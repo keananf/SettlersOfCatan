@@ -1,2 +1,2 @@
 # SettlersOfCatan
-Settlers of Catan Implementation in Lua, using the LOVE2D engine.
+Settlers of Catan implementation in Java, using libGDX.

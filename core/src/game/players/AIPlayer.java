@@ -1,4 +1,6 @@
-package game;
+package game.players;
+
+import game.moves.Moves;
 
 /**
  * Class representing an AI player
@@ -6,10 +8,10 @@ package game;
 public class AIPlayer extends Player
 {
 	@Override
-	public void receiveMove()
+	public Moves receiveMoves()
 	{
 		// TODO Auto-generated method stub
-		
+		return new Moves();
 	}
 
 }

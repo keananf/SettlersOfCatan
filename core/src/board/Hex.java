@@ -6,19 +6,15 @@ import game.enums.ResourceType;
  * Class representing an individual hex 
  * @author 140001596
  */
-public class Hex 
+public class Hex extends BoardElement
 {
 	private ResourceType resource;
 	private int diceRoll;
-	private int x; // x coordinate (column)
-	private int y; // y coordinate (row)
 	private boolean hasRobber;
 	
 	public Hex(int x, int y)
 	{
-		this.x = x;
-		this.y = y;
-		
+		super(x, y);
 	}
 
 	/**
@@ -40,7 +36,7 @@ public class Hex
 	/**
 	 * @return the diceRoll
 	 */
-	public int getDiceRoll() 
+	public int getChit() 
 	{
 		return diceRoll;
 	}
@@ -53,38 +49,6 @@ public class Hex
 		this.diceRoll = diceRoll;
 	}
 	
-	/**
-	 * @return the x
-	 */
-	public int getX()
-	{
-		return x;
-	}
-	
-	/**
-	 * @param x the x to set
-	 */
-	public void setX(int x)
-	{
-		this.x = x;
-	}
-	
-	/**
-	 * @return the y
-	 */
-	public int getY()
-	{
-		return y;
-	}
-	
-	/**
-	 * @param y the y to set
-	 */
-	public void setY(int y)
-	{
-		this.y = y;
-	}
-
 	public boolean hasRobber()
 	{
 		return hasRobber;
@@ -93,16 +57,5 @@ public class Hex
 	public void toggleRobber()
 	{
 		hasRobber = !hasRobber;
-	}
-
-	public boolean borders(Hex h)
-	{
-		int x2 = h.getX(), y2 = h.getY();
-		
-		// If the given hex is further away than one
-		if(Math.abs(y2 - y) > 1 || Math.abs(x2 - x) > 1)
-			return false;
-		
-		return true;
 	}
 }

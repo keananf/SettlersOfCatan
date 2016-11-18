@@ -2,6 +2,7 @@ package board;
 
 import game.enums.ResourceType;
 
+import java.awt.Point;
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 
@@ -11,10 +12,11 @@ import java.util.AbstractMap.SimpleEntry;
  */
 public class HexGrid
 {
-	public Hashtable<SimpleEntry<Integer, Integer>, Hex> grid; // Overall grid
-	public HashSet<Edge> edges; // All edges
-	public Hashtable<SimpleEntry<Integer, Integer>, Node> nodes; // All nodes
-	public static final int SIZE_OF_GRID = 8;
+	public Hashtable<Point, Hex> grid; // Overall grid
+	public List<Edge> edges; // All edges
+	public List<Port> ports; // All ports
+	public Hashtable<Point, Node> nodes; // All nodes
+	public static final int SIZE_OF_GRID = 5;
 	
 	public HexGrid()
 	{
@@ -26,37 +28,37 @@ public class HexGrid
 	 */
 	private void initGrid()
 	{
-		grid = new Hashtable<SimpleEntry<Integer, Integer>, Hex>();
-		nodes = new Hashtable<SimpleEntry<Integer, Integer>, Node>();
+		grid = new Hashtable<Point, Hex>();
+		nodes = new Hashtable<Point, Node>();
 		
-		edges = new HashSet<Edge>();
+		edges = new ArrayList<Edge>();
+		ports = new ArrayList<Port>();
 		
 		Map<Integer, Integer> chitsAvailable = getChitsAvailable();
 		Map<ResourceType, Integer> resourcesAvailable = getResourcesAvailable();
 		
 		// for each column
-		for(int x = -SIZE_OF_GRID; x < SIZE_OF_GRID; x++) // x goes from -8 to 8
+		for(int x = -SIZE_OF_GRID; x <= SIZE_OF_GRID; x++)
 		{
 			// for each row
-			for(int y = -(SIZE_OF_GRID - 3); y <= SIZE_OF_GRID - 3; y++) // y goes from -5 to 5
+			for(int y = -SIZE_OF_GRID; y <= SIZE_OF_GRID; y++)
 			{
-				// Condition for whether or not the coordinate is a hex.
-				if(x % 3 == 0) // TODO make more generic. NO make number
+				// If in boundaries
+				if(y - 2*x <= 8 && 2*y - x <= 8 && x + y <= 8 &&
+				   y - 2*x >= -8 && 2*y - x >= -8 && x + y >= -8)
 				{
-					Hex hex = new Hex(x, y);
-					SimpleEntry<Integer, Integer> coords = new SimpleEntry<Integer, Integer>(x, y);
 					
-					allocateResource(hex, chitsAvailable, resourcesAvailable);
-					grid.put(coords, hex);
-				}
-				
-				// Condition for whether or not the coordinate is a node
-				else
-				{
-					Node node = new Node(x, y);
-					SimpleEntry<Integer, Integer> coords = new SimpleEntry<Integer, Integer>(x, y);
+					// Condition for whether or not the coordinate is a hex.
+					if(Math.abs(x + y) % 3 == 0 || x + y == 0) // TODO make more generic. NO magic number
+					{
+						Hex hex = new Hex(x, y);
+						
+						allocateResource(hex, chitsAvailable, resourcesAvailable);
+						grid.put(new Point(x, y), hex);
+					}
 					
-					nodes.put(coords, node);
+					// Condition for whether or not the coordinate is a node
+					else nodes.put(new Point(x, y), new Node(x, y));
 				}
 			}
 		}
@@ -73,36 +75,57 @@ public class HexGrid
 	 */
 	private List<BoardElement> getNeighbours(Node node)
 	{
-		List<BoardElement> neighbours = new LinkedList<BoardElement>();		
-		Hashtable<SimpleEntry<Integer, Integer>, BoardElement> allBoardElements = new Hashtable<SimpleEntry<Integer, Integer>, BoardElement>();
-		allBoardElements.putAll(nodes);
-		allBoardElements.putAll(grid);
+		List<BoardElement> neighbours = new LinkedList<BoardElement>();
+
+		// Find all 6 neighbours
+		for(int i = -1; i <= 1; i++)
+		{
+			for(int j = -1; j <= 1; j++)
+			{
+				if(i == 0 && j == 0) continue;
+				if(i == -1 && j == 1) continue;
+				if(i == 1 && j == -1) continue;
+				
+				Point p = new Point(node.getX() + i, node.getY() + j);
+				
+				if(nodes.containsKey(p)) neighbours.add(nodes.get(p));
+
+				if(grid.containsKey(p)) neighbours.add(grid.get(p));
+			}				
+		}
 		
-		//TODO MAKE MORE EFFICIENT. Just do coordinate arithmetic to retrieve specific elements
-		allBoardElements.values().removeIf((b) -> b instanceof Node ? !node.isAdjacent((Node)b) 
-													: !node.isAdjacent((Hex) b));
-		
-		neighbours.addAll(allBoardElements.values());
 		return neighbours;
 	}
 	
 	/**
-	 * Creates edges and relationships between the different board elements
+	 * Creates edges and relationships between the different board elements.
+	 * Nodes are given their adjacent hexes, and edges are made between nodes.
+	 * Ports are also made here
 	 */
 	private void setUpEdgesAndNodes()
 	{
+		List<Port> availablePorts = getAvailablePorts();
+		
 		// for each node
 		for(Node node : nodes.values())
 		{
 			List<Hex> adjacentHexes = new LinkedList<Hex>();
+			List<BoardElement> neighbours = getNeighbours(node);
 			
 			// Create both edges AND find the adjacent hexes
-			for(BoardElement neighbour : getNeighbours(node))
+			for(BoardElement neighbour : neighbours)
 			{
 				// If neighbour is a node, create an edge
 				if(neighbour instanceof Node)
-				{					
-					edges.add(new Edge(node, (Node)neighbour));
+				{			
+					
+					// If on boundaries, make a port
+					if(onBoundaries(node) || onBoundaries((Node)neighbour))
+					{
+						if(!availablePorts.isEmpty())
+							Port.makePort(node, (Node)neighbour, ports, availablePorts);
+					}
+					else Edge.makeEdge(node, (Node)neighbour, edges);
 				}
 				
 				// Otherwise add to this node's list of adjacent hexes.
@@ -114,6 +137,27 @@ public class HexGrid
 			}
 			node.setAdjacentHexes(adjacentHexes);
 		}
+		
+		edges.addAll(ports);
+	}
+
+	/**
+	 * Determines if a node is on the boundaries of the board
+	 * @param node the node being checked
+	 * @return boolean indicating whether or not the node is on the board
+	 */
+	private boolean onBoundaries(Node node)
+	{
+		int x = node.getX();
+		int y = node.getY();
+		
+		if(y - 2*x == 8 || 2*y - x == 8 || x + y == 8 ||
+				   y - 2*x == -8 || 2*y - x == -8 || x + y == -8) // TODO fix magic numbers
+		{
+			return true;
+		}
+		
+		return false;
 	}
 
 	/**
@@ -134,6 +178,40 @@ public class HexGrid
 		chitsAvailable.put(12, 1);
 		
 		return chitsAvailable;
+	}
+		
+	/**
+	 * @return list of available ports
+	 */
+	private List<Port> getAvailablePorts()
+	{
+		List<Port> ports = new LinkedList<Port>();
+		
+		// Default ports
+		for(int i = 0; i < 4; i++)
+		{
+			Port p = new Port(new Node(0,0), new Node(-1, -1)); //default nodes
+			p.exchangeAmount = 3;
+			p.exchangeType = ResourceType.None; // signifies 'Any'
+			p.receiveAmount = 1;
+			p.receiveType = ResourceType.None; // signifies 'Any'
+			
+			ports.add(p);
+		}
+			
+		// One port for each resource type
+		for(ResourceType r : ResourceType.values())
+		{
+			Port p = new Port(new Node(0,0), new Node(-1, -1)); //default nodes
+			p.exchangeAmount = 2;
+			p.exchangeType = r;
+			p.receiveAmount = 1;
+			p.receiveType = r;
+			
+			ports.add(p);
+		}
+		
+		return ports;
 	}
 	
 	/**
@@ -163,7 +241,8 @@ public class HexGrid
 			Map<ResourceType, Integer> resourcesAvailable)
 	{
 		Random rand = new Random();
-		ResourceType resource = ResourceType.None;
+		int r = rand.nextInt(resourcesAvailable.size());
+		ResourceType resource = ResourceType.values()[r];
 		
 		// Find a resource to allocate 
 		while(hex.getResource() == ResourceType.None)
@@ -173,20 +252,25 @@ public class HexGrid
 			{
 				resourcesAvailable.put(resource, remaining - 1);
 				hex.setResource(resource);
-				if(resource == ResourceType.None) hex.toggleRobber();
-				
-				break; // Necessary to allow one hex to be 'none'
+				if(resource == ResourceType.None)
+				{
+					hex.toggleRobber();
+					return; // Necessary to allow one hex to be 'none'					
+				}
 			}
 			
 			// If we could not allocate this resource, randomly select a new one.
-			int r = rand.nextInt(resourcesAvailable.size());
+			r = rand.nextInt(resourcesAvailable.size());
 			resource = ResourceType.values()[r];
 		}
 		
 		// Loop until we have a valid dice roll
 		while(hex.getChit() == 0)
 		{
-			int dice = rand.nextInt(chitsAvailable.size()) + 1; 
+			int dice = rand.nextInt(chitsAvailable.size() + 1) + 2; 
+			
+			if(dice == 7) continue;
+			
 			int remaining = chitsAvailable.get(dice);
 			if(remaining > 0)
 			{

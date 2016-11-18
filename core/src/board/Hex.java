@@ -15,6 +15,7 @@ public class Hex extends BoardElement
 	public Hex(int x, int y)
 	{
 		super(x, y);
+		resource = ResourceType.None;
 	}
 
 	/**

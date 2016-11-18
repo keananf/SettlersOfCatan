@@ -53,4 +53,12 @@ public class Node extends BoardElement
 		return (Math.abs(getX() - h.getX()) == 2 || Math.abs(getX() - h.getX()) == 1) 
 				&& Math.abs(getY() - h.getY()) <= 1;
 	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		if(getX() == ((Node)other).getX() && getY() == ((Node)other).getY()) return true;
+		
+		return false;
+	}
 }

@@ -22,7 +22,7 @@ public class Game
 	public Game()
 	{
 		grid = new HexGrid();
-		players = new Player[NUM_PLAYERS ];
+		players = new Player[NUM_PLAYERS];
 		thingsBuilt = new Hashtable<Player, List<Building>>();
 		dice = new Random();
 	}
@@ -82,15 +82,15 @@ public class Game
 	private void allocateResources(int dice)
 	{
 		// for each player
-		for(Player p : players)
+		for(Player player : players)
 		{
 			Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 			
 			// for each of the players settlements
-			for(Building b : thingsBuilt.get(p))
+			for(Building building : thingsBuilt.get(player))
 			{
-				int multiplier = b instanceof City ? 2 : 1;
-				List<Hex> hexes = b.getNode().getHexes();
+				int amount = building instanceof City ? 2 : 1;
+				List<Hex> hexes = building.getNode().getHexes();
 				
 				// for each hex on this settlement
 				for(Hex hex : hexes)
@@ -98,11 +98,11 @@ public class Game
 					// If the hex's chit is equal to the dice roll
 					if(hex.getChit() == dice)
 					{
-						grant.put(hex.getResource(), multiplier);
+						grant.put(hex.getResource(), amount);
 					}
 				}
 			}
-			p.grantResources(grant); // Will be overriden in each type of player's implementation
+			player.grantResources(grant); // Will be overriden in each type of player's implementation
 		}
 	}
 

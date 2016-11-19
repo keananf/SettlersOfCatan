@@ -14,6 +14,12 @@ public abstract class Building implements IBuildable
 	private Node node;
 	private Colour playerColour;
 	
+	public Building(Node node, Colour colour)
+	{
+		this.node = node;
+		this.playerColour = colour;
+	}
+	
 	/**
 	 * Calculates the total resources gained for this settlement
 	 * @return a map of resource types to number of cards gained.

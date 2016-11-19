@@ -104,7 +104,7 @@ public class HexGrid
 	 */
 	private void setUpEdgesAndNodes()
 	{
-		List<Port> availablePorts = getAvailablePorts();
+		List<Edge> potentialPorts = new ArrayList<Edge>();
 		
 		// for each node
 		for(Node node : nodes.values())
@@ -116,16 +116,18 @@ public class HexGrid
 			for(BoardElement neighbour : neighbours)
 			{
 				// If neighbour is a node, create an edge
-				if(neighbour instanceof Node)
-				{			
-					
-					// If on boundaries, make a port
-					if(onBoundaries(node) || onBoundaries((Node)neighbour))
+				if (neighbour instanceof Node)
+				{
+					Edge e = Edge.makeEdge(node, (Node) neighbour, edges);
+					if (e != null)
 					{
-						if(!availablePorts.isEmpty())
-							Port.makePort(node, (Node)neighbour, ports, availablePorts);
+						e.x.addEdge(e);
+						e.y.addEdge(e);
+						if (e.x.onBoundaries() || e.y.onBoundaries())
+						{
+							potentialPorts.add(e);
+						}
 					}
-					else Edge.makeEdge(node, (Node)neighbour, edges);
 				}
 				
 				// Otherwise add to this node's list of adjacent hexes.
@@ -138,26 +140,7 @@ public class HexGrid
 			node.setAdjacentHexes(adjacentHexes);
 		}
 		
-		edges.addAll(ports);
-	}
-
-	/**
-	 * Determines if a node is on the boundaries of the board
-	 * @param node the node being checked
-	 * @return boolean indicating whether or not the node is on the board
-	 */
-	private boolean onBoundaries(Node node)
-	{
-		int x = node.getX();
-		int y = node.getY();
-		
-		if(y - 2*x == 8 || 2*y - x == 8 || x + y == 8 ||
-				   y - 2*x == -8 || 2*y - x == -8 || x + y == -8) // TODO fix magic numbers
-		{
-			return true;
-		}
-		
-		return false;
+		ports = Port.makePorts(edges, potentialPorts);
 	}
 
 	/**
@@ -178,40 +161,6 @@ public class HexGrid
 		chitsAvailable.put(12, 1);
 		
 		return chitsAvailable;
-	}
-		
-	/**
-	 * @return list of available ports
-	 */
-	private List<Port> getAvailablePorts()
-	{
-		List<Port> ports = new LinkedList<Port>();
-		
-		// Default ports
-		for(int i = 0; i < 4; i++)
-		{
-			Port p = new Port(new Node(0,0), new Node(-1, -1)); //default nodes
-			p.exchangeAmount = 3;
-			p.exchangeType = ResourceType.None; // signifies 'Any'
-			p.receiveAmount = 1;
-			p.receiveType = ResourceType.None; // signifies 'Any'
-			
-			ports.add(p);
-		}
-			
-		// One port for each resource type
-		for(ResourceType r : ResourceType.values())
-		{
-			Port p = new Port(new Node(0,0), new Node(-1, -1)); //default nodes
-			p.exchangeAmount = 2;
-			p.exchangeType = r;
-			p.receiveAmount = 1;
-			p.receiveType = r;
-			
-			ports.add(p);
-		}
-		
-		return ports;
 	}
 	
 	/**

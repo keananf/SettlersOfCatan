@@ -1,10 +1,11 @@
 package game;
 
 import game.build.*;
-import game.enums.ResourceType;
-import game.moves.Moves;
-import game.players.Player;
+import game.enums.*;
+import game.moves.*;
+import game.players.*;
 
+import java.awt.Point;
 import java.util.*;
 
 import board.*;
@@ -12,27 +13,36 @@ import board.*;
 public class Game
 {
 	HexGrid grid;
-	Player[] players;
+	List<Player> players;
 	Hashtable<Player, List<Building>> thingsBuilt;
 	Random dice;
 	Player currentPlayer;
 	private int current; // index of current player
+	private Player p;
 	private static final int NUM_PLAYERS = 4;
 	
 	public Game()
 	{
 		grid = new HexGrid();
-		players = new Player[NUM_PLAYERS];
+		players = new ArrayList<Player>(NUM_PLAYERS); 
 		thingsBuilt = new Hashtable<Player, List<Building>>();
 		dice = new Random();
+		
+		// test
+		p = new HumanPlayer(Colour.Blue);
+		players.add(p);
+		Settlement s = new Settlement(grid.nodes.get(new Point(-1, 0)), Colour.Blue);
+		List<Building> buildings = new ArrayList<Building>();
+		buildings.add(s);
+		thingsBuilt.put(p, buildings);
 	}
 	
 	public static void main(String[] args)
 	{
 		Game game = new Game();
-		game.getPlayers(); //TODO
-		game.chooseFirstPlayer();
-		game.getInitialSettlementsAndRoads(); //TODO
+		//game.getPlayers(); //TODO
+		//game.chooseFirstPlayer();
+		//game.getInitialSettlementsAndRoads(); //TODO
 		
 		// Main game loop
 		while(!game.isOver())
@@ -40,9 +50,9 @@ public class Game
 			int dice = game.generateDiceRoll();
 			game.allocateResources(dice);
 			
-			Moves moves = game.currentPlayer.receiveMoves();
-			game.processMoves(moves); //TODO
-			game.changeTurn();
+			//Moves moves = game.currentPlayer.receiveMoves();
+			//game.processMoves(moves); //TODO
+			//game.changeTurn();
 		}
 	}
 
@@ -72,7 +82,7 @@ public class Game
 		int dice = this.dice.nextInt(NUM_PLAYERS);
 		
 		current = dice;
-		currentPlayer = players[dice];
+		currentPlayer = players.get(dice);
 	}
 
 	/**
@@ -111,7 +121,7 @@ public class Game
 	 */
 	private void changeTurn()
 	{
-		currentPlayer = players[++current % NUM_PLAYERS];
+		currentPlayer = players.get(++current % NUM_PLAYERS);
 	}
 
 	/**

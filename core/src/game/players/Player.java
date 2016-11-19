@@ -24,6 +24,19 @@ public abstract class Player
 
 	private static final int THRESHHOLD = 10;
 	
+	public Player(Colour colour)
+	{
+		this.colour = colour;
+		thingsBuilt = new HashSet<IBuildable>();
+		resources = new HashMap<ResourceType, Integer>();
+		
+		// Initialise resources
+		for(ResourceType r : ResourceType.values())
+		{
+			if(r == ResourceType.None) continue;
+			resources.put(r, 0);
+		}
+	}
 	
 	public abstract Moves receiveMoves();
 	

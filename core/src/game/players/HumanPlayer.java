@@ -1,5 +1,6 @@
 package game.players;
 
+import game.enums.Colour;
 import game.moves.Moves;
 
 /**
@@ -7,6 +8,11 @@ import game.moves.Moves;
  */
 public class HumanPlayer extends Player
 {
+
+	public HumanPlayer(Colour colour)
+	{
+		super(colour);
+	}
 
 	@Override
 	public Moves receiveMoves()

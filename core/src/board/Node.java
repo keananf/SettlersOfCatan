@@ -11,7 +11,7 @@ public class Node extends BoardElement
 	private List<Hex> hexes;
 	private  List<Edge> edges;
 	
-	protected Node(int x, int y)
+	public Node(int x, int y)
 	{
 		super(x, y);
 		edges = new ArrayList<Edge>(3);

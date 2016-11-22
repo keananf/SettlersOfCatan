@@ -12,95 +12,48 @@ import board.*;
 
 public class Game
 {
-	HexGrid grid;
-	List<Player> players;
-	Hashtable<Player, List<Building>> thingsBuilt;
+	private HexGrid grid;
+	private List<Player> players;
 	Random dice;
 	Player currentPlayer;
 	private int current; // index of current player
 	private Player p;
-	private static final int NUM_PLAYERS = 4;
+	public static final int NUM_PLAYERS = 4;
 	
 	public Game()
 	{
 		grid = new HexGrid();
 		players = new ArrayList<Player>(NUM_PLAYERS); 
-		thingsBuilt = new Hashtable<Player, List<Building>>();
 		dice = new Random();
-		
-		// test
-		p = new HumanPlayer(Colour.Blue);
-		players.add(p);
-		Settlement s = new Settlement(grid.nodes.get(new Point(-1, 0)), Colour.Blue);
-		List<Building> buildings = new ArrayList<Building>();
-		buildings.add(s);
-		thingsBuilt.put(p, buildings);
-	}
-	
-	public static void main(String[] args)
-	{
-		Game game = new Game();
-		//game.getPlayers(); //TODO
-		//game.chooseFirstPlayer();
-		//game.getInitialSettlementsAndRoads(); //TODO
-		
-		// Main game loop
-		while(!game.isOver())
-		{
-			int dice = game.generateDiceRoll();
-			game.allocateResources(dice);
-			
-			//Moves moves = game.currentPlayer.receiveMoves();
-			//game.processMoves(moves); //TODO
-			//game.changeTurn();
-		}
-	}
-
-	private void getPlayers()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void getInitialSettlementsAndRoads()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void processMoves(Moves moves)
-	{
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
 	 * Chooses first player.
 	 */
-	private void chooseFirstPlayer()
+	public void chooseFirstPlayer()
 	{
 		int dice = this.dice.nextInt(NUM_PLAYERS);
 		
 		current = dice;
-		currentPlayer = players.get(dice);
+		currentPlayer = getPlayers().get(dice);
 	}
 
 	/**
 	 * Assigns resources to each player based upon their settlements and the dice
 	 * @param dice the dice roll
 	 */
-	private void allocateResources(int dice)
+	public void allocateResources(int dice)
 	{
 		// for each player
-		for(Player player : players)
+		for(Player player : getPlayers())
 		{
 			Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 			
 			// for each of the players settlements
-			for(Building building : thingsBuilt.get(player))
+			for(Building building : player.getSettlements().values())
 			{
 				int amount = building instanceof City ? 2 : 1;
-				List<Hex> hexes = building.getNode().getHexes();
+				List<Hex> hexes = ((Building)building).getNode().getHexes();
 				
 				// for each hex on this settlement
 				for(Hex hex : hexes)
@@ -119,15 +72,15 @@ public class Game
 	/**
 	 * Toggles a player's turn
 	 */
-	private void changeTurn()
+	public void changeTurn()
 	{
-		currentPlayer = players.get(++current % NUM_PLAYERS);
+		currentPlayer = getPlayers().get(++current % NUM_PLAYERS);
 	}
 
 	/**
 	 * Generates a random roll between 1 and 12
 	 */
-	private int generateDiceRoll()
+	public int generateDiceRoll()
 	{
 		return dice.nextInt(12) + 1;
 	}
@@ -136,13 +89,34 @@ public class Game
 	 * Looks to see if any player has won
 	 * @return true if a player has won
 	 */
-	private boolean isOver()
+	public boolean isOver()
 	{
-		for(Player p : players)
+		for(Player p : getPlayers())
 		{
 			if(p.hasWon()) return true;
 		}
 		
 		return false;
+	}
+
+	/**
+	 * @param players the players to set
+	 */
+	public void addPlayer(Player player)
+	{
+		this.players.add(player);
+	}
+
+	/**
+	 * @return the grid
+	 */
+	public HexGrid getGrid()
+	{
+		return grid;
+	}
+	
+	public List<Player> getPlayers()
+	{
+		return players;
 	}
 }

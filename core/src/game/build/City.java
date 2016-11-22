@@ -18,6 +18,8 @@ public class City extends Building
 		super(node, colour);
 	}
 
+	private City(){}
+
 	/**
 	 * @return a map containing the total cost for all resources
 	 */
@@ -29,5 +31,10 @@ public class City extends Building
 		resources.put(ResourceType.Stone, 3);
 		
 		return resources;
+	}
+	
+	public static Map<ResourceType, Integer> getCityCost()
+	{
+		return new City().getCost();
 	}
 }

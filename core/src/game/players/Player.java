@@ -1,16 +1,18 @@
 package game.players;
 
+import java.awt.Point;
 import java.util.*;
 
-import game.build.IBuildable;
-import game.build.Road;
+import board.Edge;
+import board.Node;
+import game.build.*;
 import game.enums.*;
 import game.exceptions.CannotAffordException;
+import game.exceptions.CannotUpgradeException;
 import game.moves.Move;
-import game.moves.Moves;
 
 /**
- * Abstract class describing a player (human, AI, or network)
+ * Abstract class describing a player (AI, or network)
  * @author 140001596
  */
 public abstract class Player 
@@ -18,7 +20,8 @@ public abstract class Player
 	private int vp; // Victory points
 	private Colour colour;
 	private Map<ResourceType, Integer> resources;
-	private HashSet<IBuildable> thingsBuilt; 
+	private HashSet<Road> roads; 
+	private HashMap<Point, Building> settlements;
 	private int knightsUsed;
 	private boolean hasLongestRoad;
 
@@ -27,7 +30,8 @@ public abstract class Player
 	public Player(Colour colour)
 	{
 		this.colour = colour;
-		thingsBuilt = new HashSet<IBuildable>();
+		roads = new HashSet<Road>();
+		settlements = new HashMap<Point, Building>();
 		resources = new HashMap<ResourceType, Integer>();
 		
 		// Initialise resources
@@ -38,23 +42,61 @@ public abstract class Player
 		}
 	}
 	
-	public abstract Moves receiveMoves();
+	public abstract Move receiveMove();
 	
 	/**
 	 * @return the length of this player's longest road
 	 */
 	public int calcRoadLength()
-	{
-		HashSet<IBuildable> roads = new HashSet<IBuildable>();
-		roads.addAll(thingsBuilt);
-		
-		// Filter out everything except the roads
-		roads.removeIf((b) -> !(b instanceof Road));
-		
-		//TODO ensure that when building roads, they are inserted in such a way that adjacent ones are stored next to each other
-		
-		
+	{	
+		//TODO
 		return 0;
+	}
+
+	/**
+	 * Attempts to build a road for this player
+	 * @param edge the edge to build the road on
+	 * @throws CannotAffordException
+	 */
+	public void buildRoad(Edge edge) throws CannotAffordException
+	{
+		Road r = new Road(edge, colour);
+		spendResources(r.getCost());
+		
+		roads.add(r);
+	}
+	
+	/**
+	 * Attempts to build a settlement for this player
+	 * @param node the node to build the settlement on
+	 * @throws CannotAffordException
+	 */
+	public void buildSettlement(Node node) throws CannotAffordException
+	{
+		Settlement s = new Settlement(node, colour);
+		spendResources(s.getCost());
+		
+		settlements.put(new Point(node.getX(), node.getY()), s);
+	}
+	
+	/**
+	 * Attempts to upgrade a settlement for this player
+	 * @param node the node to build the settlement on
+	 * @throws CannotAffordException
+	 */
+	public void upgradeSettlement(Node node) throws CannotAffordException, CannotUpgradeException
+	{
+		Point p = new Point(node.getX(), node.getY());
+		
+		// If settlement doesn't yet exist
+		if(!settlements.containsKey(p))
+			throw new CannotUpgradeException(node.getX(), node.getY());
+			
+		// Otherwise build city
+		City c = new City(node, colour);
+		spendResources(c.getCost());
+		
+		settlements.put(p, c);
 	}
 	
 	/**
@@ -138,5 +180,29 @@ public abstract class Player
 	public boolean hasWon()
 	{
 		return vp >= THRESHHOLD;
+	}
+
+	/**
+	 * @return the player's resources
+	 */
+	public Map<ResourceType, Integer> getResources()
+	{
+		return resources;
+	}
+	
+	/**
+	 * @return the settlements the player has built
+	 */
+	public HashMap<Point, Building> getSettlements()
+	{
+		return settlements;
+	}
+	
+	/**
+	 * @return the roads the player has built
+	 */
+	public HashSet<Road> getRoads()
+	{
+		return roads;
 	}
 }

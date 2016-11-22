@@ -16,6 +16,13 @@ public class Road implements IBuildable
 	private Edge edge;
 	private Colour playerColour;
 	
+	public Road(Edge edge, Colour c)
+	{
+		playerColour = c;
+		this.edge = edge;
+	}
+	private Road(){}
+	
 	/**
 	 * @return a map containing the total cost for all resources
 	 */
@@ -29,46 +36,10 @@ public class Road implements IBuildable
 		return resources;
 	}
 	
-	/**
-	 * Calculate the distance between two roads
-	 * @param road the road the check
-	 * @return the distance between 'this' and 'road'
-	 
-	public boolean isBordering(Road road)
+	public static Map<ResourceType, Integer> getRoadCost()
 	{
-		int x1, y1, x2, y2, x3, y3;
-		
-		List<Hex> borderingHexes = edge.getHexes();
-		List<Hex> otherHexes = road.edge.getHexes();
-		boolean valid = false;
-		
-		// Lists must have one element in common to be adjacent
-		for(Hex hex : borderingHexes)
-		{
-			if(otherHexes.contains(hex))
-			{
-				valid = true;
-				otherHexes.remove(hex);
-			}
-		}
-		if(!valid) return false;
-		
-		x1 = borderingHexes.get(0).getX();
-		y1 = borderingHexes.get(0).getY(); 
-		
-		x2 = borderingHexes.get(1).getX();
-		y2 = borderingHexes.get(1).getY(); 
-		
-		x3 = otherHexes.get(0).getX();
-		y3 = otherHexes.get(0).getY();
-		
-		// If any one of the hexes is more than one hex away from the other two
-		if(Math.abs(y3 - y2) > 1 || Math.abs(y2 - y1) > 1
-				|| Math.abs(x3 - x2) > 1 || Math.abs(x2 - x1) > 1)
-			return false;
-		
-		return true;
-	}*/
+		return new Road().getCost();
+	}
 	
 	/**
 	 * @return the playerColour

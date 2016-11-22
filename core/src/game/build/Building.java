@@ -20,6 +20,8 @@ public abstract class Building implements IBuildable
 		this.playerColour = colour;
 	}
 	
+	protected Building(){}
+	
 	/**
 	 * Calculates the total resources gained for this settlement
 	 * @return a map of resource types to number of cards gained.

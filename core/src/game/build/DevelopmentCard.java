@@ -31,4 +31,9 @@ public enum DevelopmentCard implements IBuildable //TODO change to normal inheri
 		
 		return resources;
 	}
+	
+	public static Map<ResourceType, Integer> getCardCost()
+	{
+		return DevelopmentCard.Knight.getCost();
+	}
 }

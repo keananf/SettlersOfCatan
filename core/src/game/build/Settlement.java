@@ -18,6 +18,8 @@ public class Settlement extends Building
 		super(node, colour);
 	}
 
+	private Settlement(){}
+
 	/**
 	 * @return a map containing the total cost for all resources
 	 */
@@ -33,4 +35,8 @@ public class Settlement extends Building
 		return resources;
 	}
 
+	public static Map<ResourceType, Integer> getSettlementCost()
+	{
+		return new Settlement().getCost();
+	}
 }

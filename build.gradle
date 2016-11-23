@@ -22,6 +22,7 @@ allprojects {
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
         protobufVersion = "3.1.0"
+        junitVersion = "4.12"
     }
 
     repositories {
@@ -47,11 +48,11 @@ project(":desktop") {
 project(":core") {
     apply plugin: "java"
 
-
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.google.protobuf:protobuf-java:$protobufVersion"
+        testCompile "junit:junit:4.12"
     }
 }
 

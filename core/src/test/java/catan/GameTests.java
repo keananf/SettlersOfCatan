@@ -14,19 +14,13 @@ import org.junit.*;
 
 public class GameTests
 {
-	static Game game;
-	static Player p;
-	static Node n;
-	static Hex hex;
+	Game game;
+	Player p;
+	Node n;
+	Hex hex;
 
-	@BeforeClass
-	public static void setUp()
-	{
-		reset();
-	}
-
-	@After
-	public void cleanUp()
+	@Before
+	public void setUp()
 	{
 		reset();
 	}
@@ -45,10 +39,30 @@ public class GameTests
 		p.buildSettlement(n);
 	}
 
-	@Test(expected = CannotAffordException.class)
-	public void cannotBuildRoadTest() throws CannotAffordException
+	@Test(expected = CannotBuildRoadException.class)
+	public void cannotBuildRoadTest() throws CannotAffordException, CannotBuildRoadException
 	{
-		p.buildRoad(game.getGrid().edges.get(0));
+		// Grant resources for road
+		assertFalse(hasResources(p));
+		p.grantResources(Road.getRoadCost());
+		assertTrue(hasResources(p));
+		
+		// Cannot build because there is no settlement
+		buildRoad(n.getEdges().get(0));
+	}
+	
+	@Test(expected = CannotAffordException.class)
+	public void cannotAffordRoadTest() throws CannotAffordException, CannotBuildRoadException
+	{
+		// Have to make a settlement before you can build a road
+		assertFalse(hasResources(p));
+		p.grantResources(Settlement.getSettlementCost());
+		assertTrue(hasResources(p));
+		Settlement s = makeSettlement(n);
+
+		// Try to build a road with no resources
+		assertFalse(hasResources(p));
+		p.buildRoad(n.getEdges().get(0));
 	}
 
 	@Test(expected = CannotAffordException.class)
@@ -60,7 +74,7 @@ public class GameTests
 		assertTrue(hasResources(p));
 
 		// Build settlement
-		Settlement s = makeSettlement();
+		Settlement s = makeSettlement(n);
 
 		p.upgradeSettlement(n);
 	}
@@ -80,19 +94,27 @@ public class GameTests
 		assertTrue(hasResources(p));
 
 		// Build settlement
-		makeSettlement();
+		makeSettlement(n);
 	}
 
 	@Test
-	public void buildRoadTest()
+	public void buildRoadTest() throws CannotBuildRoadException
 	{
-		// Test resources
+		// Test resources grant
+		assertFalse(hasResources(p));
+		p.grantResources(Settlement.getSettlementCost());
+		assertTrue(hasResources(p));
+
+		// make settlement so that we can build a road
+		makeSettlement(n);
+		
+		// Test resources grant
 		assertFalse(hasResources(p));
 		p.grantResources(Road.getRoadCost());
 		assertTrue(hasResources(p));
-
+		
 		// Build road
-		buildRoad();
+		buildRoad(n.getEdges().get(0));
 	}
 
 	@Test
@@ -101,7 +123,7 @@ public class GameTests
 		p.grantResources(Settlement.getSettlementCost());
 		game.addPlayer(p);
 
-		makeSettlement();
+		makeSettlement(n);
 
 		// collect resources
 		game.allocateResources(hex.getChit());
@@ -116,7 +138,7 @@ public class GameTests
 
 		// Make settlement
 		p.grantResources(Settlement.getSettlementCost());
-		Settlement s = makeSettlement();
+		Settlement s = makeSettlement(n);
 
 		// collect resources
 		game.allocateResources(hex.getChit());
@@ -125,7 +147,7 @@ public class GameTests
 
 		// Upgrade settlement
 		p.grantResources(City.getCityCost());
-		City c = makeCity();
+		City c = makeCity(n);
 		assertEquals(c.getNode(), s.getNode());
 
 		// collect resources
@@ -134,20 +156,51 @@ public class GameTests
 		assertTrue(p.getResources().get(hex.getResource()) == 3);
 	}
 
+	@Test 
+	public void roadLengthTest() throws CannotBuildRoadException
+	{
+		Node n2 = game.getGrid().nodes.get(new Point(4,1));
+		
+		// Make two settlements
+		p.grantResources(Settlement.getSettlementCost());
+		Settlement s = makeSettlement(n);
+		p.grantResources(Settlement.getSettlementCost());
+		Settlement s2 = makeSettlement(n2);
+		
+		// Make three roads
+		for(int i = 0; i < n.getEdges().size(); i++)
+		{
+			Edge e = n.getEdges().get(i);
+			p.grantResources(Road.getRoadCost());
+			
+			// Build road
+			buildRoad(e);
+		}
+		
+		// Make another road
+		Edge e = n2.getEdges().get(0);
+		p.grantResources(Road.getRoadCost());
+		buildRoad(e);
+		
+		// Ensure three were built and that this player's longest road count
+		// was incremented
+		assertEquals(4, p.getRoads().size());
+		assertEquals(3, p.calcRoadLength());
+	}
+	
+	
+	
 	////////////////////
 	// HELPER METHODS //
 	////////////////////
-
-
-	private Settlement makeSettlement()
+	private Settlement makeSettlement(Node n)
 	{
 		assertTrue(hasResources(p));
-
+		int oldSize = p.getSettlements().size();
+		
 		// Build settlement
 		try
 		{
-			Node n = game.getGrid().nodes.get(new Point(-1, 0));
-			hex = n.getHexes().get(0);
 			p.buildSettlement(n);
 		}
 		catch (CannotAffordException e)
@@ -156,21 +209,19 @@ public class GameTests
 		}
 
 		// Test it was built correctly and that resources were taken away
-		assertTrue(p.getSettlements().size() == 1);
+		assertTrue(p.getSettlements().size() > oldSize);
 		assertFalse(hasResources(p));
 
 		return (Settlement) p.getSettlements().values().toArray()[0];
 	}
 
-	private City makeCity()
+	private City makeCity(Node n)
 	{
 		assertTrue(hasResources(p));
 
 		// Build settlement
 		try
 		{
-			Node n = game.getGrid().nodes.get(new Point(-1, 0));
-			hex = n.getHexes().get(0);
 			p.upgradeSettlement(n);
 		}
 		catch (CannotAffordException | CannotUpgradeException e)
@@ -184,21 +235,22 @@ public class GameTests
 		return (City) p.getSettlements().values().toArray()[0];
 	}
 
-	private Road buildRoad()
+	private Road buildRoad(Edge e) throws CannotBuildRoadException
 	{
+		int oldSize = p.getRoads().size();
+		
 		assertTrue(hasResources(p));
 		try
 		{
-			Edge e= game.getGrid().edges.get(0);
 			p.buildRoad(e);
 		}
-		catch (CannotAffordException e)
+		catch (CannotAffordException ex)
 		{
-			e.printStackTrace();
+			ex.printStackTrace();
 		}
 
 		// Test it was built correctly and that resources were taken away
-		assertTrue(p.getRoads().size() == 1);
+		assertTrue(p.getRoads().size() > oldSize);
 		assertFalse(hasResources(p));
 
 		return (Road) p.getRoads().toArray()[0];
@@ -216,7 +268,7 @@ public class GameTests
 	}
 
 
-	private static void reset()
+	private void reset()
 	{
 		game = new Game();
 		p = new NetworkPlayer(Colour.Blue);

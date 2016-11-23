@@ -39,19 +39,19 @@ public class Port extends Edge
 		// Add in right order
 		if(node.getX() + node.getY() < neighbour.getX() + neighbour.getY())
 		{
-			port.x = node;
-			port.y = neighbour;
+			port.setX(node);
+			port.setY(neighbour);
 		}
 		else
 		{
-			port.x = neighbour;
-			port.y = node;				
+			port.setX(neighbour);
+			port.setY(node);				
 		}			
 	
 		// Check this edge has not been created before
 		for(Port other : currentPorts)
 		{
-			if(other.x.equals(port.x) && other.y.equals(port.y))
+			if(other.getX().equals(port.getX()) && other.getY().equals(port.getY()))
 			{
 				duplicate = true;
 			}
@@ -102,15 +102,15 @@ public class Port extends Edge
 		{
 			if (availablePorts.size() > 0)
 			{
-				Port p = makePort(e.x, e.y, ports, availablePorts);
+				Port p = makePort(e.getX(), e.getY(), ports, availablePorts);
 				if (p != null)
 				{
-					e.x.removeEdge(e);
-					e.y.removeEdge(e);
+					e.getX().removeEdge(e);
+					e.getY().removeEdge(e);
 					edges.remove(e);
 
-					e.x.addEdge(p);
-					e.y.addEdge(p);
+					e.getX().addEdge(p);
+					e.getY().addEdge(p);
 					edges.add(p);
 				}
 			}

@@ -8,6 +8,7 @@ import main.java.board.Node;
 import main.java.game.build.*;
 import main.java.game.enums.*;
 import main.java.game.exceptions.CannotAffordException;
+import main.java.game.exceptions.CannotBuildRoadException;
 import main.java.game.exceptions.CannotUpgradeException;
 import main.java.game.moves.Move;
 
@@ -20,17 +21,18 @@ public abstract class Player
 	private int vp; // Victory points
 	private Colour colour;
 	private Map<ResourceType, Integer> resources;
-	private HashSet<Road> roads; 
+	private List<List<Road>> roads; 
 	private HashMap<Point, Building> settlements;
 	private int knightsUsed;
 	private boolean hasLongestRoad;
+	private int longestRoad;
 
 	private static final int THRESHHOLD = 10;
 	
 	public Player(Colour colour)
 	{
 		this.colour = colour;
-		roads = new HashSet<Road>();
+		roads = new ArrayList<List<Road>>();
 		settlements = new HashMap<Point, Building>();
 		resources = new HashMap<ResourceType, Integer>();
 		
@@ -49,23 +51,134 @@ public abstract class Player
 	 */
 	public int calcRoadLength()
 	{	
-		//TODO
-		return 0;
+		return longestRoad;
 	}
 
 	/**
 	 * Attempts to build a road for this player
 	 * @param edge the edge to build the road on
-	 * @throws CannotAffordException
+	 * @throws CannotAffordException if the player cannot afford it
+	 * @throws CannotBuildRoadException if it is not a valid place to build a road
 	 */
-	public void buildRoad(Edge edge) throws CannotAffordException
+	public void buildRoad(Edge edge) throws CannotAffordException, CannotBuildRoadException
 	{
+		boolean valid = false;
+		List<Integer> listsAddedTo = new ArrayList<Integer>();
+		int index = 0;
 		Road r = new Road(edge, colour);
-		spendResources(r.getCost());
+
+		// Check the location is valid for building and that the player can afford it
+		if(r.getEdge().isNearSettlement(settlements))
+		{
+			canAfford(r.getCost());
+		}
+		else throw new CannotBuildRoadException(r);
+
+		valid = checkRoadsAndAdd(r, listsAddedTo);
 		
-		roads.add(r);
+		// If valid place to put road
+		if(valid || listsAddedTo.size() == 0)
+		{
+			spendResources(r.getCost());
+			
+			// If not connected to any other roads
+			if (listsAddedTo.size() == 0)
+			{
+				r.setChainLength(1);
+				List<Road> newList = new ArrayList<Road>();
+				newList.add(r);
+				roads.add(newList);
+			}
+
+			// merge lists if necessary
+			else if(listsAddedTo.size() > 1)
+				mergeRoads(r, listsAddedTo);
+		}
 	}
+
+	/**
+	 * Checks the new road against all other lists of connected roads.
+	 * 
+	 * If it is connected to one of the connected lists, then
+	 * it is added and all the members' of that list are updated to reflect
+	 * the new chain length
+	 * @param r the new road
+	 * @param listsAddedTo the list which records if more than one list was added to
+	 * (i.e. this new road connects two previously separate ones)
+	 * @return boolean dictating whether or not this method was successful
+	 */
+	private boolean checkRoadsAndAdd(Road r, List<Integer> listsAddedTo)
+	{
+		boolean isConnected = false, valid = false;
+		int index = 0;
+		
+		// Check if this road is adjacent to any others
+		for (List<Road> list : roads)
+		{
+			isConnected  = false;
+			for(Road road : list)
+			{
+				// If they're connected, update the length
+				if (r.isConnected(road))
+				{
+					isConnected = true;
+					listsAddedTo.add(index++);
+					
+					// Set r's chain length
+					int current = r.getChainLength() == 0 ? 1 : r.getChainLength();
+					r.setChainLength(current + road.getChainLength());
 	
+					// Update longest road if necessary
+					if (r.getChainLength() > longestRoad)
+						longestRoad = r.getChainLength();
+					
+					break;
+				}
+			}
+			
+			// Update list
+			if(isConnected)
+			{
+				list.add(r);
+				valid = true;
+				
+				// update all other roads on this path
+				for (Road road : list)
+				{
+					road.setChainLength(road.getChainLength() + 1);
+				}
+			}
+		}
+		
+		return valid;
+	}
+
+	/**
+	 * Merges two roads together if a road was recently built which connects
+	 * to previously separate ones
+	 * @param r the new road
+	 * @param listsAddedTo the number of lists (of adjacent roads) it was added to 
+	 */
+	private void mergeRoads(Road r, List<Integer> listsAddedTo)
+	{
+		for(int i = 1; i < listsAddedTo.size(); i++)
+		{
+			List<Road> last = roads.get(listsAddedTo.get(i - 1));
+			List<Road> current = roads.get(listsAddedTo.get(i));
+			
+			// Update longest road if necessary
+			int newSize = last.get(0).getChainLength() + current.get(0).getChainLength() - 1;
+			if (newSize > longestRoad)
+				longestRoad = newSize;
+			
+			last.remove(r);
+			current.addAll(last);
+			current.forEach((road) -> road.setChainLength(newSize));
+			
+			roads.remove(last);
+		}
+	}
+
 	/**
 	 * Attempts to build a settlement for this player
 	 * @param node the node to build the settlement on
@@ -124,12 +237,7 @@ public abstract class Player
 	 */
 	public void spendResources(Map<ResourceType, Integer> cost) throws CannotAffordException
 	{
-		// Check if the player can afford this before initiating the purchase
-		for(ResourceType r : cost.keySet())
-		{
-			if(resources.get(r) < cost.get(r))
-				throw new CannotAffordException(r, resources.get(r), cost.get(r));
-		}
+		canAfford(cost);
 		
 		// Subtract each resource and its amount from the player's resource bank
 		for(ResourceType r : cost.keySet())
@@ -143,6 +251,23 @@ public abstract class Player
 	}
 	
 	/**
+	 * Checks to see if the user canAfford something
+	 * @param cost
+	 * @throws CannotAffordException
+	 */
+	private boolean canAfford(Map<ResourceType, Integer> cost) throws CannotAffordException
+	{
+		// Check if the player can afford this before initiating the purchase
+		for(ResourceType r : cost.keySet())
+		{
+			if(resources.get(r) < cost.get(r))
+				throw new CannotAffordException(r, resources.get(r), cost.get(r));
+		}
+		
+		return true;
+	}
+	
+	/**
 	 * @return the victory points for this player
 	 */
 	public int getVp()
@@ -153,9 +278,9 @@ public abstract class Player
 	/**
 	 * This function increments a player's vp
 	 */
-	public void incVp()
+	public void setVp(int amount)
 	{
-		vp++;
+		vp += amount;
 	}
 
 	/**
@@ -201,8 +326,29 @@ public abstract class Player
 	/**
 	 * @return the roads the player has built
 	 */
-	public HashSet<Road> getRoads()
+	public List<Road> getRoads()
 	{
-		return roads;
+		List<Road> total = new ArrayList<Road>();
+		
+		for(List<Road> list : roads)
+			total.addAll(list);
+		
+		return total;
+	}
+
+	/**
+	 * @return the hasLongestRoad
+	 */
+	public boolean hasLongestRoad()
+	{
+		return hasLongestRoad;
+	}
+
+	/**
+	 * @param hasLongestRoad the hasLongestRoad to set
+	 */
+	public void setHasLongestRoad(boolean hasLongestRoad)
+	{
+		this.hasLongestRoad = hasLongestRoad;
 	}
 }

@@ -2,29 +2,31 @@ package main.java.game;
 
 import main.java.game.build.*;
 import main.java.game.enums.*;
+import main.java.game.exceptions.*;
 import main.java.game.moves.*;
 import main.java.game.players.*;
 
 import java.awt.Point;
 import java.util.*;
 
-import main.java.board.Hex;
-import main.java.board.HexGrid;
+import main.java.board.*;
 
 public class Game
 {
 	private HexGrid grid;
-	private List<Player> players;
+	private Map<Colour, Player> players;
 	Random dice;
 	Player currentPlayer;
 	private int current; // index of current player
 	private Player p;
+	private Player playerWithLongestRoad;
+	private int longestRoad;
 	public static final int NUM_PLAYERS = 4;
 	
 	public Game()
 	{
 		grid = new HexGrid();
-		players = new ArrayList<Player>(NUM_PLAYERS); 
+		players = new HashMap<Colour, Player>(); 
 		dice = new Random();
 	}
 
@@ -36,7 +38,7 @@ public class Game
 		int dice = this.dice.nextInt(NUM_PLAYERS);
 		
 		current = dice;
-		currentPlayer = getPlayers().get(dice);
+		currentPlayer = getPlayers()[dice];
 	}
 
 	/**
@@ -71,11 +73,137 @@ public class Game
 	}
 
 	/**
+	 * Checks that the player can build a road at the desired location, and builds it.
+	 * @param move
+	 * @return the response message to the client
+	 */
+	public byte[] buildCity(BuildCityMove move)
+	{
+		Player p = players.get(move.getColour());
+		Node n = grid.nodes.get(new Point(move.getX(), move.getY()));
+		
+		try
+		{
+			p.upgradeSettlement(n);
+		}
+		catch (CannotUpgradeException e)
+		{
+			// TODO construct error message to give to the server
+			// to be sent to the client
+			e.printStackTrace();
+		}
+		catch (CannotAffordException e2)
+		{
+			// TODO construct error message to give to the server
+			// to be sent to the client
+			e2.printStackTrace();
+		}
+		
+		// return success message
+		return new byte[]{};
+	}
+	
+	/**
+	 * Checks that the player can build a settlement at the desired location, and builds it.
+	 * @param move
+	 * @return the response message to the client
+	 */
+	public byte[] buildSettlement(BuildSettlementMove move)
+	{
+		Player p = players.get(move.getColour());
+		Node n = grid.nodes.get(new Point(move.getX(), move.getY()));
+		
+		try
+		{
+			p.buildSettlement(n);
+		}
+		catch (CannotAffordException e2)
+		{
+			// TODO construct error message to give to the server
+			// to be sent to the client
+			e2.printStackTrace();
+		}
+		
+		// return success message
+		return new byte[]{};
+	}
+	
+	/**
+	 * Checks that the player can build a road at the desired location, and builds it.
+	 * @param move
+	 * @return the response message to the client
+	 */
+	public byte[] buildRoad(BuildRoadMove move)
+	{
+		Player p = players.get(move.getColour());
+		Node n = grid.nodes.get(new Point(move.getX1(), move.getY1()));
+		Node n2 = grid.nodes.get(new Point(move.getX2(), move.getY2()));
+		Edge edge  = null;
+		
+		// Find edge
+		for(Edge e : n.getEdges())
+		{
+			if(e.getX().equals(n2) || e.getY().equals(n2))
+			{
+				edge = e;
+				break;
+			}
+		}
+		
+		try
+		{
+			p.buildRoad(edge);
+		}
+		catch (CannotBuildRoadException e1)
+		{
+			// TODO construct error message to give to the server
+			// to be sent to the client
+			e1.printStackTrace();
+		}
+		catch (CannotAffordException e2)
+		{
+			// TODO construct error message to give to the server
+			// to be sent to the client
+			e2.printStackTrace();
+		}
+		
+		checkLongestRoad();
+		
+		// return success message
+		return new byte[]{};
+	}
+	
+	/**
+	 * Checks who has the longest road
+	 */
+	private void checkLongestRoad()
+	{
+		Player current = players.get(currentPlayer);
+		Player longestRoadPlayer = players.get(playerWithLongestRoad);
+		
+		int length = current.calcRoadLength();
+		if(length > longestRoad)
+		{
+			// Update victory points
+			if(longestRoad >= 5)
+			{
+				current.setVp(current.getVp() + 2);
+				longestRoadPlayer.setVp(longestRoadPlayer.getVp() - 2);
+				longestRoadPlayer.setHasLongestRoad(false);
+				current.setHasLongestRoad(true);
+			}
+			
+			longestRoad = length;
+			playerWithLongestRoad = currentPlayer;
+		}
+	}
+
+	/**
 	 * Toggles a player's turn
 	 */
 	public void changeTurn()
 	{
-		currentPlayer = getPlayers().get(++current % NUM_PLAYERS);
+		currentPlayer = getPlayers()[++current % NUM_PLAYERS];
 	}
 
 	/**
@@ -105,7 +233,7 @@ public class Game
 	 */
 	public void addPlayer(Player player)
 	{
-		this.players.add(player);
+		this.players.put(player.getColour(), player);
 	}
 
 	/**
@@ -116,8 +244,8 @@ public class Game
 		return grid;
 	}
 	
-	public List<Player> getPlayers()
+	public Player[] getPlayers()
 	{
-		return players;
+		return players.values().toArray(new Player[]{});
 	}
 }

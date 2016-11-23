@@ -120,9 +120,9 @@ public class HexGrid
 					Edge e = Edge.makeEdge(node, (Node) neighbour, edges);
 					if (e != null)
 					{
-						e.x.addEdge(e);
-						e.y.addEdge(e);
-						if (e.x.onBoundaries() || e.y.onBoundaries())
+						e.getX().addEdge(e);
+						e.getY().addEdge(e);
+						if (e.getX().onBoundaries() || e.getY().onBoundaries())
 						{
 							potentialPorts.add(e);
 						}

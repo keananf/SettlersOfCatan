@@ -1,6 +1,13 @@
 package main.java.board;
 
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import main.java.game.build.Building;
+import main.java.game.build.Road;
+import main.java.game.build.Settlement;
 
 
 /**
@@ -9,12 +16,12 @@ import java.util.List;
  */
 public class Edge //TODO extend BoardElement
 {
-	Node x, y; // way of uniquely describing an edge
+	private Node x, y; // way of uniquely describing an edge
 	
 	public Edge(Node x, Node y)
 	{
-		this.x = x;
-		this.y = y;
+		this.setX(x);
+		this.setY(y);
 	}
 
 	/**
@@ -25,37 +32,37 @@ public class Edge //TODO extend BoardElement
 	public int distance(Edge other)
 	{
 		Node goal = null, start = null;
-		Node otherX = other.x;
-		Node otherY = other.y;
+		Node otherX = other.getX();
+		Node otherY = other.getY();
 		int xyDistance = 0, yxDistance = 0, xxDistance = 0, yyDistance = 0;
 		
 		// Find raw differences between both nodes of this edge and the nodes of the other edge.
 		// This will determine which is the goal node of the other edge, as well as which node of this edge
 		// to start with.
-		xyDistance = x.getCoordDistance(otherY);
-		yxDistance = y.getCoordDistance(otherX);
-		xxDistance = x.getCoordDistance(otherX);
-		yyDistance = y.getCoordDistance(otherY);
+		xyDistance = getX().getCoordDistance(otherY);
+		yxDistance = getY().getCoordDistance(otherX);
+		xxDistance = getX().getCoordDistance(otherX);
+		yyDistance = getY().getCoordDistance(otherY);
 
 		// Determine start and goal node
 		if(xyDistance <= yxDistance && xyDistance <= xxDistance && xyDistance <= yyDistance)
 		{
-			start = x;
+			start = getX();
 			goal = otherY;
 		}
 		else if(yxDistance <= xyDistance && yxDistance <= xxDistance && yxDistance <= yyDistance)
 		{
-			start = y;
+			start = getY();
 			goal = otherX;
 		}
 		else if(xxDistance <= xyDistance && xxDistance <= yxDistance && xxDistance <= yyDistance)
 		{
-			start = x;
+			start = getX();
 			goal = otherX;
 		}
 		else if(yyDistance <= xyDistance && yyDistance <= xxDistance && yyDistance <= yxDistance)
 		{
-			start = y;
+			start = getY();
 			goal = otherY;
 		}
 		
@@ -81,7 +88,7 @@ public class Edge //TODO extend BoardElement
 		
 		// Find the next closest node adjacent to this one
 		Edge next = findNextNode(node, goalNode);
-		Node nextNode = next.x.equals(node) ? next.y : next.x;
+		Node nextNode = next.getX().equals(node) ? next.getY() : next.getX();
 		return 1 + next.navigate(nextNode, goalNode);
 	}
 	
@@ -100,7 +107,7 @@ public class Edge //TODO extend BoardElement
 		// For each of node's edges except for 'this'
 		for(Edge e : node.getEdges())
 		{
-			Node other = e.x.equals(node) ? e.y : e.x;
+			Node other = e.getX().equals(node) ? e.getY() : e.getX();
 			if(e.equals(this)) continue;
 			
 			if(distance1 == 5000)
@@ -140,7 +147,7 @@ public class Edge //TODO extend BoardElement
 		// Check this edge has not been created before
 		for(Edge other : edges)
 		{
-			if(other.x.equals(e.x) && other.y.equals(e.y))
+			if(other.getX().equals(e.getX()) && other.getY().equals(e.getY()))
 			{
 				duplicate = true;
 			}
@@ -155,9 +162,80 @@ public class Edge //TODO extend BoardElement
 		return null;
 	}
 	
+
+	/**
+	 * Checks that a road is within a distance of two to a settlement
+	 * @param r the road that is attempting to be built
+	 * @return true / false indicating if it is a valid move
+	 */
+	public boolean isNearSettlement(HashMap<Point, Building> settlements)
+	{
+		Node n1 = getX(), n2 = getY();
+		List<Edge> edges = new ArrayList<Edge>();
+		edges.addAll(n1.getEdges());
+		edges.addAll(n2.getEdges());
+		
+		// If there is a settlement on one of its nodes
+		if(settlements.containsKey(new Point(n1.getX(), n1.getY()))
+				|| settlements.containsKey(new Point(n2.getX(), n2.getY())))
+		{
+			return true;
+		}
+		
+		// Check if there is a settlement of distance one away from one of its nodes
+		for(Edge e : edges)
+		{
+			if(e.equals(this)) continue;
+			
+			n1 = e.getX();
+			n2 = e.getY();
+			
+			// If there is a settlement on one of its nodes
+			if(settlements.containsKey(new Point(n1.getX(), n1.getY()))
+					|| settlements.containsKey(new Point(n2.getX(), n2.getY())))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	@Override
 	public boolean equals(Object e)
 	{
-		return ((Edge)e).x.equals(x) && ((Edge)e).y.equals(y); 
+		return ((Edge)e).getX().equals(getX()) && ((Edge)e).getY().equals(getY()); 
+	}
+
+	/**
+	 * @return the x
+	 */
+	public Node getX()
+	{
+		return x;
+	}
+
+	/**
+	 * @param x the x to set
+	 */
+	public void setX(Node x)
+	{
+		this.x = x;
+	}
+
+	/**
+	 * @return the y
+	 */
+	public Node getY()
+	{
+		return y;
+	}
+
+	/**
+	 * @param y the y to set
+	 */
+	public void setY(Node y)
+	{
+		this.y = y;
 	}
 }

@@ -1,4 +1,4 @@
-package board;
+package main.java.board;
 
 import java.util.List;
 

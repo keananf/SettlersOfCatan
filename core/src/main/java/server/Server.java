@@ -1,6 +1,6 @@
-package server;
+package main.java.server;
 
-import game.Game;
+import main.java.game.Game;
 
 import java.io.IOException;
 import java.net.*;

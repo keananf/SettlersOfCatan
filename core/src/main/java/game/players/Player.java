@@ -1,15 +1,15 @@
-package game.players;
+package main.java.game.players;
 
 import java.awt.Point;
 import java.util.*;
 
-import board.Edge;
-import board.Node;
-import game.build.*;
-import game.enums.*;
-import game.exceptions.CannotAffordException;
-import game.exceptions.CannotUpgradeException;
-import game.moves.Move;
+import main.java.board.Edge;
+import main.java.board.Node;
+import main.java.game.build.*;
+import main.java.game.enums.*;
+import main.java.game.exceptions.CannotAffordException;
+import main.java.game.exceptions.CannotUpgradeException;
+import main.java.game.moves.Move;
 
 /**
  * Abstract class describing a player (AI, or network)

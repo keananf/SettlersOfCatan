@@ -1,13 +1,8 @@
-package board;
+package main.java.board;
 
-import game.enums.ResourceType;
+import main.java.game.enums.ResourceType;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Class describing a port

@@ -1,6 +1,6 @@
-package board;
+package main.java.board;
 
-import game.enums.ResourceType;
+import main.java.game.enums.ResourceType;
 
 /**
  * Class representing an individual hex 

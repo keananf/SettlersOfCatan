@@ -1,8 +1,7 @@
-package game.players;
+package main.java.game.players;
 
-import game.enums.Colour;
-import game.moves.BuildSettlementMove;
-import game.moves.Move;
+import main.java.game.enums.Colour;
+import main.java.game.moves.*;
 
 /**
  * Class representing an AI player

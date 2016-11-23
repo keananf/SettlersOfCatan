@@ -1,4 +1,4 @@
-package game.enums;
+package main.java.game.enums;
 
 public enum ResourceType 
 {

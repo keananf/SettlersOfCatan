@@ -1,14 +1,15 @@
-package game;
+package main.java.game;
 
-import game.build.*;
-import game.enums.*;
-import game.moves.*;
-import game.players.*;
+import main.java.game.build.*;
+import main.java.game.enums.*;
+import main.java.game.moves.*;
+import main.java.game.players.*;
 
 import java.awt.Point;
 import java.util.*;
 
-import board.*;
+import main.java.board.Hex;
+import main.java.board.HexGrid;
 
 public class Game
 {

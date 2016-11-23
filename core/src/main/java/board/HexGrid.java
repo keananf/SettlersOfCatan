@@ -1,10 +1,9 @@
-package board;
+package main.java.board;
 
-import game.enums.ResourceType;
+import main.java.game.enums.ResourceType;
 
 import java.awt.Point;
 import java.util.*;
-import java.util.AbstractMap.SimpleEntry;
 
 /**
  * Class describing the hex board

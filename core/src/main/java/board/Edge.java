@@ -1,13 +1,9 @@
 package main.java.board;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
-import main.java.game.build.Building;
-import main.java.game.build.Road;
-import main.java.game.build.Settlement;
+import main.java.game.build.*;
 
 
 /**
@@ -17,6 +13,7 @@ import main.java.game.build.Settlement;
 public class Edge //TODO extend BoardElement
 {
 	private Node x, y; // way of uniquely describing an edge
+	private Road  road;
 	
 	public Edge(Node x, Node y)
 	{
@@ -237,5 +234,21 @@ public class Edge //TODO extend BoardElement
 	public void setY(Node y)
 	{
 		this.y = y;
+	}
+
+	/**
+	 * @return the road
+	 */
+	public Road getRoad()
+	{
+		return road;
+	}
+
+	/**
+	 * @param road the road to set
+	 */
+	public void setRoad(Road road)
+	{
+		this.road = road;
 	}
 }

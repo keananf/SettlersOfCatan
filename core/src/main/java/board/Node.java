@@ -2,6 +2,8 @@ package main.java.board;
 
 import java.util.*;
 
+import main.java.game.build.*;
+
 /**
  * Class representing an individual node in catan (intersection of three hexes)
  * @author 140001596
@@ -9,7 +11,8 @@ import java.util.*;
 public class Node extends BoardElement
 {
 	private List<Hex> hexes;
-	private  List<Edge> edges;
+	private List<Edge> edges;
+	private Building settlement;
 	
 	public Node(int x, int y)
 	{
@@ -113,5 +116,21 @@ public class Node extends BoardElement
 		}
 		
 		return false;
+	}
+
+	/**
+	 * @return the settlement
+	 */
+	public Building getSettlement()
+	{
+		return settlement;
+	}
+
+	/**
+	 * @param settlement the settlement to set
+	 */
+	public void setSettlement(Building settlement)
+	{
+		this.settlement = settlement;
 	}
 }

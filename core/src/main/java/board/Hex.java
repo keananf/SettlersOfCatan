@@ -1,5 +1,8 @@
 package main.java.board;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import main.java.game.enums.ResourceType;
 
 /**
@@ -11,11 +14,13 @@ public class Hex extends BoardElement
 	private ResourceType resource;
 	private int diceRoll;
 	private boolean hasRobber;
+	private List<Node> nodes;
 	
 	public Hex(int x, int y)
 	{
 		super(x, y);
 		resource = ResourceType.None;
+		nodes = new ArrayList<Node>();
 	}
 
 	/**
@@ -58,5 +63,15 @@ public class Hex extends BoardElement
 	public void toggleRobber()
 	{
 		hasRobber = !hasRobber;
+	}
+
+	public List<Node> getNodes()
+	{
+		return nodes;
+	}
+
+	public void addNode(Node node)
+	{
+		nodes.add(node);
 	}
 }

@@ -15,6 +15,7 @@ public class HexGrid
 	public List<Edge> edges; // All edges
 	public List<Port> ports; // All ports
 	public Hashtable<Point, Node> nodes; // All nodes
+	private Hex hexWithRobber;
 	public static final int SIZE_OF_GRID = 5;
 	
 	public HexGrid()
@@ -137,6 +138,10 @@ public class HexGrid
 				}
 			}
 			node.setAdjacentHexes(adjacentHexes);
+			for(Hex hex : adjacentHexes)
+			{
+				hex.addNode(node);
+			}
 		}
 		
 		ports = Port.makePorts(edges, potentialPorts);
@@ -203,6 +208,8 @@ public class HexGrid
 				if(resource == ResourceType.None)
 				{
 					hex.toggleRobber();
+
+					hexWithRobber = hex;
 					return; // Necessary to allow one hex to be 'none'					
 				}
 			}
@@ -227,5 +234,23 @@ public class HexGrid
 			}
 		}
 		
+	}
+	
+	/**
+	 * Swaps robbers with the current hex and the one at x, y
+	 * @param x the hex's x coordinate
+	 * @param y the hex's y coordinate
+	 */
+	public Hex swapRobbers(int x, int y)
+	{
+		Point p = new Point(x, y);
+		Hex hex = grid.get(p);
+		
+		// Swap robbers
+		hexWithRobber.toggleRobber();
+		hexWithRobber = hex;
+		hexWithRobber.toggleRobber();
+		
+		return hexWithRobber;
 	}
 }

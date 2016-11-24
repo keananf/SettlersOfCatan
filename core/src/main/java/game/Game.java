@@ -7,6 +7,7 @@ import main.java.game.moves.*;
 import main.java.game.players.*;
 
 import java.awt.Point;
+import java.net.InetAddress;
 import java.util.*;
 
 import main.java.board.*;
@@ -21,6 +22,7 @@ public class Game
 	private Player p;
 	private Player playerWithLongestRoad;
 	private int longestRoad;
+	private int numPlayers;
 	public static final int NUM_PLAYERS = 4;
 	
 	public Game()
@@ -62,7 +64,7 @@ public class Game
 				for(Hex hex : hexes)
 				{
 					// If the hex's chit is equal to the dice roll
-					if(hex.getChit() == dice)
+					if(hex.getChit() == dice && !hex.hasRobber())
 					{
 						grant.put(hex.getResource(), amount);
 					}
@@ -79,7 +81,7 @@ public class Game
 	 */
 	public byte[] buildCity(BuildCityMove move)
 	{
-		Player p = players.get(move.getColour());
+		Player p = players.get(move.getPlayerColour());
 		Node n = grid.nodes.get(new Point(move.getX(), move.getY()));
 		
 		try
@@ -110,19 +112,35 @@ public class Game
 	 */
 	public byte[] buildSettlement(BuildSettlementMove move)
 	{
-		Player p = players.get(move.getColour());
+		Player p = players.get(move.getPlayerColour());
 		Node n = grid.nodes.get(new Point(move.getX(), move.getY()));
 		
 		try
 		{
 			p.buildSettlement(n);
 		}
-		catch (CannotAffordException e2)
+		catch (CannotAffordException e)
 		{
 			// TODO construct error message to give to the server
 			// to be sent to the client
-			e2.printStackTrace();
+			e.printStackTrace();
 		}
+		
+		// return success message
+		return new byte[]{};
+	}
+	
+	/**
+	 * Moves the robber and takes a card from the player
+	 * who has a settlement on the hex
+	 * @param move the move
+	 * @return success message
+	 */
+	public byte[] moveRobber(MoveRobberMove move)
+	{
+		Hex hexWithRobber = grid.swapRobbers(move.getX(), move.getY());
+		List<Node> nodes = hexWithRobber.getNodes();
+		
 		
 		// return success message
 		return new byte[]{};
@@ -135,7 +153,7 @@ public class Game
 	 */
 	public byte[] buildRoad(BuildRoadMove move)
 	{
-		Player p = players.get(move.getColour());
+		Player p = players.get(move.getPlayerColour());
 		Node n = grid.nodes.get(new Point(move.getX1(), move.getY1()));
 		Node n2 = grid.nodes.get(new Point(move.getX2(), move.getY2()));
 		Edge edge  = null;
@@ -187,14 +205,14 @@ public class Game
 			// Update victory points
 			if(longestRoad >= 5)
 			{
-				current.setVp(current.getVp() + 2);
 				longestRoadPlayer.setVp(longestRoadPlayer.getVp() - 2);
-				longestRoadPlayer.setHasLongestRoad(false);
-				current.setHasLongestRoad(true);
 			}
+			if (length >= 5) current.setVp(current.getVp() + 2);
 			
 			longestRoad = length;
+			longestRoadPlayer.setHasLongestRoad(false);
 			playerWithLongestRoad = currentPlayer;
+			current.setHasLongestRoad(true);
 		}
 	}
 
@@ -229,14 +247,6 @@ public class Game
 	}
 
 	/**
-	 * @param players the players to set
-	 */
-	public void addPlayer(Player player)
-	{
-		this.players.put(player.getColour(), player);
-	}
-
-	/**
 	 * @return the grid
 	 */
 	public HexGrid getGrid()
@@ -247,5 +257,18 @@ public class Game
 	public Player[] getPlayers()
 	{
 		return players.values().toArray(new Player[]{});
+	}
+
+	public void addNetworkPlayer(InetAddress inetAddress)
+	{
+		NetworkPlayer p = new NetworkPlayer(Colour.values()[numPlayers++]);
+		p.setInetAddress(inetAddress);
+		
+		players.put(p.getColour(), p);
+	}
+
+	public void addPlayer(Player p)
+	{
+		players.put(p.getColour(), p);
 	}
 }

@@ -1,6 +1,7 @@
 package main.java.server;
 
 import main.java.game.Game;
+import main.java.game.players.NetworkPlayer;
 
 import java.io.IOException;
 import java.net.*;
@@ -86,8 +87,14 @@ public class Server
 		while(numConnections++ < Game.NUM_PLAYERS)
 		{
 			Socket connection = serverSocket.accept();
-			connections.add(connection);
-			System.out.println(String.format("Player %d connected", numConnections));
+			
+			if (connection != null)
+			{
+				game.addNetworkPlayer(connection.getInetAddress());
+				
+				connections.add(connection);
+				System.out.println(String.format("Player %d connected", numConnections));
+			}
 		}
 		
 		System.out.println("All Players connected. Starting game...\n");

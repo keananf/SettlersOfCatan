@@ -1,28 +1,12 @@
 package main.java.game.moves;
 
-import main.java.game.enums.Colour;
-
 public class BuildRoadMove extends Move
 {
 	private int x1;
 	private int y1;
 	private int x2;
 	private int y2;
-	private Colour colour;
-	/**
-	 * @return the colour
-	 */
-	public Colour getColour()
-	{
-		return colour;
-	}
-	/**
-	 * @param colour the colour to set
-	 */
-	public void setColour(Colour colour)
-	{
-		this.colour = colour;
-	}
+	
 	/**
 	 * @return the x1
 	 */

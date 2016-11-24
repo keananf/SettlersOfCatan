@@ -39,6 +39,12 @@ public class GameTests
 		p.buildSettlement(n);
 	}
 
+	@Test(expected = CannotAffordException.class)
+	public void cannotBuyDevCardTest() throws CannotAffordException
+	{
+		p.buyDevelopmentCard();
+	}
+	
 	@Test(expected = CannotBuildRoadException.class)
 	public void cannotBuildRoadTest() throws CannotAffordException, CannotBuildRoadException
 	{
@@ -118,6 +124,18 @@ public class GameTests
 	}
 
 	@Test
+	public void buyDevelopmentCardTest() throws CannotAffordException
+	{
+		// Test resources grant
+		assertFalse(hasResources(p));
+		p.grantResources(DevelopmentCard.getCardCost());
+		assertTrue(hasResources(p));
+		
+		buyDevelopmentCard();
+		assertTrue(p.getDevelopmentCards().size() > 0);
+	}
+	
+	@Test
 	public void collectResourcesTest()
 	{
 		p.grantResources(Settlement.getSettlementCost());
@@ -131,6 +149,21 @@ public class GameTests
 		assertTrue(p.getResources().get(hex.getResource()) == 1);
 	}
 
+	@Test
+	public void collectResourcesWithRobberTest()
+	{
+		p.grantResources(Settlement.getSettlementCost());
+		game.addPlayer(p);
+
+		makeSettlement(n);
+		hex.toggleRobber();
+
+		// try to collect resources
+		game.allocateResources(hex.getChit());
+		assertFalse(hasResources(p));
+		assertTrue(p.getResources().get(hex.getResource()) == 0);
+	}
+	
 	@Test
 	public void collectResourcesCityTest()
 	{
@@ -212,7 +245,7 @@ public class GameTests
 		assertTrue(p.getSettlements().size() > oldSize);
 		assertFalse(hasResources(p));
 
-		return (Settlement) p.getSettlements().values().toArray()[0];
+		return (Settlement) p.getSettlements().values().toArray()[p.getSettlements().values().size() - 1];
 	}
 
 	private City makeCity(Node n)
@@ -232,7 +265,7 @@ public class GameTests
 		// Test it was built correctly and that resources were taken away
 		assertTrue(p.getSettlements().size() == 1);
 
-		return (City) p.getSettlements().values().toArray()[0];
+		return (City) p.getSettlements().values().toArray()[p.getSettlements().values().size() - 1];
 	}
 
 	private Road buildRoad(Edge e) throws CannotBuildRoadException
@@ -253,7 +286,28 @@ public class GameTests
 		assertTrue(p.getRoads().size() > oldSize);
 		assertFalse(hasResources(p));
 
-		return (Road) p.getRoads().toArray()[0];
+		return p.getRoads().get(p.getRoads().size() - 1);
+	}
+	
+	private DevelopmentCard buyDevelopmentCard() throws CannotAffordException
+	{
+		int oldSize = p.getDevelopmentCards().size();
+		
+		assertTrue(hasResources(p));
+		try
+		{
+			p.buyDevelopmentCard();
+		}
+		catch (CannotAffordException ex)
+		{
+			ex.printStackTrace();
+		}
+
+		// Test it was built correctly and that resources were taken away
+		assertTrue(p.getDevelopmentCards().size() > oldSize);
+		assertFalse(hasResources(p));
+
+		return p.getDevelopmentCards().get(p.getDevelopmentCards().size() - 1);
 	}
 
 	private boolean hasResources(Player p)

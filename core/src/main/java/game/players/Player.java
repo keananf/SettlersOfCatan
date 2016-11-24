@@ -25,7 +25,7 @@ public abstract class Player
 	private HashMap<Point, Building> settlements;
 	private int knightsUsed;
 	private boolean hasLongestRoad;
-	private int longestRoad;
+	private List<DevelopmentCard> cards;
 
 	private static final int THRESHHOLD = 10;
 	
@@ -35,6 +35,7 @@ public abstract class Player
 		roads = new ArrayList<List<Road>>();
 		settlements = new HashMap<Point, Building>();
 		resources = new HashMap<ResourceType, Integer>();
+		cards = new ArrayList<DevelopmentCard>();
 		
 		// Initialise resources
 		for(ResourceType r : ResourceType.values())
@@ -51,7 +52,14 @@ public abstract class Player
 	 */
 	public int calcRoadLength()
 	{	
-		return longestRoad;
+		int longest = 0;
+		for(List<Road> list : roads)
+		{
+			if (list.size() > longest) 
+				longest = list.size();
+		}
+		
+		return longest;
 	}
 
 	/**
@@ -64,7 +72,6 @@ public abstract class Player
 	{
 		boolean valid = false;
 		List<Integer> listsAddedTo = new ArrayList<Integer>();
-		int index = 0;
 		Road r = new Road(edge, colour);
 
 		// Check the location is valid for building and that the player can afford it
@@ -80,11 +87,11 @@ public abstract class Player
 		if(valid || listsAddedTo.size() == 0)
 		{
 			spendResources(r.getCost());
+			edge.setRoad(r);
 			
 			// If not connected to any other roads
 			if (listsAddedTo.size() == 0)
 			{
-				r.setChainLength(1);
 				List<Road> newList = new ArrayList<Road>();
 				newList.add(r);
 				roads.add(newList);
@@ -123,15 +130,6 @@ public abstract class Player
 				{
 					isConnected = true;
 					listsAddedTo.add(index++);
-					
-					// Set r's chain length
-					int current = r.getChainLength() == 0 ? 1 : r.getChainLength();
-					r.setChainLength(current + road.getChainLength());
-	
-					// Update longest road if necessary
-					if (r.getChainLength() > longestRoad)
-						longestRoad = r.getChainLength();
-					
 					break;
 				}
 			}
@@ -141,12 +139,6 @@ public abstract class Player
 			{
 				list.add(r);
 				valid = true;
-				
-				// update all other roads on this path
-				for (Road road : list)
-				{
-					road.setChainLength(road.getChainLength() + 1);
-				}
 			}
 		}
 		
@@ -166,14 +158,9 @@ public abstract class Player
 			List<Road> last = roads.get(listsAddedTo.get(i - 1));
 			List<Road> current = roads.get(listsAddedTo.get(i));
 			
-			// Update longest road if necessary
-			int newSize = last.get(0).getChainLength() + current.get(0).getChainLength() - 1;
-			if (newSize > longestRoad)
-				longestRoad = newSize;
-			
+			// Remove the duplicate road in one of the lists and add it to the other one.
 			last.remove(r);
 			current.addAll(last);
-			current.forEach((road) -> road.setChainLength(newSize));
 			
 			roads.remove(last);
 		}
@@ -188,8 +175,28 @@ public abstract class Player
 	{
 		Settlement s = new Settlement(node, colour);
 		spendResources(s.getCost());
+		node.setSettlement(s);
 		
 		settlements.put(new Point(node.getX(), node.getY()), s);
+	}
+	
+
+	/**
+	 * Attempts to purchase a development card for this player
+	 * @throws CannotAffordException
+	 */
+	public void buyDevelopmentCard() throws CannotAffordException
+	{
+		DevelopmentCard card = DevelopmentCard.chooseRandom();
+		
+		// Try to buy a development card
+		spendResources(card.getCost());		
+		cards.add(card);
+	}
+	
+	public void spendDevelopmentCard()
+	{
+		
 	}
 	
 	/**
@@ -208,6 +215,7 @@ public abstract class Player
 		// Otherwise build city
 		City c = new City(node, colour);
 		spendResources(c.getCost());
+		node.setSettlement(c);
 		
 		settlements.put(p, c);
 	}
@@ -321,6 +329,14 @@ public abstract class Player
 	public HashMap<Point, Building> getSettlements()
 	{
 		return settlements;
+	}
+
+	/**
+	 * @return the development cards in this player's hand
+	 */
+	public List<DevelopmentCard> getDevelopmentCards()
+	{
+		return cards;
 	}
 	
 	/**

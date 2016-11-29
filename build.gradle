@@ -52,7 +52,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.google.protobuf:protobuf-java:$protobufVersion"
-        testCompile "junit:junit:4.12"
+        testCompile "junit:junit:$junitVersion"
     }
 }
 

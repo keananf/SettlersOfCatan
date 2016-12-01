@@ -1,16 +1,16 @@
-package catan;
+package test.java.catan;
 
-import catan.game.build.*;
-import catan.game.enums.*;
-import catan.game.exceptions.*;
-import catan.board.*;
-import catan.game.*;
-import catan.game.players.*;
+import static org.junit.Assert.*;
+import main.java.game.build.*;
+import main.java.game.enums.*;
+import main.java.game.exceptions.*;
+import main.java.board.*;
+import main.java.game.*;
+import main.java.game.players.*;
 
 import java.awt.Point;
 
 import org.junit.*;
-import static org.junit.Assert.*;
 
 public class GameTests
 {
@@ -46,7 +46,7 @@ public class GameTests
 	}
 	
 	@Test(expected = CannotBuildRoadException.class)
-	public void cannotBuildRoadTest() throws CannotAffordException, CannotBuildRoadException
+	public void cannotBuildRoadTest() throws CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
 		// Grant resources for road
 		assertFalse(hasResources(p));
@@ -58,7 +58,7 @@ public class GameTests
 	}
 	
 	@Test(expected = CannotAffordException.class)
-	public void cannotAffordRoadTest() throws CannotAffordException, CannotBuildRoadException
+	public void cannotAffordRoadTest() throws CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
 		// Have to make a settlement before you can build a road
 		assertFalse(hasResources(p));
@@ -88,6 +88,7 @@ public class GameTests
 	@Test(expected = CannotUpgradeException.class)
 	public void cannotBuildCityTest() throws CannotAffordException, CannotUpgradeException
 	{
+		// Cannot build city on node unless a settlement is already there
 		p.upgradeSettlement(n);
 	}
 
@@ -104,7 +105,7 @@ public class GameTests
 	}
 
 	@Test
-	public void buildRoadTest() throws CannotBuildRoadException
+	public void buildRoadTest() throws CannotBuildRoadException, RoadExistsException
 	{
 		// Test resources grant
 		assertFalse(hasResources(p));
@@ -153,8 +154,8 @@ public class GameTests
 	public void collectResourcesWithRobberTest()
 	{
 		p.grantResources(Settlement.getSettlementCost());
-		game.addPlayer(p);
-
+		
+		// Make a settlement and toggle the robber on its hex
 		makeSettlement(n);
 		hex.toggleRobber();
 
@@ -167,32 +168,32 @@ public class GameTests
 	@Test
 	public void collectResourcesCityTest()
 	{
-		game.addPlayer(p);
-
-		// Make settlement
+		// Grant resources for and make settlement
 		p.grantResources(Settlement.getSettlementCost());
 		Settlement s = makeSettlement(n);
 
-		// collect resources
-		game.allocateResources(hex.getChit());
-		assertTrue(hasResources(p));
-		assertTrue(p.getResources().get(hex.getResource()) == 1);
-
-		// Upgrade settlement
+		// Grant resources for and upgrade settlement
 		p.grantResources(City.getCityCost());
 		City c = makeCity(n);
-		assertEquals(c.getNode(), s.getNode());
+		assertEquals(c.getNode(), s.getNode()); // assert the upgrade happened
 
-		// collect resources
+		// collect 2 of this resource
 		game.allocateResources(hex.getChit());
 		assertTrue(hasResources(p));
-		assertTrue(p.getResources().get(hex.getResource()) == 3);
+		assertTrue(p.getResources().get(hex.getResource()) == 2);
 	}
 
+	/**
+	 * Builds roads around a single node, and another somewhere else.
+	 * This test asserts the player has 4 roads but that the length of its 
+	 * longest is 3.
+	 * @throws CannotBuildRoadException
+	 * @throws RoadExistsException 
+	 */
 	@Test 
-	public void roadLengthTest() throws CannotBuildRoadException
+	public void roadLengthTest() throws CannotBuildRoadException, RoadExistsException
 	{
-		Node n2 = game.getGrid().nodes.get(new Point(4,1));
+		Node n2 = game.getGrid().nodes.get(new Point(-1,0));
 		
 		// Make two settlements
 		p.grantResources(Settlement.getSettlementCost());
@@ -268,7 +269,7 @@ public class GameTests
 		return (City) p.getSettlements().values().toArray()[p.getSettlements().values().size() - 1];
 	}
 
-	private Road buildRoad(Edge e) throws CannotBuildRoadException
+	private Road buildRoad(Edge e) throws CannotBuildRoadException, RoadExistsException
 	{
 		int oldSize = p.getRoads().size();
 		
@@ -326,7 +327,32 @@ public class GameTests
 	{
 		game = new Game();
 		p = new NetworkPlayer(Colour.Blue);
-		n = game.getGrid().nodes.get(new Point(-1, 0));
-		hex = n.getHexes().get(0);
+		game.addPlayer(p);
+		
+		
+		// Find hex without 'None'
+		for(int i = 0; i < game.getGrid().nodes.values().size(); i++)
+		{
+			n = (Node) game.getGrid().nodes.values().toArray()[i];
+			hex = n.getHexes().get(0);
+			
+			// for each hex
+			boolean valid = true;
+			for(Hex h : n.getHexes())
+			{				
+				for(Hex h2 : n.getHexes())
+					if(h2.getChit() == h.getChit() && !h.equals(h2))
+					{
+						valid = false;
+						break;
+					}
+				
+			}
+			
+			// Skip if this one isn't the desert
+			if(valid && hex.getResource() != ResourceType.None && !hex.hasRobber())
+				break;
+			
+		}
 	}
 }

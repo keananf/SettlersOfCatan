@@ -1,6 +1,6 @@
 package main.java.game.players;
 
-import main.java.game.enums.Colour;
+import main.java.enums.Colour;
 import main.java.game.moves.*;
 
 /**

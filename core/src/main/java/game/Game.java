@@ -1,8 +1,8 @@
 package main.java.game;
 
+import main.java.enums.*;
+import main.java.exceptions.*;
 import main.java.game.build.*;
-import main.java.game.enums.*;
-import main.java.game.exceptions.*;
 import main.java.game.moves.*;
 import main.java.game.players.*;
 
@@ -17,7 +17,7 @@ public class Game
 	private HexGrid grid;
 	private Map<Colour, Player> players;
 	Random dice;
-	Player currentPlayer;
+	private Player currentPlayer;
 	private int current; // index of current player
 	private Player p;
 	private Player playerWithLongestRoad;
@@ -40,7 +40,7 @@ public class Game
 		int dice = this.dice.nextInt(NUM_PLAYERS);
 		
 		current = dice;
-		currentPlayer = getPlayers()[dice];
+		setCurrentPlayer(getPlayers()[dice]);
 	}
 
 	/**
@@ -79,30 +79,24 @@ public class Game
 	 * @param move
 	 * @return the response message to the client
 	 */
-	public byte[] buildCity(BuildCityMove move)
+	public String upgradeSettlement(UpgradeSettlementMove move)
 	{
 		Player p = players.get(move.getPlayerColour());
 		Node n = grid.nodes.get(new Point(move.getX(), move.getY()));
 		
+		// Try to upgrade settlement
 		try
 		{
 			p.upgradeSettlement(n);
 		}
-		catch (CannotUpgradeException e)
+		catch (CannotUpgradeException | CannotAffordException e)
 		{
-			// TODO construct error message to give to the server
-			// to be sent to the client
-			e.printStackTrace();
-		}
-		catch (CannotAffordException e2)
-		{
-			// TODO construct error message to give to the server
-			// to be sent to the client
-			e2.printStackTrace();
+			// error
+			return e.getMessage();
 		}
 		
 		// return success message
-		return new byte[]{};
+		return "ok";
 	}
 	
 	/**
@@ -110,24 +104,47 @@ public class Game
 	 * @param move
 	 * @return the response message to the client
 	 */
-	public byte[] buildSettlement(BuildSettlementMove move)
+	public String buildSettlement(BuildSettlementMove move)
 	{
 		Player p = players.get(move.getPlayerColour());
 		Node n = grid.nodes.get(new Point(move.getX(), move.getY()));
 		
+		// Try to build settlement
 		try
 		{
-			p.buildSettlement(n);
+			p.buildSettlement(n);//TODO add exception for unable to build (proximity to other settlement
 		}
-		catch (CannotAffordException e)
+		catch (CannotAffordException e) 
 		{
-			// TODO construct error message to give to the server
-			// to be sent to the client
-			e.printStackTrace();
+			return e.getMessage();
 		}
 		
 		// return success message
-		return new byte[]{};
+		return "ok";
+	}
+	
+	
+	/**
+	 * Checks that the player can buy a development card
+	 * @param move
+	 * @return the response message to the client
+	 */
+	public String buyDevelopmentCard(BuyDevelopmentCardMove move)
+	{
+		Player p = players.get(move.getPlayerColour());
+		
+		// Try to buy card
+		try
+		{
+			p.buyDevelopmentCard();
+		}
+		catch (CannotAffordException e) 
+		{
+			return e.getMessage();
+		}
+		
+		// return success message
+		return "ok";
 	}
 	
 	/**
@@ -136,14 +153,17 @@ public class Game
 	 * @param move the move
 	 * @return success message
 	 */
-	public byte[] moveRobber(MoveRobberMove move)
+	public String moveRobber(MoveRobberMove move)
 	{
 		Hex hexWithRobber = grid.swapRobbers(move.getX(), move.getY());
 		List<Node> nodes = hexWithRobber.getNodes();
 		
+		//TODO swap cards with player or something. Verify this player
+		// can take from the specified one
+		// else throw exception?
 		
 		// return success message
-		return new byte[]{};
+		return "ok";
 	}
 	
 	/**
@@ -151,7 +171,7 @@ public class Game
 	 * @param move
 	 * @return the response message to the client
 	 */
-	public byte[] buildRoad(BuildRoadMove move)
+	public String buildRoad(BuildRoadMove move)
 	{
 		Player p = players.get(move.getPlayerColour());
 		Node n = grid.nodes.get(new Point(move.getX1(), move.getY1()));
@@ -172,29 +192,15 @@ public class Game
 		{
 			p.buildRoad(edge);
 		}
-		catch (CannotBuildRoadException e1)
+		catch (CannotBuildRoadException | RoadExistsException | CannotAffordException e)
 		{
-			// TODO construct error message to give to the server
-			// to be sent to the client
-			e1.printStackTrace();
-		}
-		catch (CannotAffordException e2)
-		{
-			// TODO construct error message to give to the server
-			// to be sent to the client
-			e2.printStackTrace();
-		}
-		catch (RoadExistsException e1)
-		{
-			// TODO construct error message to give to the server
-			// to be sent to the client
-			e1.printStackTrace();
+			return e.getMessage();
 		}
 		
 		checkLongestRoad();
 		
 		// return success message
-		return new byte[]{};
+		return "ok";
 	}
 	
 	/**
@@ -202,7 +208,7 @@ public class Game
 	 */
 	private void checkLongestRoad()
 	{
-		Player current = players.get(currentPlayer);
+		Player current = players.get(getCurrentPlayer());
 		Player longestRoadPlayer = players.get(playerWithLongestRoad);
 		
 		int length = current.calcRoadLength();
@@ -217,17 +223,19 @@ public class Game
 			
 			longestRoad = length;
 			longestRoadPlayer.setHasLongestRoad(false);
-			playerWithLongestRoad = currentPlayer;
+			playerWithLongestRoad = getCurrentPlayer();
 			current.setHasLongestRoad(true);
 		}
 	}
 
 	/**
 	 * Toggles a player's turn
+	 * @return 
 	 */
-	public void changeTurn()
+	public String changeTurn()
 	{
-		currentPlayer = getPlayers()[++current % NUM_PLAYERS];
+		setCurrentPlayer(getPlayers()[++current % NUM_PLAYERS]);
+		return "ok";
 	}
 
 	/**
@@ -265,16 +273,34 @@ public class Game
 		return players.values().toArray(new Player[]{});
 	}
 
-	public void addNetworkPlayer(InetAddress inetAddress)
+	public Colour addNetworkPlayer(InetAddress inetAddress)
 	{
 		NetworkPlayer p = new NetworkPlayer(Colour.values()[numPlayers++]);
 		p.setInetAddress(inetAddress);
 		
 		players.put(p.getColour(), p);
+		
+		return p.getColour();
 	}
 
 	public void addPlayer(Player p)
 	{
 		players.put(p.getColour(), p);
+	}
+
+	/**
+	 * @return the currentPlayer
+	 */
+	public Player getCurrentPlayer()
+	{
+		return currentPlayer;
+	}
+
+	/**
+	 * @param currentPlayer the currentPlayer to set
+	 */
+	public void setCurrentPlayer(Player currentPlayer)
+	{
+		this.currentPlayer = currentPlayer;
 	}
 }

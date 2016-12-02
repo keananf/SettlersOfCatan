@@ -1,6 +1,6 @@
 package main.java.game.moves;
 
-import main.java.game.enums.*;
+import main.java.enums.*;
 
 /**
  * Class describing an abstract move type
@@ -9,7 +9,24 @@ import main.java.game.enums.*;
 public abstract class Move
 {
 	private Colour playerColour;
+	private MoveType type;
 	
+	/**
+	 * @return the type
+	 */
+	public MoveType getType()
+	{
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(MoveType type)
+	{
+		this.type = type;
+	}
+
 	/**
 	 * @return the playerColour
 	 */

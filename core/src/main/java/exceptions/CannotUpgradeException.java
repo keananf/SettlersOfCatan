@@ -1,4 +1,4 @@
-package main.java.game.exceptions;
+package main.java.exceptions;
 
 @SuppressWarnings("serial")
 public class CannotUpgradeException extends Exception

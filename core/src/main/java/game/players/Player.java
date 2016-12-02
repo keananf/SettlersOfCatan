@@ -5,12 +5,12 @@ import java.util.*;
 
 import main.java.board.Edge;
 import main.java.board.Node;
+import main.java.enums.*;
+import main.java.exceptions.CannotAffordException;
+import main.java.exceptions.CannotBuildRoadException;
+import main.java.exceptions.CannotUpgradeException;
+import main.java.exceptions.RoadExistsException;
 import main.java.game.build.*;
-import main.java.game.enums.*;
-import main.java.game.exceptions.CannotAffordException;
-import main.java.game.exceptions.CannotBuildRoadException;
-import main.java.game.exceptions.CannotUpgradeException;
-import main.java.game.exceptions.RoadExistsException;
 import main.java.game.moves.Move;
 
 /**
@@ -200,7 +200,7 @@ public abstract class Player
 		cards.add(card);
 	}
 	
-	public void spendDevelopmentCard()
+	public void playDevelopmentCard()
 	{
 		
 	}

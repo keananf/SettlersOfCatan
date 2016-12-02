@@ -1,6 +1,6 @@
 package main.java.game.build;
 
-import main.java.game.enums.*;
+import main.java.enums.*;
 
 import java.util.*;
 

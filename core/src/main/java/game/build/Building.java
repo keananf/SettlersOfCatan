@@ -2,7 +2,7 @@ package main.java.game.build;
 
 import java.util.*;
 
-import main.java.game.enums.*;
+import main.java.enums.*;
 import main.java.board.*;
 
 /**

@@ -1,4 +1,4 @@
-package main.java.game.enums;
+package main.java.enums;
 
 public enum Colour
 {

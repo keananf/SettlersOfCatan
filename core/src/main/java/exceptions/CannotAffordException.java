@@ -1,6 +1,6 @@
-package main.java.game.exceptions;
+package main.java.exceptions;
 
-import main.java.game.enums.ResourceType;
+import main.java.enums.ResourceType;
 
 public class CannotAffordException extends Exception
 {

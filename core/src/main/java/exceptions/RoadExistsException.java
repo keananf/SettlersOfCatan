@@ -1,4 +1,4 @@
-package main.java.game.exceptions;
+package main.java.exceptions;
 
 import main.java.board.*;
 import main.java.game.build.Road;

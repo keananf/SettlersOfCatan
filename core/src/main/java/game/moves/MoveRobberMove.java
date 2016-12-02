@@ -1,6 +1,6 @@
 package main.java.game.moves;
 
-import main.java.game.enums.Colour;
+import main.java.enums.Colour;
 
 public class MoveRobberMove extends Move
 {

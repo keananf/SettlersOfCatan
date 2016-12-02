@@ -1,9 +1,9 @@
 package test.java.catan;
 
 import static org.junit.Assert.*;
+import main.java.enums.*;
+import main.java.exceptions.*;
 import main.java.game.build.*;
-import main.java.game.enums.*;
-import main.java.game.exceptions.*;
 import main.java.board.*;
 import main.java.game.*;
 import main.java.game.players.*;

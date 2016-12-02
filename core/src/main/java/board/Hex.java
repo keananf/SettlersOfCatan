@@ -3,7 +3,7 @@ package main.java.board;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.game.enums.ResourceType;
+import main.java.enums.ResourceType;
 
 /**
  * Class representing an individual hex 

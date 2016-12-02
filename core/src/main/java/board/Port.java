@@ -1,6 +1,6 @@
 package main.java.board;
 
-import main.java.game.enums.ResourceType;
+import main.java.enums.ResourceType;
 
 import java.util.*;
 

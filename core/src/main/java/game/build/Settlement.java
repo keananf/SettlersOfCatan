@@ -48,6 +48,9 @@ public class Settlement extends Building
 			Node other = e.getX().equals(node) ? e.getY() : e.getX();
 			for(Edge e2 : other.getEdges())
 			{
+				// Skip 'e' as checking it is redundant
+				if(e2.equals(e)) continue;
+				
 				// If either of these nodes have a settlement, return true
 				if(e2.getX().getSettlement() != null || e2.getY().getSettlement() != null)
 					return true;

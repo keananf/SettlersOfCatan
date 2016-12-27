@@ -16,6 +16,6 @@ public class CannotAffordException extends Exception
 
 	public String getMessage()
 	{
-		return String.format("Cannot afford resource: %s. Cost: %d, Player has: %d", resource.toString(), cost, existing);
+		return String.format("Cannot afford due to resource: %s. Cost: %d, Player has: %d", resource.toString(), cost, existing);
 	}
 }

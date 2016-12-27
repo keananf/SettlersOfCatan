@@ -3,6 +3,8 @@ package main.java.server;
 import main.java.enums.Colour;
 import main.java.enums.MoveType;
 import main.java.game.Game;
+import main.java.game.build.DevelopmentCard;
+import main.java.comm.DevelopmentCardSerialiser;
 import main.java.comm.Request;
 import main.java.comm.Response;
 import main.java.comm.ResponseSerialiser;
@@ -121,7 +123,12 @@ public class Server
 				response = game.upgradeSettlement(requestDeserialiser.getUpgradeSettlementMove(bytes));
 				break;
 			case BuyDevelopmentCard:
-				response = game.buyDevelopmentCard(requestDeserialiser.getBuyDevelopmentCardMove(bytes));
+				DevelopmentCard c = null;
+				response = game.buyDevelopmentCard(requestDeserialiser.getBuyDevelopmentCardMove(bytes), c);
+				bytes = DevelopmentCardSerialiser.serialise(c).getBytes();
+				break;
+			case PlayDevelopmentCard:
+				response = game.playDevelopmentCard(requestDeserialiser.getPlayDevelopmentCardMove(bytes));
 				break;
 			case EndMove:
 				response = game.changeTurn();			

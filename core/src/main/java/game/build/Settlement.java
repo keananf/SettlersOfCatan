@@ -4,6 +4,7 @@ import main.java.enums.*;
 
 import java.util.*;
 
+import main.java.board.Edge;
 import main.java.board.Node;
 
 /**
@@ -34,6 +35,30 @@ public class Settlement extends Building
 		return resources;
 	}
 
+	/**
+	 * Checks all nodes within two to check if any have a settlement
+	 * @return true if this settlement is near another
+	 */
+	public boolean isNearSettlement()
+	{
+		// Check all paths from this node
+		for(Edge e : node.getEdges())
+		{
+			// Get other node on this edge, check it and all its paths
+			Node other = e.getX().equals(node) ? e.getY() : e.getX();
+			for(Edge e2 : other.getEdges())
+			{
+				// If either of these nodes have a settlement, return true
+				if(e2.getX().getSettlement() != null || e2.getY().getSettlement() != null)
+					return true;
+			}
+			
+		}
+		
+		// Not near any settlements
+		return false;
+	}
+	
 	public static Map<ResourceType, Integer> getSettlementCost()
 	{
 		return new Settlement().getCost();

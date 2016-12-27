@@ -91,11 +91,11 @@ public class Game
 		}
 		catch (CannotUpgradeException | CannotAffordException e)
 		{
-			// error
+			// Error
 			return e.getMessage();
 		}
 		
-		// return success message
+		// Return success message
 		return "ok";
 	}
 	
@@ -112,38 +112,65 @@ public class Game
 		// Try to build settlement
 		try
 		{
-			p.buildSettlement(n);//TODO add exception for unable to build (proximity to other settlement
+			p.buildSettlement(n);
 		}
-		catch (CannotAffordException e) 
+		catch (IllegalPlacementException | CannotAffordException e) 
 		{
+			// Error
 			return e.getMessage();
 		}
 		
-		// return success message
+		// Return success message
 		return "ok";
 	}
-	
 	
 	/**
 	 * Checks that the player can buy a development card
 	 * @param move
 	 * @return the response message to the client
 	 */
-	public String buyDevelopmentCard(BuyDevelopmentCardMove move)
+	public String playDevelopmentCard(PlayDevelopmentCardMove move)
 	{
 		Player p = players.get(move.getPlayerColour());
+		
+		// Try to play card
+		try
+		{
+			p.playDevelopmentCard(move.getCard());
+		}
+		catch (DoesNotOwnException e) 
+		{
+			// Error
+			return e.getMessage();
+		}
+		
+		// Return success message
+		return "ok";
+	}
+	
+	/**
+	 * Checks that the player can buy a development card
+	 * @param move
+	 * @return the response message to the client
+	 */
+	public String buyDevelopmentCard(BuyDevelopmentCardMove move, DevelopmentCard card)
+	{
+		Player p = players.get(move.getPlayerColour());
+		DevelopmentCard c = null;
 		
 		// Try to buy card
 		try
 		{
-			p.buyDevelopmentCard();
+			c = p.buyDevelopmentCard();
 		}
 		catch (CannotAffordException e) 
 		{
+			// Error
 			return e.getMessage();
 		}
 		
-		// return success message
+		// Return with "ok" status and set the card parameter
+		card = c;
 		return "ok";
 	}
 	
@@ -155,6 +182,7 @@ public class Game
 	 */
 	public String moveRobber(MoveRobberMove move)
 	{
+		// Swap robber and retrieve the new hex it's been moved to.
 		Hex hexWithRobber = grid.swapRobbers(move.getX(), move.getY());
 		List<Node> nodes = hexWithRobber.getNodes();
 		

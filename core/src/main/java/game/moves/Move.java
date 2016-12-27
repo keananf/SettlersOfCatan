@@ -9,23 +9,6 @@ import main.java.enums.*;
 public abstract class Move
 {
 	private Colour playerColour;
-	private MoveType type;
-	
-	/**
-	 * @return the type
-	 */
-	public MoveType getType()
-	{
-		return type;
-	}
-
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(MoveType type)
-	{
-		this.type = type;
-	}
 
 	/**
 	 * @return the playerColour

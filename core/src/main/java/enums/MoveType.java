@@ -6,6 +6,7 @@ public enum MoveType //TODO complete
 	BuildSettlement,
 	UpgradeSettlement,
 	MoveRobber,
-	BuyDevelopmentCard, 
+	BuyDevelopmentCard,
+	PlayDevelopmentCard,
 	EndMove
 }

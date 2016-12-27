@@ -11,7 +11,7 @@ import main.java.board.*;
  */
 public abstract class Building implements IBuildable
 {
-	private Node node;
+	protected Node node;
 	private Colour playerColour;
 	
 	public Building(Node node, Colour colour)

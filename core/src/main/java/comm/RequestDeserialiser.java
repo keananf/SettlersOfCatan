@@ -65,8 +65,6 @@ public class RequestDeserialiser implements JsonDeserializer<Request>
 	{
 		GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeHierarchyAdapter(BuildSettlementMove.class, new BuildSettlementMoveDeserialiser());
-		builder.registerTypeHierarchyAdapter(UpgradeSettlementMove.class, new UpgradeSettlementMoveDeserialiser());
-		builder.registerTypeHierarchyAdapter(MoveRobberMove.class, new MoveRobberMoveDeserialiser());
 		Gson gson = builder.create();
 
 		return gson.fromJson(bytes.toString(), BuildSettlementMove.class);
@@ -81,7 +79,6 @@ public class RequestDeserialiser implements JsonDeserializer<Request>
 	{
 		GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeHierarchyAdapter(UpgradeSettlementMove.class, new UpgradeSettlementMoveDeserialiser());
-		builder.registerTypeHierarchyAdapter(MoveRobberMove.class, new MoveRobberMoveDeserialiser());
 		Gson gson = builder.create();
 
 		return gson.fromJson(bytes.toString(), UpgradeSettlementMove .class);
@@ -99,6 +96,20 @@ public class RequestDeserialiser implements JsonDeserializer<Request>
 		Gson gson = builder.create();
 
 		return gson.fromJson(bytes.toString(), MoveRobberMove.class);
+	}
+
+	/**
+	 * Deserialises the bytes as a PlayDevelopmentCardMove
+	 * @param bytes the move
+	 * @return the move
+	 */
+	public PlayDevelopmentCardMove getPlayDevelopmentCardMove(byte[] bytes)
+	{
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeHierarchyAdapter(PlayDevelopmentCardMove.class, new PlayDevelopmentCardMoveDeserialiser());
+		Gson gson = builder.create();
+
+		return gson.fromJson(bytes.toString(), PlayDevelopmentCardMove.class);
 	}
 	
 	/**

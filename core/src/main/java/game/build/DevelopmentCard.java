@@ -1,6 +1,6 @@
 package main.java.game.build;
 
-import main.java.enums.ResourceType;
+import main.java.enums.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,15 +10,10 @@ import java.util.Random;
  * Enum representing the different options of a development card
  * @author 140001596
  */
-public enum DevelopmentCard implements IBuildable //TODO change to normal inheritance?
+public class DevelopmentCard implements IBuildable //TODO change to normal inheritance?
 {
-	Knight, // Steal 1 resource from 
-	Library, // 1 VP
-	University, // 1 VP
-	YearOfPlenty, // Gain any 2 resources from the bank
-	RoadBuilding, // Build two new roads
-	Monopoly; // Every player must give over all resources of a particular type
-	
+	private DevelopmentCardType type;
+	private Colour colour;
 	private static Random rand;
 	
 	static
@@ -42,12 +37,49 @@ public enum DevelopmentCard implements IBuildable //TODO change to normal inheri
 	
 	public static Map<ResourceType, Integer> getCardCost()
 	{
-		return DevelopmentCard.Knight.getCost();
+		return (new DevelopmentCard()).getCost();
 	}
 
-	public static DevelopmentCard chooseRandom()
+	public static DevelopmentCard chooseRandom(Colour colour)
 	{
+		DevelopmentCard c = new DevelopmentCard();
+
 		// Randomly choose a development card to allocate
-		return DevelopmentCard.values()[rand.nextInt(DevelopmentCard.values().length)];
+		c.type = DevelopmentCardType.values()[rand.nextInt(DevelopmentCardType.values().length)];
+		c.colour = colour;
+		
+		return c;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public DevelopmentCardType getType()
+	{
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(DevelopmentCardType type)
+	{
+		this.type = type;
+	}
+
+	/**
+	 * @return the colour
+	 */
+	public Colour getColour()
+	{
+		return colour;
+	}
+
+	/**
+	 * @param colour the colour to set
+	 */
+	public void setColour(Colour colour)
+	{
+		this.colour = colour;
 	}
 }

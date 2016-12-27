@@ -6,12 +6,10 @@ import java.util.*;
 import main.java.board.Edge;
 import main.java.board.Node;
 import main.java.enums.*;
-import main.java.exceptions.CannotAffordException;
-import main.java.exceptions.CannotBuildRoadException;
-import main.java.exceptions.CannotUpgradeException;
-import main.java.exceptions.RoadExistsException;
+import main.java.exceptions.*;
 import main.java.game.build.*;
 import main.java.game.moves.Move;
+import main.java.game.moves.PlayDevelopmentCardMove;
 
 /**
  * Abstract class describing a player (AI, or network)
@@ -26,7 +24,7 @@ public abstract class Player
 	private HashMap<Point, Building> settlements;
 	private int knightsUsed;
 	private boolean hasLongestRoad;
-	private List<DevelopmentCard> cards;
+	private HashMap<DevelopmentCardType, List<DevelopmentCard>> cards;
 
 	private static final int THRESHHOLD = 10;
 	
@@ -36,7 +34,7 @@ public abstract class Player
 		roads = new ArrayList<List<Road>>();
 		settlements = new HashMap<Point, Building>();
 		resources = new HashMap<ResourceType, Integer>();
-		cards = new ArrayList<DevelopmentCard>();
+		cards = new HashMap<DevelopmentCardType, List<DevelopmentCard>>();
 		
 		// Initialise resources
 		for(ResourceType r : ResourceType.values())
@@ -177,9 +175,17 @@ public abstract class Player
 	 * @param node the node to build the settlement on
 	 * @throws CannotAffordException
 	 */
-	public void buildSettlement(Node node) throws CannotAffordException
+	public void buildSettlement(Node node) throws CannotAffordException, IllegalPlacementException
 	{
 		Settlement s = new Settlement(node, colour);
+		
+		// Check if within two nodes of any other settlement
+		if(s.isNearSettlement())
+		{
+			throw new IllegalPlacementException(s);
+		}
+		
+		// If valid placement, attempt to spend the required resources
 		spendResources(s.getCost());
 		node.setSettlement(s);
 		
@@ -189,20 +195,38 @@ public abstract class Player
 
 	/**
 	 * Attempts to purchase a development card for this player
+	 * @return the bought development card
 	 * @throws CannotAffordException
 	 */
-	public void buyDevelopmentCard() throws CannotAffordException
+	public DevelopmentCard buyDevelopmentCard() throws CannotAffordException
 	{
-		DevelopmentCard card = DevelopmentCard.chooseRandom();
+		DevelopmentCard card = DevelopmentCard.chooseRandom(colour);
+		List<DevelopmentCard> existing = cards.containsKey(card) ? cards.get(card) : new ArrayList<DevelopmentCard>();
 		
 		// Try to buy a development card
-		spendResources(card.getCost());		
-		cards.add(card);
+		spendResources(card.getCost());
+		existing.add(card);
+		cards.put(card.getType(), existing);
+		
+		return card;
 	}
 	
-	public void playDevelopmentCard()
+	/**
+	 * Attempts to play the development card for this player
+	 * @param card the development card to play
+	 * @throws DoesNotOwnException if the user does not own the given card
+	 */
+	public void playDevelopmentCard(DevelopmentCard card) throws DoesNotOwnException
 	{
+		// Check if the player owns the given card
+		if(!cards.containsKey(card.getType()))
+		{
+			throw new DoesNotOwnException(card);
+		}
 		
+		// Remove from inventory and apply effects
+		List<DevelopmentCard> existing = cards.get(card.getType());
+		existing.remove(existing.size() - 1);
 	}
 	
 	/**
@@ -341,7 +365,7 @@ public abstract class Player
 	/**
 	 * @return the development cards in this player's hand
 	 */
-	public List<DevelopmentCard> getDevelopmentCards()
+	public HashMap<DevelopmentCardType, List<DevelopmentCard>> getDevelopmentCards()
 	{
 		return cards;
 	}

@@ -12,13 +12,8 @@ import java.awt.Point;
 
 import org.junit.*;
 
-public class GameTests
+public class GameTests extends TestHelper
 {
-	Game game;
-	Player p;
-	Node n;
-	Hex hex;
-
 	@Before
 	public void setUp()
 	{
@@ -34,15 +29,9 @@ public class GameTests
 	}
 
 	@Test(expected = CannotAffordException.class)
-	public void cannotBuildSettlementTest() throws CannotAffordException
+	public void cannotBuildSettlementTest() throws CannotAffordException, IllegalPlacementException
 	{
 		p.buildSettlement(n);
-	}
-
-	@Test(expected = CannotAffordException.class)
-	public void cannotBuyDevCardTest() throws CannotAffordException
-	{
-		p.buyDevelopmentCard();
 	}
 	
 	@Test(expected = CannotBuildRoadException.class)
@@ -103,6 +92,28 @@ public class GameTests
 		// Build settlement
 		makeSettlement(n);
 	}
+	
+	@Test(expected = IllegalPlacementException.class)
+	public void buildNearSettlementTest() throws IllegalPlacementException
+	{
+		// Grant resources and build first settlement
+		p.grantResources(Settlement.getSettlementCost());
+		makeSettlement(n);
+		
+		// Find adjacent node
+		Node x = n.getEdges().get(0).getX(), y = n.getEdges().get(0).getY();
+		Node n2 = x.equals(n) ? y : x;
+		try
+		{
+			// Grant resources and try to build a settlement
+			p.grantResources(Settlement.getSettlementCost());
+			p.buildSettlement(n);
+		}
+		catch (CannotAffordException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	@Test
 	public void buildRoadTest() throws CannotBuildRoadException, RoadExistsException
@@ -122,18 +133,6 @@ public class GameTests
 		
 		// Build road
 		buildRoad(n.getEdges().get(0));
-	}
-
-	@Test
-	public void buyDevelopmentCardTest() throws CannotAffordException
-	{
-		// Test resources grant
-		assertFalse(hasResources(p));
-		p.grantResources(DevelopmentCard.getCardCost());
-		assertTrue(hasResources(p));
-		
-		buyDevelopmentCard();
-		assertTrue(p.getDevelopmentCards().size() > 0);
 	}
 	
 	@Test
@@ -221,138 +220,5 @@ public class GameTests
 		assertEquals(4, p.getRoads().size());
 		assertEquals(3, p.calcRoadLength());
 	}
-	
-	
-	
-	////////////////////
-	// HELPER METHODS //
-	////////////////////
-	private Settlement makeSettlement(Node n)
-	{
-		assertTrue(hasResources(p));
-		int oldSize = p.getSettlements().size();
-		
-		// Build settlement
-		try
-		{
-			p.buildSettlement(n);
-		}
-		catch (CannotAffordException e)
-		{
-			e.printStackTrace();
-		}
 
-		// Test it was built correctly and that resources were taken away
-		assertTrue(p.getSettlements().size() > oldSize);
-		assertFalse(hasResources(p));
-
-		return (Settlement) p.getSettlements().values().toArray()[p.getSettlements().values().size() - 1];
-	}
-
-	private City makeCity(Node n)
-	{
-		assertTrue(hasResources(p));
-
-		// Build settlement
-		try
-		{
-			p.upgradeSettlement(n);
-		}
-		catch (CannotAffordException | CannotUpgradeException e)
-		{
-			e.printStackTrace();
-		}
-
-		// Test it was built correctly and that resources were taken away
-		assertTrue(p.getSettlements().size() == 1);
-
-		return (City) p.getSettlements().values().toArray()[p.getSettlements().values().size() - 1];
-	}
-
-	private Road buildRoad(Edge e) throws CannotBuildRoadException, RoadExistsException
-	{
-		int oldSize = p.getRoads().size();
-		
-		assertTrue(hasResources(p));
-		try
-		{
-			p.buildRoad(e);
-		}
-		catch (CannotAffordException ex)
-		{
-			ex.printStackTrace();
-		}
-
-		// Test it was built correctly and that resources were taken away
-		assertTrue(p.getRoads().size() > oldSize);
-		assertFalse(hasResources(p));
-
-		return p.getRoads().get(p.getRoads().size() - 1);
-	}
-	
-	private DevelopmentCard buyDevelopmentCard() throws CannotAffordException
-	{
-		int oldSize = p.getDevelopmentCards().size();
-		
-		assertTrue(hasResources(p));
-		try
-		{
-			p.buyDevelopmentCard();
-		}
-		catch (CannotAffordException ex)
-		{
-			ex.printStackTrace();
-		}
-
-		// Test it was built correctly and that resources were taken away
-		assertTrue(p.getDevelopmentCards().size() > oldSize);
-		assertFalse(hasResources(p));
-
-		return p.getDevelopmentCards().get(p.getDevelopmentCards().size() - 1);
-	}
-
-	private boolean hasResources(Player p)
-	{
-		for(ResourceType r : p.getResources().keySet())
-		{
-			if(p.getResources().get(r) > 0)
-				return true;
-		}
-
-		return false;
-	}
-
-
-	private void reset()
-	{
-		game = new Game();
-		p = new NetworkPlayer(Colour.Blue);
-		game.addPlayer(p);
-		
-		
-		// Find hex without 'None'
-		for(int i = 0; i < game.getGrid().nodes.values().size(); i++)
-		{
-			n = (Node) game.getGrid().nodes.values().toArray()[i];
-			hex = n.getHexes().get(0);
-			
-			// for each hex
-			boolean valid = true;
-			for(Hex h : n.getHexes())
-			{				
-				for(Hex h2 : n.getHexes())
-					if(h2.getChit() == h.getChit() && !h.equals(h2))
-					{
-						valid = false;
-						break;
-					}
-				
-			}
-			
-			// Skip if this one isn't the desert
-			if(valid && hex.getResource() != ResourceType.None && !hex.hasRobber())
-				break;
-			
-		}
-	}
 }

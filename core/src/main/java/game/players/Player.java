@@ -290,6 +290,20 @@ public abstract class Player
 	}
 	
 	/**
+	 * @return the total number of resource cards the player has
+	 */
+	public int getNumResources()
+	{
+		int sum = 0;
+		for (ResourceType r : getResources().keySet())
+		{
+			sum += getResources().get(r);
+		}
+
+		return sum;
+	}
+	
+	/**
 	 * Checks to see if the user canAfford something
 	 * @param cost
 	 * @throws CannotAffordException
@@ -345,7 +359,7 @@ public abstract class Player
 	{
 		return vp >= THRESHHOLD;
 	}
-
+	
 	/**
 	 * @return the player's resources
 	 */
@@ -398,4 +412,5 @@ public abstract class Player
 	{
 		this.hasLongestRoad = hasLongestRoad;
 	}
+
 }

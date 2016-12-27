@@ -1,14 +1,7 @@
 package test.java.catan;
 
 import static org.junit.Assert.*;
-import main.java.enums.*;
-import main.java.exceptions.*;
 import main.java.game.build.*;
-import main.java.board.*;
-import main.java.game.*;
-import main.java.game.players.*;
-
-import java.awt.Point;
 
 import org.junit.*;
 
@@ -54,6 +47,19 @@ public class GameAndResourcesTests extends TestHelper
 		game.allocateResources(hex.getChit());
 		assertFalse(hasResources(p));
 		assertTrue(p.getResources().get(hex.getResource()) == 0);
+	}
+	
+	@Test
+	public void loseResourcesTest() // If you have over 7 resources, and a 7 is rolled
+	{		
+		// Grant the player over 7 resources
+		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(Settlement.getSettlementCost());
+		assertTrue(p.getNumResources() >= 7);
+
+		// A '7' is rolled, so this player must lose it's excess resources
+		game.allocateResources(7);
+		assertTrue(p.getNumResources() == 7);
 	}
 	
 	@Test

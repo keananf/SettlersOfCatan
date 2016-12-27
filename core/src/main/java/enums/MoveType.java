@@ -1,12 +1,13 @@
 package main.java.enums;
 
-public enum MoveType //TODO complete
+public enum MoveType
 {
 	BuildRoad,
 	BuildSettlement,
-	UpgradeSettlement,
-	MoveRobber,
 	BuyDevelopmentCard,
+	EndMove,
+	MoveRobber,
 	PlayDevelopmentCard,
-	EndMove
+	TradeMove, // TODO
+	UpgradeSettlement,
 }

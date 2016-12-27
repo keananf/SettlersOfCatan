@@ -111,7 +111,6 @@ public class TestHelper
 		return false;
 	}
 
-
 	protected void reset()
 	{
 		game = new Game();

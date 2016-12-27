@@ -31,7 +31,7 @@ public class SettlementAndCityTests extends TestHelper
 		assertTrue(hasResources(p));
 
 		// Build settlement
-		Settlement s = makeSettlement(n);
+		makeSettlement(n);
 
 		p.upgradeSettlement(n);
 	}

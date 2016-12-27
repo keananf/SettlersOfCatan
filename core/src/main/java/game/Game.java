@@ -49,12 +49,21 @@ public class Game
 	 */
 	public void allocateResources(int dice)
 	{
+		int resourceLimit = 7;
+		
 		// for each player
 		for(Player player : getPlayers())
 		{
 			Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 			
-			// for each of the players settlements
+			// If 7, check that no one is above the resource limit
+			if(dice == resourceLimit)
+			{
+				checkResources(player);
+				continue;
+			}
+			
+			// for each of this player's settlements
 			for(Building building : player.getSettlements().values())
 			{
 				int amount = building instanceof City ? 2 : 1;
@@ -72,6 +81,33 @@ public class Game
 			}
 			player.grantResources(grant); // Will be overriden in each type of player's implementation
 		}
+	}
+
+	/**
+	 * Checks if a player has more than 7 resource cards.
+	 * 
+	 * If so, cards are randomly removed until the player has 7 again.
+	 * @param player the player
+	 */
+	private void checkResources(Player player)
+	{
+		Random rand = new Random();
+		int resourceLimit = 7;
+		int numResources = player.getNumResources();
+		Map<ResourceType, Integer> resources = player.getResources();
+		
+		// Remove resources until the cap is reached
+		while(numResources > resourceLimit)
+		{
+			ResourceType key = (ResourceType) resources.keySet().toArray()[rand.nextInt(resources.size())];
+			
+			if(resources.get(key) > 0)
+			{
+				resources.put(key, resources.get(key) - 1);
+				numResources--;
+			}
+		}
+		
 	}
 
 	/**

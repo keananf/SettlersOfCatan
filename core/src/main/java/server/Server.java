@@ -4,6 +4,7 @@ import main.java.enums.Colour;
 import main.java.enums.MoveType;
 import main.java.game.Game;
 import main.java.game.build.DevelopmentCard;
+import main.java.game.moves.PlayDevelopmentCardMove;
 import main.java.comm.DevelopmentCardSerialiser;
 import main.java.comm.Request;
 import main.java.comm.Response;
@@ -105,30 +106,31 @@ public class Server
 		String response = null;	
 		Request req = requestDeserialiser.deserialise(bytes);
 		Response resp = new Response();
+		byte[] rawMsg = req.getMsg().getBytes();
 		
 		// Switch on message type to interpret the move, then process the move
 		// and receive the response
 		switch(req.getType())
 		{
 			case BuildRoad:
-				response = game.buildRoad(requestDeserialiser.getBuildRoadMove(bytes));
+				response = game.buildRoad(requestDeserialiser.getBuildRoadMove(rawMsg));
 				break;
 			case BuildSettlement:
-				response = game.buildSettlement(requestDeserialiser.getBuildSettlementMove(bytes));
+				response = game.buildSettlement(requestDeserialiser.getBuildSettlementMove(rawMsg));
 				break;
 			case MoveRobber:
-				response = game.moveRobber(requestDeserialiser.getMoveRobberMove(bytes));
+				response = game.moveRobber(requestDeserialiser.getMoveRobberMove(rawMsg));
 				break;
 			case UpgradeSettlement:
-				response = game.upgradeSettlement(requestDeserialiser.getUpgradeSettlementMove(bytes));
+				response = game.upgradeSettlement(requestDeserialiser.getUpgradeSettlementMove(rawMsg));
 				break;
 			case BuyDevelopmentCard:
 				DevelopmentCard c = null;
-				response = game.buyDevelopmentCard(requestDeserialiser.getBuyDevelopmentCardMove(bytes), c);
-				bytes = DevelopmentCardSerialiser.serialise(c).getBytes();
+				response = game.buyDevelopmentCard(requestDeserialiser.getBuyDevelopmentCardMove(rawMsg), c);
+				rawMsg = DevelopmentCardSerialiser.serialise(c).getBytes();
 				break;
 			case PlayDevelopmentCard:
-				response = game.playDevelopmentCard(requestDeserialiser.getPlayDevelopmentCardMove(bytes));
+				response = processDevelopmentCard(requestDeserialiser.getPlayDevelopmentCardMove(rawMsg));
 				break;
 			case EndMove:
 				response = game.changeTurn();			
@@ -142,12 +144,56 @@ public class Server
 		// Set up response object
 		resp.setType(req.getType());
 		resp.setResponse(response);
-		resp.setMsg(bytes.toString());
+		resp.setMsg(rawMsg.toString());
 		
 		// Return response to be sent back to clients
 		return resp;
 	}
 	
+	/**
+	 * Processes the type of development card being played
+	 * @param move the move
+	 * @return the response
+	 */
+	private String processDevelopmentCard(PlayDevelopmentCardMove move)
+	{
+		//TODO rollback if individual component in overall move fails
+		
+		// Update player's inventory and ensure card can be played
+		String response = game.playDevelopmentCard(move);
+		if(response.equals("ok"))
+		{
+			// If valid, process internal message 
+			byte[] bytes = move.getMoveAsJson().getBytes();
+			switch(move.getCard().getType())
+			{
+				case Knight:
+					response = game.moveRobber(requestDeserialiser.getMoveRobberMove(bytes));
+					break;
+				case Library:
+					response = game.playLibraryCard();
+					break;
+				case University:
+					response = game.playUniversityCard();
+					break;
+				case Monopoly:
+					response = game.playMonopolyCard(requestDeserialiser.getPlayMonopolyCardMove(bytes));
+					break;
+				case RoadBuilding:
+					response = game.playBuildRoadsCard(requestDeserialiser.getPlayRoadBuildingCardMove(bytes));
+					break;
+				case YearOfPlenty:
+					response =  game.playYearOfPlentyCard(requestDeserialiser.getPlayYearOfPlentyCardMove(bytes));
+					break;
+				default:
+					break;
+				
+			}
+		}
+		
+		return response;
+	}
+
 	/**
 	 * Sends response out to each client so that they may
 	 * update their boards

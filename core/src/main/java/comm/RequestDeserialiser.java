@@ -125,4 +125,46 @@ public class RequestDeserialiser implements JsonDeserializer<Request>
 
 		return gson.fromJson(bytes.toString(), BuyDevelopmentCardMove.class);
 	}
+
+	/**
+	 * Deserialises the bytes as a PlayMonopolyCardMove
+	 * @param bytes the move
+	 * @return the move
+	 */
+	public PlayMonopolyCardMove getPlayMonopolyCardMove(byte[] bytes)
+	{
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeHierarchyAdapter(PlayMonopolyCardMove.class, new PlayMonopolyCardMoveDeserialiser());
+		Gson gson = builder.create();
+
+		return gson.fromJson(bytes.toString(), PlayMonopolyCardMove.class);
+	}
+
+	/**
+	 * Deserialises the bytes as a PlayYearOfPlentyCardMove 
+	 * @param bytes the move
+	 * @return the move
+	 */
+	public PlayYearOfPlentyCardMove getPlayYearOfPlentyCardMove(byte[] bytes)
+	{
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeHierarchyAdapter(PlayYearOfPlentyCardMove.class, new PlayYearOfPlentyCardMoveDeserialiser());
+		Gson gson = builder.create();
+
+		return gson.fromJson(bytes.toString(), PlayYearOfPlentyCardMove.class);
+	}
+	
+	/**
+	 * Deserialises the bytes as a PlayRoadBuildingCardMove 
+	 * @param bytes the move
+	 * @return the move
+	 */
+	public PlayRoadBuildingCardMove getPlayRoadBuildingCardMove(byte[] bytes)
+	{
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeHierarchyAdapter(PlayRoadBuildingCardMove.class, new PlayRoadBuildingCardMoveDeserialiser());
+		Gson gson = builder.create();
+
+		return gson.fromJson(bytes.toString(), PlayRoadBuildingCardMove.class);
+	}
 }

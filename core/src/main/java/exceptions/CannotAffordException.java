@@ -2,6 +2,7 @@ package main.java.exceptions;
 
 import main.java.enums.ResourceType;
 
+@SuppressWarnings("serial")
 public class CannotAffordException extends Exception
 {
 	ResourceType resource;

@@ -253,4 +253,12 @@ public class HexGrid
 		
 		return hexWithRobber;
 	}
+
+	/**
+	 * @return the hexWithRobber
+	 */
+	public Hex getHexWithRobber()
+	{
+		return hexWithRobber;
+	}
 }

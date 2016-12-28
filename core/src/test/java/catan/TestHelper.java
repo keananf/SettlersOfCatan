@@ -116,7 +116,7 @@ public class TestHelper
 		game = new Game();
 		p = new NetworkPlayer(Colour.Blue);
 		game.addPlayer(p);
-		
+		game.setCurrentPlayer(p);
 		
 		// Find hex without 'None'
 		for(int i = 0; i < game.getGrid().nodes.values().size(); i++)

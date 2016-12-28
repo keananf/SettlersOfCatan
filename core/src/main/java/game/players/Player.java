@@ -227,6 +227,7 @@ public abstract class Player
 		// Remove from inventory and apply effects
 		List<DevelopmentCard> existing = cards.get(card.getType());
 		existing.remove(existing.size() - 1);
+		
 	}
 	
 	/**
@@ -411,6 +412,32 @@ public abstract class Player
 	public void setHasLongestRoad(boolean hasLongestRoad)
 	{
 		this.hasLongestRoad = hasLongestRoad;
+	}
+
+	/**
+	 * Take one resource randomly from the other player
+	 * @param other the other player
+	 */
+	public void takeResource(Player other)
+	{
+		Random rand = new Random();
+		ResourceType key = ResourceType.None;
+		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+
+		// Check there are resources to take
+		if(other.getNumResources() == 0) return;
+		
+		// Find resource to take
+		while((key = (ResourceType) other.getResources().keySet().toArray()[rand.nextInt(other.getResources().size())]) == ResourceType.None || other.getResources().get(key) == 0);
+		grant.put(key, 1);
+
+		try
+		{
+			other.spendResources(grant);
+		}
+		catch (CannotAffordException e){ /* Cannot happen*/ }
+		
+		grantResources(grant);
 	}
 
 }

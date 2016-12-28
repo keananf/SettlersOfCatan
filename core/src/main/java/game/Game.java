@@ -19,7 +19,6 @@ public class Game
 	Random dice;
 	private Player currentPlayer;
 	private int current; // index of current player
-	private Player p;
 	private Player playerWithLongestRoad;
 	private int longestRoad;
 	private int numPlayers;
@@ -81,6 +80,8 @@ public class Game
 			}
 			player.grantResources(grant); // Will be overriden in each type of player's implementation
 		}
+		
+		// TODO return map of each player's granted resources to send across network
 	}
 
 	/**
@@ -96,7 +97,7 @@ public class Game
 		int numResources = player.getNumResources();
 		Map<ResourceType, Integer> resources = player.getResources();
 		
-		// Remove resources until the cap is reached
+		// Randomly remove resources until the cap is reached
 		while(numResources > resourceLimit)
 		{
 			ResourceType key = (ResourceType) resources.keySet().toArray()[rand.nextInt(resources.size())];
@@ -186,7 +187,8 @@ public class Game
 	
 	/**
 	 * Checks that the player can buy a development card
-	 * @param move
+	 * @param move the move
+	 * @param card the object to hold the new development card. 
 	 * @return the response message to the client
 	 */
 	public String buyDevelopmentCard(BuyDevelopmentCardMove move, DevelopmentCard card)
@@ -214,19 +216,116 @@ public class Game
 	 * Moves the robber and takes a card from the player
 	 * who has a settlement on the hex
 	 * @param move the move
-	 * @return success message
+	 * @return return message
 	 */
 	public String moveRobber(MoveRobberMove move)
 	{
-		// Swap robber and retrieve the new hex it's been moved to.
-		Hex hexWithRobber = grid.swapRobbers(move.getX(), move.getY());
-		List<Node> nodes = hexWithRobber.getNodes();
+		// Retrieve the new hex the robber will move to.
+		Hex newHex = grid.swapRobbers(move.getX(), move.getY());
+		Player other = players.get(move.getColourToTakeFrom());
+		boolean valid = false;
+
+		// Verify this player can take from the specified one
+		for(Node n : newHex.getNodes())
+		{
+			// If node has a settlement and it is of the specified colour, then the player can take a card
+			// Randomly remove resource
+			if(n.getSettlement() != null && n.getSettlement().getPlayerColour().equals(move.getColourToTakeFrom()))
+			{
+				currentPlayer.takeResource(other);
+				valid = true;
+			}
+		}
 		
-		//TODO swap cards with player or something. Verify this player
-		// can take from the specified one
-		// else throw exception?
+		// Cannot take from this player
+		if(!valid) return String.format("Player %s cannot take resource from %s.", 
+							currentPlayer.getColour().toString(), other.getColour().toString());
 		
 		// return success message
+		return "ok";
+	}
+
+	/**
+	 * Process the playing of the 'Build Roads' development card.
+	 * @param move the move to process
+	 * @return return message
+	 */
+	public String playBuildRoadsCard(PlayRoadBuildingCardMove move)
+	{
+		buildRoad(move.getMove1());
+		buildRoad(move.getMove2());
+		// TODO MAKE ATOMIC
+		
+		return "ok";
+	}
+	
+	/**
+	 * Process the playing of the 'University' development card.
+	 * @param move the move to process
+	 * @return return message
+	 */
+	public String playUniversityCard()
+	{
+		grantVpPoint();
+		return "ok";
+	}
+	
+	/**
+	 * Process the playing of the 'Library' development card.
+	 * @param move the move to process
+	 * @return return message
+	 */
+	public String playLibraryCard()
+	{
+		grantVpPoint();
+		return "ok";
+	}
+	
+	/**
+	 * Process the playing of the 'Year of Plenty' development card.
+	 * @param move the move to process
+	 * @return return message
+	 */
+	public String playYearOfPlentyCard(PlayYearOfPlentyCardMove move)
+	{
+		// Set up grant
+		ResourceType r1 = move.getResource1(), r2 = move.getResource2(); 
+		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+		grant.put(r1, 1);
+		grant.put(r2, 1);
+		currentPlayer.grantResources(grant);
+		
+		// TODO send out new resources 
+		return "ok";
+	}
+	
+	/**
+	 * Process the playing of the 'Monopoly' development card.
+	 * @param move the move to process
+	 * @return return message
+	 */
+	public String playMonopolyCard(PlayMonopolyCardMove move)
+	{
+		ResourceType r = move.getResource(); 
+		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+		
+		// for each player
+		for(Player p : players.values())
+		{
+			if(p.equals(currentPlayer)) continue;
+			
+			// Give p's resources of type 'r' to currentPlayer
+			try
+			{
+				int num = p.getResources().get(r);
+				grant.put(r, num);
+				p.spendResources(grant);
+			} 
+			catch (CannotAffordException e) { /* Will never happen */ }
+			currentPlayer.grantResources(grant);
+		}
+		
+		// TODO send out new resources 
 		return "ok";
 	}
 	
@@ -272,8 +371,7 @@ public class Game
 	 */
 	private void checkLongestRoad()
 	{
-		Player current = players.get(getCurrentPlayer());
-		Player longestRoadPlayer = players.get(playerWithLongestRoad);
+		Player current = getCurrentPlayer();
 		
 		int length = current.calcRoadLength();
 		if(length > longestRoad)
@@ -281,12 +379,12 @@ public class Game
 			// Update victory points
 			if(longestRoad >= 5)
 			{
-				longestRoadPlayer.setVp(longestRoadPlayer.getVp() - 2);
+				playerWithLongestRoad.setVp(playerWithLongestRoad.getVp() - 2);
 			}
 			if (length >= 5) current.setVp(current.getVp() + 2);
+			if(playerWithLongestRoad != null) playerWithLongestRoad.setHasLongestRoad(false);
 			
 			longestRoad = length;
-			longestRoadPlayer.setHasLongestRoad(false);
 			playerWithLongestRoad = getCurrentPlayer();
 			current.setHasLongestRoad(true);
 		}
@@ -367,4 +465,11 @@ public class Game
 	{
 		this.currentPlayer = currentPlayer;
 	}
+
+	private String grantVpPoint()
+	{
+		currentPlayer.setVp(currentPlayer.getVp() + 1);
+		return "ok";
+	}
+
 }

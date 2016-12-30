@@ -10,8 +10,8 @@ import java.util.*;
  */
 public class Port extends Edge 
 {
-	ResourceType exchangeType, receiveType;
-	int exchangeAmount, receiveAmount;
+	private ResourceType exchangeType, receiveType;
+	private int exchangeAmount, receiveAmount;
 	
 	public Port(Node x, Node y)
 	{
@@ -155,4 +155,69 @@ public class Port extends Edge
 		
 		return ports;
 	}
+
+	/**
+	 * @return the exchangeType
+	 */
+	public ResourceType getExchangeType()
+	{
+		return exchangeType;
+	}
+
+	/**
+	 * @param exchangeType the exchangeType to set
+	 */
+	public void setExchangeType(ResourceType exchangeType)
+	{
+		this.exchangeType = exchangeType;
+	}
+
+	/**
+	 * @return the receiveType
+	 */
+	public ResourceType getReturnType()
+	{
+		return receiveType;
+	}
+
+	/**
+	 * @param receiveType the receiveType to set
+	 */
+	public void setReturnType(ResourceType receiveType)
+	{
+		this.receiveType = receiveType;
+	}
+
+	/**
+	 * @return the exchangeAmount
+	 */
+	public int getExchangeAmount()
+	{
+		return exchangeAmount;
+	}
+
+	/**
+	 * @param exchangeAmount the exchangeAmount to set
+	 */
+	public void setExchangeAmount(int exchangeAmount)
+	{
+		this.exchangeAmount = exchangeAmount;
+	}
+
+	/**
+	 * @return the receiveAmount
+	 */
+	public int getReturnAmount()
+	{
+		return receiveAmount;
+	}
+
+	/**
+	 * @param receiveAmount the receiveAmount to set
+	 */
+	public void setReturnAmount(int receiveAmount)
+	{
+		this.receiveAmount = receiveAmount;
+	}
+
 }

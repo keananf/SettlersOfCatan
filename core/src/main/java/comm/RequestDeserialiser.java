@@ -2,6 +2,7 @@ package main.java.comm;
 
 import java.lang.reflect.Type;
 
+import main.java.comm.messages.Request;
 import main.java.enums.MoveType;
 import main.java.game.moves.*;
 

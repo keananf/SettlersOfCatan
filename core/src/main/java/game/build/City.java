@@ -26,8 +26,8 @@ public class City extends Building
 	{
 		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
 		
-		resources.put(ResourceType.Wheat, 2);
-		resources.put(ResourceType.Stone, 3);
+		resources.put(ResourceType.Grain, 2);
+		resources.put(ResourceType.Ore, 3);
 		
 		return resources;
 	}

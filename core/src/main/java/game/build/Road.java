@@ -29,7 +29,7 @@ public class Road implements IBuildable
 		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
 		
 		resources.put(ResourceType.Brick, 1);
-		resources.put(ResourceType.Wood, 1);
+		resources.put(ResourceType.Lumber, 1);
 		
 		return resources;
 	}

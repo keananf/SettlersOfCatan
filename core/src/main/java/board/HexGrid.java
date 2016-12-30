@@ -175,10 +175,10 @@ public class HexGrid
 		
 		Map<ResourceType, Integer> resourcesAvailable = new HashMap<ResourceType, Integer>();
 		resourcesAvailable.put(ResourceType.Brick, 3);
-		resourcesAvailable.put(ResourceType.Wheat, 4);
-		resourcesAvailable.put(ResourceType.Stone, 3);
-		resourcesAvailable.put(ResourceType.Sheep, 4);
-		resourcesAvailable.put(ResourceType.Wood, 4);
+		resourcesAvailable.put(ResourceType.Grain, 4);
+		resourcesAvailable.put(ResourceType.Ore, 3);
+		resourcesAvailable.put(ResourceType.Wool, 4);
+		resourcesAvailable.put(ResourceType.Lumber, 4);
 		resourcesAvailable.put(ResourceType.None, 1);
 		
 		return resourcesAvailable;

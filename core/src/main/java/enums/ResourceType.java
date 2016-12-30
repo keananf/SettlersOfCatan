@@ -3,9 +3,9 @@ package main.java.enums;
 public enum ResourceType 
 {
 	None, // Default
-	Wheat, 
-	Stone,
+	Wool,
+	Ore,
+	Grain, 
 	Brick,
-	Wood,
-	Sheep,
+	Lumber,
 }

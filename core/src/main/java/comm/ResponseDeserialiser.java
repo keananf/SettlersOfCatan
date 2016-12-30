@@ -1,6 +1,8 @@
 package main.java.comm;
 
 import java.lang.reflect.Type;
+
+import main.java.comm.messages.Response;
 import main.java.enums.MoveType;
 
 import com.google.gson.*;

@@ -2,14 +2,20 @@ package main.java.server;
 
 import main.java.enums.Colour;
 import main.java.enums.MoveType;
+import main.java.enums.ResourceType;
 import main.java.game.Game;
 import main.java.game.build.DevelopmentCard;
 import main.java.game.moves.PlayDevelopmentCardMove;
+import main.java.game.players.Player;
+import main.java.comm.BoardSerialiser;
 import main.java.comm.DevelopmentCardSerialiser;
-import main.java.comm.Request;
-import main.java.comm.Response;
 import main.java.comm.ResponseSerialiser;
 import main.java.comm.RequestDeserialiser;
+import main.java.comm.TurnSerialiser;
+import main.java.comm.messages.BoardMessage;
+import main.java.comm.messages.Request;
+import main.java.comm.messages.Response;
+import main.java.comm.messages.TurnUpdateMessage;
 
 import java.io.*;
 import java.net.*;
@@ -23,6 +29,8 @@ public class Server
 	private ServerSocket serverSocket;
 	private static final int PORT = 12345;
 	private ResponseSerialiser responseSerialiser;
+	private TurnSerialiser turnSerialiser;
+	private BoardSerialiser boardSerialiser;
 	private RequestDeserialiser requestDeserialiser;
 	
 	public Server()
@@ -31,6 +39,8 @@ public class Server
 		connections = new HashMap<Colour, Socket>();
 		responseSerialiser = new ResponseSerialiser();
 		requestDeserialiser = new RequestDeserialiser();
+		boardSerialiser = new BoardSerialiser();
+		turnSerialiser = new TurnSerialiser();
 	}
 	
 	public static void main(String[] args)
@@ -38,7 +48,22 @@ public class Server
 		Server s = new Server();
 		try
 		{
+			// Get players and initial moves
 			s.getPlayers();
+			s.broadcastBoard();
+			s.game.chooseFirstPlayer();
+			s.getInitialSettlementsAndRoads();
+			
+			// Main game loop
+			while(!s.game.isOver())
+			{			
+				// Allocate and send resources and dice out to players
+				int dice = s.game.generateDiceRoll();
+				Map<Colour, Map<ResourceType, Integer>> resources = s.game.allocateResources(dice);
+				s.sendTurns(dice, resources);
+				
+				s.receiveMoves();
+			}
 		}
 		catch (IOException e)
 		{
@@ -46,53 +71,96 @@ public class Server
 			System.out.println("Error connecting players");
 			return;
 		} 
-		
-		s.game.chooseFirstPlayer();
-		s.getInitialSettlementsAndRoads();
-		
-		// Main game loop
-		while(!s.game.isOver())
+	}
+
+	/**
+	 * Sends the dice and each player's respective resource count to the player's socket
+	 * @param dice the dice roll to send
+	 * @param resources the map of each 
+	 * @throws IOException 
+	 */
+	private void sendTurns(int dice, Map<Colour, Map<ResourceType, Integer>> resources) throws IOException
+	{		
+		// For each player
+		for(Colour c : Colour.values())
 		{
-			int dice = s.game.generateDiceRoll();
-			s.game.allocateResources(dice);
-			//TODO send resources and dice out to players
-			
-			s.receiveMoves();
+			sendTurn(dice, c, resources.get(c));
 		}
 	}
 
 	/**
+	 * Sends the dice and the player's resource count to the player's socket
+	 * @param dice the dice roll to send
+	 * @param c the colour of the player
+	 * @param resources the map of resources 
+	 * @throws IOException 
+	 */
+	private void sendTurn(int dice, Colour c, Map<ResourceType, Integer> resources) throws IOException
+	{		
+		Socket s = connections.get(c);
+		
+		// Set up message
+		TurnUpdateMessage msg = new TurnUpdateMessage();
+		msg.setDice(dice);
+		msg.setPlayer(c);
+		msg.setResources(resources);
+		
+		// Serialise and Send
+		byte[] bytes = turnSerialiser.serialise(msg);
+		s.getOutputStream().write(bytes);
+		s.getOutputStream().flush();
+	}
+	
+	/**
+	 * Serialises and Broadcasts the board to each connected player
+	 * @throws IOException
+	 */
+	private void broadcastBoard() throws IOException
+	{
+		// For each player
+		for(Colour c : Colour.values())
+		{
+			Socket s = connections.get(c);
+			
+			// Set up message
+			BoardMessage msg = new BoardMessage();
+			msg.setEdges(game.getGrid().edges);
+			msg.setNodes(game.getGrid().nodes);
+			msg.setPorts(game.getGrid().ports);
+			msg.setHexes(game.getGrid().grid);
+			
+			// Serialise and Send
+			byte[] bytes = boardSerialiser.serialise(msg);
+			s.getOutputStream().write(bytes);
+			s.getOutputStream().flush();
+		}
+	}
+	
+	/**
 	 * Listens for moves from the current player
 	 * @return the bytes received from the current player
+	 * @throws IOException 
 	 */
-	private void receiveMoves()
+	private void receiveMoves() throws IOException
 	{
 		Colour colour = game.getCurrentPlayer().getColour();
 		Socket socket = connections.get(colour);
 		Response response = null;
-		
-		// Try to read this players moves 
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream())))
-		{	
-			// Receive and process moves until the end one is received
-			while(true)
-			{				
-				byte[] move = reader.lines().toString().getBytes(); // TODO fix this
-				response = processMove(move);
-				sendResponse(response);
+		 
+		// Receive and process moves until the end one is received
+		BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));	
+		while(true)
+		{				
+			byte[] move = reader.lines().toString().getBytes(); // TODO fix this
+			response = processMove(move);
+			sendResponse(response);
 
-				// If end move, stop
-				if(response.getType() == MoveType.EndMove)
-				{
-					break;
-				}
+			// If end move, stop
+			if(response.getType() == MoveType.EndMove)
+			{
+				break;
 			}
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		
+		}		
 	}
 
 	/**
@@ -213,6 +281,7 @@ public class Server
 			for(Socket conn : connections.values())
 			{
 				conn.getOutputStream().write(bytes);
+				conn.getOutputStream().flush();
 			}
 		}
 		else

@@ -28,9 +28,9 @@ public class DevelopmentCard implements IBuildable //TODO change to normal inher
 	{
 		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
 		
-		resources.put(ResourceType.Stone, 1);
-		resources.put(ResourceType.Wheat, 1);
-		resources.put(ResourceType.Sheep, 1);
+		resources.put(ResourceType.Ore, 1);
+		resources.put(ResourceType.Grain, 1);
+		resources.put(ResourceType.Wool, 1);
 		
 		return resources;
 	}

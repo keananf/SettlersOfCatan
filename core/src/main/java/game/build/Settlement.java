@@ -28,9 +28,9 @@ public class Settlement extends Building
 		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
 		
 		resources.put(ResourceType.Brick, 1);
-		resources.put(ResourceType.Wood, 1);
-		resources.put(ResourceType.Wheat, 1);
-		resources.put(ResourceType.Sheep, 1);
+		resources.put(ResourceType.Lumber, 1);
+		resources.put(ResourceType.Grain, 1);
+		resources.put(ResourceType.Wool, 1);
 		
 		return resources;
 	}

@@ -39,19 +39,21 @@ public class Game
 		int dice = this.dice.nextInt(NUM_PLAYERS);
 		
 		current = dice;
-		setCurrentPlayer(getPlayers()[dice]);
+		setCurrentPlayer(getPlayersAsList()[dice]);
 	}
 
 	/**
 	 * Assigns resources to each player based upon their settlements and the dice
 	 * @param dice the dice roll
+	 * @return 
 	 */
-	public void allocateResources(int dice)
+	public Map<Colour, Map<ResourceType, Integer>> allocateResources(int dice)
 	{
 		int resourceLimit = 7;
+		Map<Colour, Map<ResourceType, Integer>> playerResources = new HashMap<Colour, Map<ResourceType, Integer>>();
 		
 		// for each player
-		for(Player player : getPlayers())
+		for(Player player : getPlayersAsList())
 		{
 			Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 			
@@ -78,10 +80,11 @@ public class Game
 					}
 				}
 			}
-			player.grantResources(grant); // Will be overriden in each type of player's implementation
+			player.grantResources(grant);
+			playerResources.put(player.getColour(), grant);
 		}
 		
-		// TODO return map of each player's granted resources to send across network
+		return playerResources;
 	}
 
 	/**
@@ -295,7 +298,7 @@ public class Game
 		grant.put(r2, 1);
 		currentPlayer.grantResources(grant);
 		
-		// TODO send out new resources 
+		// In receiving 'ok,' the client knows the request has been granted 
 		return "ok";
 	}
 	
@@ -308,6 +311,7 @@ public class Game
 	{
 		ResourceType r = move.getResource(); 
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+		int sum = 0;
 		
 		// for each player
 		for(Player p : players.values())
@@ -320,13 +324,14 @@ public class Game
 				int num = p.getResources().get(r);
 				grant.put(r, num);
 				p.spendResources(grant);
+				sum += num;
 			} 
 			catch (CannotAffordException e) { /* Will never happen */ }
 			currentPlayer.grantResources(grant);
 		}
 		
-		// TODO send out new resources 
-		return "ok";
+		// Return message is string showing number of resources taken
+		return String.format("%d", sum);
 	}
 	
 	/**
@@ -396,7 +401,7 @@ public class Game
 	 */
 	public String changeTurn()
 	{
-		setCurrentPlayer(getPlayers()[++current % NUM_PLAYERS]);
+		setCurrentPlayer(getPlayersAsList()[++current % NUM_PLAYERS]);
 		return "ok";
 	}
 
@@ -414,7 +419,7 @@ public class Game
 	 */
 	public boolean isOver()
 	{
-		for(Player p : getPlayers())
+		for(Player p : getPlayersAsList())
 		{
 			if(p.hasWon()) return true;
 		}
@@ -429,8 +434,13 @@ public class Game
 	{
 		return grid;
 	}
+
+	public Map<Colour, Player> getPlayers()
+	{
+		return players;
+	}
 	
-	public Player[] getPlayers()
+	public Player[] getPlayersAsList()
 	{
 		return players.values().toArray(new Player[]{});
 	}

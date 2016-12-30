@@ -194,7 +194,7 @@ public class DevelopmentCardTests extends TestHelper
 		PlayYearOfPlentyCardMove move = new PlayYearOfPlentyCardMove();
 		move.setPlayerColour(p.getColour());
 		move.setResource1(ResourceType.Brick);
-		move.setResource2(ResourceType.Stone);
+		move.setResource2(ResourceType.Ore);
 		
 		// Play move and assert resources were transferred
 		assertEquals(0, p.getNumResources());	

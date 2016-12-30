@@ -1,6 +1,9 @@
 package main.java.comm;
 
 import java.lang.reflect.Type;
+
+import main.java.comm.messages.Request;
+
 import com.google.gson.*;
 
 

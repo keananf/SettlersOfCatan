@@ -1,8 +1,10 @@
 package test.java.catan;
 
 import static org.junit.Assert.*;
+import main.java.board.Edge;
 import main.java.board.Node;
 import main.java.exceptions.*;
+import main.java.game.build.Road;
 import main.java.game.build.Settlement;
 
 import org.junit.*;
@@ -31,7 +33,7 @@ public class SettlementAndCityTests extends TestHelper
 		assertTrue(hasResources(p));
 
 		// Build settlement
-		makeSettlement(n);
+		makeSettlement(p, n);
 
 		p.upgradeSettlement(n);
 	}
@@ -52,15 +54,15 @@ public class SettlementAndCityTests extends TestHelper
 		assertTrue(hasResources(p));
 
 		// Build settlement
-		makeSettlement(n);
+		makeSettlement(p, n);
 	}
 	
 	@Test(expected = IllegalPlacementException.class)
-	public void buildNearSettlementTest() throws IllegalPlacementException
+	public void tooCloseToSettlementTest() throws IllegalPlacementException
 	{
 		// Grant resources and build first settlement
 		p.grantResources(Settlement.getSettlementCost());
-		makeSettlement(n);
+		makeSettlement(p, n);
 		
 		// Find adjacent node
 		Node x = n.getEdges().get(0).getX(), y = n.getEdges().get(0).getY();
@@ -76,5 +78,4 @@ public class SettlementAndCityTests extends TestHelper
 			e.printStackTrace();
 		}
 	}
-	
 }

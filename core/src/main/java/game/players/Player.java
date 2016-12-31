@@ -75,19 +75,14 @@ public abstract class Player
 		// Road already here. Cannot build
 		if(edge.getRoad() != null)
 			throw new RoadExistsException(r);
-		
-		// Check the location is valid for building and that the player can afford it
-		if(r.getEdge().isNearSettlement(settlements))
-		{
-			canAfford(r.getCost());
-		}
-		else throw new CannotBuildRoadException(r);
 
+		// Find out where this road is connected
 		valid = checkRoadsAndAdd(r, listsAddedTo);
 		
-		// If valid place to put road
-		if(valid || listsAddedTo.size() == 0)
+		// Check the location is valid for building and that the player can afford it
+		if(r.getEdge().onSettlement(settlements) || valid)
 		{
+			canAfford(r.getCost());
 			spendResources(r.getCost());
 			edge.setRoad(r);
 			
@@ -103,6 +98,7 @@ public abstract class Player
 			else if(listsAddedTo.size() > 1)
 				mergeRoads(r, listsAddedTo);
 		}
+		else throw new CannotBuildRoadException(r);
 	}
 
 	/**
@@ -127,12 +123,20 @@ public abstract class Player
 			isConnected  = false;
 			for(Road road : list)
 			{
-				// If they're connected, update the length
+				Edge e = r.getEdge(), e2 = road.getEdge();
 				if (r.isConnected(road))
 				{
-					isConnected = true;
-					listsAddedTo.add(index++);
-					break;
+					// Find if the joined node has a settlement on it
+					Node joinedNode = e.getX().equals(e2.getX()) || e.getX().equals(e2.getY()) ? e.getX() : e.getY();
+					Building building = joinedNode.getSettlement();
+					
+					// If there is a settlement and it is not foreign, then the join is not broken
+					if((building ==  null) || (building != null && building.getPlayerColour().equals(r.getPlayerColour())))
+					{
+						isConnected = true;
+						listsAddedTo.add(index++);
+					}
+					break;	
 				}
 			}
 			
@@ -142,11 +146,52 @@ public abstract class Player
 				list.add(r);
 				valid = true;
 			}
+			else index++;
 		}
 		
 		return valid;
 	}
 
+	/**
+	 * Finds the road chain these two edges belong to, and breaks it into two
+	 * @param e the first edge
+	 * @param other the other edge
+	 */
+	public void breakRoad(Edge e, Edge other)
+	{
+		List<Road> newList1 = new ArrayList<Road>();
+		List<Road> newList2 = new ArrayList<Road>();
+		boolean isConnected = false;
+		int index = 0;
+		
+		// For each road chain
+		for(List<Road> subList : roads)
+		{
+			// For each road in the chain
+			for(Road road : subList)
+			{
+				// Divide up subList
+				if(e.getRoad().isConnected(road))
+				{
+					isConnected = true;
+					newList1.add(road);
+				}
+				else if(other.getRoad().isConnected(road))
+				{
+					isConnected = true;
+					newList2.add(road);
+				}
+			}
+			index++;
+			if(isConnected) break;
+		}
+		
+		// Remove old list and add two new ones
+		roads.remove(index - 1);
+		roads.add(newList1);
+		roads.add(newList2);
+	}
+	
 	/**
 	 * Merges two roads together if a road was recently built which connects
 	 * to previously separate ones
@@ -517,6 +562,11 @@ public abstract class Player
 	public void setHasLongestRoad(boolean hasLongestRoad)
 	{
 		this.hasLongestRoad = hasLongestRoad;
+	}
+
+	public int getNumOfRoadChains()
+	{
+		return roads.size();
 	}
 
 }

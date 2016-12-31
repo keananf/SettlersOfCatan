@@ -15,7 +15,7 @@ public class TestHelper
 	protected Node n;
 	protected Hex hex;
 	
-	protected Settlement makeSettlement(Node n)
+	protected Settlement makeSettlement(Player p, Node n)
 	{
 		assertTrue(hasResources(p));
 		int oldSize = p.getSettlements().size();

@@ -26,7 +26,7 @@ public class GameAndResourcesTests extends TestHelper
 	{
 		// Grant resources and make settlement
 		p.grantResources(Settlement.getSettlementCost());
-		makeSettlement(n);
+		makeSettlement(p, n);
 		assertFalse(hasResources(p));
 
 		// collect resources
@@ -40,7 +40,7 @@ public class GameAndResourcesTests extends TestHelper
 	{		
 		// Make a settlement and toggle the robber on its hex
 		p.grantResources(Settlement.getSettlementCost());
-		makeSettlement(n);
+		makeSettlement(p, n);
 		hex.toggleRobber();
 
 		// try to collect resources
@@ -67,7 +67,7 @@ public class GameAndResourcesTests extends TestHelper
 	{
 		// Grant resources for and make settlement
 		p.grantResources(Settlement.getSettlementCost());
-		Settlement s = makeSettlement(n);
+		Settlement s = makeSettlement(p, n);
 
 		// Grant resources for and upgrade settlement
 		p.grantResources(City.getCityCost());

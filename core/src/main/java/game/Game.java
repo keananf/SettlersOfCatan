@@ -195,10 +195,35 @@ public class Game
 	private String buildSettlement(BuildSettlementMove move) throws CannotAffordException, IllegalPlacementException
 	{
 		Player p = players.get(move.getPlayerColour());
-		Node n = grid.nodes.get(new Point(move.getX(), move.getY()));
+		Node node = grid.nodes.get(new Point(move.getX(), move.getY()));
 		
 		// Try to build settlement
-		p.buildSettlement(n);
+		p.buildSettlement(node);
+		
+		// Check all combinations of edges to check if a road chain was broken
+		for(int i = 0; i < node.getEdges().size(); i++)
+		{
+			boolean broken= false;
+			for(int j = 0; j < node.getEdges().size(); j++)
+			{
+				Edge e = node.getEdges().get(i), other = node.getEdges().get(j);
+				Road r = e.getRoad(), otherR = other.getRoad();
+				
+				if(e.equals(other)) continue;
+				
+				// If this settlement is between two roads of the same colour
+				if(r != null && otherR != null && r.getPlayerColour().equals(otherR.getPlayerColour()))
+				{
+					// retrieve owner of roads and break the road chain
+					players.get(e.getRoad().getPlayerColour()).breakRoad(e, other);
+					broken = true;
+					break;
+				}
+			}
+			if(broken) break;
+		}
+		// TODO send out updated road counts
+		
 		return "ok";
 	}
 	
@@ -458,6 +483,7 @@ public class Game
 	{
 		Player current = getCurrentPlayer();
 		
+		// Calculate who has longest road
 		int length = current.calcRoadLength();
 		if(length > longestRoad)
 		{

@@ -165,34 +165,15 @@ public class Edge //TODO extend BoardElement
 	 * @param r the road that is attempting to be built
 	 * @return true / false indicating if it is a valid move
 	 */
-	public boolean isNearSettlement(HashMap<Point, Building> settlements)
+	public boolean onSettlement(HashMap<Point, Building> settlements)
 	{
 		Node n1 = getX(), n2 = getY();
-		List<Edge> edges = new ArrayList<Edge>();
-		edges.addAll(n1.getEdges());
-		edges.addAll(n2.getEdges());
 		
 		// If there is a settlement on one of its nodes
 		if(settlements.containsKey(new Point(n1.getX(), n1.getY()))
 				|| settlements.containsKey(new Point(n2.getX(), n2.getY())))
 		{
 			return true;
-		}
-		
-		// Check if there is a settlement of distance one away from one of its nodes
-		for(Edge e : edges)
-		{
-			if(e.equals(this)) continue;
-			
-			n1 = e.getX();
-			n2 = e.getY();
-			
-			// If there is a settlement on one of its nodes
-			if(settlements.containsKey(new Point(n1.getX(), n1.getY()))
-					|| settlements.containsKey(new Point(n2.getX(), n2.getY())))
-			{
-				return true;
-			}
 		}
 		
 		return false;

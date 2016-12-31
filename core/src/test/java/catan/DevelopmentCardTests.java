@@ -233,7 +233,7 @@ public class DevelopmentCardTests extends TestHelper
 		
 		// Grant resources and make settlement
 		p.grantResources(Settlement.getSettlementCost());
-		makeSettlement(n);
+		makeSettlement(p, n);
 		
 		// Grant resources and Build roads
 		p.grantResources(Road.getRoadCost());
@@ -287,7 +287,7 @@ public class DevelopmentCardTests extends TestHelper
 		
 		// Grant resources and make settlement
 		p.grantResources(Settlement.getSettlementCost());
-		makeSettlement(n);
+		makeSettlement(p, n);
 		
 		// Grant resources and Build roads
 		p.grantResources(Road.getRoadCost());

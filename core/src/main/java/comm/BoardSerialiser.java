@@ -136,6 +136,7 @@ public class BoardSerialiser implements JsonSerializer<BoardMessage>
 		{
 			// Set up Json Object to add to the array
 			JsonObject jObj = serialiseCoord(h.getX(), h.getY());
+			jObj.addProperty("resource", h.getResource().toString());
 			
 			arr.add(jObj);
 		}

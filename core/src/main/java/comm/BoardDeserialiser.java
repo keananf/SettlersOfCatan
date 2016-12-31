@@ -125,9 +125,11 @@ public class BoardDeserialiser implements JsonDeserializer<BoardMessage>
 		for(JsonElement elem : arr)
 		{
 			// Deserialise and add each node to the list
-			JsonObject c = elem.getAsJsonObject();
-			Hex n = new Hex(c.get("x").getAsInt(), c.get("y").getAsInt());
-			hexes.add(n);
+			JsonObject jObj = elem.getAsJsonObject();
+			Hex hex = new Hex(jObj.get("x").getAsInt(), jObj.get("y").getAsInt());
+			hex.setResource(ResourceType.valueOf(jObj.get("resource").getAsString()));
+			
+			hexes.add(hex);
 		}
 		
 		return hexes;

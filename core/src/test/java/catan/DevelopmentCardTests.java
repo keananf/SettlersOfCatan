@@ -96,7 +96,7 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test
-	public void playKnightNoResourcesTest() throws CannotAffordException, IllegalPlacementException
+	public void playKnightNoResourcesTest() throws CannotAffordException, IllegalPlacementException, CannotStealException
 	{	
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
@@ -148,14 +148,20 @@ public class DevelopmentCardTests extends TestHelper
 		
 		// Robber will move, but cannot take resource because this player does not have a settlement
 		// on one of the hex's nodes
-		String response = game.moveRobber(move);
-		assertNotEquals("ok", response);
-		assertTrue(!oldHex.equals(game.getGrid().getHexWithRobber()));
-		assertTrue(game.getGrid().getHexWithRobber().hasRobber());
+		try
+		{
+			game.moveRobber(move);
+		}
+		catch (CannotStealException e)
+		{
+			// Ensure robber wasn't moved
+			assertTrue(oldHex.equals(game.getGrid().getHexWithRobber()));
+			assertTrue(game.getGrid().getHexWithRobber().hasRobber());
+		}
 	}
 	
 	@Test
-	public void playKnightTakeResourceTest() throws CannotAffordException, IllegalPlacementException
+	public void playKnightTakeResourceTest() throws CannotAffordException, IllegalPlacementException, CannotStealException
 	{	
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
@@ -203,7 +209,7 @@ public class DevelopmentCardTests extends TestHelper
 	}
 	
 	@Test
-	public void playBuildRoadsCardTest() throws CannotBuildRoadException, RoadExistsException
+	public void playBuildRoadsCardTest() throws CannotBuildRoadException, RoadExistsException, CannotAffordException
 	{
 		// Set up entities
 		Edge e1 = n.getEdges().get(0), e2 = n.getEdges().get(1);
@@ -237,6 +243,63 @@ public class DevelopmentCardTests extends TestHelper
 		assertTrue(p.getRoads().size() == 2);
 		assertTrue(p.getRoads().get(0).getEdge().equals(e1));
 		assertTrue(p.getRoads().get(1).getEdge().equals(e2));
+	}
+	
+	/**
+	 * Tests atomicity and end-to-end processing of a multi-part move
+	 * @throws CannotBuildRoadException
+	 * @throws CannotAffordException
+	 */
+	@Test
+	public void playBuildRoadsCardFailure() throws CannotBuildRoadException, CannotAffordException
+	{
+		// Set up variables
+		Edge e1 = n.getEdges().get(0);
+		Node n1 = e1.getX(), n2 = e1.getY();
+		int oldResources = 0;
+		
+		// Set up development card
+		p.grantResources(DevelopmentCard.getCardCost());
+		DevelopmentCard card = new DevelopmentCard();
+		card.setType(DevelopmentCardType.RoadBuilding);
+		p.buyDevelopmentCard(card);
+		
+		// Set up moves. Make move2 a duplicate of move1 to throw an exception
+		PlayRoadBuildingCardMove internalMove = new PlayRoadBuildingCardMove();
+		BuildRoadMove move1 = new BuildRoadMove(), move2 = new BuildRoadMove();
+		move1.setX1(n1.getX());
+		move1.setY1(n1.getY());
+		move1.setX2(n2.getX());
+		move1.setY2(n2.getY());
+		move1.setPlayerColour(p.getColour());
+		move2.setX1(n1.getX());
+		move2.setY1(n1.getY());
+		move2.setX2(n2.getX());
+		move2.setY2(n2.getY());
+		move2.setPlayerColour(p.getColour());
+		internalMove.setMove1(move1);
+		internalMove.setMove2(move2);
+		
+		// Set up wrapper move
+		PlayDevelopmentCardMove devCardMove = new PlayDevelopmentCardMove();
+		devCardMove.setPlayerColour(p.getColour());
+		devCardMove.setCard(card);
+		
+		// Grant resources and make settlement
+		p.grantResources(Settlement.getSettlementCost());
+		makeSettlement(n);
+		
+		// Grant resources and Build roads
+		p.grantResources(Road.getRoadCost());
+		p.grantResources(Road.getRoadCost());
+		oldResources = p.getNumResources();
+		game.processDevelopmentCard(devCardMove, internalMove); // FAILS
+	
+		// Ensure player wasn't updated, and that the dev card was not spent
+		assertEquals(0, p.getRoads().size());
+		assertEquals(oldResources, p.getNumResources());
+		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.RoadBuilding).size() == 1);
+	
 	}
 	
 	@Test

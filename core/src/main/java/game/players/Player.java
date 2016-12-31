@@ -3,13 +3,11 @@ package main.java.game.players;
 import java.awt.Point;
 import java.util.*;
 
-import main.java.board.Edge;
-import main.java.board.Node;
+import main.java.board.*;
 import main.java.enums.*;
 import main.java.exceptions.*;
 import main.java.game.build.*;
-import main.java.game.moves.Move;
-import main.java.game.moves.PlayDevelopmentCardMove;
+import main.java.game.moves.*;
 
 /**
  * Abstract class describing a player (AI, or network)
@@ -192,6 +190,23 @@ public abstract class Player
 		settlements.put(new Point(node.getX(), node.getY()), s);
 	}
 	
+	/**
+	 * Attempts to purchase a development card for this player
+	 * @param card the card to buy
+	 * @return the bought development card
+	 * @throws CannotAffordException
+	 */
+	public DevelopmentCard buyDevelopmentCard(DevelopmentCard card) throws CannotAffordException
+	{
+		List<DevelopmentCard> existing = cards.containsKey(card) ? cards.get(card) : new ArrayList<DevelopmentCard>();
+		
+		// Try to buy a development card
+		spendResources(card.getCost());
+		existing.add(card);
+		cards.put(card.getType(), existing);
+		
+		return card;
+	}	
 
 	/**
 	 * Attempts to purchase a development card for this player
@@ -289,6 +304,33 @@ public abstract class Player
 			resources.put(r, existing - value);
 		}
 	}
+
+	/**
+	 * Take one resource randomly from the other player
+	 * @param other the other player
+	 */
+	public void takeResource(Player other)
+	{
+		Random rand = new Random();
+		ResourceType key = ResourceType.None;
+		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+
+		// Check there are resources to take
+		if(other.getNumResources() == 0) return;
+		
+		// Find resource to take
+		while((key = (ResourceType) other.getResources().keySet().toArray()[rand.nextInt(other.getResources().size())]) == ResourceType.None || other.getResources().get(key) == 0);
+		grant.put(key, 1);
+
+		try
+		{
+			other.spendResources(grant);
+		}
+		catch (CannotAffordException e){ /* Cannot happen*/ }
+		
+		grantResources(grant);
+	}
+
 	
 	/**
 	 * @return the total number of resource cards the player has
@@ -319,6 +361,69 @@ public abstract class Player
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * @return duplicate of this player
+	 */
+	public Player copy()
+	{
+		// Set up player
+		Player p = this instanceof AIPlayer ? new AIPlayer(colour) : new NetworkPlayer(colour);
+		p.resources = new HashMap<ResourceType, Integer>();
+		p.cards = new HashMap<DevelopmentCardType, List<DevelopmentCard>>();
+		p.settlements = new HashMap<Point, Building>();
+		p.roads = new ArrayList<List<Road>>();
+
+		// Initialise Resources
+		for(ResourceType r : ResourceType.values())
+		{
+			if(r == ResourceType.None) continue;
+			p.resources.put(r, 0);
+		}
+
+		// Copy over this player's information
+		p.setVp(vp);
+		p.grantResources(this.resources);
+		p.cards.putAll(this.cards);
+		p.settlements.putAll(this.settlements);
+		p.roads.addAll(this.roads);
+		p.hasLongestRoad = this.hasLongestRoad;
+		p.knightsUsed = this.knightsUsed;
+		
+		return p;
+	}
+	
+	/**
+	 * Restores the player to the given state
+	 * @param copy the copy
+	 * @param card the card that was spent
+	 */
+	public void restoreCopy(Player copy, DevelopmentCard card)
+	{
+		resources = new HashMap<ResourceType, Integer>();
+		cards = new HashMap<DevelopmentCardType, List<DevelopmentCard>>();
+		settlements = new HashMap<Point, Building>();
+		roads = new ArrayList<List<Road>>();
+
+		// Initialise Resources
+		for(ResourceType r : ResourceType.values())
+		{
+			if(r == ResourceType.None) continue;
+			resources.put(r, 0);
+		}
+		
+		// Copy over this player's information
+		setVp(vp);
+		grantResources(copy.resources);
+		cards.putAll(copy.cards);
+		settlements.putAll(copy.settlements);
+		roads.addAll(copy.roads);
+		hasLongestRoad = copy.hasLongestRoad;
+		knightsUsed = copy.knightsUsed;
+
+		// Re-add the spent card:
+		cards.get(card.getType()).add(card);
 	}
 	
 	/**
@@ -412,32 +517,6 @@ public abstract class Player
 	public void setHasLongestRoad(boolean hasLongestRoad)
 	{
 		this.hasLongestRoad = hasLongestRoad;
-	}
-
-	/**
-	 * Take one resource randomly from the other player
-	 * @param other the other player
-	 */
-	public void takeResource(Player other)
-	{
-		Random rand = new Random();
-		ResourceType key = ResourceType.None;
-		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
-
-		// Check there are resources to take
-		if(other.getNumResources() == 0) return;
-		
-		// Find resource to take
-		while((key = (ResourceType) other.getResources().keySet().toArray()[rand.nextInt(other.getResources().size())]) == ResourceType.None || other.getResources().get(key) == 0);
-		grant.put(key, 1);
-
-		try
-		{
-			other.spendResources(grant);
-		}
-		catch (CannotAffordException e){ /* Cannot happen*/ }
-		
-		grantResources(grant);
 	}
 
 }

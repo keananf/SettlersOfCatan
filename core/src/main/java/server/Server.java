@@ -1,21 +1,10 @@
 package main.java.server;
 
-import main.java.enums.Colour;
-import main.java.enums.MoveType;
-import main.java.enums.ResourceType;
+import main.java.enums.*;
 import main.java.game.Game;
-import main.java.game.build.DevelopmentCard;
-import main.java.game.moves.PlayDevelopmentCardMove;
-import main.java.game.players.Player;
-import main.java.comm.BoardSerialiser;
-import main.java.comm.DevelopmentCardSerialiser;
-import main.java.comm.ResponseSerialiser;
-import main.java.comm.RequestDeserialiser;
-import main.java.comm.TurnSerialiser;
-import main.java.comm.messages.BoardMessage;
-import main.java.comm.messages.Request;
-import main.java.comm.messages.Response;
-import main.java.comm.messages.TurnUpdateMessage;
+import main.java.game.moves.*;
+import main.java.comm.*;
+import main.java.comm.messages.*;
 
 import java.io.*;
 import java.net.*;
@@ -172,43 +161,28 @@ public class Server
 	private Response processMove(byte[] bytes)
 	{
 		String response = null;	
-		Request req = requestDeserialiser.deserialise(bytes);
+		Request req = requestDeserialiser.deserialiseRequest(bytes);
 		Response resp = new Response();
 		byte[] rawMsg = req.getMsg().getBytes();
+		Move move = requestDeserialiser.deserialiseMove(rawMsg, req.getType());
 		
 		// Switch on message type to interpret the move, then process the move
 		// and receive the response
 		switch(req.getType())
 		{
-			case BuildRoad:
-				response = game.buildRoad(requestDeserialiser.getBuildRoadMove(rawMsg));
-				break;
-			case BuildSettlement:
-				response = game.buildSettlement(requestDeserialiser.getBuildSettlementMove(rawMsg));
-				break;
-			case MoveRobber:
-				response = game.moveRobber(requestDeserialiser.getMoveRobberMove(rawMsg));
-				break;
-			case UpgradeSettlement:
-				response = game.upgradeSettlement(requestDeserialiser.getUpgradeSettlementMove(rawMsg));
-				break;
-			case BuyDevelopmentCard:
-				DevelopmentCard c = null;
-				response = game.buyDevelopmentCard(requestDeserialiser.getBuyDevelopmentCardMove(rawMsg), c);
-				rawMsg = DevelopmentCardSerialiser.serialise(c).getBytes();
-				break;
+			// Development Cards. Need extra processing step to extract internal move
 			case PlayDevelopmentCard:
-				response = processDevelopmentCard(requestDeserialiser.getPlayDevelopmentCardMove(rawMsg));
+				PlayDevelopmentCardMove devMove = requestDeserialiser.getPlayDevelopmentCardMove(rawMsg);
+				response = game.processDevelopmentCard(devMove, requestDeserialiser.getInternalDevCardMove(devMove));
 				break;
-			case EndMove:
-				response = game.changeTurn();			
-				break;
-				
+			
+			// Other moves
 			default:
+				response = game.processMove(move, req.getType());
 				break;
 			
 		}
-
+	
 		// Set up response object
 		resp.setType(req.getType());
 		resp.setResponse(response);
@@ -216,50 +190,6 @@ public class Server
 		
 		// Return response to be sent back to clients
 		return resp;
-	}
-	
-	/**
-	 * Processes the type of development card being played
-	 * @param move the move
-	 * @return the response
-	 */
-	private String processDevelopmentCard(PlayDevelopmentCardMove move)
-	{
-		//TODO rollback if individual component in overall move fails
-		
-		// Update player's inventory and ensure card can be played
-		String response = game.playDevelopmentCard(move);
-		if(response.equals("ok"))
-		{
-			// If valid, process internal message 
-			byte[] bytes = move.getMoveAsJson().getBytes();
-			switch(move.getCard().getType())
-			{
-				case Knight:
-					response = game.moveRobber(requestDeserialiser.getMoveRobberMove(bytes));
-					break;
-				case Library:
-					response = game.playLibraryCard();
-					break;
-				case University:
-					response = game.playUniversityCard();
-					break;
-				case Monopoly:
-					response = game.playMonopolyCard(requestDeserialiser.getPlayMonopolyCardMove(bytes));
-					break;
-				case RoadBuilding:
-					response = game.playBuildRoadsCard(requestDeserialiser.getPlayRoadBuildingCardMove(bytes));
-					break;
-				case YearOfPlenty:
-					response =  game.playYearOfPlentyCard(requestDeserialiser.getPlayYearOfPlentyCardMove(bytes));
-					break;
-				default:
-					break;
-				
-			}
-		}
-		
-		return response;
 	}
 
 	/**

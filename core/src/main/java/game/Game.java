@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.util.*;
 
 import main.java.board.*;
+import main.java.comm.messages.Request;
 
 public class Game
 {
@@ -113,29 +114,74 @@ public class Game
 		}
 		
 	}
-
+	
+	/**
+	 * Performs basic verification and then processes the move.
+	 * Returns a response message, which is either "ok" or an 
+	 * exception's message.
+	 * @param move the move
+	 * @param type the move's type
+	 * @return the response message
+	 */
+	public String processMove(Move move, MoveType type)
+	{
+		String response = null;
+		
+		// Check to see this is the player's turn
+		if(!currentPlayer.getColour().equals(move.getPlayerColour()))
+		{
+			return String.format("It is not %s player's turn", move.getPlayerColour().toString()); 
+		}
+		
+		try
+		{
+			// Process the message by switching on its type
+			switch(type) //TODO finish
+			{
+				case BuildRoad:
+					response = buildRoad((BuildRoadMove) move);
+					break;
+				case BuildSettlement:
+					response = buildSettlement((BuildSettlementMove) move);
+					break;
+				case MoveRobber:
+					response = moveRobber((MoveRobberMove) move);
+					break;
+				case UpgradeSettlement:
+					response = upgradeSettlement((UpgradeSettlementMove) move);
+					break;
+				case BuyDevelopmentCard:
+					response = buyDevelopmentCard((BuyDevelopmentCardMove) move);
+					break;
+				case EndMove:
+					response = changeTurn();			
+					break;
+			}
+		}
+		catch(Exception e)
+		{
+			// Error, return exception's message
+			return e.getMessage();
+		}
+		
+		// Return message
+		return response;
+	}
+	
 	/**
 	 * Checks that the player can build a road at the desired location, and builds it.
 	 * @param move
 	 * @return the response message to the client
+	 * @throws CannotUpgradeException 
+	 * @throws CannotAffordException 
 	 */
-	public String upgradeSettlement(UpgradeSettlementMove move)
+	private String upgradeSettlement(UpgradeSettlementMove move) throws CannotAffordException, CannotUpgradeException
 	{
 		Player p = players.get(move.getPlayerColour());
 		Node n = grid.nodes.get(new Point(move.getX(), move.getY()));
 		
 		// Try to upgrade settlement
-		try
-		{
-			p.upgradeSettlement(n);
-		}
-		catch (CannotUpgradeException | CannotAffordException e)
-		{
-			// Error
-			return e.getMessage();
-		}
-		
-		// Return success message
+		p.upgradeSettlement(n);
 		return "ok";
 	}
 	
@@ -143,24 +189,16 @@ public class Game
 	 * Checks that the player can build a settlement at the desired location, and builds it.
 	 * @param move
 	 * @return the response message to the client
+	 * @throws IllegalPlacementException 
+	 * @throws CannotAffordException 
 	 */
-	public String buildSettlement(BuildSettlementMove move)
+	private String buildSettlement(BuildSettlementMove move) throws CannotAffordException, IllegalPlacementException
 	{
 		Player p = players.get(move.getPlayerColour());
 		Node n = grid.nodes.get(new Point(move.getX(), move.getY()));
 		
 		// Try to build settlement
-		try
-		{
-			p.buildSettlement(n);
-		}
-		catch (IllegalPlacementException | CannotAffordException e) 
-		{
-			// Error
-			return e.getMessage();
-		}
-		
-		// Return success message
+		p.buildSettlement(n);
 		return "ok";
 	}
 	
@@ -169,7 +207,7 @@ public class Game
 	 * @param move
 	 * @return the response message to the client
 	 */
-	public String playDevelopmentCard(PlayDevelopmentCardMove move)
+	private String playDevelopmentCard(PlayDevelopmentCardMove move)
 	{
 		Player p = players.get(move.getPlayerColour());
 		
@@ -191,28 +229,71 @@ public class Game
 	/**
 	 * Checks that the player can buy a development card
 	 * @param move the move
-	 * @param card the object to hold the new development card. 
 	 * @return the response message to the client
+	 * @throws CannotAffordException 
 	 */
-	public String buyDevelopmentCard(BuyDevelopmentCardMove move, DevelopmentCard card)
+	private String buyDevelopmentCard(BuyDevelopmentCardMove move) throws CannotAffordException
 	{
 		Player p = players.get(move.getPlayerColour());
-		DevelopmentCard c = null;
 		
 		// Try to buy card
-		try
+		// Return with "ok" status and set the card parameter
+		return p.buyDevelopmentCard().toString(); //TODO fix
+	}
+	
+	
+	/**
+	 * Atomically processes the type of development card being played
+	 * @param move the move
+	 * @return the response
+	 */
+	public String processDevelopmentCard(PlayDevelopmentCardMove move, Move internalMove)
+	{
+		// Copy old player state in case rollback is needed (individual component of move failing)
+		Player copy = players.get(move.getPlayerColour()).copy();
+		
+		// Update player's inventory and ensure card can be played
+		String response = playDevelopmentCard(move);
+		if(response.equals("ok"))
 		{
-			c = p.buyDevelopmentCard();
-		}
-		catch (CannotAffordException e) 
-		{
-			// Error
-			return e.getMessage();
+			// If valid, try to process internal message
+			try
+			{
+				switch (move.getCard().getType())
+				{
+					case Knight:
+						response = moveRobber((MoveRobberMove) internalMove);
+						break;
+					case Library:
+						response = playLibraryCard();
+						break;
+					case University:
+						response = playUniversityCard();
+						break;
+					case Monopoly:
+						response = playMonopolyCard((PlayMonopolyCardMove) internalMove);
+						break;
+					case RoadBuilding:
+						response = playBuildRoadsCard((PlayRoadBuildingCardMove) internalMove);
+						break;
+					case YearOfPlenty:
+						response = playYearOfPlentyCard((PlayYearOfPlentyCardMove) internalMove);
+						break;
+					default:
+						break;
+
+				}
+			}
+			catch(Exception e) 
+			{ 
+				// Error. Reset player and return exception message
+				players.get(copy.getColour()).restoreCopy(copy, move.getCard());
+				
+				return e.getMessage(); 
+			}
 		}
 		
-		// Return with "ok" status and set the card parameter
-		card = c;
-		return "ok";
+		return response;
 	}
 	
 	/**
@@ -220,11 +301,12 @@ public class Game
 	 * who has a settlement on the hex
 	 * @param move the move
 	 * @return return message
+	 * @throws CannotStealException if the specified player cannot provide a resource 
 	 */
-	public String moveRobber(MoveRobberMove move)
+	public String moveRobber(MoveRobberMove move) throws CannotStealException
 	{
 		// Retrieve the new hex the robber will move to.
-		Hex newHex = grid.swapRobbers(move.getX(), move.getY());
+		Hex newHex = grid.grid.get(new Point(move.getX(), move.getY()));
 		Player other = players.get(move.getColourToTakeFrom());
 		boolean valid = false;
 
@@ -241,10 +323,10 @@ public class Game
 		}
 		
 		// Cannot take from this player
-		if(!valid) return String.format("Player %s cannot take resource from %s.", 
-							currentPlayer.getColour().toString(), other.getColour().toString());
+		if(!valid) throw new CannotStealException(move.getPlayerColour(), other.getColour());
 		
 		// return success message
+		grid.swapRobbers(move.getX(), move.getY());
 		return "ok";
 	}
 
@@ -252,12 +334,14 @@ public class Game
 	 * Process the playing of the 'Build Roads' development card.
 	 * @param move the move to process
 	 * @return return message
+	 * @throws RoadExistsException 
+	 * @throws CannotBuildRoadException 
+	 * @throws CannotAffordException 
 	 */
-	public String playBuildRoadsCard(PlayRoadBuildingCardMove move)
+	public String playBuildRoadsCard(PlayRoadBuildingCardMove move) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
 		buildRoad(move.getMove1());
 		buildRoad(move.getMove2());
-		// TODO MAKE ATOMIC
 		
 		return "ok";
 	}
@@ -318,9 +402,9 @@ public class Game
 		{
 			if(p.equals(currentPlayer)) continue;
 			
-			// Give p's resources of type 'r' to currentPlayer
 			try
 			{
+				// Give p's resources of type 'r' to currentPlayer
 				int num = p.getResources().get(r);
 				grant.put(r, num);
 				p.spendResources(grant);
@@ -331,15 +415,18 @@ public class Game
 		}
 		
 		// Return message is string showing number of resources taken
-		return String.format("%d", sum);
+		return String.format("%d", sum); //TODO fix
 	}
 	
 	/**
 	 * Checks that the player can build a road at the desired location, and builds it.
 	 * @param move
 	 * @return the response message to the client
+	 * @throws RoadExistsException 
+	 * @throws CannotBuildRoadException 
+	 * @throws CannotAffordException 
 	 */
-	public String buildRoad(BuildRoadMove move)
+	private String buildRoad(BuildRoadMove move) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
 		Player p = players.get(move.getPlayerColour());
 		Node n = grid.nodes.get(new Point(move.getX1(), move.getY1()));
@@ -356,16 +443,9 @@ public class Game
 			}
 		}
 		
-		try
-		{
-			p.buildRoad(edge);
-		}
-		catch (CannotBuildRoadException | RoadExistsException | CannotAffordException e)
-		{
-			return e.getMessage();
-		}
-		
-		checkLongestRoad();
+		// Try to build the road and update the longest road 
+		p.buildRoad(edge);
+		checkLongestRoad(); //TODO send updated road length
 		
 		// return success message
 		return "ok";
@@ -481,5 +561,4 @@ public class Game
 		currentPlayer.setVp(currentPlayer.getVp() + 1);
 		return "ok";
 	}
-
 }

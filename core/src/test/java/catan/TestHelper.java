@@ -15,10 +15,11 @@ public class TestHelper
 	protected Node n;
 	protected Hex hex;
 	
-	protected Settlement makeSettlement(Player p, Node n)
+	protected Settlement makeSettlement(Player p, Node n) throws SettlementExistsException
 	{
 		assertTrue(hasResources(p));
 		int oldSize = p.getSettlements().size();
+		int oldResources = p.getNumResources();
 		
 		// Build settlement
 		try
@@ -32,7 +33,7 @@ public class TestHelper
 
 		// Test it was built correctly and that resources were taken away
 		assertTrue(p.getSettlements().size() > oldSize);
-		assertFalse(hasResources(p));
+		assertTrue(oldResources > p.getNumResources());
 
 		return (Settlement) p.getSettlements().values().toArray()[p.getSettlements().values().size() - 1];
 	}

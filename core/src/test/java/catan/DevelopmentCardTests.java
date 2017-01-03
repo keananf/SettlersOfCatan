@@ -96,7 +96,7 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test
-	public void playKnightNoResourcesTest() throws CannotAffordException, IllegalPlacementException, CannotStealException
+	public void playKnightNoResourcesTest() throws SettlementExistsException, CannotAffordException, IllegalPlacementException, CannotStealException
 	{	
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
@@ -104,8 +104,7 @@ public class DevelopmentCardTests extends TestHelper
 		Player p2 = new NetworkPlayer(Colour.Red);
 		game.addPlayer(p2);
 		p2.grantResources(Settlement.getSettlementCost());
-		p2.buildSettlement(hex.getNodes().get(0));
-		assertFalse(hasResources(p2));
+		makeSettlement(p2, hex.getNodes().get(0));
 		
 		// Set up move
 		MoveRobberMove move = new MoveRobberMove();
@@ -161,7 +160,7 @@ public class DevelopmentCardTests extends TestHelper
 	}
 	
 	@Test
-	public void playKnightTakeResourceTest() throws CannotAffordException, IllegalPlacementException, CannotStealException
+	public void playKnightTakeResourceTest() throws SettlementExistsException, CannotAffordException, IllegalPlacementException, CannotStealException
 	{	
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
@@ -170,7 +169,7 @@ public class DevelopmentCardTests extends TestHelper
 		p2.grantResources(DevelopmentCard.getCardCost());
 		game.addPlayer(p2);
 		p2.grantResources(Settlement.getSettlementCost());
-		p2.buildSettlement(hex.getNodes().get(0));
+		makeSettlement(p2, hex.getNodes().get(0));
 		
 		// Set up move
 		MoveRobberMove move = new MoveRobberMove();
@@ -209,7 +208,7 @@ public class DevelopmentCardTests extends TestHelper
 	}
 	
 	@Test
-	public void playBuildRoadsCardTest() throws CannotBuildRoadException, RoadExistsException, CannotAffordException
+	public void playBuildRoadsCardTest() throws SettlementExistsException, CannotBuildRoadException, RoadExistsException, CannotAffordException
 	{
 		// Set up entities
 		Edge e1 = n.getEdges().get(0), e2 = n.getEdges().get(1);
@@ -251,7 +250,7 @@ public class DevelopmentCardTests extends TestHelper
 	 * @throws CannotAffordException
 	 */
 	@Test
-	public void playBuildRoadsCardFailure() throws CannotBuildRoadException, CannotAffordException
+	public void playBuildRoadsCardFailure() throws SettlementExistsException, CannotBuildRoadException, CannotAffordException
 	{
 		// Set up variables
 		Edge e1 = n.getEdges().get(0);

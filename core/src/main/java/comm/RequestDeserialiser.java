@@ -3,6 +3,7 @@ package main.java.comm;
 import java.lang.reflect.Type;
 
 import main.java.comm.messages.Request;
+import main.java.comm.messages.TradeMessage;
 import main.java.enums.MoveType;
 import main.java.game.moves.*;
 
@@ -60,13 +61,16 @@ public class RequestDeserialiser implements JsonDeserializer<Request>
 			case PlayDevelopmentCard:
 				move = getPlayDevelopmentCardMove(bytes);
 				break;
-			default:
+			case EndMove:
+				move = getEndMove(bytes);
+				break;
+			case TradeMove:
+				move = getTradeMessage(bytes);
 				break;
 		}
 		
 		return move;
 	}
-
 
 	/**
 	 * Parses the specific kind of development card move
@@ -236,5 +240,33 @@ public class RequestDeserialiser implements JsonDeserializer<Request>
 		Gson gson = builder.create();
 
 		return gson.fromJson(bytes.toString(), PlayRoadBuildingCardMove.class);
+	}
+
+	/**
+	 * Deserialises the bytes as a TradeMessage
+	 * @param bytes the move
+	 * @return the move
+	 */
+	private Move getEndMove(byte[] bytes)
+	{
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeHierarchyAdapter(EndMove.class, new EndMoveDeserialiser());
+		Gson gson = builder.create();
+
+		return gson.fromJson(bytes.toString(), EndMove.class);
+	}
+	
+	/**
+	 * Deserialises the bytes as a TradeMessage
+	 * @param bytes the move
+	 * @return the move
+	 */
+	private TradeMessage getTradeMessage(byte[] bytes)
+	{
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeHierarchyAdapter(TradeMessage.class, new TradeMessageDeserialiser());
+		Gson gson = builder.create();
+
+		return gson.fromJson(bytes.toString(), TradeMessage.class);
 	}
 }

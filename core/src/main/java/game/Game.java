@@ -11,7 +11,7 @@ import java.net.InetAddress;
 import java.util.*;
 
 import main.java.board.*;
-import main.java.comm.messages.Request;
+import main.java.comm.messages.TradeMessage;
 
 public class Game
 {
@@ -61,7 +61,7 @@ public class Game
 			// If 7, check that no one is above the resource limit
 			if(dice == resourceLimit)
 			{
-				checkResources(player);
+				player.loseResources();
 				continue;
 			}
 			
@@ -87,33 +87,6 @@ public class Game
 		
 		return playerResources;
 	}
-
-	/**
-	 * Checks if a player has more than 7 resource cards.
-	 * 
-	 * If so, cards are randomly removed until the player has 7 again.
-	 * @param player the player
-	 */
-	private void checkResources(Player player)
-	{
-		Random rand = new Random();
-		int resourceLimit = 7;
-		int numResources = player.getNumResources();
-		Map<ResourceType, Integer> resources = player.getResources();
-		
-		// Randomly remove resources until the cap is reached
-		while(numResources > resourceLimit)
-		{
-			ResourceType key = (ResourceType) resources.keySet().toArray()[rand.nextInt(resources.size())];
-			
-			if(resources.get(key) > 0)
-			{
-				resources.put(key, resources.get(key) - 1);
-				numResources--;
-			}
-		}
-		
-	}
 	
 	/**
 	 * Performs basic verification and then processes the move.
@@ -125,6 +98,8 @@ public class Game
 	 */
 	public String processMove(Move move, MoveType type)
 	{
+		// Maintain original in case roll back is necessary
+		Player player = players.get(move.getPlayerColour()), copy = player.copy();
 		String response = null;
 		
 		// Check to see this is the player's turn
@@ -136,7 +111,7 @@ public class Game
 		try
 		{
 			// Process the message by switching on its type
-			switch(type) //TODO finish
+			switch(type)
 			{
 				case BuildRoad:
 					response = buildRoad((BuildRoadMove) move);
@@ -156,11 +131,18 @@ public class Game
 				case EndMove:
 					response = changeTurn();			
 					break;
+				case TradeMove:
+					response = processTrade((TradeMessage) move, player);
+					break;
+				default:
+					break;
 			}
 		}
 		catch(Exception e)
 		{
-			// Error, return exception's message
+			// Error. Reset player and return exception message
+			players.get(copy.getColour()).restoreCopy(copy, null);
+			
 			return e.getMessage();
 		}
 		
@@ -168,6 +150,37 @@ public class Game
 		return response;
 	}
 	
+	/**
+	 * If trade was successful, exchange of resources occurs here
+	 * @param move the move object detailing the trade
+	 * @return the response status
+	 */
+	private String processTrade(TradeMessage move, Player offerer) throws IllegalTradeException
+	{
+		// Find the recipient and extract the trade's contents
+		Map<ResourceType, Integer> offer = move.getOfferAsMap(), request = move.getRequestAsMap();
+		Player recipient = players.get(move.getRecipient()), recipientCopy = recipient.copy();
+		
+		try
+		{
+			// Exchange resources
+			offerer.spendResources(offer);
+			recipient.grantResources(offer);
+			
+			recipient.spendResources(request);
+			offerer.grantResources(request);
+		}
+		catch(Exception e)
+		{
+			// Reset recipient and throw exception. Offerer is reset in above method
+			recipient.restoreCopy(recipientCopy, null);
+					
+			throw new IllegalTradeException(offerer.getColour(), recipient.getColour());
+		}
+		
+		return "ok";
+	}
+
 	/**
 	 * Checks that the player can build a road at the desired location, and builds it.
 	 * @param move
@@ -191,8 +204,9 @@ public class Game
 	 * @return the response message to the client
 	 * @throws IllegalPlacementException 
 	 * @throws CannotAffordException 
+	 * @throws SettlementExistsException 
 	 */
-	private String buildSettlement(BuildSettlementMove move) throws CannotAffordException, IllegalPlacementException
+	private String buildSettlement(BuildSettlementMove move) throws CannotAffordException, IllegalPlacementException, SettlementExistsException
 	{
 		Player p = players.get(move.getPlayerColour());
 		Node node = grid.nodes.get(new Point(move.getX(), move.getY()));

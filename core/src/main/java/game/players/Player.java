@@ -23,6 +23,7 @@ public abstract class Player
 	private int knightsUsed;
 	private boolean hasLongestRoad;
 	private HashMap<DevelopmentCardType, List<DevelopmentCard>> cards;
+	private int numResources;
 
 	private static final int THRESHHOLD = 10;
 	
@@ -217,10 +218,17 @@ public abstract class Player
 	 * Attempts to build a settlement for this player
 	 * @param node the node to build the settlement on
 	 * @throws CannotAffordException
+	 * @throws SettlementExistsException 
 	 */
-	public void buildSettlement(Node node) throws CannotAffordException, IllegalPlacementException
+	public void buildSettlement(Node node) throws CannotAffordException, IllegalPlacementException, SettlementExistsException
 	{
 		Settlement s = new Settlement(node, colour);
+		
+		// Check if empty
+		if(node.getSettlement() != null)
+		{
+			throw new SettlementExistsException(s);
+		}
 		
 		// Check if within two nodes of any other settlement
 		if(s.isNearSettlement())
@@ -326,6 +334,7 @@ public abstract class Player
 			
 			// Add to overall resource bank
 			resources.put(r, value + existing);
+			numResources += value;
 		}
 	}	
 	
@@ -347,9 +356,34 @@ public abstract class Player
 			
 			// Add to overall resource bank
 			resources.put(r, existing - value);
+			numResources -= value;
 		}
 	}
 
+	/**
+	 * Checks if a player has more than 7 resource cards.
+	 * 
+	 * If so, cards are randomly removed until the player has 7 again.
+	 * @param player the player
+	 */
+	public void loseResources()
+	{
+		Random rand = new Random();
+		int resourceLimit = 7;
+		
+		// Randomly remove resources until the cap is reached
+		while(numResources > resourceLimit)
+		{
+			ResourceType key = (ResourceType) resources.keySet().toArray()[rand.nextInt(resources.size())];
+			
+			if(resources.get(key) > 0)
+			{
+				resources.put(key, resources.get(key) - 1);
+				numResources--;
+			}
+		}
+	}
+	
 	/**
 	 * Take one resource randomly from the other player
 	 * @param other the other player
@@ -382,13 +416,7 @@ public abstract class Player
 	 */
 	public int getNumResources()
 	{
-		int sum = 0;
-		for (ResourceType r : getResources().keySet())
-		{
-			sum += getResources().get(r);
-		}
-
-		return sum;
+		return numResources;
 	}
 	
 	/**
@@ -446,6 +474,7 @@ public abstract class Player
 	 */
 	public void restoreCopy(Player copy, DevelopmentCard card)
 	{
+		numResources = 0;
 		resources = new HashMap<ResourceType, Integer>();
 		cards = new HashMap<DevelopmentCardType, List<DevelopmentCard>>();
 		settlements = new HashMap<Point, Building>();
@@ -468,7 +497,10 @@ public abstract class Player
 		knightsUsed = copy.knightsUsed;
 
 		// Re-add the spent card:
-		cards.get(card.getType()).add(card);
+		if(card != null)
+		{			
+			cards.get(card.getType()).add(card);
+		}
 	}
 	
 	/**
@@ -568,5 +600,4 @@ public abstract class Player
 	{
 		return roads.size();
 	}
-
 }

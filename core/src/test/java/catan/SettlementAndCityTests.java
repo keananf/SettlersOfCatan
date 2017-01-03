@@ -1,10 +1,8 @@
 package test.java.catan;
 
 import static org.junit.Assert.*;
-import main.java.board.Edge;
 import main.java.board.Node;
 import main.java.exceptions.*;
-import main.java.game.build.Road;
 import main.java.game.build.Settlement;
 
 import org.junit.*;
@@ -19,13 +17,13 @@ public class SettlementAndCityTests extends TestHelper
 
 
 	@Test(expected = CannotAffordException.class)
-	public void cannotBuildSettlementTest() throws CannotAffordException, IllegalPlacementException
+	public void cannotBuildSettlementTest() throws CannotAffordException, IllegalPlacementException, SettlementExistsException
 	{
 		p.buildSettlement(n);
 	}
 
 	@Test(expected = CannotAffordException.class)
-	public void cannotAffordCityTest() throws CannotAffordException, CannotUpgradeException
+	public void cannotAffordCityTest() throws SettlementExistsException, CannotAffordException, CannotUpgradeException
 	{
 		// Test resources
 		assertFalse(hasResources(p));
@@ -46,7 +44,7 @@ public class SettlementAndCityTests extends TestHelper
 	}
 
 	@Test
-	public void buildSettlementTest()
+	public void buildSettlementTest() throws SettlementExistsException
 	{
 		// Test resources
 		assertFalse(hasResources(p));
@@ -56,9 +54,22 @@ public class SettlementAndCityTests extends TestHelper
 		// Build settlement
 		makeSettlement(p, n);
 	}
+
+	@Test(expected = SettlementExistsException.class)
+	public void duplicateSettlementTest() throws SettlementExistsException
+	{
+		// Grant resources for two settlements
+		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(Settlement.getSettlementCost());
+
+		// Build settlement, and attempt to build at same node again.
+		// Exception will be thrown
+		makeSettlement(p, n);
+		makeSettlement(p, n);
+	}
 	
 	@Test(expected = IllegalPlacementException.class)
-	public void tooCloseToSettlementTest() throws IllegalPlacementException
+	public void tooCloseToSettlementTest() throws SettlementExistsException, IllegalPlacementException
 	{
 		// Grant resources and build first settlement
 		p.grantResources(Settlement.getSettlementCost());
@@ -73,7 +84,7 @@ public class SettlementAndCityTests extends TestHelper
 			p.grantResources(Settlement.getSettlementCost());
 			p.buildSettlement(n2);
 		}
-		catch (CannotAffordException e)
+		catch (SettlementExistsException | CannotAffordException e)
 		{
 			e.printStackTrace();
 		}

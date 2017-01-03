@@ -176,6 +176,12 @@ public class Server
 				response = game.processDevelopmentCard(devMove, requestDeserialiser.getInternalDevCardMove(devMove));
 				break;
 			
+			case TradeMove:
+				response = processTrade((TradeMessage)move, rawMsg);
+				
+				// if response is denied, simply break. Otherwise proceed into default behaviour
+				if(response.equals(TradeStatus.Denied.toString())) break;
+				
 			// Other moves
 			default:
 				response = game.processMove(move, req.getType());
@@ -220,6 +226,37 @@ public class Server
 			Socket socket = connections.get(colour);
 			socket.getOutputStream().write(bytes);
 		}
+	}
+	
+
+	/**
+	 * Forwards the trade request to the other player and blocks for a response
+	 * @param move the trade move
+	 * @param rawMsg the serialised move, received from across the network
+	 * @return the status of the trade "accepted, denied, offer"
+	 */
+	private String processTrade(TradeMessage move, byte[] rawMsg) 
+	{
+		Socket recipient = connections.get(move.getRecipient());
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(recipient.getInputStream())))
+		{
+			// Send message to recipient 
+			recipient.getOutputStream().write(rawMsg);
+
+			// Receive move and process
+			byte[] rec = reader.lines().toString().getBytes(); // TODO fix this
+					
+			// Overwrite message object with response. Should be the same contents except 
+			// with a different status
+			move = (TradeMessage) requestDeserialiser.deserialiseMove(rec, MoveType.TradeMove);
+
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+				
+		return move.getStatus().toString();
 	}
 	
 	/**

@@ -3,14 +3,11 @@ package test.java.catan;
 import static org.junit.Assert.*;
 
 import java.awt.Point;
-import java.util.HashMap;
-import java.util.Map;
 
 import main.java.board.Edge;
 import main.java.board.Node;
 import main.java.enums.Colour;
 import main.java.enums.MoveType;
-import main.java.enums.ResourceType;
 import main.java.exceptions.*;
 import main.java.game.build.*;
 import main.java.game.moves.BuildSettlementMove;
@@ -28,7 +25,7 @@ public class RoadTests extends TestHelper
 	}
 
 	@Test
-	public void buildRoadTest() throws CannotBuildRoadException, RoadExistsException
+	public void buildRoadTest() throws SettlementExistsException, CannotBuildRoadException, RoadExistsException
 	{
 		// Grant resources and make settlement
 		p.grantResources(Settlement.getSettlementCost());
@@ -48,7 +45,7 @@ public class RoadTests extends TestHelper
 	}
 	
 	@Test
-	public void settlementBreaksRoadTest() throws CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public void settlementBreaksRoadTest() throws SettlementExistsException, CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{	
 		// Set up player 2
 		Player p2 = new NetworkPlayer(Colour.Red);				
@@ -116,7 +113,7 @@ public class RoadTests extends TestHelper
 	}
 	
 	@Test
-	public void settlementBreaksRoadTest2() throws CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public void settlementBreaksRoadTest2() throws SettlementExistsException, CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{	
 		// Set up player 2
 		Player p2 = new NetworkPlayer(Colour.Red);				
@@ -159,7 +156,7 @@ public class RoadTests extends TestHelper
 	}
 	
 	@Test(expected = CannotAffordException.class)
-	public void cannotAffordRoadTest() throws CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public void cannotAffordRoadTest() throws SettlementExistsException, CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
 		// Need a settlement before you can build a road.
 		p.grantResources(Settlement.getSettlementCost());
@@ -178,7 +175,7 @@ public class RoadTests extends TestHelper
 	 * @throws RoadExistsException 
 	 */
 	@Test 
-	public void roadLengthTest() throws CannotBuildRoadException, RoadExistsException
+	public void roadLengthTest() throws SettlementExistsException, CannotBuildRoadException, RoadExistsException
 	{
 		Node n2 = game.getGrid().nodes.get(new Point(-1,0));
 		

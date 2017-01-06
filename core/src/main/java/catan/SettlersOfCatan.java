@@ -14,7 +14,8 @@ import main.java.board.*;
 import java.awt.Point;
 import java.util.Hashtable;
 
-public class SettlersOfCatan extends ApplicationAdapter {
+public class SettlersOfCatan extends ApplicationAdapter
+{
 	HexGrid map;
 	Texture texture;
 	OrthographicCamera camera;

@@ -6,4 +6,4 @@ Settlers of Catan Implementation in Java using LibGDX
 `./gradlew build`
 
 ### Windows (PowerShell)
-`./gradlew.bat build
+`./gradlew.bat build`

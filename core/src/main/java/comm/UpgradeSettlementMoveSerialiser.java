@@ -1,8 +1,8 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 
-import main.java.game.moves.UpgradeSettlementMove;
+import game.moves.UpgradeSettlementMove;
 
 import com.google.gson.*;
 

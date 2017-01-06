@@ -1,12 +1,12 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.comm.messages.BoardMessage;
-import main.java.enums.ResourceType;
-import main.java.board.*;
+import comm.messages.BoardMessage;
+import enums.ResourceType;
+import board.*;
 
 import com.google.gson.*;
 

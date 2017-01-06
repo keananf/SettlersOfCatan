@@ -1,9 +1,9 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 
-import main.java.enums.Colour;
-import main.java.game.moves.EndMove;
+import enums.Colour;
+import game.moves.EndMove;
 
 import com.google.gson.*;
 

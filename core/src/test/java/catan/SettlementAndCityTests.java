@@ -1,9 +1,9 @@
-package test.java.catan;
+package catan;
 
 import static org.junit.Assert.*;
-import main.java.board.Node;
-import main.java.exceptions.*;
-import main.java.game.build.Settlement;
+import board.Node;
+import exceptions.*;
+import game.build.Settlement;
 
 import org.junit.*;
 

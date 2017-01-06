@@ -1,6 +1,6 @@
-package main.java.game.moves;
+package game.moves;
 
-import main.java.enums.ResourceType;
+import enums.ResourceType;
 
 public class PlayMonopolyCardMove extends Move
 {

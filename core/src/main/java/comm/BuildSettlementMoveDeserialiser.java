@@ -1,9 +1,9 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 
-import main.java.enums.Colour;
-import main.java.game.moves.BuildSettlementMove;
+import enums.Colour;
+import game.moves.BuildSettlementMove;
 
 import com.google.gson.*;
 

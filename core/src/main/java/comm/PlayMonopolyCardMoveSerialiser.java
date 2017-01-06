@@ -1,7 +1,7 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
-import main.java.game.moves.PlayMonopolyCardMove;
+import game.moves.PlayMonopolyCardMove;
 import com.google.gson.*;
 
 public class PlayMonopolyCardMoveSerialiser implements JsonSerializer<PlayMonopolyCardMove>

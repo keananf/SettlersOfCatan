@@ -1,4 +1,4 @@
-package main.java.game.moves;
+package game.moves;
 
 
 public class UpgradeSettlementMove extends Move

@@ -1,18 +1,18 @@
-package test.java.catan;
+package catan;
 
 import static org.junit.Assert.*;
 
 import java.awt.Point;
 
-import main.java.board.Edge;
-import main.java.board.Node;
-import main.java.enums.Colour;
-import main.java.enums.MoveType;
-import main.java.exceptions.*;
-import main.java.game.build.*;
-import main.java.game.moves.BuildSettlementMove;
-import main.java.game.players.NetworkPlayer;
-import main.java.game.players.Player;
+import board.Edge;
+import board.Node;
+import enums.Colour;
+import enums.MoveType;
+import exceptions.*;
+import game.build.*;
+import game.moves.BuildSettlementMove;
+import game.players.NetworkPlayer;
+import game.players.Player;
 
 import org.junit.*;
 

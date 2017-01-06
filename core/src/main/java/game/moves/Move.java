@@ -1,6 +1,6 @@
-package main.java.game.moves;
+package game.moves;
 
-import main.java.enums.*;
+import enums.*;
 
 /**
  * Class describing an abstract move type

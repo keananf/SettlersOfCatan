@@ -1,20 +1,20 @@
-package test.java.catan;
+package catan;
 
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import main.java.board.Edge;
-import main.java.board.Hex;
-import main.java.board.Node;
-import main.java.enums.*;
-import main.java.exceptions.*;
-import main.java.game.build.DevelopmentCard;
-import main.java.game.build.Road;
-import main.java.game.build.Settlement;
-import main.java.game.moves.*;
-import main.java.game.players.*;
+import board.Edge;
+import board.Hex;
+import board.Node;
+import enums.*;
+import exceptions.*;
+import game.build.DevelopmentCard;
+import game.build.Road;
+import game.build.Settlement;
+import game.moves.*;
+import game.players.*;
 
 import org.junit.*;
 

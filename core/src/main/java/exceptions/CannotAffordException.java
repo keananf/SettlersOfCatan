@@ -1,6 +1,6 @@
-package main.java.exceptions;
+package exceptions;
 
-import main.java.enums.ResourceType;
+import enums.ResourceType;
 
 @SuppressWarnings("serial")
 public class CannotAffordException extends Exception

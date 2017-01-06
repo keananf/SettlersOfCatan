@@ -1,7 +1,7 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
-import main.java.game.moves.EndMove;
+import game.moves.EndMove;
 import com.google.gson.*;
 
 public class EndMoveSerialiser implements JsonSerializer<EndMove>

@@ -1,9 +1,9 @@
-package main.java.game.build;
+package game.build;
 
 import java.util.*;
 
-import main.java.enums.*;
-import main.java.board.*;
+import enums.*;
+import board.*;
 
 /**
  * Class describing a road

@@ -1,6 +1,6 @@
-package main.java.game.build;
+package game.build;
 
-import main.java.enums.*;
+import enums.*;
 
 import java.util.HashMap;
 import java.util.Map;

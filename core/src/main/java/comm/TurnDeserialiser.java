@@ -1,10 +1,10 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 
-import main.java.comm.messages.ResourceCount;
-import main.java.comm.messages.TurnUpdateMessage;
-import main.java.enums.Colour;
+import comm.messages.ResourceCount;
+import comm.messages.TurnUpdateMessage;
+import enums.Colour;
 
 import com.google.gson.*;
 

@@ -1,8 +1,8 @@
-package main.java.board;
+package board;
 
 import java.util.*;
 
-import main.java.game.build.*;
+import game.build.*;
 
 /**
  * Class representing an individual node in catan (intersection of three hexes)

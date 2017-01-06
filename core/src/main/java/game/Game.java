@@ -1,17 +1,17 @@
-package main.java.game;
+package game;
 
-import main.java.enums.*;
-import main.java.exceptions.*;
-import main.java.game.build.*;
-import main.java.game.moves.*;
-import main.java.game.players.*;
+import enums.*;
+import exceptions.*;
+import game.build.*;
+import game.moves.*;
+import game.players.*;
 
 import java.awt.Point;
 import java.net.InetAddress;
 import java.util.*;
 
-import main.java.board.*;
-import main.java.comm.messages.TradeMessage;
+import board.*;
+import comm.messages.TradeMessage;
 
 public class Game
 {

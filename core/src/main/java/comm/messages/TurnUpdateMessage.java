@@ -1,9 +1,9 @@
-package main.java.comm.messages;
+package comm.messages;
 
 import java.util.Map;
 
-import main.java.enums.Colour;
-import main.java.enums.ResourceType;
+import enums.Colour;
+import enums.ResourceType;
 
 /**
  * Class describing a turn update message. Includes info about resources and dice

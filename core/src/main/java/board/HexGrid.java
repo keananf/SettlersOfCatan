@@ -1,6 +1,6 @@
-package main.java.board;
+package board;
 
-import main.java.enums.ResourceType;
+import enums.ResourceType;
 
 import java.awt.Point;
 import java.util.*;

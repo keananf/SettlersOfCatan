@@ -1,6 +1,6 @@
-package main.java.comm.messages;
+package comm.messages;
 
-import main.java.enums.MoveType;
+import enums.MoveType;
 
 
 /**

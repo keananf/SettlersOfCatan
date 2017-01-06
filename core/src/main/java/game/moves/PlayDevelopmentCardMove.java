@@ -1,6 +1,6 @@
-package main.java.game.moves;
+package game.moves;
 
-import main.java.game.build.DevelopmentCard;
+import game.build.DevelopmentCard;
 
 public class PlayDevelopmentCardMove extends Move
 {

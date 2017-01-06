@@ -1,9 +1,9 @@
-package main.java.game.players;
+package game.players;
 
 import java.net.InetAddress;
 
-import main.java.enums.Colour;
-import main.java.game.moves.*;
+import enums.Colour;
+import game.moves.*;
 
 /**
  * Class representing a player from across the network

@@ -1,8 +1,8 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 
-import main.java.game.build.DevelopmentCard;
+import game.build.DevelopmentCard;
 
 import com.google.gson.*;
 

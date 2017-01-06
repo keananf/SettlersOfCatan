@@ -1,12 +1,12 @@
-package test.java.catan;
+package catan;
 
 import static org.junit.Assert.*;
-import main.java.enums.*;
-import main.java.exceptions.*;
-import main.java.game.build.*;
-import main.java.board.*;
-import main.java.game.*;
-import main.java.game.players.*;
+import enums.*;
+import exceptions.*;
+import game.build.*;
+import board.*;
+import game.*;
+import game.players.*;
 
 import java.awt.Point;
 

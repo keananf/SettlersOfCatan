@@ -1,9 +1,9 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 
-import main.java.comm.messages.*;
-import main.java.enums.*;
+import comm.messages.*;
+import enums.*;
 
 import com.google.gson.*;
 

@@ -1,10 +1,10 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 import java.util.List;
 
-import main.java.board.*;
-import main.java.comm.messages.BoardMessage;
+import board.*;
+import comm.messages.BoardMessage;
 
 import com.google.gson.*;
 

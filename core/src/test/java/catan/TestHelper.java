@@ -1,12 +1,12 @@
-package test.java.catan;
+package catan;
 
 import static org.junit.Assert.*;
-import main.java.board.*;
-import main.java.enums.*;
-import main.java.exceptions.*;
-import main.java.game.Game;
-import main.java.game.build.*;
-import main.java.game.players.*;
+import board.*;
+import enums.*;
+import exceptions.*;
+import game.Game;
+import game.build.*;
+import game.players.*;
 
 public class TestHelper
 {

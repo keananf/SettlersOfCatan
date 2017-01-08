@@ -1,9 +1,9 @@
-package main.java.board;
+package board;
 
 import java.awt.Point;
 import java.util.*;
 
-import main.java.game.build.*;
+import game.build.*;
 
 
 /**

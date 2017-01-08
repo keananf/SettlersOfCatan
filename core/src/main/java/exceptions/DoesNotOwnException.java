@@ -1,6 +1,6 @@
-package main.java.exceptions;
+package exceptions;
 
-import main.java.game.build.*;
+import game.build.*;
 
 @SuppressWarnings("serial")
 public class DoesNotOwnException extends Exception

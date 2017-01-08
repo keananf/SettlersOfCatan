@@ -1,9 +1,9 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 
-import main.java.enums.Colour;
-import main.java.game.moves.BuyDevelopmentCardMove;
+import enums.Colour;
+import game.moves.BuyDevelopmentCardMove;
 
 import com.google.gson.*;
 

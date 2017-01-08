@@ -1,10 +1,10 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 
-import main.java.enums.Colour;
-import main.java.enums.DevelopmentCardType;
-import main.java.game.build.DevelopmentCard;
+import enums.Colour;
+import enums.DevelopmentCardType;
+import game.build.DevelopmentCard;
 
 import com.google.gson.*;
 

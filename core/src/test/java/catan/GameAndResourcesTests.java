@@ -1,15 +1,15 @@
-package test.java.catan;
+package catan;
 
 import static org.junit.Assert.*;
 import java.util.*;
-import main.java.comm.messages.ResourceCount;
-import main.java.comm.messages.TradeMessage;
-import main.java.enums.*;
-import main.java.exceptions.IllegalTradeException;
-import main.java.exceptions.SettlementExistsException;
-import main.java.game.build.*;
-import main.java.game.players.NetworkPlayer;
-import main.java.game.players.Player;
+import comm.messages.ResourceCount;
+import comm.messages.TradeMessage;
+import enums.*;
+import exceptions.IllegalTradeException;
+import exceptions.SettlementExistsException;
+import game.build.*;
+import game.players.NetworkPlayer;
+import game.players.Player;
 
 import org.junit.*;
 

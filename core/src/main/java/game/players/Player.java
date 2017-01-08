@@ -1,13 +1,13 @@
-package main.java.game.players;
+package game.players;
 
 import java.awt.Point;
 import java.util.*;
 
-import main.java.board.*;
-import main.java.enums.*;
-import main.java.exceptions.*;
-import main.java.game.build.*;
-import main.java.game.moves.*;
+import board.*;
+import enums.*;
+import exceptions.*;
+import game.build.*;
+import game.moves.*;
 
 /**
  * Abstract class describing a player (AI, or network)

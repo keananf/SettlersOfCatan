@@ -1,10 +1,10 @@
-package main.java.game.build;
+package game.build;
 
-import main.java.enums.*;
+import enums.*;
 
 import java.util.*;
 
-import main.java.board.Node;
+import board.Node;
 
 /**
  * Class describing a city

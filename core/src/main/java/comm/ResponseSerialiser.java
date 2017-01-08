@@ -1,8 +1,8 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 
-import main.java.comm.messages.Response;
+import comm.messages.Response;
 
 import com.google.gson.*;
 

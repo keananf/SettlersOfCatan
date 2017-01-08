@@ -1,9 +1,9 @@
-package main.java.comm.messages;
+package comm.messages;
 
 import java.awt.Point;
 import java.util.*;
 
-import main.java.board.*;
+import board.*;
 
 public class BoardMessage
 {

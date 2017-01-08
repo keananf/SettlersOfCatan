@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Texture;
 
-import main.java.board.*;
+import board.*;
 
 import java.awt.Point;
 import java.util.Hashtable;

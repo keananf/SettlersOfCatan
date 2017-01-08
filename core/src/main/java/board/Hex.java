@@ -1,9 +1,9 @@
-package main.java.board;
+package board;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.enums.ResourceType;
+import enums.ResourceType;
 
 /**
  * Class representing an individual hex 

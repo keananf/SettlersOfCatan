@@ -1,11 +1,11 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 
-import main.java.comm.messages.Request;
-import main.java.comm.messages.TradeMessage;
-import main.java.enums.MoveType;
-import main.java.game.moves.*;
+import comm.messages.Request;
+import comm.messages.TradeMessage;
+import enums.MoveType;
+import game.moves.*;
 
 import com.google.gson.*;
 

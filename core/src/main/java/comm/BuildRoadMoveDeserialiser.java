@@ -1,9 +1,9 @@
 
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
-import main.java.enums.*;
-import main.java.game.moves.BuildRoadMove;
+import enums.*;
+import game.moves.BuildRoadMove;
 
 import com.google.gson.*;
 

@@ -1,8 +1,8 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 
-import main.java.game.moves.PlayYearOfPlentyCardMove;
+import game.moves.PlayYearOfPlentyCardMove;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

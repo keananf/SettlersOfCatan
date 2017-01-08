@@ -1,7 +1,7 @@
-package main.java.exceptions;
+package exceptions;
 
-import main.java.board.*;
-import main.java.game.build.Road;
+import board.*;
+import game.build.Road;
 
 @SuppressWarnings("serial")
 public class CannotBuildRoadException extends Exception

@@ -1,4 +1,4 @@
-package main.java.game.moves;
+package game.moves;
 
 
 public class BuildSettlementMove extends Move

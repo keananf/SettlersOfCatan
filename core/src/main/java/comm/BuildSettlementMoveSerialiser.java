@@ -1,7 +1,7 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
-import main.java.game.moves.BuildSettlementMove;
+import game.moves.BuildSettlementMove;
 import com.google.gson.*;
 
 public class BuildSettlementMoveSerialiser implements JsonSerializer<BuildSettlementMove>

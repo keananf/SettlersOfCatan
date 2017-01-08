@@ -1,10 +1,10 @@
-package main.java.server;
+package server;
 
-import main.java.enums.*;
-import main.java.game.Game;
-import main.java.game.moves.*;
-import main.java.comm.*;
-import main.java.comm.messages.*;
+import enums.*;
+import game.Game;
+import game.moves.*;
+import comm.*;
+import comm.messages.*;
 
 import java.io.*;
 import java.net.*;

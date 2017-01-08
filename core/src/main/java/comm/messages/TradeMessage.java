@@ -1,11 +1,11 @@
-package main.java.comm.messages;
+package comm.messages;
 
 
 import java.util.HashMap;
 import java.util.Map;
 
-import main.java.enums.*;
-import main.java.game.moves.Move;
+import enums.*;
+import game.moves.Move;
 
 public class TradeMessage extends Move
 {

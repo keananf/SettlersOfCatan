@@ -1,4 +1,4 @@
-package main.java.comm.messages;
+package comm.messages;
 
 public class ResourceCount
 {

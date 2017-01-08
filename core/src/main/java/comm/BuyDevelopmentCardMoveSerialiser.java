@@ -1,8 +1,8 @@
-package main.java.comm;
+package comm;
 
 import java.lang.reflect.Type;
 
-import main.java.game.moves.BuyDevelopmentCardMove;
+import game.moves.BuyDevelopmentCardMove;
 
 import com.google.gson.*;
 

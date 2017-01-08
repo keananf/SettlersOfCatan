@@ -23,6 +23,7 @@ allprojects {
         aiVersion = '1.8.0'
         protobufVersion = "3.1.0"
         junitVersion = "4.12"
+        gsonVersion = "2.8.0"
     }
 
     repositories {
@@ -35,7 +36,6 @@ allprojects {
 
 project(":desktop") {
     apply plugin: "java"
-
 
     dependencies {
         compile project(":core")
@@ -52,7 +52,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.google.protobuf:protobuf-java:$protobufVersion"
-        compile "com.google.code.gson:gson:2.8.0"
+        compile "com.google.code.gson:gson:$gsonVersion"
         testCompile "junit:junit:$junitVersion"
     }
 }

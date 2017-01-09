@@ -1,0 +1,29 @@
+syntax = "proto2";
+
+option java_package = "protocol";
+
+option java_outer_classname = "BuildProtos";
+
+import "enums.proto";
+
+message RoadProto 
+{
+    required PointProto p1 = 1;
+    required PointProto p2 = 2;
+    required ColourProto playerId = 3;
+}
+
+message BuildingProto 
+{
+    required BuildingTypeProto type = 1;
+    required PointProto p = 2;
+    required ColourProto playerId = 3;
+}
+
+message PointProto
+{
+    required int32 x = 1;
+    required int32 y = 2;
+}
+
+

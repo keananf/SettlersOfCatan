@@ -3,7 +3,6 @@ package game.players;
 import java.net.InetAddress;
 
 import enums.Colour;
-import game.moves.*;
 
 /**
  * Class representing a player from across the network
@@ -17,12 +16,6 @@ public class NetworkPlayer extends Player
 		super(colour);
 	}
 
-	@Override
-	public Move receiveMove()
-	{
-		// TODO Auto-generated method stub
-		return new BuildSettlementMove();
-	}
 
 	/**
 	 * @return the inetAddress

@@ -119,7 +119,7 @@ public class TestHelper
 		game.addPlayer(p);
 		game.setCurrentPlayer(p);
 		
-		// Find hex without 'None'
+		// Find hex without 'Generic'
 		for(int i = 0; i < game.getGrid().nodes.values().size(); i++)
 		{
 			n = (Node) game.getGrid().nodes.values().toArray()[i];
@@ -139,7 +139,7 @@ public class TestHelper
 			}
 			
 			// Skip if this one isn't the desert
-			if(valid && hex.getResource() != ResourceType.None && !hex.hasRobber())
+			if(valid && hex.getResource() != ResourceType.Generic && !hex.hasRobber())
 				break;
 			
 		}

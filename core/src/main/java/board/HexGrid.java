@@ -179,7 +179,7 @@ public class HexGrid
 		resourcesAvailable.put(ResourceType.Ore, 3);
 		resourcesAvailable.put(ResourceType.Wool, 4);
 		resourcesAvailable.put(ResourceType.Lumber, 4);
-		resourcesAvailable.put(ResourceType.None, 1);
+		resourcesAvailable.put(ResourceType.Generic, 1);
 		
 		return resourcesAvailable;
 	}
@@ -198,14 +198,14 @@ public class HexGrid
 		ResourceType resource = ResourceType.values()[r];
 		
 		// Find a resource to allocate 
-		while(hex.getResource() == ResourceType.None)
+		while(hex.getResource() == ResourceType.Generic)
 		{
 			int remaining = resourcesAvailable.get(resource);
 			if(remaining > 0)
 			{
 				resourcesAvailable.put(resource, remaining - 1);
 				hex.setResource(resource);
-				if(resource == ResourceType.None)
+				if(resource == ResourceType.Generic)
 				{
 					hex.toggleRobber();
 
@@ -238,14 +238,10 @@ public class HexGrid
 	
 	/**
 	 * Swaps robbers with the current hex and the one at x, y
-	 * @param x the hex's x coordinate
-	 * @param y the hex's y coordinate
+	 * @param hex the hex that is getting the robber
 	 */
-	public Hex swapRobbers(int x, int y)
+	public Hex swapRobbers(Hex hex)
 	{
-		Point p = new Point(x, y);
-		Hex hex = grid.get(p);
-		
 		// Swap robbers
 		hexWithRobber.toggleRobber();
 		hexWithRobber = hex;
@@ -261,4 +257,71 @@ public class HexGrid
 	{
 		return hexWithRobber;
 	}
+
+    /**
+     * Retrieve the hex at the given coordinates
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return the hex, if found
+     */
+    public Hex getHex(int x, int y)
+    {
+        return grid.get(new Point(x, y));
+    }
+
+    /**
+     * Retrieve the Node at the given coordinates
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return the Node, if found
+     */
+    public Node getNode(int x, int y)
+    {
+        return nodes.get(new Point(x, y));
+    }
+
+    /**
+     * @return all hexes on this board
+     */
+    public List<Hex> getHexesAsList()
+    {
+        List<Hex> hexes = new ArrayList<Hex>();
+        hexes.addAll(this.grid.values());
+
+        return hexes;
+    }
+
+    /**
+     * @return a list of all ports
+     */
+    public List<Port> getPortsAsList()
+    {
+        List<Port> ports = new ArrayList<Port>();
+        ports.addAll(this.ports);
+
+        return ports;
+    }
+
+    /**
+     * @return list of all nodes
+     */
+    public List<Node> getNodesAsList()
+    {
+        List<Node> nodes = new ArrayList<Node>();
+        nodes.addAll(this.nodes.values());
+
+        return nodes;
+    }
+
+    /**
+     * @return a list of all edges
+     */
+    public List<Edge> getEdgesAsList()
+    {
+        List<Edge> edges = new ArrayList<Edge>();
+        edges.addAll(this.edges);
+
+        return edges;
+
+    }
 }

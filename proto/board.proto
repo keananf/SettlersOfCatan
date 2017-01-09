@@ -1,0 +1,51 @@
+syntax = "proto2";
+
+option java_package = "protocol";
+
+option java_outer_classname = "BoardProtos";
+
+import "enums.proto";
+import "build.proto";
+
+message EdgeProto 
+{
+    required PointProto p1 = 1;
+    required PointProto p2 = 2;
+}
+
+message HexProto 
+{
+    required PointProto p = 1;
+    required ResourceTypeProto resource = 2;
+    repeated NodeProto nodes = 3;
+    required bool hasRobber = 4;
+    optional int32 chitNumber = 5;
+}
+
+message NodeProto 
+{
+    required PointProto p = 1;
+    optional BuildingTypeProto buildingType = 2;
+    optional BuildingProto building = 3;
+}
+
+message PortProto 
+{
+    required PointProto p1 = 1;
+    required PointProto p2 = 2;
+    required ResourceTypeProto exchangeResource = 3;
+    required ResourceTypeProto returnResource = 4;
+    required int32 exchangeAmount = 5;
+    required int32 returnAmount = 6;
+}
+
+message BoardProto 
+{
+    repeated HexProto hexes = 1;
+    repeated PortProto ports = 2;
+    repeated EdgeProto edges = 3;
+    repeated NodeProto nodes = 4;
+}
+
+
+

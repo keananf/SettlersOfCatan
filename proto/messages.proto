@@ -1,0 +1,40 @@
+syntax = "proto2";
+
+option java_package = "protocol";
+
+option java_outer_classname = "MessageProtos";
+
+import "requests.proto";
+import "responses.proto";
+import "events.proto";
+import "enums.proto";
+
+message Message 
+{
+    required ColourProto playerColour = 1;
+    oneof type 
+    {
+        Request request = 2;
+        Response response = 3;
+        Event event = 4;
+    }
+}
+
+message Response 
+{
+    oneof type 
+    {
+        SuccessFailResponse successFailResponse = 1;
+        AcceptRejectResponse acceptRejectResponse = 2;
+        GiveBoardResponse currentBoardResponse = 3;
+        BuyDevCardResponse buyDevCardResponse = 4;
+	PlayMonopolyCardResponse playMonopolyCardResponse = 5;
+	PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;
+	BuildRoadResponse buildRoadResponse = 8;
+	MoveRobberResponse moveRobberResponse = 9;
+	EndMoveResponse endMoveResponse = 10;
+    }
+    required Message originalMessage = 11;
+}
+
+

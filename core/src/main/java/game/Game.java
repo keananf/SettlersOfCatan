@@ -3,15 +3,19 @@ package game;
 import enums.*;
 import exceptions.*;
 import game.build.*;
-import game.moves.*;
 import game.players.*;
 
-import java.awt.Point;
 import java.net.InetAddress;
 import java.util.*;
 
 import board.*;
-import comm.messages.TradeMessage;
+import protocol.EnumProtos.*;
+import protocol.RequestProtos.*;
+import protocol.ResourceProtos.*;
+import protocol.BoardProtos.*;
+import protocol.ResponseProtos.*;
+import protocol.BuildProtos.*;
+import protocol.TradeProtos.*;
 
 public class Game
 {
@@ -28,7 +32,7 @@ public class Game
 	public Game()
 	{
 		grid = new HexGrid();
-		players = new HashMap<Colour, Player>(); 
+		players = new HashMap<Colour, Player>();
 		dice = new Random();
 	}
 
@@ -61,7 +65,8 @@ public class Game
 			// If 7, check that no one is above the resource limit
 			if(dice == resourceLimit)
 			{
-				player.loseResources();
+				grant.putAll(player.loseResources());
+                playerResources.put(player.getColour(), grant);
 				continue;
 			}
 			
@@ -89,77 +94,19 @@ public class Game
 	}
 	
 	/**
-	 * Performs basic verification and then processes the move.
-	 * Returns a response message, which is either "ok" or an 
-	 * exception's message.
-	 * @param move the move
-	 * @param type the move's type
-	 * @return the response message
-	 */
-	public String processMove(Move move, MoveType type)
-	{
-		// Maintain original in case roll back is necessary
-		Player player = players.get(move.getPlayerColour()), copy = player.copy();
-		String response = null;
-		
-		// Check to see this is the player's turn
-		if(!currentPlayer.getColour().equals(move.getPlayerColour()))
-		{
-			return String.format("It is not %s player's turn", move.getPlayerColour().toString()); 
-		}
-		
-		try
-		{
-			// Process the message by switching on its type
-			switch(type)
-			{
-				case BuildRoad:
-					response = buildRoad((BuildRoadMove) move);
-					break;
-				case BuildSettlement:
-					response = buildSettlement((BuildSettlementMove) move);
-					break;
-				case MoveRobber:
-					response = moveRobber((MoveRobberMove) move);
-					break;
-				case UpgradeSettlement:
-					response = upgradeSettlement((UpgradeSettlementMove) move);
-					break;
-				case BuyDevelopmentCard:
-					response = buyDevelopmentCard((BuyDevelopmentCardMove) move);
-					break;
-				case EndMove:
-					response = changeTurn();			
-					break;
-				case TradeMove:
-					response = processTrade((TradeMessage) move, player);
-					break;
-				default:
-					break;
-			}
-		}
-		catch(Exception e)
-		{
-			// Error. Reset player and return exception message
-			players.get(copy.getColour()).restoreCopy(copy, null);
-			
-			return e.getMessage();
-		}
-		
-		// Return message
-		return response;
-	}
-	
-	/**
 	 * If trade was successful, exchange of resources occurs here
-	 * @param move the move object detailing the trade
+	 * @param trade the trade object detailing the trade
 	 * @return the response status
 	 */
-	private String processTrade(TradeMessage move, Player offerer) throws IllegalTradeException
+	public SuccessFailResponse processTrade(TradeProto trade, Player offerer) throws IllegalTradeException
 	{
-		// Find the recipient and extract the trade's contents
-		Map<ResourceType, Integer> offer = move.getOfferAsMap(), request = move.getRequestAsMap();
-		Player recipient = players.get(move.getRecipient()), recipientCopy = recipient.copy();
+        SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
+
+        // Find the recipient and extract the trade's contents
+        int type = trade.getContentsCase();
+		ResourceCount.Builder offer = trade.getOffer();
+		ResourceCount.Builder request = trade.getRequestAsMap();
+		Player recipient = players.get(trade.getRecipient()), recipientCopy = recipient.copy();
 		
 		try
 		{
@@ -177,39 +124,49 @@ public class Game
 					
 			throw new IllegalTradeException(offerer.getColour(), recipient.getColour());
 		}
-		
-		return "ok";
+
+        resp.setResult(ResultProto.SUCCESS);
+        return resp.build();
 	}
+
+
 
 	/**
 	 * Checks that the player can build a road at the desired location, and builds it.
 	 * @param move
+	 * @param playerColour the player's colour
 	 * @return the response message to the client
 	 * @throws CannotUpgradeException 
 	 * @throws CannotAffordException 
 	 */
-	private String upgradeSettlement(UpgradeSettlementMove move) throws CannotAffordException, CannotUpgradeException
+	public SuccessFailResponse upgradeSettlement(UpgradeSettlementRequest move, Colour playerColour) throws CannotAffordException, CannotUpgradeException
 	{
-		Player p = players.get(move.getPlayerColour());
-		Node n = grid.nodes.get(new Point(move.getX(), move.getY()));
+	    SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
+        Player p = players.get(playerColour);
+		Node n = grid.getNode(move.getPoint().getX(), move.getPoint().getY());
 		
 		// Try to upgrade settlement
 		p.upgradeSettlement(n);
-		return "ok";
-	}
+
+		resp.setResult(ResultProto.SUCCESS);
+		return resp.build();
+    }
 	
 	/**
 	 * Checks that the player can build a settlement at the desired location, and builds it.
-	 * @param move
+	 * @param request the request
+     * @param playerColour the player's colour
 	 * @return the response message to the client
 	 * @throws IllegalPlacementException 
 	 * @throws CannotAffordException 
 	 * @throws SettlementExistsException 
 	 */
-	private String buildSettlement(BuildSettlementMove move) throws CannotAffordException, IllegalPlacementException, SettlementExistsException
+	public SuccessFailResponse buildSettlement(BuildSettlementRequest request, Colour playerColour) throws CannotAffordException, IllegalPlacementException, SettlementExistsException
 	{
-		Player p = players.get(move.getPlayerColour());
-		Node node = grid.nodes.get(new Point(move.getX(), move.getY()));
+	    SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
+        Player p = players.get(playerColour);
+        PointProto pointProto = request.getPoint();
+		Node node = grid.getNode(pointProto.getX(), pointProto.getY());
 		
 		// Try to build settlement
 		p.buildSettlement(node);
@@ -237,116 +194,80 @@ public class Game
 			if(broken) break;
 		}
 		// TODO send out updated road counts
-		
-		return "ok";
+
+        resp.setResult(ResultProto.SUCCESS);
+		return resp.build();
 	}
 	
 	/**
 	 * Checks that the player can buy a development card
-	 * @param move
+	 * @param type the type of development card to play
+	 * @param playerColour the player's colour
 	 * @return the response message to the client
 	 */
-	private String playDevelopmentCard(PlayDevelopmentCardMove move)
+	public SuccessFailResponse playDevelopmentCard(DevelopmentCardType type, Colour playerColour)
 	{
-		Player p = players.get(move.getPlayerColour());
-		
+	    SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
+	    Player p = players.get(playerColour);
+
 		// Try to play card
 		try
 		{
-			p.playDevelopmentCard(move.getCard());
+			DevelopmentCard card = new DevelopmentCard();
+			card.setType(type);
+			card.setColour(playerColour);
+			p.playDevelopmentCard(card);
+            resp.setResult(ResultProto.SUCCESS);
 		}
 		catch (DoesNotOwnException e) 
 		{
 			// Error
-			return e.getMessage();
+            resp.setResult(ResultProto.FAILURE);
+			resp.setReason(e.getMessage());
 		}
 		
 		// Return success message
-		return "ok";
+		return resp.build();
 	}
 	
 	/**
 	 * Checks that the player can buy a development card
 	 * @param move the move
+	 * @param playerColour the player's colour
 	 * @return the response message to the client
 	 * @throws CannotAffordException 
 	 */
-	private String buyDevelopmentCard(BuyDevelopmentCardMove move) throws CannotAffordException
+	public BuyDevCardResponse buyDevelopmentCard(BuyDevCardRequest move, Colour playerColour) throws CannotAffordException
 	{
-		Player p = players.get(move.getPlayerColour());
+        BuyDevCardResponse.Builder resp = BuyDevCardResponse.newBuilder();
+		Player p = players.get(playerColour);
 		
 		// Try to buy card
-		// Return with "ok" status and set the card parameter
-		return p.buyDevelopmentCard().toString(); //TODO fix
-	}
-	
-	
-	/**
-	 * Atomically processes the type of development card being played
-	 * @param move the move
-	 * @return the response
-	 */
-	public String processDevelopmentCard(PlayDevelopmentCardMove move, Move internalMove)
-	{
-		// Copy old player state in case rollback is needed (individual component of move failing)
-		Player copy = players.get(move.getPlayerColour()).copy();
-		
-		// Update player's inventory and ensure card can be played
-		String response = playDevelopmentCard(move);
-		if(response.equals("ok"))
-		{
-			// If valid, try to process internal message
-			try
-			{
-				switch (move.getCard().getType())
-				{
-					case Knight:
-						response = moveRobber((MoveRobberMove) internalMove);
-						break;
-					case Library:
-						response = playLibraryCard();
-						break;
-					case University:
-						response = playUniversityCard();
-						break;
-					case Monopoly:
-						response = playMonopolyCard((PlayMonopolyCardMove) internalMove);
-						break;
-					case RoadBuilding:
-						response = playBuildRoadsCard((PlayRoadBuildingCardMove) internalMove);
-						break;
-					case YearOfPlenty:
-						response = playYearOfPlentyCard((PlayYearOfPlentyCardMove) internalMove);
-						break;
-					default:
-						break;
-
-				}
-			}
-			catch(Exception e) 
-			{ 
-				// Error. Reset player and return exception message
-				players.get(copy.getColour()).restoreCopy(copy, move.getCard());
-				
-				return e.getMessage(); 
-			}
-		}
-		
-		return response;
+		// Return the response with the card parameter set
+        DevelopmentCardType card = p.buyDevelopmentCard();
+        resp.setDevelopmentCard(DevelopmentCardType.toProto(card));
+        resp.setResult(ResultProto.SUCCESS);
+		return resp.build();
 	}
 	
 	/**
 	 * Moves the robber and takes a card from the player
 	 * who has a settlement on the hex
 	 * @param move the move
+     * @param playerColour the player's colour
 	 * @return return message
 	 * @throws CannotStealException if the specified player cannot provide a resource 
 	 */
-	public String moveRobber(MoveRobberMove move) throws CannotStealException
+	public MoveRobberResponse moveRobber(MoveRobberRequest move, Colour playerColour) throws CannotStealException
 	{
+        MoveRobberResponse.Builder resp = MoveRobberResponse.newBuilder();
+
 		// Retrieve the new hex the robber will move to.
-		Hex newHex = grid.grid.get(new Point(move.getX(), move.getY()));
-		Player other = players.get(move.getColourToTakeFrom());
+        PointProto point = move.getHex().getP();
+		Hex newHex = grid.getHex(point.getX(), point.getY());
+
+		Colour otherColour = Colour.fromProto(move.getColourToTakeFrom());
+		Player other = players.get(otherColour);
 		boolean valid = false;
 
 		// Verify this player can take from the specified one
@@ -354,57 +275,64 @@ public class Game
 		{
 			// If node has a settlement and it is of the specified colour, then the player can take a card
 			// Randomly remove resource
-			if(n.getSettlement() != null && n.getSettlement().getPlayerColour().equals(move.getColourToTakeFrom()))
+			if(n.getSettlement() != null && n.getSettlement().getPlayerColour().equals(otherColour))
 			{
-				currentPlayer.takeResource(other);
+                resp.setResource(ResourceType.toProto(currentPlayer.takeResource(other)));
 				valid = true;
 			}
 		}
 		
 		// Cannot take from this player
-		if(!valid) throw new CannotStealException(move.getPlayerColour(), other.getColour());
+		if(!valid) throw new CannotStealException(playerColour, otherColour);
 		
 		// return success message
-		grid.swapRobbers(move.getX(), move.getY());
-		return "ok";
+		grid.swapRobbers(newHex);
+		return resp.build();
 	}
 
 	/**
 	 * Process the playing of the 'Build Roads' development card.
-	 * @param move the move to process
+	 * @param request the request to process
+     * @param playerColour the player's colour
 	 * @return return message
 	 * @throws RoadExistsException 
 	 * @throws CannotBuildRoadException 
 	 * @throws CannotAffordException 
 	 */
-	public String playBuildRoadsCard(PlayRoadBuildingCardMove move) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public PlayRoadBuildingCardResponse playBuildRoadsCard(PlayRoadBuildingCardRequest request, Colour playerColour) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
-		buildRoad(move.getMove1());
-		buildRoad(move.getMove2());
-		
-		return "ok";
+		PlayRoadBuildingCardResponse.Builder resp = PlayRoadBuildingCardResponse.newBuilder();
+
+		// Set responses and return
+		resp.setResponse1(buildRoad(request.getRequest1(), playerColour));
+		resp.setResponse2(buildRoad(request.getRequest2(), playerColour));
+		return resp.build();
 	}
 	
 	/**
 	 * Process the playing of the 'University' development card.
-	 * @param move the move to process
 	 * @return return message
 	 */
-	public String playUniversityCard()
-	{
-		grantVpPoint();
-		return "ok";
+	public SuccessFailResponse playUniversityCard()
+    {
+        SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
+        grantVpPoint();
+
+        resp.setResult(ResultProto.SUCCESS);
+        return resp.build();
 	}
 	
 	/**
 	 * Process the playing of the 'Library' development card.
-	 * @param move the move to process
 	 * @return return message
 	 */
-	public String playLibraryCard()
+	public SuccessFailResponse playLibraryCard()
 	{
-		grantVpPoint();
-		return "ok";
+        SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
+        grantVpPoint();
+
+        resp.setResult(ResultProto.SUCCESS);
+        return resp.build();
 	}
 	
 	/**
@@ -412,27 +340,30 @@ public class Game
 	 * @param move the move to process
 	 * @return return message
 	 */
-	public String playYearOfPlentyCard(PlayYearOfPlentyCardMove move)
+	public SuccessFailResponse playYearOfPlentyCard(PlayYearOfPlentyCardRequest move)
 	{
-		// Set up grant
-		ResourceType r1 = move.getResource1(), r2 = move.getResource2(); 
+	    SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
+
+        // Set up grant
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
-		grant.put(r1, 1);
-		grant.put(r2, 1);
+		grant.put(ResourceType.fromProto(move.getR1()), 1);
+		grant.put(ResourceType.fromProto(move.getR2()), 1);
 		currentPlayer.grantResources(grant);
 		
-		// In receiving 'ok,' the client knows the request has been granted 
-		return "ok";
+		// In receiving success, the client knows the request has been granted
+        resp.setResult(ResultProto.SUCCESS);
+		return resp.build();
 	}
 	
 	/**
 	 * Process the playing of the 'Monopoly' development card.
-	 * @param move the move to process
+	 * @param request the request to process
 	 * @return return message
 	 */
-	public String playMonopolyCard(PlayMonopolyCardMove move)
+	public PlayMonopolyCardResponse playMonopolyCard(PlayMonopolyCardRequest request)
 	{
-		ResourceType r = move.getResource(); 
+        PlayMonopolyCardResponse.Builder response = PlayMonopolyCardResponse.newBuilder();
+		ResourceTypeProto r = request.getResource();
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 		int sum = 0;
 		
@@ -444,8 +375,8 @@ public class Game
 			try
 			{
 				// Give p's resources of type 'r' to currentPlayer
-				int num = p.getResources().get(r);
-				grant.put(r, num);
+				int num = p.getResources().get(ResourceType.fromProto(r));
+				grant.put(ResourceType.fromProto(r), num);
 				p.spendResources(grant);
 				sum += num;
 			} 
@@ -454,23 +385,26 @@ public class Game
 		}
 		
 		// Return message is string showing number of resources taken
-		return String.format("%d", sum); //TODO fix
+        response.setNumResources(sum);
+		return response.build();
 	}
 	
 	/**
 	 * Checks that the player can build a road at the desired location, and builds it.
-	 * @param move
+	 * @param request
 	 * @return the response message to the client
 	 * @throws RoadExistsException 
 	 * @throws CannotBuildRoadException 
 	 * @throws CannotAffordException 
 	 */
-	private String buildRoad(BuildRoadMove move) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public BuildRoadResponse buildRoad(BuildRoadRequest request, Colour colour) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
-		Player p = players.get(move.getPlayerColour());
-		Node n = grid.nodes.get(new Point(move.getX1(), move.getY1()));
-		Node n2 = grid.nodes.get(new Point(move.getX2(), move.getY2()));
+		Player p = players.get(colour);
+		PointProto p1 = request.getEdge().getP1(), p2 = request.getEdge().getP2();
+		Node n = grid.getNode(p1.getX(), p1.getY());
+		Node n2 = grid.getNode(p2.getX(), p2.getY());
 		Edge edge  = null;
+        BuildRoadResponse.Builder response = BuildRoadResponse.newBuilder();
 		
 		// Find edge
 		for(Edge e : n.getEdges())
@@ -483,11 +417,12 @@ public class Game
 		}
 		
 		// Try to build the road and update the longest road 
-		p.buildRoad(edge);
-		checkLongestRoad(); //TODO send updated road length
+		int longestRoad = p.buildRoad(edge);
+		checkLongestRoad();
 		
 		// return success message
-		return "ok";
+        response.setLongestRoad(longestRoad);
+		return response.build();
 	}
 	
 	/**
@@ -519,10 +454,14 @@ public class Game
 	 * Toggles a player's turn
 	 * @return 
 	 */
-	public String changeTurn()
+	public EndMoveResponse changeTurn()
 	{
+		EndMoveResponse.Builder resp = EndMoveResponse.newBuilder();
+
 		setCurrentPlayer(getPlayersAsList()[++current % NUM_PLAYERS]);
-		return "ok";
+		resp.setNewTurn(Colour.toProto(currentPlayer.getColour()));
+
+		return resp.build();
 	}
 
 	/**
@@ -567,7 +506,8 @@ public class Game
 
 	public Colour addNetworkPlayer(InetAddress inetAddress)
 	{
-		NetworkPlayer p = new NetworkPlayer(Colour.values()[numPlayers++]);
+	    Colour newCol = Colour.values()[numPlayers++];
+		NetworkPlayer p = new NetworkPlayer(newCol);
 		p.setInetAddress(inetAddress);
 		
 		players.put(p.getColour(), p);
@@ -596,9 +536,54 @@ public class Game
 		this.currentPlayer = currentPlayer;
 	}
 
-	private String grantVpPoint()
+	private void grantVpPoint()
 	{
 		currentPlayer.setVp(currentPlayer.getVp() + 1);
-		return "ok";
+	}
+
+	/**
+	 * @return a representation of the board that is compatible with protofbufs
+	 */
+    public GiveBoardResponse getBoard()
+    {
+    	GiveBoardResponse.Builder resp = GiveBoardResponse.newBuilder();
+        BoardProto.Builder builder = BoardProto.newBuilder();
+        int index = 0;
+
+        // Add edges
+        for(Edge e : getGrid().getEdgesAsList())
+        {
+            builder.setEdges(index++, e.toEdgeProto());
+        }
+
+        // Add hexes
+        index = 0;
+        for(Hex h : getGrid().getHexesAsList())
+        {
+            builder.setHexes(index++, h.toHexProto());
+        }
+
+        // Add port
+        index = 0;
+        for(Port p : getGrid().getPortsAsList())
+        {
+            builder.setPorts(index++, p.toPortProto());
+        }
+
+
+        // Add nodes
+        index = 0;
+        for(Node n : getGrid().getNodesAsList())
+        {
+            builder.setNodes(index++, n.toProto());
+        }
+
+        resp.setBoard(builder.build());
+        return resp.build();
+    }
+
+	public void restorePlayerFromCopy(Player copy, DevelopmentCard card)
+	{
+		players.get(copy.getColour()).restoreCopy(copy, card);
 	}
 }

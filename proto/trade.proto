@@ -1,0 +1,43 @@
+syntax = "proto2";
+
+option java_package = "protocol";
+
+option java_outer_classname = "TradeProtos";
+
+import "enums.proto";
+import "resources.proto";
+import "board.proto";
+
+message TradeProto 
+{
+    oneof Contents
+    { 
+        PlayerTradeProto playerTrade = 1;
+        //BankTradeProto bankTrade = 2;
+        PortTradeProto portTrade = 3;
+    }
+}
+
+message PlayerTradeProto 
+{
+    required ColourProto  playerA = 1;
+    required ResourceCount fromAtoB = 2;
+    required ColourProto  playerB = 3;
+    required ResourceCount fromBtoA = 4;
+}
+/*
+message BankTradeProto
+{
+    required ColourProto player = 1;
+    required ResourceCount fromPlayerToBank = 2;
+    required ResourceCount fromBankToPlayer = 3;
+}
+*/
+message PortTradeProto
+{ 
+    required ColourProto player = 1;
+    required ResourceCount fromPlayerToPort = 2;
+    required PortProto port = 3;
+    required ResourceCount fromPortToPlayer = 4;
+}
+

@@ -1,0 +1,72 @@
+syntax = "proto2";
+
+option java_package = "protocol";
+
+option java_outer_classname = "ResponseProtos";
+
+import "board.proto";
+import "enums.proto";
+
+
+// SUCCESS-FAIL RESPONSE (mainly for responding to build/play requests)
+message SuccessFailResponse 
+{
+    required ResultProto result = 1;
+    optional string reason = 2; //associated with FAILURE results (for debugging purposes only)
+}
+
+message EndMoveResponse
+{
+    required ColourProto newTurn = 1;
+}
+
+
+message PlayMonopolyCardResponse
+{
+    required int32 numResources = 1;
+}
+
+message PlayRoadBuildingCardResponse
+{
+    required BuildRoadResponse response1 = 1;
+    required BuildRoadResponse response2 = 2;
+}
+
+message BuyDevCardResponse 
+{
+    required ResultProto result = 1;
+    required DevelopmentCardProto developmentCard = 2;
+    optional string reason = 3; //associated with FAILURE results (for debugging purposes only)
+}
+
+message BuildRoadResponse
+{
+    required int32 longestRoad = 1;
+}
+
+message MoveRobberResponse
+{
+    required ResourceTypeProto resource = 1;
+}
+
+// ACCEPT-REJECT RESPONSE (mainly for responding to human trade requests)
+message AcceptRejectResponse 
+{
+    required TradeStatusProto answer = 1;
+    optional string reason = 2; //associated with REJECT results (for debugging purposes only)
+}
+
+// GIVE RESPONSES (for responding to getCurrentBoard request etc.)
+//
+// needs to be expanded upon, to get full game info: board + my resources + my development cards + who has longest road
+// + how many resource cards the other players each have etc.
+
+message GiveBoardResponse 
+{
+    required BoardProto board = 1;
+}
+
+
+
+
+

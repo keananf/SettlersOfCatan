@@ -1,7 +1,6 @@
 package game.players;
 
-import enums.Colour;
-import game.moves.*;
+import enums.*;
 
 /**
  * Class representing an AI player
@@ -12,10 +11,5 @@ public class AIPlayer extends Player
 	{
 		super(colour);
 	}
-	@Override
-	public Move receiveMove()
-	{
-		// TODO Auto-generated method stub
-		return new BuildSettlementMove();
-	}
+
 }

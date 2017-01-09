@@ -2,7 +2,12 @@ package board;
 
 import java.util.*;
 
+import enums.Colour;
+import enums.ResourceType;
 import game.build.*;
+import protocol.BoardProtos.*;
+import protocol.BuildProtos;
+import protocol.EnumProtos;
 
 /**
  * Class representing an individual node in catan (intersection of three hexes)
@@ -133,4 +138,43 @@ public class Node extends BoardElement
 	{
 		this.settlement = settlement;
 	}
+
+	/**
+	 * Searches through the adjacent edges for the one with the given node
+	 * @param n2 the node to search for
+	 */
+    public Edge findEdge(Node n2)
+	{
+		for(Edge e : edges)
+		{
+			if(e.getX().equals(n2) || e.getY().equals(n2))
+				return e;
+		}
+
+		return null;
+    }
+
+	/**
+	 * @return converts this Node into a similar representation that is also compatible with protobufs
+	 */
+	public NodeProto toProto()
+	{
+		int index = 0;
+		NodeProto.Builder nodeBuilder = NodeProto.newBuilder();
+		BuildProtos.PointProto.Builder coords = BuildProtos.PointProto.newBuilder();
+
+		coords.setX(getX());
+		coords.setY(getY());
+		nodeBuilder.setP(coords.build());
+
+		// Add Building
+		BuildProtos.BuildingProto.Builder building = BuildProtos.BuildingProto.newBuilder();
+		building.setP(coords.build());
+		building.setPlayerId(Colour.toProto(settlement.getPlayerColour()));
+		building.setType(settlement instanceof City ? EnumProtos.BuildingTypeProto.CITY : EnumProtos.BuildingTypeProto.SETTLEMENT);
+		nodeBuilder.setBuilding(building.build());
+		nodeBuilder.setBuildingType(settlement instanceof City ? EnumProtos.BuildingTypeProto.CITY : EnumProtos.BuildingTypeProto.SETTLEMENT);
+
+		return nodeBuilder.build();
+    }
 }

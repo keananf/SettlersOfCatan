@@ -6,7 +6,6 @@ import java.awt.Point;
 
 import board.Edge;
 import board.Node;
-import enums.Colour;
 import enums.MoveType;
 import exceptions.*;
 import game.build.*;

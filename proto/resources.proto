@@ -1,0 +1,22 @@
+syntax = "proto2";
+
+option java_package = "protocol";
+
+option java_outer_classname = "ResourceProtos";
+
+import "enums.proto";
+
+message ResourceAllocation
+{
+    required ResourceCount resources = 1;
+    required ColourProto playerColour = 2;
+}
+
+message ResourceCount
+{
+    required int32 brick = 1;
+    required int32 lumber = 2;
+    required int32 wool = 3;
+    required int32 grain = 4;
+    required int32 ore = 5;
+}

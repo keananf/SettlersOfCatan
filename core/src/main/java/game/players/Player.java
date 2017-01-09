@@ -7,7 +7,6 @@ import board.*;
 import enums.*;
 import exceptions.*;
 import game.build.*;
-import game.moves.*;
 
 /**
  * Abstract class describing a player (AI, or network)
@@ -38,13 +37,11 @@ public abstract class Player
 		// Initialise resources
 		for(ResourceType r : ResourceType.values())
 		{
-			if(r == ResourceType.None) continue;
+			if(r == ResourceType.Generic) continue;
 			resources.put(r, 0);
 		}
 	}
-	
-	public abstract Move receiveMove();
-	
+
 	/**
 	 * @return the length of this player's longest road
 	 */
@@ -63,11 +60,12 @@ public abstract class Player
 	/**
 	 * Attempts to build a road for this player
 	 * @param edge the edge to build the road on
+	 * @return the length of the player's longest road
 	 * @throws CannotAffordException if the player cannot afford it
 	 * @throws CannotBuildRoadException if it is not a valid place to build a road
 	 * @throws RoadExistsException 
 	 */
-	public void buildRoad(Edge edge) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public int buildRoad(Edge edge) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
 		boolean valid = false;
 		List<Integer> listsAddedTo = new ArrayList<Integer>();
@@ -81,7 +79,7 @@ public abstract class Player
 		valid = checkRoadsAndAdd(r, listsAddedTo);
 		
 		// Check the location is valid for building and that the player can afford it
-		if(r.getEdge().onSettlement(settlements) || valid)
+		if(r.getEdge().hasSettlement() || valid)
 		{
 			canAfford(r.getCost());
 			spendResources(r.getCost());
@@ -100,6 +98,8 @@ public abstract class Player
 				mergeRoads(r, listsAddedTo);
 		}
 		else throw new CannotBuildRoadException(r);
+
+		return calcRoadLength();
 	}
 
 	/**
@@ -266,7 +266,7 @@ public abstract class Player
 	 * @return the bought development card
 	 * @throws CannotAffordException
 	 */
-	public DevelopmentCard buyDevelopmentCard() throws CannotAffordException
+	public DevelopmentCardType buyDevelopmentCard() throws CannotAffordException
 	{
 		DevelopmentCard card = DevelopmentCard.chooseRandom(colour);
 		List<DevelopmentCard> existing = cards.containsKey(card) ? cards.get(card) : new ArrayList<DevelopmentCard>();
@@ -276,7 +276,7 @@ public abstract class Player
 		existing.add(card);
 		cards.put(card.getType(), existing);
 		
-		return card;
+		return card.getType(); //TODO fromProto rid of encapsulation. No longer needed
 	}
 	
 	/**
@@ -364,13 +364,13 @@ public abstract class Player
 	 * Checks if a player has more than 7 resource cards.
 	 * 
 	 * If so, cards are randomly removed until the player has 7 again.
-	 * @param player the player
 	 */
-	public void loseResources()
+	public Map<ResourceType, Integer> loseResources()
 	{
 		Random rand = new Random();
 		int resourceLimit = 7;
-		
+		Map<ResourceType, Integer> removed = new HashMap<ResourceType, Integer>();
+
 		// Randomly remove resources until the cap is reached
 		while(numResources > resourceLimit)
 		{
@@ -378,27 +378,31 @@ public abstract class Player
 			
 			if(resources.get(key) > 0)
 			{
+				int existing =  removed.containsKey(key) ? removed.get(key) : 0;
 				resources.put(key, resources.get(key) - 1);
+				removed.put(key, existing + 1);
 				numResources--;
 			}
 		}
+
+		return removed;
 	}
 	
 	/**
 	 * Take one resource randomly from the other player
 	 * @param other the other player
 	 */
-	public void takeResource(Player other)
+	public ResourceType takeResource(Player other)
 	{
 		Random rand = new Random();
-		ResourceType key = ResourceType.None;
+		ResourceType key = ResourceType.Generic;
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
 		// Check there are resources to take
-		if(other.getNumResources() == 0) return;
+		if(other.getNumResources() == 0) return ResourceType.Generic;
 		
 		// Find resource to take
-		while((key = (ResourceType) other.getResources().keySet().toArray()[rand.nextInt(other.getResources().size())]) == ResourceType.None || other.getResources().get(key) == 0);
+		while((key = (ResourceType) other.getResources().keySet().toArray()[rand.nextInt(other.getResources().size())]) == ResourceType.Generic || other.getResources().get(key) == 0);
 		grant.put(key, 1);
 
 		try
@@ -406,8 +410,10 @@ public abstract class Player
 			other.spendResources(grant);
 		}
 		catch (CannotAffordException e){ /* Cannot happen*/ }
-		
+
+		// Grant and return
 		grantResources(grant);
+		return key;
 	}
 
 	
@@ -451,7 +457,7 @@ public abstract class Player
 		// Initialise Resources
 		for(ResourceType r : ResourceType.values())
 		{
-			if(r == ResourceType.None) continue;
+			if(r == ResourceType.Generic) continue;
 			p.resources.put(r, 0);
 		}
 
@@ -483,7 +489,7 @@ public abstract class Player
 		// Initialise Resources
 		for(ResourceType r : ResourceType.values())
 		{
-			if(r == ResourceType.None) continue;
+			if(r == ResourceType.Generic) continue;
 			resources.put(r, 0);
 		}
 		

@@ -7,6 +7,7 @@ option java_outer_classname = "RequestProtos";
 import "board.proto";
 import "build.proto";
 import "enums.proto";
+import "trade.proto";
 
 message Request 
 {
@@ -27,6 +28,7 @@ message Request
 
 	MoveRobberRequest moveRobberRequest = 12;
 	EndMoveRequest endMoveRequest = 13;
+	TradeRequest tradeRequest = 14;
     }
 }
 

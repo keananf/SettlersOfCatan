@@ -8,8 +8,8 @@ public final class TradeProtos {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
-  public interface TradeProtoOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:TradeProto)
+  public interface TradeRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:TradeRequest)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -51,25 +51,25 @@ public final class TradeProtos {
     protocol.TradeProtos.PortTradeProtoOrBuilder getPortTradeOrBuilder();
   }
   /**
-   * Protobuf type {@code TradeProto}
+   * Protobuf type {@code TradeRequest}
    */
-  public static final class TradeProto extends
+  public static final class TradeRequest extends
       com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:TradeProto)
-      TradeProtoOrBuilder {
-    // Use TradeProto.newBuilder() to construct.
-    private TradeProto(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      // @@protoc_insertion_point(message_implements:TradeRequest)
+      TradeRequestOrBuilder {
+    // Use TradeRequest.newBuilder() to construct.
+    private TradeRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private TradeProto(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private TradeRequest(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final TradeProto defaultInstance;
-    public static TradeProto getDefaultInstance() {
+    private static final TradeRequest defaultInstance;
+    public static TradeRequest getDefaultInstance() {
       return defaultInstance;
     }
 
-    public TradeProto getDefaultInstanceForType() {
+    public TradeRequest getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -79,7 +79,7 @@ public final class TradeProtos {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private TradeProto(
+    private TradeRequest(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -142,28 +142,28 @@ public final class TradeProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protocol.TradeProtos.internal_static_TradeProto_descriptor;
+      return protocol.TradeProtos.internal_static_TradeRequest_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protocol.TradeProtos.internal_static_TradeProto_fieldAccessorTable
+      return protocol.TradeProtos.internal_static_TradeRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protocol.TradeProtos.TradeProto.class, protocol.TradeProtos.TradeProto.Builder.class);
+              protocol.TradeProtos.TradeRequest.class, protocol.TradeProtos.TradeRequest.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<TradeProto> PARSER =
-        new com.google.protobuf.AbstractParser<TradeProto>() {
-      public TradeProto parsePartialFrom(
+    public static com.google.protobuf.Parser<TradeRequest> PARSER =
+        new com.google.protobuf.AbstractParser<TradeRequest>() {
+      public TradeRequest parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new TradeProto(input, extensionRegistry);
+        return new TradeRequest(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<TradeProto> getParserForType() {
+    public com.google.protobuf.Parser<TradeRequest> getParserForType() {
       return PARSER;
     }
 
@@ -325,53 +325,53 @@ public final class TradeProtos {
       return super.writeReplace();
     }
 
-    public static protocol.TradeProtos.TradeProto parseFrom(
+    public static protocol.TradeProtos.TradeRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protocol.TradeProtos.TradeProto parseFrom(
+    public static protocol.TradeProtos.TradeRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protocol.TradeProtos.TradeProto parseFrom(byte[] data)
+    public static protocol.TradeProtos.TradeRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protocol.TradeProtos.TradeProto parseFrom(
+    public static protocol.TradeProtos.TradeRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protocol.TradeProtos.TradeProto parseFrom(java.io.InputStream input)
+    public static protocol.TradeProtos.TradeRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protocol.TradeProtos.TradeProto parseFrom(
+    public static protocol.TradeProtos.TradeRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protocol.TradeProtos.TradeProto parseDelimitedFrom(java.io.InputStream input)
+    public static protocol.TradeProtos.TradeRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protocol.TradeProtos.TradeProto parseDelimitedFrom(
+    public static protocol.TradeProtos.TradeRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protocol.TradeProtos.TradeProto parseFrom(
+    public static protocol.TradeProtos.TradeRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protocol.TradeProtos.TradeProto parseFrom(
+    public static protocol.TradeProtos.TradeRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -380,7 +380,7 @@ public final class TradeProtos {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protocol.TradeProtos.TradeProto prototype) {
+    public static Builder newBuilder(protocol.TradeProtos.TradeRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -392,25 +392,25 @@ public final class TradeProtos {
       return builder;
     }
     /**
-     * Protobuf type {@code TradeProto}
+     * Protobuf type {@code TradeRequest}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:TradeProto)
-        protocol.TradeProtos.TradeProtoOrBuilder {
+        // @@protoc_insertion_point(builder_implements:TradeRequest)
+        protocol.TradeProtos.TradeRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protocol.TradeProtos.internal_static_TradeProto_descriptor;
+        return protocol.TradeProtos.internal_static_TradeRequest_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protocol.TradeProtos.internal_static_TradeProto_fieldAccessorTable
+        return protocol.TradeProtos.internal_static_TradeRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protocol.TradeProtos.TradeProto.class, protocol.TradeProtos.TradeProto.Builder.class);
+                protocol.TradeProtos.TradeRequest.class, protocol.TradeProtos.TradeRequest.Builder.class);
       }
 
-      // Construct using protocol.TradeProtos.TradeProto.newBuilder()
+      // Construct using protocol.TradeProtos.TradeRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -441,23 +441,23 @@ public final class TradeProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protocol.TradeProtos.internal_static_TradeProto_descriptor;
+        return protocol.TradeProtos.internal_static_TradeRequest_descriptor;
       }
 
-      public protocol.TradeProtos.TradeProto getDefaultInstanceForType() {
-        return protocol.TradeProtos.TradeProto.getDefaultInstance();
+      public protocol.TradeProtos.TradeRequest getDefaultInstanceForType() {
+        return protocol.TradeProtos.TradeRequest.getDefaultInstance();
       }
 
-      public protocol.TradeProtos.TradeProto build() {
-        protocol.TradeProtos.TradeProto result = buildPartial();
+      public protocol.TradeProtos.TradeRequest build() {
+        protocol.TradeProtos.TradeRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protocol.TradeProtos.TradeProto buildPartial() {
-        protocol.TradeProtos.TradeProto result = new protocol.TradeProtos.TradeProto(this);
+      public protocol.TradeProtos.TradeRequest buildPartial() {
+        protocol.TradeProtos.TradeRequest result = new protocol.TradeProtos.TradeRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (contentsCase_ == 1) {
@@ -481,16 +481,16 @@ public final class TradeProtos {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protocol.TradeProtos.TradeProto) {
-          return mergeFrom((protocol.TradeProtos.TradeProto)other);
+        if (other instanceof protocol.TradeProtos.TradeRequest) {
+          return mergeFrom((protocol.TradeProtos.TradeRequest)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protocol.TradeProtos.TradeProto other) {
-        if (other == protocol.TradeProtos.TradeProto.getDefaultInstance()) return this;
+      public Builder mergeFrom(protocol.TradeProtos.TradeRequest other) {
+        if (other == protocol.TradeProtos.TradeRequest.getDefaultInstance()) return this;
         switch (other.getContentsCase()) {
           case PLAYERTRADE: {
             mergePlayerTrade(other.getPlayerTrade());
@@ -528,11 +528,11 @@ public final class TradeProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protocol.TradeProtos.TradeProto parsedMessage = null;
+        protocol.TradeProtos.TradeRequest parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protocol.TradeProtos.TradeProto) e.getUnfinishedMessage();
+          parsedMessage = (protocol.TradeProtos.TradeRequest) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -864,15 +864,15 @@ public final class TradeProtos {
         return portTradeBuilder_;
       }
 
-      // @@protoc_insertion_point(builder_scope:TradeProto)
+      // @@protoc_insertion_point(builder_scope:TradeRequest)
     }
 
     static {
-      defaultInstance = new TradeProto(true);
+      defaultInstance = new TradeRequest(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:TradeProto)
+    // @@protoc_insertion_point(class_scope:TradeRequest)
   }
 
   public interface PlayerTradeProtoOrBuilder extends
@@ -880,48 +880,48 @@ public final class TradeProtos {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required .ColourProto playerA = 1;</code>
+     * <code>required .ColourProto offerer = 1;</code>
      */
-    boolean hasPlayerA();
+    boolean hasOfferer();
     /**
-     * <code>required .ColourProto playerA = 1;</code>
+     * <code>required .ColourProto offerer = 1;</code>
      */
-    protocol.EnumProtos.ColourProto getPlayerA();
+    protocol.EnumProtos.ColourProto getOfferer();
 
     /**
-     * <code>required .ResourceCount fromAtoB = 2;</code>
+     * <code>required .ResourceCount offer = 2;</code>
      */
-    boolean hasFromAtoB();
+    boolean hasOffer();
     /**
-     * <code>required .ResourceCount fromAtoB = 2;</code>
+     * <code>required .ResourceCount offer = 2;</code>
      */
-    protocol.ResourceProtos.ResourceCount getFromAtoB();
+    protocol.ResourceProtos.ResourceCount getOffer();
     /**
-     * <code>required .ResourceCount fromAtoB = 2;</code>
+     * <code>required .ResourceCount offer = 2;</code>
      */
-    protocol.ResourceProtos.ResourceCountOrBuilder getFromAtoBOrBuilder();
+    protocol.ResourceProtos.ResourceCountOrBuilder getOfferOrBuilder();
 
     /**
-     * <code>required .ColourProto playerB = 3;</code>
+     * <code>required .ColourProto recipient = 3;</code>
      */
-    boolean hasPlayerB();
+    boolean hasRecipient();
     /**
-     * <code>required .ColourProto playerB = 3;</code>
+     * <code>required .ColourProto recipient = 3;</code>
      */
-    protocol.EnumProtos.ColourProto getPlayerB();
+    protocol.EnumProtos.ColourProto getRecipient();
 
     /**
-     * <code>required .ResourceCount fromBtoA = 4;</code>
+     * <code>required .ResourceCount request = 4;</code>
      */
-    boolean hasFromBtoA();
+    boolean hasRequest();
     /**
-     * <code>required .ResourceCount fromBtoA = 4;</code>
+     * <code>required .ResourceCount request = 4;</code>
      */
-    protocol.ResourceProtos.ResourceCount getFromBtoA();
+    protocol.ResourceProtos.ResourceCount getRequest();
     /**
-     * <code>required .ResourceCount fromBtoA = 4;</code>
+     * <code>required .ResourceCount request = 4;</code>
      */
-    protocol.ResourceProtos.ResourceCountOrBuilder getFromBtoAOrBuilder();
+    protocol.ResourceProtos.ResourceCountOrBuilder getRequestOrBuilder();
   }
   /**
    * Protobuf type {@code PlayerTradeProto}
@@ -982,19 +982,19 @@ public final class TradeProtos {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
                 bitField0_ |= 0x00000001;
-                playerA_ = value;
+                offerer_ = value;
               }
               break;
             }
             case 18: {
               protocol.ResourceProtos.ResourceCount.Builder subBuilder = null;
               if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                subBuilder = fromAtoB_.toBuilder();
+                subBuilder = offer_.toBuilder();
               }
-              fromAtoB_ = input.readMessage(protocol.ResourceProtos.ResourceCount.PARSER, extensionRegistry);
+              offer_ = input.readMessage(protocol.ResourceProtos.ResourceCount.PARSER, extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(fromAtoB_);
-                fromAtoB_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(offer_);
+                offer_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000002;
               break;
@@ -1006,19 +1006,19 @@ public final class TradeProtos {
                 unknownFields.mergeVarintField(3, rawValue);
               } else {
                 bitField0_ |= 0x00000004;
-                playerB_ = value;
+                recipient_ = value;
               }
               break;
             }
             case 34: {
               protocol.ResourceProtos.ResourceCount.Builder subBuilder = null;
               if (((bitField0_ & 0x00000008) == 0x00000008)) {
-                subBuilder = fromBtoA_.toBuilder();
+                subBuilder = request_.toBuilder();
               }
-              fromBtoA_ = input.readMessage(protocol.ResourceProtos.ResourceCount.PARSER, extensionRegistry);
+              request_ = input.readMessage(protocol.ResourceProtos.ResourceCount.PARSER, extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(fromBtoA_);
-                fromBtoA_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(request_);
+                request_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000008;
               break;
@@ -1063,83 +1063,83 @@ public final class TradeProtos {
     }
 
     private int bitField0_;
-    public static final int PLAYERA_FIELD_NUMBER = 1;
-    private protocol.EnumProtos.ColourProto playerA_;
+    public static final int OFFERER_FIELD_NUMBER = 1;
+    private protocol.EnumProtos.ColourProto offerer_;
     /**
-     * <code>required .ColourProto playerA = 1;</code>
+     * <code>required .ColourProto offerer = 1;</code>
      */
-    public boolean hasPlayerA() {
+    public boolean hasOfferer() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required .ColourProto playerA = 1;</code>
+     * <code>required .ColourProto offerer = 1;</code>
      */
-    public protocol.EnumProtos.ColourProto getPlayerA() {
-      return playerA_;
+    public protocol.EnumProtos.ColourProto getOfferer() {
+      return offerer_;
     }
 
-    public static final int FROMATOB_FIELD_NUMBER = 2;
-    private protocol.ResourceProtos.ResourceCount fromAtoB_;
+    public static final int OFFER_FIELD_NUMBER = 2;
+    private protocol.ResourceProtos.ResourceCount offer_;
     /**
-     * <code>required .ResourceCount fromAtoB = 2;</code>
+     * <code>required .ResourceCount offer = 2;</code>
      */
-    public boolean hasFromAtoB() {
+    public boolean hasOffer() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required .ResourceCount fromAtoB = 2;</code>
+     * <code>required .ResourceCount offer = 2;</code>
      */
-    public protocol.ResourceProtos.ResourceCount getFromAtoB() {
-      return fromAtoB_;
+    public protocol.ResourceProtos.ResourceCount getOffer() {
+      return offer_;
     }
     /**
-     * <code>required .ResourceCount fromAtoB = 2;</code>
+     * <code>required .ResourceCount offer = 2;</code>
      */
-    public protocol.ResourceProtos.ResourceCountOrBuilder getFromAtoBOrBuilder() {
-      return fromAtoB_;
+    public protocol.ResourceProtos.ResourceCountOrBuilder getOfferOrBuilder() {
+      return offer_;
     }
 
-    public static final int PLAYERB_FIELD_NUMBER = 3;
-    private protocol.EnumProtos.ColourProto playerB_;
+    public static final int RECIPIENT_FIELD_NUMBER = 3;
+    private protocol.EnumProtos.ColourProto recipient_;
     /**
-     * <code>required .ColourProto playerB = 3;</code>
+     * <code>required .ColourProto recipient = 3;</code>
      */
-    public boolean hasPlayerB() {
+    public boolean hasRecipient() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>required .ColourProto playerB = 3;</code>
+     * <code>required .ColourProto recipient = 3;</code>
      */
-    public protocol.EnumProtos.ColourProto getPlayerB() {
-      return playerB_;
+    public protocol.EnumProtos.ColourProto getRecipient() {
+      return recipient_;
     }
 
-    public static final int FROMBTOA_FIELD_NUMBER = 4;
-    private protocol.ResourceProtos.ResourceCount fromBtoA_;
+    public static final int REQUEST_FIELD_NUMBER = 4;
+    private protocol.ResourceProtos.ResourceCount request_;
     /**
-     * <code>required .ResourceCount fromBtoA = 4;</code>
+     * <code>required .ResourceCount request = 4;</code>
      */
-    public boolean hasFromBtoA() {
+    public boolean hasRequest() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>required .ResourceCount fromBtoA = 4;</code>
+     * <code>required .ResourceCount request = 4;</code>
      */
-    public protocol.ResourceProtos.ResourceCount getFromBtoA() {
-      return fromBtoA_;
+    public protocol.ResourceProtos.ResourceCount getRequest() {
+      return request_;
     }
     /**
-     * <code>required .ResourceCount fromBtoA = 4;</code>
+     * <code>required .ResourceCount request = 4;</code>
      */
-    public protocol.ResourceProtos.ResourceCountOrBuilder getFromBtoAOrBuilder() {
-      return fromBtoA_;
+    public protocol.ResourceProtos.ResourceCountOrBuilder getRequestOrBuilder() {
+      return request_;
     }
 
     private void initFields() {
-      playerA_ = protocol.EnumProtos.ColourProto.RED;
-      fromAtoB_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
-      playerB_ = protocol.EnumProtos.ColourProto.RED;
-      fromBtoA_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      offerer_ = protocol.EnumProtos.ColourProto.RED;
+      offer_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      recipient_ = protocol.EnumProtos.ColourProto.RED;
+      request_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -1147,27 +1147,27 @@ public final class TradeProtos {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
-      if (!hasPlayerA()) {
+      if (!hasOfferer()) {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasFromAtoB()) {
+      if (!hasOffer()) {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasPlayerB()) {
+      if (!hasRecipient()) {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasFromBtoA()) {
+      if (!hasRequest()) {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!getFromAtoB().isInitialized()) {
+      if (!getOffer().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!getFromBtoA().isInitialized()) {
+      if (!getRequest().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -1179,16 +1179,16 @@ public final class TradeProtos {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, playerA_.getNumber());
+        output.writeEnum(1, offerer_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeMessage(2, fromAtoB_);
+        output.writeMessage(2, offer_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeEnum(3, playerB_.getNumber());
+        output.writeEnum(3, recipient_.getNumber());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeMessage(4, fromBtoA_);
+        output.writeMessage(4, request_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -1201,19 +1201,19 @@ public final class TradeProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, playerA_.getNumber());
+          .computeEnumSize(1, offerer_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, fromAtoB_);
+          .computeMessageSize(2, offer_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(3, playerB_.getNumber());
+          .computeEnumSize(3, recipient_.getNumber());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, fromBtoA_);
+          .computeMessageSize(4, request_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1324,8 +1324,8 @@ public final class TradeProtos {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getFromAtoBFieldBuilder();
-          getFromBtoAFieldBuilder();
+          getOfferFieldBuilder();
+          getRequestFieldBuilder();
         }
       }
       private static Builder create() {
@@ -1334,20 +1334,20 @@ public final class TradeProtos {
 
       public Builder clear() {
         super.clear();
-        playerA_ = protocol.EnumProtos.ColourProto.RED;
+        offerer_ = protocol.EnumProtos.ColourProto.RED;
         bitField0_ = (bitField0_ & ~0x00000001);
-        if (fromAtoBBuilder_ == null) {
-          fromAtoB_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+        if (offerBuilder_ == null) {
+          offer_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
         } else {
-          fromAtoBBuilder_.clear();
+          offerBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
-        playerB_ = protocol.EnumProtos.ColourProto.RED;
+        recipient_ = protocol.EnumProtos.ColourProto.RED;
         bitField0_ = (bitField0_ & ~0x00000004);
-        if (fromBtoABuilder_ == null) {
-          fromBtoA_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+        if (requestBuilder_ == null) {
+          request_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
         } else {
-          fromBtoABuilder_.clear();
+          requestBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000008);
         return this;
@@ -1381,26 +1381,26 @@ public final class TradeProtos {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.playerA_ = playerA_;
+        result.offerer_ = offerer_;
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        if (fromAtoBBuilder_ == null) {
-          result.fromAtoB_ = fromAtoB_;
+        if (offerBuilder_ == null) {
+          result.offer_ = offer_;
         } else {
-          result.fromAtoB_ = fromAtoBBuilder_.build();
+          result.offer_ = offerBuilder_.build();
         }
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.playerB_ = playerB_;
+        result.recipient_ = recipient_;
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
-        if (fromBtoABuilder_ == null) {
-          result.fromBtoA_ = fromBtoA_;
+        if (requestBuilder_ == null) {
+          result.request_ = request_;
         } else {
-          result.fromBtoA_ = fromBtoABuilder_.build();
+          result.request_ = requestBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -1418,44 +1418,44 @@ public final class TradeProtos {
 
       public Builder mergeFrom(protocol.TradeProtos.PlayerTradeProto other) {
         if (other == protocol.TradeProtos.PlayerTradeProto.getDefaultInstance()) return this;
-        if (other.hasPlayerA()) {
-          setPlayerA(other.getPlayerA());
+        if (other.hasOfferer()) {
+          setOfferer(other.getOfferer());
         }
-        if (other.hasFromAtoB()) {
-          mergeFromAtoB(other.getFromAtoB());
+        if (other.hasOffer()) {
+          mergeOffer(other.getOffer());
         }
-        if (other.hasPlayerB()) {
-          setPlayerB(other.getPlayerB());
+        if (other.hasRecipient()) {
+          setRecipient(other.getRecipient());
         }
-        if (other.hasFromBtoA()) {
-          mergeFromBtoA(other.getFromBtoA());
+        if (other.hasRequest()) {
+          mergeRequest(other.getRequest());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
-        if (!hasPlayerA()) {
+        if (!hasOfferer()) {
           
           return false;
         }
-        if (!hasFromAtoB()) {
+        if (!hasOffer()) {
           
           return false;
         }
-        if (!hasPlayerB()) {
+        if (!hasRecipient()) {
           
           return false;
         }
-        if (!hasFromBtoA()) {
+        if (!hasRequest()) {
           
           return false;
         }
-        if (!getFromAtoB().isInitialized()) {
+        if (!getOffer().isInitialized()) {
           
           return false;
         }
-        if (!getFromBtoA().isInitialized()) {
+        if (!getRequest().isInitialized()) {
           
           return false;
         }
@@ -1481,306 +1481,306 @@ public final class TradeProtos {
       }
       private int bitField0_;
 
-      private protocol.EnumProtos.ColourProto playerA_ = protocol.EnumProtos.ColourProto.RED;
+      private protocol.EnumProtos.ColourProto offerer_ = protocol.EnumProtos.ColourProto.RED;
       /**
-       * <code>required .ColourProto playerA = 1;</code>
+       * <code>required .ColourProto offerer = 1;</code>
        */
-      public boolean hasPlayerA() {
+      public boolean hasOfferer() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required .ColourProto playerA = 1;</code>
+       * <code>required .ColourProto offerer = 1;</code>
        */
-      public protocol.EnumProtos.ColourProto getPlayerA() {
-        return playerA_;
+      public protocol.EnumProtos.ColourProto getOfferer() {
+        return offerer_;
       }
       /**
-       * <code>required .ColourProto playerA = 1;</code>
+       * <code>required .ColourProto offerer = 1;</code>
        */
-      public Builder setPlayerA(protocol.EnumProtos.ColourProto value) {
+      public Builder setOfferer(protocol.EnumProtos.ColourProto value) {
         if (value == null) {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000001;
-        playerA_ = value;
+        offerer_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required .ColourProto playerA = 1;</code>
+       * <code>required .ColourProto offerer = 1;</code>
        */
-      public Builder clearPlayerA() {
+      public Builder clearOfferer() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        playerA_ = protocol.EnumProtos.ColourProto.RED;
+        offerer_ = protocol.EnumProtos.ColourProto.RED;
         onChanged();
         return this;
       }
 
-      private protocol.ResourceProtos.ResourceCount fromAtoB_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      private protocol.ResourceProtos.ResourceCount offer_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> fromAtoBBuilder_;
+          protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> offerBuilder_;
       /**
-       * <code>required .ResourceCount fromAtoB = 2;</code>
+       * <code>required .ResourceCount offer = 2;</code>
        */
-      public boolean hasFromAtoB() {
+      public boolean hasOffer() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required .ResourceCount fromAtoB = 2;</code>
+       * <code>required .ResourceCount offer = 2;</code>
        */
-      public protocol.ResourceProtos.ResourceCount getFromAtoB() {
-        if (fromAtoBBuilder_ == null) {
-          return fromAtoB_;
+      public protocol.ResourceProtos.ResourceCount getOffer() {
+        if (offerBuilder_ == null) {
+          return offer_;
         } else {
-          return fromAtoBBuilder_.getMessage();
+          return offerBuilder_.getMessage();
         }
       }
       /**
-       * <code>required .ResourceCount fromAtoB = 2;</code>
+       * <code>required .ResourceCount offer = 2;</code>
        */
-      public Builder setFromAtoB(protocol.ResourceProtos.ResourceCount value) {
-        if (fromAtoBBuilder_ == null) {
+      public Builder setOffer(protocol.ResourceProtos.ResourceCount value) {
+        if (offerBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          fromAtoB_ = value;
+          offer_ = value;
           onChanged();
         } else {
-          fromAtoBBuilder_.setMessage(value);
+          offerBuilder_.setMessage(value);
         }
         bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>required .ResourceCount fromAtoB = 2;</code>
+       * <code>required .ResourceCount offer = 2;</code>
        */
-      public Builder setFromAtoB(
+      public Builder setOffer(
           protocol.ResourceProtos.ResourceCount.Builder builderForValue) {
-        if (fromAtoBBuilder_ == null) {
-          fromAtoB_ = builderForValue.build();
+        if (offerBuilder_ == null) {
+          offer_ = builderForValue.build();
           onChanged();
         } else {
-          fromAtoBBuilder_.setMessage(builderForValue.build());
+          offerBuilder_.setMessage(builderForValue.build());
         }
         bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>required .ResourceCount fromAtoB = 2;</code>
+       * <code>required .ResourceCount offer = 2;</code>
        */
-      public Builder mergeFromAtoB(protocol.ResourceProtos.ResourceCount value) {
-        if (fromAtoBBuilder_ == null) {
+      public Builder mergeOffer(protocol.ResourceProtos.ResourceCount value) {
+        if (offerBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              fromAtoB_ != protocol.ResourceProtos.ResourceCount.getDefaultInstance()) {
-            fromAtoB_ =
-              protocol.ResourceProtos.ResourceCount.newBuilder(fromAtoB_).mergeFrom(value).buildPartial();
+              offer_ != protocol.ResourceProtos.ResourceCount.getDefaultInstance()) {
+            offer_ =
+              protocol.ResourceProtos.ResourceCount.newBuilder(offer_).mergeFrom(value).buildPartial();
           } else {
-            fromAtoB_ = value;
+            offer_ = value;
           }
           onChanged();
         } else {
-          fromAtoBBuilder_.mergeFrom(value);
+          offerBuilder_.mergeFrom(value);
         }
         bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>required .ResourceCount fromAtoB = 2;</code>
+       * <code>required .ResourceCount offer = 2;</code>
        */
-      public Builder clearFromAtoB() {
-        if (fromAtoBBuilder_ == null) {
-          fromAtoB_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      public Builder clearOffer() {
+        if (offerBuilder_ == null) {
+          offer_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
           onChanged();
         } else {
-          fromAtoBBuilder_.clear();
+          offerBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
       /**
-       * <code>required .ResourceCount fromAtoB = 2;</code>
+       * <code>required .ResourceCount offer = 2;</code>
        */
-      public protocol.ResourceProtos.ResourceCount.Builder getFromAtoBBuilder() {
+      public protocol.ResourceProtos.ResourceCount.Builder getOfferBuilder() {
         bitField0_ |= 0x00000002;
         onChanged();
-        return getFromAtoBFieldBuilder().getBuilder();
+        return getOfferFieldBuilder().getBuilder();
       }
       /**
-       * <code>required .ResourceCount fromAtoB = 2;</code>
+       * <code>required .ResourceCount offer = 2;</code>
        */
-      public protocol.ResourceProtos.ResourceCountOrBuilder getFromAtoBOrBuilder() {
-        if (fromAtoBBuilder_ != null) {
-          return fromAtoBBuilder_.getMessageOrBuilder();
+      public protocol.ResourceProtos.ResourceCountOrBuilder getOfferOrBuilder() {
+        if (offerBuilder_ != null) {
+          return offerBuilder_.getMessageOrBuilder();
         } else {
-          return fromAtoB_;
+          return offer_;
         }
       }
       /**
-       * <code>required .ResourceCount fromAtoB = 2;</code>
+       * <code>required .ResourceCount offer = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> 
-          getFromAtoBFieldBuilder() {
-        if (fromAtoBBuilder_ == null) {
-          fromAtoBBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+          getOfferFieldBuilder() {
+        if (offerBuilder_ == null) {
+          offerBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder>(
-                  getFromAtoB(),
+                  getOffer(),
                   getParentForChildren(),
                   isClean());
-          fromAtoB_ = null;
+          offer_ = null;
         }
-        return fromAtoBBuilder_;
+        return offerBuilder_;
       }
 
-      private protocol.EnumProtos.ColourProto playerB_ = protocol.EnumProtos.ColourProto.RED;
+      private protocol.EnumProtos.ColourProto recipient_ = protocol.EnumProtos.ColourProto.RED;
       /**
-       * <code>required .ColourProto playerB = 3;</code>
+       * <code>required .ColourProto recipient = 3;</code>
        */
-      public boolean hasPlayerB() {
+      public boolean hasRecipient() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>required .ColourProto playerB = 3;</code>
+       * <code>required .ColourProto recipient = 3;</code>
        */
-      public protocol.EnumProtos.ColourProto getPlayerB() {
-        return playerB_;
+      public protocol.EnumProtos.ColourProto getRecipient() {
+        return recipient_;
       }
       /**
-       * <code>required .ColourProto playerB = 3;</code>
+       * <code>required .ColourProto recipient = 3;</code>
        */
-      public Builder setPlayerB(protocol.EnumProtos.ColourProto value) {
+      public Builder setRecipient(protocol.EnumProtos.ColourProto value) {
         if (value == null) {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000004;
-        playerB_ = value;
+        recipient_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required .ColourProto playerB = 3;</code>
+       * <code>required .ColourProto recipient = 3;</code>
        */
-      public Builder clearPlayerB() {
+      public Builder clearRecipient() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        playerB_ = protocol.EnumProtos.ColourProto.RED;
+        recipient_ = protocol.EnumProtos.ColourProto.RED;
         onChanged();
         return this;
       }
 
-      private protocol.ResourceProtos.ResourceCount fromBtoA_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      private protocol.ResourceProtos.ResourceCount request_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> fromBtoABuilder_;
+          protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> requestBuilder_;
       /**
-       * <code>required .ResourceCount fromBtoA = 4;</code>
+       * <code>required .ResourceCount request = 4;</code>
        */
-      public boolean hasFromBtoA() {
+      public boolean hasRequest() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>required .ResourceCount fromBtoA = 4;</code>
+       * <code>required .ResourceCount request = 4;</code>
        */
-      public protocol.ResourceProtos.ResourceCount getFromBtoA() {
-        if (fromBtoABuilder_ == null) {
-          return fromBtoA_;
+      public protocol.ResourceProtos.ResourceCount getRequest() {
+        if (requestBuilder_ == null) {
+          return request_;
         } else {
-          return fromBtoABuilder_.getMessage();
+          return requestBuilder_.getMessage();
         }
       }
       /**
-       * <code>required .ResourceCount fromBtoA = 4;</code>
+       * <code>required .ResourceCount request = 4;</code>
        */
-      public Builder setFromBtoA(protocol.ResourceProtos.ResourceCount value) {
-        if (fromBtoABuilder_ == null) {
+      public Builder setRequest(protocol.ResourceProtos.ResourceCount value) {
+        if (requestBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          fromBtoA_ = value;
+          request_ = value;
           onChanged();
         } else {
-          fromBtoABuilder_.setMessage(value);
+          requestBuilder_.setMessage(value);
         }
         bitField0_ |= 0x00000008;
         return this;
       }
       /**
-       * <code>required .ResourceCount fromBtoA = 4;</code>
+       * <code>required .ResourceCount request = 4;</code>
        */
-      public Builder setFromBtoA(
+      public Builder setRequest(
           protocol.ResourceProtos.ResourceCount.Builder builderForValue) {
-        if (fromBtoABuilder_ == null) {
-          fromBtoA_ = builderForValue.build();
+        if (requestBuilder_ == null) {
+          request_ = builderForValue.build();
           onChanged();
         } else {
-          fromBtoABuilder_.setMessage(builderForValue.build());
+          requestBuilder_.setMessage(builderForValue.build());
         }
         bitField0_ |= 0x00000008;
         return this;
       }
       /**
-       * <code>required .ResourceCount fromBtoA = 4;</code>
+       * <code>required .ResourceCount request = 4;</code>
        */
-      public Builder mergeFromBtoA(protocol.ResourceProtos.ResourceCount value) {
-        if (fromBtoABuilder_ == null) {
+      public Builder mergeRequest(protocol.ResourceProtos.ResourceCount value) {
+        if (requestBuilder_ == null) {
           if (((bitField0_ & 0x00000008) == 0x00000008) &&
-              fromBtoA_ != protocol.ResourceProtos.ResourceCount.getDefaultInstance()) {
-            fromBtoA_ =
-              protocol.ResourceProtos.ResourceCount.newBuilder(fromBtoA_).mergeFrom(value).buildPartial();
+              request_ != protocol.ResourceProtos.ResourceCount.getDefaultInstance()) {
+            request_ =
+              protocol.ResourceProtos.ResourceCount.newBuilder(request_).mergeFrom(value).buildPartial();
           } else {
-            fromBtoA_ = value;
+            request_ = value;
           }
           onChanged();
         } else {
-          fromBtoABuilder_.mergeFrom(value);
+          requestBuilder_.mergeFrom(value);
         }
         bitField0_ |= 0x00000008;
         return this;
       }
       /**
-       * <code>required .ResourceCount fromBtoA = 4;</code>
+       * <code>required .ResourceCount request = 4;</code>
        */
-      public Builder clearFromBtoA() {
-        if (fromBtoABuilder_ == null) {
-          fromBtoA_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      public Builder clearRequest() {
+        if (requestBuilder_ == null) {
+          request_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
           onChanged();
         } else {
-          fromBtoABuilder_.clear();
+          requestBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
       /**
-       * <code>required .ResourceCount fromBtoA = 4;</code>
+       * <code>required .ResourceCount request = 4;</code>
        */
-      public protocol.ResourceProtos.ResourceCount.Builder getFromBtoABuilder() {
+      public protocol.ResourceProtos.ResourceCount.Builder getRequestBuilder() {
         bitField0_ |= 0x00000008;
         onChanged();
-        return getFromBtoAFieldBuilder().getBuilder();
+        return getRequestFieldBuilder().getBuilder();
       }
       /**
-       * <code>required .ResourceCount fromBtoA = 4;</code>
+       * <code>required .ResourceCount request = 4;</code>
        */
-      public protocol.ResourceProtos.ResourceCountOrBuilder getFromBtoAOrBuilder() {
-        if (fromBtoABuilder_ != null) {
-          return fromBtoABuilder_.getMessageOrBuilder();
+      public protocol.ResourceProtos.ResourceCountOrBuilder getRequestOrBuilder() {
+        if (requestBuilder_ != null) {
+          return requestBuilder_.getMessageOrBuilder();
         } else {
-          return fromBtoA_;
+          return request_;
         }
       }
       /**
-       * <code>required .ResourceCount fromBtoA = 4;</code>
+       * <code>required .ResourceCount request = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> 
-          getFromBtoAFieldBuilder() {
-        if (fromBtoABuilder_ == null) {
-          fromBtoABuilder_ = new com.google.protobuf.SingleFieldBuilder<
+          getRequestFieldBuilder() {
+        if (requestBuilder_ == null) {
+          requestBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder>(
-                  getFromBtoA(),
+                  getRequest(),
                   getParentForChildren(),
                   isClean());
-          fromBtoA_ = null;
+          request_ = null;
         }
-        return fromBtoABuilder_;
+        return requestBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:PlayerTradeProto)
@@ -1808,17 +1808,17 @@ public final class TradeProtos {
     protocol.EnumProtos.ColourProto getPlayer();
 
     /**
-     * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+     * <code>required .ResourceCount requestResources = 2;</code>
      */
-    boolean hasFromPlayerToPort();
+    boolean hasRequestResources();
     /**
-     * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+     * <code>required .ResourceCount requestResources = 2;</code>
      */
-    protocol.ResourceProtos.ResourceCount getFromPlayerToPort();
+    protocol.ResourceProtos.ResourceCount getRequestResources();
     /**
-     * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+     * <code>required .ResourceCount requestResources = 2;</code>
      */
-    protocol.ResourceProtos.ResourceCountOrBuilder getFromPlayerToPortOrBuilder();
+    protocol.ResourceProtos.ResourceCountOrBuilder getRequestResourcesOrBuilder();
 
     /**
      * <code>required .PortProto port = 3;</code>
@@ -1834,17 +1834,17 @@ public final class TradeProtos {
     protocol.BoardProtos.PortProtoOrBuilder getPortOrBuilder();
 
     /**
-     * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+     * <code>required .ResourceCount offerResources = 4;</code>
      */
-    boolean hasFromPortToPlayer();
+    boolean hasOfferResources();
     /**
-     * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+     * <code>required .ResourceCount offerResources = 4;</code>
      */
-    protocol.ResourceProtos.ResourceCount getFromPortToPlayer();
+    protocol.ResourceProtos.ResourceCount getOfferResources();
     /**
-     * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+     * <code>required .ResourceCount offerResources = 4;</code>
      */
-    protocol.ResourceProtos.ResourceCountOrBuilder getFromPortToPlayerOrBuilder();
+    protocol.ResourceProtos.ResourceCountOrBuilder getOfferResourcesOrBuilder();
   }
   /**
    * Protobuf type {@code PortTradeProto}
@@ -1921,12 +1921,12 @@ public final class TradeProtos {
             case 18: {
               protocol.ResourceProtos.ResourceCount.Builder subBuilder = null;
               if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                subBuilder = fromPlayerToPort_.toBuilder();
+                subBuilder = requestResources_.toBuilder();
               }
-              fromPlayerToPort_ = input.readMessage(protocol.ResourceProtos.ResourceCount.PARSER, extensionRegistry);
+              requestResources_ = input.readMessage(protocol.ResourceProtos.ResourceCount.PARSER, extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(fromPlayerToPort_);
-                fromPlayerToPort_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(requestResources_);
+                requestResources_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000002;
               break;
@@ -1947,12 +1947,12 @@ public final class TradeProtos {
             case 34: {
               protocol.ResourceProtos.ResourceCount.Builder subBuilder = null;
               if (((bitField0_ & 0x00000008) == 0x00000008)) {
-                subBuilder = fromPortToPlayer_.toBuilder();
+                subBuilder = offerResources_.toBuilder();
               }
-              fromPortToPlayer_ = input.readMessage(protocol.ResourceProtos.ResourceCount.PARSER, extensionRegistry);
+              offerResources_ = input.readMessage(protocol.ResourceProtos.ResourceCount.PARSER, extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(fromPortToPlayer_);
-                fromPortToPlayer_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(offerResources_);
+                offerResources_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000008;
               break;
@@ -2012,25 +2012,25 @@ public final class TradeProtos {
       return player_;
     }
 
-    public static final int FROMPLAYERTOPORT_FIELD_NUMBER = 2;
-    private protocol.ResourceProtos.ResourceCount fromPlayerToPort_;
+    public static final int REQUESTRESOURCES_FIELD_NUMBER = 2;
+    private protocol.ResourceProtos.ResourceCount requestResources_;
     /**
-     * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+     * <code>required .ResourceCount requestResources = 2;</code>
      */
-    public boolean hasFromPlayerToPort() {
+    public boolean hasRequestResources() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+     * <code>required .ResourceCount requestResources = 2;</code>
      */
-    public protocol.ResourceProtos.ResourceCount getFromPlayerToPort() {
-      return fromPlayerToPort_;
+    public protocol.ResourceProtos.ResourceCount getRequestResources() {
+      return requestResources_;
     }
     /**
-     * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+     * <code>required .ResourceCount requestResources = 2;</code>
      */
-    public protocol.ResourceProtos.ResourceCountOrBuilder getFromPlayerToPortOrBuilder() {
-      return fromPlayerToPort_;
+    public protocol.ResourceProtos.ResourceCountOrBuilder getRequestResourcesOrBuilder() {
+      return requestResources_;
     }
 
     public static final int PORT_FIELD_NUMBER = 3;
@@ -2054,32 +2054,32 @@ public final class TradeProtos {
       return port_;
     }
 
-    public static final int FROMPORTTOPLAYER_FIELD_NUMBER = 4;
-    private protocol.ResourceProtos.ResourceCount fromPortToPlayer_;
+    public static final int OFFERRESOURCES_FIELD_NUMBER = 4;
+    private protocol.ResourceProtos.ResourceCount offerResources_;
     /**
-     * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+     * <code>required .ResourceCount offerResources = 4;</code>
      */
-    public boolean hasFromPortToPlayer() {
+    public boolean hasOfferResources() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+     * <code>required .ResourceCount offerResources = 4;</code>
      */
-    public protocol.ResourceProtos.ResourceCount getFromPortToPlayer() {
-      return fromPortToPlayer_;
+    public protocol.ResourceProtos.ResourceCount getOfferResources() {
+      return offerResources_;
     }
     /**
-     * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+     * <code>required .ResourceCount offerResources = 4;</code>
      */
-    public protocol.ResourceProtos.ResourceCountOrBuilder getFromPortToPlayerOrBuilder() {
-      return fromPortToPlayer_;
+    public protocol.ResourceProtos.ResourceCountOrBuilder getOfferResourcesOrBuilder() {
+      return offerResources_;
     }
 
     private void initFields() {
       player_ = protocol.EnumProtos.ColourProto.RED;
-      fromPlayerToPort_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      requestResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
       port_ = protocol.BoardProtos.PortProto.getDefaultInstance();
-      fromPortToPlayer_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      offerResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2091,7 +2091,7 @@ public final class TradeProtos {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasFromPlayerToPort()) {
+      if (!hasRequestResources()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -2099,11 +2099,11 @@ public final class TradeProtos {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasFromPortToPlayer()) {
+      if (!hasOfferResources()) {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!getFromPlayerToPort().isInitialized()) {
+      if (!getRequestResources().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -2111,7 +2111,7 @@ public final class TradeProtos {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!getFromPortToPlayer().isInitialized()) {
+      if (!getOfferResources().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -2126,13 +2126,13 @@ public final class TradeProtos {
         output.writeEnum(1, player_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeMessage(2, fromPlayerToPort_);
+        output.writeMessage(2, requestResources_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeMessage(3, port_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeMessage(4, fromPortToPlayer_);
+        output.writeMessage(4, offerResources_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -2149,7 +2149,7 @@ public final class TradeProtos {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, fromPlayerToPort_);
+          .computeMessageSize(2, requestResources_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
@@ -2157,7 +2157,7 @@ public final class TradeProtos {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, fromPortToPlayer_);
+          .computeMessageSize(4, offerResources_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2277,9 +2277,9 @@ public final class TradeProtos {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getFromPlayerToPortFieldBuilder();
+          getRequestResourcesFieldBuilder();
           getPortFieldBuilder();
-          getFromPortToPlayerFieldBuilder();
+          getOfferResourcesFieldBuilder();
         }
       }
       private static Builder create() {
@@ -2290,10 +2290,10 @@ public final class TradeProtos {
         super.clear();
         player_ = protocol.EnumProtos.ColourProto.RED;
         bitField0_ = (bitField0_ & ~0x00000001);
-        if (fromPlayerToPortBuilder_ == null) {
-          fromPlayerToPort_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+        if (requestResourcesBuilder_ == null) {
+          requestResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
         } else {
-          fromPlayerToPortBuilder_.clear();
+          requestResourcesBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
         if (portBuilder_ == null) {
@@ -2302,10 +2302,10 @@ public final class TradeProtos {
           portBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000004);
-        if (fromPortToPlayerBuilder_ == null) {
-          fromPortToPlayer_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+        if (offerResourcesBuilder_ == null) {
+          offerResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
         } else {
-          fromPortToPlayerBuilder_.clear();
+          offerResourcesBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000008);
         return this;
@@ -2343,10 +2343,10 @@ public final class TradeProtos {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        if (fromPlayerToPortBuilder_ == null) {
-          result.fromPlayerToPort_ = fromPlayerToPort_;
+        if (requestResourcesBuilder_ == null) {
+          result.requestResources_ = requestResources_;
         } else {
-          result.fromPlayerToPort_ = fromPlayerToPortBuilder_.build();
+          result.requestResources_ = requestResourcesBuilder_.build();
         }
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
@@ -2359,10 +2359,10 @@ public final class TradeProtos {
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
-        if (fromPortToPlayerBuilder_ == null) {
-          result.fromPortToPlayer_ = fromPortToPlayer_;
+        if (offerResourcesBuilder_ == null) {
+          result.offerResources_ = offerResources_;
         } else {
-          result.fromPortToPlayer_ = fromPortToPlayerBuilder_.build();
+          result.offerResources_ = offerResourcesBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -2383,14 +2383,14 @@ public final class TradeProtos {
         if (other.hasPlayer()) {
           setPlayer(other.getPlayer());
         }
-        if (other.hasFromPlayerToPort()) {
-          mergeFromPlayerToPort(other.getFromPlayerToPort());
+        if (other.hasRequestResources()) {
+          mergeRequestResources(other.getRequestResources());
         }
         if (other.hasPort()) {
           mergePort(other.getPort());
         }
-        if (other.hasFromPortToPlayer()) {
-          mergeFromPortToPlayer(other.getFromPortToPlayer());
+        if (other.hasOfferResources()) {
+          mergeOfferResources(other.getOfferResources());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -2401,7 +2401,7 @@ public final class TradeProtos {
           
           return false;
         }
-        if (!hasFromPlayerToPort()) {
+        if (!hasRequestResources()) {
           
           return false;
         }
@@ -2409,11 +2409,11 @@ public final class TradeProtos {
           
           return false;
         }
-        if (!hasFromPortToPlayer()) {
+        if (!hasOfferResources()) {
           
           return false;
         }
-        if (!getFromPlayerToPort().isInitialized()) {
+        if (!getRequestResources().isInitialized()) {
           
           return false;
         }
@@ -2421,7 +2421,7 @@ public final class TradeProtos {
           
           return false;
         }
-        if (!getFromPortToPlayer().isInitialized()) {
+        if (!getOfferResources().isInitialized()) {
           
           return false;
         }
@@ -2482,120 +2482,120 @@ public final class TradeProtos {
         return this;
       }
 
-      private protocol.ResourceProtos.ResourceCount fromPlayerToPort_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      private protocol.ResourceProtos.ResourceCount requestResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> fromPlayerToPortBuilder_;
+          protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> requestResourcesBuilder_;
       /**
-       * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+       * <code>required .ResourceCount requestResources = 2;</code>
        */
-      public boolean hasFromPlayerToPort() {
+      public boolean hasRequestResources() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+       * <code>required .ResourceCount requestResources = 2;</code>
        */
-      public protocol.ResourceProtos.ResourceCount getFromPlayerToPort() {
-        if (fromPlayerToPortBuilder_ == null) {
-          return fromPlayerToPort_;
+      public protocol.ResourceProtos.ResourceCount getRequestResources() {
+        if (requestResourcesBuilder_ == null) {
+          return requestResources_;
         } else {
-          return fromPlayerToPortBuilder_.getMessage();
+          return requestResourcesBuilder_.getMessage();
         }
       }
       /**
-       * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+       * <code>required .ResourceCount requestResources = 2;</code>
        */
-      public Builder setFromPlayerToPort(protocol.ResourceProtos.ResourceCount value) {
-        if (fromPlayerToPortBuilder_ == null) {
+      public Builder setRequestResources(protocol.ResourceProtos.ResourceCount value) {
+        if (requestResourcesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          fromPlayerToPort_ = value;
+          requestResources_ = value;
           onChanged();
         } else {
-          fromPlayerToPortBuilder_.setMessage(value);
+          requestResourcesBuilder_.setMessage(value);
         }
         bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+       * <code>required .ResourceCount requestResources = 2;</code>
        */
-      public Builder setFromPlayerToPort(
+      public Builder setRequestResources(
           protocol.ResourceProtos.ResourceCount.Builder builderForValue) {
-        if (fromPlayerToPortBuilder_ == null) {
-          fromPlayerToPort_ = builderForValue.build();
+        if (requestResourcesBuilder_ == null) {
+          requestResources_ = builderForValue.build();
           onChanged();
         } else {
-          fromPlayerToPortBuilder_.setMessage(builderForValue.build());
+          requestResourcesBuilder_.setMessage(builderForValue.build());
         }
         bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+       * <code>required .ResourceCount requestResources = 2;</code>
        */
-      public Builder mergeFromPlayerToPort(protocol.ResourceProtos.ResourceCount value) {
-        if (fromPlayerToPortBuilder_ == null) {
+      public Builder mergeRequestResources(protocol.ResourceProtos.ResourceCount value) {
+        if (requestResourcesBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              fromPlayerToPort_ != protocol.ResourceProtos.ResourceCount.getDefaultInstance()) {
-            fromPlayerToPort_ =
-              protocol.ResourceProtos.ResourceCount.newBuilder(fromPlayerToPort_).mergeFrom(value).buildPartial();
+              requestResources_ != protocol.ResourceProtos.ResourceCount.getDefaultInstance()) {
+            requestResources_ =
+              protocol.ResourceProtos.ResourceCount.newBuilder(requestResources_).mergeFrom(value).buildPartial();
           } else {
-            fromPlayerToPort_ = value;
+            requestResources_ = value;
           }
           onChanged();
         } else {
-          fromPlayerToPortBuilder_.mergeFrom(value);
+          requestResourcesBuilder_.mergeFrom(value);
         }
         bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+       * <code>required .ResourceCount requestResources = 2;</code>
        */
-      public Builder clearFromPlayerToPort() {
-        if (fromPlayerToPortBuilder_ == null) {
-          fromPlayerToPort_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      public Builder clearRequestResources() {
+        if (requestResourcesBuilder_ == null) {
+          requestResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
           onChanged();
         } else {
-          fromPlayerToPortBuilder_.clear();
+          requestResourcesBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
       /**
-       * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+       * <code>required .ResourceCount requestResources = 2;</code>
        */
-      public protocol.ResourceProtos.ResourceCount.Builder getFromPlayerToPortBuilder() {
+      public protocol.ResourceProtos.ResourceCount.Builder getRequestResourcesBuilder() {
         bitField0_ |= 0x00000002;
         onChanged();
-        return getFromPlayerToPortFieldBuilder().getBuilder();
+        return getRequestResourcesFieldBuilder().getBuilder();
       }
       /**
-       * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+       * <code>required .ResourceCount requestResources = 2;</code>
        */
-      public protocol.ResourceProtos.ResourceCountOrBuilder getFromPlayerToPortOrBuilder() {
-        if (fromPlayerToPortBuilder_ != null) {
-          return fromPlayerToPortBuilder_.getMessageOrBuilder();
+      public protocol.ResourceProtos.ResourceCountOrBuilder getRequestResourcesOrBuilder() {
+        if (requestResourcesBuilder_ != null) {
+          return requestResourcesBuilder_.getMessageOrBuilder();
         } else {
-          return fromPlayerToPort_;
+          return requestResources_;
         }
       }
       /**
-       * <code>required .ResourceCount fromPlayerToPort = 2;</code>
+       * <code>required .ResourceCount requestResources = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> 
-          getFromPlayerToPortFieldBuilder() {
-        if (fromPlayerToPortBuilder_ == null) {
-          fromPlayerToPortBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+          getRequestResourcesFieldBuilder() {
+        if (requestResourcesBuilder_ == null) {
+          requestResourcesBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder>(
-                  getFromPlayerToPort(),
+                  getRequestResources(),
                   getParentForChildren(),
                   isClean());
-          fromPlayerToPort_ = null;
+          requestResources_ = null;
         }
-        return fromPlayerToPortBuilder_;
+        return requestResourcesBuilder_;
       }
 
       private protocol.BoardProtos.PortProto port_ = protocol.BoardProtos.PortProto.getDefaultInstance();
@@ -2714,120 +2714,120 @@ public final class TradeProtos {
         return portBuilder_;
       }
 
-      private protocol.ResourceProtos.ResourceCount fromPortToPlayer_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      private protocol.ResourceProtos.ResourceCount offerResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> fromPortToPlayerBuilder_;
+          protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> offerResourcesBuilder_;
       /**
-       * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+       * <code>required .ResourceCount offerResources = 4;</code>
        */
-      public boolean hasFromPortToPlayer() {
+      public boolean hasOfferResources() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+       * <code>required .ResourceCount offerResources = 4;</code>
        */
-      public protocol.ResourceProtos.ResourceCount getFromPortToPlayer() {
-        if (fromPortToPlayerBuilder_ == null) {
-          return fromPortToPlayer_;
+      public protocol.ResourceProtos.ResourceCount getOfferResources() {
+        if (offerResourcesBuilder_ == null) {
+          return offerResources_;
         } else {
-          return fromPortToPlayerBuilder_.getMessage();
+          return offerResourcesBuilder_.getMessage();
         }
       }
       /**
-       * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+       * <code>required .ResourceCount offerResources = 4;</code>
        */
-      public Builder setFromPortToPlayer(protocol.ResourceProtos.ResourceCount value) {
-        if (fromPortToPlayerBuilder_ == null) {
+      public Builder setOfferResources(protocol.ResourceProtos.ResourceCount value) {
+        if (offerResourcesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          fromPortToPlayer_ = value;
+          offerResources_ = value;
           onChanged();
         } else {
-          fromPortToPlayerBuilder_.setMessage(value);
+          offerResourcesBuilder_.setMessage(value);
         }
         bitField0_ |= 0x00000008;
         return this;
       }
       /**
-       * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+       * <code>required .ResourceCount offerResources = 4;</code>
        */
-      public Builder setFromPortToPlayer(
+      public Builder setOfferResources(
           protocol.ResourceProtos.ResourceCount.Builder builderForValue) {
-        if (fromPortToPlayerBuilder_ == null) {
-          fromPortToPlayer_ = builderForValue.build();
+        if (offerResourcesBuilder_ == null) {
+          offerResources_ = builderForValue.build();
           onChanged();
         } else {
-          fromPortToPlayerBuilder_.setMessage(builderForValue.build());
+          offerResourcesBuilder_.setMessage(builderForValue.build());
         }
         bitField0_ |= 0x00000008;
         return this;
       }
       /**
-       * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+       * <code>required .ResourceCount offerResources = 4;</code>
        */
-      public Builder mergeFromPortToPlayer(protocol.ResourceProtos.ResourceCount value) {
-        if (fromPortToPlayerBuilder_ == null) {
+      public Builder mergeOfferResources(protocol.ResourceProtos.ResourceCount value) {
+        if (offerResourcesBuilder_ == null) {
           if (((bitField0_ & 0x00000008) == 0x00000008) &&
-              fromPortToPlayer_ != protocol.ResourceProtos.ResourceCount.getDefaultInstance()) {
-            fromPortToPlayer_ =
-              protocol.ResourceProtos.ResourceCount.newBuilder(fromPortToPlayer_).mergeFrom(value).buildPartial();
+              offerResources_ != protocol.ResourceProtos.ResourceCount.getDefaultInstance()) {
+            offerResources_ =
+              protocol.ResourceProtos.ResourceCount.newBuilder(offerResources_).mergeFrom(value).buildPartial();
           } else {
-            fromPortToPlayer_ = value;
+            offerResources_ = value;
           }
           onChanged();
         } else {
-          fromPortToPlayerBuilder_.mergeFrom(value);
+          offerResourcesBuilder_.mergeFrom(value);
         }
         bitField0_ |= 0x00000008;
         return this;
       }
       /**
-       * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+       * <code>required .ResourceCount offerResources = 4;</code>
        */
-      public Builder clearFromPortToPlayer() {
-        if (fromPortToPlayerBuilder_ == null) {
-          fromPortToPlayer_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      public Builder clearOfferResources() {
+        if (offerResourcesBuilder_ == null) {
+          offerResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
           onChanged();
         } else {
-          fromPortToPlayerBuilder_.clear();
+          offerResourcesBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
       /**
-       * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+       * <code>required .ResourceCount offerResources = 4;</code>
        */
-      public protocol.ResourceProtos.ResourceCount.Builder getFromPortToPlayerBuilder() {
+      public protocol.ResourceProtos.ResourceCount.Builder getOfferResourcesBuilder() {
         bitField0_ |= 0x00000008;
         onChanged();
-        return getFromPortToPlayerFieldBuilder().getBuilder();
+        return getOfferResourcesFieldBuilder().getBuilder();
       }
       /**
-       * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+       * <code>required .ResourceCount offerResources = 4;</code>
        */
-      public protocol.ResourceProtos.ResourceCountOrBuilder getFromPortToPlayerOrBuilder() {
-        if (fromPortToPlayerBuilder_ != null) {
-          return fromPortToPlayerBuilder_.getMessageOrBuilder();
+      public protocol.ResourceProtos.ResourceCountOrBuilder getOfferResourcesOrBuilder() {
+        if (offerResourcesBuilder_ != null) {
+          return offerResourcesBuilder_.getMessageOrBuilder();
         } else {
-          return fromPortToPlayer_;
+          return offerResources_;
         }
       }
       /**
-       * <code>required .ResourceCount fromPortToPlayer = 4;</code>
+       * <code>required .ResourceCount offerResources = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> 
-          getFromPortToPlayerFieldBuilder() {
-        if (fromPortToPlayerBuilder_ == null) {
-          fromPortToPlayerBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+          getOfferResourcesFieldBuilder() {
+        if (offerResourcesBuilder_ == null) {
+          offerResourcesBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder>(
-                  getFromPortToPlayer(),
+                  getOfferResources(),
                   getParentForChildren(),
                   isClean());
-          fromPortToPlayer_ = null;
+          offerResources_ = null;
         }
-        return fromPortToPlayerBuilder_;
+        return offerResourcesBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:PortTradeProto)
@@ -2842,10 +2842,10 @@ public final class TradeProtos {
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_TradeProto_descriptor;
+    internal_static_TradeRequest_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_TradeProto_fieldAccessorTable;
+      internal_static_TradeRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_PlayerTradeProto_descriptor;
   private static
@@ -2866,18 +2866,18 @@ public final class TradeProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\013trade.proto\032\013enums.proto\032\017resources.pr" +
-      "oto\032\013board.proto\"h\n\nTradeProto\022(\n\013player" +
-      "Trade\030\001 \001(\0132\021.PlayerTradeProtoH\000\022$\n\tport" +
-      "Trade\030\003 \001(\0132\017.PortTradeProtoH\000B\n\n\010Conten" +
-      "ts\"\224\001\n\020PlayerTradeProto\022\035\n\007playerA\030\001 \002(\016" +
-      "2\014.ColourProto\022 \n\010fromAtoB\030\002 \002(\0132\016.Resou" +
-      "rceCount\022\035\n\007playerB\030\003 \002(\0162\014.ColourProto\022" +
-      " \n\010fromBtoA\030\004 \002(\0132\016.ResourceCount\"\234\001\n\016Po" +
+      "oto\032\013board.proto\"j\n\014TradeRequest\022(\n\013play" +
+      "erTrade\030\001 \001(\0132\021.PlayerTradeProtoH\000\022$\n\tpo" +
+      "rtTrade\030\003 \001(\0132\017.PortTradeProtoH\000B\n\n\010Cont" +
+      "ents\"\222\001\n\020PlayerTradeProto\022\035\n\007offerer\030\001 \002" +
+      "(\0162\014.ColourProto\022\035\n\005offer\030\002 \002(\0132\016.Resour" +
+      "ceCount\022\037\n\trecipient\030\003 \002(\0162\014.ColourProto" +
+      "\022\037\n\007request\030\004 \002(\0132\016.ResourceCount\"\232\001\n\016Po" +
       "rtTradeProto\022\034\n\006player\030\001 \002(\0162\014.ColourPro" +
-      "to\022(\n\020fromPlayerToPort\030\002 \002(\0132\016.ResourceC",
-      "ount\022\030\n\004port\030\003 \002(\0132\n.PortProto\022(\n\020fromPo" +
-      "rtToPlayer\030\004 \002(\0132\016.ResourceCountB\027\n\010prot" +
-      "ocolB\013TradeProtos"
+      "to\022(\n\020requestResources\030\002 \002(\0132\016.ResourceC",
+      "ount\022\030\n\004port\030\003 \002(\0132\n.PortProto\022&\n\016offerR" +
+      "esources\030\004 \002(\0132\016.ResourceCountB\027\n\010protoc" +
+      "olB\013TradeProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2894,24 +2894,24 @@ public final class TradeProtos {
           protocol.ResourceProtos.getDescriptor(),
           protocol.BoardProtos.getDescriptor(),
         }, assigner);
-    internal_static_TradeProto_descriptor =
+    internal_static_TradeRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_TradeProto_fieldAccessorTable = new
+    internal_static_TradeRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_TradeProto_descriptor,
+        internal_static_TradeRequest_descriptor,
         new java.lang.String[] { "PlayerTrade", "PortTrade", "Contents", });
     internal_static_PlayerTradeProto_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_PlayerTradeProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PlayerTradeProto_descriptor,
-        new java.lang.String[] { "PlayerA", "FromAtoB", "PlayerB", "FromBtoA", });
+        new java.lang.String[] { "Offerer", "Offer", "Recipient", "Request", });
     internal_static_PortTradeProto_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_PortTradeProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PortTradeProto_descriptor,
-        new java.lang.String[] { "Player", "FromPlayerToPort", "Port", "FromPortToPlayer", });
+        new java.lang.String[] { "Player", "RequestResources", "Port", "OfferResources", });
     protocol.EnumProtos.getDescriptor();
     protocol.ResourceProtos.getDescriptor();
     protocol.BoardProtos.getDescriptor();

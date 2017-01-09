@@ -1,4 +1,4 @@
-package catan;
+package tests;
 
 import static org.junit.Assert.*;
 
@@ -6,10 +6,9 @@ import java.awt.Point;
 
 import board.Edge;
 import board.Node;
-import enums.MoveType;
+import enums.Colour;
 import exceptions.*;
 import game.build.*;
-import game.moves.BuildSettlementMove;
 import game.players.NetworkPlayer;
 import game.players.Player;
 
@@ -47,7 +46,7 @@ public class RoadTests extends TestHelper
 	public void settlementBreaksRoadTest() throws SettlementExistsException, CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{	
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.Red);				
+		Player p2 = new NetworkPlayer(Colour.RED);
 		game.addPlayer(p2);		
 
 		// Make roads
@@ -115,7 +114,7 @@ public class RoadTests extends TestHelper
 	public void settlementBreaksRoadTest2() throws SettlementExistsException, CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{	
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.Red);				
+		Player p2 = new NetworkPlayer(Colour.RED);
 		game.addPlayer(p2);	
 		game.setCurrentPlayer(p2);
 		
@@ -143,12 +142,8 @@ public class RoadTests extends TestHelper
 	
 		// Build foreign settlement in between second and third road.
 		p2.grantResources(Settlement.getSettlementCost());
-		BuildSettlementMove move = new BuildSettlementMove();
-		move.setX(n2.getX());
-		move.setY(n2.getY());
-		move.setPlayerColour(p2.getColour());
-		game.processMove(move, MoveType.BuildSettlement);
-		
+		makeSettlement(p2, n2);
+
 		// Assert previous road chain of length three was broken.
 		assertEquals(2, p.calcRoadLength());
 		assertEquals(2, p.getNumOfRoadChains());

@@ -1,4 +1,4 @@
-package catan;
+package tests;
 
 import static org.junit.Assert.*;
 import board.*;
@@ -79,10 +79,10 @@ public class TestHelper
 		return p.getRoads().get(p.getRoads().size() - 1);
 	}
 	
-	protected DevelopmentCard buyDevelopmentCard() throws CannotAffordException
+	protected DevelopmentCardType buyDevelopmentCard() throws CannotAffordException
 	{
 		int oldSize = p.getDevelopmentCards().size();
-		DevelopmentCard c = null;
+		DevelopmentCardType c = DevelopmentCardType.Knight;
 		
 		assertTrue(hasResources(p));
 		try
@@ -115,7 +115,7 @@ public class TestHelper
 	protected void reset()
 	{
 		game = new Game();
-		p = new NetworkPlayer(Colour.Blue);
+		p = new NetworkPlayer(Colour.BLUE);
 		game.addPlayer(p);
 		game.setCurrentPlayer(p);
 		

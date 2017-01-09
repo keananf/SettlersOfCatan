@@ -1,4 +1,4 @@
-package catan;
+package tests;
 
 import static org.junit.Assert.*;
 
@@ -13,10 +13,13 @@ import exceptions.*;
 import game.build.DevelopmentCard;
 import game.build.Road;
 import game.build.Settlement;
-import game.moves.*;
 import game.players.*;
 
 import org.junit.*;
+import protocol.BoardProtos.*;
+import protocol.BuildProtos;
+import protocol.RequestProtos.*;
+import protocol.ResponseProtos.*;
 
 public class DevelopmentCardTests extends TestHelper
 {
@@ -72,7 +75,7 @@ public class DevelopmentCardTests extends TestHelper
 	public void playMonopolyTest()
 	{
 		// Set-up resources to be taken when playing the development card 
-		Player p2 = new NetworkPlayer(Colour.Red);
+		Player p2 = new NetworkPlayer(Colour.RED);
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 		ResourceType r = ResourceType.Brick;
 		
@@ -81,16 +84,15 @@ public class DevelopmentCardTests extends TestHelper
 		game.addPlayer(p2);		
 		p2.grantResources(grant);
 
-		// Set up move
-		PlayMonopolyCardMove move = new PlayMonopolyCardMove();
-		move.setPlayerColour(p.getColour());
-		move.setResource(r);
-		
-		// Play move and assert resources were transferred
+		// Set up request
+		PlayMonopolyCardRequest.Builder request = PlayMonopolyCardRequest.newBuilder();
+		request.setResource(ResourceType.toProto(r));
+
+		// Play request and assert resources were transferred
 		assertEquals(2, p2.getNumResources());
 		assertEquals(0, p.getNumResources());
 		
-		game.playMonopolyCard(move);
+		game.playMonopolyCard(request.build());
 		assertEquals(0, p2.getNumResources());
 		assertEquals(2, p.getNumResources());
 	}
@@ -101,22 +103,19 @@ public class DevelopmentCardTests extends TestHelper
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.Red);
+		Player p2 = new NetworkPlayer(Colour.RED);
 		game.addPlayer(p2);
 		p2.grantResources(Settlement.getSettlementCost());
 		makeSettlement(p2, hex.getNodes().get(0));
 		
-		// Set up move
-		MoveRobberMove move = new MoveRobberMove();
-		move.setPlayerColour(p.getColour());
-		move.setColourToTakeFrom(p2.getColour());
-		move.setX(hex.getX());
-		move.setY(hex.getY());
+		// Set up request
+		MoveRobberRequest.Builder request = MoveRobberRequest.newBuilder();
+		request.setColourToTakeFrom(Colour.toProto(p2.getColour()));
+		request.setHex(hex.toHexProto());
 				
 		// Assert that swap happened, but that no resource was taken
 		// as p2 didn't have any
-		String response = game.moveRobber(move);
-		assertEquals("ok", response);
+		MoveRobberResponse response = game.moveRobber(request.build(), p.getColour());
 		assertTrue(!oldHex.equals(game.getGrid().getHexWithRobber()));
 		assertTrue(game.getGrid().getHexWithRobber().hasRobber());
 		assertFalse(oldHex.hasRobber());
@@ -129,16 +128,14 @@ public class DevelopmentCardTests extends TestHelper
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.Red);
+		Player p2 = new NetworkPlayer(Colour.RED);
 		p2.grantResources(DevelopmentCard.getCardCost());
 		game.addPlayer(p2);
-		
-		// Set up move
-		MoveRobberMove move = new MoveRobberMove();
-		move.setPlayerColour(p.getColour());
-		move.setColourToTakeFrom(p2.getColour());
-		move.setX(hex.getX());
-		move.setY(hex.getY());
+
+		// Set up request
+		MoveRobberRequest.Builder request = MoveRobberRequest.newBuilder();
+		request.setColourToTakeFrom(Colour.toProto(p2.getColour()));
+		request.setHex(hex.toHexProto());
 		
 		// Play move and assert robber was moved
 		assertTrue(oldHex.hasRobber());
@@ -149,7 +146,7 @@ public class DevelopmentCardTests extends TestHelper
 		// on one of the hex's nodes
 		try
 		{
-			game.moveRobber(move);
+			game.moveRobber(request.build(), p.getColour());
 		}
 		catch (CannotStealException e)
 		{
@@ -165,26 +162,23 @@ public class DevelopmentCardTests extends TestHelper
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.Red);
+		Player p2 = new NetworkPlayer(Colour.RED);
 		p2.grantResources(DevelopmentCard.getCardCost());
 		game.addPlayer(p2);
 		p2.grantResources(Settlement.getSettlementCost());
 		makeSettlement(p2, hex.getNodes().get(0));
 		
-		// Set up move
-		MoveRobberMove move = new MoveRobberMove();
-		move.setPlayerColour(p.getColour());
-		move.setColourToTakeFrom(p2.getColour());
-		move.setX(hex.getX());
-		move.setY(hex.getY());
+		// Set up request
+		MoveRobberRequest.Builder request = MoveRobberRequest.newBuilder();
+		request.setColourToTakeFrom(Colour.toProto(p2.getColour()));
+		request.setHex(hex.toHexProto());
 		
 		// Play move and assert robber was moved
 		assertTrue(oldHex.hasRobber());
 		assertFalse(hasResources(p));
 		assertTrue(hasResources(p2));
 		
-		String response = game.moveRobber(move);
-		assertEquals("ok", response);
+		MoveRobberResponse response = game.moveRobber(request.build(), p.getColour());
 		assertTrue(!oldHex.equals(game.getGrid().getHexWithRobber()));
 		assertTrue(game.getGrid().getHexWithRobber().hasRobber());
 		assertFalse(oldHex.hasRobber());
@@ -195,15 +189,14 @@ public class DevelopmentCardTests extends TestHelper
 	@Test
 	public void playYearOfPlentyTest()
 	{
-		// Set up move
-		PlayYearOfPlentyCardMove move = new PlayYearOfPlentyCardMove();
-		move.setPlayerColour(p.getColour());
-		move.setResource1(ResourceType.Brick);
-		move.setResource2(ResourceType.Ore);
+		// Set up request
+		PlayYearOfPlentyCardRequest.Builder request = PlayYearOfPlentyCardRequest.newBuilder();
+		request.setR1(ResourceType.toProto(ResourceType.Brick));
+		request.setR2(ResourceType.toProto(ResourceType.Grain));
 		
-		// Play move and assert resources were transferred
+		// Play request and assert resources were transferred
 		assertEquals(0, p.getNumResources());	
-		game.playYearOfPlentyCard(move);
+		game.playYearOfPlentyCard(request.build());
 		assertEquals(2, p.getNumResources());
 	}
 	
@@ -215,21 +208,39 @@ public class DevelopmentCardTests extends TestHelper
 		Node n1 = e1.getX(), n2 = e1.getY(), n3 = e2.getX(), n4 = e2.getY();
 		
 		// Set up moves
-		PlayRoadBuildingCardMove move = new PlayRoadBuildingCardMove();
-		BuildRoadMove move1 = new BuildRoadMove(), move2 = new BuildRoadMove();
-		move1.setX1(n1.getX());
-		move1.setY1(n1.getY());
-		move1.setX2(n2.getX());
-		move1.setY2(n2.getY());
-		move1.setPlayerColour(p.getColour());
-		move2.setX1(n3.getX());
-		move2.setY1(n3.getY());
-		move2.setX2(n4.getX());
-		move2.setY2(n4.getY());
-		move2.setPlayerColour(p.getColour());
-		move.setMove1(move1);
-		move.setMove2(move2);
-		
+		PlayRoadBuildingCardRequest.Builder request = PlayRoadBuildingCardRequest.newBuilder();
+		BuildRoadRequest.Builder roadReq = BuildRoadRequest.newBuilder();
+		EdgeProto.Builder edge = EdgeProto.newBuilder();
+		BuildProtos.PointProto.Builder point = BuildProtos.PointProto.newBuilder();
+
+		// Node 1 of road 1
+		point.setX(n1.getX());
+		point.setY(n1.getY());
+		edge.setP1(point.build());
+
+		// Node 2 of road 1
+		point.setX(n2.getX());
+		point.setY(n2.getY());
+		edge.setP2(point.build());
+
+		// Add edge to BuildRoadRequest, and add first req to overall request
+		roadReq.setEdge(edge.build());
+		request.setRequest1(roadReq.build());
+
+		// Node 1 of road 2
+		point.setX(n3.getX());
+		point.setY(n3.getY());
+		edge.setP1(point.build());
+
+		// Node 2 of road 2
+		point.setX(n4.getX());
+		point.setY(n4.getY());
+		edge.setP2(point.build());
+
+		// Add edge to BuildRoadRequest, and add second req to overall request
+		roadReq.setEdge(edge.build());
+		request.setRequest2(roadReq.build());
+
 		// Grant resources and make settlement
 		p.grantResources(Settlement.getSettlementCost());
 		makeSettlement(p, n);
@@ -237,7 +248,7 @@ public class DevelopmentCardTests extends TestHelper
 		// Grant resources and Build roads
 		p.grantResources(Road.getRoadCost());
 		p.grantResources(Road.getRoadCost());
-		game.playBuildRoadsCard(move);
+		game.playBuildRoadsCard(request.build(), p.getColour());
 		
 		assertTrue(p.getRoads().size() == 2);
 		assertTrue(p.getRoads().get(0).getEdge().equals(e1));
@@ -264,26 +275,26 @@ public class DevelopmentCardTests extends TestHelper
 		p.buyDevelopmentCard(card);
 		
 		// Set up moves. Make move2 a duplicate of move1 to throw an exception
-		PlayRoadBuildingCardMove internalMove = new PlayRoadBuildingCardMove();
-		BuildRoadMove move1 = new BuildRoadMove(), move2 = new BuildRoadMove();
-		move1.setX1(n1.getX());
-		move1.setY1(n1.getY());
-		move1.setX2(n2.getX());
-		move1.setY2(n2.getY());
-		move1.setPlayerColour(p.getColour());
-		move2.setX1(n1.getX());
-		move2.setY1(n1.getY());
-		move2.setX2(n2.getX());
-		move2.setY2(n2.getY());
-		move2.setPlayerColour(p.getColour());
-		internalMove.setMove1(move1);
-		internalMove.setMove2(move2);
-		
-		// Set up wrapper move
-		PlayDevelopmentCardMove devCardMove = new PlayDevelopmentCardMove();
-		devCardMove.setPlayerColour(p.getColour());
-		devCardMove.setCard(card);
-		
+		PlayRoadBuildingCardRequest.Builder request = PlayRoadBuildingCardRequest.newBuilder();
+		BuildRoadRequest.Builder roadReq = BuildRoadRequest.newBuilder();
+		EdgeProto.Builder edge = EdgeProto.newBuilder();
+		BuildProtos.PointProto.Builder point = BuildProtos.PointProto.newBuilder();
+
+		// Node 1 of road 1
+		point.setX(n1.getX());
+		point.setY(n1.getY());
+		edge.setP1(point.build());
+
+		// Node 2 of road 1
+		point.setX(n2.getX());
+		point.setY(n2.getY());
+		edge.setP2(point.build());
+
+		// Add edge to BuildRoadRequest, and add request twice so error is thrown
+		roadReq.setEdge(edge.build());
+		request.setRequest1(roadReq.build());
+		request.setRequest2(roadReq.build());
+
 		// Grant resources and make settlement
 		p.grantResources(Settlement.getSettlementCost());
 		makeSettlement(p, n);
@@ -292,13 +303,20 @@ public class DevelopmentCardTests extends TestHelper
 		p.grantResources(Road.getRoadCost());
 		p.grantResources(Road.getRoadCost());
 		oldResources = p.getNumResources();
-		game.processDevelopmentCard(devCardMove, internalMove); // FAILS
-	
-		// Ensure player wasn't updated, and that the dev card was not spent
-		assertEquals(0, p.getRoads().size());
-		assertEquals(oldResources, p.getNumResources());
-		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.RoadBuilding).size() == 1);
-	
+
+		// Catch thrown exception and ensure player does NOT have first road
+		try
+		{
+			game.playBuildRoadsCard(request.build(), p.getColour()); // FAILS
+		}
+		catch (RoadExistsException e)
+		{
+			// Ensure player wasn't updated, and that the dev card was not spent
+			assertEquals(0, p.getRoads().size());
+			assertEquals(oldResources, p.getNumResources());
+			assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.RoadBuilding).size() == 1);
+		}
+
 	}
 	
 	@Test

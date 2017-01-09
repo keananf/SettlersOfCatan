@@ -92,22 +92,43 @@ public class Game
 		
 		return playerResources;
 	}
-	
+
+
 	/**
 	 * If trade was successful, exchange of resources occurs here
 	 * @param trade the trade object detailing the trade
 	 * @return the response status
 	 */
-	public SuccessFailResponse processTrade(TradeProto trade, Player offerer) throws IllegalTradeException
+	public TradeStatusProto processPortTrade(PortTradeProto trade) throws IllegalPortTradeException, CannotAffordException
+	{
+		// Find the port and extract the trade's contents
+		Player recipient = currentPlayer;
+		ResourceCount offer = trade.getOfferResources();
+		ResourceCount request = trade.getRequestResources();
+		Port p = grid.getPort(trade.getPort());
+
+		// Exchange resources
+		p.exchange(recipient, offer, request);
+
+		return TradeStatusProto.ACCEPT;
+	}
+
+	/**
+	 * If trade was successful, exchange of resources occurs here
+	 * @param trade the trade object detailing the trade
+	 * @param offererColour the offerer's colour
+	 * @return the response status
+	 */
+	public SuccessFailResponse processPlayerTrade(PlayerTradeProto trade, Colour offererColour)
 	{
         SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
 
         // Find the recipient and extract the trade's contents
-        int type = trade.getContentsCase();
-		ResourceCount.Builder offer = trade.getOffer();
-		ResourceCount.Builder request = trade.getRequestAsMap();
-		Player recipient = players.get(trade.getRecipient()), recipientCopy = recipient.copy();
-		
+		ResourceCount offer = trade.getOffer();
+		ResourceCount request = trade.getRequest();
+		Player recipient = players.get(Colour.fromProto(trade.getRecipient())), recipientCopy = recipient.copy();
+		Player offerer = players.get(offererColour);
+
 		try
 		{
 			// Exchange resources
@@ -116,16 +137,16 @@ public class Game
 			
 			recipient.spendResources(request);
 			offerer.grantResources(request);
+        	resp.setResult(ResultProto.SUCCESS);
 		}
 		catch(Exception e)
 		{
 			// Reset recipient and throw exception. Offerer is reset in above method
 			recipient.restoreCopy(recipientCopy, null);
-					
-			throw new IllegalTradeException(offerer.getColour(), recipient.getColour());
+
+			resp.setResult(ResultProto.FAILURE);
 		}
 
-        resp.setResult(ResultProto.SUCCESS);
         return resp.build();
 	}
 

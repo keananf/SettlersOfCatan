@@ -87,17 +87,17 @@ public final class EventProtos {
     protocol.EventProtos.PlayDevCardEventOrBuilder getPlayedDevCardOrBuilder();
 
     /**
-     * <code>optional .TradeProto transaction = 7;</code>
+     * <code>optional .TradeRequest transaction = 7;</code>
      */
     boolean hasTransaction();
     /**
-     * <code>optional .TradeProto transaction = 7;</code>
+     * <code>optional .TradeRequest transaction = 7;</code>
      */
-    protocol.TradeProtos.TradeProto getTransaction();
+    protocol.TradeProtos.TradeRequest getTransaction();
     /**
-     * <code>optional .TradeProto transaction = 7;</code>
+     * <code>optional .TradeRequest transaction = 7;</code>
      */
-    protocol.TradeProtos.TradeProtoOrBuilder getTransactionOrBuilder();
+    protocol.TradeProtos.TradeRequestOrBuilder getTransactionOrBuilder();
 
     /**
      * <code>optional .PointProto robberMove = 8;</code>
@@ -262,13 +262,13 @@ public final class EventProtos {
               break;
             }
             case 58: {
-              protocol.TradeProtos.TradeProto.Builder subBuilder = null;
+              protocol.TradeProtos.TradeRequest.Builder subBuilder = null;
               if (typeCase_ == 7) {
-                subBuilder = ((protocol.TradeProtos.TradeProto) type_).toBuilder();
+                subBuilder = ((protocol.TradeProtos.TradeRequest) type_).toBuilder();
               }
-              type_ = input.readMessage(protocol.TradeProtos.TradeProto.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.TradeProtos.TradeRequest.PARSER, extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((protocol.TradeProtos.TradeProto) type_);
+                subBuilder.mergeFrom((protocol.TradeProtos.TradeRequest) type_);
                 type_ = subBuilder.buildPartial();
               }
               typeCase_ = 7;
@@ -532,28 +532,28 @@ public final class EventProtos {
 
     public static final int TRANSACTION_FIELD_NUMBER = 7;
     /**
-     * <code>optional .TradeProto transaction = 7;</code>
+     * <code>optional .TradeRequest transaction = 7;</code>
      */
     public boolean hasTransaction() {
       return typeCase_ == 7;
     }
     /**
-     * <code>optional .TradeProto transaction = 7;</code>
+     * <code>optional .TradeRequest transaction = 7;</code>
      */
-    public protocol.TradeProtos.TradeProto getTransaction() {
+    public protocol.TradeProtos.TradeRequest getTransaction() {
       if (typeCase_ == 7) {
-         return (protocol.TradeProtos.TradeProto) type_;
+         return (protocol.TradeProtos.TradeRequest) type_;
       }
-      return protocol.TradeProtos.TradeProto.getDefaultInstance();
+      return protocol.TradeProtos.TradeRequest.getDefaultInstance();
     }
     /**
-     * <code>optional .TradeProto transaction = 7;</code>
+     * <code>optional .TradeRequest transaction = 7;</code>
      */
-    public protocol.TradeProtos.TradeProtoOrBuilder getTransactionOrBuilder() {
+    public protocol.TradeProtos.TradeRequestOrBuilder getTransactionOrBuilder() {
       if (typeCase_ == 7) {
-         return (protocol.TradeProtos.TradeProto) type_;
+         return (protocol.TradeProtos.TradeRequest) type_;
       }
-      return protocol.TradeProtos.TradeProto.getDefaultInstance();
+      return protocol.TradeProtos.TradeRequest.getDefaultInstance();
     }
 
     public static final int ROBBERMOVE_FIELD_NUMBER = 8;
@@ -687,7 +687,7 @@ public final class EventProtos {
         output.writeMessage(6, (protocol.EventProtos.PlayDevCardEvent) type_);
       }
       if (typeCase_ == 7) {
-        output.writeMessage(7, (protocol.TradeProtos.TradeProto) type_);
+        output.writeMessage(7, (protocol.TradeProtos.TradeRequest) type_);
       }
       if (typeCase_ == 8) {
         output.writeMessage(8, (protocol.BuildProtos.PointProto) type_);
@@ -730,7 +730,7 @@ public final class EventProtos {
       }
       if (typeCase_ == 7) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(7, (protocol.TradeProtos.TradeProto) type_);
+          .computeMessageSize(7, (protocol.TradeProtos.TradeRequest) type_);
       }
       if (typeCase_ == 8) {
         size += com.google.protobuf.CodedOutputStream
@@ -1799,33 +1799,33 @@ public final class EventProtos {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
-          protocol.TradeProtos.TradeProto, protocol.TradeProtos.TradeProto.Builder, protocol.TradeProtos.TradeProtoOrBuilder> transactionBuilder_;
+          protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder> transactionBuilder_;
       /**
-       * <code>optional .TradeProto transaction = 7;</code>
+       * <code>optional .TradeRequest transaction = 7;</code>
        */
       public boolean hasTransaction() {
         return typeCase_ == 7;
       }
       /**
-       * <code>optional .TradeProto transaction = 7;</code>
+       * <code>optional .TradeRequest transaction = 7;</code>
        */
-      public protocol.TradeProtos.TradeProto getTransaction() {
+      public protocol.TradeProtos.TradeRequest getTransaction() {
         if (transactionBuilder_ == null) {
           if (typeCase_ == 7) {
-            return (protocol.TradeProtos.TradeProto) type_;
+            return (protocol.TradeProtos.TradeRequest) type_;
           }
-          return protocol.TradeProtos.TradeProto.getDefaultInstance();
+          return protocol.TradeProtos.TradeRequest.getDefaultInstance();
         } else {
           if (typeCase_ == 7) {
             return transactionBuilder_.getMessage();
           }
-          return protocol.TradeProtos.TradeProto.getDefaultInstance();
+          return protocol.TradeProtos.TradeRequest.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .TradeProto transaction = 7;</code>
+       * <code>optional .TradeRequest transaction = 7;</code>
        */
-      public Builder setTransaction(protocol.TradeProtos.TradeProto value) {
+      public Builder setTransaction(protocol.TradeProtos.TradeRequest value) {
         if (transactionBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1839,10 +1839,10 @@ public final class EventProtos {
         return this;
       }
       /**
-       * <code>optional .TradeProto transaction = 7;</code>
+       * <code>optional .TradeRequest transaction = 7;</code>
        */
       public Builder setTransaction(
-          protocol.TradeProtos.TradeProto.Builder builderForValue) {
+          protocol.TradeProtos.TradeRequest.Builder builderForValue) {
         if (transactionBuilder_ == null) {
           type_ = builderForValue.build();
           onChanged();
@@ -1853,13 +1853,13 @@ public final class EventProtos {
         return this;
       }
       /**
-       * <code>optional .TradeProto transaction = 7;</code>
+       * <code>optional .TradeRequest transaction = 7;</code>
        */
-      public Builder mergeTransaction(protocol.TradeProtos.TradeProto value) {
+      public Builder mergeTransaction(protocol.TradeProtos.TradeRequest value) {
         if (transactionBuilder_ == null) {
           if (typeCase_ == 7 &&
-              type_ != protocol.TradeProtos.TradeProto.getDefaultInstance()) {
-            type_ = protocol.TradeProtos.TradeProto.newBuilder((protocol.TradeProtos.TradeProto) type_)
+              type_ != protocol.TradeProtos.TradeRequest.getDefaultInstance()) {
+            type_ = protocol.TradeProtos.TradeRequest.newBuilder((protocol.TradeProtos.TradeRequest) type_)
                 .mergeFrom(value).buildPartial();
           } else {
             type_ = value;
@@ -1875,7 +1875,7 @@ public final class EventProtos {
         return this;
       }
       /**
-       * <code>optional .TradeProto transaction = 7;</code>
+       * <code>optional .TradeRequest transaction = 7;</code>
        */
       public Builder clearTransaction() {
         if (transactionBuilder_ == null) {
@@ -1894,37 +1894,37 @@ public final class EventProtos {
         return this;
       }
       /**
-       * <code>optional .TradeProto transaction = 7;</code>
+       * <code>optional .TradeRequest transaction = 7;</code>
        */
-      public protocol.TradeProtos.TradeProto.Builder getTransactionBuilder() {
+      public protocol.TradeProtos.TradeRequest.Builder getTransactionBuilder() {
         return getTransactionFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .TradeProto transaction = 7;</code>
+       * <code>optional .TradeRequest transaction = 7;</code>
        */
-      public protocol.TradeProtos.TradeProtoOrBuilder getTransactionOrBuilder() {
+      public protocol.TradeProtos.TradeRequestOrBuilder getTransactionOrBuilder() {
         if ((typeCase_ == 7) && (transactionBuilder_ != null)) {
           return transactionBuilder_.getMessageOrBuilder();
         } else {
           if (typeCase_ == 7) {
-            return (protocol.TradeProtos.TradeProto) type_;
+            return (protocol.TradeProtos.TradeRequest) type_;
           }
-          return protocol.TradeProtos.TradeProto.getDefaultInstance();
+          return protocol.TradeProtos.TradeRequest.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .TradeProto transaction = 7;</code>
+       * <code>optional .TradeRequest transaction = 7;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          protocol.TradeProtos.TradeProto, protocol.TradeProtos.TradeProto.Builder, protocol.TradeProtos.TradeProtoOrBuilder> 
+          protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder> 
           getTransactionFieldBuilder() {
         if (transactionBuilder_ == null) {
           if (!(typeCase_ == 7)) {
-            type_ = protocol.TradeProtos.TradeProto.getDefaultInstance();
+            type_ = protocol.TradeProtos.TradeRequest.getDefaultInstance();
           }
           transactionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              protocol.TradeProtos.TradeProto, protocol.TradeProtos.TradeProto.Builder, protocol.TradeProtos.TradeProtoOrBuilder>(
-                  (protocol.TradeProtos.TradeProto) type_,
+              protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder>(
+                  (protocol.TradeProtos.TradeRequest) type_,
                   getParentForChildren(),
                   isClean());
           type_ = null;
@@ -3582,20 +3582,20 @@ public final class EventProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\014events.proto\032\013build.proto\032\013enums.proto" +
-      "\032\013trade.proto\"\310\002\n\005Event\022\027\n\005error\030\001 \001(\0132\006" +
+      "\032\013trade.proto\"\312\002\n\005Event\022\027\n\005error\030\001 \001(\0132\006" +
       ".ErrorH\000\022\035\n\010diceRoll\030\002 \001(\0132\t.DiceRollH\000\022" +
       "\035\n\007newRoad\030\003 \001(\0132\n.RoadProtoH\000\022%\n\013newBui" +
       "lding\030\004 \001(\0132\016.BuildingProtoH\000\022%\n\rboughtD" +
       "evCard\030\005 \001(\0162\014.ColourProtoH\000\022*\n\rplayedDe" +
-      "vCard\030\006 \001(\0132\021.PlayDevCardEventH\000\022\"\n\013tran" +
-      "saction\030\007 \001(\0132\013.TradeProtoH\000\022!\n\nrobberMo" +
-      "ve\030\010 \001(\0132\013.PointProtoH\000\022\037\n\007newTurn\030\t \001(\016" +
-      "2\014.ColourProtoH\000B\006\n\004type\"[\n\020PlayDevCardE",
-      "vent\022\"\n\014playerColour\030\001 \002(\0162\014.ColourProto" +
-      "\022#\n\004type\030\002 \002(\0162\025.DevelopmentCardProto\"\030\n" +
-      "\010DiceRoll\022\014\n\004dice\030\001 \002(\005\"\034\n\005Error\022\023\n\013desc" +
-      "ription\030\001 \002(\tB!\n\010protocolB\013EventProtosZ\010" +
-      "protocol"
+      "vCard\030\006 \001(\0132\021.PlayDevCardEventH\000\022$\n\013tran" +
+      "saction\030\007 \001(\0132\r.TradeRequestH\000\022!\n\nrobber" +
+      "Move\030\010 \001(\0132\013.PointProtoH\000\022\037\n\007newTurn\030\t \001" +
+      "(\0162\014.ColourProtoH\000B\006\n\004type\"[\n\020PlayDevCar",
+      "dEvent\022\"\n\014playerColour\030\001 \002(\0162\014.ColourPro" +
+      "to\022#\n\004type\030\002 \002(\0162\025.DevelopmentCardProto\"" +
+      "\030\n\010DiceRoll\022\014\n\004dice\030\001 \002(\005\"\034\n\005Error\022\023\n\013de" +
+      "scription\030\001 \002(\tB!\n\010protocolB\013EventProtos" +
+      "Z\010protocol"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

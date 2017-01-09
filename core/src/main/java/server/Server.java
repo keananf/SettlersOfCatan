@@ -1,6 +1,8 @@
 package server;
 
 import enums.*;
+import exceptions.CannotAffordException;
+import exceptions.IllegalPortTradeException;
 import game.Game;
 import game.build.DevelopmentCard;
 import game.players.Player;
@@ -150,7 +152,7 @@ public class Server
 	private void receiveMoves() throws IOException
 	{
 		Colour colour = game.getCurrentPlayer().getColour();
-		Socket socket = connections.get(colour);
+		Socket socket = connections.get(colour); //TODO this should be effectively listening to all players
 
 		// Receive and process moves until the end one is received
 		while(true)
@@ -169,7 +171,10 @@ public class Server
 					// TODO sendEvents(response);
 					break;
 				case RESPONSE:
-					sendError(socket, msg);
+					//TODO finish processing
+					Response resp = msg.getResponse();
+					resp = processResponse(resp, socket, msg);
+
 					break;
 			}
 
@@ -179,6 +184,33 @@ public class Server
 				break;
 			}
 		}		
+	}
+
+	/**
+	 * Processes the response message received from the client
+	 * @param resp the response message
+	 * @param socket the socket of the sender
+	 * @param msg the original received message
+	 * @return the response from processing this response
+	 * @throws IOException
+	 */
+	private Response processResponse(Response resp, Socket socket, Message msg) throws IOException
+	{
+		//TODO
+/*
+		// If not a trade response, illegal
+		if(!resp.hasAcceptRejectResponse())
+			sendError(socket, msg);
+
+			// Perform actual trade
+		else if(resp.getAcceptRejectResponse().getAnswer().equals(TradeStatusProto.ACCEPT))
+			resp = game.processPlayerTrade(resp.getAcceptRejectResponse());
+
+			// Forward denial or counter response to original
+		else
+			forwardTrade(resp.getAcceptRejectResponse());*/
+
+		return resp;
 	}
 
 	/**
@@ -271,9 +303,9 @@ public class Server
 				case ENDMOVEREQUEST:
 					resp.setEndMoveResponse(game.changeTurn());
 					break;
-				//case TRADEREQUEST:
-					// TODO HANDLE TRADE
-				//	break;
+				case TRADEREQUEST:
+					resp.setAcceptRejectResponse(processTrade(request.getTradeRequest(), msg));
+					break;
 			}
 		}
 		catch(Exception e)
@@ -323,59 +355,31 @@ public class Server
 	 * @param msg the original request, received from across the network
 	 * @return the status of the trade "accepted, denied, offer"
 	 */
-	private String processTrade(TradeProtos.TradeProto request, Message msg)
+	private AcceptRejectResponse processTrade(TradeProtos.TradeRequest request, Message msg) throws IllegalPortTradeException, CannotAffordException, IOException
 	{
-		Colour colour = game.getCurrentPlayer().getColour();
-		Socket socket = connections.get(colour);
+		// Set up response object
+		AcceptRejectResponse.Builder resp = AcceptRejectResponse.newBuilder();
+		resp.setTrade(request);
 
-		// Receive and process moves until the end one is received
-		while(true)
+		// Switch on trade type
+		switch(request.getContentsCase())
 		{
-			Message msg = Message.parseFrom(socket.getInputStream());
+			// Simply forward the message
+			case PLAYERTRADE:
+				Colour colour = Colour.fromProto(request.getPlayerTrade().getRecipient());
+				Socket recipient = connections.get(colour);
 
-			// switch on message type
-			switch(msg.getTypeCase())
-			{
-				case EVENT:
-					sendError(socket, msg);
-					break;
-				case REQUEST:
-					Response response = processMove(msg, Colour.fromProto(msg.getPlayerColour()));
-					sendResponse(response);
-					// TODO sendEvents(response);
-					break;
-				case RESPONSE:
-					sendError(socket, msg);
-					break;
-			}
-
-			// If end move, stop
-			if(msg.getTypeCase().equals(Message.TypeCase.REQUEST) && msg.getRequest().getTypeCase().equals(Request.TypeCase.ENDMOVEREQUEST))
-			{
+				msg.writeTo(recipient.getOutputStream());
+				resp.setAnswer(TradeStatusProto.PENDING);
 				break;
-			}
+
+			// Process the trade and ensure it is legal
+			case PORTTRADE:
+				resp.setAnswer(game.processPortTrade(request.getPortTrade()));
+				break;
 		}
 
-
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(recipient.getInputStream())))
-		{
-			// Send message to recipient 
-			recipient.getOutputStream().write(rawMsg);
-
-			// Receive request and process
-			byte[] rec = reader.lines().toString().getBytes(); // TODO fix this
-					
-			// Overwrite message object with response. Should be the same contents except 
-			// with a different status
-			request = (TradeMessage) requestDeserialiser.deserialiseMove(rec, MoveType.TradeMove);
-
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-				
-		return request.getStatus().toString();
+		return resp.build();
 	}
 	
 	/**

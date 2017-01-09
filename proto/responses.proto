@@ -5,6 +5,7 @@ option java_package = "protocol";
 option java_outer_classname = "ResponseProtos";
 
 import "board.proto";
+import "trade.proto";
 import "enums.proto";
 
 
@@ -52,8 +53,9 @@ message MoveRobberResponse
 // ACCEPT-REJECT RESPONSE (mainly for responding to human trade requests)
 message AcceptRejectResponse 
 {
-    required TradeStatusProto answer = 1;
-    optional string reason = 2; //associated with REJECT results (for debugging purposes only)
+    required TradeRequest trade = 1;
+    required TradeStatusProto answer = 2;
+    optional string reason = 3; //associated with REJECT results (for debugging purposes only)
 }
 
 // GIVE RESPONSES (for responding to getCurrentBoard request etc.)

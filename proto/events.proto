@@ -24,7 +24,7 @@ message Event
         ColourProto boughtDevCard = 5;
 	PlayDevCardEvent playedDevCard = 6;
 
-        TradeProto transaction = 7;
+        TradeRequest transaction = 7;
         //Theft theft = 7;
         PointProto robberMove = 8;
 	ColourProto newTurn = 9;

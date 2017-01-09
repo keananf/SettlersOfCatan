@@ -7,6 +7,7 @@ import board.*;
 import enums.*;
 import exceptions.*;
 import game.build.*;
+import protocol.ResourceProtos;
 
 /**
  * Abstract class describing a player (AI, or network)
@@ -336,8 +337,42 @@ public abstract class Player
 			resources.put(r, value + existing);
 			numResources += value;
 		}
-	}	
-	
+	}
+
+	/**
+	 * Grants resources to the player
+	 * @param count a map of resources to give to the player
+	 */
+	public void grantResources(ResourceProtos.ResourceCount count) throws CannotAffordException
+	{
+		Map<ResourceType, Integer> newResources = new HashMap<ResourceType, Integer> ();
+		newResources.put(ResourceType.Brick, count.getBrick());
+		newResources.put(ResourceType.Wool, count.getWool());
+		newResources.put(ResourceType.Ore, count.getOre());
+		newResources.put(ResourceType.Grain, count.getGrain());
+		newResources.put(ResourceType.Lumber, count.getLumber());
+
+		grantResources(newResources);
+	}
+
+	/**
+	 * Spends resources to the player
+	 * @param count the resources describing the IBuildable that the player
+	 * wants to construct
+	 * @throws CannotAffordException if the player does not have enough resources
+	 */
+	public void spendResources(ResourceProtos.ResourceCount count) throws CannotAffordException
+	{
+		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer> ();
+		cost.put(ResourceType.Brick, count.getBrick());
+		cost.put(ResourceType.Wool, count.getWool());
+		cost.put(ResourceType.Ore, count.getOre());
+		cost.put(ResourceType.Grain, count.getGrain());
+		cost.put(ResourceType.Lumber, count.getLumber());
+
+		spendResources(cost);
+	}
+
 	/**
 	 * Spends resources to the player
 	 * @param cost a map of resources describing the IBuildable that the player

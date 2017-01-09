@@ -3721,16 +3721,29 @@ public final class ResponseProtos {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required .TradeStatusProto answer = 1;</code>
+     * <code>required .TradeRequest trade = 1;</code>
+     */
+    boolean hasTrade();
+    /**
+     * <code>required .TradeRequest trade = 1;</code>
+     */
+    protocol.TradeProtos.TradeRequest getTrade();
+    /**
+     * <code>required .TradeRequest trade = 1;</code>
+     */
+    protocol.TradeProtos.TradeRequestOrBuilder getTradeOrBuilder();
+
+    /**
+     * <code>required .TradeStatusProto answer = 2;</code>
      */
     boolean hasAnswer();
     /**
-     * <code>required .TradeStatusProto answer = 1;</code>
+     * <code>required .TradeStatusProto answer = 2;</code>
      */
     protocol.EnumProtos.TradeStatusProto getAnswer();
 
     /**
-     * <code>optional string reason = 2;</code>
+     * <code>optional string reason = 3;</code>
      *
      * <pre>
      *associated with REJECT results (for debugging purposes only)
@@ -3738,7 +3751,7 @@ public final class ResponseProtos {
      */
     boolean hasReason();
     /**
-     * <code>optional string reason = 2;</code>
+     * <code>optional string reason = 3;</code>
      *
      * <pre>
      *associated with REJECT results (for debugging purposes only)
@@ -3746,7 +3759,7 @@ public final class ResponseProtos {
      */
     java.lang.String getReason();
     /**
-     * <code>optional string reason = 2;</code>
+     * <code>optional string reason = 3;</code>
      *
      * <pre>
      *associated with REJECT results (for debugging purposes only)
@@ -3811,20 +3824,33 @@ public final class ResponseProtos {
               }
               break;
             }
-            case 8: {
+            case 10: {
+              protocol.TradeProtos.TradeRequest.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = trade_.toBuilder();
+              }
+              trade_ = input.readMessage(protocol.TradeProtos.TradeRequest.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(trade_);
+                trade_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+            case 16: {
               int rawValue = input.readEnum();
               protocol.EnumProtos.TradeStatusProto value = protocol.EnumProtos.TradeStatusProto.valueOf(rawValue);
               if (value == null) {
-                unknownFields.mergeVarintField(1, rawValue);
+                unknownFields.mergeVarintField(2, rawValue);
               } else {
-                bitField0_ |= 0x00000001;
+                bitField0_ |= 0x00000002;
                 answer_ = value;
               }
               break;
             }
-            case 18: {
+            case 26: {
               com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000002;
+              bitField0_ |= 0x00000004;
               reason_ = bs;
               break;
             }
@@ -3868,35 +3894,56 @@ public final class ResponseProtos {
     }
 
     private int bitField0_;
-    public static final int ANSWER_FIELD_NUMBER = 1;
-    private protocol.EnumProtos.TradeStatusProto answer_;
+    public static final int TRADE_FIELD_NUMBER = 1;
+    private protocol.TradeProtos.TradeRequest trade_;
     /**
-     * <code>required .TradeStatusProto answer = 1;</code>
+     * <code>required .TradeRequest trade = 1;</code>
      */
-    public boolean hasAnswer() {
+    public boolean hasTrade() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required .TradeStatusProto answer = 1;</code>
+     * <code>required .TradeRequest trade = 1;</code>
+     */
+    public protocol.TradeProtos.TradeRequest getTrade() {
+      return trade_;
+    }
+    /**
+     * <code>required .TradeRequest trade = 1;</code>
+     */
+    public protocol.TradeProtos.TradeRequestOrBuilder getTradeOrBuilder() {
+      return trade_;
+    }
+
+    public static final int ANSWER_FIELD_NUMBER = 2;
+    private protocol.EnumProtos.TradeStatusProto answer_;
+    /**
+     * <code>required .TradeStatusProto answer = 2;</code>
+     */
+    public boolean hasAnswer() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .TradeStatusProto answer = 2;</code>
      */
     public protocol.EnumProtos.TradeStatusProto getAnswer() {
       return answer_;
     }
 
-    public static final int REASON_FIELD_NUMBER = 2;
+    public static final int REASON_FIELD_NUMBER = 3;
     private java.lang.Object reason_;
     /**
-     * <code>optional string reason = 2;</code>
+     * <code>optional string reason = 3;</code>
      *
      * <pre>
      *associated with REJECT results (for debugging purposes only)
      * </pre>
      */
     public boolean hasReason() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional string reason = 2;</code>
+     * <code>optional string reason = 3;</code>
      *
      * <pre>
      *associated with REJECT results (for debugging purposes only)
@@ -3917,7 +3964,7 @@ public final class ResponseProtos {
       }
     }
     /**
-     * <code>optional string reason = 2;</code>
+     * <code>optional string reason = 3;</code>
      *
      * <pre>
      *associated with REJECT results (for debugging purposes only)
@@ -3938,6 +3985,7 @@ public final class ResponseProtos {
     }
 
     private void initFields() {
+      trade_ = protocol.TradeProtos.TradeRequest.getDefaultInstance();
       answer_ = protocol.EnumProtos.TradeStatusProto.ACCEPT;
       reason_ = "";
     }
@@ -3947,7 +3995,15 @@ public final class ResponseProtos {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
+      if (!hasTrade()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       if (!hasAnswer()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getTrade().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -3959,10 +4015,13 @@ public final class ResponseProtos {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, answer_.getNumber());
+        output.writeMessage(1, trade_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, getReasonBytes());
+        output.writeEnum(2, answer_.getNumber());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(3, getReasonBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -3975,11 +4034,15 @@ public final class ResponseProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, answer_.getNumber());
+          .computeMessageSize(1, trade_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getReasonBytes());
+          .computeEnumSize(2, answer_.getNumber());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, getReasonBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -4094,6 +4157,7 @@ public final class ResponseProtos {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getTradeFieldBuilder();
         }
       }
       private static Builder create() {
@@ -4102,10 +4166,16 @@ public final class ResponseProtos {
 
       public Builder clear() {
         super.clear();
-        answer_ = protocol.EnumProtos.TradeStatusProto.ACCEPT;
+        if (tradeBuilder_ == null) {
+          trade_ = protocol.TradeProtos.TradeRequest.getDefaultInstance();
+        } else {
+          tradeBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000001);
-        reason_ = "";
+        answer_ = protocol.EnumProtos.TradeStatusProto.ACCEPT;
         bitField0_ = (bitField0_ & ~0x00000002);
+        reason_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -4137,9 +4207,17 @@ public final class ResponseProtos {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.answer_ = answer_;
+        if (tradeBuilder_ == null) {
+          result.trade_ = trade_;
+        } else {
+          result.trade_ = tradeBuilder_.build();
+        }
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
+        }
+        result.answer_ = answer_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
         }
         result.reason_ = reason_;
         result.bitField0_ = to_bitField0_;
@@ -4158,11 +4236,14 @@ public final class ResponseProtos {
 
       public Builder mergeFrom(protocol.ResponseProtos.AcceptRejectResponse other) {
         if (other == protocol.ResponseProtos.AcceptRejectResponse.getDefaultInstance()) return this;
+        if (other.hasTrade()) {
+          mergeTrade(other.getTrade());
+        }
         if (other.hasAnswer()) {
           setAnswer(other.getAnswer());
         }
         if (other.hasReason()) {
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000004;
           reason_ = other.reason_;
           onChanged();
         }
@@ -4171,7 +4252,15 @@ public final class ResponseProtos {
       }
 
       public final boolean isInitialized() {
+        if (!hasTrade()) {
+          
+          return false;
+        }
         if (!hasAnswer()) {
+          
+          return false;
+        }
+        if (!getTrade().isInitialized()) {
           
           return false;
         }
@@ -4197,36 +4286,152 @@ public final class ResponseProtos {
       }
       private int bitField0_;
 
-      private protocol.EnumProtos.TradeStatusProto answer_ = protocol.EnumProtos.TradeStatusProto.ACCEPT;
+      private protocol.TradeProtos.TradeRequest trade_ = protocol.TradeProtos.TradeRequest.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder> tradeBuilder_;
       /**
-       * <code>required .TradeStatusProto answer = 1;</code>
+       * <code>required .TradeRequest trade = 1;</code>
        */
-      public boolean hasAnswer() {
+      public boolean hasTrade() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required .TradeStatusProto answer = 1;</code>
+       * <code>required .TradeRequest trade = 1;</code>
+       */
+      public protocol.TradeProtos.TradeRequest getTrade() {
+        if (tradeBuilder_ == null) {
+          return trade_;
+        } else {
+          return tradeBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .TradeRequest trade = 1;</code>
+       */
+      public Builder setTrade(protocol.TradeProtos.TradeRequest value) {
+        if (tradeBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          trade_ = value;
+          onChanged();
+        } else {
+          tradeBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .TradeRequest trade = 1;</code>
+       */
+      public Builder setTrade(
+          protocol.TradeProtos.TradeRequest.Builder builderForValue) {
+        if (tradeBuilder_ == null) {
+          trade_ = builderForValue.build();
+          onChanged();
+        } else {
+          tradeBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .TradeRequest trade = 1;</code>
+       */
+      public Builder mergeTrade(protocol.TradeProtos.TradeRequest value) {
+        if (tradeBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              trade_ != protocol.TradeProtos.TradeRequest.getDefaultInstance()) {
+            trade_ =
+              protocol.TradeProtos.TradeRequest.newBuilder(trade_).mergeFrom(value).buildPartial();
+          } else {
+            trade_ = value;
+          }
+          onChanged();
+        } else {
+          tradeBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .TradeRequest trade = 1;</code>
+       */
+      public Builder clearTrade() {
+        if (tradeBuilder_ == null) {
+          trade_ = protocol.TradeProtos.TradeRequest.getDefaultInstance();
+          onChanged();
+        } else {
+          tradeBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>required .TradeRequest trade = 1;</code>
+       */
+      public protocol.TradeProtos.TradeRequest.Builder getTradeBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getTradeFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .TradeRequest trade = 1;</code>
+       */
+      public protocol.TradeProtos.TradeRequestOrBuilder getTradeOrBuilder() {
+        if (tradeBuilder_ != null) {
+          return tradeBuilder_.getMessageOrBuilder();
+        } else {
+          return trade_;
+        }
+      }
+      /**
+       * <code>required .TradeRequest trade = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder> 
+          getTradeFieldBuilder() {
+        if (tradeBuilder_ == null) {
+          tradeBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder>(
+                  getTrade(),
+                  getParentForChildren(),
+                  isClean());
+          trade_ = null;
+        }
+        return tradeBuilder_;
+      }
+
+      private protocol.EnumProtos.TradeStatusProto answer_ = protocol.EnumProtos.TradeStatusProto.ACCEPT;
+      /**
+       * <code>required .TradeStatusProto answer = 2;</code>
+       */
+      public boolean hasAnswer() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .TradeStatusProto answer = 2;</code>
        */
       public protocol.EnumProtos.TradeStatusProto getAnswer() {
         return answer_;
       }
       /**
-       * <code>required .TradeStatusProto answer = 1;</code>
+       * <code>required .TradeStatusProto answer = 2;</code>
        */
       public Builder setAnswer(protocol.EnumProtos.TradeStatusProto value) {
         if (value == null) {
           throw new NullPointerException();
         }
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000002;
         answer_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required .TradeStatusProto answer = 1;</code>
+       * <code>required .TradeStatusProto answer = 2;</code>
        */
       public Builder clearAnswer() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000002);
         answer_ = protocol.EnumProtos.TradeStatusProto.ACCEPT;
         onChanged();
         return this;
@@ -4234,17 +4439,17 @@ public final class ResponseProtos {
 
       private java.lang.Object reason_ = "";
       /**
-       * <code>optional string reason = 2;</code>
+       * <code>optional string reason = 3;</code>
        *
        * <pre>
        *associated with REJECT results (for debugging purposes only)
        * </pre>
        */
       public boolean hasReason() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional string reason = 2;</code>
+       * <code>optional string reason = 3;</code>
        *
        * <pre>
        *associated with REJECT results (for debugging purposes only)
@@ -4265,7 +4470,7 @@ public final class ResponseProtos {
         }
       }
       /**
-       * <code>optional string reason = 2;</code>
+       * <code>optional string reason = 3;</code>
        *
        * <pre>
        *associated with REJECT results (for debugging purposes only)
@@ -4285,7 +4490,7 @@ public final class ResponseProtos {
         }
       }
       /**
-       * <code>optional string reason = 2;</code>
+       * <code>optional string reason = 3;</code>
        *
        * <pre>
        *associated with REJECT results (for debugging purposes only)
@@ -4296,26 +4501,26 @@ public final class ResponseProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000002;
+  bitField0_ |= 0x00000004;
         reason_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string reason = 2;</code>
+       * <code>optional string reason = 3;</code>
        *
        * <pre>
        *associated with REJECT results (for debugging purposes only)
        * </pre>
        */
       public Builder clearReason() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         reason_ = getDefaultInstance().getReason();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string reason = 2;</code>
+       * <code>optional string reason = 3;</code>
        *
        * <pre>
        *associated with REJECT results (for debugging purposes only)
@@ -4326,7 +4531,7 @@ public final class ResponseProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000002;
+  bitField0_ |= 0x00000004;
         reason_ = value;
         onChanged();
         return this;
@@ -4921,24 +5126,25 @@ public final class ResponseProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\017responses.proto\032\013board.proto\032\013enums.pr" +
-      "oto\"C\n\023SuccessFailResponse\022\034\n\006result\030\001 \002" +
-      "(\0162\014.ResultProto\022\016\n\006reason\030\002 \001(\t\"0\n\017EndM" +
-      "oveResponse\022\035\n\007newTurn\030\001 \002(\0162\014.ColourPro" +
-      "to\"0\n\030PlayMonopolyCardResponse\022\024\n\014numRes" +
-      "ources\030\001 \002(\005\"l\n\034PlayRoadBuildingCardResp" +
-      "onse\022%\n\tresponse1\030\001 \002(\0132\022.BuildRoadRespo" +
-      "nse\022%\n\tresponse2\030\002 \002(\0132\022.BuildRoadRespon" +
-      "se\"r\n\022BuyDevCardResponse\022\034\n\006result\030\001 \002(\016" +
-      "2\014.ResultProto\022.\n\017developmentCard\030\002 \002(\0162",
-      "\025.DevelopmentCardProto\022\016\n\006reason\030\003 \001(\t\"(" +
-      "\n\021BuildRoadResponse\022\023\n\013longestRoad\030\001 \002(\005" +
-      "\":\n\022MoveRobberResponse\022$\n\010resource\030\001 \002(\016" +
-      "2\022.ResourceTypeProto\"I\n\024AcceptRejectResp" +
-      "onse\022!\n\006answer\030\001 \002(\0162\021.TradeStatusProto\022" +
-      "\016\n\006reason\030\002 \001(\t\"/\n\021GiveBoardResponse\022\032\n\005" +
-      "board\030\001 \002(\0132\013.BoardProtoB\032\n\010protocolB\016Re" +
-      "sponseProtos"
+      "\n\017responses.proto\032\013board.proto\032\013trade.pr" +
+      "oto\032\013enums.proto\"C\n\023SuccessFailResponse\022" +
+      "\034\n\006result\030\001 \002(\0162\014.ResultProto\022\016\n\006reason\030" +
+      "\002 \001(\t\"0\n\017EndMoveResponse\022\035\n\007newTurn\030\001 \002(" +
+      "\0162\014.ColourProto\"0\n\030PlayMonopolyCardRespo" +
+      "nse\022\024\n\014numResources\030\001 \002(\005\"l\n\034PlayRoadBui" +
+      "ldingCardResponse\022%\n\tresponse1\030\001 \002(\0132\022.B" +
+      "uildRoadResponse\022%\n\tresponse2\030\002 \002(\0132\022.Bu" +
+      "ildRoadResponse\"r\n\022BuyDevCardResponse\022\034\n" +
+      "\006result\030\001 \002(\0162\014.ResultProto\022.\n\017developme",
+      "ntCard\030\002 \002(\0162\025.DevelopmentCardProto\022\016\n\006r" +
+      "eason\030\003 \001(\t\"(\n\021BuildRoadResponse\022\023\n\013long" +
+      "estRoad\030\001 \002(\005\":\n\022MoveRobberResponse\022$\n\010r" +
+      "esource\030\001 \002(\0162\022.ResourceTypeProto\"g\n\024Acc" +
+      "eptRejectResponse\022\034\n\005trade\030\001 \002(\0132\r.Trade" +
+      "Request\022!\n\006answer\030\002 \002(\0162\021.TradeStatusPro" +
+      "to\022\016\n\006reason\030\003 \001(\t\"/\n\021GiveBoardResponse\022" +
+      "\032\n\005board\030\001 \002(\0132\013.BoardProtoB\032\n\010protocolB" +
+      "\016ResponseProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4952,6 +5158,7 @@ public final class ResponseProtos {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           protocol.BoardProtos.getDescriptor(),
+          protocol.TradeProtos.getDescriptor(),
           protocol.EnumProtos.getDescriptor(),
         }, assigner);
     internal_static_SuccessFailResponse_descriptor =
@@ -5001,7 +5208,7 @@ public final class ResponseProtos {
     internal_static_AcceptRejectResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_AcceptRejectResponse_descriptor,
-        new java.lang.String[] { "Answer", "Reason", });
+        new java.lang.String[] { "Trade", "Answer", "Reason", });
     internal_static_GiveBoardResponse_descriptor =
       getDescriptor().getMessageTypes().get(8);
     internal_static_GiveBoardResponse_fieldAccessorTable = new
@@ -5009,6 +5216,7 @@ public final class ResponseProtos {
         internal_static_GiveBoardResponse_descriptor,
         new java.lang.String[] { "Board", });
     protocol.BoardProtos.getDescriptor();
+    protocol.TradeProtos.getDescriptor();
     protocol.EnumProtos.getDescriptor();
   }
 

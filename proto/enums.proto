@@ -45,6 +45,7 @@ enum TradeStatusProto
 {
     ACCEPT = 1;
     REJECT = 2;
+    PENDING = 3;
 }
 
 enum ResultProto 

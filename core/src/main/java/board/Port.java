@@ -1,8 +1,13 @@
 package board;
 
 import enums.ResourceType;
+import exceptions.CannotAffordException;
+import exceptions.IllegalPortTradeException;
+import exceptions.IllegalTradeException;
+import game.players.Player;
 import protocol.BoardProtos.*;
 import protocol.BuildProtos.*;
+import protocol.ResourceProtos.*;
 
 import java.util.*;
 
@@ -249,4 +254,27 @@ public class Port extends Edge
 		this.receiveAmount = receiveAmount;
 	}
 
+	/**
+	 * Performs the port trade
+	 * @param offerer the offerer
+	 * @param offer the offer
+	 * @param request the request
+	 */
+    public void exchange(Player offerer, ResourceCount offer, ResourceCount request) throws IllegalPortTradeException, CannotAffordException
+	{
+		// Can only get one resource from a port, and it must be the same resource
+		if((request.getBrick() == 1 && (request.getGrain() == 1 || request.getOre() == 1 || request.getWool() == 1
+				|| request.getLumber() == 1)) || ( !receiveType.equals(ResourceType.Generic)
+				&& ((request.getBrick() == 1 && !receiveType.equals(ResourceType.Brick))
+				|| (request.getLumber() == 1 && !receiveType.equals(ResourceType.Lumber))
+				|| (request.getWool() == 1 && !receiveType.equals(ResourceType.Wool))
+				|| (request.getGrain() == 1 && !receiveType.equals(ResourceType.Grain))
+				|| (request.getOre() == 1 && !receiveType.equals(ResourceType.Ore)))))
+		{
+			throw new IllegalPortTradeException(offerer.getColour(), this);
+		}
+
+		offerer.spendResources(offer);
+		offerer.grantResources(request);
+    }
 }

@@ -1,9 +1,7 @@
-package catan;
+package tests;
 
 import static org.junit.Assert.*;
 import java.util.*;
-import comm.messages.ResourceCount;
-import comm.messages.TradeMessage;
 import enums.*;
 import exceptions.IllegalTradeException;
 import exceptions.SettlementExistsException;
@@ -12,6 +10,8 @@ import game.players.NetworkPlayer;
 import game.players.Player;
 
 import org.junit.*;
+import protocol.ResourceProtos.*;
+import protocol.TradeProtos.*;
 
 public class GameAndResourcesTests extends TestHelper
 {
@@ -92,26 +92,27 @@ public class GameAndResourcesTests extends TestHelper
 	public void illegalTradeTest() throws IllegalTradeException
 	{
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.Red);				
+		Player p2 = new NetworkPlayer(Colour.RED);
 		game.addPlayer(p2);		
 
-		// Set up trade move and offer and request
-		ResourceCount offer = new ResourceCount(), request = new ResourceCount();
-		TradeMessage msg = new TradeMessage();
-		offer.setBrick(1);
-		request.setWool(1);
-		msg.setOffer(offer);
-		msg.setRequest(request);
-		msg.setPlayerColour(p.getColour());
-		msg.setRecipient(p2.getColour());
-		msg.setStatus(TradeStatus.Accepted);
-		
+		// Set up playerTrade move and offer and request
+		ResourceCount.Builder resource = ResourceCount.newBuilder();
+		PlayerTradeProto.Builder playerTrade = PlayerTradeProto.newBuilder();
+
+		// Set offer and request
+		resource.setBrick(1);
+		playerTrade.setOffer(resource.build());
+		resource.setWool(1);
+		playerTrade.setRequest(resource);
+
+		playerTrade.setOfferer(Colour.toProto(p.getColour()));
+		playerTrade.setRecipient(Colour.toProto(p2.getColour()));
+
 		// Neither player has resources, so this will fail.
 		// Exception thrown and caught in processMove
-		String response = game.processMove(msg, MoveType.TradeMove);
+		game.processPlayerTrade(playerTrade.build(), p.getColour());
 		
 		// assert failed
-		assertNotEquals("ok", response);
 		assertTrue(p.getNumResources() == 0 && p2.getNumResources() == 0);
 	}
 	
@@ -120,30 +121,32 @@ public class GameAndResourcesTests extends TestHelper
 	public void emptyTradeTest() throws IllegalTradeException
 	{
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.Red);		
+		Player p2 = new NetworkPlayer(Colour.RED);
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 		grant.put(ResourceType.Brick, 1);
 		p2.grantResources(grant);
-		game.addPlayer(p2);	
+		game.addPlayer(p2);
 
-		// Set up trade move and request
-		ResourceCount request = new ResourceCount();
-		TradeMessage msg = new TradeMessage();
-		request.setBrick(1);
-		msg.setOffer(new ResourceCount()); // Empty offer
-		msg.setRequest(request);
-		msg.setPlayerColour(p.getColour());
-		msg.setRecipient(p2.getColour());
-		msg.setStatus(TradeStatus.Accepted);
+
+		// Set up playerTrade move and offer and request
+		ResourceCount.Builder resource = ResourceCount.newBuilder();
+		PlayerTradeProto.Builder playerTrade = PlayerTradeProto.newBuilder();
+
+		// Set up empty offer and request
+		playerTrade.setOffer(resource.build());
+		resource.setWool(1);
+		playerTrade.setRequest(resource);
+
+		playerTrade.setOfferer(Colour.toProto(p.getColour()));
+		playerTrade.setRecipient(Colour.toProto(p2.getColour()));
 
 		assertTrue(p.getNumResources() == 0 && p2.getNumResources() == 1);
 		
 		// Neither player has resources, so this will fail.
 		// Exception thrown and caught in processMove
-		String response = game.processMove(msg, MoveType.TradeMove);
+		game.processPlayerTrade(playerTrade.build(), p.getColour());
 		
 		// assert success
-		assertEquals("ok", response);
 		assertTrue(p.getNumResources() == 1 && p2.getNumResources() == 0);
 	}
 }

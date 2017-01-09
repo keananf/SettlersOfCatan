@@ -459,6 +459,10 @@ public final class EnumProtos {
      * <code>REJECT = 2;</code>
      */
     REJECT(1, 2),
+    /**
+     * <code>PENDING = 3;</code>
+     */
+    PENDING(2, 3),
     ;
 
     /**
@@ -469,6 +473,10 @@ public final class EnumProtos {
      * <code>REJECT = 2;</code>
      */
     public static final int REJECT_VALUE = 2;
+    /**
+     * <code>PENDING = 3;</code>
+     */
+    public static final int PENDING_VALUE = 3;
 
 
     public final int getNumber() { return value; }
@@ -477,6 +485,7 @@ public final class EnumProtos {
       switch (value) {
         case 1: return ACCEPT;
         case 2: return REJECT;
+        case 3: return PENDING;
         default: return null;
       }
     }
@@ -627,9 +636,10 @@ public final class EnumProtos {
       "TY\020\002*t\n\024DevelopmentCardProto\022\n\n\006KNIGHT\020\001" +
       "\022\021\n\rROAD_BUILDING\020\002\022\014\n\010MONOPOLY\020\003\022\022\n\016YEA" +
       "R_OF_PLENTY\020\004\022\013\n\007LIBRARY\020\005\022\016\n\nUNIVERSITY" +
-      "\020E**\n\020TradeStatusProto\022\n\n\006ACCEPT\020\001\022\n\n\006RE" +
-      "JECT\020\002*\'\n\013ResultProto\022\013\n\007SUCCESS\020\001\022\013\n\007FA",
-      "ILURE\020\002B\026\n\010protocolB\nEnumProtos"
+      "\020E*7\n\020TradeStatusProto\022\n\n\006ACCEPT\020\001\022\n\n\006RE" +
+      "JECT\020\002\022\013\n\007PENDING\020\003*\'\n\013ResultProto\022\013\n\007SU",
+      "CCESS\020\001\022\013\n\007FAILURE\020\002B\026\n\010protocolB\nEnumPr" +
+      "otos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

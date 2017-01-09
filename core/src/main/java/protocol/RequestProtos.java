@@ -180,6 +180,19 @@ public final class RequestProtos {
      * <code>optional .EndMoveRequest endMoveRequest = 13;</code>
      */
     protocol.RequestProtos.EndMoveRequestOrBuilder getEndMoveRequestOrBuilder();
+
+    /**
+     * <code>optional .TradeRequest tradeRequest = 14;</code>
+     */
+    boolean hasTradeRequest();
+    /**
+     * <code>optional .TradeRequest tradeRequest = 14;</code>
+     */
+    protocol.TradeProtos.TradeRequest getTradeRequest();
+    /**
+     * <code>optional .TradeRequest tradeRequest = 14;</code>
+     */
+    protocol.TradeProtos.TradeRequestOrBuilder getTradeRequestOrBuilder();
   }
   /**
    * Protobuf type {@code Request}
@@ -402,6 +415,19 @@ public final class RequestProtos {
               typeCase_ = 13;
               break;
             }
+            case 114: {
+              protocol.TradeProtos.TradeRequest.Builder subBuilder = null;
+              if (typeCase_ == 14) {
+                subBuilder = ((protocol.TradeProtos.TradeRequest) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.TradeProtos.TradeRequest.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.TradeProtos.TradeRequest) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 14;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -459,6 +485,7 @@ public final class RequestProtos {
       PLAYKNIGHTCARDREQUEST(11),
       MOVEROBBERREQUEST(12),
       ENDMOVEREQUEST(13),
+      TRADEREQUEST(14),
       TYPE_NOT_SET(0);
       private int value = 0;
       private TypeCase(int value) {
@@ -479,6 +506,7 @@ public final class RequestProtos {
           case 11: return PLAYKNIGHTCARDREQUEST;
           case 12: return MOVEROBBERREQUEST;
           case 13: return ENDMOVEREQUEST;
+          case 14: return TRADEREQUEST;
           case 0: return TYPE_NOT_SET;
           default: throw new java.lang.IllegalArgumentException(
             "Value is undefined for this oneof enum.");
@@ -833,6 +861,32 @@ public final class RequestProtos {
       return protocol.RequestProtos.EndMoveRequest.getDefaultInstance();
     }
 
+    public static final int TRADEREQUEST_FIELD_NUMBER = 14;
+    /**
+     * <code>optional .TradeRequest tradeRequest = 14;</code>
+     */
+    public boolean hasTradeRequest() {
+      return typeCase_ == 14;
+    }
+    /**
+     * <code>optional .TradeRequest tradeRequest = 14;</code>
+     */
+    public protocol.TradeProtos.TradeRequest getTradeRequest() {
+      if (typeCase_ == 14) {
+         return (protocol.TradeProtos.TradeRequest) type_;
+      }
+      return protocol.TradeProtos.TradeRequest.getDefaultInstance();
+    }
+    /**
+     * <code>optional .TradeRequest tradeRequest = 14;</code>
+     */
+    public protocol.TradeProtos.TradeRequestOrBuilder getTradeRequestOrBuilder() {
+      if (typeCase_ == 14) {
+         return (protocol.TradeProtos.TradeRequest) type_;
+      }
+      return protocol.TradeProtos.TradeRequest.getDefaultInstance();
+    }
+
     private void initFields() {
     }
     private byte memoizedIsInitialized = -1;
@@ -889,6 +943,12 @@ public final class RequestProtos {
           return false;
         }
       }
+      if (hasTradeRequest()) {
+        if (!getTradeRequest().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -934,6 +994,9 @@ public final class RequestProtos {
       }
       if (typeCase_ == 13) {
         output.writeMessage(13, (protocol.RequestProtos.EndMoveRequest) type_);
+      }
+      if (typeCase_ == 14) {
+        output.writeMessage(14, (protocol.TradeProtos.TradeRequest) type_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -995,6 +1058,10 @@ public final class RequestProtos {
       if (typeCase_ == 13) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(13, (protocol.RequestProtos.EndMoveRequest) type_);
+      }
+      if (typeCase_ == 14) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(14, (protocol.TradeProtos.TradeRequest) type_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1234,6 +1301,13 @@ public final class RequestProtos {
             result.type_ = endMoveRequestBuilder_.build();
           }
         }
+        if (typeCase_ == 14) {
+          if (tradeRequestBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = tradeRequestBuilder_.build();
+          }
+        }
         result.bitField0_ = to_bitField0_;
         result.typeCase_ = typeCase_;
         onBuilt();
@@ -1304,6 +1378,10 @@ public final class RequestProtos {
             mergeEndMoveRequest(other.getEndMoveRequest());
             break;
           }
+          case TRADEREQUEST: {
+            mergeTradeRequest(other.getTradeRequest());
+            break;
+          }
           case TYPE_NOT_SET: {
             break;
           }
@@ -1357,6 +1435,12 @@ public final class RequestProtos {
         }
         if (hasMoveRobberRequest()) {
           if (!getMoveRobberRequest().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasTradeRequest()) {
+          if (!getTradeRequest().isInitialized()) {
             
             return false;
           }
@@ -3151,6 +3235,141 @@ public final class RequestProtos {
         }
         typeCase_ = 13;
         return endMoveRequestBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder> tradeRequestBuilder_;
+      /**
+       * <code>optional .TradeRequest tradeRequest = 14;</code>
+       */
+      public boolean hasTradeRequest() {
+        return typeCase_ == 14;
+      }
+      /**
+       * <code>optional .TradeRequest tradeRequest = 14;</code>
+       */
+      public protocol.TradeProtos.TradeRequest getTradeRequest() {
+        if (tradeRequestBuilder_ == null) {
+          if (typeCase_ == 14) {
+            return (protocol.TradeProtos.TradeRequest) type_;
+          }
+          return protocol.TradeProtos.TradeRequest.getDefaultInstance();
+        } else {
+          if (typeCase_ == 14) {
+            return tradeRequestBuilder_.getMessage();
+          }
+          return protocol.TradeProtos.TradeRequest.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .TradeRequest tradeRequest = 14;</code>
+       */
+      public Builder setTradeRequest(protocol.TradeProtos.TradeRequest value) {
+        if (tradeRequestBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          tradeRequestBuilder_.setMessage(value);
+        }
+        typeCase_ = 14;
+        return this;
+      }
+      /**
+       * <code>optional .TradeRequest tradeRequest = 14;</code>
+       */
+      public Builder setTradeRequest(
+          protocol.TradeProtos.TradeRequest.Builder builderForValue) {
+        if (tradeRequestBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          tradeRequestBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 14;
+        return this;
+      }
+      /**
+       * <code>optional .TradeRequest tradeRequest = 14;</code>
+       */
+      public Builder mergeTradeRequest(protocol.TradeProtos.TradeRequest value) {
+        if (tradeRequestBuilder_ == null) {
+          if (typeCase_ == 14 &&
+              type_ != protocol.TradeProtos.TradeRequest.getDefaultInstance()) {
+            type_ = protocol.TradeProtos.TradeRequest.newBuilder((protocol.TradeProtos.TradeRequest) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 14) {
+            tradeRequestBuilder_.mergeFrom(value);
+          }
+          tradeRequestBuilder_.setMessage(value);
+        }
+        typeCase_ = 14;
+        return this;
+      }
+      /**
+       * <code>optional .TradeRequest tradeRequest = 14;</code>
+       */
+      public Builder clearTradeRequest() {
+        if (tradeRequestBuilder_ == null) {
+          if (typeCase_ == 14) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 14) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          tradeRequestBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .TradeRequest tradeRequest = 14;</code>
+       */
+      public protocol.TradeProtos.TradeRequest.Builder getTradeRequestBuilder() {
+        return getTradeRequestFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .TradeRequest tradeRequest = 14;</code>
+       */
+      public protocol.TradeProtos.TradeRequestOrBuilder getTradeRequestOrBuilder() {
+        if ((typeCase_ == 14) && (tradeRequestBuilder_ != null)) {
+          return tradeRequestBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 14) {
+            return (protocol.TradeProtos.TradeRequest) type_;
+          }
+          return protocol.TradeProtos.TradeRequest.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .TradeRequest tradeRequest = 14;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder> 
+          getTradeRequestFieldBuilder() {
+        if (tradeRequestBuilder_ == null) {
+          if (!(typeCase_ == 14)) {
+            type_ = protocol.TradeProtos.TradeRequest.getDefaultInstance();
+          }
+          tradeRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder>(
+                  (protocol.TradeProtos.TradeRequest) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 14;
+        return tradeRequestBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:Request)
@@ -9302,43 +9521,45 @@ public final class RequestProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\016requests.proto\032\013board.proto\032\013build.pro" +
-      "to\032\013enums.proto\"\357\005\n\007Request\022-\n\020buildRoad" +
-      "Request\030\001 \001(\0132\021.BuildRoadRequestH\000\0229\n\026bu" +
-      "ildSettlementRequest\030\002 \001(\0132\027.BuildSettle" +
-      "mentRequestH\000\022<\n\027upradeSettlementRequest" +
-      "\030\003 \001(\0132\031.UpgradeSettlementRequestH\000\022/\n\021b" +
-      "uyDevCardRequest\030\004 \001(\0132\022.BuyDevCardReque" +
-      "stH\000\022+\n\017getBoardRequest\030\005 \001(\0132\020.GetBoard" +
-      "RequestH\000\022C\n\033playRoadBuildingCardRequest" +
-      "\030\006 \001(\0132\034.PlayRoadBuildingCardRequestH\000\022;",
-      "\n\027playMonopolyCardRequest\030\007 \001(\0132\030.PlayMo" +
-      "nopolyCardRequestH\000\022C\n\033playYearOfPlentyC" +
-      "ardRequest\030\010 \001(\0132\034.PlayYearOfPlentyCardR" +
-      "equestH\000\0229\n\026playLibraryCardRequest\030\t \001(\013" +
-      "2\027.PlayLibraryCardRequestH\000\022?\n\031playUnive" +
-      "rsityCardRequest\030\n \001(\0132\032.PlayUniversityC" +
-      "ardRequestH\000\0227\n\025playKnightCardRequest\030\013 " +
-      "\001(\0132\026.PlayKnightCardRequestH\000\022/\n\021moveRob" +
-      "berRequest\030\014 \001(\0132\022.MoveRobberRequestH\000\022)" +
-      "\n\016endMoveRequest\030\r \001(\0132\017.EndMoveRequestH",
-      "\000B\006\n\004type\",\n\020BuildRoadRequest\022\030\n\004edge\030\001 " +
-      "\002(\0132\n.EdgeProto\"<\n\025PlayKnightCardRequest" +
-      "\022#\n\007request\030\001 \002(\0132\022.MoveRobberRequest\"g\n" +
-      "\033PlayRoadBuildingCardRequest\022#\n\010request1" +
-      "\030\001 \002(\0132\021.BuildRoadRequest\022#\n\010request2\030\002 " +
-      "\002(\0132\021.BuildRoadRequest\"?\n\027PlayMonopolyCa" +
-      "rdRequest\022$\n\010resource\030\001 \002(\0162\022.ResourceTy" +
-      "peProto\"]\n\033PlayYearOfPlentyCardRequest\022\036" +
-      "\n\002r1\030\001 \002(\0162\022.ResourceTypeProto\022\036\n\002r2\030\002 \002" +
-      "(\0162\022.ResourceTypeProto\"\030\n\026PlayLibraryCar",
-      "dRequest\"\033\n\031PlayUniversityCardRequest\"S\n" +
-      "\021MoveRobberRequest\022&\n\020colourToTakeFrom\030\001" +
-      " \002(\0162\014.ColourProto\022\026\n\003hex\030\002 \002(\0132\t.HexPro" +
-      "to\"4\n\026BuildSettlementRequest\022\032\n\005point\030\001 " +
-      "\002(\0132\013.PointProto\"6\n\030UpgradeSettlementReq" +
-      "uest\022\032\n\005point\030\001 \002(\0132\013.PointProto\"\023\n\021BuyD" +
-      "evCardRequest\"\021\n\017GetBoardRequest\"\020\n\016EndM" +
-      "oveRequestB\031\n\010protocolB\rRequestProtos"
+      "to\032\013enums.proto\032\013trade.proto\"\226\006\n\007Request" +
+      "\022-\n\020buildRoadRequest\030\001 \001(\0132\021.BuildRoadRe" +
+      "questH\000\0229\n\026buildSettlementRequest\030\002 \001(\0132" +
+      "\027.BuildSettlementRequestH\000\022<\n\027upradeSett" +
+      "lementRequest\030\003 \001(\0132\031.UpgradeSettlementR" +
+      "equestH\000\022/\n\021buyDevCardRequest\030\004 \001(\0132\022.Bu" +
+      "yDevCardRequestH\000\022+\n\017getBoardRequest\030\005 \001" +
+      "(\0132\020.GetBoardRequestH\000\022C\n\033playRoadBuildi" +
+      "ngCardRequest\030\006 \001(\0132\034.PlayRoadBuildingCa",
+      "rdRequestH\000\022;\n\027playMonopolyCardRequest\030\007" +
+      " \001(\0132\030.PlayMonopolyCardRequestH\000\022C\n\033play" +
+      "YearOfPlentyCardRequest\030\010 \001(\0132\034.PlayYear" +
+      "OfPlentyCardRequestH\000\0229\n\026playLibraryCard" +
+      "Request\030\t \001(\0132\027.PlayLibraryCardRequestH\000" +
+      "\022?\n\031playUniversityCardRequest\030\n \001(\0132\032.Pl" +
+      "ayUniversityCardRequestH\000\0227\n\025playKnightC" +
+      "ardRequest\030\013 \001(\0132\026.PlayKnightCardRequest" +
+      "H\000\022/\n\021moveRobberRequest\030\014 \001(\0132\022.MoveRobb" +
+      "erRequestH\000\022)\n\016endMoveRequest\030\r \001(\0132\017.En",
+      "dMoveRequestH\000\022%\n\014tradeRequest\030\016 \001(\0132\r.T" +
+      "radeRequestH\000B\006\n\004type\",\n\020BuildRoadReques" +
+      "t\022\030\n\004edge\030\001 \002(\0132\n.EdgeProto\"<\n\025PlayKnigh" +
+      "tCardRequest\022#\n\007request\030\001 \002(\0132\022.MoveRobb" +
+      "erRequest\"g\n\033PlayRoadBuildingCardRequest" +
+      "\022#\n\010request1\030\001 \002(\0132\021.BuildRoadRequest\022#\n" +
+      "\010request2\030\002 \002(\0132\021.BuildRoadRequest\"?\n\027Pl" +
+      "ayMonopolyCardRequest\022$\n\010resource\030\001 \002(\0162" +
+      "\022.ResourceTypeProto\"]\n\033PlayYearOfPlentyC" +
+      "ardRequest\022\036\n\002r1\030\001 \002(\0162\022.ResourceTypePro",
+      "to\022\036\n\002r2\030\002 \002(\0162\022.ResourceTypeProto\"\030\n\026Pl" +
+      "ayLibraryCardRequest\"\033\n\031PlayUniversityCa" +
+      "rdRequest\"S\n\021MoveRobberRequest\022&\n\020colour" +
+      "ToTakeFrom\030\001 \002(\0162\014.ColourProto\022\026\n\003hex\030\002 " +
+      "\002(\0132\t.HexProto\"4\n\026BuildSettlementRequest" +
+      "\022\032\n\005point\030\001 \002(\0132\013.PointProto\"6\n\030UpgradeS" +
+      "ettlementRequest\022\032\n\005point\030\001 \002(\0132\013.PointP" +
+      "roto\"\023\n\021BuyDevCardRequest\"\021\n\017GetBoardReq" +
+      "uest\"\020\n\016EndMoveRequestB\031\n\010protocolB\rRequ" +
+      "estProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -9354,13 +9575,14 @@ public final class RequestProtos {
           protocol.BoardProtos.getDescriptor(),
           protocol.BuildProtos.getDescriptor(),
           protocol.EnumProtos.getDescriptor(),
+          protocol.TradeProtos.getDescriptor(),
         }, assigner);
     internal_static_Request_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Request_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_Request_descriptor,
-        new java.lang.String[] { "BuildRoadRequest", "BuildSettlementRequest", "UpradeSettlementRequest", "BuyDevCardRequest", "GetBoardRequest", "PlayRoadBuildingCardRequest", "PlayMonopolyCardRequest", "PlayYearOfPlentyCardRequest", "PlayLibraryCardRequest", "PlayUniversityCardRequest", "PlayKnightCardRequest", "MoveRobberRequest", "EndMoveRequest", "Type", });
+        new java.lang.String[] { "BuildRoadRequest", "BuildSettlementRequest", "UpradeSettlementRequest", "BuyDevCardRequest", "GetBoardRequest", "PlayRoadBuildingCardRequest", "PlayMonopolyCardRequest", "PlayYearOfPlentyCardRequest", "PlayLibraryCardRequest", "PlayUniversityCardRequest", "PlayKnightCardRequest", "MoveRobberRequest", "EndMoveRequest", "TradeRequest", "Type", });
     internal_static_BuildRoadRequest_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_BuildRoadRequest_fieldAccessorTable = new
@@ -9442,6 +9664,7 @@ public final class RequestProtos {
     protocol.BoardProtos.getDescriptor();
     protocol.BuildProtos.getDescriptor();
     protocol.EnumProtos.getDescriptor();
+    protocol.TradeProtos.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -331,7 +331,7 @@ public abstract class Player
 		for(ResourceType r : newResources.keySet())
 		{
 			int value = newResources.get(r);
-			int existing = resources.get(r);
+			int existing = resources.containsKey(r) ? resources.get(r) : 0;
 			
 			// Add to overall resource bank
 			resources.put(r, value + existing);

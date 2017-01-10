@@ -155,7 +155,7 @@ public class Port extends Edge
 			p.exchangeAmount = 2;
 			p.exchangeType = r;
 			p.receiveAmount = 1;
-			p.receiveType = r;
+			p.receiveType = ResourceType.Generic;
 			
 			ports.add(p);
 		}
@@ -262,7 +262,7 @@ public class Port extends Edge
 	 */
     public void exchange(Player offerer, ResourceCount offer, ResourceCount request) throws IllegalPortTradeException, CannotAffordException
 	{
-		// Can only get one resource from a port, and it must be the same resource
+		// Can only get one resource from a port, and it must be the same resource as what is offered
 		if((request.getBrick() == 1 && (request.getGrain() == 1 || request.getOre() == 1 || request.getWool() == 1
 				|| request.getLumber() == 1)) || ( !receiveType.equals(ResourceType.Generic)
 				&& ((request.getBrick() == 1 && !receiveType.equals(ResourceType.Brick))

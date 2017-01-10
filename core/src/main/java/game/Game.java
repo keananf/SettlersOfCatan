@@ -139,7 +139,7 @@ public class Game
 			offerer.grantResources(request);
         	resp.setResult(ResultProto.SUCCESS);
 		}
-		catch(Exception e)
+		catch(CannotAffordException e)
 		{
 			// Reset recipient and throw exception. Offerer is reset in above method
 			recipient.restoreCopy(recipientCopy, null);

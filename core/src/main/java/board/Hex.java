@@ -93,25 +93,12 @@ public class Hex extends BoardElement
 		hexBuilder.setChitNumber(diceRoll);
 		hexBuilder.setResource(ResourceType.toProto(resource));
 		hexBuilder.setP(coords.build());
+		hexBuilder.setHasRobber(hasRobber);
 
 		// Add nodes
 		for(Node n : nodes)
 		{
-			NodeProto.Builder nodeProto = NodeProto.newBuilder();
-			if(n.getSettlement() != null)
-			{
-				PointProto.Builder point = PointProto.newBuilder();
-				BuildingProto.Builder building = BuildingProto.newBuilder();
-				point.setX(n.getX());
-				point.setY(n.getY());
-				building.setP(point.build());
-				building.setPlayerId(Colour.toProto(n.getSettlement().getPlayerColour()));
-				building.setType(n.getSettlement() instanceof City ? BuildingTypeProto.CITY : BuildingTypeProto.SETTLEMENT);
-
-				nodeProto.setBuildingType(n.getSettlement() instanceof City ? BuildingTypeProto.CITY : BuildingTypeProto.SETTLEMENT);
-				nodeProto.setBuilding(building.build());
-			}
-			hexBuilder.addNodes(index++, nodeProto.build());
+			hexBuilder.addNodes(index++, n.toProto());
 		}
 
 		return hexBuilder.build();

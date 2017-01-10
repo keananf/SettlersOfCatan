@@ -134,8 +134,8 @@ public class GameAndResourcesTests extends TestHelper
 
 		// Set up empty offer and request
 		playerTrade.setOffer(resource.build());
-		resource.setWool(1);
-		playerTrade.setRequest(resource);
+		resource.setBrick(1);
+		playerTrade.setRequest(resource.build());
 
 		playerTrade.setOfferer(Colour.toProto(p.getColour()));
 		playerTrade.setRecipient(Colour.toProto(p2.getColour()));

@@ -14,9 +14,9 @@ message ResourceAllocation
 
 message ResourceCount
 {
-    required int32 brick = 1;
-    required int32 lumber = 2;
-    required int32 wool = 3;
-    required int32 grain = 4;
-    required int32 ore = 5;
+    optional int32 brick = 1;
+    optional int32 lumber = 2;
+    optional int32 wool = 3;
+    optional int32 grain = 4;
+    optional int32 ore = 5;
 }

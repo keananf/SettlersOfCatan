@@ -305,12 +305,16 @@ public class DevelopmentCardTests extends TestHelper
 		oldResources = p.getNumResources();
 
 		// Catch thrown exception and ensure player does NOT have first road
+		Player copy = p.copy();
 		try
 		{
 			game.playBuildRoadsCard(request.build(), p.getColour()); // FAILS
 		}
 		catch (RoadExistsException e)
 		{
+			// Simulate rollback which occurs at server level
+			p.restoreCopy(copy, null);
+
 			// Ensure player wasn't updated, and that the dev card was not spent
 			assertEquals(0, p.getRoads().size());
 			assertEquals(oldResources, p.getNumResources());

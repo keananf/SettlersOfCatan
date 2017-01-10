@@ -204,10 +204,6 @@ public final class ResourceProtos {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!getResources().isInitialized()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -439,10 +435,6 @@ public final class ResourceProtos {
           
           return false;
         }
-        if (!getResources().isInitialized()) {
-          
-          return false;
-        }
         return true;
       }
 
@@ -632,47 +624,47 @@ public final class ResourceProtos {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required int32 brick = 1;</code>
+     * <code>optional int32 brick = 1;</code>
      */
     boolean hasBrick();
     /**
-     * <code>required int32 brick = 1;</code>
+     * <code>optional int32 brick = 1;</code>
      */
     int getBrick();
 
     /**
-     * <code>required int32 lumber = 2;</code>
+     * <code>optional int32 lumber = 2;</code>
      */
     boolean hasLumber();
     /**
-     * <code>required int32 lumber = 2;</code>
+     * <code>optional int32 lumber = 2;</code>
      */
     int getLumber();
 
     /**
-     * <code>required int32 wool = 3;</code>
+     * <code>optional int32 wool = 3;</code>
      */
     boolean hasWool();
     /**
-     * <code>required int32 wool = 3;</code>
+     * <code>optional int32 wool = 3;</code>
      */
     int getWool();
 
     /**
-     * <code>required int32 grain = 4;</code>
+     * <code>optional int32 grain = 4;</code>
      */
     boolean hasGrain();
     /**
-     * <code>required int32 grain = 4;</code>
+     * <code>optional int32 grain = 4;</code>
      */
     int getGrain();
 
     /**
-     * <code>required int32 ore = 5;</code>
+     * <code>optional int32 ore = 5;</code>
      */
     boolean hasOre();
     /**
-     * <code>required int32 ore = 5;</code>
+     * <code>optional int32 ore = 5;</code>
      */
     int getOre();
   }
@@ -796,13 +788,13 @@ public final class ResourceProtos {
     public static final int BRICK_FIELD_NUMBER = 1;
     private int brick_;
     /**
-     * <code>required int32 brick = 1;</code>
+     * <code>optional int32 brick = 1;</code>
      */
     public boolean hasBrick() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required int32 brick = 1;</code>
+     * <code>optional int32 brick = 1;</code>
      */
     public int getBrick() {
       return brick_;
@@ -811,13 +803,13 @@ public final class ResourceProtos {
     public static final int LUMBER_FIELD_NUMBER = 2;
     private int lumber_;
     /**
-     * <code>required int32 lumber = 2;</code>
+     * <code>optional int32 lumber = 2;</code>
      */
     public boolean hasLumber() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required int32 lumber = 2;</code>
+     * <code>optional int32 lumber = 2;</code>
      */
     public int getLumber() {
       return lumber_;
@@ -826,13 +818,13 @@ public final class ResourceProtos {
     public static final int WOOL_FIELD_NUMBER = 3;
     private int wool_;
     /**
-     * <code>required int32 wool = 3;</code>
+     * <code>optional int32 wool = 3;</code>
      */
     public boolean hasWool() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>required int32 wool = 3;</code>
+     * <code>optional int32 wool = 3;</code>
      */
     public int getWool() {
       return wool_;
@@ -841,13 +833,13 @@ public final class ResourceProtos {
     public static final int GRAIN_FIELD_NUMBER = 4;
     private int grain_;
     /**
-     * <code>required int32 grain = 4;</code>
+     * <code>optional int32 grain = 4;</code>
      */
     public boolean hasGrain() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>required int32 grain = 4;</code>
+     * <code>optional int32 grain = 4;</code>
      */
     public int getGrain() {
       return grain_;
@@ -856,13 +848,13 @@ public final class ResourceProtos {
     public static final int ORE_FIELD_NUMBER = 5;
     private int ore_;
     /**
-     * <code>required int32 ore = 5;</code>
+     * <code>optional int32 ore = 5;</code>
      */
     public boolean hasOre() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>required int32 ore = 5;</code>
+     * <code>optional int32 ore = 5;</code>
      */
     public int getOre() {
       return ore_;
@@ -881,26 +873,6 @@ public final class ResourceProtos {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
-      if (!hasBrick()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasLumber()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasWool()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasGrain()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasOre()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1163,26 +1135,6 @@ public final class ResourceProtos {
       }
 
       public final boolean isInitialized() {
-        if (!hasBrick()) {
-          
-          return false;
-        }
-        if (!hasLumber()) {
-          
-          return false;
-        }
-        if (!hasWool()) {
-          
-          return false;
-        }
-        if (!hasGrain()) {
-          
-          return false;
-        }
-        if (!hasOre()) {
-          
-          return false;
-        }
         return true;
       }
 
@@ -1207,19 +1159,19 @@ public final class ResourceProtos {
 
       private int brick_ ;
       /**
-       * <code>required int32 brick = 1;</code>
+       * <code>optional int32 brick = 1;</code>
        */
       public boolean hasBrick() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required int32 brick = 1;</code>
+       * <code>optional int32 brick = 1;</code>
        */
       public int getBrick() {
         return brick_;
       }
       /**
-       * <code>required int32 brick = 1;</code>
+       * <code>optional int32 brick = 1;</code>
        */
       public Builder setBrick(int value) {
         bitField0_ |= 0x00000001;
@@ -1228,7 +1180,7 @@ public final class ResourceProtos {
         return this;
       }
       /**
-       * <code>required int32 brick = 1;</code>
+       * <code>optional int32 brick = 1;</code>
        */
       public Builder clearBrick() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -1239,19 +1191,19 @@ public final class ResourceProtos {
 
       private int lumber_ ;
       /**
-       * <code>required int32 lumber = 2;</code>
+       * <code>optional int32 lumber = 2;</code>
        */
       public boolean hasLumber() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required int32 lumber = 2;</code>
+       * <code>optional int32 lumber = 2;</code>
        */
       public int getLumber() {
         return lumber_;
       }
       /**
-       * <code>required int32 lumber = 2;</code>
+       * <code>optional int32 lumber = 2;</code>
        */
       public Builder setLumber(int value) {
         bitField0_ |= 0x00000002;
@@ -1260,7 +1212,7 @@ public final class ResourceProtos {
         return this;
       }
       /**
-       * <code>required int32 lumber = 2;</code>
+       * <code>optional int32 lumber = 2;</code>
        */
       public Builder clearLumber() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -1271,19 +1223,19 @@ public final class ResourceProtos {
 
       private int wool_ ;
       /**
-       * <code>required int32 wool = 3;</code>
+       * <code>optional int32 wool = 3;</code>
        */
       public boolean hasWool() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>required int32 wool = 3;</code>
+       * <code>optional int32 wool = 3;</code>
        */
       public int getWool() {
         return wool_;
       }
       /**
-       * <code>required int32 wool = 3;</code>
+       * <code>optional int32 wool = 3;</code>
        */
       public Builder setWool(int value) {
         bitField0_ |= 0x00000004;
@@ -1292,7 +1244,7 @@ public final class ResourceProtos {
         return this;
       }
       /**
-       * <code>required int32 wool = 3;</code>
+       * <code>optional int32 wool = 3;</code>
        */
       public Builder clearWool() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -1303,19 +1255,19 @@ public final class ResourceProtos {
 
       private int grain_ ;
       /**
-       * <code>required int32 grain = 4;</code>
+       * <code>optional int32 grain = 4;</code>
        */
       public boolean hasGrain() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>required int32 grain = 4;</code>
+       * <code>optional int32 grain = 4;</code>
        */
       public int getGrain() {
         return grain_;
       }
       /**
-       * <code>required int32 grain = 4;</code>
+       * <code>optional int32 grain = 4;</code>
        */
       public Builder setGrain(int value) {
         bitField0_ |= 0x00000008;
@@ -1324,7 +1276,7 @@ public final class ResourceProtos {
         return this;
       }
       /**
-       * <code>required int32 grain = 4;</code>
+       * <code>optional int32 grain = 4;</code>
        */
       public Builder clearGrain() {
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -1335,19 +1287,19 @@ public final class ResourceProtos {
 
       private int ore_ ;
       /**
-       * <code>required int32 ore = 5;</code>
+       * <code>optional int32 ore = 5;</code>
        */
       public boolean hasOre() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>required int32 ore = 5;</code>
+       * <code>optional int32 ore = 5;</code>
        */
       public int getOre() {
         return ore_;
       }
       /**
-       * <code>required int32 ore = 5;</code>
+       * <code>optional int32 ore = 5;</code>
        */
       public Builder setOre(int value) {
         bitField0_ |= 0x00000010;
@@ -1356,7 +1308,7 @@ public final class ResourceProtos {
         return this;
       }
       /**
-       * <code>required int32 ore = 5;</code>
+       * <code>optional int32 ore = 5;</code>
        */
       public Builder clearOre() {
         bitField0_ = (bitField0_ & ~0x00000010);
@@ -1398,9 +1350,9 @@ public final class ResourceProtos {
       "\n\017resources.proto\032\013enums.proto\"[\n\022Resour" +
       "ceAllocation\022!\n\tresources\030\001 \002(\0132\016.Resour" +
       "ceCount\022\"\n\014playerColour\030\002 \002(\0162\014.ColourPr" +
-      "oto\"X\n\rResourceCount\022\r\n\005brick\030\001 \002(\005\022\016\n\006l" +
-      "umber\030\002 \002(\005\022\014\n\004wool\030\003 \002(\005\022\r\n\005grain\030\004 \002(\005" +
-      "\022\013\n\003ore\030\005 \002(\005B\032\n\010protocolB\016ResourceProto" +
+      "oto\"X\n\rResourceCount\022\r\n\005brick\030\001 \001(\005\022\016\n\006l" +
+      "umber\030\002 \001(\005\022\014\n\004wool\030\003 \001(\005\022\r\n\005grain\030\004 \001(\005" +
+      "\022\013\n\003ore\030\005 \001(\005B\032\n\010protocolB\016ResourceProto" +
       "s"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =

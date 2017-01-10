@@ -1163,14 +1163,6 @@ public final class TradeProtos {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!getOffer().isInitialized()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!getRequest().isInitialized()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1448,14 +1440,6 @@ public final class TradeProtos {
           return false;
         }
         if (!hasRequest()) {
-          
-          return false;
-        }
-        if (!getOffer().isInitialized()) {
-          
-          return false;
-        }
-        if (!getRequest().isInitialized()) {
           
           return false;
         }
@@ -2103,15 +2087,7 @@ public final class TradeProtos {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!getRequestResources().isInitialized()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       if (!getPort().isInitialized()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!getOfferResources().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -2413,15 +2389,7 @@ public final class TradeProtos {
           
           return false;
         }
-        if (!getRequestResources().isInitialized()) {
-          
-          return false;
-        }
         if (!getPort().isInitialized()) {
-          
-          return false;
-        }
-        if (!getOfferResources().isInitialized()) {
           
           return false;
         }

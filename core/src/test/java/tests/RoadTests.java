@@ -13,6 +13,8 @@ import game.players.NetworkPlayer;
 import game.players.Player;
 
 import org.junit.*;
+import protocol.RequestProtos.*;
+import protocol.BuildProtos.*;
 
 public class RoadTests extends TestHelper
 {
@@ -111,8 +113,7 @@ public class RoadTests extends TestHelper
 	}
 	
 	@Test
-	public void settlementBreaksRoadTest2() throws SettlementExistsException, CannotAffordException, CannotBuildRoadException, RoadExistsException
-	{	
+	public void settlementBreaksRoadTest2() throws SettlementExistsException, CannotAffordException, CannotBuildRoadException, RoadExistsException, IllegalPlacementException {
 		// Set up player 2
 		Player p2 = new NetworkPlayer(Colour.RED);
 		game.addPlayer(p2);	
@@ -142,7 +143,12 @@ public class RoadTests extends TestHelper
 	
 		// Build foreign settlement in between second and third road.
 		p2.grantResources(Settlement.getSettlementCost());
-		makeSettlement(p2, n2);
+		BuildSettlementRequest.Builder req = BuildSettlementRequest.newBuilder();
+		PointProto.Builder point = PointProto.newBuilder();
+		point.setX(n2.getX());
+		point.setY(n2.getY());
+		req.setPoint(point.build());
+		game.buildSettlement(req.build(), p2.getColour());
 
 		// Assert previous road chain of length three was broken.
 		assertEquals(2, p.calcRoadLength());

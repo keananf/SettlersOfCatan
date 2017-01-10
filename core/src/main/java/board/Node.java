@@ -168,12 +168,15 @@ public class Node extends BoardElement
 		nodeBuilder.setP(coords.build());
 
 		// Add Building
-		BuildProtos.BuildingProto.Builder building = BuildProtos.BuildingProto.newBuilder();
-		building.setP(coords.build());
-		building.setPlayerId(Colour.toProto(settlement.getPlayerColour()));
-		building.setType(settlement instanceof City ? EnumProtos.BuildingTypeProto.CITY : EnumProtos.BuildingTypeProto.SETTLEMENT);
-		nodeBuilder.setBuilding(building.build());
-		nodeBuilder.setBuildingType(settlement instanceof City ? EnumProtos.BuildingTypeProto.CITY : EnumProtos.BuildingTypeProto.SETTLEMENT);
+		if(getSettlement() != null)
+		{
+			BuildProtos.BuildingProto.Builder building = BuildProtos.BuildingProto.newBuilder();
+			building.setP(coords.build());
+			building.setPlayerId(Colour.toProto(settlement.getPlayerColour()));
+			building.setType(settlement instanceof City ? EnumProtos.BuildingTypeProto.CITY : EnumProtos.BuildingTypeProto.SETTLEMENT);
+			nodeBuilder.setBuilding(building.build());
+			nodeBuilder.setBuildingType(settlement instanceof City ? EnumProtos.BuildingTypeProto.CITY : EnumProtos.BuildingTypeProto.SETTLEMENT);
+		}
 
 		return nodeBuilder.build();
     }

@@ -2,19 +2,19 @@ package server;
 
 import enums.*;
 import exceptions.CannotAffordException;
+import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
 import game.Game;
 import game.build.DevelopmentCard;
 import game.players.Player;
 import protocol.EnumProtos.*;
-import protocol.MessageProtos;
+import protocol.MessageProtos.*;
 import protocol.ResponseProtos.*;
 import protocol.RequestProtos.*;
 import protocol.ResourceProtos.*;
 import protocol.EventProtos.*;
 import protocol.BoardProtos.*;
-import protocol.MessageProtos.*;
-import protocol.TradeProtos;
+import protocol.TradeProtos.*;
 
 
 import java.io.*;
@@ -355,7 +355,10 @@ public class Server
 	 * @param msg the original request, received from across the network
 	 * @return the status of the trade "accepted, denied, offer"
 	 */
-	private AcceptRejectResponse processTrade(TradeProtos.TradeRequest request, Message msg) throws IllegalPortTradeException, CannotAffordException, IOException
+	private AcceptRejectResponse processTrade(TradeRequest request, Message msg) throws IllegalPortTradeException,
+																						IllegalBankTradeException,
+																						CannotAffordException,
+																						IOException
 	{
 		// Set up response object
 		AcceptRejectResponse.Builder resp = AcceptRejectResponse.newBuilder();
@@ -376,6 +379,10 @@ public class Server
 			// Process the trade and ensure it is legal
 			case PORTTRADE:
 				resp.setAnswer(game.processPortTrade(request.getPortTrade()));
+				break;
+
+			case BANKTRADE:
+				resp.setAnswer(game.processBankTrade(request.getBankTrade()));
 				break;
 		}
 

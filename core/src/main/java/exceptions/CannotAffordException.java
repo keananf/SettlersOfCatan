@@ -1,22 +1,50 @@
 package exceptions;
 
 import enums.ResourceType;
+import protocol.ResourceProtos;
+
+import java.util.*;
 
 @SuppressWarnings("serial")
 public class CannotAffordException extends Exception
 {
-	ResourceType resource;
-	int cost, existing;
-	
-	public CannotAffordException(ResourceType r, int existing, int cost)
+	Map<ResourceType, Integer> resources, cost;
+
+
+    public CannotAffordException(Map<ResourceType, Integer> resources, Map<ResourceType, Integer> cost)
 	{
-		resource = r;
-		this.existing = existing;
+		this.resources = resources;
+		this.cost = cost;
+    }
+
+	public CannotAffordException(Map<ResourceType, Integer> resources, ResourceProtos.ResourceCount offer)
+	{
+		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer> ();
+		cost.put(ResourceType.Brick, offer.getBrick());
+		cost.put(ResourceType.Wool, offer.getWool());
+		cost.put(ResourceType.Ore, offer.getOre());
+		cost.put(ResourceType.Grain, offer.getGrain());
+		cost.put(ResourceType.Lumber, offer.getLumber());
+
+		this.resources = resources;
 		this.cost = cost;
 	}
 
 	public String getMessage()
 	{
-		return String.format("Cannot afford due to resource: %s. Cost: %d, Player has: %d", resource.toString(), cost, existing);
+		return String.format("Cannot afford due to resource: %s.", getInsufficientResource().toString());
+	}
+
+	private ResourceType getInsufficientResource()
+	{
+		for(ResourceType r : ResourceType.values())
+		{
+			if(cost.get(r) > resources.get(r))
+			{
+				return r;
+			}
+		}
+
+		return ResourceType.Generic;
 	}
 }

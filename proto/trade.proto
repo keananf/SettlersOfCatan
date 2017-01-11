@@ -13,7 +13,7 @@ message TradeRequest
     oneof Contents
     { 
         PlayerTradeProto playerTrade = 1;
-        //BankTradeProto bankTrade = 2;
+        BankTradeProto bankTrade = 2;
         PortTradeProto portTrade = 3;
     }
 }
@@ -25,14 +25,14 @@ message PlayerTradeProto
     required ColourProto  recipient = 3;
     required ResourceCount request = 4;
 }
-/*
+
 message BankTradeProto
 {
     required ColourProto player = 1;
-    required ResourceCount fromPlayerToBank = 2;
-    required ResourceCount fromBankToPlayer = 3;
+    required ResourceCount offerResources = 2;
+    required ResourceCount requestResources = 3;
 }
-*/
+
 message PortTradeProto
 { 
     required ColourProto player = 1;

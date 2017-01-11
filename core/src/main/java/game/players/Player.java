@@ -7,7 +7,7 @@ import board.*;
 import enums.*;
 import exceptions.*;
 import game.build.*;
-import protocol.ResourceProtos;
+import protocol.ResourceProtos.*;
 
 /**
  * Abstract class describing a player (AI, or network)
@@ -82,7 +82,6 @@ public abstract class Player
 		// Check the location is valid for building and that the player can afford it
 		if(r.getEdge().hasSettlement() || valid)
 		{
-			canAfford(r.getCost());
 			spendResources(r.getCost());
 			edge.setRoad(r);
 			
@@ -343,7 +342,7 @@ public abstract class Player
 	 * Grants resources to the player
 	 * @param count a map of resources to give to the player
 	 */
-	public void grantResources(ResourceProtos.ResourceCount count) throws CannotAffordException
+	public void grantResources(ResourceCount count) throws CannotAffordException
 	{
 		Map<ResourceType, Integer> newResources = new HashMap<ResourceType, Integer> ();
 		newResources.put(ResourceType.Brick, count.getBrick());
@@ -361,7 +360,7 @@ public abstract class Player
 	 * wants to construct
 	 * @throws CannotAffordException if the player does not have enough resources
 	 */
-	public void spendResources(ResourceProtos.ResourceCount count) throws CannotAffordException
+	public void spendResources(ResourceCount count) throws CannotAffordException
 	{
 		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer> ();
 		cost.put(ResourceType.Brick, count.getBrick());
@@ -381,7 +380,8 @@ public abstract class Player
 	 */
 	public void spendResources(Map<ResourceType, Integer> cost) throws CannotAffordException
 	{
-		canAfford(cost);
+		if(!canAfford(cost))
+			throw new CannotAffordException(resources, cost);
 		
 		// Subtract each resource and its amount from the player's resource bank
 		for(ResourceType r : cost.keySet())
@@ -465,13 +465,13 @@ public abstract class Player
 	 * @param cost
 	 * @throws CannotAffordException
 	 */
-	private boolean canAfford(Map<ResourceType, Integer> cost) throws CannotAffordException
+	public boolean canAfford(Map<ResourceType, Integer> cost)
 	{
 		// Check if the player can afford this before initiating the purchase
 		for(ResourceType r : cost.keySet())
 		{
 			if(resources.get(r) < cost.get(r))
-				throw new CannotAffordException(r, resources.get(r), cost.get(r));
+				return false;
 		}
 		
 		return true;

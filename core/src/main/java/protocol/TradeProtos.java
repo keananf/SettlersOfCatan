@@ -26,27 +26,28 @@ public final class TradeProtos {
     protocol.TradeProtos.PlayerTradeProtoOrBuilder getPlayerTradeOrBuilder();
 
     /**
+     * <code>optional .BankTradeProto bankTrade = 2;</code>
+     */
+    boolean hasBankTrade();
+    /**
+     * <code>optional .BankTradeProto bankTrade = 2;</code>
+     */
+    protocol.TradeProtos.BankTradeProto getBankTrade();
+    /**
+     * <code>optional .BankTradeProto bankTrade = 2;</code>
+     */
+    protocol.TradeProtos.BankTradeProtoOrBuilder getBankTradeOrBuilder();
+
+    /**
      * <code>optional .PortTradeProto portTrade = 3;</code>
-     *
-     * <pre>
-     *BankTradeProto bankTrade = 2;
-     * </pre>
      */
     boolean hasPortTrade();
     /**
      * <code>optional .PortTradeProto portTrade = 3;</code>
-     *
-     * <pre>
-     *BankTradeProto bankTrade = 2;
-     * </pre>
      */
     protocol.TradeProtos.PortTradeProto getPortTrade();
     /**
      * <code>optional .PortTradeProto portTrade = 3;</code>
-     *
-     * <pre>
-     *BankTradeProto bankTrade = 2;
-     * </pre>
      */
     protocol.TradeProtos.PortTradeProtoOrBuilder getPortTradeOrBuilder();
   }
@@ -115,6 +116,19 @@ public final class TradeProtos {
               contentsCase_ = 1;
               break;
             }
+            case 18: {
+              protocol.TradeProtos.BankTradeProto.Builder subBuilder = null;
+              if (contentsCase_ == 2) {
+                subBuilder = ((protocol.TradeProtos.BankTradeProto) contents_).toBuilder();
+              }
+              contents_ = input.readMessage(protocol.TradeProtos.BankTradeProto.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.TradeProtos.BankTradeProto) contents_);
+                contents_ = subBuilder.buildPartial();
+              }
+              contentsCase_ = 2;
+              break;
+            }
             case 26: {
               protocol.TradeProtos.PortTradeProto.Builder subBuilder = null;
               if (contentsCase_ == 3) {
@@ -173,6 +187,7 @@ public final class TradeProtos {
     public enum ContentsCase
         implements com.google.protobuf.Internal.EnumLite {
       PLAYERTRADE(1),
+      BANKTRADE(2),
       PORTTRADE(3),
       CONTENTS_NOT_SET(0);
       private int value = 0;
@@ -182,6 +197,7 @@ public final class TradeProtos {
       public static ContentsCase valueOf(int value) {
         switch (value) {
           case 1: return PLAYERTRADE;
+          case 2: return BANKTRADE;
           case 3: return PORTTRADE;
           case 0: return CONTENTS_NOT_SET;
           default: throw new java.lang.IllegalArgumentException(
@@ -225,23 +241,41 @@ public final class TradeProtos {
       return protocol.TradeProtos.PlayerTradeProto.getDefaultInstance();
     }
 
+    public static final int BANKTRADE_FIELD_NUMBER = 2;
+    /**
+     * <code>optional .BankTradeProto bankTrade = 2;</code>
+     */
+    public boolean hasBankTrade() {
+      return contentsCase_ == 2;
+    }
+    /**
+     * <code>optional .BankTradeProto bankTrade = 2;</code>
+     */
+    public protocol.TradeProtos.BankTradeProto getBankTrade() {
+      if (contentsCase_ == 2) {
+         return (protocol.TradeProtos.BankTradeProto) contents_;
+      }
+      return protocol.TradeProtos.BankTradeProto.getDefaultInstance();
+    }
+    /**
+     * <code>optional .BankTradeProto bankTrade = 2;</code>
+     */
+    public protocol.TradeProtos.BankTradeProtoOrBuilder getBankTradeOrBuilder() {
+      if (contentsCase_ == 2) {
+         return (protocol.TradeProtos.BankTradeProto) contents_;
+      }
+      return protocol.TradeProtos.BankTradeProto.getDefaultInstance();
+    }
+
     public static final int PORTTRADE_FIELD_NUMBER = 3;
     /**
      * <code>optional .PortTradeProto portTrade = 3;</code>
-     *
-     * <pre>
-     *BankTradeProto bankTrade = 2;
-     * </pre>
      */
     public boolean hasPortTrade() {
       return contentsCase_ == 3;
     }
     /**
      * <code>optional .PortTradeProto portTrade = 3;</code>
-     *
-     * <pre>
-     *BankTradeProto bankTrade = 2;
-     * </pre>
      */
     public protocol.TradeProtos.PortTradeProto getPortTrade() {
       if (contentsCase_ == 3) {
@@ -251,10 +285,6 @@ public final class TradeProtos {
     }
     /**
      * <code>optional .PortTradeProto portTrade = 3;</code>
-     *
-     * <pre>
-     *BankTradeProto bankTrade = 2;
-     * </pre>
      */
     public protocol.TradeProtos.PortTradeProtoOrBuilder getPortTradeOrBuilder() {
       if (contentsCase_ == 3) {
@@ -277,6 +307,12 @@ public final class TradeProtos {
           return false;
         }
       }
+      if (hasBankTrade()) {
+        if (!getBankTrade().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       if (hasPortTrade()) {
         if (!getPortTrade().isInitialized()) {
           memoizedIsInitialized = 0;
@@ -293,6 +329,9 @@ public final class TradeProtos {
       if (contentsCase_ == 1) {
         output.writeMessage(1, (protocol.TradeProtos.PlayerTradeProto) contents_);
       }
+      if (contentsCase_ == 2) {
+        output.writeMessage(2, (protocol.TradeProtos.BankTradeProto) contents_);
+      }
       if (contentsCase_ == 3) {
         output.writeMessage(3, (protocol.TradeProtos.PortTradeProto) contents_);
       }
@@ -308,6 +347,10 @@ public final class TradeProtos {
       if (contentsCase_ == 1) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, (protocol.TradeProtos.PlayerTradeProto) contents_);
+      }
+      if (contentsCase_ == 2) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, (protocol.TradeProtos.BankTradeProto) contents_);
       }
       if (contentsCase_ == 3) {
         size += com.google.protobuf.CodedOutputStream
@@ -467,6 +510,13 @@ public final class TradeProtos {
             result.contents_ = playerTradeBuilder_.build();
           }
         }
+        if (contentsCase_ == 2) {
+          if (bankTradeBuilder_ == null) {
+            result.contents_ = contents_;
+          } else {
+            result.contents_ = bankTradeBuilder_.build();
+          }
+        }
         if (contentsCase_ == 3) {
           if (portTradeBuilder_ == null) {
             result.contents_ = contents_;
@@ -496,6 +546,10 @@ public final class TradeProtos {
             mergePlayerTrade(other.getPlayerTrade());
             break;
           }
+          case BANKTRADE: {
+            mergeBankTrade(other.getBankTrade());
+            break;
+          }
           case PORTTRADE: {
             mergePortTrade(other.getPortTrade());
             break;
@@ -511,6 +565,12 @@ public final class TradeProtos {
       public final boolean isInitialized() {
         if (hasPlayerTrade()) {
           if (!getPlayerTrade().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasBankTrade()) {
+          if (!getBankTrade().isInitialized()) {
             
             return false;
           }
@@ -694,23 +754,150 @@ public final class TradeProtos {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
+          protocol.TradeProtos.BankTradeProto, protocol.TradeProtos.BankTradeProto.Builder, protocol.TradeProtos.BankTradeProtoOrBuilder> bankTradeBuilder_;
+      /**
+       * <code>optional .BankTradeProto bankTrade = 2;</code>
+       */
+      public boolean hasBankTrade() {
+        return contentsCase_ == 2;
+      }
+      /**
+       * <code>optional .BankTradeProto bankTrade = 2;</code>
+       */
+      public protocol.TradeProtos.BankTradeProto getBankTrade() {
+        if (bankTradeBuilder_ == null) {
+          if (contentsCase_ == 2) {
+            return (protocol.TradeProtos.BankTradeProto) contents_;
+          }
+          return protocol.TradeProtos.BankTradeProto.getDefaultInstance();
+        } else {
+          if (contentsCase_ == 2) {
+            return bankTradeBuilder_.getMessage();
+          }
+          return protocol.TradeProtos.BankTradeProto.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .BankTradeProto bankTrade = 2;</code>
+       */
+      public Builder setBankTrade(protocol.TradeProtos.BankTradeProto value) {
+        if (bankTradeBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          contents_ = value;
+          onChanged();
+        } else {
+          bankTradeBuilder_.setMessage(value);
+        }
+        contentsCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>optional .BankTradeProto bankTrade = 2;</code>
+       */
+      public Builder setBankTrade(
+          protocol.TradeProtos.BankTradeProto.Builder builderForValue) {
+        if (bankTradeBuilder_ == null) {
+          contents_ = builderForValue.build();
+          onChanged();
+        } else {
+          bankTradeBuilder_.setMessage(builderForValue.build());
+        }
+        contentsCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>optional .BankTradeProto bankTrade = 2;</code>
+       */
+      public Builder mergeBankTrade(protocol.TradeProtos.BankTradeProto value) {
+        if (bankTradeBuilder_ == null) {
+          if (contentsCase_ == 2 &&
+              contents_ != protocol.TradeProtos.BankTradeProto.getDefaultInstance()) {
+            contents_ = protocol.TradeProtos.BankTradeProto.newBuilder((protocol.TradeProtos.BankTradeProto) contents_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            contents_ = value;
+          }
+          onChanged();
+        } else {
+          if (contentsCase_ == 2) {
+            bankTradeBuilder_.mergeFrom(value);
+          }
+          bankTradeBuilder_.setMessage(value);
+        }
+        contentsCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>optional .BankTradeProto bankTrade = 2;</code>
+       */
+      public Builder clearBankTrade() {
+        if (bankTradeBuilder_ == null) {
+          if (contentsCase_ == 2) {
+            contentsCase_ = 0;
+            contents_ = null;
+            onChanged();
+          }
+        } else {
+          if (contentsCase_ == 2) {
+            contentsCase_ = 0;
+            contents_ = null;
+          }
+          bankTradeBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .BankTradeProto bankTrade = 2;</code>
+       */
+      public protocol.TradeProtos.BankTradeProto.Builder getBankTradeBuilder() {
+        return getBankTradeFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .BankTradeProto bankTrade = 2;</code>
+       */
+      public protocol.TradeProtos.BankTradeProtoOrBuilder getBankTradeOrBuilder() {
+        if ((contentsCase_ == 2) && (bankTradeBuilder_ != null)) {
+          return bankTradeBuilder_.getMessageOrBuilder();
+        } else {
+          if (contentsCase_ == 2) {
+            return (protocol.TradeProtos.BankTradeProto) contents_;
+          }
+          return protocol.TradeProtos.BankTradeProto.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .BankTradeProto bankTrade = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.TradeProtos.BankTradeProto, protocol.TradeProtos.BankTradeProto.Builder, protocol.TradeProtos.BankTradeProtoOrBuilder> 
+          getBankTradeFieldBuilder() {
+        if (bankTradeBuilder_ == null) {
+          if (!(contentsCase_ == 2)) {
+            contents_ = protocol.TradeProtos.BankTradeProto.getDefaultInstance();
+          }
+          bankTradeBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.TradeProtos.BankTradeProto, protocol.TradeProtos.BankTradeProto.Builder, protocol.TradeProtos.BankTradeProtoOrBuilder>(
+                  (protocol.TradeProtos.BankTradeProto) contents_,
+                  getParentForChildren(),
+                  isClean());
+          contents_ = null;
+        }
+        contentsCase_ = 2;
+        return bankTradeBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.TradeProtos.PortTradeProto, protocol.TradeProtos.PortTradeProto.Builder, protocol.TradeProtos.PortTradeProtoOrBuilder> portTradeBuilder_;
       /**
        * <code>optional .PortTradeProto portTrade = 3;</code>
-       *
-       * <pre>
-       *BankTradeProto bankTrade = 2;
-       * </pre>
        */
       public boolean hasPortTrade() {
         return contentsCase_ == 3;
       }
       /**
        * <code>optional .PortTradeProto portTrade = 3;</code>
-       *
-       * <pre>
-       *BankTradeProto bankTrade = 2;
-       * </pre>
        */
       public protocol.TradeProtos.PortTradeProto getPortTrade() {
         if (portTradeBuilder_ == null) {
@@ -727,10 +914,6 @@ public final class TradeProtos {
       }
       /**
        * <code>optional .PortTradeProto portTrade = 3;</code>
-       *
-       * <pre>
-       *BankTradeProto bankTrade = 2;
-       * </pre>
        */
       public Builder setPortTrade(protocol.TradeProtos.PortTradeProto value) {
         if (portTradeBuilder_ == null) {
@@ -747,10 +930,6 @@ public final class TradeProtos {
       }
       /**
        * <code>optional .PortTradeProto portTrade = 3;</code>
-       *
-       * <pre>
-       *BankTradeProto bankTrade = 2;
-       * </pre>
        */
       public Builder setPortTrade(
           protocol.TradeProtos.PortTradeProto.Builder builderForValue) {
@@ -765,10 +944,6 @@ public final class TradeProtos {
       }
       /**
        * <code>optional .PortTradeProto portTrade = 3;</code>
-       *
-       * <pre>
-       *BankTradeProto bankTrade = 2;
-       * </pre>
        */
       public Builder mergePortTrade(protocol.TradeProtos.PortTradeProto value) {
         if (portTradeBuilder_ == null) {
@@ -791,10 +966,6 @@ public final class TradeProtos {
       }
       /**
        * <code>optional .PortTradeProto portTrade = 3;</code>
-       *
-       * <pre>
-       *BankTradeProto bankTrade = 2;
-       * </pre>
        */
       public Builder clearPortTrade() {
         if (portTradeBuilder_ == null) {
@@ -814,20 +985,12 @@ public final class TradeProtos {
       }
       /**
        * <code>optional .PortTradeProto portTrade = 3;</code>
-       *
-       * <pre>
-       *BankTradeProto bankTrade = 2;
-       * </pre>
        */
       public protocol.TradeProtos.PortTradeProto.Builder getPortTradeBuilder() {
         return getPortTradeFieldBuilder().getBuilder();
       }
       /**
        * <code>optional .PortTradeProto portTrade = 3;</code>
-       *
-       * <pre>
-       *BankTradeProto bankTrade = 2;
-       * </pre>
        */
       public protocol.TradeProtos.PortTradeProtoOrBuilder getPortTradeOrBuilder() {
         if ((contentsCase_ == 3) && (portTradeBuilder_ != null)) {
@@ -841,10 +1004,6 @@ public final class TradeProtos {
       }
       /**
        * <code>optional .PortTradeProto portTrade = 3;</code>
-       *
-       * <pre>
-       *BankTradeProto bankTrade = 2;
-       * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
           protocol.TradeProtos.PortTradeProto, protocol.TradeProtos.PortTradeProto.Builder, protocol.TradeProtos.PortTradeProtoOrBuilder> 
@@ -1778,6 +1937,814 @@ public final class TradeProtos {
     // @@protoc_insertion_point(class_scope:PlayerTradeProto)
   }
 
+  public interface BankTradeProtoOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:BankTradeProto)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required .ColourProto player = 1;</code>
+     */
+    boolean hasPlayer();
+    /**
+     * <code>required .ColourProto player = 1;</code>
+     */
+    protocol.EnumProtos.ColourProto getPlayer();
+
+    /**
+     * <code>required .ResourceCount offerResources = 2;</code>
+     */
+    boolean hasOfferResources();
+    /**
+     * <code>required .ResourceCount offerResources = 2;</code>
+     */
+    protocol.ResourceProtos.ResourceCount getOfferResources();
+    /**
+     * <code>required .ResourceCount offerResources = 2;</code>
+     */
+    protocol.ResourceProtos.ResourceCountOrBuilder getOfferResourcesOrBuilder();
+
+    /**
+     * <code>required .ResourceCount requestResources = 3;</code>
+     */
+    boolean hasRequestResources();
+    /**
+     * <code>required .ResourceCount requestResources = 3;</code>
+     */
+    protocol.ResourceProtos.ResourceCount getRequestResources();
+    /**
+     * <code>required .ResourceCount requestResources = 3;</code>
+     */
+    protocol.ResourceProtos.ResourceCountOrBuilder getRequestResourcesOrBuilder();
+  }
+  /**
+   * Protobuf type {@code BankTradeProto}
+   */
+  public static final class BankTradeProto extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:BankTradeProto)
+      BankTradeProtoOrBuilder {
+    // Use BankTradeProto.newBuilder() to construct.
+    private BankTradeProto(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private BankTradeProto(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final BankTradeProto defaultInstance;
+    public static BankTradeProto getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public BankTradeProto getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private BankTradeProto(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              int rawValue = input.readEnum();
+              protocol.EnumProtos.ColourProto value = protocol.EnumProtos.ColourProto.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                player_ = value;
+              }
+              break;
+            }
+            case 18: {
+              protocol.ResourceProtos.ResourceCount.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = offerResources_.toBuilder();
+              }
+              offerResources_ = input.readMessage(protocol.ResourceProtos.ResourceCount.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(offerResources_);
+                offerResources_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
+            case 26: {
+              protocol.ResourceProtos.ResourceCount.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = requestResources_.toBuilder();
+              }
+              requestResources_ = input.readMessage(protocol.ResourceProtos.ResourceCount.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(requestResources_);
+                requestResources_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000004;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protocol.TradeProtos.internal_static_BankTradeProto_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protocol.TradeProtos.internal_static_BankTradeProto_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protocol.TradeProtos.BankTradeProto.class, protocol.TradeProtos.BankTradeProto.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<BankTradeProto> PARSER =
+        new com.google.protobuf.AbstractParser<BankTradeProto>() {
+      public BankTradeProto parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new BankTradeProto(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BankTradeProto> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int PLAYER_FIELD_NUMBER = 1;
+    private protocol.EnumProtos.ColourProto player_;
+    /**
+     * <code>required .ColourProto player = 1;</code>
+     */
+    public boolean hasPlayer() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .ColourProto player = 1;</code>
+     */
+    public protocol.EnumProtos.ColourProto getPlayer() {
+      return player_;
+    }
+
+    public static final int OFFERRESOURCES_FIELD_NUMBER = 2;
+    private protocol.ResourceProtos.ResourceCount offerResources_;
+    /**
+     * <code>required .ResourceCount offerResources = 2;</code>
+     */
+    public boolean hasOfferResources() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .ResourceCount offerResources = 2;</code>
+     */
+    public protocol.ResourceProtos.ResourceCount getOfferResources() {
+      return offerResources_;
+    }
+    /**
+     * <code>required .ResourceCount offerResources = 2;</code>
+     */
+    public protocol.ResourceProtos.ResourceCountOrBuilder getOfferResourcesOrBuilder() {
+      return offerResources_;
+    }
+
+    public static final int REQUESTRESOURCES_FIELD_NUMBER = 3;
+    private protocol.ResourceProtos.ResourceCount requestResources_;
+    /**
+     * <code>required .ResourceCount requestResources = 3;</code>
+     */
+    public boolean hasRequestResources() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required .ResourceCount requestResources = 3;</code>
+     */
+    public protocol.ResourceProtos.ResourceCount getRequestResources() {
+      return requestResources_;
+    }
+    /**
+     * <code>required .ResourceCount requestResources = 3;</code>
+     */
+    public protocol.ResourceProtos.ResourceCountOrBuilder getRequestResourcesOrBuilder() {
+      return requestResources_;
+    }
+
+    private void initFields() {
+      player_ = protocol.EnumProtos.ColourProto.RED;
+      offerResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      requestResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasPlayer()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasOfferResources()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasRequestResources()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeEnum(1, player_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, offerResources_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeMessage(3, requestResources_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, player_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, offerResources_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, requestResources_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protocol.TradeProtos.BankTradeProto parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protocol.TradeProtos.BankTradeProto parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protocol.TradeProtos.BankTradeProto parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protocol.TradeProtos.BankTradeProto parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protocol.TradeProtos.BankTradeProto parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protocol.TradeProtos.BankTradeProto parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protocol.TradeProtos.BankTradeProto parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protocol.TradeProtos.BankTradeProto parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protocol.TradeProtos.BankTradeProto parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protocol.TradeProtos.BankTradeProto parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protocol.TradeProtos.BankTradeProto prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code BankTradeProto}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:BankTradeProto)
+        protocol.TradeProtos.BankTradeProtoOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protocol.TradeProtos.internal_static_BankTradeProto_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protocol.TradeProtos.internal_static_BankTradeProto_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protocol.TradeProtos.BankTradeProto.class, protocol.TradeProtos.BankTradeProto.Builder.class);
+      }
+
+      // Construct using protocol.TradeProtos.BankTradeProto.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getOfferResourcesFieldBuilder();
+          getRequestResourcesFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        player_ = protocol.EnumProtos.ColourProto.RED;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (offerResourcesBuilder_ == null) {
+          offerResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+        } else {
+          offerResourcesBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        if (requestResourcesBuilder_ == null) {
+          requestResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+        } else {
+          requestResourcesBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protocol.TradeProtos.internal_static_BankTradeProto_descriptor;
+      }
+
+      public protocol.TradeProtos.BankTradeProto getDefaultInstanceForType() {
+        return protocol.TradeProtos.BankTradeProto.getDefaultInstance();
+      }
+
+      public protocol.TradeProtos.BankTradeProto build() {
+        protocol.TradeProtos.BankTradeProto result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protocol.TradeProtos.BankTradeProto buildPartial() {
+        protocol.TradeProtos.BankTradeProto result = new protocol.TradeProtos.BankTradeProto(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.player_ = player_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (offerResourcesBuilder_ == null) {
+          result.offerResources_ = offerResources_;
+        } else {
+          result.offerResources_ = offerResourcesBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        if (requestResourcesBuilder_ == null) {
+          result.requestResources_ = requestResources_;
+        } else {
+          result.requestResources_ = requestResourcesBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protocol.TradeProtos.BankTradeProto) {
+          return mergeFrom((protocol.TradeProtos.BankTradeProto)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protocol.TradeProtos.BankTradeProto other) {
+        if (other == protocol.TradeProtos.BankTradeProto.getDefaultInstance()) return this;
+        if (other.hasPlayer()) {
+          setPlayer(other.getPlayer());
+        }
+        if (other.hasOfferResources()) {
+          mergeOfferResources(other.getOfferResources());
+        }
+        if (other.hasRequestResources()) {
+          mergeRequestResources(other.getRequestResources());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasPlayer()) {
+          
+          return false;
+        }
+        if (!hasOfferResources()) {
+          
+          return false;
+        }
+        if (!hasRequestResources()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protocol.TradeProtos.BankTradeProto parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protocol.TradeProtos.BankTradeProto) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private protocol.EnumProtos.ColourProto player_ = protocol.EnumProtos.ColourProto.RED;
+      /**
+       * <code>required .ColourProto player = 1;</code>
+       */
+      public boolean hasPlayer() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .ColourProto player = 1;</code>
+       */
+      public protocol.EnumProtos.ColourProto getPlayer() {
+        return player_;
+      }
+      /**
+       * <code>required .ColourProto player = 1;</code>
+       */
+      public Builder setPlayer(protocol.EnumProtos.ColourProto value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        player_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .ColourProto player = 1;</code>
+       */
+      public Builder clearPlayer() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        player_ = protocol.EnumProtos.ColourProto.RED;
+        onChanged();
+        return this;
+      }
+
+      private protocol.ResourceProtos.ResourceCount offerResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> offerResourcesBuilder_;
+      /**
+       * <code>required .ResourceCount offerResources = 2;</code>
+       */
+      public boolean hasOfferResources() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .ResourceCount offerResources = 2;</code>
+       */
+      public protocol.ResourceProtos.ResourceCount getOfferResources() {
+        if (offerResourcesBuilder_ == null) {
+          return offerResources_;
+        } else {
+          return offerResourcesBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .ResourceCount offerResources = 2;</code>
+       */
+      public Builder setOfferResources(protocol.ResourceProtos.ResourceCount value) {
+        if (offerResourcesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          offerResources_ = value;
+          onChanged();
+        } else {
+          offerResourcesBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .ResourceCount offerResources = 2;</code>
+       */
+      public Builder setOfferResources(
+          protocol.ResourceProtos.ResourceCount.Builder builderForValue) {
+        if (offerResourcesBuilder_ == null) {
+          offerResources_ = builderForValue.build();
+          onChanged();
+        } else {
+          offerResourcesBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .ResourceCount offerResources = 2;</code>
+       */
+      public Builder mergeOfferResources(protocol.ResourceProtos.ResourceCount value) {
+        if (offerResourcesBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              offerResources_ != protocol.ResourceProtos.ResourceCount.getDefaultInstance()) {
+            offerResources_ =
+              protocol.ResourceProtos.ResourceCount.newBuilder(offerResources_).mergeFrom(value).buildPartial();
+          } else {
+            offerResources_ = value;
+          }
+          onChanged();
+        } else {
+          offerResourcesBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .ResourceCount offerResources = 2;</code>
+       */
+      public Builder clearOfferResources() {
+        if (offerResourcesBuilder_ == null) {
+          offerResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+          onChanged();
+        } else {
+          offerResourcesBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      /**
+       * <code>required .ResourceCount offerResources = 2;</code>
+       */
+      public protocol.ResourceProtos.ResourceCount.Builder getOfferResourcesBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getOfferResourcesFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .ResourceCount offerResources = 2;</code>
+       */
+      public protocol.ResourceProtos.ResourceCountOrBuilder getOfferResourcesOrBuilder() {
+        if (offerResourcesBuilder_ != null) {
+          return offerResourcesBuilder_.getMessageOrBuilder();
+        } else {
+          return offerResources_;
+        }
+      }
+      /**
+       * <code>required .ResourceCount offerResources = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> 
+          getOfferResourcesFieldBuilder() {
+        if (offerResourcesBuilder_ == null) {
+          offerResourcesBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder>(
+                  getOfferResources(),
+                  getParentForChildren(),
+                  isClean());
+          offerResources_ = null;
+        }
+        return offerResourcesBuilder_;
+      }
+
+      private protocol.ResourceProtos.ResourceCount requestResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> requestResourcesBuilder_;
+      /**
+       * <code>required .ResourceCount requestResources = 3;</code>
+       */
+      public boolean hasRequestResources() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required .ResourceCount requestResources = 3;</code>
+       */
+      public protocol.ResourceProtos.ResourceCount getRequestResources() {
+        if (requestResourcesBuilder_ == null) {
+          return requestResources_;
+        } else {
+          return requestResourcesBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .ResourceCount requestResources = 3;</code>
+       */
+      public Builder setRequestResources(protocol.ResourceProtos.ResourceCount value) {
+        if (requestResourcesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          requestResources_ = value;
+          onChanged();
+        } else {
+          requestResourcesBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .ResourceCount requestResources = 3;</code>
+       */
+      public Builder setRequestResources(
+          protocol.ResourceProtos.ResourceCount.Builder builderForValue) {
+        if (requestResourcesBuilder_ == null) {
+          requestResources_ = builderForValue.build();
+          onChanged();
+        } else {
+          requestResourcesBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .ResourceCount requestResources = 3;</code>
+       */
+      public Builder mergeRequestResources(protocol.ResourceProtos.ResourceCount value) {
+        if (requestResourcesBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
+              requestResources_ != protocol.ResourceProtos.ResourceCount.getDefaultInstance()) {
+            requestResources_ =
+              protocol.ResourceProtos.ResourceCount.newBuilder(requestResources_).mergeFrom(value).buildPartial();
+          } else {
+            requestResources_ = value;
+          }
+          onChanged();
+        } else {
+          requestResourcesBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .ResourceCount requestResources = 3;</code>
+       */
+      public Builder clearRequestResources() {
+        if (requestResourcesBuilder_ == null) {
+          requestResources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+          onChanged();
+        } else {
+          requestResourcesBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      /**
+       * <code>required .ResourceCount requestResources = 3;</code>
+       */
+      public protocol.ResourceProtos.ResourceCount.Builder getRequestResourcesBuilder() {
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return getRequestResourcesFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .ResourceCount requestResources = 3;</code>
+       */
+      public protocol.ResourceProtos.ResourceCountOrBuilder getRequestResourcesOrBuilder() {
+        if (requestResourcesBuilder_ != null) {
+          return requestResourcesBuilder_.getMessageOrBuilder();
+        } else {
+          return requestResources_;
+        }
+      }
+      /**
+       * <code>required .ResourceCount requestResources = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> 
+          getRequestResourcesFieldBuilder() {
+        if (requestResourcesBuilder_ == null) {
+          requestResourcesBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder>(
+                  getRequestResources(),
+                  getParentForChildren(),
+                  isClean());
+          requestResources_ = null;
+        }
+        return requestResourcesBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:BankTradeProto)
+    }
+
+    static {
+      defaultInstance = new BankTradeProto(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:BankTradeProto)
+  }
+
   public interface PortTradeProtoOrBuilder extends
       // @@protoc_insertion_point(interface_extends:PortTradeProto)
       com.google.protobuf.MessageOrBuilder {
@@ -1832,15 +2799,6 @@ public final class TradeProtos {
   }
   /**
    * Protobuf type {@code PortTradeProto}
-   *
-   * <pre>
-   *message BankTradeProto
-   *{
-   *required ColourProto player = 1;
-   *required ResourceCount fromPlayerToBank = 2;
-   *required ResourceCount fromBankToPlayer = 3;
-   *}
-   * </pre>
    */
   public static final class PortTradeProto extends
       com.google.protobuf.GeneratedMessage implements
@@ -2215,15 +3173,6 @@ public final class TradeProtos {
     }
     /**
      * Protobuf type {@code PortTradeProto}
-     *
-     * <pre>
-     *message BankTradeProto
-     *{
-     *required ColourProto player = 1;
-     *required ResourceCount fromPlayerToBank = 2;
-     *required ResourceCount fromBankToPlayer = 3;
-     *}
-     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -2820,6 +3769,11 @@ public final class TradeProtos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_PlayerTradeProto_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_BankTradeProto_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_BankTradeProto_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_PortTradeProto_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -2834,18 +3788,22 @@ public final class TradeProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\013trade.proto\032\013enums.proto\032\017resources.pr" +
-      "oto\032\013board.proto\"j\n\014TradeRequest\022(\n\013play" +
-      "erTrade\030\001 \001(\0132\021.PlayerTradeProtoH\000\022$\n\tpo" +
-      "rtTrade\030\003 \001(\0132\017.PortTradeProtoH\000B\n\n\010Cont" +
-      "ents\"\222\001\n\020PlayerTradeProto\022\035\n\007offerer\030\001 \002" +
-      "(\0162\014.ColourProto\022\035\n\005offer\030\002 \002(\0132\016.Resour" +
-      "ceCount\022\037\n\trecipient\030\003 \002(\0162\014.ColourProto" +
-      "\022\037\n\007request\030\004 \002(\0132\016.ResourceCount\"\232\001\n\016Po" +
-      "rtTradeProto\022\034\n\006player\030\001 \002(\0162\014.ColourPro" +
-      "to\022(\n\020requestResources\030\002 \002(\0132\016.ResourceC",
-      "ount\022\030\n\004port\030\003 \002(\0132\n.PortProto\022&\n\016offerR" +
-      "esources\030\004 \002(\0132\016.ResourceCountB\027\n\010protoc" +
-      "olB\013TradeProtos"
+      "oto\032\013board.proto\"\220\001\n\014TradeRequest\022(\n\013pla" +
+      "yerTrade\030\001 \001(\0132\021.PlayerTradeProtoH\000\022$\n\tb" +
+      "ankTrade\030\002 \001(\0132\017.BankTradeProtoH\000\022$\n\tpor" +
+      "tTrade\030\003 \001(\0132\017.PortTradeProtoH\000B\n\n\010Conte" +
+      "nts\"\222\001\n\020PlayerTradeProto\022\035\n\007offerer\030\001 \002(" +
+      "\0162\014.ColourProto\022\035\n\005offer\030\002 \002(\0132\016.Resourc" +
+      "eCount\022\037\n\trecipient\030\003 \002(\0162\014.ColourProto\022" +
+      "\037\n\007request\030\004 \002(\0132\016.ResourceCount\"\200\001\n\016Ban" +
+      "kTradeProto\022\034\n\006player\030\001 \002(\0162\014.ColourProt",
+      "o\022&\n\016offerResources\030\002 \002(\0132\016.ResourceCoun" +
+      "t\022(\n\020requestResources\030\003 \002(\0132\016.ResourceCo" +
+      "unt\"\232\001\n\016PortTradeProto\022\034\n\006player\030\001 \002(\0162\014" +
+      ".ColourProto\022(\n\020requestResources\030\002 \002(\0132\016" +
+      ".ResourceCount\022\030\n\004port\030\003 \002(\0132\n.PortProto" +
+      "\022&\n\016offerResources\030\004 \002(\0132\016.ResourceCount" +
+      "B\027\n\010protocolB\013TradeProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2867,15 +3825,21 @@ public final class TradeProtos {
     internal_static_TradeRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_TradeRequest_descriptor,
-        new java.lang.String[] { "PlayerTrade", "PortTrade", "Contents", });
+        new java.lang.String[] { "PlayerTrade", "BankTrade", "PortTrade", "Contents", });
     internal_static_PlayerTradeProto_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_PlayerTradeProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PlayerTradeProto_descriptor,
         new java.lang.String[] { "Offerer", "Offer", "Recipient", "Request", });
-    internal_static_PortTradeProto_descriptor =
+    internal_static_BankTradeProto_descriptor =
       getDescriptor().getMessageTypes().get(2);
+    internal_static_BankTradeProto_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_BankTradeProto_descriptor,
+        new java.lang.String[] { "Player", "OfferResources", "RequestResources", });
+    internal_static_PortTradeProto_descriptor =
+      getDescriptor().getMessageTypes().get(3);
     internal_static_PortTradeProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PortTradeProto_descriptor,

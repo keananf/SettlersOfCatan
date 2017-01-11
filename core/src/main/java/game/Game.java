@@ -11,6 +11,7 @@ import java.util.*;
 import board.*;
 import protocol.EnumProtos.*;
 import protocol.RequestProtos.*;
+import protocol.ResourceProtos;
 import protocol.ResourceProtos.*;
 import protocol.BoardProtos.*;
 import protocol.ResponseProtos.*;
@@ -93,6 +94,67 @@ public class Game
 		return playerResources;
 	}
 
+	/**
+	 * If trade was successful, exchange of resources occurs here
+	 * @param trade the trade object detailing the trade
+	 * @return the response status
+	 */
+	public TradeStatusProto processBankTrade(BankTradeProto trade) throws IllegalBankTradeException, CannotAffordException
+	{
+		int exchangeAmount = 4, offerSum = 0, reqSum = 0;
+
+		// Extract the trade's contents
+		Player recipient = players.get(Colour.fromProto(trade.getPlayer()));
+		Map<ResourceType, Integer> request = processResources(trade.getRequestResources());
+		Map<ResourceType, Integer> offer = processResources(trade.getOfferResources());
+
+		// Check that the player can afford the offer
+		if(!recipient.canAfford(offer))
+		{
+			throw new CannotAffordException(recipient.getResources(), offer);
+		}
+
+		// Check that requested trade is allowed
+		for(ResourceType r : ResourceType.values())
+		{
+			// sum up total quantities of offer and request
+			offerSum += offer.containsKey(r) ? offer.get(r) : 0;
+			reqSum += request.containsKey(r) ? request.get(r) : 0;
+
+			// If too little or too many resources for a trade on this port
+			if(offer.containsKey(r) && offer.get(r) % exchangeAmount != 0)
+				throw new IllegalBankTradeException(recipient.getColour());
+		}
+
+		// If request doesn't match what the offer should give
+		if(offerSum / reqSum != exchangeAmount)
+		{
+			throw new IllegalBankTradeException(recipient.getColour());
+		}
+
+		// Perform swap and return
+		recipient.spendResources(offer);
+		recipient.grantResources(request);
+		return TradeStatusProto.ACCEPT;
+	}
+
+	/**
+	 * Translates the protobuf representation of a resources allocation into a map.
+	 * @param resources the resources received from the network
+	 * @return a map of resources to number
+	 */
+	private Map<ResourceType,Integer> processResources(ResourceCount resources)
+	{
+		Map<ResourceType,Integer> ret = new HashMap<ResourceType,Integer>();
+
+		ret.put(ResourceType.Brick, resources.hasBrick() ? resources.getBrick() : 0);
+		ret.put(ResourceType.Lumber, resources.hasLumber() ? resources.getLumber() : 0);
+		ret.put(ResourceType.Grain, resources.hasGrain() ? resources.getGrain() : 0);
+		ret.put(ResourceType.Ore, resources.hasOre() ? resources.getOre() : 0);
+		ret.put(ResourceType.Wool, resources.hasWool() ? resources.getWool() : 0);
+
+		return ret;
+	}
 
 	/**
 	 * If trade was successful, exchange of resources occurs here
@@ -102,13 +164,39 @@ public class Game
 	public TradeStatusProto processPortTrade(PortTradeProto trade) throws IllegalPortTradeException, CannotAffordException
 	{
 		// Find the port and extract the trade's contents
-		Player recipient = currentPlayer;
-		ResourceCount offer = trade.getOfferResources();
-		ResourceCount request = trade.getRequestResources();
-		Port p = grid.getPort(trade.getPort());
+		Player recipient = players.get(Colour.fromProto(trade.getPlayer()));
+		Map<ResourceType, Integer> request = processResources(trade.getRequestResources());
+		Map<ResourceType, Integer> offer = processResources(trade.getOfferResources());
+		Port port = grid.getPort(trade.getPort());
+		int offerSum = 0, reqSum = 0;
+		int exchangeAmount = port.getExchangeAmount();
+
+		// Check that the player can afford the offer
+		if(!recipient.canAfford(offer))
+		{
+			throw new CannotAffordException(recipient.getResources(), offer);
+		}
+
+		// Check that requested trade is allowed
+		for(ResourceType r : ResourceType.values())
+		{
+			// sum up total quantities of offer and request
+			offerSum += offer.containsKey(r) ? offer.get(r) : 0;
+			reqSum += request.containsKey(r) ? request.get(r) : 0;
+
+			// If too little or too many resources for a trade on this port
+			if(offer.containsKey(r) && offer.get(r) % exchangeAmount != 0)
+				throw new IllegalPortTradeException(recipient.getColour(), port);
+		}
+
+		// If request doesn't match what the offer should give
+		if(offerSum / reqSum != exchangeAmount)
+		{
+			throw new IllegalPortTradeException(recipient.getColour(), port);
+		}
 
 		// Exchange resources
-		p.exchange(recipient, offer, request);
+		port.exchange(recipient, offer, request);
 
 		return TradeStatusProto.ACCEPT;
 	}

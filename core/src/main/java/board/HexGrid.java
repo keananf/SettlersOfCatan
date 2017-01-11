@@ -327,6 +327,20 @@ public class HexGrid
     }
 
 	/**
+	 * @param edge the protobuf version of the edge to find
+	 * @return the internal version of the edge
+	 */
+	public Edge getEdge(EdgeProto edge)
+	{
+		// Find nodes and edges
+		Node n1 = getNode(edge.getP1().getX(), edge.getP1().getY());
+		Node n2 = getNode(edge.getP2().getX(), edge.getP2().getY());
+		Edge e = n1.findEdge(n2);
+
+		return e;
+	}
+
+	/**
 	 * @param port the protobuf version of the port to find
 	 * @return the internal version of the port
 	 */

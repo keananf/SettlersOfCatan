@@ -7,13 +7,31 @@ option java_outer_classname = "ResponseProtos";
 import "board.proto";
 import "trade.proto";
 import "enums.proto";
+import "build.proto";
 
+message Response 
+{
+    oneof type 
+    {
+        SuccessFailResponse successFailResponse = 1;
+        AcceptRejectResponse acceptRejectResponse = 2;
+        GiveBoardResponse currentBoardResponse = 3;
+        BuyDevCardResponse buyDevCardResponse = 4;
+	PlayMonopolyCardResponse playMonopolyCardResponse = 5;
+	PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;
+	BuildRoadResponse buildRoadResponse = 8;
+	MoveRobberResponse moveRobberResponse = 9;
+	EndMoveResponse endMoveResponse = 10;
+	BuildSettlementResponse buildSettlementResponse = 11;
+	UpgradeSettlementResponse upgradeSettlementResponse = 12;
+    }
+}
 
 // SUCCESS-FAIL RESPONSE (mainly for responding to build/play requests)
 message SuccessFailResponse 
 {
     required ResultProto result = 1;
-    optional string reason = 2; //associated with FAILURE results (for debugging purposes only)
+    optional string reason = 2; //associated with FAILURE results
 }
 
 message EndMoveResponse
@@ -35,14 +53,23 @@ message PlayRoadBuildingCardResponse
 
 message BuyDevCardResponse 
 {
-    required ResultProto result = 1;
-    required DevelopmentCardProto developmentCard = 2;
-    optional string reason = 3; //associated with FAILURE results (for debugging purposes only)
+    required DevelopmentCardProto developmentCard = 1;
+}
+
+message BuildSettlementResponse
+{
+    required BuildingProto newBuilding = 1;
+}
+
+message UpgradeSettlementResponse
+{
+    required BuildingProto newBuilding = 1;
 }
 
 message BuildRoadResponse
 {
     required int32 longestRoad = 1;
+    required RoadProto newRoad = 2;
 }
 
 message MoveRobberResponse
@@ -55,7 +82,7 @@ message AcceptRejectResponse
 {
     required TradeRequest trade = 1;
     required TradeStatusProto answer = 2;
-    optional string reason = 3; //associated with REJECT results (for debugging purposes only)
+    optional string reason = 3; //associated with REJECT results
 }
 
 // GIVE RESPONSES (for responding to getCurrentBoard request etc.)

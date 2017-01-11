@@ -5,7 +5,9 @@ import java.util.*;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import game.build.*;
+import protocol.BoardProtos;
 import protocol.BoardProtos.*;
+import protocol.BuildProtos;
 import protocol.BuildProtos.PointProto;
 
 
@@ -13,7 +15,7 @@ import protocol.BuildProtos.PointProto;
  * Class uniquely describing an edge (between two edges)
  * @author 140001596
  */
-public class Edge //TODO extend BoardElement
+public class Edge
 {
 	private Node x, y; // way of uniquely describing an edge
 	private Road  road;
@@ -254,4 +256,5 @@ public class Edge //TODO extend BoardElement
 
 		return e.build();
     }
+
 }

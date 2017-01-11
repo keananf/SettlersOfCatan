@@ -8,6 +8,2784 @@ public final class ResponseProtos {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
+  public interface ResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:Response)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+     */
+    boolean hasSuccessFailResponse();
+    /**
+     * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+     */
+    protocol.ResponseProtos.SuccessFailResponse getSuccessFailResponse();
+    /**
+     * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+     */
+    protocol.ResponseProtos.SuccessFailResponseOrBuilder getSuccessFailResponseOrBuilder();
+
+    /**
+     * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+     */
+    boolean hasAcceptRejectResponse();
+    /**
+     * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+     */
+    protocol.ResponseProtos.AcceptRejectResponse getAcceptRejectResponse();
+    /**
+     * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+     */
+    protocol.ResponseProtos.AcceptRejectResponseOrBuilder getAcceptRejectResponseOrBuilder();
+
+    /**
+     * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+     */
+    boolean hasCurrentBoardResponse();
+    /**
+     * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+     */
+    protocol.ResponseProtos.GiveBoardResponse getCurrentBoardResponse();
+    /**
+     * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+     */
+    protocol.ResponseProtos.GiveBoardResponseOrBuilder getCurrentBoardResponseOrBuilder();
+
+    /**
+     * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+     */
+    boolean hasBuyDevCardResponse();
+    /**
+     * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+     */
+    protocol.ResponseProtos.BuyDevCardResponse getBuyDevCardResponse();
+    /**
+     * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+     */
+    protocol.ResponseProtos.BuyDevCardResponseOrBuilder getBuyDevCardResponseOrBuilder();
+
+    /**
+     * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+     */
+    boolean hasPlayMonopolyCardResponse();
+    /**
+     * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+     */
+    protocol.ResponseProtos.PlayMonopolyCardResponse getPlayMonopolyCardResponse();
+    /**
+     * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+     */
+    protocol.ResponseProtos.PlayMonopolyCardResponseOrBuilder getPlayMonopolyCardResponseOrBuilder();
+
+    /**
+     * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+     */
+    boolean hasPlayRoadBuildingCardResponse();
+    /**
+     * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+     */
+    protocol.ResponseProtos.PlayRoadBuildingCardResponse getPlayRoadBuildingCardResponse();
+    /**
+     * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+     */
+    protocol.ResponseProtos.PlayRoadBuildingCardResponseOrBuilder getPlayRoadBuildingCardResponseOrBuilder();
+
+    /**
+     * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+     */
+    boolean hasBuildRoadResponse();
+    /**
+     * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+     */
+    protocol.ResponseProtos.BuildRoadResponse getBuildRoadResponse();
+    /**
+     * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+     */
+    protocol.ResponseProtos.BuildRoadResponseOrBuilder getBuildRoadResponseOrBuilder();
+
+    /**
+     * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+     */
+    boolean hasMoveRobberResponse();
+    /**
+     * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+     */
+    protocol.ResponseProtos.MoveRobberResponse getMoveRobberResponse();
+    /**
+     * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+     */
+    protocol.ResponseProtos.MoveRobberResponseOrBuilder getMoveRobberResponseOrBuilder();
+
+    /**
+     * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+     */
+    boolean hasEndMoveResponse();
+    /**
+     * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+     */
+    protocol.ResponseProtos.EndMoveResponse getEndMoveResponse();
+    /**
+     * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+     */
+    protocol.ResponseProtos.EndMoveResponseOrBuilder getEndMoveResponseOrBuilder();
+
+    /**
+     * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+     */
+    boolean hasBuildSettlementResponse();
+    /**
+     * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+     */
+    protocol.ResponseProtos.BuildSettlementResponse getBuildSettlementResponse();
+    /**
+     * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+     */
+    protocol.ResponseProtos.BuildSettlementResponseOrBuilder getBuildSettlementResponseOrBuilder();
+
+    /**
+     * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+     */
+    boolean hasUpgradeSettlementResponse();
+    /**
+     * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+     */
+    protocol.ResponseProtos.UpgradeSettlementResponse getUpgradeSettlementResponse();
+    /**
+     * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+     */
+    protocol.ResponseProtos.UpgradeSettlementResponseOrBuilder getUpgradeSettlementResponseOrBuilder();
+  }
+  /**
+   * Protobuf type {@code Response}
+   */
+  public static final class Response extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:Response)
+      ResponseOrBuilder {
+    // Use Response.newBuilder() to construct.
+    private Response(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private Response(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final Response defaultInstance;
+    public static Response getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public Response getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Response(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              protocol.ResponseProtos.SuccessFailResponse.Builder subBuilder = null;
+              if (typeCase_ == 1) {
+                subBuilder = ((protocol.ResponseProtos.SuccessFailResponse) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResponseProtos.SuccessFailResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResponseProtos.SuccessFailResponse) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 1;
+              break;
+            }
+            case 18: {
+              protocol.ResponseProtos.AcceptRejectResponse.Builder subBuilder = null;
+              if (typeCase_ == 2) {
+                subBuilder = ((protocol.ResponseProtos.AcceptRejectResponse) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResponseProtos.AcceptRejectResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResponseProtos.AcceptRejectResponse) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 2;
+              break;
+            }
+            case 26: {
+              protocol.ResponseProtos.GiveBoardResponse.Builder subBuilder = null;
+              if (typeCase_ == 3) {
+                subBuilder = ((protocol.ResponseProtos.GiveBoardResponse) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResponseProtos.GiveBoardResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResponseProtos.GiveBoardResponse) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 3;
+              break;
+            }
+            case 34: {
+              protocol.ResponseProtos.BuyDevCardResponse.Builder subBuilder = null;
+              if (typeCase_ == 4) {
+                subBuilder = ((protocol.ResponseProtos.BuyDevCardResponse) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResponseProtos.BuyDevCardResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResponseProtos.BuyDevCardResponse) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 4;
+              break;
+            }
+            case 42: {
+              protocol.ResponseProtos.PlayMonopolyCardResponse.Builder subBuilder = null;
+              if (typeCase_ == 5) {
+                subBuilder = ((protocol.ResponseProtos.PlayMonopolyCardResponse) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResponseProtos.PlayMonopolyCardResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResponseProtos.PlayMonopolyCardResponse) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 5;
+              break;
+            }
+            case 58: {
+              protocol.ResponseProtos.PlayRoadBuildingCardResponse.Builder subBuilder = null;
+              if (typeCase_ == 7) {
+                subBuilder = ((protocol.ResponseProtos.PlayRoadBuildingCardResponse) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResponseProtos.PlayRoadBuildingCardResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResponseProtos.PlayRoadBuildingCardResponse) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 7;
+              break;
+            }
+            case 66: {
+              protocol.ResponseProtos.BuildRoadResponse.Builder subBuilder = null;
+              if (typeCase_ == 8) {
+                subBuilder = ((protocol.ResponseProtos.BuildRoadResponse) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResponseProtos.BuildRoadResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResponseProtos.BuildRoadResponse) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 8;
+              break;
+            }
+            case 74: {
+              protocol.ResponseProtos.MoveRobberResponse.Builder subBuilder = null;
+              if (typeCase_ == 9) {
+                subBuilder = ((protocol.ResponseProtos.MoveRobberResponse) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResponseProtos.MoveRobberResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResponseProtos.MoveRobberResponse) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 9;
+              break;
+            }
+            case 82: {
+              protocol.ResponseProtos.EndMoveResponse.Builder subBuilder = null;
+              if (typeCase_ == 10) {
+                subBuilder = ((protocol.ResponseProtos.EndMoveResponse) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResponseProtos.EndMoveResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResponseProtos.EndMoveResponse) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 10;
+              break;
+            }
+            case 90: {
+              protocol.ResponseProtos.BuildSettlementResponse.Builder subBuilder = null;
+              if (typeCase_ == 11) {
+                subBuilder = ((protocol.ResponseProtos.BuildSettlementResponse) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResponseProtos.BuildSettlementResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResponseProtos.BuildSettlementResponse) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 11;
+              break;
+            }
+            case 98: {
+              protocol.ResponseProtos.UpgradeSettlementResponse.Builder subBuilder = null;
+              if (typeCase_ == 12) {
+                subBuilder = ((protocol.ResponseProtos.UpgradeSettlementResponse) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResponseProtos.UpgradeSettlementResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResponseProtos.UpgradeSettlementResponse) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 12;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protocol.ResponseProtos.internal_static_Response_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protocol.ResponseProtos.internal_static_Response_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protocol.ResponseProtos.Response.class, protocol.ResponseProtos.Response.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<Response> PARSER =
+        new com.google.protobuf.AbstractParser<Response>() {
+      public Response parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Response(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Response> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    private int typeCase_ = 0;
+    private java.lang.Object type_;
+    public enum TypeCase
+        implements com.google.protobuf.Internal.EnumLite {
+      SUCCESSFAILRESPONSE(1),
+      ACCEPTREJECTRESPONSE(2),
+      CURRENTBOARDRESPONSE(3),
+      BUYDEVCARDRESPONSE(4),
+      PLAYMONOPOLYCARDRESPONSE(5),
+      PLAYROADBUILDINGCARDRESPONSE(7),
+      BUILDROADRESPONSE(8),
+      MOVEROBBERRESPONSE(9),
+      ENDMOVERESPONSE(10),
+      BUILDSETTLEMENTRESPONSE(11),
+      UPGRADESETTLEMENTRESPONSE(12),
+      TYPE_NOT_SET(0);
+      private int value = 0;
+      private TypeCase(int value) {
+        this.value = value;
+      }
+      public static TypeCase valueOf(int value) {
+        switch (value) {
+          case 1: return SUCCESSFAILRESPONSE;
+          case 2: return ACCEPTREJECTRESPONSE;
+          case 3: return CURRENTBOARDRESPONSE;
+          case 4: return BUYDEVCARDRESPONSE;
+          case 5: return PLAYMONOPOLYCARDRESPONSE;
+          case 7: return PLAYROADBUILDINGCARDRESPONSE;
+          case 8: return BUILDROADRESPONSE;
+          case 9: return MOVEROBBERRESPONSE;
+          case 10: return ENDMOVERESPONSE;
+          case 11: return BUILDSETTLEMENTRESPONSE;
+          case 12: return UPGRADESETTLEMENTRESPONSE;
+          case 0: return TYPE_NOT_SET;
+          default: throw new java.lang.IllegalArgumentException(
+            "Value is undefined for this oneof enum.");
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public TypeCase
+    getTypeCase() {
+      return TypeCase.valueOf(
+          typeCase_);
+    }
+
+    public static final int SUCCESSFAILRESPONSE_FIELD_NUMBER = 1;
+    /**
+     * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+     */
+    public boolean hasSuccessFailResponse() {
+      return typeCase_ == 1;
+    }
+    /**
+     * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+     */
+    public protocol.ResponseProtos.SuccessFailResponse getSuccessFailResponse() {
+      if (typeCase_ == 1) {
+         return (protocol.ResponseProtos.SuccessFailResponse) type_;
+      }
+      return protocol.ResponseProtos.SuccessFailResponse.getDefaultInstance();
+    }
+    /**
+     * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+     */
+    public protocol.ResponseProtos.SuccessFailResponseOrBuilder getSuccessFailResponseOrBuilder() {
+      if (typeCase_ == 1) {
+         return (protocol.ResponseProtos.SuccessFailResponse) type_;
+      }
+      return protocol.ResponseProtos.SuccessFailResponse.getDefaultInstance();
+    }
+
+    public static final int ACCEPTREJECTRESPONSE_FIELD_NUMBER = 2;
+    /**
+     * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+     */
+    public boolean hasAcceptRejectResponse() {
+      return typeCase_ == 2;
+    }
+    /**
+     * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+     */
+    public protocol.ResponseProtos.AcceptRejectResponse getAcceptRejectResponse() {
+      if (typeCase_ == 2) {
+         return (protocol.ResponseProtos.AcceptRejectResponse) type_;
+      }
+      return protocol.ResponseProtos.AcceptRejectResponse.getDefaultInstance();
+    }
+    /**
+     * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+     */
+    public protocol.ResponseProtos.AcceptRejectResponseOrBuilder getAcceptRejectResponseOrBuilder() {
+      if (typeCase_ == 2) {
+         return (protocol.ResponseProtos.AcceptRejectResponse) type_;
+      }
+      return protocol.ResponseProtos.AcceptRejectResponse.getDefaultInstance();
+    }
+
+    public static final int CURRENTBOARDRESPONSE_FIELD_NUMBER = 3;
+    /**
+     * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+     */
+    public boolean hasCurrentBoardResponse() {
+      return typeCase_ == 3;
+    }
+    /**
+     * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+     */
+    public protocol.ResponseProtos.GiveBoardResponse getCurrentBoardResponse() {
+      if (typeCase_ == 3) {
+         return (protocol.ResponseProtos.GiveBoardResponse) type_;
+      }
+      return protocol.ResponseProtos.GiveBoardResponse.getDefaultInstance();
+    }
+    /**
+     * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+     */
+    public protocol.ResponseProtos.GiveBoardResponseOrBuilder getCurrentBoardResponseOrBuilder() {
+      if (typeCase_ == 3) {
+         return (protocol.ResponseProtos.GiveBoardResponse) type_;
+      }
+      return protocol.ResponseProtos.GiveBoardResponse.getDefaultInstance();
+    }
+
+    public static final int BUYDEVCARDRESPONSE_FIELD_NUMBER = 4;
+    /**
+     * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+     */
+    public boolean hasBuyDevCardResponse() {
+      return typeCase_ == 4;
+    }
+    /**
+     * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+     */
+    public protocol.ResponseProtos.BuyDevCardResponse getBuyDevCardResponse() {
+      if (typeCase_ == 4) {
+         return (protocol.ResponseProtos.BuyDevCardResponse) type_;
+      }
+      return protocol.ResponseProtos.BuyDevCardResponse.getDefaultInstance();
+    }
+    /**
+     * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+     */
+    public protocol.ResponseProtos.BuyDevCardResponseOrBuilder getBuyDevCardResponseOrBuilder() {
+      if (typeCase_ == 4) {
+         return (protocol.ResponseProtos.BuyDevCardResponse) type_;
+      }
+      return protocol.ResponseProtos.BuyDevCardResponse.getDefaultInstance();
+    }
+
+    public static final int PLAYMONOPOLYCARDRESPONSE_FIELD_NUMBER = 5;
+    /**
+     * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+     */
+    public boolean hasPlayMonopolyCardResponse() {
+      return typeCase_ == 5;
+    }
+    /**
+     * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+     */
+    public protocol.ResponseProtos.PlayMonopolyCardResponse getPlayMonopolyCardResponse() {
+      if (typeCase_ == 5) {
+         return (protocol.ResponseProtos.PlayMonopolyCardResponse) type_;
+      }
+      return protocol.ResponseProtos.PlayMonopolyCardResponse.getDefaultInstance();
+    }
+    /**
+     * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+     */
+    public protocol.ResponseProtos.PlayMonopolyCardResponseOrBuilder getPlayMonopolyCardResponseOrBuilder() {
+      if (typeCase_ == 5) {
+         return (protocol.ResponseProtos.PlayMonopolyCardResponse) type_;
+      }
+      return protocol.ResponseProtos.PlayMonopolyCardResponse.getDefaultInstance();
+    }
+
+    public static final int PLAYROADBUILDINGCARDRESPONSE_FIELD_NUMBER = 7;
+    /**
+     * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+     */
+    public boolean hasPlayRoadBuildingCardResponse() {
+      return typeCase_ == 7;
+    }
+    /**
+     * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+     */
+    public protocol.ResponseProtos.PlayRoadBuildingCardResponse getPlayRoadBuildingCardResponse() {
+      if (typeCase_ == 7) {
+         return (protocol.ResponseProtos.PlayRoadBuildingCardResponse) type_;
+      }
+      return protocol.ResponseProtos.PlayRoadBuildingCardResponse.getDefaultInstance();
+    }
+    /**
+     * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+     */
+    public protocol.ResponseProtos.PlayRoadBuildingCardResponseOrBuilder getPlayRoadBuildingCardResponseOrBuilder() {
+      if (typeCase_ == 7) {
+         return (protocol.ResponseProtos.PlayRoadBuildingCardResponse) type_;
+      }
+      return protocol.ResponseProtos.PlayRoadBuildingCardResponse.getDefaultInstance();
+    }
+
+    public static final int BUILDROADRESPONSE_FIELD_NUMBER = 8;
+    /**
+     * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+     */
+    public boolean hasBuildRoadResponse() {
+      return typeCase_ == 8;
+    }
+    /**
+     * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+     */
+    public protocol.ResponseProtos.BuildRoadResponse getBuildRoadResponse() {
+      if (typeCase_ == 8) {
+         return (protocol.ResponseProtos.BuildRoadResponse) type_;
+      }
+      return protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
+    }
+    /**
+     * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+     */
+    public protocol.ResponseProtos.BuildRoadResponseOrBuilder getBuildRoadResponseOrBuilder() {
+      if (typeCase_ == 8) {
+         return (protocol.ResponseProtos.BuildRoadResponse) type_;
+      }
+      return protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
+    }
+
+    public static final int MOVEROBBERRESPONSE_FIELD_NUMBER = 9;
+    /**
+     * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+     */
+    public boolean hasMoveRobberResponse() {
+      return typeCase_ == 9;
+    }
+    /**
+     * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+     */
+    public protocol.ResponseProtos.MoveRobberResponse getMoveRobberResponse() {
+      if (typeCase_ == 9) {
+         return (protocol.ResponseProtos.MoveRobberResponse) type_;
+      }
+      return protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
+    }
+    /**
+     * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+     */
+    public protocol.ResponseProtos.MoveRobberResponseOrBuilder getMoveRobberResponseOrBuilder() {
+      if (typeCase_ == 9) {
+         return (protocol.ResponseProtos.MoveRobberResponse) type_;
+      }
+      return protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
+    }
+
+    public static final int ENDMOVERESPONSE_FIELD_NUMBER = 10;
+    /**
+     * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+     */
+    public boolean hasEndMoveResponse() {
+      return typeCase_ == 10;
+    }
+    /**
+     * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+     */
+    public protocol.ResponseProtos.EndMoveResponse getEndMoveResponse() {
+      if (typeCase_ == 10) {
+         return (protocol.ResponseProtos.EndMoveResponse) type_;
+      }
+      return protocol.ResponseProtos.EndMoveResponse.getDefaultInstance();
+    }
+    /**
+     * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+     */
+    public protocol.ResponseProtos.EndMoveResponseOrBuilder getEndMoveResponseOrBuilder() {
+      if (typeCase_ == 10) {
+         return (protocol.ResponseProtos.EndMoveResponse) type_;
+      }
+      return protocol.ResponseProtos.EndMoveResponse.getDefaultInstance();
+    }
+
+    public static final int BUILDSETTLEMENTRESPONSE_FIELD_NUMBER = 11;
+    /**
+     * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+     */
+    public boolean hasBuildSettlementResponse() {
+      return typeCase_ == 11;
+    }
+    /**
+     * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+     */
+    public protocol.ResponseProtos.BuildSettlementResponse getBuildSettlementResponse() {
+      if (typeCase_ == 11) {
+         return (protocol.ResponseProtos.BuildSettlementResponse) type_;
+      }
+      return protocol.ResponseProtos.BuildSettlementResponse.getDefaultInstance();
+    }
+    /**
+     * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+     */
+    public protocol.ResponseProtos.BuildSettlementResponseOrBuilder getBuildSettlementResponseOrBuilder() {
+      if (typeCase_ == 11) {
+         return (protocol.ResponseProtos.BuildSettlementResponse) type_;
+      }
+      return protocol.ResponseProtos.BuildSettlementResponse.getDefaultInstance();
+    }
+
+    public static final int UPGRADESETTLEMENTRESPONSE_FIELD_NUMBER = 12;
+    /**
+     * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+     */
+    public boolean hasUpgradeSettlementResponse() {
+      return typeCase_ == 12;
+    }
+    /**
+     * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+     */
+    public protocol.ResponseProtos.UpgradeSettlementResponse getUpgradeSettlementResponse() {
+      if (typeCase_ == 12) {
+         return (protocol.ResponseProtos.UpgradeSettlementResponse) type_;
+      }
+      return protocol.ResponseProtos.UpgradeSettlementResponse.getDefaultInstance();
+    }
+    /**
+     * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+     */
+    public protocol.ResponseProtos.UpgradeSettlementResponseOrBuilder getUpgradeSettlementResponseOrBuilder() {
+      if (typeCase_ == 12) {
+         return (protocol.ResponseProtos.UpgradeSettlementResponse) type_;
+      }
+      return protocol.ResponseProtos.UpgradeSettlementResponse.getDefaultInstance();
+    }
+
+    private void initFields() {
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (hasSuccessFailResponse()) {
+        if (!getSuccessFailResponse().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasAcceptRejectResponse()) {
+        if (!getAcceptRejectResponse().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasCurrentBoardResponse()) {
+        if (!getCurrentBoardResponse().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasBuyDevCardResponse()) {
+        if (!getBuyDevCardResponse().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasPlayMonopolyCardResponse()) {
+        if (!getPlayMonopolyCardResponse().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasPlayRoadBuildingCardResponse()) {
+        if (!getPlayRoadBuildingCardResponse().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasBuildRoadResponse()) {
+        if (!getBuildRoadResponse().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasMoveRobberResponse()) {
+        if (!getMoveRobberResponse().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasEndMoveResponse()) {
+        if (!getEndMoveResponse().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasBuildSettlementResponse()) {
+        if (!getBuildSettlementResponse().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasUpgradeSettlementResponse()) {
+        if (!getUpgradeSettlementResponse().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (typeCase_ == 1) {
+        output.writeMessage(1, (protocol.ResponseProtos.SuccessFailResponse) type_);
+      }
+      if (typeCase_ == 2) {
+        output.writeMessage(2, (protocol.ResponseProtos.AcceptRejectResponse) type_);
+      }
+      if (typeCase_ == 3) {
+        output.writeMessage(3, (protocol.ResponseProtos.GiveBoardResponse) type_);
+      }
+      if (typeCase_ == 4) {
+        output.writeMessage(4, (protocol.ResponseProtos.BuyDevCardResponse) type_);
+      }
+      if (typeCase_ == 5) {
+        output.writeMessage(5, (protocol.ResponseProtos.PlayMonopolyCardResponse) type_);
+      }
+      if (typeCase_ == 7) {
+        output.writeMessage(7, (protocol.ResponseProtos.PlayRoadBuildingCardResponse) type_);
+      }
+      if (typeCase_ == 8) {
+        output.writeMessage(8, (protocol.ResponseProtos.BuildRoadResponse) type_);
+      }
+      if (typeCase_ == 9) {
+        output.writeMessage(9, (protocol.ResponseProtos.MoveRobberResponse) type_);
+      }
+      if (typeCase_ == 10) {
+        output.writeMessage(10, (protocol.ResponseProtos.EndMoveResponse) type_);
+      }
+      if (typeCase_ == 11) {
+        output.writeMessage(11, (protocol.ResponseProtos.BuildSettlementResponse) type_);
+      }
+      if (typeCase_ == 12) {
+        output.writeMessage(12, (protocol.ResponseProtos.UpgradeSettlementResponse) type_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (typeCase_ == 1) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, (protocol.ResponseProtos.SuccessFailResponse) type_);
+      }
+      if (typeCase_ == 2) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, (protocol.ResponseProtos.AcceptRejectResponse) type_);
+      }
+      if (typeCase_ == 3) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, (protocol.ResponseProtos.GiveBoardResponse) type_);
+      }
+      if (typeCase_ == 4) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, (protocol.ResponseProtos.BuyDevCardResponse) type_);
+      }
+      if (typeCase_ == 5) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, (protocol.ResponseProtos.PlayMonopolyCardResponse) type_);
+      }
+      if (typeCase_ == 7) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, (protocol.ResponseProtos.PlayRoadBuildingCardResponse) type_);
+      }
+      if (typeCase_ == 8) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(8, (protocol.ResponseProtos.BuildRoadResponse) type_);
+      }
+      if (typeCase_ == 9) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(9, (protocol.ResponseProtos.MoveRobberResponse) type_);
+      }
+      if (typeCase_ == 10) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(10, (protocol.ResponseProtos.EndMoveResponse) type_);
+      }
+      if (typeCase_ == 11) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(11, (protocol.ResponseProtos.BuildSettlementResponse) type_);
+      }
+      if (typeCase_ == 12) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(12, (protocol.ResponseProtos.UpgradeSettlementResponse) type_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protocol.ResponseProtos.Response parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protocol.ResponseProtos.Response parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.Response parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protocol.ResponseProtos.Response parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.Response parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protocol.ResponseProtos.Response parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.Response parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protocol.ResponseProtos.Response parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.Response parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protocol.ResponseProtos.Response parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protocol.ResponseProtos.Response prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code Response}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:Response)
+        protocol.ResponseProtos.ResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protocol.ResponseProtos.internal_static_Response_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protocol.ResponseProtos.internal_static_Response_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protocol.ResponseProtos.Response.class, protocol.ResponseProtos.Response.Builder.class);
+      }
+
+      // Construct using protocol.ResponseProtos.Response.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        typeCase_ = 0;
+        type_ = null;
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protocol.ResponseProtos.internal_static_Response_descriptor;
+      }
+
+      public protocol.ResponseProtos.Response getDefaultInstanceForType() {
+        return protocol.ResponseProtos.Response.getDefaultInstance();
+      }
+
+      public protocol.ResponseProtos.Response build() {
+        protocol.ResponseProtos.Response result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protocol.ResponseProtos.Response buildPartial() {
+        protocol.ResponseProtos.Response result = new protocol.ResponseProtos.Response(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (typeCase_ == 1) {
+          if (successFailResponseBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = successFailResponseBuilder_.build();
+          }
+        }
+        if (typeCase_ == 2) {
+          if (acceptRejectResponseBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = acceptRejectResponseBuilder_.build();
+          }
+        }
+        if (typeCase_ == 3) {
+          if (currentBoardResponseBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = currentBoardResponseBuilder_.build();
+          }
+        }
+        if (typeCase_ == 4) {
+          if (buyDevCardResponseBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = buyDevCardResponseBuilder_.build();
+          }
+        }
+        if (typeCase_ == 5) {
+          if (playMonopolyCardResponseBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = playMonopolyCardResponseBuilder_.build();
+          }
+        }
+        if (typeCase_ == 7) {
+          if (playRoadBuildingCardResponseBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = playRoadBuildingCardResponseBuilder_.build();
+          }
+        }
+        if (typeCase_ == 8) {
+          if (buildRoadResponseBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = buildRoadResponseBuilder_.build();
+          }
+        }
+        if (typeCase_ == 9) {
+          if (moveRobberResponseBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = moveRobberResponseBuilder_.build();
+          }
+        }
+        if (typeCase_ == 10) {
+          if (endMoveResponseBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = endMoveResponseBuilder_.build();
+          }
+        }
+        if (typeCase_ == 11) {
+          if (buildSettlementResponseBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = buildSettlementResponseBuilder_.build();
+          }
+        }
+        if (typeCase_ == 12) {
+          if (upgradeSettlementResponseBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = upgradeSettlementResponseBuilder_.build();
+          }
+        }
+        result.bitField0_ = to_bitField0_;
+        result.typeCase_ = typeCase_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protocol.ResponseProtos.Response) {
+          return mergeFrom((protocol.ResponseProtos.Response)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protocol.ResponseProtos.Response other) {
+        if (other == protocol.ResponseProtos.Response.getDefaultInstance()) return this;
+        switch (other.getTypeCase()) {
+          case SUCCESSFAILRESPONSE: {
+            mergeSuccessFailResponse(other.getSuccessFailResponse());
+            break;
+          }
+          case ACCEPTREJECTRESPONSE: {
+            mergeAcceptRejectResponse(other.getAcceptRejectResponse());
+            break;
+          }
+          case CURRENTBOARDRESPONSE: {
+            mergeCurrentBoardResponse(other.getCurrentBoardResponse());
+            break;
+          }
+          case BUYDEVCARDRESPONSE: {
+            mergeBuyDevCardResponse(other.getBuyDevCardResponse());
+            break;
+          }
+          case PLAYMONOPOLYCARDRESPONSE: {
+            mergePlayMonopolyCardResponse(other.getPlayMonopolyCardResponse());
+            break;
+          }
+          case PLAYROADBUILDINGCARDRESPONSE: {
+            mergePlayRoadBuildingCardResponse(other.getPlayRoadBuildingCardResponse());
+            break;
+          }
+          case BUILDROADRESPONSE: {
+            mergeBuildRoadResponse(other.getBuildRoadResponse());
+            break;
+          }
+          case MOVEROBBERRESPONSE: {
+            mergeMoveRobberResponse(other.getMoveRobberResponse());
+            break;
+          }
+          case ENDMOVERESPONSE: {
+            mergeEndMoveResponse(other.getEndMoveResponse());
+            break;
+          }
+          case BUILDSETTLEMENTRESPONSE: {
+            mergeBuildSettlementResponse(other.getBuildSettlementResponse());
+            break;
+          }
+          case UPGRADESETTLEMENTRESPONSE: {
+            mergeUpgradeSettlementResponse(other.getUpgradeSettlementResponse());
+            break;
+          }
+          case TYPE_NOT_SET: {
+            break;
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (hasSuccessFailResponse()) {
+          if (!getSuccessFailResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasAcceptRejectResponse()) {
+          if (!getAcceptRejectResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasCurrentBoardResponse()) {
+          if (!getCurrentBoardResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasBuyDevCardResponse()) {
+          if (!getBuyDevCardResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasPlayMonopolyCardResponse()) {
+          if (!getPlayMonopolyCardResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasPlayRoadBuildingCardResponse()) {
+          if (!getPlayRoadBuildingCardResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasBuildRoadResponse()) {
+          if (!getBuildRoadResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasMoveRobberResponse()) {
+          if (!getMoveRobberResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasEndMoveResponse()) {
+          if (!getEndMoveResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasBuildSettlementResponse()) {
+          if (!getBuildSettlementResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasUpgradeSettlementResponse()) {
+          if (!getUpgradeSettlementResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protocol.ResponseProtos.Response parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protocol.ResponseProtos.Response) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int typeCase_ = 0;
+      private java.lang.Object type_;
+      public TypeCase
+          getTypeCase() {
+        return TypeCase.valueOf(
+            typeCase_);
+      }
+
+      public Builder clearType() {
+        typeCase_ = 0;
+        type_ = null;
+        onChanged();
+        return this;
+      }
+
+      private int bitField0_;
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.SuccessFailResponse, protocol.ResponseProtos.SuccessFailResponse.Builder, protocol.ResponseProtos.SuccessFailResponseOrBuilder> successFailResponseBuilder_;
+      /**
+       * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+       */
+      public boolean hasSuccessFailResponse() {
+        return typeCase_ == 1;
+      }
+      /**
+       * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+       */
+      public protocol.ResponseProtos.SuccessFailResponse getSuccessFailResponse() {
+        if (successFailResponseBuilder_ == null) {
+          if (typeCase_ == 1) {
+            return (protocol.ResponseProtos.SuccessFailResponse) type_;
+          }
+          return protocol.ResponseProtos.SuccessFailResponse.getDefaultInstance();
+        } else {
+          if (typeCase_ == 1) {
+            return successFailResponseBuilder_.getMessage();
+          }
+          return protocol.ResponseProtos.SuccessFailResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+       */
+      public Builder setSuccessFailResponse(protocol.ResponseProtos.SuccessFailResponse value) {
+        if (successFailResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          successFailResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 1;
+        return this;
+      }
+      /**
+       * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+       */
+      public Builder setSuccessFailResponse(
+          protocol.ResponseProtos.SuccessFailResponse.Builder builderForValue) {
+        if (successFailResponseBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          successFailResponseBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 1;
+        return this;
+      }
+      /**
+       * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+       */
+      public Builder mergeSuccessFailResponse(protocol.ResponseProtos.SuccessFailResponse value) {
+        if (successFailResponseBuilder_ == null) {
+          if (typeCase_ == 1 &&
+              type_ != protocol.ResponseProtos.SuccessFailResponse.getDefaultInstance()) {
+            type_ = protocol.ResponseProtos.SuccessFailResponse.newBuilder((protocol.ResponseProtos.SuccessFailResponse) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 1) {
+            successFailResponseBuilder_.mergeFrom(value);
+          }
+          successFailResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 1;
+        return this;
+      }
+      /**
+       * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+       */
+      public Builder clearSuccessFailResponse() {
+        if (successFailResponseBuilder_ == null) {
+          if (typeCase_ == 1) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 1) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          successFailResponseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+       */
+      public protocol.ResponseProtos.SuccessFailResponse.Builder getSuccessFailResponseBuilder() {
+        return getSuccessFailResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+       */
+      public protocol.ResponseProtos.SuccessFailResponseOrBuilder getSuccessFailResponseOrBuilder() {
+        if ((typeCase_ == 1) && (successFailResponseBuilder_ != null)) {
+          return successFailResponseBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 1) {
+            return (protocol.ResponseProtos.SuccessFailResponse) type_;
+          }
+          return protocol.ResponseProtos.SuccessFailResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.SuccessFailResponse, protocol.ResponseProtos.SuccessFailResponse.Builder, protocol.ResponseProtos.SuccessFailResponseOrBuilder> 
+          getSuccessFailResponseFieldBuilder() {
+        if (successFailResponseBuilder_ == null) {
+          if (!(typeCase_ == 1)) {
+            type_ = protocol.ResponseProtos.SuccessFailResponse.getDefaultInstance();
+          }
+          successFailResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.SuccessFailResponse, protocol.ResponseProtos.SuccessFailResponse.Builder, protocol.ResponseProtos.SuccessFailResponseOrBuilder>(
+                  (protocol.ResponseProtos.SuccessFailResponse) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 1;
+        return successFailResponseBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.AcceptRejectResponse, protocol.ResponseProtos.AcceptRejectResponse.Builder, protocol.ResponseProtos.AcceptRejectResponseOrBuilder> acceptRejectResponseBuilder_;
+      /**
+       * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+       */
+      public boolean hasAcceptRejectResponse() {
+        return typeCase_ == 2;
+      }
+      /**
+       * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+       */
+      public protocol.ResponseProtos.AcceptRejectResponse getAcceptRejectResponse() {
+        if (acceptRejectResponseBuilder_ == null) {
+          if (typeCase_ == 2) {
+            return (protocol.ResponseProtos.AcceptRejectResponse) type_;
+          }
+          return protocol.ResponseProtos.AcceptRejectResponse.getDefaultInstance();
+        } else {
+          if (typeCase_ == 2) {
+            return acceptRejectResponseBuilder_.getMessage();
+          }
+          return protocol.ResponseProtos.AcceptRejectResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+       */
+      public Builder setAcceptRejectResponse(protocol.ResponseProtos.AcceptRejectResponse value) {
+        if (acceptRejectResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          acceptRejectResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+       */
+      public Builder setAcceptRejectResponse(
+          protocol.ResponseProtos.AcceptRejectResponse.Builder builderForValue) {
+        if (acceptRejectResponseBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          acceptRejectResponseBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+       */
+      public Builder mergeAcceptRejectResponse(protocol.ResponseProtos.AcceptRejectResponse value) {
+        if (acceptRejectResponseBuilder_ == null) {
+          if (typeCase_ == 2 &&
+              type_ != protocol.ResponseProtos.AcceptRejectResponse.getDefaultInstance()) {
+            type_ = protocol.ResponseProtos.AcceptRejectResponse.newBuilder((protocol.ResponseProtos.AcceptRejectResponse) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 2) {
+            acceptRejectResponseBuilder_.mergeFrom(value);
+          }
+          acceptRejectResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+       */
+      public Builder clearAcceptRejectResponse() {
+        if (acceptRejectResponseBuilder_ == null) {
+          if (typeCase_ == 2) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 2) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          acceptRejectResponseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+       */
+      public protocol.ResponseProtos.AcceptRejectResponse.Builder getAcceptRejectResponseBuilder() {
+        return getAcceptRejectResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+       */
+      public protocol.ResponseProtos.AcceptRejectResponseOrBuilder getAcceptRejectResponseOrBuilder() {
+        if ((typeCase_ == 2) && (acceptRejectResponseBuilder_ != null)) {
+          return acceptRejectResponseBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 2) {
+            return (protocol.ResponseProtos.AcceptRejectResponse) type_;
+          }
+          return protocol.ResponseProtos.AcceptRejectResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.AcceptRejectResponse, protocol.ResponseProtos.AcceptRejectResponse.Builder, protocol.ResponseProtos.AcceptRejectResponseOrBuilder> 
+          getAcceptRejectResponseFieldBuilder() {
+        if (acceptRejectResponseBuilder_ == null) {
+          if (!(typeCase_ == 2)) {
+            type_ = protocol.ResponseProtos.AcceptRejectResponse.getDefaultInstance();
+          }
+          acceptRejectResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.AcceptRejectResponse, protocol.ResponseProtos.AcceptRejectResponse.Builder, protocol.ResponseProtos.AcceptRejectResponseOrBuilder>(
+                  (protocol.ResponseProtos.AcceptRejectResponse) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 2;
+        return acceptRejectResponseBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.GiveBoardResponse, protocol.ResponseProtos.GiveBoardResponse.Builder, protocol.ResponseProtos.GiveBoardResponseOrBuilder> currentBoardResponseBuilder_;
+      /**
+       * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+       */
+      public boolean hasCurrentBoardResponse() {
+        return typeCase_ == 3;
+      }
+      /**
+       * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+       */
+      public protocol.ResponseProtos.GiveBoardResponse getCurrentBoardResponse() {
+        if (currentBoardResponseBuilder_ == null) {
+          if (typeCase_ == 3) {
+            return (protocol.ResponseProtos.GiveBoardResponse) type_;
+          }
+          return protocol.ResponseProtos.GiveBoardResponse.getDefaultInstance();
+        } else {
+          if (typeCase_ == 3) {
+            return currentBoardResponseBuilder_.getMessage();
+          }
+          return protocol.ResponseProtos.GiveBoardResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+       */
+      public Builder setCurrentBoardResponse(protocol.ResponseProtos.GiveBoardResponse value) {
+        if (currentBoardResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          currentBoardResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+       */
+      public Builder setCurrentBoardResponse(
+          protocol.ResponseProtos.GiveBoardResponse.Builder builderForValue) {
+        if (currentBoardResponseBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          currentBoardResponseBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+       */
+      public Builder mergeCurrentBoardResponse(protocol.ResponseProtos.GiveBoardResponse value) {
+        if (currentBoardResponseBuilder_ == null) {
+          if (typeCase_ == 3 &&
+              type_ != protocol.ResponseProtos.GiveBoardResponse.getDefaultInstance()) {
+            type_ = protocol.ResponseProtos.GiveBoardResponse.newBuilder((protocol.ResponseProtos.GiveBoardResponse) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 3) {
+            currentBoardResponseBuilder_.mergeFrom(value);
+          }
+          currentBoardResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+       */
+      public Builder clearCurrentBoardResponse() {
+        if (currentBoardResponseBuilder_ == null) {
+          if (typeCase_ == 3) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 3) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          currentBoardResponseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+       */
+      public protocol.ResponseProtos.GiveBoardResponse.Builder getCurrentBoardResponseBuilder() {
+        return getCurrentBoardResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+       */
+      public protocol.ResponseProtos.GiveBoardResponseOrBuilder getCurrentBoardResponseOrBuilder() {
+        if ((typeCase_ == 3) && (currentBoardResponseBuilder_ != null)) {
+          return currentBoardResponseBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 3) {
+            return (protocol.ResponseProtos.GiveBoardResponse) type_;
+          }
+          return protocol.ResponseProtos.GiveBoardResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.GiveBoardResponse, protocol.ResponseProtos.GiveBoardResponse.Builder, protocol.ResponseProtos.GiveBoardResponseOrBuilder> 
+          getCurrentBoardResponseFieldBuilder() {
+        if (currentBoardResponseBuilder_ == null) {
+          if (!(typeCase_ == 3)) {
+            type_ = protocol.ResponseProtos.GiveBoardResponse.getDefaultInstance();
+          }
+          currentBoardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.GiveBoardResponse, protocol.ResponseProtos.GiveBoardResponse.Builder, protocol.ResponseProtos.GiveBoardResponseOrBuilder>(
+                  (protocol.ResponseProtos.GiveBoardResponse) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 3;
+        return currentBoardResponseBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.BuyDevCardResponse, protocol.ResponseProtos.BuyDevCardResponse.Builder, protocol.ResponseProtos.BuyDevCardResponseOrBuilder> buyDevCardResponseBuilder_;
+      /**
+       * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+       */
+      public boolean hasBuyDevCardResponse() {
+        return typeCase_ == 4;
+      }
+      /**
+       * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+       */
+      public protocol.ResponseProtos.BuyDevCardResponse getBuyDevCardResponse() {
+        if (buyDevCardResponseBuilder_ == null) {
+          if (typeCase_ == 4) {
+            return (protocol.ResponseProtos.BuyDevCardResponse) type_;
+          }
+          return protocol.ResponseProtos.BuyDevCardResponse.getDefaultInstance();
+        } else {
+          if (typeCase_ == 4) {
+            return buyDevCardResponseBuilder_.getMessage();
+          }
+          return protocol.ResponseProtos.BuyDevCardResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+       */
+      public Builder setBuyDevCardResponse(protocol.ResponseProtos.BuyDevCardResponse value) {
+        if (buyDevCardResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          buyDevCardResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+       */
+      public Builder setBuyDevCardResponse(
+          protocol.ResponseProtos.BuyDevCardResponse.Builder builderForValue) {
+        if (buyDevCardResponseBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          buyDevCardResponseBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+       */
+      public Builder mergeBuyDevCardResponse(protocol.ResponseProtos.BuyDevCardResponse value) {
+        if (buyDevCardResponseBuilder_ == null) {
+          if (typeCase_ == 4 &&
+              type_ != protocol.ResponseProtos.BuyDevCardResponse.getDefaultInstance()) {
+            type_ = protocol.ResponseProtos.BuyDevCardResponse.newBuilder((protocol.ResponseProtos.BuyDevCardResponse) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 4) {
+            buyDevCardResponseBuilder_.mergeFrom(value);
+          }
+          buyDevCardResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+       */
+      public Builder clearBuyDevCardResponse() {
+        if (buyDevCardResponseBuilder_ == null) {
+          if (typeCase_ == 4) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 4) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          buyDevCardResponseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+       */
+      public protocol.ResponseProtos.BuyDevCardResponse.Builder getBuyDevCardResponseBuilder() {
+        return getBuyDevCardResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+       */
+      public protocol.ResponseProtos.BuyDevCardResponseOrBuilder getBuyDevCardResponseOrBuilder() {
+        if ((typeCase_ == 4) && (buyDevCardResponseBuilder_ != null)) {
+          return buyDevCardResponseBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 4) {
+            return (protocol.ResponseProtos.BuyDevCardResponse) type_;
+          }
+          return protocol.ResponseProtos.BuyDevCardResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.BuyDevCardResponse, protocol.ResponseProtos.BuyDevCardResponse.Builder, protocol.ResponseProtos.BuyDevCardResponseOrBuilder> 
+          getBuyDevCardResponseFieldBuilder() {
+        if (buyDevCardResponseBuilder_ == null) {
+          if (!(typeCase_ == 4)) {
+            type_ = protocol.ResponseProtos.BuyDevCardResponse.getDefaultInstance();
+          }
+          buyDevCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.BuyDevCardResponse, protocol.ResponseProtos.BuyDevCardResponse.Builder, protocol.ResponseProtos.BuyDevCardResponseOrBuilder>(
+                  (protocol.ResponseProtos.BuyDevCardResponse) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 4;
+        return buyDevCardResponseBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.PlayMonopolyCardResponse, protocol.ResponseProtos.PlayMonopolyCardResponse.Builder, protocol.ResponseProtos.PlayMonopolyCardResponseOrBuilder> playMonopolyCardResponseBuilder_;
+      /**
+       * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+       */
+      public boolean hasPlayMonopolyCardResponse() {
+        return typeCase_ == 5;
+      }
+      /**
+       * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+       */
+      public protocol.ResponseProtos.PlayMonopolyCardResponse getPlayMonopolyCardResponse() {
+        if (playMonopolyCardResponseBuilder_ == null) {
+          if (typeCase_ == 5) {
+            return (protocol.ResponseProtos.PlayMonopolyCardResponse) type_;
+          }
+          return protocol.ResponseProtos.PlayMonopolyCardResponse.getDefaultInstance();
+        } else {
+          if (typeCase_ == 5) {
+            return playMonopolyCardResponseBuilder_.getMessage();
+          }
+          return protocol.ResponseProtos.PlayMonopolyCardResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+       */
+      public Builder setPlayMonopolyCardResponse(protocol.ResponseProtos.PlayMonopolyCardResponse value) {
+        if (playMonopolyCardResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          playMonopolyCardResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 5;
+        return this;
+      }
+      /**
+       * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+       */
+      public Builder setPlayMonopolyCardResponse(
+          protocol.ResponseProtos.PlayMonopolyCardResponse.Builder builderForValue) {
+        if (playMonopolyCardResponseBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          playMonopolyCardResponseBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 5;
+        return this;
+      }
+      /**
+       * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+       */
+      public Builder mergePlayMonopolyCardResponse(protocol.ResponseProtos.PlayMonopolyCardResponse value) {
+        if (playMonopolyCardResponseBuilder_ == null) {
+          if (typeCase_ == 5 &&
+              type_ != protocol.ResponseProtos.PlayMonopolyCardResponse.getDefaultInstance()) {
+            type_ = protocol.ResponseProtos.PlayMonopolyCardResponse.newBuilder((protocol.ResponseProtos.PlayMonopolyCardResponse) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 5) {
+            playMonopolyCardResponseBuilder_.mergeFrom(value);
+          }
+          playMonopolyCardResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 5;
+        return this;
+      }
+      /**
+       * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+       */
+      public Builder clearPlayMonopolyCardResponse() {
+        if (playMonopolyCardResponseBuilder_ == null) {
+          if (typeCase_ == 5) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 5) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          playMonopolyCardResponseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+       */
+      public protocol.ResponseProtos.PlayMonopolyCardResponse.Builder getPlayMonopolyCardResponseBuilder() {
+        return getPlayMonopolyCardResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+       */
+      public protocol.ResponseProtos.PlayMonopolyCardResponseOrBuilder getPlayMonopolyCardResponseOrBuilder() {
+        if ((typeCase_ == 5) && (playMonopolyCardResponseBuilder_ != null)) {
+          return playMonopolyCardResponseBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 5) {
+            return (protocol.ResponseProtos.PlayMonopolyCardResponse) type_;
+          }
+          return protocol.ResponseProtos.PlayMonopolyCardResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.PlayMonopolyCardResponse, protocol.ResponseProtos.PlayMonopolyCardResponse.Builder, protocol.ResponseProtos.PlayMonopolyCardResponseOrBuilder> 
+          getPlayMonopolyCardResponseFieldBuilder() {
+        if (playMonopolyCardResponseBuilder_ == null) {
+          if (!(typeCase_ == 5)) {
+            type_ = protocol.ResponseProtos.PlayMonopolyCardResponse.getDefaultInstance();
+          }
+          playMonopolyCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.PlayMonopolyCardResponse, protocol.ResponseProtos.PlayMonopolyCardResponse.Builder, protocol.ResponseProtos.PlayMonopolyCardResponseOrBuilder>(
+                  (protocol.ResponseProtos.PlayMonopolyCardResponse) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 5;
+        return playMonopolyCardResponseBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.PlayRoadBuildingCardResponse, protocol.ResponseProtos.PlayRoadBuildingCardResponse.Builder, protocol.ResponseProtos.PlayRoadBuildingCardResponseOrBuilder> playRoadBuildingCardResponseBuilder_;
+      /**
+       * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+       */
+      public boolean hasPlayRoadBuildingCardResponse() {
+        return typeCase_ == 7;
+      }
+      /**
+       * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+       */
+      public protocol.ResponseProtos.PlayRoadBuildingCardResponse getPlayRoadBuildingCardResponse() {
+        if (playRoadBuildingCardResponseBuilder_ == null) {
+          if (typeCase_ == 7) {
+            return (protocol.ResponseProtos.PlayRoadBuildingCardResponse) type_;
+          }
+          return protocol.ResponseProtos.PlayRoadBuildingCardResponse.getDefaultInstance();
+        } else {
+          if (typeCase_ == 7) {
+            return playRoadBuildingCardResponseBuilder_.getMessage();
+          }
+          return protocol.ResponseProtos.PlayRoadBuildingCardResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+       */
+      public Builder setPlayRoadBuildingCardResponse(protocol.ResponseProtos.PlayRoadBuildingCardResponse value) {
+        if (playRoadBuildingCardResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          playRoadBuildingCardResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 7;
+        return this;
+      }
+      /**
+       * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+       */
+      public Builder setPlayRoadBuildingCardResponse(
+          protocol.ResponseProtos.PlayRoadBuildingCardResponse.Builder builderForValue) {
+        if (playRoadBuildingCardResponseBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          playRoadBuildingCardResponseBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 7;
+        return this;
+      }
+      /**
+       * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+       */
+      public Builder mergePlayRoadBuildingCardResponse(protocol.ResponseProtos.PlayRoadBuildingCardResponse value) {
+        if (playRoadBuildingCardResponseBuilder_ == null) {
+          if (typeCase_ == 7 &&
+              type_ != protocol.ResponseProtos.PlayRoadBuildingCardResponse.getDefaultInstance()) {
+            type_ = protocol.ResponseProtos.PlayRoadBuildingCardResponse.newBuilder((protocol.ResponseProtos.PlayRoadBuildingCardResponse) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 7) {
+            playRoadBuildingCardResponseBuilder_.mergeFrom(value);
+          }
+          playRoadBuildingCardResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 7;
+        return this;
+      }
+      /**
+       * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+       */
+      public Builder clearPlayRoadBuildingCardResponse() {
+        if (playRoadBuildingCardResponseBuilder_ == null) {
+          if (typeCase_ == 7) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 7) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          playRoadBuildingCardResponseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+       */
+      public protocol.ResponseProtos.PlayRoadBuildingCardResponse.Builder getPlayRoadBuildingCardResponseBuilder() {
+        return getPlayRoadBuildingCardResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+       */
+      public protocol.ResponseProtos.PlayRoadBuildingCardResponseOrBuilder getPlayRoadBuildingCardResponseOrBuilder() {
+        if ((typeCase_ == 7) && (playRoadBuildingCardResponseBuilder_ != null)) {
+          return playRoadBuildingCardResponseBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 7) {
+            return (protocol.ResponseProtos.PlayRoadBuildingCardResponse) type_;
+          }
+          return protocol.ResponseProtos.PlayRoadBuildingCardResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.PlayRoadBuildingCardResponse, protocol.ResponseProtos.PlayRoadBuildingCardResponse.Builder, protocol.ResponseProtos.PlayRoadBuildingCardResponseOrBuilder> 
+          getPlayRoadBuildingCardResponseFieldBuilder() {
+        if (playRoadBuildingCardResponseBuilder_ == null) {
+          if (!(typeCase_ == 7)) {
+            type_ = protocol.ResponseProtos.PlayRoadBuildingCardResponse.getDefaultInstance();
+          }
+          playRoadBuildingCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.PlayRoadBuildingCardResponse, protocol.ResponseProtos.PlayRoadBuildingCardResponse.Builder, protocol.ResponseProtos.PlayRoadBuildingCardResponseOrBuilder>(
+                  (protocol.ResponseProtos.PlayRoadBuildingCardResponse) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 7;
+        return playRoadBuildingCardResponseBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.BuildRoadResponse, protocol.ResponseProtos.BuildRoadResponse.Builder, protocol.ResponseProtos.BuildRoadResponseOrBuilder> buildRoadResponseBuilder_;
+      /**
+       * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+       */
+      public boolean hasBuildRoadResponse() {
+        return typeCase_ == 8;
+      }
+      /**
+       * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+       */
+      public protocol.ResponseProtos.BuildRoadResponse getBuildRoadResponse() {
+        if (buildRoadResponseBuilder_ == null) {
+          if (typeCase_ == 8) {
+            return (protocol.ResponseProtos.BuildRoadResponse) type_;
+          }
+          return protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
+        } else {
+          if (typeCase_ == 8) {
+            return buildRoadResponseBuilder_.getMessage();
+          }
+          return protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+       */
+      public Builder setBuildRoadResponse(protocol.ResponseProtos.BuildRoadResponse value) {
+        if (buildRoadResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          buildRoadResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 8;
+        return this;
+      }
+      /**
+       * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+       */
+      public Builder setBuildRoadResponse(
+          protocol.ResponseProtos.BuildRoadResponse.Builder builderForValue) {
+        if (buildRoadResponseBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          buildRoadResponseBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 8;
+        return this;
+      }
+      /**
+       * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+       */
+      public Builder mergeBuildRoadResponse(protocol.ResponseProtos.BuildRoadResponse value) {
+        if (buildRoadResponseBuilder_ == null) {
+          if (typeCase_ == 8 &&
+              type_ != protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance()) {
+            type_ = protocol.ResponseProtos.BuildRoadResponse.newBuilder((protocol.ResponseProtos.BuildRoadResponse) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 8) {
+            buildRoadResponseBuilder_.mergeFrom(value);
+          }
+          buildRoadResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 8;
+        return this;
+      }
+      /**
+       * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+       */
+      public Builder clearBuildRoadResponse() {
+        if (buildRoadResponseBuilder_ == null) {
+          if (typeCase_ == 8) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 8) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          buildRoadResponseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+       */
+      public protocol.ResponseProtos.BuildRoadResponse.Builder getBuildRoadResponseBuilder() {
+        return getBuildRoadResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+       */
+      public protocol.ResponseProtos.BuildRoadResponseOrBuilder getBuildRoadResponseOrBuilder() {
+        if ((typeCase_ == 8) && (buildRoadResponseBuilder_ != null)) {
+          return buildRoadResponseBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 8) {
+            return (protocol.ResponseProtos.BuildRoadResponse) type_;
+          }
+          return protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.BuildRoadResponse, protocol.ResponseProtos.BuildRoadResponse.Builder, protocol.ResponseProtos.BuildRoadResponseOrBuilder> 
+          getBuildRoadResponseFieldBuilder() {
+        if (buildRoadResponseBuilder_ == null) {
+          if (!(typeCase_ == 8)) {
+            type_ = protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
+          }
+          buildRoadResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.BuildRoadResponse, protocol.ResponseProtos.BuildRoadResponse.Builder, protocol.ResponseProtos.BuildRoadResponseOrBuilder>(
+                  (protocol.ResponseProtos.BuildRoadResponse) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 8;
+        return buildRoadResponseBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.MoveRobberResponse, protocol.ResponseProtos.MoveRobberResponse.Builder, protocol.ResponseProtos.MoveRobberResponseOrBuilder> moveRobberResponseBuilder_;
+      /**
+       * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+       */
+      public boolean hasMoveRobberResponse() {
+        return typeCase_ == 9;
+      }
+      /**
+       * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+       */
+      public protocol.ResponseProtos.MoveRobberResponse getMoveRobberResponse() {
+        if (moveRobberResponseBuilder_ == null) {
+          if (typeCase_ == 9) {
+            return (protocol.ResponseProtos.MoveRobberResponse) type_;
+          }
+          return protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
+        } else {
+          if (typeCase_ == 9) {
+            return moveRobberResponseBuilder_.getMessage();
+          }
+          return protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+       */
+      public Builder setMoveRobberResponse(protocol.ResponseProtos.MoveRobberResponse value) {
+        if (moveRobberResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          moveRobberResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 9;
+        return this;
+      }
+      /**
+       * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+       */
+      public Builder setMoveRobberResponse(
+          protocol.ResponseProtos.MoveRobberResponse.Builder builderForValue) {
+        if (moveRobberResponseBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          moveRobberResponseBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 9;
+        return this;
+      }
+      /**
+       * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+       */
+      public Builder mergeMoveRobberResponse(protocol.ResponseProtos.MoveRobberResponse value) {
+        if (moveRobberResponseBuilder_ == null) {
+          if (typeCase_ == 9 &&
+              type_ != protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance()) {
+            type_ = protocol.ResponseProtos.MoveRobberResponse.newBuilder((protocol.ResponseProtos.MoveRobberResponse) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 9) {
+            moveRobberResponseBuilder_.mergeFrom(value);
+          }
+          moveRobberResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 9;
+        return this;
+      }
+      /**
+       * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+       */
+      public Builder clearMoveRobberResponse() {
+        if (moveRobberResponseBuilder_ == null) {
+          if (typeCase_ == 9) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 9) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          moveRobberResponseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+       */
+      public protocol.ResponseProtos.MoveRobberResponse.Builder getMoveRobberResponseBuilder() {
+        return getMoveRobberResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+       */
+      public protocol.ResponseProtos.MoveRobberResponseOrBuilder getMoveRobberResponseOrBuilder() {
+        if ((typeCase_ == 9) && (moveRobberResponseBuilder_ != null)) {
+          return moveRobberResponseBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 9) {
+            return (protocol.ResponseProtos.MoveRobberResponse) type_;
+          }
+          return protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.MoveRobberResponse, protocol.ResponseProtos.MoveRobberResponse.Builder, protocol.ResponseProtos.MoveRobberResponseOrBuilder> 
+          getMoveRobberResponseFieldBuilder() {
+        if (moveRobberResponseBuilder_ == null) {
+          if (!(typeCase_ == 9)) {
+            type_ = protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
+          }
+          moveRobberResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.MoveRobberResponse, protocol.ResponseProtos.MoveRobberResponse.Builder, protocol.ResponseProtos.MoveRobberResponseOrBuilder>(
+                  (protocol.ResponseProtos.MoveRobberResponse) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 9;
+        return moveRobberResponseBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.EndMoveResponse, protocol.ResponseProtos.EndMoveResponse.Builder, protocol.ResponseProtos.EndMoveResponseOrBuilder> endMoveResponseBuilder_;
+      /**
+       * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+       */
+      public boolean hasEndMoveResponse() {
+        return typeCase_ == 10;
+      }
+      /**
+       * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+       */
+      public protocol.ResponseProtos.EndMoveResponse getEndMoveResponse() {
+        if (endMoveResponseBuilder_ == null) {
+          if (typeCase_ == 10) {
+            return (protocol.ResponseProtos.EndMoveResponse) type_;
+          }
+          return protocol.ResponseProtos.EndMoveResponse.getDefaultInstance();
+        } else {
+          if (typeCase_ == 10) {
+            return endMoveResponseBuilder_.getMessage();
+          }
+          return protocol.ResponseProtos.EndMoveResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+       */
+      public Builder setEndMoveResponse(protocol.ResponseProtos.EndMoveResponse value) {
+        if (endMoveResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          endMoveResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 10;
+        return this;
+      }
+      /**
+       * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+       */
+      public Builder setEndMoveResponse(
+          protocol.ResponseProtos.EndMoveResponse.Builder builderForValue) {
+        if (endMoveResponseBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          endMoveResponseBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 10;
+        return this;
+      }
+      /**
+       * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+       */
+      public Builder mergeEndMoveResponse(protocol.ResponseProtos.EndMoveResponse value) {
+        if (endMoveResponseBuilder_ == null) {
+          if (typeCase_ == 10 &&
+              type_ != protocol.ResponseProtos.EndMoveResponse.getDefaultInstance()) {
+            type_ = protocol.ResponseProtos.EndMoveResponse.newBuilder((protocol.ResponseProtos.EndMoveResponse) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 10) {
+            endMoveResponseBuilder_.mergeFrom(value);
+          }
+          endMoveResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 10;
+        return this;
+      }
+      /**
+       * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+       */
+      public Builder clearEndMoveResponse() {
+        if (endMoveResponseBuilder_ == null) {
+          if (typeCase_ == 10) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 10) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          endMoveResponseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+       */
+      public protocol.ResponseProtos.EndMoveResponse.Builder getEndMoveResponseBuilder() {
+        return getEndMoveResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+       */
+      public protocol.ResponseProtos.EndMoveResponseOrBuilder getEndMoveResponseOrBuilder() {
+        if ((typeCase_ == 10) && (endMoveResponseBuilder_ != null)) {
+          return endMoveResponseBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 10) {
+            return (protocol.ResponseProtos.EndMoveResponse) type_;
+          }
+          return protocol.ResponseProtos.EndMoveResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.EndMoveResponse, protocol.ResponseProtos.EndMoveResponse.Builder, protocol.ResponseProtos.EndMoveResponseOrBuilder> 
+          getEndMoveResponseFieldBuilder() {
+        if (endMoveResponseBuilder_ == null) {
+          if (!(typeCase_ == 10)) {
+            type_ = protocol.ResponseProtos.EndMoveResponse.getDefaultInstance();
+          }
+          endMoveResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.EndMoveResponse, protocol.ResponseProtos.EndMoveResponse.Builder, protocol.ResponseProtos.EndMoveResponseOrBuilder>(
+                  (protocol.ResponseProtos.EndMoveResponse) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 10;
+        return endMoveResponseBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.BuildSettlementResponse, protocol.ResponseProtos.BuildSettlementResponse.Builder, protocol.ResponseProtos.BuildSettlementResponseOrBuilder> buildSettlementResponseBuilder_;
+      /**
+       * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+       */
+      public boolean hasBuildSettlementResponse() {
+        return typeCase_ == 11;
+      }
+      /**
+       * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+       */
+      public protocol.ResponseProtos.BuildSettlementResponse getBuildSettlementResponse() {
+        if (buildSettlementResponseBuilder_ == null) {
+          if (typeCase_ == 11) {
+            return (protocol.ResponseProtos.BuildSettlementResponse) type_;
+          }
+          return protocol.ResponseProtos.BuildSettlementResponse.getDefaultInstance();
+        } else {
+          if (typeCase_ == 11) {
+            return buildSettlementResponseBuilder_.getMessage();
+          }
+          return protocol.ResponseProtos.BuildSettlementResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+       */
+      public Builder setBuildSettlementResponse(protocol.ResponseProtos.BuildSettlementResponse value) {
+        if (buildSettlementResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          buildSettlementResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 11;
+        return this;
+      }
+      /**
+       * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+       */
+      public Builder setBuildSettlementResponse(
+          protocol.ResponseProtos.BuildSettlementResponse.Builder builderForValue) {
+        if (buildSettlementResponseBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          buildSettlementResponseBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 11;
+        return this;
+      }
+      /**
+       * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+       */
+      public Builder mergeBuildSettlementResponse(protocol.ResponseProtos.BuildSettlementResponse value) {
+        if (buildSettlementResponseBuilder_ == null) {
+          if (typeCase_ == 11 &&
+              type_ != protocol.ResponseProtos.BuildSettlementResponse.getDefaultInstance()) {
+            type_ = protocol.ResponseProtos.BuildSettlementResponse.newBuilder((protocol.ResponseProtos.BuildSettlementResponse) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 11) {
+            buildSettlementResponseBuilder_.mergeFrom(value);
+          }
+          buildSettlementResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 11;
+        return this;
+      }
+      /**
+       * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+       */
+      public Builder clearBuildSettlementResponse() {
+        if (buildSettlementResponseBuilder_ == null) {
+          if (typeCase_ == 11) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 11) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          buildSettlementResponseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+       */
+      public protocol.ResponseProtos.BuildSettlementResponse.Builder getBuildSettlementResponseBuilder() {
+        return getBuildSettlementResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+       */
+      public protocol.ResponseProtos.BuildSettlementResponseOrBuilder getBuildSettlementResponseOrBuilder() {
+        if ((typeCase_ == 11) && (buildSettlementResponseBuilder_ != null)) {
+          return buildSettlementResponseBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 11) {
+            return (protocol.ResponseProtos.BuildSettlementResponse) type_;
+          }
+          return protocol.ResponseProtos.BuildSettlementResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.BuildSettlementResponse, protocol.ResponseProtos.BuildSettlementResponse.Builder, protocol.ResponseProtos.BuildSettlementResponseOrBuilder> 
+          getBuildSettlementResponseFieldBuilder() {
+        if (buildSettlementResponseBuilder_ == null) {
+          if (!(typeCase_ == 11)) {
+            type_ = protocol.ResponseProtos.BuildSettlementResponse.getDefaultInstance();
+          }
+          buildSettlementResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.BuildSettlementResponse, protocol.ResponseProtos.BuildSettlementResponse.Builder, protocol.ResponseProtos.BuildSettlementResponseOrBuilder>(
+                  (protocol.ResponseProtos.BuildSettlementResponse) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 11;
+        return buildSettlementResponseBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.UpgradeSettlementResponse, protocol.ResponseProtos.UpgradeSettlementResponse.Builder, protocol.ResponseProtos.UpgradeSettlementResponseOrBuilder> upgradeSettlementResponseBuilder_;
+      /**
+       * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+       */
+      public boolean hasUpgradeSettlementResponse() {
+        return typeCase_ == 12;
+      }
+      /**
+       * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+       */
+      public protocol.ResponseProtos.UpgradeSettlementResponse getUpgradeSettlementResponse() {
+        if (upgradeSettlementResponseBuilder_ == null) {
+          if (typeCase_ == 12) {
+            return (protocol.ResponseProtos.UpgradeSettlementResponse) type_;
+          }
+          return protocol.ResponseProtos.UpgradeSettlementResponse.getDefaultInstance();
+        } else {
+          if (typeCase_ == 12) {
+            return upgradeSettlementResponseBuilder_.getMessage();
+          }
+          return protocol.ResponseProtos.UpgradeSettlementResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+       */
+      public Builder setUpgradeSettlementResponse(protocol.ResponseProtos.UpgradeSettlementResponse value) {
+        if (upgradeSettlementResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          upgradeSettlementResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 12;
+        return this;
+      }
+      /**
+       * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+       */
+      public Builder setUpgradeSettlementResponse(
+          protocol.ResponseProtos.UpgradeSettlementResponse.Builder builderForValue) {
+        if (upgradeSettlementResponseBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          upgradeSettlementResponseBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 12;
+        return this;
+      }
+      /**
+       * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+       */
+      public Builder mergeUpgradeSettlementResponse(protocol.ResponseProtos.UpgradeSettlementResponse value) {
+        if (upgradeSettlementResponseBuilder_ == null) {
+          if (typeCase_ == 12 &&
+              type_ != protocol.ResponseProtos.UpgradeSettlementResponse.getDefaultInstance()) {
+            type_ = protocol.ResponseProtos.UpgradeSettlementResponse.newBuilder((protocol.ResponseProtos.UpgradeSettlementResponse) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 12) {
+            upgradeSettlementResponseBuilder_.mergeFrom(value);
+          }
+          upgradeSettlementResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 12;
+        return this;
+      }
+      /**
+       * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+       */
+      public Builder clearUpgradeSettlementResponse() {
+        if (upgradeSettlementResponseBuilder_ == null) {
+          if (typeCase_ == 12) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 12) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          upgradeSettlementResponseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+       */
+      public protocol.ResponseProtos.UpgradeSettlementResponse.Builder getUpgradeSettlementResponseBuilder() {
+        return getUpgradeSettlementResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+       */
+      public protocol.ResponseProtos.UpgradeSettlementResponseOrBuilder getUpgradeSettlementResponseOrBuilder() {
+        if ((typeCase_ == 12) && (upgradeSettlementResponseBuilder_ != null)) {
+          return upgradeSettlementResponseBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 12) {
+            return (protocol.ResponseProtos.UpgradeSettlementResponse) type_;
+          }
+          return protocol.ResponseProtos.UpgradeSettlementResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.UpgradeSettlementResponse, protocol.ResponseProtos.UpgradeSettlementResponse.Builder, protocol.ResponseProtos.UpgradeSettlementResponseOrBuilder> 
+          getUpgradeSettlementResponseFieldBuilder() {
+        if (upgradeSettlementResponseBuilder_ == null) {
+          if (!(typeCase_ == 12)) {
+            type_ = protocol.ResponseProtos.UpgradeSettlementResponse.getDefaultInstance();
+          }
+          upgradeSettlementResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.UpgradeSettlementResponse, protocol.ResponseProtos.UpgradeSettlementResponse.Builder, protocol.ResponseProtos.UpgradeSettlementResponseOrBuilder>(
+                  (protocol.ResponseProtos.UpgradeSettlementResponse) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 12;
+        return upgradeSettlementResponseBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:Response)
+    }
+
+    static {
+      defaultInstance = new Response(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:Response)
+  }
+
   public interface SuccessFailResponseOrBuilder extends
       // @@protoc_insertion_point(interface_extends:SuccessFailResponse)
       com.google.protobuf.MessageOrBuilder {
@@ -25,7 +2803,7 @@ public final class ResponseProtos {
      * <code>optional string reason = 2;</code>
      *
      * <pre>
-     *associated with FAILURE results (for debugging purposes only)
+     *associated with FAILURE results
      * </pre>
      */
     boolean hasReason();
@@ -33,7 +2811,7 @@ public final class ResponseProtos {
      * <code>optional string reason = 2;</code>
      *
      * <pre>
-     *associated with FAILURE results (for debugging purposes only)
+     *associated with FAILURE results
      * </pre>
      */
     java.lang.String getReason();
@@ -41,7 +2819,7 @@ public final class ResponseProtos {
      * <code>optional string reason = 2;</code>
      *
      * <pre>
-     *associated with FAILURE results (for debugging purposes only)
+     *associated with FAILURE results
      * </pre>
      */
     com.google.protobuf.ByteString
@@ -181,7 +2959,7 @@ public final class ResponseProtos {
      * <code>optional string reason = 2;</code>
      *
      * <pre>
-     *associated with FAILURE results (for debugging purposes only)
+     *associated with FAILURE results
      * </pre>
      */
     public boolean hasReason() {
@@ -191,7 +2969,7 @@ public final class ResponseProtos {
      * <code>optional string reason = 2;</code>
      *
      * <pre>
-     *associated with FAILURE results (for debugging purposes only)
+     *associated with FAILURE results
      * </pre>
      */
     public java.lang.String getReason() {
@@ -212,7 +2990,7 @@ public final class ResponseProtos {
      * <code>optional string reason = 2;</code>
      *
      * <pre>
-     *associated with FAILURE results (for debugging purposes only)
+     *associated with FAILURE results
      * </pre>
      */
     public com.google.protobuf.ByteString
@@ -529,7 +3307,7 @@ public final class ResponseProtos {
        * <code>optional string reason = 2;</code>
        *
        * <pre>
-       *associated with FAILURE results (for debugging purposes only)
+       *associated with FAILURE results
        * </pre>
        */
       public boolean hasReason() {
@@ -539,7 +3317,7 @@ public final class ResponseProtos {
        * <code>optional string reason = 2;</code>
        *
        * <pre>
-       *associated with FAILURE results (for debugging purposes only)
+       *associated with FAILURE results
        * </pre>
        */
       public java.lang.String getReason() {
@@ -560,7 +3338,7 @@ public final class ResponseProtos {
        * <code>optional string reason = 2;</code>
        *
        * <pre>
-       *associated with FAILURE results (for debugging purposes only)
+       *associated with FAILURE results
        * </pre>
        */
       public com.google.protobuf.ByteString
@@ -580,7 +3358,7 @@ public final class ResponseProtos {
        * <code>optional string reason = 2;</code>
        *
        * <pre>
-       *associated with FAILURE results (for debugging purposes only)
+       *associated with FAILURE results
        * </pre>
        */
       public Builder setReason(
@@ -597,7 +3375,7 @@ public final class ResponseProtos {
        * <code>optional string reason = 2;</code>
        *
        * <pre>
-       *associated with FAILURE results (for debugging purposes only)
+       *associated with FAILURE results
        * </pre>
        */
       public Builder clearReason() {
@@ -610,7 +3388,7 @@ public final class ResponseProtos {
        * <code>optional string reason = 2;</code>
        *
        * <pre>
-       *associated with FAILURE results (for debugging purposes only)
+       *associated with FAILURE results
        * </pre>
        */
       public Builder setReasonBytes(
@@ -2188,48 +4966,13 @@ public final class ResponseProtos {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required .ResultProto result = 1;</code>
-     */
-    boolean hasResult();
-    /**
-     * <code>required .ResultProto result = 1;</code>
-     */
-    protocol.EnumProtos.ResultProto getResult();
-
-    /**
-     * <code>required .DevelopmentCardProto developmentCard = 2;</code>
+     * <code>required .DevelopmentCardProto developmentCard = 1;</code>
      */
     boolean hasDevelopmentCard();
     /**
-     * <code>required .DevelopmentCardProto developmentCard = 2;</code>
+     * <code>required .DevelopmentCardProto developmentCard = 1;</code>
      */
     protocol.EnumProtos.DevelopmentCardProto getDevelopmentCard();
-
-    /**
-     * <code>optional string reason = 3;</code>
-     *
-     * <pre>
-     *associated with FAILURE results (for debugging purposes only)
-     * </pre>
-     */
-    boolean hasReason();
-    /**
-     * <code>optional string reason = 3;</code>
-     *
-     * <pre>
-     *associated with FAILURE results (for debugging purposes only)
-     * </pre>
-     */
-    java.lang.String getReason();
-    /**
-     * <code>optional string reason = 3;</code>
-     *
-     * <pre>
-     *associated with FAILURE results (for debugging purposes only)
-     * </pre>
-     */
-    com.google.protobuf.ByteString
-        getReasonBytes();
   }
   /**
    * Protobuf type {@code BuyDevCardResponse}
@@ -2285,30 +5028,13 @@ public final class ResponseProtos {
             }
             case 8: {
               int rawValue = input.readEnum();
-              protocol.EnumProtos.ResultProto value = protocol.EnumProtos.ResultProto.valueOf(rawValue);
+              protocol.EnumProtos.DevelopmentCardProto value = protocol.EnumProtos.DevelopmentCardProto.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
                 bitField0_ |= 0x00000001;
-                result_ = value;
-              }
-              break;
-            }
-            case 16: {
-              int rawValue = input.readEnum();
-              protocol.EnumProtos.DevelopmentCardProto value = protocol.EnumProtos.DevelopmentCardProto.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(2, rawValue);
-              } else {
-                bitField0_ |= 0x00000002;
                 developmentCard_ = value;
               }
-              break;
-            }
-            case 26: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000004;
-              reason_ = bs;
               break;
             }
           }
@@ -2351,94 +5077,23 @@ public final class ResponseProtos {
     }
 
     private int bitField0_;
-    public static final int RESULT_FIELD_NUMBER = 1;
-    private protocol.EnumProtos.ResultProto result_;
+    public static final int DEVELOPMENTCARD_FIELD_NUMBER = 1;
+    private protocol.EnumProtos.DevelopmentCardProto developmentCard_;
     /**
-     * <code>required .ResultProto result = 1;</code>
+     * <code>required .DevelopmentCardProto developmentCard = 1;</code>
      */
-    public boolean hasResult() {
+    public boolean hasDevelopmentCard() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required .ResultProto result = 1;</code>
-     */
-    public protocol.EnumProtos.ResultProto getResult() {
-      return result_;
-    }
-
-    public static final int DEVELOPMENTCARD_FIELD_NUMBER = 2;
-    private protocol.EnumProtos.DevelopmentCardProto developmentCard_;
-    /**
-     * <code>required .DevelopmentCardProto developmentCard = 2;</code>
-     */
-    public boolean hasDevelopmentCard() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>required .DevelopmentCardProto developmentCard = 2;</code>
+     * <code>required .DevelopmentCardProto developmentCard = 1;</code>
      */
     public protocol.EnumProtos.DevelopmentCardProto getDevelopmentCard() {
       return developmentCard_;
     }
 
-    public static final int REASON_FIELD_NUMBER = 3;
-    private java.lang.Object reason_;
-    /**
-     * <code>optional string reason = 3;</code>
-     *
-     * <pre>
-     *associated with FAILURE results (for debugging purposes only)
-     * </pre>
-     */
-    public boolean hasReason() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>optional string reason = 3;</code>
-     *
-     * <pre>
-     *associated with FAILURE results (for debugging purposes only)
-     * </pre>
-     */
-    public java.lang.String getReason() {
-      java.lang.Object ref = reason_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          reason_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string reason = 3;</code>
-     *
-     * <pre>
-     *associated with FAILURE results (for debugging purposes only)
-     * </pre>
-     */
-    public com.google.protobuf.ByteString
-        getReasonBytes() {
-      java.lang.Object ref = reason_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        reason_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
     private void initFields() {
-      result_ = protocol.EnumProtos.ResultProto.SUCCESS;
       developmentCard_ = protocol.EnumProtos.DevelopmentCardProto.KNIGHT;
-      reason_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2446,10 +5101,6 @@ public final class ResponseProtos {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
-      if (!hasResult()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       if (!hasDevelopmentCard()) {
         memoizedIsInitialized = 0;
         return false;
@@ -2462,13 +5113,7 @@ public final class ResponseProtos {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, result_.getNumber());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, developmentCard_.getNumber());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, getReasonBytes());
+        output.writeEnum(1, developmentCard_.getNumber());
       }
       getUnknownFields().writeTo(output);
     }
@@ -2481,15 +5126,7 @@ public final class ResponseProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, result_.getNumber());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, developmentCard_.getNumber());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getReasonBytes());
+          .computeEnumSize(1, developmentCard_.getNumber());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2608,12 +5245,8 @@ public final class ResponseProtos {
 
       public Builder clear() {
         super.clear();
-        result_ = protocol.EnumProtos.ResultProto.SUCCESS;
-        bitField0_ = (bitField0_ & ~0x00000001);
         developmentCard_ = protocol.EnumProtos.DevelopmentCardProto.KNIGHT;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        reason_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
 
@@ -2645,15 +5278,7 @@ public final class ResponseProtos {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.result_ = result_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
         result.developmentCard_ = developmentCard_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.reason_ = reason_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -2670,26 +5295,14 @@ public final class ResponseProtos {
 
       public Builder mergeFrom(protocol.ResponseProtos.BuyDevCardResponse other) {
         if (other == protocol.ResponseProtos.BuyDevCardResponse.getDefaultInstance()) return this;
-        if (other.hasResult()) {
-          setResult(other.getResult());
-        }
         if (other.hasDevelopmentCard()) {
           setDevelopmentCard(other.getDevelopmentCard());
-        }
-        if (other.hasReason()) {
-          bitField0_ |= 0x00000004;
-          reason_ = other.reason_;
-          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
-        if (!hasResult()) {
-          
-          return false;
-        }
         if (!hasDevelopmentCard()) {
           
           return false;
@@ -2716,172 +5329,37 @@ public final class ResponseProtos {
       }
       private int bitField0_;
 
-      private protocol.EnumProtos.ResultProto result_ = protocol.EnumProtos.ResultProto.SUCCESS;
+      private protocol.EnumProtos.DevelopmentCardProto developmentCard_ = protocol.EnumProtos.DevelopmentCardProto.KNIGHT;
       /**
-       * <code>required .ResultProto result = 1;</code>
+       * <code>required .DevelopmentCardProto developmentCard = 1;</code>
        */
-      public boolean hasResult() {
+      public boolean hasDevelopmentCard() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required .ResultProto result = 1;</code>
-       */
-      public protocol.EnumProtos.ResultProto getResult() {
-        return result_;
-      }
-      /**
-       * <code>required .ResultProto result = 1;</code>
-       */
-      public Builder setResult(protocol.EnumProtos.ResultProto value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000001;
-        result_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required .ResultProto result = 1;</code>
-       */
-      public Builder clearResult() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        result_ = protocol.EnumProtos.ResultProto.SUCCESS;
-        onChanged();
-        return this;
-      }
-
-      private protocol.EnumProtos.DevelopmentCardProto developmentCard_ = protocol.EnumProtos.DevelopmentCardProto.KNIGHT;
-      /**
-       * <code>required .DevelopmentCardProto developmentCard = 2;</code>
-       */
-      public boolean hasDevelopmentCard() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>required .DevelopmentCardProto developmentCard = 2;</code>
+       * <code>required .DevelopmentCardProto developmentCard = 1;</code>
        */
       public protocol.EnumProtos.DevelopmentCardProto getDevelopmentCard() {
         return developmentCard_;
       }
       /**
-       * <code>required .DevelopmentCardProto developmentCard = 2;</code>
+       * <code>required .DevelopmentCardProto developmentCard = 1;</code>
        */
       public Builder setDevelopmentCard(protocol.EnumProtos.DevelopmentCardProto value) {
         if (value == null) {
           throw new NullPointerException();
         }
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000001;
         developmentCard_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required .DevelopmentCardProto developmentCard = 2;</code>
+       * <code>required .DevelopmentCardProto developmentCard = 1;</code>
        */
       public Builder clearDevelopmentCard() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000001);
         developmentCard_ = protocol.EnumProtos.DevelopmentCardProto.KNIGHT;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object reason_ = "";
-      /**
-       * <code>optional string reason = 3;</code>
-       *
-       * <pre>
-       *associated with FAILURE results (for debugging purposes only)
-       * </pre>
-       */
-      public boolean hasReason() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional string reason = 3;</code>
-       *
-       * <pre>
-       *associated with FAILURE results (for debugging purposes only)
-       * </pre>
-       */
-      public java.lang.String getReason() {
-        java.lang.Object ref = reason_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            reason_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string reason = 3;</code>
-       *
-       * <pre>
-       *associated with FAILURE results (for debugging purposes only)
-       * </pre>
-       */
-      public com.google.protobuf.ByteString
-          getReasonBytes() {
-        java.lang.Object ref = reason_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          reason_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string reason = 3;</code>
-       *
-       * <pre>
-       *associated with FAILURE results (for debugging purposes only)
-       * </pre>
-       */
-      public Builder setReason(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        reason_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string reason = 3;</code>
-       *
-       * <pre>
-       *associated with FAILURE results (for debugging purposes only)
-       * </pre>
-       */
-      public Builder clearReason() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        reason_ = getDefaultInstance().getReason();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string reason = 3;</code>
-       *
-       * <pre>
-       *associated with FAILURE results (for debugging purposes only)
-       * </pre>
-       */
-      public Builder setReasonBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        reason_ = value;
         onChanged();
         return this;
       }
@@ -2897,6 +5375,1054 @@ public final class ResponseProtos {
     // @@protoc_insertion_point(class_scope:BuyDevCardResponse)
   }
 
+  public interface BuildSettlementResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:BuildSettlementResponse)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required .BuildingProto newBuilding = 1;</code>
+     */
+    boolean hasNewBuilding();
+    /**
+     * <code>required .BuildingProto newBuilding = 1;</code>
+     */
+    protocol.BuildProtos.BuildingProto getNewBuilding();
+    /**
+     * <code>required .BuildingProto newBuilding = 1;</code>
+     */
+    protocol.BuildProtos.BuildingProtoOrBuilder getNewBuildingOrBuilder();
+  }
+  /**
+   * Protobuf type {@code BuildSettlementResponse}
+   */
+  public static final class BuildSettlementResponse extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:BuildSettlementResponse)
+      BuildSettlementResponseOrBuilder {
+    // Use BuildSettlementResponse.newBuilder() to construct.
+    private BuildSettlementResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private BuildSettlementResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final BuildSettlementResponse defaultInstance;
+    public static BuildSettlementResponse getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public BuildSettlementResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private BuildSettlementResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              protocol.BuildProtos.BuildingProto.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = newBuilding_.toBuilder();
+              }
+              newBuilding_ = input.readMessage(protocol.BuildProtos.BuildingProto.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(newBuilding_);
+                newBuilding_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protocol.ResponseProtos.internal_static_BuildSettlementResponse_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protocol.ResponseProtos.internal_static_BuildSettlementResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protocol.ResponseProtos.BuildSettlementResponse.class, protocol.ResponseProtos.BuildSettlementResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<BuildSettlementResponse> PARSER =
+        new com.google.protobuf.AbstractParser<BuildSettlementResponse>() {
+      public BuildSettlementResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new BuildSettlementResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BuildSettlementResponse> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int NEWBUILDING_FIELD_NUMBER = 1;
+    private protocol.BuildProtos.BuildingProto newBuilding_;
+    /**
+     * <code>required .BuildingProto newBuilding = 1;</code>
+     */
+    public boolean hasNewBuilding() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .BuildingProto newBuilding = 1;</code>
+     */
+    public protocol.BuildProtos.BuildingProto getNewBuilding() {
+      return newBuilding_;
+    }
+    /**
+     * <code>required .BuildingProto newBuilding = 1;</code>
+     */
+    public protocol.BuildProtos.BuildingProtoOrBuilder getNewBuildingOrBuilder() {
+      return newBuilding_;
+    }
+
+    private void initFields() {
+      newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasNewBuilding()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getNewBuilding().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeMessage(1, newBuilding_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, newBuilding_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protocol.ResponseProtos.BuildSettlementResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protocol.ResponseProtos.BuildSettlementResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.BuildSettlementResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protocol.ResponseProtos.BuildSettlementResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.BuildSettlementResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protocol.ResponseProtos.BuildSettlementResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.BuildSettlementResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protocol.ResponseProtos.BuildSettlementResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.BuildSettlementResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protocol.ResponseProtos.BuildSettlementResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protocol.ResponseProtos.BuildSettlementResponse prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code BuildSettlementResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:BuildSettlementResponse)
+        protocol.ResponseProtos.BuildSettlementResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protocol.ResponseProtos.internal_static_BuildSettlementResponse_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protocol.ResponseProtos.internal_static_BuildSettlementResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protocol.ResponseProtos.BuildSettlementResponse.class, protocol.ResponseProtos.BuildSettlementResponse.Builder.class);
+      }
+
+      // Construct using protocol.ResponseProtos.BuildSettlementResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getNewBuildingFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        if (newBuildingBuilder_ == null) {
+          newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+        } else {
+          newBuildingBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protocol.ResponseProtos.internal_static_BuildSettlementResponse_descriptor;
+      }
+
+      public protocol.ResponseProtos.BuildSettlementResponse getDefaultInstanceForType() {
+        return protocol.ResponseProtos.BuildSettlementResponse.getDefaultInstance();
+      }
+
+      public protocol.ResponseProtos.BuildSettlementResponse build() {
+        protocol.ResponseProtos.BuildSettlementResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protocol.ResponseProtos.BuildSettlementResponse buildPartial() {
+        protocol.ResponseProtos.BuildSettlementResponse result = new protocol.ResponseProtos.BuildSettlementResponse(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        if (newBuildingBuilder_ == null) {
+          result.newBuilding_ = newBuilding_;
+        } else {
+          result.newBuilding_ = newBuildingBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protocol.ResponseProtos.BuildSettlementResponse) {
+          return mergeFrom((protocol.ResponseProtos.BuildSettlementResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protocol.ResponseProtos.BuildSettlementResponse other) {
+        if (other == protocol.ResponseProtos.BuildSettlementResponse.getDefaultInstance()) return this;
+        if (other.hasNewBuilding()) {
+          mergeNewBuilding(other.getNewBuilding());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasNewBuilding()) {
+          
+          return false;
+        }
+        if (!getNewBuilding().isInitialized()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protocol.ResponseProtos.BuildSettlementResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protocol.ResponseProtos.BuildSettlementResponse) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private protocol.BuildProtos.BuildingProto newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder> newBuildingBuilder_;
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public boolean hasNewBuilding() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public protocol.BuildProtos.BuildingProto getNewBuilding() {
+        if (newBuildingBuilder_ == null) {
+          return newBuilding_;
+        } else {
+          return newBuildingBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public Builder setNewBuilding(protocol.BuildProtos.BuildingProto value) {
+        if (newBuildingBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          newBuilding_ = value;
+          onChanged();
+        } else {
+          newBuildingBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public Builder setNewBuilding(
+          protocol.BuildProtos.BuildingProto.Builder builderForValue) {
+        if (newBuildingBuilder_ == null) {
+          newBuilding_ = builderForValue.build();
+          onChanged();
+        } else {
+          newBuildingBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public Builder mergeNewBuilding(protocol.BuildProtos.BuildingProto value) {
+        if (newBuildingBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              newBuilding_ != protocol.BuildProtos.BuildingProto.getDefaultInstance()) {
+            newBuilding_ =
+              protocol.BuildProtos.BuildingProto.newBuilder(newBuilding_).mergeFrom(value).buildPartial();
+          } else {
+            newBuilding_ = value;
+          }
+          onChanged();
+        } else {
+          newBuildingBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public Builder clearNewBuilding() {
+        if (newBuildingBuilder_ == null) {
+          newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+          onChanged();
+        } else {
+          newBuildingBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public protocol.BuildProtos.BuildingProto.Builder getNewBuildingBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getNewBuildingFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public protocol.BuildProtos.BuildingProtoOrBuilder getNewBuildingOrBuilder() {
+        if (newBuildingBuilder_ != null) {
+          return newBuildingBuilder_.getMessageOrBuilder();
+        } else {
+          return newBuilding_;
+        }
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder> 
+          getNewBuildingFieldBuilder() {
+        if (newBuildingBuilder_ == null) {
+          newBuildingBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder>(
+                  getNewBuilding(),
+                  getParentForChildren(),
+                  isClean());
+          newBuilding_ = null;
+        }
+        return newBuildingBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:BuildSettlementResponse)
+    }
+
+    static {
+      defaultInstance = new BuildSettlementResponse(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:BuildSettlementResponse)
+  }
+
+  public interface UpgradeSettlementResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:UpgradeSettlementResponse)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required .BuildingProto newBuilding = 1;</code>
+     */
+    boolean hasNewBuilding();
+    /**
+     * <code>required .BuildingProto newBuilding = 1;</code>
+     */
+    protocol.BuildProtos.BuildingProto getNewBuilding();
+    /**
+     * <code>required .BuildingProto newBuilding = 1;</code>
+     */
+    protocol.BuildProtos.BuildingProtoOrBuilder getNewBuildingOrBuilder();
+  }
+  /**
+   * Protobuf type {@code UpgradeSettlementResponse}
+   */
+  public static final class UpgradeSettlementResponse extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:UpgradeSettlementResponse)
+      UpgradeSettlementResponseOrBuilder {
+    // Use UpgradeSettlementResponse.newBuilder() to construct.
+    private UpgradeSettlementResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private UpgradeSettlementResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final UpgradeSettlementResponse defaultInstance;
+    public static UpgradeSettlementResponse getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public UpgradeSettlementResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private UpgradeSettlementResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              protocol.BuildProtos.BuildingProto.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = newBuilding_.toBuilder();
+              }
+              newBuilding_ = input.readMessage(protocol.BuildProtos.BuildingProto.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(newBuilding_);
+                newBuilding_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protocol.ResponseProtos.internal_static_UpgradeSettlementResponse_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protocol.ResponseProtos.internal_static_UpgradeSettlementResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protocol.ResponseProtos.UpgradeSettlementResponse.class, protocol.ResponseProtos.UpgradeSettlementResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<UpgradeSettlementResponse> PARSER =
+        new com.google.protobuf.AbstractParser<UpgradeSettlementResponse>() {
+      public UpgradeSettlementResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new UpgradeSettlementResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<UpgradeSettlementResponse> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int NEWBUILDING_FIELD_NUMBER = 1;
+    private protocol.BuildProtos.BuildingProto newBuilding_;
+    /**
+     * <code>required .BuildingProto newBuilding = 1;</code>
+     */
+    public boolean hasNewBuilding() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .BuildingProto newBuilding = 1;</code>
+     */
+    public protocol.BuildProtos.BuildingProto getNewBuilding() {
+      return newBuilding_;
+    }
+    /**
+     * <code>required .BuildingProto newBuilding = 1;</code>
+     */
+    public protocol.BuildProtos.BuildingProtoOrBuilder getNewBuildingOrBuilder() {
+      return newBuilding_;
+    }
+
+    private void initFields() {
+      newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasNewBuilding()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getNewBuilding().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeMessage(1, newBuilding_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, newBuilding_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protocol.ResponseProtos.UpgradeSettlementResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protocol.ResponseProtos.UpgradeSettlementResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.UpgradeSettlementResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protocol.ResponseProtos.UpgradeSettlementResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.UpgradeSettlementResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protocol.ResponseProtos.UpgradeSettlementResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.UpgradeSettlementResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protocol.ResponseProtos.UpgradeSettlementResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.UpgradeSettlementResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protocol.ResponseProtos.UpgradeSettlementResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protocol.ResponseProtos.UpgradeSettlementResponse prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code UpgradeSettlementResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:UpgradeSettlementResponse)
+        protocol.ResponseProtos.UpgradeSettlementResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protocol.ResponseProtos.internal_static_UpgradeSettlementResponse_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protocol.ResponseProtos.internal_static_UpgradeSettlementResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protocol.ResponseProtos.UpgradeSettlementResponse.class, protocol.ResponseProtos.UpgradeSettlementResponse.Builder.class);
+      }
+
+      // Construct using protocol.ResponseProtos.UpgradeSettlementResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getNewBuildingFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        if (newBuildingBuilder_ == null) {
+          newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+        } else {
+          newBuildingBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protocol.ResponseProtos.internal_static_UpgradeSettlementResponse_descriptor;
+      }
+
+      public protocol.ResponseProtos.UpgradeSettlementResponse getDefaultInstanceForType() {
+        return protocol.ResponseProtos.UpgradeSettlementResponse.getDefaultInstance();
+      }
+
+      public protocol.ResponseProtos.UpgradeSettlementResponse build() {
+        protocol.ResponseProtos.UpgradeSettlementResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protocol.ResponseProtos.UpgradeSettlementResponse buildPartial() {
+        protocol.ResponseProtos.UpgradeSettlementResponse result = new protocol.ResponseProtos.UpgradeSettlementResponse(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        if (newBuildingBuilder_ == null) {
+          result.newBuilding_ = newBuilding_;
+        } else {
+          result.newBuilding_ = newBuildingBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protocol.ResponseProtos.UpgradeSettlementResponse) {
+          return mergeFrom((protocol.ResponseProtos.UpgradeSettlementResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protocol.ResponseProtos.UpgradeSettlementResponse other) {
+        if (other == protocol.ResponseProtos.UpgradeSettlementResponse.getDefaultInstance()) return this;
+        if (other.hasNewBuilding()) {
+          mergeNewBuilding(other.getNewBuilding());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasNewBuilding()) {
+          
+          return false;
+        }
+        if (!getNewBuilding().isInitialized()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protocol.ResponseProtos.UpgradeSettlementResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protocol.ResponseProtos.UpgradeSettlementResponse) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private protocol.BuildProtos.BuildingProto newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder> newBuildingBuilder_;
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public boolean hasNewBuilding() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public protocol.BuildProtos.BuildingProto getNewBuilding() {
+        if (newBuildingBuilder_ == null) {
+          return newBuilding_;
+        } else {
+          return newBuildingBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public Builder setNewBuilding(protocol.BuildProtos.BuildingProto value) {
+        if (newBuildingBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          newBuilding_ = value;
+          onChanged();
+        } else {
+          newBuildingBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public Builder setNewBuilding(
+          protocol.BuildProtos.BuildingProto.Builder builderForValue) {
+        if (newBuildingBuilder_ == null) {
+          newBuilding_ = builderForValue.build();
+          onChanged();
+        } else {
+          newBuildingBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public Builder mergeNewBuilding(protocol.BuildProtos.BuildingProto value) {
+        if (newBuildingBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              newBuilding_ != protocol.BuildProtos.BuildingProto.getDefaultInstance()) {
+            newBuilding_ =
+              protocol.BuildProtos.BuildingProto.newBuilder(newBuilding_).mergeFrom(value).buildPartial();
+          } else {
+            newBuilding_ = value;
+          }
+          onChanged();
+        } else {
+          newBuildingBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public Builder clearNewBuilding() {
+        if (newBuildingBuilder_ == null) {
+          newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+          onChanged();
+        } else {
+          newBuildingBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public protocol.BuildProtos.BuildingProto.Builder getNewBuildingBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getNewBuildingFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      public protocol.BuildProtos.BuildingProtoOrBuilder getNewBuildingOrBuilder() {
+        if (newBuildingBuilder_ != null) {
+          return newBuildingBuilder_.getMessageOrBuilder();
+        } else {
+          return newBuilding_;
+        }
+      }
+      /**
+       * <code>required .BuildingProto newBuilding = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder> 
+          getNewBuildingFieldBuilder() {
+        if (newBuildingBuilder_ == null) {
+          newBuildingBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder>(
+                  getNewBuilding(),
+                  getParentForChildren(),
+                  isClean());
+          newBuilding_ = null;
+        }
+        return newBuildingBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:UpgradeSettlementResponse)
+    }
+
+    static {
+      defaultInstance = new UpgradeSettlementResponse(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:UpgradeSettlementResponse)
+  }
+
   public interface BuildRoadResponseOrBuilder extends
       // @@protoc_insertion_point(interface_extends:BuildRoadResponse)
       com.google.protobuf.MessageOrBuilder {
@@ -2909,6 +6435,19 @@ public final class ResponseProtos {
      * <code>required int32 longestRoad = 1;</code>
      */
     int getLongestRoad();
+
+    /**
+     * <code>required .RoadProto newRoad = 2;</code>
+     */
+    boolean hasNewRoad();
+    /**
+     * <code>required .RoadProto newRoad = 2;</code>
+     */
+    protocol.BuildProtos.RoadProto getNewRoad();
+    /**
+     * <code>required .RoadProto newRoad = 2;</code>
+     */
+    protocol.BuildProtos.RoadProtoOrBuilder getNewRoadOrBuilder();
   }
   /**
    * Protobuf type {@code BuildRoadResponse}
@@ -2967,6 +6506,19 @@ public final class ResponseProtos {
               longestRoad_ = input.readInt32();
               break;
             }
+            case 18: {
+              protocol.BuildProtos.RoadProto.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = newRoad_.toBuilder();
+              }
+              newRoad_ = input.readMessage(protocol.BuildProtos.RoadProto.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(newRoad_);
+                newRoad_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -3022,8 +6574,30 @@ public final class ResponseProtos {
       return longestRoad_;
     }
 
+    public static final int NEWROAD_FIELD_NUMBER = 2;
+    private protocol.BuildProtos.RoadProto newRoad_;
+    /**
+     * <code>required .RoadProto newRoad = 2;</code>
+     */
+    public boolean hasNewRoad() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .RoadProto newRoad = 2;</code>
+     */
+    public protocol.BuildProtos.RoadProto getNewRoad() {
+      return newRoad_;
+    }
+    /**
+     * <code>required .RoadProto newRoad = 2;</code>
+     */
+    public protocol.BuildProtos.RoadProtoOrBuilder getNewRoadOrBuilder() {
+      return newRoad_;
+    }
+
     private void initFields() {
       longestRoad_ = 0;
+      newRoad_ = protocol.BuildProtos.RoadProto.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3032,6 +6606,14 @@ public final class ResponseProtos {
       if (isInitialized == 0) return false;
 
       if (!hasLongestRoad()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasNewRoad()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getNewRoad().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -3045,6 +6627,9 @@ public final class ResponseProtos {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt32(1, longestRoad_);
       }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, newRoad_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -3057,6 +6642,10 @@ public final class ResponseProtos {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, longestRoad_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, newRoad_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3167,6 +6756,7 @@ public final class ResponseProtos {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getNewRoadFieldBuilder();
         }
       }
       private static Builder create() {
@@ -3177,6 +6767,12 @@ public final class ResponseProtos {
         super.clear();
         longestRoad_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
+        if (newRoadBuilder_ == null) {
+          newRoad_ = protocol.BuildProtos.RoadProto.getDefaultInstance();
+        } else {
+          newRoadBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -3209,6 +6805,14 @@ public final class ResponseProtos {
           to_bitField0_ |= 0x00000001;
         }
         result.longestRoad_ = longestRoad_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (newRoadBuilder_ == null) {
+          result.newRoad_ = newRoad_;
+        } else {
+          result.newRoad_ = newRoadBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3228,12 +6832,23 @@ public final class ResponseProtos {
         if (other.hasLongestRoad()) {
           setLongestRoad(other.getLongestRoad());
         }
+        if (other.hasNewRoad()) {
+          mergeNewRoad(other.getNewRoad());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasLongestRoad()) {
+          
+          return false;
+        }
+        if (!hasNewRoad()) {
+          
+          return false;
+        }
+        if (!getNewRoad().isInitialized()) {
           
           return false;
         }
@@ -3289,6 +6904,122 @@ public final class ResponseProtos {
         longestRoad_ = 0;
         onChanged();
         return this;
+      }
+
+      private protocol.BuildProtos.RoadProto newRoad_ = protocol.BuildProtos.RoadProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.BuildProtos.RoadProto, protocol.BuildProtos.RoadProto.Builder, protocol.BuildProtos.RoadProtoOrBuilder> newRoadBuilder_;
+      /**
+       * <code>required .RoadProto newRoad = 2;</code>
+       */
+      public boolean hasNewRoad() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .RoadProto newRoad = 2;</code>
+       */
+      public protocol.BuildProtos.RoadProto getNewRoad() {
+        if (newRoadBuilder_ == null) {
+          return newRoad_;
+        } else {
+          return newRoadBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .RoadProto newRoad = 2;</code>
+       */
+      public Builder setNewRoad(protocol.BuildProtos.RoadProto value) {
+        if (newRoadBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          newRoad_ = value;
+          onChanged();
+        } else {
+          newRoadBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .RoadProto newRoad = 2;</code>
+       */
+      public Builder setNewRoad(
+          protocol.BuildProtos.RoadProto.Builder builderForValue) {
+        if (newRoadBuilder_ == null) {
+          newRoad_ = builderForValue.build();
+          onChanged();
+        } else {
+          newRoadBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .RoadProto newRoad = 2;</code>
+       */
+      public Builder mergeNewRoad(protocol.BuildProtos.RoadProto value) {
+        if (newRoadBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              newRoad_ != protocol.BuildProtos.RoadProto.getDefaultInstance()) {
+            newRoad_ =
+              protocol.BuildProtos.RoadProto.newBuilder(newRoad_).mergeFrom(value).buildPartial();
+          } else {
+            newRoad_ = value;
+          }
+          onChanged();
+        } else {
+          newRoadBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .RoadProto newRoad = 2;</code>
+       */
+      public Builder clearNewRoad() {
+        if (newRoadBuilder_ == null) {
+          newRoad_ = protocol.BuildProtos.RoadProto.getDefaultInstance();
+          onChanged();
+        } else {
+          newRoadBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      /**
+       * <code>required .RoadProto newRoad = 2;</code>
+       */
+      public protocol.BuildProtos.RoadProto.Builder getNewRoadBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getNewRoadFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .RoadProto newRoad = 2;</code>
+       */
+      public protocol.BuildProtos.RoadProtoOrBuilder getNewRoadOrBuilder() {
+        if (newRoadBuilder_ != null) {
+          return newRoadBuilder_.getMessageOrBuilder();
+        } else {
+          return newRoad_;
+        }
+      }
+      /**
+       * <code>required .RoadProto newRoad = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.BuildProtos.RoadProto, protocol.BuildProtos.RoadProto.Builder, protocol.BuildProtos.RoadProtoOrBuilder> 
+          getNewRoadFieldBuilder() {
+        if (newRoadBuilder_ == null) {
+          newRoadBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.BuildProtos.RoadProto, protocol.BuildProtos.RoadProto.Builder, protocol.BuildProtos.RoadProtoOrBuilder>(
+                  getNewRoad(),
+                  getParentForChildren(),
+                  isClean());
+          newRoad_ = null;
+        }
+        return newRoadBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:BuildRoadResponse)
@@ -3746,7 +7477,7 @@ public final class ResponseProtos {
      * <code>optional string reason = 3;</code>
      *
      * <pre>
-     *associated with REJECT results (for debugging purposes only)
+     *associated with REJECT results
      * </pre>
      */
     boolean hasReason();
@@ -3754,7 +7485,7 @@ public final class ResponseProtos {
      * <code>optional string reason = 3;</code>
      *
      * <pre>
-     *associated with REJECT results (for debugging purposes only)
+     *associated with REJECT results
      * </pre>
      */
     java.lang.String getReason();
@@ -3762,7 +7493,7 @@ public final class ResponseProtos {
      * <code>optional string reason = 3;</code>
      *
      * <pre>
-     *associated with REJECT results (for debugging purposes only)
+     *associated with REJECT results
      * </pre>
      */
     com.google.protobuf.ByteString
@@ -3936,7 +7667,7 @@ public final class ResponseProtos {
      * <code>optional string reason = 3;</code>
      *
      * <pre>
-     *associated with REJECT results (for debugging purposes only)
+     *associated with REJECT results
      * </pre>
      */
     public boolean hasReason() {
@@ -3946,7 +7677,7 @@ public final class ResponseProtos {
      * <code>optional string reason = 3;</code>
      *
      * <pre>
-     *associated with REJECT results (for debugging purposes only)
+     *associated with REJECT results
      * </pre>
      */
     public java.lang.String getReason() {
@@ -3967,7 +7698,7 @@ public final class ResponseProtos {
      * <code>optional string reason = 3;</code>
      *
      * <pre>
-     *associated with REJECT results (for debugging purposes only)
+     *associated with REJECT results
      * </pre>
      */
     public com.google.protobuf.ByteString
@@ -4442,7 +8173,7 @@ public final class ResponseProtos {
        * <code>optional string reason = 3;</code>
        *
        * <pre>
-       *associated with REJECT results (for debugging purposes only)
+       *associated with REJECT results
        * </pre>
        */
       public boolean hasReason() {
@@ -4452,7 +8183,7 @@ public final class ResponseProtos {
        * <code>optional string reason = 3;</code>
        *
        * <pre>
-       *associated with REJECT results (for debugging purposes only)
+       *associated with REJECT results
        * </pre>
        */
       public java.lang.String getReason() {
@@ -4473,7 +8204,7 @@ public final class ResponseProtos {
        * <code>optional string reason = 3;</code>
        *
        * <pre>
-       *associated with REJECT results (for debugging purposes only)
+       *associated with REJECT results
        * </pre>
        */
       public com.google.protobuf.ByteString
@@ -4493,7 +8224,7 @@ public final class ResponseProtos {
        * <code>optional string reason = 3;</code>
        *
        * <pre>
-       *associated with REJECT results (for debugging purposes only)
+       *associated with REJECT results
        * </pre>
        */
       public Builder setReason(
@@ -4510,7 +8241,7 @@ public final class ResponseProtos {
        * <code>optional string reason = 3;</code>
        *
        * <pre>
-       *associated with REJECT results (for debugging purposes only)
+       *associated with REJECT results
        * </pre>
        */
       public Builder clearReason() {
@@ -4523,7 +8254,7 @@ public final class ResponseProtos {
        * <code>optional string reason = 3;</code>
        *
        * <pre>
-       *associated with REJECT results (for debugging purposes only)
+       *associated with REJECT results
        * </pre>
        */
       public Builder setReasonBytes(
@@ -5073,6 +8804,11 @@ public final class ResponseProtos {
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Response_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_Response_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_SuccessFailResponse_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -5097,6 +8833,16 @@ public final class ResponseProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_BuyDevCardResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_BuildSettlementResponse_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_BuildSettlementResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_UpgradeSettlementResponse_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_UpgradeSettlementResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_BuildRoadResponse_descriptor;
   private static
@@ -5127,24 +8873,43 @@ public final class ResponseProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\017responses.proto\032\013board.proto\032\013trade.pr" +
-      "oto\032\013enums.proto\"C\n\023SuccessFailResponse\022" +
-      "\034\n\006result\030\001 \002(\0162\014.ResultProto\022\016\n\006reason\030" +
-      "\002 \001(\t\"0\n\017EndMoveResponse\022\035\n\007newTurn\030\001 \002(" +
-      "\0162\014.ColourProto\"0\n\030PlayMonopolyCardRespo" +
-      "nse\022\024\n\014numResources\030\001 \002(\005\"l\n\034PlayRoadBui" +
-      "ldingCardResponse\022%\n\tresponse1\030\001 \002(\0132\022.B" +
-      "uildRoadResponse\022%\n\tresponse2\030\002 \002(\0132\022.Bu" +
-      "ildRoadResponse\"r\n\022BuyDevCardResponse\022\034\n" +
-      "\006result\030\001 \002(\0162\014.ResultProto\022.\n\017developme",
-      "ntCard\030\002 \002(\0162\025.DevelopmentCardProto\022\016\n\006r" +
-      "eason\030\003 \001(\t\"(\n\021BuildRoadResponse\022\023\n\013long" +
-      "estRoad\030\001 \002(\005\":\n\022MoveRobberResponse\022$\n\010r" +
-      "esource\030\001 \002(\0162\022.ResourceTypeProto\"g\n\024Acc" +
-      "eptRejectResponse\022\034\n\005trade\030\001 \002(\0132\r.Trade" +
-      "Request\022!\n\006answer\030\002 \002(\0162\021.TradeStatusPro" +
-      "to\022\016\n\006reason\030\003 \001(\t\"/\n\021GiveBoardResponse\022" +
-      "\032\n\005board\030\001 \002(\0132\013.BoardProtoB\032\n\010protocolB" +
-      "\016ResponseProtos"
+      "oto\032\013enums.proto\032\013build.proto\"\372\004\n\010Respon" +
+      "se\0223\n\023successFailResponse\030\001 \001(\0132\024.Succes" +
+      "sFailResponseH\000\0225\n\024acceptRejectResponse\030" +
+      "\002 \001(\0132\025.AcceptRejectResponseH\000\0222\n\024curren" +
+      "tBoardResponse\030\003 \001(\0132\022.GiveBoardResponse" +
+      "H\000\0221\n\022buyDevCardResponse\030\004 \001(\0132\023.BuyDevC" +
+      "ardResponseH\000\022=\n\030playMonopolyCardRespons" +
+      "e\030\005 \001(\0132\031.PlayMonopolyCardResponseH\000\022E\n\034" +
+      "playRoadBuildingCardResponse\030\007 \001(\0132\035.Pla",
+      "yRoadBuildingCardResponseH\000\022/\n\021buildRoad" +
+      "Response\030\010 \001(\0132\022.BuildRoadResponseH\000\0221\n\022" +
+      "moveRobberResponse\030\t \001(\0132\023.MoveRobberRes" +
+      "ponseH\000\022+\n\017endMoveResponse\030\n \001(\0132\020.EndMo" +
+      "veResponseH\000\022;\n\027buildSettlementResponse\030" +
+      "\013 \001(\0132\030.BuildSettlementResponseH\000\022?\n\031upg" +
+      "radeSettlementResponse\030\014 \001(\0132\032.UpgradeSe" +
+      "ttlementResponseH\000B\006\n\004type\"C\n\023SuccessFai" +
+      "lResponse\022\034\n\006result\030\001 \002(\0162\014.ResultProto\022" +
+      "\016\n\006reason\030\002 \001(\t\"0\n\017EndMoveResponse\022\035\n\007ne",
+      "wTurn\030\001 \002(\0162\014.ColourProto\"0\n\030PlayMonopol" +
+      "yCardResponse\022\024\n\014numResources\030\001 \002(\005\"l\n\034P" +
+      "layRoadBuildingCardResponse\022%\n\tresponse1" +
+      "\030\001 \002(\0132\022.BuildRoadResponse\022%\n\tresponse2\030" +
+      "\002 \002(\0132\022.BuildRoadResponse\"D\n\022BuyDevCardR" +
+      "esponse\022.\n\017developmentCard\030\001 \002(\0162\025.Devel" +
+      "opmentCardProto\">\n\027BuildSettlementRespon" +
+      "se\022#\n\013newBuilding\030\001 \002(\0132\016.BuildingProto\"" +
+      "@\n\031UpgradeSettlementResponse\022#\n\013newBuild" +
+      "ing\030\001 \002(\0132\016.BuildingProto\"E\n\021BuildRoadRe",
+      "sponse\022\023\n\013longestRoad\030\001 \002(\005\022\033\n\007newRoad\030\002" +
+      " \002(\0132\n.RoadProto\":\n\022MoveRobberResponse\022$" +
+      "\n\010resource\030\001 \002(\0162\022.ResourceTypeProto\"g\n\024" +
+      "AcceptRejectResponse\022\034\n\005trade\030\001 \002(\0132\r.Tr" +
+      "adeRequest\022!\n\006answer\030\002 \002(\0162\021.TradeStatus" +
+      "Proto\022\016\n\006reason\030\003 \001(\t\"/\n\021GiveBoardRespon" +
+      "se\022\032\n\005board\030\001 \002(\0132\013.BoardProtoB\032\n\010protoc" +
+      "olB\016ResponseProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -5160,57 +8925,76 @@ public final class ResponseProtos {
           protocol.BoardProtos.getDescriptor(),
           protocol.TradeProtos.getDescriptor(),
           protocol.EnumProtos.getDescriptor(),
+          protocol.BuildProtos.getDescriptor(),
         }, assigner);
-    internal_static_SuccessFailResponse_descriptor =
+    internal_static_Response_descriptor =
       getDescriptor().getMessageTypes().get(0);
+    internal_static_Response_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_Response_descriptor,
+        new java.lang.String[] { "SuccessFailResponse", "AcceptRejectResponse", "CurrentBoardResponse", "BuyDevCardResponse", "PlayMonopolyCardResponse", "PlayRoadBuildingCardResponse", "BuildRoadResponse", "MoveRobberResponse", "EndMoveResponse", "BuildSettlementResponse", "UpgradeSettlementResponse", "Type", });
+    internal_static_SuccessFailResponse_descriptor =
+      getDescriptor().getMessageTypes().get(1);
     internal_static_SuccessFailResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_SuccessFailResponse_descriptor,
         new java.lang.String[] { "Result", "Reason", });
     internal_static_EndMoveResponse_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+      getDescriptor().getMessageTypes().get(2);
     internal_static_EndMoveResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EndMoveResponse_descriptor,
         new java.lang.String[] { "NewTurn", });
     internal_static_PlayMonopolyCardResponse_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(3);
     internal_static_PlayMonopolyCardResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PlayMonopolyCardResponse_descriptor,
         new java.lang.String[] { "NumResources", });
     internal_static_PlayRoadBuildingCardResponse_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_PlayRoadBuildingCardResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PlayRoadBuildingCardResponse_descriptor,
         new java.lang.String[] { "Response1", "Response2", });
     internal_static_BuyDevCardResponse_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_BuyDevCardResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_BuyDevCardResponse_descriptor,
-        new java.lang.String[] { "Result", "DevelopmentCard", "Reason", });
+        new java.lang.String[] { "DevelopmentCard", });
+    internal_static_BuildSettlementResponse_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_BuildSettlementResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_BuildSettlementResponse_descriptor,
+        new java.lang.String[] { "NewBuilding", });
+    internal_static_UpgradeSettlementResponse_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_UpgradeSettlementResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_UpgradeSettlementResponse_descriptor,
+        new java.lang.String[] { "NewBuilding", });
     internal_static_BuildRoadResponse_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_BuildRoadResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_BuildRoadResponse_descriptor,
-        new java.lang.String[] { "LongestRoad", });
+        new java.lang.String[] { "LongestRoad", "NewRoad", });
     internal_static_MoveRobberResponse_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_MoveRobberResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_MoveRobberResponse_descriptor,
         new java.lang.String[] { "Resource", });
     internal_static_AcceptRejectResponse_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_AcceptRejectResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_AcceptRejectResponse_descriptor,
         new java.lang.String[] { "Trade", "Answer", "Reason", });
     internal_static_GiveBoardResponse_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_GiveBoardResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_GiveBoardResponse_descriptor,
@@ -5218,6 +9002,7 @@ public final class ResponseProtos {
     protocol.BoardProtos.getDescriptor();
     protocol.TradeProtos.getDescriptor();
     protocol.EnumProtos.getDescriptor();
+    protocol.BuildProtos.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

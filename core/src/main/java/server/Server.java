@@ -5,7 +5,6 @@ import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
 import game.Game;
-import game.build.DevelopmentCard;
 import game.players.Player;
 import protocol.EnumProtos.*;
 import protocol.MessageProtos.*;
@@ -13,7 +12,6 @@ import protocol.ResponseProtos.*;
 import protocol.RequestProtos.*;
 import protocol.ResourceProtos.*;
 import protocol.EventProtos.*;
-import protocol.BoardProtos.*;
 import protocol.TradeProtos.*;
 
 
@@ -28,9 +26,11 @@ public class Server
 	private Map<Colour, Socket> connections;
 	private ServerSocket serverSocket;
 	private static final int PORT = 12345;
-	
+	private Logger logger;
+
 	public Server()
 	{
+		logger = new Logger();
 		game = new Game();
 		connections = new HashMap<Colour, Socket>();
 	}
@@ -158,6 +158,7 @@ public class Server
 		while(true)
 		{
 			Message msg = Message.parseFrom(socket.getInputStream());
+			logger.logReceivedMessage(msg);
 
 			// switch on message type
 			switch(msg.getTypeCase())
@@ -168,13 +169,14 @@ public class Server
 				case REQUEST:
 					Response response = processMove(msg, Colour.fromProto(msg.getPlayerColour()));
 					sendResponse(response);
-					// TODO sendEvents(response);
+					sendEvents(response);
 					break;
 				case RESPONSE:
-					//TODO finish processing
+					/*//TODO finish processing
 					Response resp = msg.getResponse();
 					resp = processResponse(resp, socket, msg);
-
+*/
+					sendError(socket, msg);
 					break;
 			}
 
@@ -184,6 +186,38 @@ public class Server
 				break;
 			}
 		}		
+	}
+
+	/**
+	 * Broadcast the necessary events to all players based upon the type of response.
+	 * @param response the response from the last processed move
+	 */
+	private void sendEvents(Response response)
+	{
+		Event.Builder event = Event.newBuilder();
+		Player copy = game.getCurrentPlayer().copy();
+
+		// Switch on message type to interpret which event(s) need to be sent out
+		switch (response.getTypeCase())
+		{
+			case BUILDROADRESPONSE:
+				event.setNewRoad(response.getBuildRoadResponse().getNewRoad());
+				break;
+			case BUILDSETTLEMENTRESPONSE:
+				event.setNewBuilding(response.getBuildSettlementResponse().getNewBuilding());
+				break;
+			case UPGRADESETTLEMENTRESPONSE:
+				event.setNewBuilding(response.getUpgradeSettlementResponse().getNewBuilding());
+				break;
+			case BUYDEVCARDRESPONSE:
+				event.setBoughtDevCard(Colour.toProto(game.getCurrentPlayer().getColour()));
+				break;
+			case ENDMOVERESPONSE:
+				event.setNewTurn(response.getEndMoveResponse().getNewTurn());
+				break;
+		}
+
+
 	}
 
 	/**
@@ -228,7 +262,6 @@ public class Server
 
 		// Set up wrapper response object
 		response.setSuccessFailResponse(result);
-		response.setOriginalMessage(originalMsg);
 		response.build().writeTo(socket.getOutputStream());
 
 	}
@@ -244,7 +277,7 @@ public class Server
 		Request request = msg.getRequest();
 		Response.Builder resp = Response.newBuilder();
 		Player copy = game.getCurrentPlayer().copy();
-		DevelopmentCard card = null;
+		DevelopmentCardType card = null;
 
 		try
 		{
@@ -256,10 +289,10 @@ public class Server
 					resp.setBuildRoadResponse(game.buildRoad(request.getBuildRoadRequest(), playerColour));
 					break;
 				case BUILDSETTLEMENTREQUEST:
-					resp.setSuccessFailResponse(game.buildSettlement(request.getBuildSettlementRequest(), playerColour));
+					resp.setBuildSettlementResponse(game.buildSettlement(request.getBuildSettlementRequest(), playerColour));
 					break;
 				case UPRADESETTLEMENTREQUEST:
-					resp.setSuccessFailResponse(game.upgradeSettlement(request.getUpradeSettlementRequest(), playerColour));
+					resp.setUpgradeSettlementResponse(game.upgradeSettlement(request.getUpradeSettlementRequest(), playerColour));
 					break;
 				case BUYDEVCARDREQUEST:
 					resp.setBuyDevCardResponse(game.buyDevelopmentCard(request.getBuyDevCardRequest(), playerColour));
@@ -268,33 +301,27 @@ public class Server
 					resp.setCurrentBoardResponse(game.getBoard());
 					break;
 				case PLAYROADBUILDINGCARDREQUEST:
-					card = new DevelopmentCard();
-					card.setType(DevelopmentCardType.RoadBuilding);
+					card = DevelopmentCardType.RoadBuilding;
 					resp.setPlayRoadBuildingCardResponse(game.playBuildRoadsCard(request.getPlayRoadBuildingCardRequest(), playerColour));
 					break;
 				case PLAYMONOPOLYCARDREQUEST:
-					card = new DevelopmentCard();
-					card.setType(DevelopmentCardType.Monopoly);
+					card = DevelopmentCardType.Monopoly;
 					resp.setPlayMonopolyCardResponse(game.playMonopolyCard(request.getPlayMonopolyCardRequest()));
 					break;
 				case PLAYYEAROFPLENTYCARDREQUEST:
-					card = new DevelopmentCard();
-					card.setType(DevelopmentCardType.YearOfPlenty);
+					card = DevelopmentCardType.YearOfPlenty;
 					resp.setSuccessFailResponse(game.playYearOfPlentyCard((request.getPlayYearOfPlentyCardRequest())));
 					break;
 				case PLAYLIBRARYCARDREQUEST:
-					card = new DevelopmentCard();
-					card.setType(DevelopmentCardType.Library);
+					card = DevelopmentCardType.Library;
 					resp.setSuccessFailResponse(game.playLibraryCard());
 					break;
 				case PLAYUNIVERSITYCARDREQUEST:
-					card = new DevelopmentCard();
-					card.setType(DevelopmentCardType.University);
+					card = DevelopmentCardType.University;
 					resp.setSuccessFailResponse(game.playUniversityCard());
 					break;
 				case PLAYKNIGHTCARDREQUEST:
-					card = new DevelopmentCard();
-					card.setType(DevelopmentCardType.Knight);
+					card = DevelopmentCardType.Knight;
 					resp.setMoveRobberResponse(game.moveRobber(request.getPlayKnightCardRequest().getRequest(), playerColour));
 					break;
 				case MOVEROBBERREQUEST:
@@ -311,7 +338,7 @@ public class Server
 		catch(Exception e)
 		{
 			// Error. Reset player and return exception message
-			game.restorePlayerFromCopy(copy, card != null ? card : null);
+			game.restorePlayerFromCopy(copy, card != null ? card : card);
 			// TODO set error response correctly
 		}
 		
@@ -395,6 +422,8 @@ public class Server
 	 */
 	public void getInitialSettlementsAndRoads()
 	{
+		//TODO complete
+
 		// Get settlements and roads one way
 		for(int i = 0; i < Game.NUM_PLAYERS; i++)
 		{

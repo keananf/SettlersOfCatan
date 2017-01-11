@@ -70,17 +70,6 @@ public class Node extends BoardElement
 				&& Math.abs(getY() - n.getY()) <= 1;
 	}
 	
-	/**
-	 * Detects whether a given hex is adjacent to this node or not
-	 * @param h the hex
-	 * @return boolean indicating adjacency
-	 */
-	public boolean isAdjacent(Hex h)
-	{
-		return (Math.abs(getX() - h.getX()) == 2 || Math.abs(getX() - h.getX()) == 1) 
-				&& Math.abs(getY() - h.getY()) <= 1;
-	}
-	
 	@Override
 	public boolean equals(Object other)
 	{
@@ -170,11 +159,7 @@ public class Node extends BoardElement
 		// Add Building
 		if(getSettlement() != null)
 		{
-			BuildProtos.BuildingProto.Builder building = BuildProtos.BuildingProto.newBuilder();
-			building.setP(coords.build());
-			building.setPlayerId(Colour.toProto(settlement.getPlayerColour()));
-			building.setType(settlement instanceof City ? EnumProtos.BuildingTypeProto.CITY : EnumProtos.BuildingTypeProto.SETTLEMENT);
-			nodeBuilder.setBuilding(building.build());
+			nodeBuilder.setBuilding(getSettlement().toProto().build());
 			nodeBuilder.setBuildingType(settlement instanceof City ? EnumProtos.BuildingTypeProto.CITY : EnumProtos.BuildingTypeProto.SETTLEMENT);
 		}
 

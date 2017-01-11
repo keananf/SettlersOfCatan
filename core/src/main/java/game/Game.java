@@ -11,7 +11,6 @@ import java.util.*;
 import board.*;
 import protocol.EnumProtos.*;
 import protocol.RequestProtos.*;
-import protocol.ResourceProtos;
 import protocol.ResourceProtos.*;
 import protocol.BoardProtos.*;
 import protocol.ResponseProtos.*;
@@ -248,16 +247,16 @@ public class Game
 	 * @throws CannotUpgradeException 
 	 * @throws CannotAffordException 
 	 */
-	public SuccessFailResponse upgradeSettlement(UpgradeSettlementRequest move, Colour playerColour) throws CannotAffordException, CannotUpgradeException
+	public UpgradeSettlementResponse upgradeSettlement(UpgradeSettlementRequest move, Colour playerColour) throws CannotAffordException, CannotUpgradeException
 	{
-	    SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
+		UpgradeSettlementResponse.Builder resp = UpgradeSettlementResponse.newBuilder();
         Player p = players.get(playerColour);
 		Node n = grid.getNode(move.getPoint().getX(), move.getPoint().getY());
 		
 		// Try to upgrade settlement
 		p.upgradeSettlement(n);
 
-		resp.setResult(ResultProto.SUCCESS);
+		resp.setNewBuilding(n.getSettlement().toProto());
 		return resp.build();
     }
 	
@@ -270,9 +269,9 @@ public class Game
 	 * @throws CannotAffordException 
 	 * @throws SettlementExistsException 
 	 */
-	public SuccessFailResponse buildSettlement(BuildSettlementRequest request, Colour playerColour) throws CannotAffordException, IllegalPlacementException, SettlementExistsException
+	public BuildSettlementResponse buildSettlement(BuildSettlementRequest request, Colour playerColour) throws CannotAffordException, IllegalPlacementException, SettlementExistsException
 	{
-	    SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
+		BuildSettlementResponse.Builder resp = BuildSettlementResponse.newBuilder();
         Player p = players.get(playerColour);
         PointProto pointProto = request.getPoint();
 		Node node = grid.getNode(pointProto.getX(), pointProto.getY());
@@ -283,7 +282,7 @@ public class Game
 		// Check all combinations of edges to check if a road chain was broken
 		for(int i = 0; i < node.getEdges().size(); i++)
 		{
-			boolean broken= false;
+			boolean broken = false;
 			for(int j = 0; j < node.getEdges().size(); j++)
 			{
 				Edge e = node.getEdges().get(i), other = node.getEdges().get(j);
@@ -300,12 +299,16 @@ public class Game
 					break;
 				}
 			}
-			if(broken) break;
+			if(broken)
+			{
+				checkLongestRoad();
+				break;
+			}
 		}
 		// TODO send out updated road counts
 
-        resp.setResult(ResultProto.SUCCESS);
-		return resp.build();
+		resp.setNewBuilding(node.getSettlement().toProto());
+        return resp.build();
 	}
 	
 	/**
@@ -314,27 +317,16 @@ public class Game
 	 * @param playerColour the player's colour
 	 * @return the response message to the client
 	 */
-	public SuccessFailResponse playDevelopmentCard(DevelopmentCardType type, Colour playerColour)
+	public SuccessFailResponse playDevelopmentCard(DevelopmentCardType type, Colour playerColour) throws DoesNotOwnException
 	{
 	    SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
 	    Player p = players.get(playerColour);
 
 		// Try to play card
-		try
-		{
-			DevelopmentCard card = new DevelopmentCard();
-			card.setType(type);
-			card.setColour(playerColour);
-			p.playDevelopmentCard(card);
-            resp.setResult(ResultProto.SUCCESS);
-		}
-		catch (DoesNotOwnException e) 
-		{
-			// Error
-            resp.setResult(ResultProto.FAILURE);
-			resp.setReason(e.getMessage());
-		}
-		
+		p.playDevelopmentCard(type);
+		resp.setResult(ResultProto.SUCCESS);
+
+
 		// Return success message
 		return resp.build();
 	}
@@ -353,9 +345,8 @@ public class Game
 		
 		// Try to buy card
 		// Return the response with the card parameter set
-        DevelopmentCardType card = p.buyDevelopmentCard();
+        DevelopmentCardType card = p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
         resp.setDevelopmentCard(DevelopmentCardType.toProto(card));
-        resp.setResult(ResultProto.SUCCESS);
 		return resp.build();
 	}
 	
@@ -408,9 +399,12 @@ public class Game
 	 * @throws CannotBuildRoadException 
 	 * @throws CannotAffordException 
 	 */
-	public PlayRoadBuildingCardResponse playBuildRoadsCard(PlayRoadBuildingCardRequest request, Colour playerColour) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public PlayRoadBuildingCardResponse playBuildRoadsCard(PlayRoadBuildingCardRequest request, Colour playerColour)
+			throws CannotAffordException, CannotBuildRoadException, RoadExistsException, DoesNotOwnException
 	{
 		PlayRoadBuildingCardResponse.Builder resp = PlayRoadBuildingCardResponse.newBuilder();
+
+		playDevelopmentCard(DevelopmentCardType.RoadBuilding, currentPlayer.getColour());
 
 		// Set responses and return
 		resp.setResponse1(buildRoad(request.getRequest1(), playerColour));
@@ -422,9 +416,11 @@ public class Game
 	 * Process the playing of the 'University' development card.
 	 * @return return message
 	 */
-	public SuccessFailResponse playUniversityCard()
-    {
+	public SuccessFailResponse playUniversityCard() throws DoesNotOwnException
+	{
         SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
+
+        playDevelopmentCard(DevelopmentCardType.University, currentPlayer.getColour());
         grantVpPoint();
 
         resp.setResult(ResultProto.SUCCESS);
@@ -435,10 +431,12 @@ public class Game
 	 * Process the playing of the 'Library' development card.
 	 * @return return message
 	 */
-	public SuccessFailResponse playLibraryCard()
+	public SuccessFailResponse playLibraryCard() throws DoesNotOwnException
 	{
         SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
-        grantVpPoint();
+
+		playDevelopmentCard(DevelopmentCardType.Library, currentPlayer.getColour());
+		grantVpPoint();
 
         resp.setResult(ResultProto.SUCCESS);
         return resp.build();
@@ -449,11 +447,13 @@ public class Game
 	 * @param move the move to process
 	 * @return return message
 	 */
-	public SuccessFailResponse playYearOfPlentyCard(PlayYearOfPlentyCardRequest move)
+	public SuccessFailResponse playYearOfPlentyCard(PlayYearOfPlentyCardRequest move) throws DoesNotOwnException
 	{
 	    SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
 
-        // Set up grant
+		playDevelopmentCard(DevelopmentCardType.YearOfPlenty, currentPlayer.getColour());
+
+		// Set up grant
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 		grant.put(ResourceType.fromProto(move.getR1()), 1);
 		grant.put(ResourceType.fromProto(move.getR2()), 1);
@@ -469,13 +469,15 @@ public class Game
 	 * @param request the request to process
 	 * @return return message
 	 */
-	public PlayMonopolyCardResponse playMonopolyCard(PlayMonopolyCardRequest request)
+	public PlayMonopolyCardResponse playMonopolyCard(PlayMonopolyCardRequest request) throws DoesNotOwnException
 	{
         PlayMonopolyCardResponse.Builder response = PlayMonopolyCardResponse.newBuilder();
 		ResourceTypeProto r = request.getResource();
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 		int sum = 0;
-		
+
+		playDevelopmentCard(DevelopmentCardType.Monopoly, currentPlayer.getColour());
+
 		// for each player
 		for(Player p : players.values())
 		{
@@ -531,6 +533,7 @@ public class Game
 		
 		// return success message
         response.setLongestRoad(longestRoad);
+        response.setNewRoad(edge.getRoad().toProto());
 		return response.build();
 	}
 	
@@ -691,7 +694,7 @@ public class Game
         return resp.build();
     }
 
-	public void restorePlayerFromCopy(Player copy, DevelopmentCard card)
+	public void restorePlayerFromCopy(Player copy, DevelopmentCardType card)
 	{
 		players.get(copy.getColour()).restoreCopy(copy, card);
 	}

@@ -87,7 +87,7 @@ public class TestHelper
 		assertTrue(hasResources(p));
 		try
 		{
-			c = p.buyDevelopmentCard();
+			c = p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
 		}
 		catch (CannotAffordException ex)
 		{

@@ -20,21 +20,5 @@ message Message
     }
 }
 
-message Response 
-{
-    oneof type 
-    {
-        SuccessFailResponse successFailResponse = 1;
-        AcceptRejectResponse acceptRejectResponse = 2;
-        GiveBoardResponse currentBoardResponse = 3;
-        BuyDevCardResponse buyDevCardResponse = 4;
-	PlayMonopolyCardResponse playMonopolyCardResponse = 5;
-	PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;
-	BuildRoadResponse buildRoadResponse = 8;
-	MoveRobberResponse moveRobberResponse = 9;
-	EndMoveResponse endMoveResponse = 10;
-    }
-    required Message originalMessage = 11;
-}
 
 

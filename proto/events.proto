@@ -45,9 +45,9 @@ message DiceRoll
 /*
 message Theft
 {
-    required ColourProto theif = 1;
+    required ColourProto thief = 1;
     required ColourProto victim = 2;
-    required ResourceCount resourcesStolen = 3;
+    required ResourceType resourceStolen = 3;
 }
 */
 

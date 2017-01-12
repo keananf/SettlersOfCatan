@@ -20,7 +20,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class Server
+public class Server implements Runnable
 {
 	private Game game;
 	private int numConnections;
@@ -35,27 +35,22 @@ public class Server
 		game = new Game();
 		connections = new HashMap<Colour, Socket>();
 	}
-	
-	public static void main(String[] args)
-	{
-		Server s = new Server();
+
+	public void run() {
 		try
 		{
-			// Get players and initial moves
-			s.getPlayers();
-			s.broadcastBoard();
-			s.game.chooseFirstPlayer();
-			s.getInitialSettlementsAndRoads();
-			
-			// Main game loop
-			while(!s.game.isOver())
-			{			
-				// Allocate and send resources and dice out to players
-				int dice = s.game.generateDiceRoll();
-				Map<Colour, Map<ResourceType, Integer>> resources = s.game.allocateResources(dice);
-				s.sendTurns(dice, resources);
+			getPlayers();
+			broadcastBoard();
+			game.chooseFirstPlayer();
+			getInitialSettlementsAndRoads();
+
+			while (!game.isOver())
+			{
+				int dice = game.generateDiceRoll();
+				Map<Colour, Map<ResourceType, Integer>> resources = game.allocateResources(dice);
+				sendTurns(dice, resources);
 				
-				s.receiveMoves();
+				receiveMoves();
 			}
 		}
 		catch (IOException e)
@@ -63,7 +58,7 @@ public class Server
 			e.printStackTrace();
 			System.out.println("Error connecting players");
 			return;
-		} 
+		}
 	}
 
 	/**

@@ -3402,12 +3402,6 @@ public final class RequestProtos {
   }
   /**
    * Protobuf type {@code BuildRoadRequest}
-   *
-   * <pre>
-   **
-   * Contract: server must return BuildRoadResponse. If successful specified road must be built and players resources
-   * adjusted accordingly. Also, if successful a RoadBuiltEvent is sent to all players.
-   * </pre>
    */
   public static final class BuildRoadRequest extends
       com.google.protobuf.GeneratedMessage implements
@@ -3652,12 +3646,6 @@ public final class RequestProtos {
     }
     /**
      * Protobuf type {@code BuildRoadRequest}
-     *
-     * <pre>
-     **
-     * Contract: server must return BuildRoadResponse. If successful specified road must be built and players resources
-     * adjusted accordingly. Also, if successful a RoadBuiltEvent is sent to all players.
-     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -3938,12 +3926,6 @@ public final class RequestProtos {
   }
   /**
    * Protobuf type {@code PlayKnightCardRequest}
-   *
-   * <pre>
-   **
-   * Contract: server must return MoveRobberResponse. If successful specified road must be built and players resources
-   * adjusted accordingly. Also, if successful a MoveRobberEvent is sent to all players.
-   * </pre>
    */
   public static final class PlayKnightCardRequest extends
       com.google.protobuf.GeneratedMessage implements
@@ -4188,12 +4170,6 @@ public final class RequestProtos {
     }
     /**
      * Protobuf type {@code PlayKnightCardRequest}
-     *
-     * <pre>
-     **
-     * Contract: server must return MoveRobberResponse. If successful specified road must be built and players resources
-     * adjusted accordingly. Also, if successful a MoveRobberEvent is sent to all players.
-     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -4487,12 +4463,6 @@ public final class RequestProtos {
   }
   /**
    * Protobuf type {@code PlayRoadBuildingCardRequest}
-   *
-   * <pre>
-   **
-   * Contract: server must return BuildRoadResponse. If successful specified road must be built and players resources
-   * adjusted accordingly. Also, if successful two RoadBuiltEvents are sent to all players.
-   * </pre>
    */
   public static final class PlayRoadBuildingCardRequest extends
       com.google.protobuf.GeneratedMessage implements
@@ -4787,12 +4757,6 @@ public final class RequestProtos {
     }
     /**
      * Protobuf type {@code PlayRoadBuildingCardRequest}
-     *
-     * <pre>
-     **
-     * Contract: server must return BuildRoadResponse. If successful specified road must be built and players resources
-     * adjusted accordingly. Also, if successful two RoadBuiltEvents are sent to all players.
-     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -5211,11 +5175,6 @@ public final class RequestProtos {
   }
   /**
    * Protobuf type {@code PlayMonopolyCardRequest}
-   *
-   * <pre>
-   * Contract: server must return PlayMonopolyCardResponse. If successful specified road must be built and players resources
-   * adjusted accordingly. Also, if successful a PlayMonopolyEvent is sent to all players.
-   * </pre>
    */
   public static final class PlayMonopolyCardRequest extends
       com.google.protobuf.GeneratedMessage implements
@@ -5448,11 +5407,6 @@ public final class RequestProtos {
     }
     /**
      * Protobuf type {@code PlayMonopolyCardRequest}
-     *
-     * <pre>
-     * Contract: server must return PlayMonopolyCardResponse. If successful specified road must be built and players resources
-     * adjusted accordingly. Also, if successful a PlayMonopolyEvent is sent to all players.
-     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -5644,12 +5598,6 @@ public final class RequestProtos {
   }
   /**
    * Protobuf type {@code PlayYearOfPlentyCardRequest}
-   *
-   * <pre>
-   * Contract: server must return SuccessFailResponse. 
-   * If successful specified road must be built and players resources
-   * adjusted accordingly.
-   * </pre>
    */
   public static final class PlayYearOfPlentyCardRequest extends
       com.google.protobuf.GeneratedMessage implements
@@ -5920,12 +5868,6 @@ public final class RequestProtos {
     }
     /**
      * Protobuf type {@code PlayYearOfPlentyCardRequest}
-     *
-     * <pre>
-     * Contract: server must return SuccessFailResponse. 
-     * If successful specified road must be built and players resources
-     * adjusted accordingly.
-     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -6147,12 +6089,6 @@ public final class RequestProtos {
   }
   /**
    * Protobuf type {@code PlayLibraryCardRequest}
-   *
-   * <pre>
-   **
-   * Contract: server must return SuccessFailResponse. If successful specified road must be built and players resources
-   * adjusted accordingly. Also, if successful a PlayDevCardEvent is sent to all players.
-   * </pre>
    */
   public static final class PlayLibraryCardRequest extends
       com.google.protobuf.GeneratedMessage implements
@@ -6345,12 +6281,6 @@ public final class RequestProtos {
     }
     /**
      * Protobuf type {@code PlayLibraryCardRequest}
-     *
-     * <pre>
-     **
-     * Contract: server must return SuccessFailResponse. If successful specified road must be built and players resources
-     * adjusted accordingly. Also, if successful a PlayDevCardEvent is sent to all players.
-     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -6807,11 +6737,6 @@ public final class RequestProtos {
   }
   /**
    * Protobuf type {@code MoveRobberRequest}
-   *
-   * <pre>
-   * Contract: server must return SuccessFailResponse. If successful specified road must be built and players resources
-   * adjusted accordingly. Also, if successful a MoveRobberEvent is sent to all players.
-   * </pre>
    */
   public static final class MoveRobberRequest extends
       com.google.protobuf.GeneratedMessage implements
@@ -7094,11 +7019,6 @@ public final class RequestProtos {
     }
     /**
      * Protobuf type {@code MoveRobberRequest}
-     *
-     * <pre>
-     * Contract: server must return SuccessFailResponse. If successful specified road must be built and players resources
-     * adjusted accordingly. Also, if successful a MoveRobberEvent is sent to all players.
-     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -7427,12 +7347,6 @@ public final class RequestProtos {
   }
   /**
    * Protobuf type {@code BuildSettlementRequest}
-   *
-   * <pre>
-   **
-   * Contract: server must return SuccessFailResponse. If successful specified settlement must be built and players
-   * resources adjusted accordingly. Also, if successful a SettlementBuiltEvent is sent to all players.
-   * </pre>
    */
   public static final class BuildSettlementRequest extends
       com.google.protobuf.GeneratedMessage implements
@@ -7677,12 +7591,6 @@ public final class RequestProtos {
     }
     /**
      * Protobuf type {@code BuildSettlementRequest}
-     *
-     * <pre>
-     **
-     * Contract: server must return SuccessFailResponse. If successful specified settlement must be built and players
-     * resources adjusted accordingly. Also, if successful a SettlementBuiltEvent is sent to all players.
-     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -7963,12 +7871,6 @@ public final class RequestProtos {
   }
   /**
    * Protobuf type {@code UpgradeSettlementRequest}
-   *
-   * <pre>
-   **
-   * Contract: server must return SuccessFailResponse. If successful specified city must be built and players resources
-   * adjusted accordingly. Also, if successful a CityBuiltEvent is sent to all player.
-   * </pre>
    */
   public static final class UpgradeSettlementRequest extends
       com.google.protobuf.GeneratedMessage implements
@@ -8213,12 +8115,6 @@ public final class RequestProtos {
     }
     /**
      * Protobuf type {@code UpgradeSettlementRequest}
-     *
-     * <pre>
-     **
-     * Contract: server must return SuccessFailResponse. If successful specified city must be built and players resources
-     * adjusted accordingly. Also, if successful a CityBuiltEvent is sent to all player.
-     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -8486,12 +8382,6 @@ public final class RequestProtos {
   }
   /**
    * Protobuf type {@code BuyDevCardRequest}
-   *
-   * <pre>
-   **
-   * Contract: server must return BuyDevCardResponse. If successful a development card must be purchased and players
-   * resources adjusted accordingly. Also, if successful a DevCardBoughtEvent is sent to all players.
-   * </pre>
    */
   public static final class BuyDevCardRequest extends
       com.google.protobuf.GeneratedMessage implements
@@ -8684,12 +8574,6 @@ public final class RequestProtos {
     }
     /**
      * Protobuf type {@code BuyDevCardRequest}
-     *
-     * <pre>
-     **
-     * Contract: server must return BuyDevCardResponse. If successful a development card must be purchased and players
-     * resources adjusted accordingly. Also, if successful a DevCardBoughtEvent is sent to all players.
-     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements

@@ -6,6 +6,7 @@ import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
 import game.Game;
 import game.players.Player;
+import protocol.EnumProtos;
 import protocol.EnumProtos.*;
 import protocol.MessageProtos.*;
 import protocol.ResponseProtos.*;
@@ -215,9 +216,34 @@ public class Server
 			case ENDMOVERESPONSE:
 				event.setNewTurn(response.getEndMoveResponse().getNewTurn());
 				break;
+			case PLAYKNIGHTCARDRESPONSE:
+				event.setRobberMove(response.getPlayKnightCardResponse().getMoveRobberResponse().getRobberLocation());
+				break;
+			case MOVEROBBERRESPONSE:
+				event.setRobberMove(response.getMoveRobberResponse().getRobberLocation());
+				break;
+			case PLAYMONOPOLYCARDRESPONSE:
+				event.setPlayedDevCard(setUpDevCardEvent(DevelopmentCardProto.MONOPOLY));
+				break;
+			case PLAYROADBUILDINGCARDRESPONSE:
+				event.setPlayedDevCard(setUpDevCardEvent(DevelopmentCardProto.ROAD_BUILDING));
 		}
 
 
+	}
+
+	/**
+	 * Creates a PlayDevCardEvent  for the given type and current player
+	 * @param type the type that was played
+	 * @return the protobuf-compatible PlayDevCardEvent to send to all players
+	 */
+	private PlayDevCardEvent setUpDevCardEvent(DevelopmentCardProto type)
+	{
+		PlayDevCardEvent.Builder ev = PlayDevCardEvent.newBuilder();
+		ev.setType(type);
+		ev.setPlayerColour(Colour.toProto(game.getCurrentPlayer().getColour()));
+
+		return ev.build();
 	}
 
 	/**
@@ -310,7 +336,7 @@ public class Server
 					break;
 				case PLAYYEAROFPLENTYCARDREQUEST:
 					card = DevelopmentCardType.YearOfPlenty;
-					resp.setSuccessFailResponse(game.playYearOfPlentyCard((request.getPlayYearOfPlentyCardRequest())));
+					resp.setPlayYearOfPlentyCardResponse(game.playYearOfPlentyCard((request.getPlayYearOfPlentyCardRequest())));
 					break;
 				case PLAYLIBRARYCARDREQUEST:
 					card = DevelopmentCardType.Library;
@@ -322,7 +348,7 @@ public class Server
 					break;
 				case PLAYKNIGHTCARDREQUEST:
 					card = DevelopmentCardType.Knight;
-					resp.setMoveRobberResponse(game.moveRobber(request.getPlayKnightCardRequest().getRequest(), playerColour));
+					resp.setPlayKnightCardResponse(game.playKnightCard(request.getPlayKnightCardRequest(), playerColour));
 					break;
 				case MOVEROBBERREQUEST:
 					resp.setMoveRobberResponse(game.moveRobber(request.getMoveRobberRequest(), playerColour));

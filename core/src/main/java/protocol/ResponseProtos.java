@@ -154,6 +154,32 @@ public final class ResponseProtos {
      * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
      */
     protocol.ResponseProtos.UpgradeSettlementResponseOrBuilder getUpgradeSettlementResponseOrBuilder();
+
+    /**
+     * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+     */
+    boolean hasPlayKnightCardResponse();
+    /**
+     * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+     */
+    protocol.ResponseProtos.PlayKnightCardResponse getPlayKnightCardResponse();
+    /**
+     * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+     */
+    protocol.ResponseProtos.PlayKnightCardResponseOrBuilder getPlayKnightCardResponseOrBuilder();
+
+    /**
+     * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+     */
+    boolean hasPlayYearOfPlentyCardResponse();
+    /**
+     * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+     */
+    protocol.ResponseProtos.PlayYearOfPlentyCardResponse getPlayYearOfPlentyCardResponse();
+    /**
+     * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+     */
+    protocol.ResponseProtos.PlayYearOfPlentyCardResponseOrBuilder getPlayYearOfPlentyCardResponseOrBuilder();
   }
   /**
    * Protobuf type {@code Response}
@@ -350,6 +376,32 @@ public final class ResponseProtos {
               typeCase_ = 12;
               break;
             }
+            case 106: {
+              protocol.ResponseProtos.PlayKnightCardResponse.Builder subBuilder = null;
+              if (typeCase_ == 13) {
+                subBuilder = ((protocol.ResponseProtos.PlayKnightCardResponse) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResponseProtos.PlayKnightCardResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResponseProtos.PlayKnightCardResponse) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 13;
+              break;
+            }
+            case 114: {
+              protocol.ResponseProtos.PlayYearOfPlentyCardResponse.Builder subBuilder = null;
+              if (typeCase_ == 14) {
+                subBuilder = ((protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResponseProtos.PlayYearOfPlentyCardResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 14;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -405,6 +457,8 @@ public final class ResponseProtos {
       ENDMOVERESPONSE(10),
       BUILDSETTLEMENTRESPONSE(11),
       UPGRADESETTLEMENTRESPONSE(12),
+      PLAYKNIGHTCARDRESPONSE(13),
+      PLAYYEAROFPLENTYCARDRESPONSE(14),
       TYPE_NOT_SET(0);
       private int value = 0;
       private TypeCase(int value) {
@@ -423,6 +477,8 @@ public final class ResponseProtos {
           case 10: return ENDMOVERESPONSE;
           case 11: return BUILDSETTLEMENTRESPONSE;
           case 12: return UPGRADESETTLEMENTRESPONSE;
+          case 13: return PLAYKNIGHTCARDRESPONSE;
+          case 14: return PLAYYEAROFPLENTYCARDRESPONSE;
           case 0: return TYPE_NOT_SET;
           default: throw new java.lang.IllegalArgumentException(
             "Value is undefined for this oneof enum.");
@@ -725,6 +781,58 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.UpgradeSettlementResponse.getDefaultInstance();
     }
 
+    public static final int PLAYKNIGHTCARDRESPONSE_FIELD_NUMBER = 13;
+    /**
+     * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+     */
+    public boolean hasPlayKnightCardResponse() {
+      return typeCase_ == 13;
+    }
+    /**
+     * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+     */
+    public protocol.ResponseProtos.PlayKnightCardResponse getPlayKnightCardResponse() {
+      if (typeCase_ == 13) {
+         return (protocol.ResponseProtos.PlayKnightCardResponse) type_;
+      }
+      return protocol.ResponseProtos.PlayKnightCardResponse.getDefaultInstance();
+    }
+    /**
+     * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+     */
+    public protocol.ResponseProtos.PlayKnightCardResponseOrBuilder getPlayKnightCardResponseOrBuilder() {
+      if (typeCase_ == 13) {
+         return (protocol.ResponseProtos.PlayKnightCardResponse) type_;
+      }
+      return protocol.ResponseProtos.PlayKnightCardResponse.getDefaultInstance();
+    }
+
+    public static final int PLAYYEAROFPLENTYCARDRESPONSE_FIELD_NUMBER = 14;
+    /**
+     * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+     */
+    public boolean hasPlayYearOfPlentyCardResponse() {
+      return typeCase_ == 14;
+    }
+    /**
+     * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+     */
+    public protocol.ResponseProtos.PlayYearOfPlentyCardResponse getPlayYearOfPlentyCardResponse() {
+      if (typeCase_ == 14) {
+         return (protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_;
+      }
+      return protocol.ResponseProtos.PlayYearOfPlentyCardResponse.getDefaultInstance();
+    }
+    /**
+     * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+     */
+    public protocol.ResponseProtos.PlayYearOfPlentyCardResponseOrBuilder getPlayYearOfPlentyCardResponseOrBuilder() {
+      if (typeCase_ == 14) {
+         return (protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_;
+      }
+      return protocol.ResponseProtos.PlayYearOfPlentyCardResponse.getDefaultInstance();
+    }
+
     private void initFields() {
     }
     private byte memoizedIsInitialized = -1;
@@ -799,6 +907,18 @@ public final class ResponseProtos {
           return false;
         }
       }
+      if (hasPlayKnightCardResponse()) {
+        if (!getPlayKnightCardResponse().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasPlayYearOfPlentyCardResponse()) {
+        if (!getPlayYearOfPlentyCardResponse().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -838,6 +958,12 @@ public final class ResponseProtos {
       }
       if (typeCase_ == 12) {
         output.writeMessage(12, (protocol.ResponseProtos.UpgradeSettlementResponse) type_);
+      }
+      if (typeCase_ == 13) {
+        output.writeMessage(13, (protocol.ResponseProtos.PlayKnightCardResponse) type_);
+      }
+      if (typeCase_ == 14) {
+        output.writeMessage(14, (protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -891,6 +1017,14 @@ public final class ResponseProtos {
       if (typeCase_ == 12) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(12, (protocol.ResponseProtos.UpgradeSettlementResponse) type_);
+      }
+      if (typeCase_ == 13) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(13, (protocol.ResponseProtos.PlayKnightCardResponse) type_);
+      }
+      if (typeCase_ == 14) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(14, (protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1116,6 +1250,20 @@ public final class ResponseProtos {
             result.type_ = upgradeSettlementResponseBuilder_.build();
           }
         }
+        if (typeCase_ == 13) {
+          if (playKnightCardResponseBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = playKnightCardResponseBuilder_.build();
+          }
+        }
+        if (typeCase_ == 14) {
+          if (playYearOfPlentyCardResponseBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = playYearOfPlentyCardResponseBuilder_.build();
+          }
+        }
         result.bitField0_ = to_bitField0_;
         result.typeCase_ = typeCase_;
         onBuilt();
@@ -1176,6 +1324,14 @@ public final class ResponseProtos {
           }
           case UPGRADESETTLEMENTRESPONSE: {
             mergeUpgradeSettlementResponse(other.getUpgradeSettlementResponse());
+            break;
+          }
+          case PLAYKNIGHTCARDRESPONSE: {
+            mergePlayKnightCardResponse(other.getPlayKnightCardResponse());
+            break;
+          }
+          case PLAYYEAROFPLENTYCARDRESPONSE: {
+            mergePlayYearOfPlentyCardResponse(other.getPlayYearOfPlentyCardResponse());
             break;
           }
           case TYPE_NOT_SET: {
@@ -1249,6 +1405,18 @@ public final class ResponseProtos {
         }
         if (hasUpgradeSettlementResponse()) {
           if (!getUpgradeSettlementResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasPlayKnightCardResponse()) {
+          if (!getPlayKnightCardResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasPlayYearOfPlentyCardResponse()) {
+          if (!getPlayYearOfPlentyCardResponse().isInitialized()) {
             
             return false;
           }
@@ -2775,6 +2943,276 @@ public final class ResponseProtos {
         return upgradeSettlementResponseBuilder_;
       }
 
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.PlayKnightCardResponse, protocol.ResponseProtos.PlayKnightCardResponse.Builder, protocol.ResponseProtos.PlayKnightCardResponseOrBuilder> playKnightCardResponseBuilder_;
+      /**
+       * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+       */
+      public boolean hasPlayKnightCardResponse() {
+        return typeCase_ == 13;
+      }
+      /**
+       * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+       */
+      public protocol.ResponseProtos.PlayKnightCardResponse getPlayKnightCardResponse() {
+        if (playKnightCardResponseBuilder_ == null) {
+          if (typeCase_ == 13) {
+            return (protocol.ResponseProtos.PlayKnightCardResponse) type_;
+          }
+          return protocol.ResponseProtos.PlayKnightCardResponse.getDefaultInstance();
+        } else {
+          if (typeCase_ == 13) {
+            return playKnightCardResponseBuilder_.getMessage();
+          }
+          return protocol.ResponseProtos.PlayKnightCardResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+       */
+      public Builder setPlayKnightCardResponse(protocol.ResponseProtos.PlayKnightCardResponse value) {
+        if (playKnightCardResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          playKnightCardResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 13;
+        return this;
+      }
+      /**
+       * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+       */
+      public Builder setPlayKnightCardResponse(
+          protocol.ResponseProtos.PlayKnightCardResponse.Builder builderForValue) {
+        if (playKnightCardResponseBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          playKnightCardResponseBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 13;
+        return this;
+      }
+      /**
+       * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+       */
+      public Builder mergePlayKnightCardResponse(protocol.ResponseProtos.PlayKnightCardResponse value) {
+        if (playKnightCardResponseBuilder_ == null) {
+          if (typeCase_ == 13 &&
+              type_ != protocol.ResponseProtos.PlayKnightCardResponse.getDefaultInstance()) {
+            type_ = protocol.ResponseProtos.PlayKnightCardResponse.newBuilder((protocol.ResponseProtos.PlayKnightCardResponse) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 13) {
+            playKnightCardResponseBuilder_.mergeFrom(value);
+          }
+          playKnightCardResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 13;
+        return this;
+      }
+      /**
+       * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+       */
+      public Builder clearPlayKnightCardResponse() {
+        if (playKnightCardResponseBuilder_ == null) {
+          if (typeCase_ == 13) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 13) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          playKnightCardResponseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+       */
+      public protocol.ResponseProtos.PlayKnightCardResponse.Builder getPlayKnightCardResponseBuilder() {
+        return getPlayKnightCardResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+       */
+      public protocol.ResponseProtos.PlayKnightCardResponseOrBuilder getPlayKnightCardResponseOrBuilder() {
+        if ((typeCase_ == 13) && (playKnightCardResponseBuilder_ != null)) {
+          return playKnightCardResponseBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 13) {
+            return (protocol.ResponseProtos.PlayKnightCardResponse) type_;
+          }
+          return protocol.ResponseProtos.PlayKnightCardResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.PlayKnightCardResponse, protocol.ResponseProtos.PlayKnightCardResponse.Builder, protocol.ResponseProtos.PlayKnightCardResponseOrBuilder> 
+          getPlayKnightCardResponseFieldBuilder() {
+        if (playKnightCardResponseBuilder_ == null) {
+          if (!(typeCase_ == 13)) {
+            type_ = protocol.ResponseProtos.PlayKnightCardResponse.getDefaultInstance();
+          }
+          playKnightCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.PlayKnightCardResponse, protocol.ResponseProtos.PlayKnightCardResponse.Builder, protocol.ResponseProtos.PlayKnightCardResponseOrBuilder>(
+                  (protocol.ResponseProtos.PlayKnightCardResponse) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 13;
+        return playKnightCardResponseBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.PlayYearOfPlentyCardResponse, protocol.ResponseProtos.PlayYearOfPlentyCardResponse.Builder, protocol.ResponseProtos.PlayYearOfPlentyCardResponseOrBuilder> playYearOfPlentyCardResponseBuilder_;
+      /**
+       * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+       */
+      public boolean hasPlayYearOfPlentyCardResponse() {
+        return typeCase_ == 14;
+      }
+      /**
+       * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+       */
+      public protocol.ResponseProtos.PlayYearOfPlentyCardResponse getPlayYearOfPlentyCardResponse() {
+        if (playYearOfPlentyCardResponseBuilder_ == null) {
+          if (typeCase_ == 14) {
+            return (protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_;
+          }
+          return protocol.ResponseProtos.PlayYearOfPlentyCardResponse.getDefaultInstance();
+        } else {
+          if (typeCase_ == 14) {
+            return playYearOfPlentyCardResponseBuilder_.getMessage();
+          }
+          return protocol.ResponseProtos.PlayYearOfPlentyCardResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+       */
+      public Builder setPlayYearOfPlentyCardResponse(protocol.ResponseProtos.PlayYearOfPlentyCardResponse value) {
+        if (playYearOfPlentyCardResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          playYearOfPlentyCardResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 14;
+        return this;
+      }
+      /**
+       * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+       */
+      public Builder setPlayYearOfPlentyCardResponse(
+          protocol.ResponseProtos.PlayYearOfPlentyCardResponse.Builder builderForValue) {
+        if (playYearOfPlentyCardResponseBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          playYearOfPlentyCardResponseBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 14;
+        return this;
+      }
+      /**
+       * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+       */
+      public Builder mergePlayYearOfPlentyCardResponse(protocol.ResponseProtos.PlayYearOfPlentyCardResponse value) {
+        if (playYearOfPlentyCardResponseBuilder_ == null) {
+          if (typeCase_ == 14 &&
+              type_ != protocol.ResponseProtos.PlayYearOfPlentyCardResponse.getDefaultInstance()) {
+            type_ = protocol.ResponseProtos.PlayYearOfPlentyCardResponse.newBuilder((protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 14) {
+            playYearOfPlentyCardResponseBuilder_.mergeFrom(value);
+          }
+          playYearOfPlentyCardResponseBuilder_.setMessage(value);
+        }
+        typeCase_ = 14;
+        return this;
+      }
+      /**
+       * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+       */
+      public Builder clearPlayYearOfPlentyCardResponse() {
+        if (playYearOfPlentyCardResponseBuilder_ == null) {
+          if (typeCase_ == 14) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 14) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          playYearOfPlentyCardResponseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+       */
+      public protocol.ResponseProtos.PlayYearOfPlentyCardResponse.Builder getPlayYearOfPlentyCardResponseBuilder() {
+        return getPlayYearOfPlentyCardResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+       */
+      public protocol.ResponseProtos.PlayYearOfPlentyCardResponseOrBuilder getPlayYearOfPlentyCardResponseOrBuilder() {
+        if ((typeCase_ == 14) && (playYearOfPlentyCardResponseBuilder_ != null)) {
+          return playYearOfPlentyCardResponseBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 14) {
+            return (protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_;
+          }
+          return protocol.ResponseProtos.PlayYearOfPlentyCardResponse.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.PlayYearOfPlentyCardResponse, protocol.ResponseProtos.PlayYearOfPlentyCardResponse.Builder, protocol.ResponseProtos.PlayYearOfPlentyCardResponseOrBuilder> 
+          getPlayYearOfPlentyCardResponseFieldBuilder() {
+        if (playYearOfPlentyCardResponseBuilder_ == null) {
+          if (!(typeCase_ == 14)) {
+            type_ = protocol.ResponseProtos.PlayYearOfPlentyCardResponse.getDefaultInstance();
+          }
+          playYearOfPlentyCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.PlayYearOfPlentyCardResponse, protocol.ResponseProtos.PlayYearOfPlentyCardResponse.Builder, protocol.ResponseProtos.PlayYearOfPlentyCardResponseOrBuilder>(
+                  (protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 14;
+        return playYearOfPlentyCardResponseBuilder_;
+      }
+
       // @@protoc_insertion_point(builder_scope:Response)
     }
 
@@ -3839,6 +4277,15 @@ public final class ResponseProtos {
      * <code>required int32 numResources = 1;</code>
      */
     int getNumResources();
+
+    /**
+     * <code>required .ResourceTypeProto resource = 2;</code>
+     */
+    boolean hasResource();
+    /**
+     * <code>required .ResourceTypeProto resource = 2;</code>
+     */
+    protocol.EnumProtos.ResourceTypeProto getResource();
   }
   /**
    * Protobuf type {@code PlayMonopolyCardResponse}
@@ -3897,6 +4344,17 @@ public final class ResponseProtos {
               numResources_ = input.readInt32();
               break;
             }
+            case 16: {
+              int rawValue = input.readEnum();
+              protocol.EnumProtos.ResourceTypeProto value = protocol.EnumProtos.ResourceTypeProto.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(2, rawValue);
+              } else {
+                bitField0_ |= 0x00000002;
+                resource_ = value;
+              }
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -3952,8 +4410,24 @@ public final class ResponseProtos {
       return numResources_;
     }
 
+    public static final int RESOURCE_FIELD_NUMBER = 2;
+    private protocol.EnumProtos.ResourceTypeProto resource_;
+    /**
+     * <code>required .ResourceTypeProto resource = 2;</code>
+     */
+    public boolean hasResource() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .ResourceTypeProto resource = 2;</code>
+     */
+    public protocol.EnumProtos.ResourceTypeProto getResource() {
+      return resource_;
+    }
+
     private void initFields() {
       numResources_ = 0;
+      resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3962,6 +4436,10 @@ public final class ResponseProtos {
       if (isInitialized == 0) return false;
 
       if (!hasNumResources()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasResource()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -3975,6 +4453,9 @@ public final class ResponseProtos {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt32(1, numResources_);
       }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeEnum(2, resource_.getNumber());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -3987,6 +4468,10 @@ public final class ResponseProtos {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, numResources_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(2, resource_.getNumber());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -4107,6 +4592,8 @@ public final class ResponseProtos {
         super.clear();
         numResources_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
+        resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -4139,6 +4626,10 @@ public final class ResponseProtos {
           to_bitField0_ |= 0x00000001;
         }
         result.numResources_ = numResources_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.resource_ = resource_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -4158,12 +4649,19 @@ public final class ResponseProtos {
         if (other.hasNumResources()) {
           setNumResources(other.getNumResources());
         }
+        if (other.hasResource()) {
+          setResource(other.getResource());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasNumResources()) {
+          
+          return false;
+        }
+        if (!hasResource()) {
           
           return false;
         }
@@ -4217,6 +4715,41 @@ public final class ResponseProtos {
       public Builder clearNumResources() {
         bitField0_ = (bitField0_ & ~0x00000001);
         numResources_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private protocol.EnumProtos.ResourceTypeProto resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+      /**
+       * <code>required .ResourceTypeProto resource = 2;</code>
+       */
+      public boolean hasResource() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .ResourceTypeProto resource = 2;</code>
+       */
+      public protocol.EnumProtos.ResourceTypeProto getResource() {
+        return resource_;
+      }
+      /**
+       * <code>required .ResourceTypeProto resource = 2;</code>
+       */
+      public Builder setResource(protocol.EnumProtos.ResourceTypeProto value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
+        resource_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .ResourceTypeProto resource = 2;</code>
+       */
+      public Builder clearResource() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         onChanged();
         return this;
       }
@@ -4959,6 +5492,515 @@ public final class ResponseProtos {
     }
 
     // @@protoc_insertion_point(class_scope:PlayRoadBuildingCardResponse)
+  }
+
+  public interface PlayYearOfPlentyCardResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:PlayYearOfPlentyCardResponse)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required .ResourceTypeProto r1 = 1;</code>
+     */
+    boolean hasR1();
+    /**
+     * <code>required .ResourceTypeProto r1 = 1;</code>
+     */
+    protocol.EnumProtos.ResourceTypeProto getR1();
+
+    /**
+     * <code>required .ResourceTypeProto r2 = 2;</code>
+     */
+    boolean hasR2();
+    /**
+     * <code>required .ResourceTypeProto r2 = 2;</code>
+     */
+    protocol.EnumProtos.ResourceTypeProto getR2();
+  }
+  /**
+   * Protobuf type {@code PlayYearOfPlentyCardResponse}
+   */
+  public static final class PlayYearOfPlentyCardResponse extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:PlayYearOfPlentyCardResponse)
+      PlayYearOfPlentyCardResponseOrBuilder {
+    // Use PlayYearOfPlentyCardResponse.newBuilder() to construct.
+    private PlayYearOfPlentyCardResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private PlayYearOfPlentyCardResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final PlayYearOfPlentyCardResponse defaultInstance;
+    public static PlayYearOfPlentyCardResponse getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public PlayYearOfPlentyCardResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private PlayYearOfPlentyCardResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              int rawValue = input.readEnum();
+              protocol.EnumProtos.ResourceTypeProto value = protocol.EnumProtos.ResourceTypeProto.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                r1_ = value;
+              }
+              break;
+            }
+            case 16: {
+              int rawValue = input.readEnum();
+              protocol.EnumProtos.ResourceTypeProto value = protocol.EnumProtos.ResourceTypeProto.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(2, rawValue);
+              } else {
+                bitField0_ |= 0x00000002;
+                r2_ = value;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protocol.ResponseProtos.internal_static_PlayYearOfPlentyCardResponse_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protocol.ResponseProtos.internal_static_PlayYearOfPlentyCardResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protocol.ResponseProtos.PlayYearOfPlentyCardResponse.class, protocol.ResponseProtos.PlayYearOfPlentyCardResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<PlayYearOfPlentyCardResponse> PARSER =
+        new com.google.protobuf.AbstractParser<PlayYearOfPlentyCardResponse>() {
+      public PlayYearOfPlentyCardResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PlayYearOfPlentyCardResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PlayYearOfPlentyCardResponse> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int R1_FIELD_NUMBER = 1;
+    private protocol.EnumProtos.ResourceTypeProto r1_;
+    /**
+     * <code>required .ResourceTypeProto r1 = 1;</code>
+     */
+    public boolean hasR1() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .ResourceTypeProto r1 = 1;</code>
+     */
+    public protocol.EnumProtos.ResourceTypeProto getR1() {
+      return r1_;
+    }
+
+    public static final int R2_FIELD_NUMBER = 2;
+    private protocol.EnumProtos.ResourceTypeProto r2_;
+    /**
+     * <code>required .ResourceTypeProto r2 = 2;</code>
+     */
+    public boolean hasR2() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .ResourceTypeProto r2 = 2;</code>
+     */
+    public protocol.EnumProtos.ResourceTypeProto getR2() {
+      return r2_;
+    }
+
+    private void initFields() {
+      r1_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+      r2_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasR1()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasR2()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeEnum(1, r1_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeEnum(2, r2_.getNumber());
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, r1_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(2, r2_.getNumber());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protocol.ResponseProtos.PlayYearOfPlentyCardResponse prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code PlayYearOfPlentyCardResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:PlayYearOfPlentyCardResponse)
+        protocol.ResponseProtos.PlayYearOfPlentyCardResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protocol.ResponseProtos.internal_static_PlayYearOfPlentyCardResponse_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protocol.ResponseProtos.internal_static_PlayYearOfPlentyCardResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protocol.ResponseProtos.PlayYearOfPlentyCardResponse.class, protocol.ResponseProtos.PlayYearOfPlentyCardResponse.Builder.class);
+      }
+
+      // Construct using protocol.ResponseProtos.PlayYearOfPlentyCardResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        r1_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        r2_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protocol.ResponseProtos.internal_static_PlayYearOfPlentyCardResponse_descriptor;
+      }
+
+      public protocol.ResponseProtos.PlayYearOfPlentyCardResponse getDefaultInstanceForType() {
+        return protocol.ResponseProtos.PlayYearOfPlentyCardResponse.getDefaultInstance();
+      }
+
+      public protocol.ResponseProtos.PlayYearOfPlentyCardResponse build() {
+        protocol.ResponseProtos.PlayYearOfPlentyCardResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protocol.ResponseProtos.PlayYearOfPlentyCardResponse buildPartial() {
+        protocol.ResponseProtos.PlayYearOfPlentyCardResponse result = new protocol.ResponseProtos.PlayYearOfPlentyCardResponse(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.r1_ = r1_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.r2_ = r2_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protocol.ResponseProtos.PlayYearOfPlentyCardResponse) {
+          return mergeFrom((protocol.ResponseProtos.PlayYearOfPlentyCardResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protocol.ResponseProtos.PlayYearOfPlentyCardResponse other) {
+        if (other == protocol.ResponseProtos.PlayYearOfPlentyCardResponse.getDefaultInstance()) return this;
+        if (other.hasR1()) {
+          setR1(other.getR1());
+        }
+        if (other.hasR2()) {
+          setR2(other.getR2());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasR1()) {
+          
+          return false;
+        }
+        if (!hasR2()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protocol.ResponseProtos.PlayYearOfPlentyCardResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protocol.ResponseProtos.PlayYearOfPlentyCardResponse) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private protocol.EnumProtos.ResourceTypeProto r1_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+      /**
+       * <code>required .ResourceTypeProto r1 = 1;</code>
+       */
+      public boolean hasR1() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .ResourceTypeProto r1 = 1;</code>
+       */
+      public protocol.EnumProtos.ResourceTypeProto getR1() {
+        return r1_;
+      }
+      /**
+       * <code>required .ResourceTypeProto r1 = 1;</code>
+       */
+      public Builder setR1(protocol.EnumProtos.ResourceTypeProto value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        r1_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .ResourceTypeProto r1 = 1;</code>
+       */
+      public Builder clearR1() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        r1_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+        onChanged();
+        return this;
+      }
+
+      private protocol.EnumProtos.ResourceTypeProto r2_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+      /**
+       * <code>required .ResourceTypeProto r2 = 2;</code>
+       */
+      public boolean hasR2() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .ResourceTypeProto r2 = 2;</code>
+       */
+      public protocol.EnumProtos.ResourceTypeProto getR2() {
+        return r2_;
+      }
+      /**
+       * <code>required .ResourceTypeProto r2 = 2;</code>
+       */
+      public Builder setR2(protocol.EnumProtos.ResourceTypeProto value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
+        r2_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .ResourceTypeProto r2 = 2;</code>
+       */
+      public Builder clearR2() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        r2_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:PlayYearOfPlentyCardResponse)
+    }
+
+    static {
+      defaultInstance = new PlayYearOfPlentyCardResponse(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:PlayYearOfPlentyCardResponse)
   }
 
   public interface BuyDevCardResponseOrBuilder extends
@@ -7033,6 +8075,530 @@ public final class ResponseProtos {
     // @@protoc_insertion_point(class_scope:BuildRoadResponse)
   }
 
+  public interface PlayKnightCardResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:PlayKnightCardResponse)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+     */
+    boolean hasMoveRobberResponse();
+    /**
+     * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+     */
+    protocol.ResponseProtos.MoveRobberResponse getMoveRobberResponse();
+    /**
+     * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+     */
+    protocol.ResponseProtos.MoveRobberResponseOrBuilder getMoveRobberResponseOrBuilder();
+  }
+  /**
+   * Protobuf type {@code PlayKnightCardResponse}
+   */
+  public static final class PlayKnightCardResponse extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:PlayKnightCardResponse)
+      PlayKnightCardResponseOrBuilder {
+    // Use PlayKnightCardResponse.newBuilder() to construct.
+    private PlayKnightCardResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private PlayKnightCardResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final PlayKnightCardResponse defaultInstance;
+    public static PlayKnightCardResponse getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public PlayKnightCardResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private PlayKnightCardResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              protocol.ResponseProtos.MoveRobberResponse.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = moveRobberResponse_.toBuilder();
+              }
+              moveRobberResponse_ = input.readMessage(protocol.ResponseProtos.MoveRobberResponse.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(moveRobberResponse_);
+                moveRobberResponse_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protocol.ResponseProtos.internal_static_PlayKnightCardResponse_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protocol.ResponseProtos.internal_static_PlayKnightCardResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protocol.ResponseProtos.PlayKnightCardResponse.class, protocol.ResponseProtos.PlayKnightCardResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<PlayKnightCardResponse> PARSER =
+        new com.google.protobuf.AbstractParser<PlayKnightCardResponse>() {
+      public PlayKnightCardResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PlayKnightCardResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PlayKnightCardResponse> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int MOVEROBBERRESPONSE_FIELD_NUMBER = 1;
+    private protocol.ResponseProtos.MoveRobberResponse moveRobberResponse_;
+    /**
+     * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+     */
+    public boolean hasMoveRobberResponse() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+     */
+    public protocol.ResponseProtos.MoveRobberResponse getMoveRobberResponse() {
+      return moveRobberResponse_;
+    }
+    /**
+     * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+     */
+    public protocol.ResponseProtos.MoveRobberResponseOrBuilder getMoveRobberResponseOrBuilder() {
+      return moveRobberResponse_;
+    }
+
+    private void initFields() {
+      moveRobberResponse_ = protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasMoveRobberResponse()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getMoveRobberResponse().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeMessage(1, moveRobberResponse_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, moveRobberResponse_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protocol.ResponseProtos.PlayKnightCardResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protocol.ResponseProtos.PlayKnightCardResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.PlayKnightCardResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protocol.ResponseProtos.PlayKnightCardResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.PlayKnightCardResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protocol.ResponseProtos.PlayKnightCardResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.PlayKnightCardResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protocol.ResponseProtos.PlayKnightCardResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protocol.ResponseProtos.PlayKnightCardResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protocol.ResponseProtos.PlayKnightCardResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protocol.ResponseProtos.PlayKnightCardResponse prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code PlayKnightCardResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:PlayKnightCardResponse)
+        protocol.ResponseProtos.PlayKnightCardResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protocol.ResponseProtos.internal_static_PlayKnightCardResponse_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protocol.ResponseProtos.internal_static_PlayKnightCardResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protocol.ResponseProtos.PlayKnightCardResponse.class, protocol.ResponseProtos.PlayKnightCardResponse.Builder.class);
+      }
+
+      // Construct using protocol.ResponseProtos.PlayKnightCardResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getMoveRobberResponseFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        if (moveRobberResponseBuilder_ == null) {
+          moveRobberResponse_ = protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
+        } else {
+          moveRobberResponseBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protocol.ResponseProtos.internal_static_PlayKnightCardResponse_descriptor;
+      }
+
+      public protocol.ResponseProtos.PlayKnightCardResponse getDefaultInstanceForType() {
+        return protocol.ResponseProtos.PlayKnightCardResponse.getDefaultInstance();
+      }
+
+      public protocol.ResponseProtos.PlayKnightCardResponse build() {
+        protocol.ResponseProtos.PlayKnightCardResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protocol.ResponseProtos.PlayKnightCardResponse buildPartial() {
+        protocol.ResponseProtos.PlayKnightCardResponse result = new protocol.ResponseProtos.PlayKnightCardResponse(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        if (moveRobberResponseBuilder_ == null) {
+          result.moveRobberResponse_ = moveRobberResponse_;
+        } else {
+          result.moveRobberResponse_ = moveRobberResponseBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protocol.ResponseProtos.PlayKnightCardResponse) {
+          return mergeFrom((protocol.ResponseProtos.PlayKnightCardResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protocol.ResponseProtos.PlayKnightCardResponse other) {
+        if (other == protocol.ResponseProtos.PlayKnightCardResponse.getDefaultInstance()) return this;
+        if (other.hasMoveRobberResponse()) {
+          mergeMoveRobberResponse(other.getMoveRobberResponse());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasMoveRobberResponse()) {
+          
+          return false;
+        }
+        if (!getMoveRobberResponse().isInitialized()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protocol.ResponseProtos.PlayKnightCardResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protocol.ResponseProtos.PlayKnightCardResponse) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private protocol.ResponseProtos.MoveRobberResponse moveRobberResponse_ = protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.MoveRobberResponse, protocol.ResponseProtos.MoveRobberResponse.Builder, protocol.ResponseProtos.MoveRobberResponseOrBuilder> moveRobberResponseBuilder_;
+      /**
+       * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+       */
+      public boolean hasMoveRobberResponse() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+       */
+      public protocol.ResponseProtos.MoveRobberResponse getMoveRobberResponse() {
+        if (moveRobberResponseBuilder_ == null) {
+          return moveRobberResponse_;
+        } else {
+          return moveRobberResponseBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+       */
+      public Builder setMoveRobberResponse(protocol.ResponseProtos.MoveRobberResponse value) {
+        if (moveRobberResponseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          moveRobberResponse_ = value;
+          onChanged();
+        } else {
+          moveRobberResponseBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+       */
+      public Builder setMoveRobberResponse(
+          protocol.ResponseProtos.MoveRobberResponse.Builder builderForValue) {
+        if (moveRobberResponseBuilder_ == null) {
+          moveRobberResponse_ = builderForValue.build();
+          onChanged();
+        } else {
+          moveRobberResponseBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+       */
+      public Builder mergeMoveRobberResponse(protocol.ResponseProtos.MoveRobberResponse value) {
+        if (moveRobberResponseBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              moveRobberResponse_ != protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance()) {
+            moveRobberResponse_ =
+              protocol.ResponseProtos.MoveRobberResponse.newBuilder(moveRobberResponse_).mergeFrom(value).buildPartial();
+          } else {
+            moveRobberResponse_ = value;
+          }
+          onChanged();
+        } else {
+          moveRobberResponseBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+       */
+      public Builder clearMoveRobberResponse() {
+        if (moveRobberResponseBuilder_ == null) {
+          moveRobberResponse_ = protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
+          onChanged();
+        } else {
+          moveRobberResponseBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+       */
+      public protocol.ResponseProtos.MoveRobberResponse.Builder getMoveRobberResponseBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getMoveRobberResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+       */
+      public protocol.ResponseProtos.MoveRobberResponseOrBuilder getMoveRobberResponseOrBuilder() {
+        if (moveRobberResponseBuilder_ != null) {
+          return moveRobberResponseBuilder_.getMessageOrBuilder();
+        } else {
+          return moveRobberResponse_;
+        }
+      }
+      /**
+       * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResponseProtos.MoveRobberResponse, protocol.ResponseProtos.MoveRobberResponse.Builder, protocol.ResponseProtos.MoveRobberResponseOrBuilder> 
+          getMoveRobberResponseFieldBuilder() {
+        if (moveRobberResponseBuilder_ == null) {
+          moveRobberResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResponseProtos.MoveRobberResponse, protocol.ResponseProtos.MoveRobberResponse.Builder, protocol.ResponseProtos.MoveRobberResponseOrBuilder>(
+                  getMoveRobberResponse(),
+                  getParentForChildren(),
+                  isClean());
+          moveRobberResponse_ = null;
+        }
+        return moveRobberResponseBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:PlayKnightCardResponse)
+    }
+
+    static {
+      defaultInstance = new PlayKnightCardResponse(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:PlayKnightCardResponse)
+  }
+
   public interface MoveRobberResponseOrBuilder extends
       // @@protoc_insertion_point(interface_extends:MoveRobberResponse)
       com.google.protobuf.MessageOrBuilder {
@@ -7045,6 +8611,19 @@ public final class ResponseProtos {
      * <code>required .ResourceTypeProto resource = 1;</code>
      */
     protocol.EnumProtos.ResourceTypeProto getResource();
+
+    /**
+     * <code>required .PointProto robberLocation = 2;</code>
+     */
+    boolean hasRobberLocation();
+    /**
+     * <code>required .PointProto robberLocation = 2;</code>
+     */
+    protocol.BuildProtos.PointProto getRobberLocation();
+    /**
+     * <code>required .PointProto robberLocation = 2;</code>
+     */
+    protocol.BuildProtos.PointProtoOrBuilder getRobberLocationOrBuilder();
   }
   /**
    * Protobuf type {@code MoveRobberResponse}
@@ -7109,6 +8688,19 @@ public final class ResponseProtos {
               }
               break;
             }
+            case 18: {
+              protocol.BuildProtos.PointProto.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = robberLocation_.toBuilder();
+              }
+              robberLocation_ = input.readMessage(protocol.BuildProtos.PointProto.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(robberLocation_);
+                robberLocation_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -7164,8 +8756,30 @@ public final class ResponseProtos {
       return resource_;
     }
 
+    public static final int ROBBERLOCATION_FIELD_NUMBER = 2;
+    private protocol.BuildProtos.PointProto robberLocation_;
+    /**
+     * <code>required .PointProto robberLocation = 2;</code>
+     */
+    public boolean hasRobberLocation() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .PointProto robberLocation = 2;</code>
+     */
+    public protocol.BuildProtos.PointProto getRobberLocation() {
+      return robberLocation_;
+    }
+    /**
+     * <code>required .PointProto robberLocation = 2;</code>
+     */
+    public protocol.BuildProtos.PointProtoOrBuilder getRobberLocationOrBuilder() {
+      return robberLocation_;
+    }
+
     private void initFields() {
       resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+      robberLocation_ = protocol.BuildProtos.PointProto.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -7174,6 +8788,14 @@ public final class ResponseProtos {
       if (isInitialized == 0) return false;
 
       if (!hasResource()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasRobberLocation()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getRobberLocation().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -7187,6 +8809,9 @@ public final class ResponseProtos {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeEnum(1, resource_.getNumber());
       }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, robberLocation_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -7199,6 +8824,10 @@ public final class ResponseProtos {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, resource_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, robberLocation_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -7309,6 +8938,7 @@ public final class ResponseProtos {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getRobberLocationFieldBuilder();
         }
       }
       private static Builder create() {
@@ -7319,6 +8949,12 @@ public final class ResponseProtos {
         super.clear();
         resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         bitField0_ = (bitField0_ & ~0x00000001);
+        if (robberLocationBuilder_ == null) {
+          robberLocation_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+        } else {
+          robberLocationBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -7351,6 +8987,14 @@ public final class ResponseProtos {
           to_bitField0_ |= 0x00000001;
         }
         result.resource_ = resource_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (robberLocationBuilder_ == null) {
+          result.robberLocation_ = robberLocation_;
+        } else {
+          result.robberLocation_ = robberLocationBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -7370,12 +9014,23 @@ public final class ResponseProtos {
         if (other.hasResource()) {
           setResource(other.getResource());
         }
+        if (other.hasRobberLocation()) {
+          mergeRobberLocation(other.getRobberLocation());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasResource()) {
+          
+          return false;
+        }
+        if (!hasRobberLocation()) {
+          
+          return false;
+        }
+        if (!getRobberLocation().isInitialized()) {
           
           return false;
         }
@@ -7434,6 +9089,122 @@ public final class ResponseProtos {
         resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         onChanged();
         return this;
+      }
+
+      private protocol.BuildProtos.PointProto robberLocation_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> robberLocationBuilder_;
+      /**
+       * <code>required .PointProto robberLocation = 2;</code>
+       */
+      public boolean hasRobberLocation() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .PointProto robberLocation = 2;</code>
+       */
+      public protocol.BuildProtos.PointProto getRobberLocation() {
+        if (robberLocationBuilder_ == null) {
+          return robberLocation_;
+        } else {
+          return robberLocationBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .PointProto robberLocation = 2;</code>
+       */
+      public Builder setRobberLocation(protocol.BuildProtos.PointProto value) {
+        if (robberLocationBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          robberLocation_ = value;
+          onChanged();
+        } else {
+          robberLocationBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .PointProto robberLocation = 2;</code>
+       */
+      public Builder setRobberLocation(
+          protocol.BuildProtos.PointProto.Builder builderForValue) {
+        if (robberLocationBuilder_ == null) {
+          robberLocation_ = builderForValue.build();
+          onChanged();
+        } else {
+          robberLocationBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .PointProto robberLocation = 2;</code>
+       */
+      public Builder mergeRobberLocation(protocol.BuildProtos.PointProto value) {
+        if (robberLocationBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              robberLocation_ != protocol.BuildProtos.PointProto.getDefaultInstance()) {
+            robberLocation_ =
+              protocol.BuildProtos.PointProto.newBuilder(robberLocation_).mergeFrom(value).buildPartial();
+          } else {
+            robberLocation_ = value;
+          }
+          onChanged();
+        } else {
+          robberLocationBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .PointProto robberLocation = 2;</code>
+       */
+      public Builder clearRobberLocation() {
+        if (robberLocationBuilder_ == null) {
+          robberLocation_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+          onChanged();
+        } else {
+          robberLocationBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      /**
+       * <code>required .PointProto robberLocation = 2;</code>
+       */
+      public protocol.BuildProtos.PointProto.Builder getRobberLocationBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getRobberLocationFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .PointProto robberLocation = 2;</code>
+       */
+      public protocol.BuildProtos.PointProtoOrBuilder getRobberLocationOrBuilder() {
+        if (robberLocationBuilder_ != null) {
+          return robberLocationBuilder_.getMessageOrBuilder();
+        } else {
+          return robberLocation_;
+        }
+      }
+      /**
+       * <code>required .PointProto robberLocation = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> 
+          getRobberLocationFieldBuilder() {
+        if (robberLocationBuilder_ == null) {
+          robberLocationBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder>(
+                  getRobberLocation(),
+                  getParentForChildren(),
+                  isClean());
+          robberLocation_ = null;
+        }
+        return robberLocationBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:MoveRobberResponse)
@@ -8829,6 +10600,11 @@ public final class ResponseProtos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_PlayRoadBuildingCardResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_PlayYearOfPlentyCardResponse_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_PlayYearOfPlentyCardResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_BuyDevCardResponse_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -8848,6 +10624,11 @@ public final class ResponseProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_BuildRoadResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_PlayKnightCardResponse_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_PlayKnightCardResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_MoveRobberResponse_descriptor;
   private static
@@ -8873,7 +10654,7 @@ public final class ResponseProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\017responses.proto\032\013board.proto\032\013trade.pr" +
-      "oto\032\013enums.proto\032\013build.proto\"\372\004\n\010Respon" +
+      "oto\032\013enums.proto\032\013build.proto\"\374\005\n\010Respon" +
       "se\0223\n\023successFailResponse\030\001 \001(\0132\024.Succes" +
       "sFailResponseH\000\0225\n\024acceptRejectResponse\030" +
       "\002 \001(\0132\025.AcceptRejectResponseH\000\0222\n\024curren" +
@@ -8889,27 +10670,36 @@ public final class ResponseProtos {
       "veResponseH\000\022;\n\027buildSettlementResponse\030" +
       "\013 \001(\0132\030.BuildSettlementResponseH\000\022?\n\031upg" +
       "radeSettlementResponse\030\014 \001(\0132\032.UpgradeSe" +
-      "ttlementResponseH\000B\006\n\004type\"C\n\023SuccessFai" +
-      "lResponse\022\034\n\006result\030\001 \002(\0162\014.ResultProto\022" +
-      "\016\n\006reason\030\002 \001(\t\"0\n\017EndMoveResponse\022\035\n\007ne",
-      "wTurn\030\001 \002(\0162\014.ColourProto\"0\n\030PlayMonopol" +
-      "yCardResponse\022\024\n\014numResources\030\001 \002(\005\"l\n\034P" +
-      "layRoadBuildingCardResponse\022%\n\tresponse1" +
-      "\030\001 \002(\0132\022.BuildRoadResponse\022%\n\tresponse2\030" +
-      "\002 \002(\0132\022.BuildRoadResponse\"D\n\022BuyDevCardR" +
-      "esponse\022.\n\017developmentCard\030\001 \002(\0162\025.Devel" +
-      "opmentCardProto\">\n\027BuildSettlementRespon" +
-      "se\022#\n\013newBuilding\030\001 \002(\0132\016.BuildingProto\"" +
-      "@\n\031UpgradeSettlementResponse\022#\n\013newBuild" +
-      "ing\030\001 \002(\0132\016.BuildingProto\"E\n\021BuildRoadRe",
-      "sponse\022\023\n\013longestRoad\030\001 \002(\005\022\033\n\007newRoad\030\002" +
-      " \002(\0132\n.RoadProto\":\n\022MoveRobberResponse\022$" +
-      "\n\010resource\030\001 \002(\0162\022.ResourceTypeProto\"g\n\024" +
-      "AcceptRejectResponse\022\034\n\005trade\030\001 \002(\0132\r.Tr" +
-      "adeRequest\022!\n\006answer\030\002 \002(\0162\021.TradeStatus" +
-      "Proto\022\016\n\006reason\030\003 \001(\t\"/\n\021GiveBoardRespon" +
-      "se\022\032\n\005board\030\001 \002(\0132\013.BoardProtoB\032\n\010protoc" +
-      "olB\016ResponseProtos"
+      "ttlementResponseH\000\0229\n\026playKnightCardResp" +
+      "onse\030\r \001(\0132\027.PlayKnightCardResponseH\000\022E\n" +
+      "\034playYearOfPlentyCardResponse\030\016 \001(\0132\035.Pl",
+      "ayYearOfPlentyCardResponseH\000B\006\n\004type\"C\n\023" +
+      "SuccessFailResponse\022\034\n\006result\030\001 \002(\0162\014.Re" +
+      "sultProto\022\016\n\006reason\030\002 \001(\t\"0\n\017EndMoveResp" +
+      "onse\022\035\n\007newTurn\030\001 \002(\0162\014.ColourProto\"V\n\030P" +
+      "layMonopolyCardResponse\022\024\n\014numResources\030" +
+      "\001 \002(\005\022$\n\010resource\030\002 \002(\0162\022.ResourceTypePr" +
+      "oto\"l\n\034PlayRoadBuildingCardResponse\022%\n\tr" +
+      "esponse1\030\001 \002(\0132\022.BuildRoadResponse\022%\n\tre" +
+      "sponse2\030\002 \002(\0132\022.BuildRoadResponse\"^\n\034Pla" +
+      "yYearOfPlentyCardResponse\022\036\n\002r1\030\001 \002(\0162\022.",
+      "ResourceTypeProto\022\036\n\002r2\030\002 \002(\0162\022.Resource" +
+      "TypeProto\"D\n\022BuyDevCardResponse\022.\n\017devel" +
+      "opmentCard\030\001 \002(\0162\025.DevelopmentCardProto\"" +
+      ">\n\027BuildSettlementResponse\022#\n\013newBuildin" +
+      "g\030\001 \002(\0132\016.BuildingProto\"@\n\031UpgradeSettle" +
+      "mentResponse\022#\n\013newBuilding\030\001 \002(\0132\016.Buil" +
+      "dingProto\"E\n\021BuildRoadResponse\022\023\n\013longes" +
+      "tRoad\030\001 \002(\005\022\033\n\007newRoad\030\002 \002(\0132\n.RoadProto" +
+      "\"I\n\026PlayKnightCardResponse\022/\n\022moveRobber" +
+      "Response\030\001 \002(\0132\023.MoveRobberResponse\"_\n\022M",
+      "oveRobberResponse\022$\n\010resource\030\001 \002(\0162\022.Re" +
+      "sourceTypeProto\022#\n\016robberLocation\030\002 \002(\0132" +
+      "\013.PointProto\"g\n\024AcceptRejectResponse\022\034\n\005" +
+      "trade\030\001 \002(\0132\r.TradeRequest\022!\n\006answer\030\002 \002" +
+      "(\0162\021.TradeStatusProto\022\016\n\006reason\030\003 \001(\t\"/\n" +
+      "\021GiveBoardResponse\022\032\n\005board\030\001 \002(\0132\013.Boar" +
+      "dProtoB\032\n\010protocolB\016ResponseProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -8932,7 +10722,7 @@ public final class ResponseProtos {
     internal_static_Response_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_Response_descriptor,
-        new java.lang.String[] { "SuccessFailResponse", "AcceptRejectResponse", "CurrentBoardResponse", "BuyDevCardResponse", "PlayMonopolyCardResponse", "PlayRoadBuildingCardResponse", "BuildRoadResponse", "MoveRobberResponse", "EndMoveResponse", "BuildSettlementResponse", "UpgradeSettlementResponse", "Type", });
+        new java.lang.String[] { "SuccessFailResponse", "AcceptRejectResponse", "CurrentBoardResponse", "BuyDevCardResponse", "PlayMonopolyCardResponse", "PlayRoadBuildingCardResponse", "BuildRoadResponse", "MoveRobberResponse", "EndMoveResponse", "BuildSettlementResponse", "UpgradeSettlementResponse", "PlayKnightCardResponse", "PlayYearOfPlentyCardResponse", "Type", });
     internal_static_SuccessFailResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_SuccessFailResponse_fieldAccessorTable = new
@@ -8950,51 +10740,63 @@ public final class ResponseProtos {
     internal_static_PlayMonopolyCardResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PlayMonopolyCardResponse_descriptor,
-        new java.lang.String[] { "NumResources", });
+        new java.lang.String[] { "NumResources", "Resource", });
     internal_static_PlayRoadBuildingCardResponse_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_PlayRoadBuildingCardResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PlayRoadBuildingCardResponse_descriptor,
         new java.lang.String[] { "Response1", "Response2", });
-    internal_static_BuyDevCardResponse_descriptor =
+    internal_static_PlayYearOfPlentyCardResponse_descriptor =
       getDescriptor().getMessageTypes().get(5);
+    internal_static_PlayYearOfPlentyCardResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_PlayYearOfPlentyCardResponse_descriptor,
+        new java.lang.String[] { "R1", "R2", });
+    internal_static_BuyDevCardResponse_descriptor =
+      getDescriptor().getMessageTypes().get(6);
     internal_static_BuyDevCardResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_BuyDevCardResponse_descriptor,
         new java.lang.String[] { "DevelopmentCard", });
     internal_static_BuildSettlementResponse_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_BuildSettlementResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_BuildSettlementResponse_descriptor,
         new java.lang.String[] { "NewBuilding", });
     internal_static_UpgradeSettlementResponse_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_UpgradeSettlementResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_UpgradeSettlementResponse_descriptor,
         new java.lang.String[] { "NewBuilding", });
     internal_static_BuildRoadResponse_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_BuildRoadResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_BuildRoadResponse_descriptor,
         new java.lang.String[] { "LongestRoad", "NewRoad", });
+    internal_static_PlayKnightCardResponse_descriptor =
+      getDescriptor().getMessageTypes().get(10);
+    internal_static_PlayKnightCardResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_PlayKnightCardResponse_descriptor,
+        new java.lang.String[] { "MoveRobberResponse", });
     internal_static_MoveRobberResponse_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_MoveRobberResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_MoveRobberResponse_descriptor,
-        new java.lang.String[] { "Resource", });
+        new java.lang.String[] { "Resource", "RobberLocation", });
     internal_static_AcceptRejectResponse_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_AcceptRejectResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_AcceptRejectResponse_descriptor,
         new java.lang.String[] { "Trade", "Answer", "Reason", });
     internal_static_GiveBoardResponse_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_GiveBoardResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_GiveBoardResponse_descriptor,

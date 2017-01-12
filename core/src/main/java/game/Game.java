@@ -317,7 +317,7 @@ public class Game
 	 * @param playerColour the player's colour
 	 * @return the response message to the client
 	 */
-	public SuccessFailResponse playDevelopmentCard(DevelopmentCardType type, Colour playerColour) throws DoesNotOwnException
+	private SuccessFailResponse playDevelopmentCard(DevelopmentCardType type, Colour playerColour) throws DoesNotOwnException
 	{
 	    SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
 	    Player p = players.get(playerColour);
@@ -325,7 +325,6 @@ public class Game
 		// Try to play card
 		p.playDevelopmentCard(type);
 		resp.setResult(ResultProto.SUCCESS);
-
 
 		// Return success message
 		return resp.build();
@@ -349,7 +348,27 @@ public class Game
         resp.setDevelopmentCard(DevelopmentCardType.toProto(card));
 		return resp.build();
 	}
-	
+
+	/**
+	 * Plays a knight development card if the player has one
+	 * @param request the request
+	 * @param playerColour the player
+	 * @return a response object
+	 * @throws CannotStealException if the player cannot steal from the requested player
+	 * @throws DoesNotOwnException if the player does not own a Knight card
+	 */
+	public PlayKnightCardResponse playKnightCard(PlayKnightCardRequest request, Colour playerColour) throws CannotStealException, DoesNotOwnException
+	{
+		PlayKnightCardResponse.Builder resp = PlayKnightCardResponse.newBuilder();
+
+		// Ensure the player has the dev card, and play it
+		playDevelopmentCard(DevelopmentCardType.Knight, playerColour);
+
+		// Perform the swap and take a resource
+		resp.setMoveRobberResponse(moveRobber(request.getRequest(), playerColour));
+		return resp.build();
+	}
+
 	/**
 	 * Moves the robber and takes a card from the player
 	 * who has a settlement on the hex
@@ -387,6 +406,7 @@ public class Game
 		
 		// return success message
 		grid.swapRobbers(newHex);
+		resp.setRobberLocation(point);
 		return resp.build();
 	}
 
@@ -444,23 +464,23 @@ public class Game
 	
 	/**
 	 * Process the playing of the 'Year of Plenty' development card.
-	 * @param move the move to process
+	 * @param request the request to process
 	 * @return return message
 	 */
-	public SuccessFailResponse playYearOfPlentyCard(PlayYearOfPlentyCardRequest move) throws DoesNotOwnException
+	public PlayYearOfPlentyCardResponse playYearOfPlentyCard(PlayYearOfPlentyCardRequest request) throws DoesNotOwnException
 	{
-	    SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
+		PlayYearOfPlentyCardResponse.Builder resp = PlayYearOfPlentyCardResponse.newBuilder();
 
 		playDevelopmentCard(DevelopmentCardType.YearOfPlenty, currentPlayer.getColour());
 
 		// Set up grant
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
-		grant.put(ResourceType.fromProto(move.getR1()), 1);
-		grant.put(ResourceType.fromProto(move.getR2()), 1);
+		grant.put(ResourceType.fromProto(request.getR1()), 1);
+		grant.put(ResourceType.fromProto(request.getR2()), 1);
 		currentPlayer.grantResources(grant);
-		
-		// In receiving success, the client knows the request has been granted
-        resp.setResult(ResultProto.SUCCESS);
+
+		resp.setR1(request.getR1());
+		resp.setR2(request.getR2());
 		return resp.build();
 	}
 	
@@ -497,6 +517,7 @@ public class Game
 		
 		// Return message is string showing number of resources taken
         response.setNumResources(sum);
+		response.setResource(r);
 		return response.build();
 	}
 	

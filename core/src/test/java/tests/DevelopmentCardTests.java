@@ -60,12 +60,14 @@ public class DevelopmentCardTests extends TestHelper
 		// Grant resources and buy a card
 		assertTrue(p.getDevelopmentCards().size() == 0);
 		p.grantResources(DevelopmentCardType.getCardCost());
-		buyDevelopmentCard();
-		assertTrue(p.getDevelopmentCards().size() > 0);
+		DevelopmentCardType c = buyDevelopmentCard();
+		assertTrue(p.getDevelopmentCards().get(c) == 1);
 		
 		// Play card and test it was removed
 		DevelopmentCardType key = (DevelopmentCardType) p.getDevelopmentCards().keySet().toArray()[0];
 		p.playDevelopmentCard(key);
+
+		assertTrue(p.getDevelopmentCards().get(c) == 0);
 	}
 	
 	@Test
@@ -101,9 +103,13 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test
-	public void playKnightNoResourcesTest() throws SettlementExistsException, CannotAffordException, IllegalPlacementException, CannotStealException
-	{	
+	public void playKnightNoResourcesTest() throws SettlementExistsException, CannotAffordException, IllegalPlacementException, CannotStealException, DoesNotOwnException
+	{
 		Hex oldHex = game.getGrid().getHexWithRobber();
+
+		// Grant
+		p.grantResources(DevelopmentCardType.getCardCost());
+		p.buyDevelopmentCard(DevelopmentCardType.Knight);
 
 		// Set up player 2
 		Player p2 = new NetworkPlayer(Colour.RED);
@@ -112,22 +118,25 @@ public class DevelopmentCardTests extends TestHelper
 		makeSettlement(p2, hex.getNodes().get(0));
 		
 		// Set up request
-		MoveRobberRequest.Builder request = MoveRobberRequest.newBuilder();
-		request.setColourToTakeFrom(Colour.toProto(p2.getColour()));
-		request.setHex(hex.toHexProto());
+		PlayKnightCardRequest.Builder request = PlayKnightCardRequest.newBuilder();
+		MoveRobberRequest.Builder internalReq = MoveRobberRequest.newBuilder();
+		internalReq.setColourToTakeFrom(Colour.toProto(p2.getColour()));
+		internalReq.setHex(hex.toHexProto());
+		request.setRequest(internalReq);
 				
 		// Assert that swap happened, but that no resource was taken
 		// as p2 didn't have any
-		MoveRobberResponse response = game.moveRobber(request.build(), p.getColour());
+		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Knight) == 1);
+		game.playKnightCard(request.build(), p.getColour());
+		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Knight) == 0);
 		assertTrue(!oldHex.equals(game.getGrid().getHexWithRobber()));
-		assertTrue(game.getGrid().getHexWithRobber().hasRobber());
 		assertFalse(oldHex.hasRobber());
 		assertFalse(hasResources(p2));
 	}
-	
-	@Test
-	public void cannotPlayKnightTest() throws CannotAffordException, IllegalPlacementException
-	{	
+
+	@Test(expected = DoesNotOwnException.class)
+	public void cannotPlayKnightTest() throws CannotAffordException, IllegalPlacementException, DoesNotOwnException, CannotStealException
+	{
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
 		// Set up player 2
@@ -136,9 +145,42 @@ public class DevelopmentCardTests extends TestHelper
 		game.addPlayer(p2);
 
 		// Set up request
-		MoveRobberRequest.Builder request = MoveRobberRequest.newBuilder();
-		request.setColourToTakeFrom(Colour.toProto(p2.getColour()));
-		request.setHex(hex.toHexProto());
+		PlayKnightCardRequest.Builder request = PlayKnightCardRequest.newBuilder();
+		MoveRobberRequest.Builder internalReq = MoveRobberRequest.newBuilder();
+		internalReq.setColourToTakeFrom(Colour.toProto(p2.getColour()));
+		internalReq.setHex(hex.toHexProto());
+		request.setRequest(internalReq);
+
+		// Play move and assert robber was moved
+		assertTrue(oldHex.hasRobber());
+		assertFalse(hasResources(p));
+		assertTrue(hasResources(p2));
+
+		// Cannot play because do not own a card
+		game.playKnightCard(request.build(), p.getColour());
+	}
+
+	@Test
+	public void cannotStealFromSpecifiedPlayerTest() throws CannotAffordException, IllegalPlacementException, DoesNotOwnException
+	{
+		Hex oldHex = game.getGrid().getHexWithRobber();
+
+		// Grant
+		p.grantResources(DevelopmentCardType.getCardCost());
+		p.buyDevelopmentCard(DevelopmentCardType.Knight);
+
+		// Set up player 2
+		Player p2 = new NetworkPlayer(Colour.RED);
+		p2.grantResources(DevelopmentCardType.getCardCost());
+		game.addPlayer(p2);
+
+		// Set up request
+
+		PlayKnightCardRequest.Builder request = PlayKnightCardRequest.newBuilder();
+		MoveRobberRequest.Builder internalReq = MoveRobberRequest.newBuilder();
+		internalReq.setColourToTakeFrom(Colour.toProto(p2.getColour()));
+		internalReq.setHex(hex.toHexProto());
+		request.setRequest(internalReq);
 		
 		// Play move and assert robber was moved
 		assertTrue(oldHex.hasRobber());
@@ -149,7 +191,7 @@ public class DevelopmentCardTests extends TestHelper
 		// on one of the hex's nodes
 		try
 		{
-			game.moveRobber(request.build(), p.getColour());
+			game.playKnightCard(request.build(), p.getColour());
 		}
 		catch (CannotStealException e)
 		{
@@ -163,6 +205,10 @@ public class DevelopmentCardTests extends TestHelper
 	public void playKnightTakeResourceTest() throws SettlementExistsException, CannotAffordException, IllegalPlacementException, CannotStealException
 	{	
 		Hex oldHex = game.getGrid().getHexWithRobber();
+
+		// Grant
+		p.grantResources(DevelopmentCardType.getCardCost());
+		p.buyDevelopmentCard(DevelopmentCardType.Knight);
 
 		// Set up player 2
 		Player p2 = new NetworkPlayer(Colour.RED);

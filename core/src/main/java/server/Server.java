@@ -144,6 +144,23 @@ public class Server
 			s.getOutputStream().flush();
 		}
 	}
+
+	/**
+	 * Serialises and Broadcasts the event to each connected player
+	 * @throws IOException
+	 */
+	private void broadcastEvent(Event ev) throws IOException
+	{
+		// For each player
+		for(Colour c : Colour.values())
+		{
+			Socket s = connections.get(c);
+
+			// Serialise and Send
+			ev.writeTo(s.getOutputStream());
+			s.getOutputStream().flush();
+		}
+	}
 	
 	/**
 	 * Listens for moves from the current player
@@ -193,10 +210,9 @@ public class Server
 	 * Broadcast the necessary events to all players based upon the type of response.
 	 * @param response the response from the last processed move
 	 */
-	private void sendEvents(Response response)
+	private void sendEvents(Response response) throws IOException
 	{
 		Event.Builder event = Event.newBuilder();
-		Player copy = game.getCurrentPlayer().copy();
 
 		// Switch on message type to interpret which event(s) need to be sent out
 		switch (response.getTypeCase())
@@ -227,9 +243,16 @@ public class Server
 				break;
 			case PLAYROADBUILDINGCARDRESPONSE:
 				event.setPlayedDevCard(setUpDevCardEvent(DevelopmentCardProto.ROAD_BUILDING));
+				break;
+			case PLAYYEAROFPLENTYCARDRESPONSE:
+				event.setPlayedDevCard(setUpDevCardEvent(DevelopmentCardProto.YEAR_OF_PLENTY));
+				break;
+			case ACCEPTREJECTRESPONSE:
+				event.setTransaction(response.getAcceptRejectResponse().getTrade());
+				break;
 		}
 
-
+		broadcastEvent(event.build());
 	}
 
 	/**

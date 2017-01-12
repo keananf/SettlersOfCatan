@@ -1,6 +1,13 @@
-package main.java.board;
+package board;
 
-import main.java.enums.ResourceType;
+import enums.ResourceType;
+import exceptions.CannotAffordException;
+import exceptions.IllegalPortTradeException;
+import exceptions.IllegalTradeException;
+import game.players.Player;
+import protocol.BoardProtos.*;
+import protocol.BuildProtos.*;
+import protocol.ResourceProtos.*;
 
 import java.util.*;
 
@@ -132,9 +139,9 @@ public class Port extends Edge
 		{
 			Port p = new Port(new Node(0,0), new Node(-1, -1)); //default nodes
 			p.exchangeAmount = 3;
-			p.exchangeType = ResourceType.None; // signifies 'Any'
+			p.exchangeType = ResourceType.Generic; // signifies 'Any'
 			p.receiveAmount = 1;
-			p.receiveType = ResourceType.None; // signifies 'Any'
+			p.receiveType = ResourceType.Generic; // signifies 'Any'
 			
 			ports.add(p);
 		}
@@ -142,18 +149,45 @@ public class Port extends Edge
 		// One port for each resource type
 		for(ResourceType r : ResourceType.values())
 		{
-			if(r == ResourceType.None) continue;
+			if(r == ResourceType.Generic) continue;
 			
 			Port p = new Port(new Node(0,0), new Node(-1, -1)); //default nodes
 			p.exchangeAmount = 2;
 			p.exchangeType = r;
 			p.receiveAmount = 1;
-			p.receiveType = r;
+			p.receiveType = ResourceType.Generic;
 			
 			ports.add(p);
 		}
 		
 		return ports;
+	}
+
+
+	/**
+	 * @return the version of this edge that can be sent across the network
+	 */
+	public PortProto toPortProto()
+	{
+		PortProto.Builder port = PortProto.newBuilder();
+		PointProto.Builder p = PointProto.newBuilder();
+
+		// Node 1
+		p.setX(getX().getX());
+		p.setY(getX().getY());
+		port.setP1(p.build());
+
+		// Node 2
+		p.setX(getY().getX());
+		p.setY(getY().getY());
+		port.setP2(p.build());
+
+		port.setExchangeAmount(exchangeAmount);
+		port.setReturnAmount(receiveAmount);
+		port.setExchangeResource(ResourceType.toProto(exchangeType));
+		port.setReturnResource(ResourceType.toProto(receiveType));
+
+		return port.build();
 	}
 
 	/**
@@ -220,4 +254,27 @@ public class Port extends Edge
 		this.receiveAmount = receiveAmount;
 	}
 
+	/**
+	 * Performs the port trade
+	 * @param offerer the offerer
+	 * @param offer the offer
+	 * @param request the request
+	 */
+    public void exchange(Player offerer, Map<ResourceType, Integer> offer, Map<ResourceType, Integer> request) throws IllegalPortTradeException, CannotAffordException
+	{
+		// Can only get one resource from a port, and it must be the same resource as what is offered
+		if((request.get(ResourceType.Brick) == 1 && (request.get(ResourceType.Grain)== 1 || request.get(ResourceType.Ore)== 1 || request.get(ResourceType.Wool) == 1
+				|| request.get(ResourceType.Lumber) == 1)) || ( !receiveType.equals(ResourceType.Generic)
+				&& ((request.get(ResourceType.Brick) == 1 && !receiveType.equals(ResourceType.Brick))
+				|| (request.get(ResourceType.Lumber) == 1 && !receiveType.equals(ResourceType.Lumber))
+				|| (request.get(ResourceType.Wool) == 1 && !receiveType.equals(ResourceType.Wool))
+				|| (request.get(ResourceType.Grain) == 1 && !receiveType.equals(ResourceType.Grain))
+				|| (request.get(ResourceType.Ore) == 1 && !receiveType.equals(ResourceType.Ore)))))
+		{
+			throw new IllegalPortTradeException(offerer.getColour(), this);
+		}
+
+		offerer.spendResources(offer);
+		offerer.grantResources(request);
+    }
 }

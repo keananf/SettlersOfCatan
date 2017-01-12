@@ -1,6 +1,6 @@
-package main.java.game.build;
+package game.build;
 
-import main.java.enums.ResourceType;
+import enums.ResourceType;
 
 import java.util.Map;
 

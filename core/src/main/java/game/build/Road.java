@@ -1,9 +1,12 @@
-package main.java.game.build;
+package game.build;
 
 import java.util.*;
 
-import main.java.enums.*;
-import main.java.board.*;
+import board.Node;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.*;
+import enums.*;
+import board.*;
+import protocol.BuildProtos.*;
 
 /**
  * Class describing a road
@@ -20,7 +23,7 @@ public class Road implements IBuildable
 		this.edge = edge;
 	}
 	private Road(){}
-	
+
 	/**
 	 * @return a map containing the total cost for all resources
 	 */
@@ -88,5 +91,42 @@ public class Road implements IBuildable
 		}
 		
 		return false;
+	}
+
+	/**
+	 * Turns this road received from across the network into a road object used internally
+	 * @param n1 the first node of the edge
+	 * @param n2 the second node of the edge
+	 * @param c the player's colour
+	 */
+    public static Road fromProto(Node n1, Node n2, Colour c)
+	{
+		Edge edge = n1.findEdge(n2);
+
+		return new Road(edge, c);
+    }
+
+	/**
+	 * @return A representation of this road compatible with protobufs for serialisation
+	 */
+	public RoadProto.Builder toProto()
+	{
+		RoadProto.Builder road = RoadProto.newBuilder();
+		PointProto.Builder p = PointProto.newBuilder();
+		Node x = edge.getX(), y = edge.getY();
+
+		// Node 1
+		p.setX(x.getX());
+		p.setY(x.getY());
+		road.setP1(p.build());
+
+		// Node 2
+		p.setX(y.getX());
+		p.setY(y.getY());
+		road.setP2(p.build());
+
+		road.setPlayerId(Colour.toProto(playerColour));
+
+		return road;
 	}
 }

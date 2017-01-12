@@ -1,8 +1,13 @@
-package main.java.board;
+package board;
 
 import java.util.*;
 
-import main.java.game.build.*;
+import enums.Colour;
+import enums.ResourceType;
+import game.build.*;
+import protocol.BoardProtos.*;
+import protocol.BuildProtos;
+import protocol.EnumProtos;
 
 /**
  * Class representing an individual node in catan (intersection of three hexes)
@@ -65,17 +70,6 @@ public class Node extends BoardElement
 				&& Math.abs(getY() - n.getY()) <= 1;
 	}
 	
-	/**
-	 * Detects whether a given hex is adjacent to this node or not
-	 * @param h the hex
-	 * @return boolean indicating adjacency
-	 */
-	public boolean isAdjacent(Hex h)
-	{
-		return (Math.abs(getX() - h.getX()) == 2 || Math.abs(getX() - h.getX()) == 1) 
-				&& Math.abs(getY() - h.getY()) <= 1;
-	}
-	
 	@Override
 	public boolean equals(Object other)
 	{
@@ -133,4 +127,42 @@ public class Node extends BoardElement
 	{
 		this.settlement = settlement;
 	}
+
+	/**
+	 * Searches through the adjacent edges for the one with the given node
+	 * @param n2 the node to search for
+	 */
+    public Edge findEdge(Node n2)
+	{
+		for(Edge e : edges)
+		{
+			if(e.getX().equals(n2) || e.getY().equals(n2))
+				return e;
+		}
+
+		return null;
+    }
+
+	/**
+	 * @return converts this Node into a similar representation that is also compatible with protobufs
+	 */
+	public NodeProto toProto()
+	{
+		int index = 0;
+		NodeProto.Builder nodeBuilder = NodeProto.newBuilder();
+		BuildProtos.PointProto.Builder coords = BuildProtos.PointProto.newBuilder();
+
+		coords.setX(getX());
+		coords.setY(getY());
+		nodeBuilder.setP(coords.build());
+
+		// Add Building
+		if(getSettlement() != null)
+		{
+			nodeBuilder.setBuilding(getSettlement().toProto().build());
+			nodeBuilder.setBuildingType(settlement instanceof City ? EnumProtos.BuildingTypeProto.CITY : EnumProtos.BuildingTypeProto.SETTLEMENT);
+		}
+
+		return nodeBuilder.build();
+    }
 }

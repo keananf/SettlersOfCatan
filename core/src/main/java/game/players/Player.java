@@ -1,13 +1,13 @@
-package main.java.game.players;
+package game.players;
 
 import java.awt.Point;
 import java.util.*;
 
-import main.java.board.*;
-import main.java.enums.*;
-import main.java.exceptions.*;
-import main.java.game.build.*;
-import main.java.game.moves.*;
+import board.*;
+import enums.*;
+import exceptions.*;
+import game.build.*;
+import protocol.ResourceProtos.*;
 
 /**
  * Abstract class describing a player (AI, or network)
@@ -22,7 +22,7 @@ public abstract class Player
 	private HashMap<Point, Building> settlements;
 	private int knightsUsed;
 	private boolean hasLongestRoad;
-	private HashMap<DevelopmentCardType, List<DevelopmentCard>> cards;
+	private HashMap<DevelopmentCardType, Integer> cards;
 	private int numResources;
 
 	private static final int THRESHHOLD = 10;
@@ -33,18 +33,16 @@ public abstract class Player
 		roads = new ArrayList<List<Road>>();
 		settlements = new HashMap<Point, Building>();
 		resources = new HashMap<ResourceType, Integer>();
-		cards = new HashMap<DevelopmentCardType, List<DevelopmentCard>>();
+		cards = new HashMap<DevelopmentCardType, Integer>();
 		
 		// Initialise resources
 		for(ResourceType r : ResourceType.values())
 		{
-			if(r == ResourceType.None) continue;
+			if(r == ResourceType.Generic) continue;
 			resources.put(r, 0);
 		}
 	}
-	
-	public abstract Move receiveMove();
-	
+
 	/**
 	 * @return the length of this player's longest road
 	 */
@@ -63,11 +61,12 @@ public abstract class Player
 	/**
 	 * Attempts to build a road for this player
 	 * @param edge the edge to build the road on
+	 * @return the length of the player's longest road
 	 * @throws CannotAffordException if the player cannot afford it
 	 * @throws CannotBuildRoadException if it is not a valid place to build a road
 	 * @throws RoadExistsException 
 	 */
-	public void buildRoad(Edge edge) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public int buildRoad(Edge edge) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
 		boolean valid = false;
 		List<Integer> listsAddedTo = new ArrayList<Integer>();
@@ -81,9 +80,8 @@ public abstract class Player
 		valid = checkRoadsAndAdd(r, listsAddedTo);
 		
 		// Check the location is valid for building and that the player can afford it
-		if(r.getEdge().onSettlement(settlements) || valid)
+		if(r.getEdge().hasSettlement() || valid)
 		{
-			canAfford(r.getCost());
 			spendResources(r.getCost());
 			edge.setRoad(r);
 			
@@ -100,6 +98,8 @@ public abstract class Player
 				mergeRoads(r, listsAddedTo);
 		}
 		else throw new CannotBuildRoadException(r);
+
+		return calcRoadLength();
 	}
 
 	/**
@@ -242,40 +242,38 @@ public abstract class Player
 		
 		settlements.put(new Point(node.getX(), node.getY()), s);
 	}
-	
-	/**
-	 * Attempts to purchase a development card for this player
-	 * @param card the card to buy
-	 * @return the bought development card
-	 * @throws CannotAffordException
-	 */
-	public DevelopmentCard buyDevelopmentCard(DevelopmentCard card) throws CannotAffordException
-	{
-		List<DevelopmentCard> existing = cards.containsKey(card) ? cards.get(card) : new ArrayList<DevelopmentCard>();
-		
-		// Try to buy a development card
-		spendResources(card.getCost());
-		existing.add(card);
-		cards.put(card.getType(), existing);
-		
-		return card;
-	}	
 
 	/**
 	 * Attempts to purchase a development card for this player
 	 * @return the bought development card
 	 * @throws CannotAffordException
 	 */
-	public DevelopmentCard buyDevelopmentCard() throws CannotAffordException
+	public DevelopmentCardType buyDevelopmentCard() throws CannotAffordException
 	{
-		DevelopmentCard card = DevelopmentCard.chooseRandom(colour);
-		List<DevelopmentCard> existing = cards.containsKey(card) ? cards.get(card) : new ArrayList<DevelopmentCard>();
-		
+		DevelopmentCardType card = DevelopmentCardType.chooseRandom(colour);
+		int existing = cards.containsKey(card) ? cards.get(card) : 0;
+
 		// Try to buy a development card
-		spendResources(card.getCost());
-		existing.add(card);
-		cards.put(card.getType(), existing);
-		
+		spendResources(DevelopmentCardType.getCardCost());
+		cards.put(card, existing + 1);
+
+		return card;
+	}
+
+	/**
+	 * Attempts to purchase a development card for this player
+	 * @param card the desired type. Testing only
+	 * @return the bought development card
+	 * @throws CannotAffordException
+	 */
+	public DevelopmentCardType buyDevelopmentCard(DevelopmentCardType card) throws CannotAffordException
+	{
+		int existing = cards.containsKey(card) ? cards.get(card) : 0;
+
+		// Try to buy a development card
+		spendResources(DevelopmentCardType.getCardCost());
+		cards.put(card, existing + 1);
+
 		return card;
 	}
 	
@@ -284,18 +282,18 @@ public abstract class Player
 	 * @param card the development card to play
 	 * @throws DoesNotOwnException if the user does not own the given card
 	 */
-	public void playDevelopmentCard(DevelopmentCard card) throws DoesNotOwnException
+	public void playDevelopmentCard(DevelopmentCardType card) throws DoesNotOwnException
 	{
 		// Check if the player owns the given card
-		if(!cards.containsKey(card.getType()))
+		if(!cards.containsKey(card))
 		{
-			throw new DoesNotOwnException(card);
+			throw new DoesNotOwnException(card, getColour());
 		}
 		
-		// Remove from inventory and apply effects
-		List<DevelopmentCard> existing = cards.get(card.getType());
-		existing.remove(existing.size() - 1);
-		
+		// Remove from inventory
+		int existing = cards.containsKey(card) ? cards.get(card) : 0;
+		cards.put(card, existing - 1);
+
 	}
 	
 	/**
@@ -330,14 +328,48 @@ public abstract class Player
 		for(ResourceType r : newResources.keySet())
 		{
 			int value = newResources.get(r);
-			int existing = resources.get(r);
+			int existing = resources.containsKey(r) ? resources.get(r) : 0;
 			
 			// Add to overall resource bank
 			resources.put(r, value + existing);
 			numResources += value;
 		}
-	}	
-	
+	}
+
+	/**
+	 * Grants resources to the player
+	 * @param count a map of resources to give to the player
+	 */
+	public void grantResources(ResourceCount count) throws CannotAffordException
+	{
+		Map<ResourceType, Integer> newResources = new HashMap<ResourceType, Integer> ();
+		newResources.put(ResourceType.Brick, count.getBrick());
+		newResources.put(ResourceType.Wool, count.getWool());
+		newResources.put(ResourceType.Ore, count.getOre());
+		newResources.put(ResourceType.Grain, count.getGrain());
+		newResources.put(ResourceType.Lumber, count.getLumber());
+
+		grantResources(newResources);
+	}
+
+	/**
+	 * Spends resources to the player
+	 * @param count the resources describing the IBuildable that the player
+	 * wants to construct
+	 * @throws CannotAffordException if the player does not have enough resources
+	 */
+	public void spendResources(ResourceCount count) throws CannotAffordException
+	{
+		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer> ();
+		cost.put(ResourceType.Brick, count.getBrick());
+		cost.put(ResourceType.Wool, count.getWool());
+		cost.put(ResourceType.Ore, count.getOre());
+		cost.put(ResourceType.Grain, count.getGrain());
+		cost.put(ResourceType.Lumber, count.getLumber());
+
+		spendResources(cost);
+	}
+
 	/**
 	 * Spends resources to the player
 	 * @param cost a map of resources describing the IBuildable that the player
@@ -346,7 +378,8 @@ public abstract class Player
 	 */
 	public void spendResources(Map<ResourceType, Integer> cost) throws CannotAffordException
 	{
-		canAfford(cost);
+		if(!canAfford(cost))
+			throw new CannotAffordException(resources, cost);
 		
 		// Subtract each resource and its amount from the player's resource bank
 		for(ResourceType r : cost.keySet())
@@ -364,13 +397,13 @@ public abstract class Player
 	 * Checks if a player has more than 7 resource cards.
 	 * 
 	 * If so, cards are randomly removed until the player has 7 again.
-	 * @param player the player
 	 */
-	public void loseResources()
+	public Map<ResourceType, Integer> loseResources()
 	{
 		Random rand = new Random();
 		int resourceLimit = 7;
-		
+		Map<ResourceType, Integer> removed = new HashMap<ResourceType, Integer>();
+
 		// Randomly remove resources until the cap is reached
 		while(numResources > resourceLimit)
 		{
@@ -378,27 +411,31 @@ public abstract class Player
 			
 			if(resources.get(key) > 0)
 			{
+				int existing =  removed.containsKey(key) ? removed.get(key) : 0;
 				resources.put(key, resources.get(key) - 1);
+				removed.put(key, existing + 1);
 				numResources--;
 			}
 		}
+
+		return removed;
 	}
 	
 	/**
 	 * Take one resource randomly from the other player
 	 * @param other the other player
 	 */
-	public void takeResource(Player other)
+	public ResourceType takeResource(Player other)
 	{
 		Random rand = new Random();
-		ResourceType key = ResourceType.None;
+		ResourceType key = ResourceType.Generic;
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
 		// Check there are resources to take
-		if(other.getNumResources() == 0) return;
+		if(other.getNumResources() == 0) return ResourceType.Generic;
 		
 		// Find resource to take
-		while((key = (ResourceType) other.getResources().keySet().toArray()[rand.nextInt(other.getResources().size())]) == ResourceType.None || other.getResources().get(key) == 0);
+		while((key = (ResourceType) other.getResources().keySet().toArray()[rand.nextInt(other.getResources().size())]) == ResourceType.Generic || other.getResources().get(key) == 0);
 		grant.put(key, 1);
 
 		try
@@ -406,8 +443,10 @@ public abstract class Player
 			other.spendResources(grant);
 		}
 		catch (CannotAffordException e){ /* Cannot happen*/ }
-		
+
+		// Grant and return
 		grantResources(grant);
+		return key;
 	}
 
 	
@@ -424,13 +463,13 @@ public abstract class Player
 	 * @param cost
 	 * @throws CannotAffordException
 	 */
-	private boolean canAfford(Map<ResourceType, Integer> cost) throws CannotAffordException
+	public boolean canAfford(Map<ResourceType, Integer> cost)
 	{
 		// Check if the player can afford this before initiating the purchase
 		for(ResourceType r : cost.keySet())
 		{
 			if(resources.get(r) < cost.get(r))
-				throw new CannotAffordException(r, resources.get(r), cost.get(r));
+				return false;
 		}
 		
 		return true;
@@ -444,14 +483,14 @@ public abstract class Player
 		// Set up player
 		Player p = this instanceof AIPlayer ? new AIPlayer(colour) : new NetworkPlayer(colour);
 		p.resources = new HashMap<ResourceType, Integer>();
-		p.cards = new HashMap<DevelopmentCardType, List<DevelopmentCard>>();
+		p.cards = new HashMap<DevelopmentCardType, Integer>();
 		p.settlements = new HashMap<Point, Building>();
 		p.roads = new ArrayList<List<Road>>();
 
 		// Initialise Resources
 		for(ResourceType r : ResourceType.values())
 		{
-			if(r == ResourceType.None) continue;
+			if(r == ResourceType.Generic) continue;
 			p.resources.put(r, 0);
 		}
 
@@ -472,18 +511,18 @@ public abstract class Player
 	 * @param copy the copy
 	 * @param card the card that was spent
 	 */
-	public void restoreCopy(Player copy, DevelopmentCard card)
+	public void restoreCopy(Player copy, DevelopmentCardType card)
 	{
 		numResources = 0;
 		resources = new HashMap<ResourceType, Integer>();
-		cards = new HashMap<DevelopmentCardType, List<DevelopmentCard>>();
+		cards = new HashMap<DevelopmentCardType, Integer>();
 		settlements = new HashMap<Point, Building>();
 		roads = new ArrayList<List<Road>>();
 
 		// Initialise Resources
 		for(ResourceType r : ResourceType.values())
 		{
-			if(r == ResourceType.None) continue;
+			if(r == ResourceType.Generic) continue;
 			resources.put(r, 0);
 		}
 		
@@ -499,7 +538,7 @@ public abstract class Player
 		// Re-add the spent card:
 		if(card != null)
 		{			
-			cards.get(card.getType()).add(card);
+			cards.put(card, cards.containsKey(card) ? cards.get(card) + 1 : 1);
 		}
 	}
 	
@@ -562,7 +601,7 @@ public abstract class Player
 	/**
 	 * @return the development cards in this player's hand
 	 */
-	public HashMap<DevelopmentCardType, List<DevelopmentCard>> getDevelopmentCards()
+	public HashMap<DevelopmentCardType, Integer> getDevelopmentCards()
 	{
 		return cards;
 	}

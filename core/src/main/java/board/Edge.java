@@ -1,16 +1,21 @@
-package main.java.board;
+package board;
 
 import java.awt.Point;
 import java.util.*;
 
-import main.java.game.build.*;
+import com.google.protobuf.InvalidProtocolBufferException;
+import game.build.*;
+import protocol.BoardProtos;
+import protocol.BoardProtos.*;
+import protocol.BuildProtos;
+import protocol.BuildProtos.PointProto;
 
 
 /**
  * Class uniquely describing an edge (between two edges)
  * @author 140001596
  */
-public class Edge //TODO extend BoardElement
+public class Edge
 {
 	private Node x, y; // way of uniquely describing an edge
 	private Road  road;
@@ -161,21 +166,19 @@ public class Edge //TODO extend BoardElement
 	
 
 	/**
-	 * Checks that a road is within a distance of two to a settlement
-	 * @param r the road that is attempting to be built
+	 * Checks if there is a settlement on either of this edge's nodes
 	 * @return true / false indicating if it is a valid move
 	 */
-	public boolean onSettlement(HashMap<Point, Building> settlements)
+	public boolean hasSettlement()
 	{
 		Node n1 = getX(), n2 = getY();
-		
+
 		// If there is a settlement on one of its nodes
-		if(settlements.containsKey(new Point(n1.getX(), n1.getY()))
-				|| settlements.containsKey(new Point(n2.getX(), n2.getY())))
+		if(n1.getSettlement() != null || n2.getSettlement() != null)
 		{
 			return true;
 		}
-		
+
 		return false;
 	}
 	
@@ -232,4 +235,26 @@ public class Edge //TODO extend BoardElement
 	{
 		this.road = road;
 	}
+
+	/**
+	 * @return the version of this edge that can be sent across the network
+	 */
+    public EdgeProto toEdgeProto()
+	{
+		EdgeProto.Builder e = EdgeProto.newBuilder();
+		PointProto.Builder p = PointProto.newBuilder();
+
+		// Node 1
+		p.setX(x.getX());
+		p.setY(x.getY());
+		e.setP1(p.build());
+
+		// Node 2
+		p.setX(y.getX());
+		p.setY(y.getY());
+		e.setP2(p.build());
+
+		return e.build();
+    }
+
 }

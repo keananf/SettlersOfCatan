@@ -1,11 +1,11 @@
-package main.java.game.build;
+package game.build;
 
-import main.java.enums.*;
+import enums.*;
 
 import java.util.*;
 
-import main.java.board.Edge;
-import main.java.board.Node;
+import board.Edge;
+import board.Node;
 
 /**
  * Class describing a settlement

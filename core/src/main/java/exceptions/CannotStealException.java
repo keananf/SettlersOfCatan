@@ -1,6 +1,6 @@
-package main.java.exceptions;
+package exceptions;
 
-import main.java.enums.Colour;
+import enums.Colour;
 
 @SuppressWarnings("serial")
 public class CannotStealException extends Exception

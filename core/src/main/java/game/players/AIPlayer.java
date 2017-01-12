@@ -1,7 +1,6 @@
-package main.java.game.players;
+package game.players;
 
-import main.java.enums.Colour;
-import main.java.game.moves.*;
+import enums.*;
 
 /**
  * Class representing an AI player
@@ -12,10 +11,5 @@ public class AIPlayer extends Player
 	{
 		super(colour);
 	}
-	@Override
-	public Move receiveMove()
-	{
-		// TODO Auto-generated method stub
-		return new BuildSettlementMove();
-	}
+
 }

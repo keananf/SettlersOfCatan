@@ -1,0 +1,59 @@
+syntax = "proto2";
+
+option java_package = "protocol";
+option go_package = "protocol";
+
+option java_outer_classname = "EventProtos";
+
+import "build.proto";
+import "enums.proto";
+import "trade.proto";
+
+//events are very preliminary at this point
+
+message Event 
+{
+    oneof type 
+    {
+        Error error = 1;
+
+        DiceRoll diceRoll = 2;
+
+        RoadProto newRoad = 3;
+        BuildingProto newBuilding = 4;
+        ColourProto boughtDevCard = 5;
+	PlayDevCardEvent playedDevCard = 6;
+
+        TradeRequest transaction = 7;
+        //Theft theft = 7;
+        PointProto robberMove = 8;
+	ColourProto newTurn = 9;
+    }
+}
+
+message PlayDevCardEvent 
+{
+    required ColourProto playerColour = 1;
+    required DevelopmentCardProto type = 2;
+}
+
+message DiceRoll 
+{
+    required int32 dice = 1;
+}
+
+/*
+message Theft
+{
+    required ColourProto thief = 1;
+    required ColourProto victim = 2;
+    required ResourceType resourceStolen = 3;
+}
+*/
+
+//======================================================================================================================
+
+message Error 
+{
+    required string description = 1;
+}

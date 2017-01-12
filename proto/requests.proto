@@ -1,0 +1,108 @@
+syntax = "proto2";
+
+option java_package = "protocol";
+
+option java_outer_classname = "RequestProtos";
+
+import "board.proto";
+import "build.proto";
+import "enums.proto";
+import "trade.proto";
+
+message Request 
+{
+    oneof type 
+    {
+        BuildRoadRequest buildRoadRequest = 1;
+        BuildSettlementRequest buildSettlementRequest = 2;
+        UpgradeSettlementRequest upradeSettlementRequest = 3;
+        BuyDevCardRequest buyDevCardRequest = 4;
+     	GetBoardRequest getBoardRequest = 5;
+
+	PlayRoadBuildingCardRequest playRoadBuildingCardRequest = 6;	
+	PlayMonopolyCardRequest playMonopolyCardRequest = 7;	
+	PlayYearOfPlentyCardRequest playYearOfPlentyCardRequest = 8;	
+	PlayLibraryCardRequest playLibraryCardRequest = 9;	
+	PlayUniversityCardRequest playUniversityCardRequest = 10;	
+	PlayKnightCardRequest playKnightCardRequest = 11;
+
+	MoveRobberRequest moveRobberRequest = 12;
+	EndMoveRequest endMoveRequest = 13;
+	TradeRequest tradeRequest = 14;
+    }
+}
+
+//======================================================================================================================
+// BUILD AND BUY REQUESTS
+
+message BuildRoadRequest 
+{
+    required EdgeProto edge = 1;
+}
+
+message PlayKnightCardRequest 
+{
+    required MoveRobberRequest request = 1;
+}
+
+message PlayRoadBuildingCardRequest 
+{
+    required BuildRoadRequest request1 = 1;
+    required BuildRoadRequest request2 = 2;
+}
+
+message PlayMonopolyCardRequest 
+{
+    required ResourceTypeProto resource = 1;
+}
+
+message PlayYearOfPlentyCardRequest
+{
+    required ResourceTypeProto r1 = 1;
+    required ResourceTypeProto r2 = 2;
+}
+
+message PlayLibraryCardRequest 
+{
+}
+
+message PlayUniversityCardRequest
+{
+}
+
+message MoveRobberRequest 
+{
+    required ColourProto colourToTakeFrom = 1;
+    required HexProto hex = 2;
+}
+
+message BuildSettlementRequest 
+{
+    required PointProto point = 1;
+}
+
+message UpgradeSettlementRequest 
+{
+    required PointProto point = 1;
+}
+
+message BuyDevCardRequest {
+}
+
+//======================================================================================================================
+// GET REQUESTS - some teams with more extensive front end logic won't necessarily need these requests
+//
+// needs to be expanded upon, to get full game info: board + my resources + my development cards + who has longest road
+// + how many resource cards the other players each have etc.
+
+/**
+* Contract: server must return GiveBoardResponse describing the current state of the Catan board
+*/
+message GetBoardRequest {
+}
+
+message EndMoveRequest
+{
+}
+
+

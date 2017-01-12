@@ -1,8 +1,8 @@
 
-package main.java.exceptions;
+package exceptions;
 
-import main.java.board.*;
-import main.java.game.build.Settlement;
+import board.*;
+import game.build.Settlement;
 
 @SuppressWarnings("serial")
 public class SettlementExistsException extends Exception

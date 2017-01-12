@@ -1,0 +1,115 @@
+syntax = "proto2";
+
+option java_package = "protocol";
+
+option java_outer_classname = "ResponseProtos";
+
+import "board.proto";
+import "trade.proto";
+import "enums.proto";
+import "build.proto";
+
+message Response 
+{
+    oneof type 
+    {
+        SuccessFailResponse successFailResponse = 1;
+        AcceptRejectResponse acceptRejectResponse = 2;
+        GiveBoardResponse currentBoardResponse = 3;
+        BuyDevCardResponse buyDevCardResponse = 4;
+	PlayMonopolyCardResponse playMonopolyCardResponse = 5;
+	PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;
+	BuildRoadResponse buildRoadResponse = 8;
+	MoveRobberResponse moveRobberResponse = 9;
+	EndMoveResponse endMoveResponse = 10;
+	BuildSettlementResponse buildSettlementResponse = 11;
+	UpgradeSettlementResponse upgradeSettlementResponse = 12;
+	PlayKnightCardResponse playKnightCardResponse = 13;
+	PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;
+    }
+}
+
+// SUCCESS-FAIL RESPONSE (mainly for responding to build/play requests)
+message SuccessFailResponse 
+{
+    required ResultProto result = 1;
+    optional string reason = 2; //associated with FAILURE results
+}
+
+message EndMoveResponse
+{
+    required ColourProto newTurn = 1;
+}
+
+message PlayMonopolyCardResponse
+{
+    required int32 numResources = 1;
+    required ResourceTypeProto resource = 2;
+}
+
+message PlayRoadBuildingCardResponse
+{
+    required BuildRoadResponse response1 = 1;
+    required BuildRoadResponse response2 = 2;
+}
+
+message PlayYearOfPlentyCardResponse
+{
+    required ResourceTypeProto r1 = 1;
+    required ResourceTypeProto r2 = 2;
+}
+
+message BuyDevCardResponse 
+{
+    required DevelopmentCardProto developmentCard = 1;
+}
+
+message BuildSettlementResponse
+{
+    required BuildingProto newBuilding = 1;
+}
+
+message UpgradeSettlementResponse
+{
+    required BuildingProto newBuilding = 1;
+}
+
+message BuildRoadResponse
+{
+    required int32 longestRoad = 1;
+    required RoadProto newRoad = 2;
+}
+
+message PlayKnightCardResponse
+{
+    required MoveRobberResponse moveRobberResponse = 1;
+}
+
+message MoveRobberResponse
+{
+    required ResourceTypeProto resource = 1;
+    required PointProto robberLocation = 2;
+}
+
+// ACCEPT-REJECT RESPONSE (mainly for responding to human trade requests)
+message AcceptRejectResponse 
+{
+    required TradeRequest trade = 1;
+    required TradeStatusProto answer = 2;
+    optional string reason = 3; //associated with REJECT results
+}
+
+// GIVE RESPONSES (for responding to getCurrentBoard request etc.)
+//
+// needs to be expanded upon, to get full game info: board + my resources + my development cards + who has longest road
+// + how many resource cards the other players each have etc.
+
+message GiveBoardResponse 
+{
+    required BoardProto board = 1;
+}
+
+
+
+
+

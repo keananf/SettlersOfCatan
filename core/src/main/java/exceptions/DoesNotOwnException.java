@@ -1,20 +1,24 @@
-package main.java.exceptions;
+package exceptions;
 
-import main.java.game.build.*;
+import enums.Colour;
+import enums.DevelopmentCardType;
+import game.build.*;
 
 @SuppressWarnings("serial")
 public class DoesNotOwnException extends Exception
 {
-	private DevelopmentCard card;
+	private DevelopmentCardType card;
+	private Colour player;
 	
-	public DoesNotOwnException(DevelopmentCard d)
+	public DoesNotOwnException(DevelopmentCardType d, Colour c)
 	{
+		player = c;
 		card = d;
 	}
 
 	public String getMessage()
 	{
-		return String.format("Cannot play %s", 
-				card.toString(), card.getColour().toString());
+		return String.format("Player %s cannot play %s",
+				player.toString(), card.toString());
 	}
 }

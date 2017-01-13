@@ -151,13 +151,17 @@ public class Server
 	 */
 	private void broadcastEvent(Event ev) throws IOException
 	{
+		Message.Builder msg = Message.newBuilder();
+		msg.setEvent(ev);
+		msg.setPlayerColour(Colour.toProto(game.getCurrentPlayer().getColour()));
+
 		// For each player
 		for(Colour c : Colour.values())
 		{
 			Socket s = connections.get(c);
 
 			// Serialise and Send
-			ev.writeTo(s.getOutputStream());
+			msg.build().writeTo(s.getOutputStream());
 			s.getOutputStream().flush();
 		}
 	}

@@ -13,12 +13,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Texture;
 
 import server.Server;
-import catan.ui.MainMenuScreen;
+import catan.ui.SplashScreen;
 
 public class SettlersOfCatan extends Game
 {
 	public SpriteBatch batch;
-
 	private Server serv = new Server();
 
 	@Override
@@ -28,7 +27,7 @@ public class SettlersOfCatan extends Game
 		(new Thread(serv)).start();
 
 		batch = new SpriteBatch();
-		setScreen(new MainMenuScreen(this));
+		setScreen(new SplashScreen(this));
 	}
 
 	@Override

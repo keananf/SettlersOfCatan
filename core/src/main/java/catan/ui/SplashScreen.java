@@ -15,13 +15,15 @@ import com.badlogic.gdx.Game;
 
 import catan.SettlersOfCatan;
 
-public class MainMenuScreen implements Screen
+public class SplashScreen implements Screen
 {
 	final private SettlersOfCatan game;
 	private OrthographicCamera camera;
+	private BitmapFont font40;
 	private BitmapFont font30;
+	private Texture edwin;
 
-	public MainMenuScreen(final SettlersOfCatan game)
+	public SplashScreen(final SettlersOfCatan game)
 	{
 		this.game = game;
 
@@ -32,9 +34,13 @@ public class MainMenuScreen implements Screen
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.minFilter = TextureFilter.Linear;
 		parameter.magFilter = TextureFilter.Linear;
+		parameter.size = 40;
+		font40 = generator.generateFont(parameter);
 		parameter.size = 30;
 		font30 = generator.generateFont(parameter);
 		generator.dispose();
+
+		edwin = new Texture(Gdx.files.internal("edwin.png"));
 	}
 
 	@Override
@@ -47,15 +53,21 @@ public class MainMenuScreen implements Screen
 		game.batch.setProjectionMatrix(camera.combined);
 
 		game.batch.begin();
-		font30.draw(game.batch, "New single player game", 60, 400);
-		font30.draw(game.batch, "Host multiplayer game", 60, 350);
-		font30.draw(game.batch, "Join multiplayer game", 60, 300);
+		game.batch.draw(edwin, 350, 10);
+		font40.draw(game.batch, "Settlers of Catan", 60, 150);
+		font30.draw(game.batch, "Click to start", 60, 100);
 		game.batch.end();
+
+		if (Gdx.input.justTouched()) {
+			game.setScreen(new MainMenuScreen(game));
+		}
 	}
 
 	@Override public void dispose()
 	{
+		font40.dispose();
 		font30.dispose();
+		edwin.dispose();
 	}
 
 	@Override public void pause() {}

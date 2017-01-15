@@ -1,33 +1,15 @@
 package server;
 
-import java.io.*;
-import java.util.*;
+import com.badlogic.gdx.Gdx;
 
 import enums.Colour;
-import protocol.RequestProtos.*;
-import protocol.MessageProtos.*;
+import protocol.MessageProtos.Message;
 
 /**
  * Created by 140001596 on 1/10/17.
  */
 public class Logger
 {
-    private static final String logFile = "log/log.txt";
-    private BufferedWriter writer;
-
-    public Logger()
-    {
-        try
-        {
-            writer = new BufferedWriter((new FileWriter(logFile)));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-
     public void logReceivedMessage(Message msg)
     {
         Colour col = Colour.fromProto(msg.getPlayerColour());
@@ -48,15 +30,7 @@ public class Logger
                 break;
         }
 
-        try
-        {
-            writer.write(str);
-            writer.flush();
-        }
-        catch(IOException e)
-        {
-            e.printStackTrace();
-        }
+        Gdx.app.debug("Server", str);
     }
 
 }

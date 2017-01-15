@@ -1,9 +1,12 @@
-# SettlersOfCatan
+# Settlers of Catan
 Settlers of Catan Implementation in Java using LibGDX
 
 ## Building
 ### Linux and macOS
 `./gradlew build`
 
-### Windows (PowerShell)
+### Windows
+#### (Powershell)
 `./gradlew.bat build`
+#### (Command shell)
+`gradlew build`

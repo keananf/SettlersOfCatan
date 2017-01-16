@@ -1,32 +1,37 @@
 package catan;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import server.Server;
 import catan.ui.SplashScreen;
 
 public class SettlersOfCatan extends Game
 {
-	public SpriteBatch batch;
-	private Server serv = new Server();
+	public Skin skin;
+	final private Server serv = new Server();
 
 	@Override
 	public void create()
 	{
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		skin = new Skin(Gdx.files.internal("skin.json"));
+
 		// Start a game server in its own thread
 		(new Thread(serv)).start();
 
-		batch = new SpriteBatch();
+		// start off at the splash screen
 		setScreen(new SplashScreen(this));
 	}
 
@@ -39,6 +44,6 @@ public class SettlersOfCatan extends Game
 	@Override
 	public void dispose()
 	{
-		batch.dispose();
+		skin.dispose();
 	}
 }

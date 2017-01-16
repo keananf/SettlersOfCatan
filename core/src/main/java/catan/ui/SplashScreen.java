@@ -1,78 +1,80 @@
 package catan.ui;
 
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.Game;
-
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import catan.SettlersOfCatan;
 
 public class SplashScreen implements Screen
 {
 	final private SettlersOfCatan game;
-	private OrthographicCamera camera;
-	private BitmapFont font40;
-	private BitmapFont font30;
-	private Texture edwin;
+	final private Stage ui = new Stage(new ScreenViewport());
 
 	public SplashScreen(final SettlersOfCatan game)
 	{
 		this.game = game;
 
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 480);
+		Gdx.input.setInputProcessor(ui);
 
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("SourceSansPro-Regular.ttf"));
-		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.minFilter = TextureFilter.Linear;
-		parameter.magFilter = TextureFilter.Linear;
-		parameter.size = 40;
-		font40 = generator.generateFont(parameter);
-		parameter.size = 30;
-		font30 = generator.generateFont(parameter);
-		generator.dispose();
+		Image background = new Image(new Texture(Gdx.files.internal("splash.jpg")));
+		background.setScaling(Scaling.fill);
+		ui.addActor(background);
 
-		edwin = new Texture(Gdx.files.internal("edwin.png"));
+		VerticalGroup body = new VerticalGroup();
+		body.setFillParent(true);
+		body.padTop(100);
+		body.space(50);
+		ui.addActor(body);
+
+		Label title = new Label("Settlers of Catan", game.skin, "title");
+		body.addActor(title);
+
+		Label prompt = new Label("Click to start", game.skin);
+		body.addActor(prompt);
+
+		body.setSize(body.getPrefWidth(), body.getPrefHeight());
 	}
 
 	@Override
-	public void render(float delta)
+	public void render(final float delta)
 	{
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		camera.update();
-		game.batch.setProjectionMatrix(camera.combined);
-
-		game.batch.begin();
-		game.batch.draw(edwin, 350, 10);
-		font40.draw(game.batch, "Settlers of Catan", 60, 150);
-		font30.draw(game.batch, "Click to start", 60, 100);
-		game.batch.end();
+		ui.act(delta);
+		ui.draw();
 
 		if (Gdx.input.justTouched()) {
 			game.setScreen(new MainMenuScreen(game));
 		}
 	}
 
-	@Override public void dispose()
+	@Override
+	public void resize(final int width, final int height)
 	{
-		font40.dispose();
-		font30.dispose();
-		edwin.dispose();
+		ui.getViewport().update(width, height, true);
+	}
+
+	@Override
+	public void dispose()
+	{
+		ui.dispose();
 	}
 
 	@Override public void pause() {}
 	@Override public void resume() {}
 	@Override public void hide() {}
 	@Override public void show() {}
-	@Override public void resize(int width, int height) {}
 }

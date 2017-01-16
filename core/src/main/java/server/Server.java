@@ -1,12 +1,13 @@
 package server;
 
+import com.sun.org.apache.regexp.internal.RE;
 import enums.*;
 import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
+import exceptions.UnexpectedMoveTypeException;
 import game.Game;
 import game.players.Player;
-import protocol.EnumProtos;
 import protocol.EnumProtos.*;
 import protocol.MessageProtos.*;
 import protocol.ResponseProtos.*;
@@ -36,7 +37,8 @@ public class Server implements Runnable
 		connections = new HashMap<Colour, Socket>();
 	}
 
-	public void run() {
+	public void run()
+	{
 		try
 		{
 			getPlayers();
@@ -129,14 +131,17 @@ public class Server implements Runnable
 		// For each player
 		for(Colour c : Colour.values())
 		{
-			Socket s = connections.get(c);
-			
-			// Set up message
-			GiveBoardResponse board = game.getBoard();
+			if(connections.containsKey(c))
+			{
+				Socket s = connections.get(c);
 
-			// Serialise and Send
-			board.writeTo(s.getOutputStream());
-			s.getOutputStream().flush();
+				// Set up message
+				GiveBoardResponse board = game.getBoard();
+
+				// Serialise and Send
+				board.writeTo(s.getOutputStream());
+				s.getOutputStream().flush();
+			}
 		}
 	}
 
@@ -153,11 +158,14 @@ public class Server implements Runnable
 		// For each player
 		for(Colour c : Colour.values())
 		{
-			Socket s = connections.get(c);
+			if(connections.containsKey(c))
+			{
+				Socket s = connections.get(c);
 
-			// Serialise and Send
-			msg.build().writeTo(s.getOutputStream());
-			s.getOutputStream().flush();
+				// Serialise and Send
+				msg.build().writeTo(s.getOutputStream());
+				s.getOutputStream().flush();
+			}
 		}
 	}
 	
@@ -177,25 +185,7 @@ public class Server implements Runnable
 			Message msg = Message.parseFrom(socket.getInputStream());
 			logger.logReceivedMessage(msg);
 
-			// switch on message type
-			switch(msg.getTypeCase())
-			{
-				case EVENT:
-					sendError(socket, msg);
-					break;
-				case REQUEST:
-					Response response = processMove(msg, Colour.fromProto(msg.getPlayerColour()));
-					sendResponse(response);
-					sendEvents(response);
-					break;
-				case RESPONSE:
-					/*//TODO finish processing
-					Response resp = msg.getResponse();
-					resp = processResponse(resp, socket, msg);
-*/
-					sendError(socket, msg);
-					break;
-			}
+			processMessage(msg, socket);
 
 			// If end move, stop
 			if(msg.getTypeCase().equals(Message.TypeCase.REQUEST) && msg.getRequest().getTypeCase().equals(Request.TypeCase.ENDMOVEREQUEST))
@@ -203,6 +193,35 @@ public class Server implements Runnable
 				break;
 			}
 		}		
+	}
+
+	/**
+	 * Process the received message, and send any responses and events.
+	 * @param msg the recieved message
+	 * @param socket the socket which sent the message
+	 * @throws IOException
+	 */
+	private void processMessage(Message msg, Socket socket) throws IOException
+	{
+		// switch on message type
+		switch(msg.getTypeCase())
+		{
+			case EVENT:
+				sendError(socket, msg);
+				break;
+			case REQUEST:
+				Response response = processMove(msg, Colour.fromProto(msg.getPlayerColour()));
+				sendResponse(response);
+				sendEvents(response);
+				break;
+			case RESPONSE:
+					/*//TODO finish processing
+					Response resp = msg.getResponse();
+					resp = processResponse(resp, socket, msg);
+*/
+				sendError(socket, msg);
+				break;
+		}
 	}
 
 	/**
@@ -468,25 +487,127 @@ public class Server implements Runnable
 	 * Get initial placements from each of the connections
 	 * and send them to the game.
 	 */
-	public void getInitialSettlementsAndRoads()
+	private void getInitialSettlementsAndRoads() throws IOException
 	{
-		//TODO complete
+		Colour current = game.getCurrentPlayer().getColour();
+		Colour next =  null;
 
-		// Get settlements and roads one way
+		// Get settlements and roads forwards from the first player
 		for(int i = 0; i < Game.NUM_PLAYERS; i++)
 		{
-			// receiveInitialMoves();
-			// Throw exception or something if unexpected move type?
+			next = Colour.values()[(current.ordinal() + i) % Game.NUM_PLAYERS];
+			receiveInitialMoves(next);
 		}
 		
-		// Get settlements and roads one way
-		for(int i = Game.NUM_PLAYERS - 1; i >= 0; i--)
+		// Get second set of settlements and roads in reverse order
+		for(int i = 0; i < Game.NUM_PLAYERS; i--)
 		{
-			// game.processMove(s.receiveMove());
-			// Throw exception or something if unexpected move type?
+			receiveInitialMoves(next);
+			next = Colour.values()[(current.ordinal() - i) % Game.NUM_PLAYERS];
 		}
 	}
-	
+
+	/**
+	 * Receives the initial moves for each player in the appropriate order
+	 * @param c the player to receive the initial moves from
+	 * @throws IOException
+	 */
+	private void receiveInitialMoves(Colour c) throws IOException
+	{
+		Player p = game.getPlayers().get(c);
+		Request.TypeCase[] allowedTypes = new Request.TypeCase[2];
+		allowedTypes[0] = Request.TypeCase.BUILDROADREQUEST;
+		allowedTypes[1] = Request.TypeCase.BUILDSETTLEMENTREQUEST;
+		int oldRoadAmount = p.getRoads().size(), oldSettlementsAmount = p.getSettlements().size();
+		boolean builtSettlement = false, builtRoad = false;
+
+		// Get moves from the player until they have completed an initial turn
+		while(p.getRoads().size() < oldRoadAmount && p.getSettlements().size() < oldSettlementsAmount)
+		{
+			// Try to receive a move
+			try
+			{
+				// Check return value and validity of move
+				Request.TypeCase ret = receiveMove(c, allowedTypes, builtRoad, builtSettlement);
+				if(ret == Request.TypeCase.BUILDSETTLEMENTREQUEST)
+				{
+					builtSettlement = true;
+				}
+				else if(ret == Request.TypeCase.BUILDROADREQUEST)
+				{
+					builtRoad = true;
+				}
+			}
+
+			// Move was illegal.
+			catch (UnexpectedMoveTypeException e)
+			{
+				if(connections.containsKey(c))
+					sendError(connections.get(c), e.getOriginalMessage());
+			}
+		}
+	}
+
+	/**
+	 * Receive an initial move. Must be of type BuildRoadRequest OR BuildSettlementRequest
+	 * @param c the player colour
+	 * @param allowedTypes the array of allowed move types
+	 * @param builtRoad
+	 *@param builtSettlement @throws UnexpectedMoveTypeException if the move is of an expected type
+	 */
+	private Request.TypeCase receiveMove(Colour c, Request.TypeCase[] allowedTypes, boolean builtRoad, boolean builtSettlement) throws UnexpectedMoveTypeException
+	{
+		Request.TypeCase ret = null;
+
+		try
+		{
+			// Try to parse a move from the player. If it is not of
+			// the prescribed types, then an exception is thrown
+			if(connections.containsKey(c))
+			{
+				boolean processed = false;
+				Socket socket = connections.get(c);
+				Message msg = Message.parseFrom(socket.getInputStream());
+				if(msg.hasRequest())
+				{
+					Request.TypeCase msgType = msg.getRequest().getTypeCase();
+
+					// Ensure this message is of an allowed type
+					for(Request.TypeCase type : allowedTypes)
+					{
+						// If valid move type
+						if(msgType.equals(type))
+						{
+							// If the player hasn't already done this in the initial move
+							if(builtRoad && msgType == Request.TypeCase.BUILDROADREQUEST ||
+									builtSettlement && msgType == Request.TypeCase.BUILDSETTLEMENTREQUEST)
+							{
+								throw new UnexpectedMoveTypeException(msg);
+							}
+
+							processMove(msg, c);
+							processed = true;
+							ret = type;
+							break;
+						}
+					}
+					// Move was not of a prescribed type
+					if(!processed)
+					{
+							throw new UnexpectedMoveTypeException(msg);
+					}
+				}
+				else throw new UnexpectedMoveTypeException(msg);
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		return ret;
+	}
+
 	/**
 	 * Loops until four players have been found
 	 * @throws IOException 

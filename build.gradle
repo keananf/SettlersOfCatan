@@ -6,6 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
     }
 }
 
@@ -46,6 +47,7 @@ project(":desktop") {
 
 project(":core") {
     apply plugin: "java"
+    apply plugin: "com.google.protobuf"
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"

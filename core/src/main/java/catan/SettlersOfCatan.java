@@ -1,36 +1,42 @@
 package catan;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import server.Server;
+import catan.ui.SplashScreen;
 
-import java.awt.Point;
-import java.util.Hashtable;
-
-public class SettlersOfCatan extends ApplicationAdapter
+public class SettlersOfCatan extends Game
 {
-	Server serv = new Server();
+	public Skin skin;
+	final private Server serv = new Server();
 
 	@Override
 	public void create()
 	{
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		skin = new Skin(Gdx.files.internal("skin.json"));
+
+		// Start a game server in its own thread
 		(new Thread(serv)).start();
+
+		// start off at the splash screen
+		setScreen(new SplashScreen(this));
 	}
 
 	@Override
 	public void render()
 	{
+		super.render();
 	}
 
 	@Override
-	public void resize(int w, int h)
+	public void dispose()
 	{
+		skin.dispose();
 	}
 }

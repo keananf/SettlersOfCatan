@@ -1,6 +1,5 @@
 package server;
 
-import com.sun.org.apache.regexp.internal.RE;
 import enums.*;
 import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
@@ -9,6 +8,7 @@ import exceptions.UnexpectedMoveTypeException;
 import game.Game;
 import game.players.Player;
 import protocol.EnumProtos.*;
+import protocol.MessageProtos;
 import protocol.MessageProtos.*;
 import protocol.ResponseProtos.*;
 import protocol.RequestProtos.*;
@@ -20,21 +20,24 @@ import protocol.TradeProtos.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Server implements Runnable
 {
 	private Game game;
 	private int numConnections;
-	private Map<Colour, Socket> connections;
+	private Map<Colour, ListenerThread> connections;
 	private ServerSocket serverSocket;
 	private static final int PORT = 12345;
 	private Logger logger;
+	private ConcurrentLinkedQueue<Message> movesToProcess;
 
 	public Server()
 	{
 		logger = new Logger();
 		game = new Game();
-		connections = new HashMap<Colour, Socket>();
+		movesToProcess = new ConcurrentLinkedQueue<Message>();
+		connections = new HashMap<Colour, ListenerThread>();
 	}
 
 	public void run()
@@ -51,8 +54,9 @@ public class Server implements Runnable
 				int dice = game.generateDiceRoll();
 				Map<Colour, Map<ResourceType, Integer>> resources = game.allocateResources(dice);
 				sendTurns(dice, resources);
-				
-				receiveMoves();
+
+				// Read moves from queue and log
+				processMessage();
 			}
 		}
 		catch (IOException e)
@@ -82,21 +86,23 @@ public class Server implements Runnable
 
 	/**
 	 * Sends the dice to the player's socket
-	 * @param dice the dice roll to send
+	 * @param num the dice roll to send
 	 * @param c the colour of the player
 	 * @throws IOException
 	 */
-	private void sendDice(Colour c, int dice) throws IOException
+	private void sendDice(Colour c, int num) throws IOException
 	{
-		Socket s = connections.get(c);
+		// Set up event
+		Event.Builder ev = Event.newBuilder();
+		DiceRoll.Builder dice = DiceRoll.newBuilder();
+		dice.setDice(num);
+		ev.setDiceRoll(dice.build());
 
 		// Set up message
-		DiceRoll.Builder builder = DiceRoll.newBuilder();
-		builder.setDice(dice);
+		Message.Builder msg = Message.newBuilder();
+		msg.setEvent(ev.build());
 
-		// Serialise and Send
-		builder.build().writeTo(s.getOutputStream());
-		s.getOutputStream().flush();
+		broadcastEvent(ev.build());
 	}
 
 	/**
@@ -106,20 +112,24 @@ public class Server implements Runnable
 	 * @throws IOException 
 	 */
 	private void sendResources(Colour c, Map<ResourceType, Integer> resources) throws IOException
-	{		
-		Socket s = connections.get(c);
+	{
+		Message.Builder msg = Message.newBuilder();
+		Response.Builder resp = Response.newBuilder();
 
-		// Set up message
+		// Set up resourcess
+		ResourceAllocation.Builder alloc = ResourceAllocation.newBuilder();
 		ResourceCount.Builder builder = ResourceCount.newBuilder();
 		builder.setBrick(resources.get(ResourceType.Brick));
 		builder.setGrain(resources.get(ResourceType.Grain));
 		builder.setOre(resources.get(ResourceType.Ore));
 		builder.setLumber(resources.get(ResourceType.Lumber));
 		builder.setWool(resources.get(ResourceType.Wool));
+		alloc.setResources(builder.build());
+		alloc.setPlayerColour(Colour.toProto(c));
 
-		// Serialise and Send
-		builder.build().writeTo(s.getOutputStream());
-		s.getOutputStream().flush();
+		// Set up and send message
+		resp.setResourceAllocation(alloc);
+		connections.get(c).sendMessage(msg.build());
 	}
 	
 	/**
@@ -128,19 +138,23 @@ public class Server implements Runnable
 	 */
 	private void broadcastBoard() throws IOException
 	{
+		// Set up message
+		GiveBoardResponse board = game.getBoard();
+		Message.Builder msg = Message.newBuilder();
+		Response.Builder resp = Response.newBuilder();
+		resp.setCurrentBoardResponse(board);
+		msg.setResponse(resp.build());
+
+		// TODO deal with ai
+
 		// For each player
 		for(Colour c : Colour.values())
 		{
 			if(connections.containsKey(c))
 			{
-				Socket s = connections.get(c);
+				msg.setPlayerColour(Colour.toProto(c));
+				connections.get(c).sendMessage(msg.build());
 
-				// Set up message
-				GiveBoardResponse board = game.getBoard();
-
-				// Serialise and Send
-				board.writeTo(s.getOutputStream());
-				s.getOutputStream().flush();
 			}
 		}
 	}
@@ -155,72 +169,65 @@ public class Server implements Runnable
 		msg.setEvent(ev);
 		msg.setPlayerColour(Colour.toProto(game.getCurrentPlayer().getColour()));
 
+		// TODO deal with AI
+
 		// For each player
 		for(Colour c : Colour.values())
 		{
 			if(connections.containsKey(c))
 			{
-				Socket s = connections.get(c);
-
-				// Serialise and Send
-				msg.build().writeTo(s.getOutputStream());
-				s.getOutputStream().flush();
+				connections.get(c).sendMessage(msg.build());
 			}
 		}
 	}
-	
+
 	/**
-	 * Listens for moves from the current player
-	 * @return the bytes received from the current player
-	 * @throws IOException 
+	 * Simply forwards the trade offer to the intended recipients
+	 * @param msg the original message
+	 * @param playerTrade the internal trade request inside the message
 	 */
-	private void receiveMoves() throws IOException
+	private void forwardTradeOffer(Message msg, PlayerTradeProto playerTrade) throws IOException
 	{
-		Colour colour = game.getCurrentPlayer().getColour();
-		Socket socket = connections.get(colour); //TODO this should be effectively listening to all players
+		List<ColourProto> options = playerTrade.getRecipientsList();
 
-		// Receive and process moves until the end one is received
-		while(true)
+		// For each player
+		for(Colour c : Colour.values())
 		{
-			Message msg = Message.parseFrom(socket.getInputStream());
-			logger.logReceivedMessage(msg);
-
-			processMessage(msg, socket);
-
-			// If end move, stop
-			if(msg.getTypeCase().equals(Message.TypeCase.REQUEST) && msg.getRequest().getTypeCase().equals(Request.TypeCase.ENDMOVEREQUEST))
+			// TODO deal with AI
+			if(connections.containsKey(c) && options.contains(Colour.toProto(c)))
 			{
-				break;
+				connections.get(c).sendMessage(msg);
 			}
-		}		
+		}
+
 	}
 
 	/**
-	 * Process the received message, and send any responses and events.
-	 * @param msg the recieved message
-	 * @param socket the socket which sent the message
+	 * Process the next message, and send any responses and events.
 	 * @throws IOException
 	 */
-	private void processMessage(Message msg, Socket socket) throws IOException
+	private void processMessage() throws IOException
 	{
+		Message msg = movesToProcess.poll();
+		ListenerThread conn = connections.get(Colour.fromProto(msg.getPlayerColour()));
+		logger.logReceivedMessage(msg);
+
 		// switch on message type
 		switch(msg.getTypeCase())
 		{
-			case EVENT:
-				sendError(socket, msg);
-				break;
+			// User request
 			case REQUEST:
 				Response response = processMove(msg, Colour.fromProto(msg.getPlayerColour()));
-				sendResponse(response);
+				conn.sendResponse(response);
 				sendEvents(response);
 				break;
+
 			case RESPONSE:
-					/*//TODO finish processing
-					Response resp = msg.getResponse();
-					resp = processResponse(resp, socket, msg);
-*/
-				sendError(socket, msg);
+				processResponse(msg, Colour.fromProto(msg.getPlayerColour()));
 				break;
+
+			default:
+				conn.sendError(msg);
 		}
 	}
 
@@ -288,57 +295,51 @@ public class Server implements Runnable
 	}
 
 	/**
-	 * Processes the response message received from the client
-	 * @param resp the response message
-	 * @param socket the socket of the sender
-	 * @param msg the original received message
-	 * @return the response from processing this response
-	 * @throws IOException
-	 */
-	private Response processResponse(Response resp, Socket socket, Message msg) throws IOException
-	{
-		//TODO
-/*
-		// If not a trade response, illegal
-		if(!resp.hasAcceptRejectResponse())
-			sendError(socket, msg);
-
-			// Perform actual trade
-		else if(resp.getAcceptRejectResponse().getAnswer().equals(TradeStatusProto.ACCEPT))
-			resp = game.processPlayerTrade(resp.getAcceptRejectResponse());
-
-			// Forward denial or counter response to original
-		else
-			forwardTrade(resp.getAcceptRejectResponse());*/
-
-		return resp;
-	}
-
-	/**
-	 * If an unknown or invalid message is received, then this message sends an error back
-	 * @param originalMsg the original message
-	 * @param socket the socket to send the error to
-	 */
-	private void sendError(Socket socket, Message originalMsg) throws IOException
-	{
-		// Set up result message
-		Response.Builder response = Response.newBuilder();
-		SuccessFailResponse.Builder result = SuccessFailResponse.newBuilder();
-		result.setResult(ResultProto.FAILURE);
-		result.setReason("Invalid message type");
-
-		// Set up wrapper response object
-		response.setSuccessFailResponse(result);
-		response.build().writeTo(socket.getOutputStream());
-
-	}
-
-	/**
-	 * This method interprets the move sent across the network and attempts
-	 * to process it 
+	 * This method interprets the response received from a client
 	 * @param msg the message received from across the network
-	 * @return the response message
+	 * @param playerColour the colour of the client who sent the response
 	 */
+	private void processResponse(Message msg, Colour playerColour) throws IOException
+	{
+		Response response = msg.getResponse();
+		Response.Builder resp = Response.newBuilder();
+
+		// Swtich on response type
+		switch(response.getTypeCase())
+		{
+			case ACCEPTREJECTRESPONSE:
+				AcceptRejectResponse ans = response.getAcceptRejectResponse();
+
+				// If valid trade type
+				if(ans.getTrade().hasPlayerTrade())
+				{
+					// Send response to offerer
+					Colour offerer = Colour.fromProto(ans.getTrade().getPlayerTrade().getOfferer());
+					connections.get(offerer).sendMessage(msg);
+
+					// If offer was accepted
+					if(ans.getAnswer().equals(TradeStatusProto.ACCEPT))
+					{
+						// Process player trade
+						Colour recipient = Colour.fromProto(msg.getPlayerColour());
+						resp.setSuccessFailResponse(game.processPlayerTrade(ans.getTrade().getPlayerTrade(), offerer, recipient));
+						sendEvents(resp.build());
+					}
+				}
+				break;
+
+			default:
+				connections.get(playerColour).sendError(msg);
+		}
+
+	}
+
+		/**
+         * This method interprets the move sent across the network and attempts
+         * to process it
+         * @param msg the message received from across the network
+         * @return the response message
+         */
 	private Response processMove(Message msg, Colour playerColour)
 	{
 		Request request = msg.getRequest();
@@ -398,7 +399,7 @@ public class Server implements Runnable
 					resp.setEndMoveResponse(game.changeTurn());
 					break;
 				case TRADEREQUEST:
-					resp.setAcceptRejectResponse(processTrade(request.getTradeRequest(), msg));
+					resp.setAcceptRejectResponse(processTradeType(request.getTradeRequest(), msg));
 					break;
 			}
 		}
@@ -412,35 +413,6 @@ public class Server implements Runnable
 		// Return response to be sent back to clients
 		return resp.build();
 	}
-
-	/**
-	 * Sends response out to each client so that they may
-	 * update their boards
-	 * @param response the response message from the last action
-	 * @throws IOException
-	 */
-	private void sendResponse(Response response) throws IOException
-	{
-		// If ok, propogate out to everyone. Otherwise just send
-		// error response to the current player.
-		if(response.hasSuccessFailResponse() && response.getSuccessFailResponse().getResult().equals(ResultProto.SUCCESS)
-			|| response.hasAcceptRejectResponse() && response.getAcceptRejectResponse().getAnswer().equals(TradeStatusProto.ACCEPT))
-		{
-			// For each socket, write the response
-			for(Socket conn : connections.values())
-			{
-				response.writeTo(conn.getOutputStream());
-				conn.getOutputStream().flush();
-			}
-		}
-		else
-		{
-			Colour colour = game.getCurrentPlayer().getColour();
-			Socket conn = connections.get(colour);
-			response.writeTo(conn.getOutputStream());
-			conn.getOutputStream().flush();
-		}
-	}
 	
 
 	/**
@@ -449,11 +421,12 @@ public class Server implements Runnable
 	 * @param msg the original request, received from across the network
 	 * @return the status of the trade "accepted, denied, offer"
 	 */
-	private AcceptRejectResponse processTrade(TradeRequest request, Message msg) throws IllegalPortTradeException,
+	private AcceptRejectResponse processTradeType(TradeRequest request, Message msg) throws IllegalPortTradeException,
 																						IllegalBankTradeException,
 																						CannotAffordException,
 																						IOException
 	{
+		//TODO DOUBLE CHECK
 		// Set up response object
 		AcceptRejectResponse.Builder resp = AcceptRejectResponse.newBuilder();
 		resp.setTrade(request);
@@ -463,10 +436,7 @@ public class Server implements Runnable
 		{
 			// Simply forward the message
 			case PLAYERTRADE:
-				Colour colour = Colour.fromProto(request.getPlayerTrade().getRecipient());
-				Socket recipient = connections.get(colour);
-
-				msg.writeTo(recipient.getOutputStream());
+				forwardTradeOffer(msg, request.getPlayerTrade());
 				resp.setAnswer(TradeStatusProto.PENDING);
 				break;
 
@@ -482,7 +452,7 @@ public class Server implements Runnable
 
 		return resp.build();
 	}
-	
+
 	/**
 	 * Get initial placements from each of the connections
 	 * and send them to the game.
@@ -514,6 +484,7 @@ public class Server implements Runnable
 	 */
 	private void receiveInitialMoves(Colour c) throws IOException
 	{
+		//TODO DOUBLE CHECK
 		Player p = game.getPlayers().get(c);
 		Request.TypeCase[] allowedTypes = new Request.TypeCase[2];
 		allowedTypes[0] = Request.TypeCase.BUILDROADREQUEST;
@@ -543,7 +514,7 @@ public class Server implements Runnable
 			catch (UnexpectedMoveTypeException e)
 			{
 				if(connections.containsKey(c))
-					sendError(connections.get(c), e.getOriginalMessage());
+					connections.get(c).sendError(e.getOriginalMessage());
 			}
 		}
 	}
@@ -555,61 +526,77 @@ public class Server implements Runnable
 	 * @param builtRoad
 	 *@param builtSettlement @throws UnexpectedMoveTypeException if the move is of an expected type
 	 */
-	private Request.TypeCase receiveMove(Colour c, Request.TypeCase[] allowedTypes, boolean builtRoad, boolean builtSettlement) throws UnexpectedMoveTypeException
+	private Request.TypeCase receiveMove(Colour c, Request.TypeCase[] allowedTypes, boolean builtRoad, boolean builtSettlement)
+			throws UnexpectedMoveTypeException, IOException
 	{
+		//TODO DOUBLE CHECK
 		Request.TypeCase ret = null;
 
-		try
+		// Try to parse a move from the player. If it is not of
+		// the prescribed types, then an exception is thrown
+		if(connections.containsKey(c))
 		{
-			// Try to parse a move from the player. If it is not of
-			// the prescribed types, then an exception is thrown
-			if(connections.containsKey(c))
+			boolean processed = false;
+			Message msg = movesToProcess.poll();
+			if(validateMsg(msg) && msg.hasRequest())
 			{
-				boolean processed = false;
-				Socket socket = connections.get(c);
-				Message msg = Message.parseFrom(socket.getInputStream());
-				if(msg.hasRequest())
+				Request.TypeCase msgType = msg.getRequest().getTypeCase();
+
+				// Ensure this message is of an allowed type
+				for(Request.TypeCase type : allowedTypes)
 				{
-					Request.TypeCase msgType = msg.getRequest().getTypeCase();
-
-					// Ensure this message is of an allowed type
-					for(Request.TypeCase type : allowedTypes)
+					// If valid move type
+					if(msgType.equals(type))
 					{
-						// If valid move type
-						if(msgType.equals(type))
+						// If the player hasn't already done this in the initial move
+						if(builtRoad && msgType == Request.TypeCase.BUILDROADREQUEST ||
+								builtSettlement && msgType == Request.TypeCase.BUILDSETTLEMENTREQUEST)
 						{
-							// If the player hasn't already done this in the initial move
-							if(builtRoad && msgType == Request.TypeCase.BUILDROADREQUEST ||
-									builtSettlement && msgType == Request.TypeCase.BUILDSETTLEMENTREQUEST)
-							{
-								throw new UnexpectedMoveTypeException(msg);
-							}
-
-							processMove(msg, c);
-							processed = true;
-							ret = type;
-							break;
-						}
-					}
-					// Move was not of a prescribed type
-					if(!processed)
-					{
 							throw new UnexpectedMoveTypeException(msg);
+						}
+
+						processMove(msg, c);
+						processed = true;
+						ret = type;
+						break;
 					}
 				}
-				else throw new UnexpectedMoveTypeException(msg);
+				// Move was not of a prescribed type
+				if(!processed)
+				{
+						throw new UnexpectedMoveTypeException(msg);
+				}
 			}
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
+			else throw new UnexpectedMoveTypeException(msg);
 		}
 
 		return ret;
 	}
 
 	/**
-	 * Loops until four players have been found
+	 * Ensures the message in the queue pertains to the current player
+	 * @param msg the message polled from the queue
+	 * @return a boolean indicating success or not
+	 * @throws IOException
+	 */
+	private boolean validateMsg(Message msg) throws IOException
+	{
+		Colour playerColour = Colour.fromProto(msg.getPlayerColour());
+		Colour currentPlayerColour = game.getCurrentPlayer().getColour();
+
+		// If it is not the player's turn, send error and return false
+		if(!playerColour.equals(currentPlayerColour))
+		{
+			connections.get(playerColour).sendError(msg);
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Loops until four players have been found.
+	 * TODO incorporate AI
 	 * @throws IOException 
 	 */
 	private void getPlayers() throws IOException
@@ -625,11 +612,16 @@ public class Server implements Runnable
 			{
 				Colour c = game.addNetworkPlayer(connection.getInetAddress());
 				
-				connections.put(c, connection);
+				connections.put(c, new ListenerThread(connection, c, this));
 				System.out.println(String.format("Player %d connected", numConnections));
 			}
 		}
 		
 		System.out.println("All Players connected. Starting game...\n");
+	}
+
+	public void addMessageToProcess(Message msg)
+	{
+		movesToProcess.add(msg);
 	}
 }

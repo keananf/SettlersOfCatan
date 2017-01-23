@@ -1061,13 +1061,17 @@ public final class TradeProtos {
     protocol.ResourceProtos.ResourceCountOrBuilder getOfferOrBuilder();
 
     /**
-     * <code>required .ColourProto recipient = 3;</code>
+     * <code>repeated .ColourProto recipients = 3;</code>
      */
-    boolean hasRecipient();
+    java.util.List<protocol.EnumProtos.ColourProto> getRecipientsList();
     /**
-     * <code>required .ColourProto recipient = 3;</code>
+     * <code>repeated .ColourProto recipients = 3;</code>
      */
-    protocol.EnumProtos.ColourProto getRecipient();
+    int getRecipientsCount();
+    /**
+     * <code>repeated .ColourProto recipients = 3;</code>
+     */
+    protocol.EnumProtos.ColourProto getRecipients(int index);
 
     /**
      * <code>required .ResourceCount request = 4;</code>
@@ -1163,15 +1167,37 @@ public final class TradeProtos {
               protocol.EnumProtos.ColourProto value = protocol.EnumProtos.ColourProto.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(3, rawValue);
-              } else {
-                bitField0_ |= 0x00000004;
-                recipient_ = value;
+                } else {
+                if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                  recipients_ = new java.util.ArrayList<protocol.EnumProtos.ColourProto>();
+                  mutable_bitField0_ |= 0x00000004;
+                }
+                recipients_.add(value);
               }
+              break;
+            }
+            case 26: {
+              int length = input.readRawVarint32();
+              int oldLimit = input.pushLimit(length);
+              while(input.getBytesUntilLimit() > 0) {
+                int rawValue = input.readEnum();
+                protocol.EnumProtos.ColourProto value = protocol.EnumProtos.ColourProto.valueOf(rawValue);
+                if (value == null) {
+                  unknownFields.mergeVarintField(3, rawValue);
+                  } else {
+                  if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                    recipients_ = new java.util.ArrayList<protocol.EnumProtos.ColourProto>();
+                    mutable_bitField0_ |= 0x00000004;
+                  }
+                  recipients_.add(value);
+                }
+              }
+              input.popLimit(oldLimit);
               break;
             }
             case 34: {
               protocol.ResourceProtos.ResourceCount.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000008) == 0x00000008)) {
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 subBuilder = request_.toBuilder();
               }
               request_ = input.readMessage(protocol.ResourceProtos.ResourceCount.PARSER, extensionRegistry);
@@ -1179,7 +1205,7 @@ public final class TradeProtos {
                 subBuilder.mergeFrom(request_);
                 request_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000008;
+              bitField0_ |= 0x00000004;
               break;
             }
           }
@@ -1190,6 +1216,9 @@ public final class TradeProtos {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          recipients_ = java.util.Collections.unmodifiableList(recipients_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -1258,19 +1287,25 @@ public final class TradeProtos {
       return offer_;
     }
 
-    public static final int RECIPIENT_FIELD_NUMBER = 3;
-    private protocol.EnumProtos.ColourProto recipient_;
+    public static final int RECIPIENTS_FIELD_NUMBER = 3;
+    private java.util.List<protocol.EnumProtos.ColourProto> recipients_;
     /**
-     * <code>required .ColourProto recipient = 3;</code>
+     * <code>repeated .ColourProto recipients = 3;</code>
      */
-    public boolean hasRecipient() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+    public java.util.List<protocol.EnumProtos.ColourProto> getRecipientsList() {
+      return recipients_;
     }
     /**
-     * <code>required .ColourProto recipient = 3;</code>
+     * <code>repeated .ColourProto recipients = 3;</code>
      */
-    public protocol.EnumProtos.ColourProto getRecipient() {
-      return recipient_;
+    public int getRecipientsCount() {
+      return recipients_.size();
+    }
+    /**
+     * <code>repeated .ColourProto recipients = 3;</code>
+     */
+    public protocol.EnumProtos.ColourProto getRecipients(int index) {
+      return recipients_.get(index);
     }
 
     public static final int REQUEST_FIELD_NUMBER = 4;
@@ -1279,7 +1314,7 @@ public final class TradeProtos {
      * <code>required .ResourceCount request = 4;</code>
      */
     public boolean hasRequest() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
      * <code>required .ResourceCount request = 4;</code>
@@ -1297,7 +1332,7 @@ public final class TradeProtos {
     private void initFields() {
       offerer_ = protocol.EnumProtos.ColourProto.RED;
       offer_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
-      recipient_ = protocol.EnumProtos.ColourProto.RED;
+      recipients_ = java.util.Collections.emptyList();
       request_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
@@ -1311,10 +1346,6 @@ public final class TradeProtos {
         return false;
       }
       if (!hasOffer()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasRecipient()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -1335,10 +1366,10 @@ public final class TradeProtos {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeMessage(2, offer_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeEnum(3, recipient_.getNumber());
+      for (int i = 0; i < recipients_.size(); i++) {
+        output.writeEnum(3, recipients_.get(i).getNumber());
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeMessage(4, request_);
       }
       getUnknownFields().writeTo(output);
@@ -1358,11 +1389,16 @@ public final class TradeProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, offer_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(3, recipient_.getNumber());
+      {
+        int dataSize = 0;
+        for (int i = 0; i < recipients_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeEnumSizeNoTag(recipients_.get(i).getNumber());
+        }
+        size += dataSize;
+        size += 1 * recipients_.size();
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, request_);
       }
@@ -1493,7 +1529,7 @@ public final class TradeProtos {
           offerBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
-        recipient_ = protocol.EnumProtos.ColourProto.RED;
+        recipients_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000004);
         if (requestBuilder_ == null) {
           request_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
@@ -1541,12 +1577,13 @@ public final class TradeProtos {
         } else {
           result.offer_ = offerBuilder_.build();
         }
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          recipients_ = java.util.Collections.unmodifiableList(recipients_);
+          bitField0_ = (bitField0_ & ~0x00000004);
         }
-        result.recipient_ = recipient_;
+        result.recipients_ = recipients_;
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
+          to_bitField0_ |= 0x00000004;
         }
         if (requestBuilder_ == null) {
           result.request_ = request_;
@@ -1575,8 +1612,15 @@ public final class TradeProtos {
         if (other.hasOffer()) {
           mergeOffer(other.getOffer());
         }
-        if (other.hasRecipient()) {
-          setRecipient(other.getRecipient());
+        if (!other.recipients_.isEmpty()) {
+          if (recipients_.isEmpty()) {
+            recipients_ = other.recipients_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureRecipientsIsMutable();
+            recipients_.addAll(other.recipients_);
+          }
+          onChanged();
         }
         if (other.hasRequest()) {
           mergeRequest(other.getRequest());
@@ -1591,10 +1635,6 @@ public final class TradeProtos {
           return false;
         }
         if (!hasOffer()) {
-          
-          return false;
-        }
-        if (!hasRecipient()) {
           
           return false;
         }
@@ -1775,37 +1815,74 @@ public final class TradeProtos {
         return offerBuilder_;
       }
 
-      private protocol.EnumProtos.ColourProto recipient_ = protocol.EnumProtos.ColourProto.RED;
-      /**
-       * <code>required .ColourProto recipient = 3;</code>
-       */
-      public boolean hasRecipient() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+      private java.util.List<protocol.EnumProtos.ColourProto> recipients_ =
+        java.util.Collections.emptyList();
+      private void ensureRecipientsIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          recipients_ = new java.util.ArrayList<protocol.EnumProtos.ColourProto>(recipients_);
+          bitField0_ |= 0x00000004;
+        }
       }
       /**
-       * <code>required .ColourProto recipient = 3;</code>
+       * <code>repeated .ColourProto recipients = 3;</code>
        */
-      public protocol.EnumProtos.ColourProto getRecipient() {
-        return recipient_;
+      public java.util.List<protocol.EnumProtos.ColourProto> getRecipientsList() {
+        return java.util.Collections.unmodifiableList(recipients_);
       }
       /**
-       * <code>required .ColourProto recipient = 3;</code>
+       * <code>repeated .ColourProto recipients = 3;</code>
        */
-      public Builder setRecipient(protocol.EnumProtos.ColourProto value) {
+      public int getRecipientsCount() {
+        return recipients_.size();
+      }
+      /**
+       * <code>repeated .ColourProto recipients = 3;</code>
+       */
+      public protocol.EnumProtos.ColourProto getRecipients(int index) {
+        return recipients_.get(index);
+      }
+      /**
+       * <code>repeated .ColourProto recipients = 3;</code>
+       */
+      public Builder setRecipients(
+          int index, protocol.EnumProtos.ColourProto value) {
         if (value == null) {
           throw new NullPointerException();
         }
-        bitField0_ |= 0x00000004;
-        recipient_ = value;
+        ensureRecipientsIsMutable();
+        recipients_.set(index, value);
         onChanged();
         return this;
       }
       /**
-       * <code>required .ColourProto recipient = 3;</code>
+       * <code>repeated .ColourProto recipients = 3;</code>
        */
-      public Builder clearRecipient() {
+      public Builder addRecipients(protocol.EnumProtos.ColourProto value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureRecipientsIsMutable();
+        recipients_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .ColourProto recipients = 3;</code>
+       */
+      public Builder addAllRecipients(
+          java.lang.Iterable<? extends protocol.EnumProtos.ColourProto> values) {
+        ensureRecipientsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, recipients_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .ColourProto recipients = 3;</code>
+       */
+      public Builder clearRecipients() {
+        recipients_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000004);
-        recipient_ = protocol.EnumProtos.ColourProto.RED;
         onChanged();
         return this;
       }
@@ -3792,18 +3869,18 @@ public final class TradeProtos {
       "yerTrade\030\001 \001(\0132\021.PlayerTradeProtoH\000\022$\n\tb" +
       "ankTrade\030\002 \001(\0132\017.BankTradeProtoH\000\022$\n\tpor" +
       "tTrade\030\003 \001(\0132\017.PortTradeProtoH\000B\n\n\010Conte" +
-      "nts\"\222\001\n\020PlayerTradeProto\022\035\n\007offerer\030\001 \002(" +
+      "nts\"\223\001\n\020PlayerTradeProto\022\035\n\007offerer\030\001 \002(" +
       "\0162\014.ColourProto\022\035\n\005offer\030\002 \002(\0132\016.Resourc" +
-      "eCount\022\037\n\trecipient\030\003 \002(\0162\014.ColourProto\022" +
-      "\037\n\007request\030\004 \002(\0132\016.ResourceCount\"\200\001\n\016Ban" +
-      "kTradeProto\022\034\n\006player\030\001 \002(\0162\014.ColourProt",
-      "o\022&\n\016offerResources\030\002 \002(\0132\016.ResourceCoun" +
-      "t\022(\n\020requestResources\030\003 \002(\0132\016.ResourceCo" +
-      "unt\"\232\001\n\016PortTradeProto\022\034\n\006player\030\001 \002(\0162\014" +
-      ".ColourProto\022(\n\020requestResources\030\002 \002(\0132\016" +
-      ".ResourceCount\022\030\n\004port\030\003 \002(\0132\n.PortProto" +
-      "\022&\n\016offerResources\030\004 \002(\0132\016.ResourceCount" +
-      "B\027\n\010protocolB\013TradeProtos"
+      "eCount\022 \n\nrecipients\030\003 \003(\0162\014.ColourProto" +
+      "\022\037\n\007request\030\004 \002(\0132\016.ResourceCount\"\200\001\n\016Ba" +
+      "nkTradeProto\022\034\n\006player\030\001 \002(\0162\014.ColourPro",
+      "to\022&\n\016offerResources\030\002 \002(\0132\016.ResourceCou" +
+      "nt\022(\n\020requestResources\030\003 \002(\0132\016.ResourceC" +
+      "ount\"\232\001\n\016PortTradeProto\022\034\n\006player\030\001 \002(\0162" +
+      "\014.ColourProto\022(\n\020requestResources\030\002 \002(\0132" +
+      "\016.ResourceCount\022\030\n\004port\030\003 \002(\0132\n.PortProt" +
+      "o\022&\n\016offerResources\030\004 \002(\0132\016.ResourceCoun" +
+      "tB\027\n\010protocolB\013TradeProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3831,7 +3908,7 @@ public final class TradeProtos {
     internal_static_PlayerTradeProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PlayerTradeProto_descriptor,
-        new java.lang.String[] { "Offerer", "Offer", "Recipient", "Request", });
+        new java.lang.String[] { "Offerer", "Offer", "Recipients", "Request", });
     internal_static_BankTradeProto_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_BankTradeProto_fieldAccessorTable = new

@@ -204,16 +204,17 @@ public class Game
 	 * If trade was successful, exchange of resources occurs here
 	 * @param trade the trade object detailing the trade
 	 * @param offererColour the offerer's colour
+	 * @param recipientColour the recipient's colour
 	 * @return the response status
 	 */
-	public SuccessFailResponse processPlayerTrade(PlayerTradeProto trade, Colour offererColour)
+	public SuccessFailResponse processPlayerTrade(PlayerTradeProto trade, Colour offererColour, Colour recipientColour)
 	{
         SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
 
         // Find the recipient and extract the trade's contents
 		ResourceCount offer = trade.getOffer();
 		ResourceCount request = trade.getRequest();
-		Player recipient = players.get(Colour.fromProto(trade.getRecipient())), recipientCopy = recipient.copy();
+		Player recipient = players.get(recipientColour), recipientCopy = recipient.copy();
 		Player offerer = players.get(offererColour);
 
 		try

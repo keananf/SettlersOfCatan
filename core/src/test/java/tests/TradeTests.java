@@ -42,11 +42,11 @@ public class TradeTests extends TestHelper
         playerTrade.setRequest(resource);
 
         playerTrade.setOfferer(Colour.toProto(p.getColour()));
-        playerTrade.setRecipient(Colour.toProto(p2.getColour()));
+        playerTrade.addRecipients(Colour.toProto(p2.getColour()));
 
         // Neither player has resources, so this will fail.
         // Exception thrown and caught in processMove
-        game.processPlayerTrade(playerTrade.build(), p.getColour());
+        game.processPlayerTrade(playerTrade.build(), p.getColour(), p2.getColour());
 
         // assert failed
         assertTrue(p.getNumResources() == 0 && p2.getNumResources() == 0);
@@ -79,7 +79,7 @@ public class TradeTests extends TestHelper
         playerTrade.setRequest(request.build());
 
         playerTrade.setOfferer(Colour.toProto(p.getColour()));
-        playerTrade.setRecipient(Colour.toProto(p2.getColour()));
+        playerTrade.addRecipients(Colour.toProto(p2.getColour()));
 
         // assert resources are set up
         assertTrue(1 == p.getResources().get(ResourceType.Grain) && 1 == p.getNumResources());
@@ -89,7 +89,7 @@ public class TradeTests extends TestHelper
 
         // Neither player has resources, so this will fail.
         // Exception thrown and caught in processMove
-        game.processPlayerTrade(playerTrade.build(), p.getColour());
+        game.processPlayerTrade(playerTrade.build(), p.getColour(), p2.getColour());
 
         // assert resources are swapped
         assertTrue(1 == p.getResources().get(ResourceType.Brick) && 1 == p.getNumResources());
@@ -230,13 +230,13 @@ public class TradeTests extends TestHelper
         playerTrade.setRequest(resource.build());
 
         playerTrade.setOfferer(Colour.toProto(p.getColour()));
-        playerTrade.setRecipient(Colour.toProto(p2.getColour()));
+        playerTrade.addRecipients(Colour.toProto(p2.getColour()));
 
         assertTrue(p.getNumResources() == 0 && p2.getNumResources() == 1);
 
         // Neither player has resources, so this will fail.
         // Exception thrown and caught in processMove
-        game.processPlayerTrade(playerTrade.build(), p.getColour());
+        game.processPlayerTrade(playerTrade.build(), p.getColour(), p2.getColour());
 
         // assert success
         assertTrue(p.getNumResources() == 1 && p2.getNumResources() == 0);

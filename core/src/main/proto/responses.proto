@@ -8,6 +8,7 @@ import "board.proto";
 import "trade.proto";
 import "enums.proto";
 import "build.proto";
+import "resources.proto";
 
 message Response 
 {
@@ -26,6 +27,7 @@ message Response
 	UpgradeSettlementResponse upgradeSettlementResponse = 12;
 	PlayKnightCardResponse playKnightCardResponse = 13;
 	PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;
+        ResourceAllocation resourceAllocation = 15;
     }
 }
 

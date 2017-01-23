@@ -22,7 +22,7 @@ message PlayerTradeProto
 {
     required ColourProto  offerer = 1;
     required ResourceCount offer = 2;
-    required ColourProto  recipient = 3;
+    repeated ColourProto  recipients = 3;
     required ResourceCount request = 4;
 }
 

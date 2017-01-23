@@ -180,6 +180,19 @@ public final class ResponseProtos {
      * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
      */
     protocol.ResponseProtos.PlayYearOfPlentyCardResponseOrBuilder getPlayYearOfPlentyCardResponseOrBuilder();
+
+    /**
+     * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+     */
+    boolean hasResourceAllocation();
+    /**
+     * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+     */
+    protocol.ResourceProtos.ResourceAllocation getResourceAllocation();
+    /**
+     * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+     */
+    protocol.ResourceProtos.ResourceAllocationOrBuilder getResourceAllocationOrBuilder();
   }
   /**
    * Protobuf type {@code Response}
@@ -402,6 +415,19 @@ public final class ResponseProtos {
               typeCase_ = 14;
               break;
             }
+            case 122: {
+              protocol.ResourceProtos.ResourceAllocation.Builder subBuilder = null;
+              if (typeCase_ == 15) {
+                subBuilder = ((protocol.ResourceProtos.ResourceAllocation) type_).toBuilder();
+              }
+              type_ = input.readMessage(protocol.ResourceProtos.ResourceAllocation.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((protocol.ResourceProtos.ResourceAllocation) type_);
+                type_ = subBuilder.buildPartial();
+              }
+              typeCase_ = 15;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -459,6 +485,7 @@ public final class ResponseProtos {
       UPGRADESETTLEMENTRESPONSE(12),
       PLAYKNIGHTCARDRESPONSE(13),
       PLAYYEAROFPLENTYCARDRESPONSE(14),
+      RESOURCEALLOCATION(15),
       TYPE_NOT_SET(0);
       private int value = 0;
       private TypeCase(int value) {
@@ -479,6 +506,7 @@ public final class ResponseProtos {
           case 12: return UPGRADESETTLEMENTRESPONSE;
           case 13: return PLAYKNIGHTCARDRESPONSE;
           case 14: return PLAYYEAROFPLENTYCARDRESPONSE;
+          case 15: return RESOURCEALLOCATION;
           case 0: return TYPE_NOT_SET;
           default: throw new java.lang.IllegalArgumentException(
             "Value is undefined for this oneof enum.");
@@ -833,6 +861,32 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.PlayYearOfPlentyCardResponse.getDefaultInstance();
     }
 
+    public static final int RESOURCEALLOCATION_FIELD_NUMBER = 15;
+    /**
+     * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+     */
+    public boolean hasResourceAllocation() {
+      return typeCase_ == 15;
+    }
+    /**
+     * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+     */
+    public protocol.ResourceProtos.ResourceAllocation getResourceAllocation() {
+      if (typeCase_ == 15) {
+         return (protocol.ResourceProtos.ResourceAllocation) type_;
+      }
+      return protocol.ResourceProtos.ResourceAllocation.getDefaultInstance();
+    }
+    /**
+     * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+     */
+    public protocol.ResourceProtos.ResourceAllocationOrBuilder getResourceAllocationOrBuilder() {
+      if (typeCase_ == 15) {
+         return (protocol.ResourceProtos.ResourceAllocation) type_;
+      }
+      return protocol.ResourceProtos.ResourceAllocation.getDefaultInstance();
+    }
+
     private void initFields() {
     }
     private byte memoizedIsInitialized = -1;
@@ -919,6 +973,12 @@ public final class ResponseProtos {
           return false;
         }
       }
+      if (hasResourceAllocation()) {
+        if (!getResourceAllocation().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -964,6 +1024,9 @@ public final class ResponseProtos {
       }
       if (typeCase_ == 14) {
         output.writeMessage(14, (protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_);
+      }
+      if (typeCase_ == 15) {
+        output.writeMessage(15, (protocol.ResourceProtos.ResourceAllocation) type_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -1025,6 +1088,10 @@ public final class ResponseProtos {
       if (typeCase_ == 14) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(14, (protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_);
+      }
+      if (typeCase_ == 15) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(15, (protocol.ResourceProtos.ResourceAllocation) type_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1264,6 +1331,13 @@ public final class ResponseProtos {
             result.type_ = playYearOfPlentyCardResponseBuilder_.build();
           }
         }
+        if (typeCase_ == 15) {
+          if (resourceAllocationBuilder_ == null) {
+            result.type_ = type_;
+          } else {
+            result.type_ = resourceAllocationBuilder_.build();
+          }
+        }
         result.bitField0_ = to_bitField0_;
         result.typeCase_ = typeCase_;
         onBuilt();
@@ -1332,6 +1406,10 @@ public final class ResponseProtos {
           }
           case PLAYYEAROFPLENTYCARDRESPONSE: {
             mergePlayYearOfPlentyCardResponse(other.getPlayYearOfPlentyCardResponse());
+            break;
+          }
+          case RESOURCEALLOCATION: {
+            mergeResourceAllocation(other.getResourceAllocation());
             break;
           }
           case TYPE_NOT_SET: {
@@ -1417,6 +1495,12 @@ public final class ResponseProtos {
         }
         if (hasPlayYearOfPlentyCardResponse()) {
           if (!getPlayYearOfPlentyCardResponse().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasResourceAllocation()) {
+          if (!getResourceAllocation().isInitialized()) {
             
             return false;
           }
@@ -3211,6 +3295,141 @@ public final class ResponseProtos {
         }
         typeCase_ = 14;
         return playYearOfPlentyCardResponseBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResourceProtos.ResourceAllocation, protocol.ResourceProtos.ResourceAllocation.Builder, protocol.ResourceProtos.ResourceAllocationOrBuilder> resourceAllocationBuilder_;
+      /**
+       * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+       */
+      public boolean hasResourceAllocation() {
+        return typeCase_ == 15;
+      }
+      /**
+       * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+       */
+      public protocol.ResourceProtos.ResourceAllocation getResourceAllocation() {
+        if (resourceAllocationBuilder_ == null) {
+          if (typeCase_ == 15) {
+            return (protocol.ResourceProtos.ResourceAllocation) type_;
+          }
+          return protocol.ResourceProtos.ResourceAllocation.getDefaultInstance();
+        } else {
+          if (typeCase_ == 15) {
+            return resourceAllocationBuilder_.getMessage();
+          }
+          return protocol.ResourceProtos.ResourceAllocation.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+       */
+      public Builder setResourceAllocation(protocol.ResourceProtos.ResourceAllocation value) {
+        if (resourceAllocationBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          type_ = value;
+          onChanged();
+        } else {
+          resourceAllocationBuilder_.setMessage(value);
+        }
+        typeCase_ = 15;
+        return this;
+      }
+      /**
+       * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+       */
+      public Builder setResourceAllocation(
+          protocol.ResourceProtos.ResourceAllocation.Builder builderForValue) {
+        if (resourceAllocationBuilder_ == null) {
+          type_ = builderForValue.build();
+          onChanged();
+        } else {
+          resourceAllocationBuilder_.setMessage(builderForValue.build());
+        }
+        typeCase_ = 15;
+        return this;
+      }
+      /**
+       * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+       */
+      public Builder mergeResourceAllocation(protocol.ResourceProtos.ResourceAllocation value) {
+        if (resourceAllocationBuilder_ == null) {
+          if (typeCase_ == 15 &&
+              type_ != protocol.ResourceProtos.ResourceAllocation.getDefaultInstance()) {
+            type_ = protocol.ResourceProtos.ResourceAllocation.newBuilder((protocol.ResourceProtos.ResourceAllocation) type_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            type_ = value;
+          }
+          onChanged();
+        } else {
+          if (typeCase_ == 15) {
+            resourceAllocationBuilder_.mergeFrom(value);
+          }
+          resourceAllocationBuilder_.setMessage(value);
+        }
+        typeCase_ = 15;
+        return this;
+      }
+      /**
+       * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+       */
+      public Builder clearResourceAllocation() {
+        if (resourceAllocationBuilder_ == null) {
+          if (typeCase_ == 15) {
+            typeCase_ = 0;
+            type_ = null;
+            onChanged();
+          }
+        } else {
+          if (typeCase_ == 15) {
+            typeCase_ = 0;
+            type_ = null;
+          }
+          resourceAllocationBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+       */
+      public protocol.ResourceProtos.ResourceAllocation.Builder getResourceAllocationBuilder() {
+        return getResourceAllocationFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+       */
+      public protocol.ResourceProtos.ResourceAllocationOrBuilder getResourceAllocationOrBuilder() {
+        if ((typeCase_ == 15) && (resourceAllocationBuilder_ != null)) {
+          return resourceAllocationBuilder_.getMessageOrBuilder();
+        } else {
+          if (typeCase_ == 15) {
+            return (protocol.ResourceProtos.ResourceAllocation) type_;
+          }
+          return protocol.ResourceProtos.ResourceAllocation.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protocol.ResourceProtos.ResourceAllocation, protocol.ResourceProtos.ResourceAllocation.Builder, protocol.ResourceProtos.ResourceAllocationOrBuilder> 
+          getResourceAllocationFieldBuilder() {
+        if (resourceAllocationBuilder_ == null) {
+          if (!(typeCase_ == 15)) {
+            type_ = protocol.ResourceProtos.ResourceAllocation.getDefaultInstance();
+          }
+          resourceAllocationBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protocol.ResourceProtos.ResourceAllocation, protocol.ResourceProtos.ResourceAllocation.Builder, protocol.ResourceProtos.ResourceAllocationOrBuilder>(
+                  (protocol.ResourceProtos.ResourceAllocation) type_,
+                  getParentForChildren(),
+                  isClean());
+          type_ = null;
+        }
+        typeCase_ = 15;
+        return resourceAllocationBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:Response)
@@ -10654,52 +10873,54 @@ public final class ResponseProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\017responses.proto\032\013board.proto\032\013trade.pr" +
-      "oto\032\013enums.proto\032\013build.proto\"\374\005\n\010Respon" +
-      "se\0223\n\023successFailResponse\030\001 \001(\0132\024.Succes" +
-      "sFailResponseH\000\0225\n\024acceptRejectResponse\030" +
-      "\002 \001(\0132\025.AcceptRejectResponseH\000\0222\n\024curren" +
-      "tBoardResponse\030\003 \001(\0132\022.GiveBoardResponse" +
-      "H\000\0221\n\022buyDevCardResponse\030\004 \001(\0132\023.BuyDevC" +
-      "ardResponseH\000\022=\n\030playMonopolyCardRespons" +
-      "e\030\005 \001(\0132\031.PlayMonopolyCardResponseH\000\022E\n\034" +
-      "playRoadBuildingCardResponse\030\007 \001(\0132\035.Pla",
-      "yRoadBuildingCardResponseH\000\022/\n\021buildRoad" +
-      "Response\030\010 \001(\0132\022.BuildRoadResponseH\000\0221\n\022" +
-      "moveRobberResponse\030\t \001(\0132\023.MoveRobberRes" +
-      "ponseH\000\022+\n\017endMoveResponse\030\n \001(\0132\020.EndMo" +
-      "veResponseH\000\022;\n\027buildSettlementResponse\030" +
-      "\013 \001(\0132\030.BuildSettlementResponseH\000\022?\n\031upg" +
-      "radeSettlementResponse\030\014 \001(\0132\032.UpgradeSe" +
-      "ttlementResponseH\000\0229\n\026playKnightCardResp" +
-      "onse\030\r \001(\0132\027.PlayKnightCardResponseH\000\022E\n" +
-      "\034playYearOfPlentyCardResponse\030\016 \001(\0132\035.Pl",
-      "ayYearOfPlentyCardResponseH\000B\006\n\004type\"C\n\023" +
-      "SuccessFailResponse\022\034\n\006result\030\001 \002(\0162\014.Re" +
-      "sultProto\022\016\n\006reason\030\002 \001(\t\"0\n\017EndMoveResp" +
-      "onse\022\035\n\007newTurn\030\001 \002(\0162\014.ColourProto\"V\n\030P" +
-      "layMonopolyCardResponse\022\024\n\014numResources\030" +
-      "\001 \002(\005\022$\n\010resource\030\002 \002(\0162\022.ResourceTypePr" +
-      "oto\"l\n\034PlayRoadBuildingCardResponse\022%\n\tr" +
-      "esponse1\030\001 \002(\0132\022.BuildRoadResponse\022%\n\tre" +
-      "sponse2\030\002 \002(\0132\022.BuildRoadResponse\"^\n\034Pla" +
-      "yYearOfPlentyCardResponse\022\036\n\002r1\030\001 \002(\0162\022.",
-      "ResourceTypeProto\022\036\n\002r2\030\002 \002(\0162\022.Resource" +
-      "TypeProto\"D\n\022BuyDevCardResponse\022.\n\017devel" +
-      "opmentCard\030\001 \002(\0162\025.DevelopmentCardProto\"" +
-      ">\n\027BuildSettlementResponse\022#\n\013newBuildin" +
-      "g\030\001 \002(\0132\016.BuildingProto\"@\n\031UpgradeSettle" +
-      "mentResponse\022#\n\013newBuilding\030\001 \002(\0132\016.Buil" +
-      "dingProto\"E\n\021BuildRoadResponse\022\023\n\013longes" +
-      "tRoad\030\001 \002(\005\022\033\n\007newRoad\030\002 \002(\0132\n.RoadProto" +
-      "\"I\n\026PlayKnightCardResponse\022/\n\022moveRobber" +
-      "Response\030\001 \002(\0132\023.MoveRobberResponse\"_\n\022M",
-      "oveRobberResponse\022$\n\010resource\030\001 \002(\0162\022.Re" +
-      "sourceTypeProto\022#\n\016robberLocation\030\002 \002(\0132" +
-      "\013.PointProto\"g\n\024AcceptRejectResponse\022\034\n\005" +
-      "trade\030\001 \002(\0132\r.TradeRequest\022!\n\006answer\030\002 \002" +
-      "(\0162\021.TradeStatusProto\022\016\n\006reason\030\003 \001(\t\"/\n" +
-      "\021GiveBoardResponse\022\032\n\005board\030\001 \002(\0132\013.Boar" +
-      "dProtoB\032\n\010protocolB\016ResponseProtos"
+      "oto\032\013enums.proto\032\013build.proto\032\017resources" +
+      ".proto\"\257\006\n\010Response\0223\n\023successFailRespon" +
+      "se\030\001 \001(\0132\024.SuccessFailResponseH\000\0225\n\024acce" +
+      "ptRejectResponse\030\002 \001(\0132\025.AcceptRejectRes" +
+      "ponseH\000\0222\n\024currentBoardResponse\030\003 \001(\0132\022." +
+      "GiveBoardResponseH\000\0221\n\022buyDevCardRespons" +
+      "e\030\004 \001(\0132\023.BuyDevCardResponseH\000\022=\n\030playMo" +
+      "nopolyCardResponse\030\005 \001(\0132\031.PlayMonopolyC" +
+      "ardResponseH\000\022E\n\034playRoadBuildingCardRes",
+      "ponse\030\007 \001(\0132\035.PlayRoadBuildingCardRespon" +
+      "seH\000\022/\n\021buildRoadResponse\030\010 \001(\0132\022.BuildR" +
+      "oadResponseH\000\0221\n\022moveRobberResponse\030\t \001(" +
+      "\0132\023.MoveRobberResponseH\000\022+\n\017endMoveRespo" +
+      "nse\030\n \001(\0132\020.EndMoveResponseH\000\022;\n\027buildSe" +
+      "ttlementResponse\030\013 \001(\0132\030.BuildSettlement" +
+      "ResponseH\000\022?\n\031upgradeSettlementResponse\030" +
+      "\014 \001(\0132\032.UpgradeSettlementResponseH\000\0229\n\026p" +
+      "layKnightCardResponse\030\r \001(\0132\027.PlayKnight" +
+      "CardResponseH\000\022E\n\034playYearOfPlentyCardRe",
+      "sponse\030\016 \001(\0132\035.PlayYearOfPlentyCardRespo" +
+      "nseH\000\0221\n\022resourceAllocation\030\017 \001(\0132\023.Reso" +
+      "urceAllocationH\000B\006\n\004type\"C\n\023SuccessFailR" +
+      "esponse\022\034\n\006result\030\001 \002(\0162\014.ResultProto\022\016\n" +
+      "\006reason\030\002 \001(\t\"0\n\017EndMoveResponse\022\035\n\007newT" +
+      "urn\030\001 \002(\0162\014.ColourProto\"V\n\030PlayMonopolyC" +
+      "ardResponse\022\024\n\014numResources\030\001 \002(\005\022$\n\010res" +
+      "ource\030\002 \002(\0162\022.ResourceTypeProto\"l\n\034PlayR" +
+      "oadBuildingCardResponse\022%\n\tresponse1\030\001 \002" +
+      "(\0132\022.BuildRoadResponse\022%\n\tresponse2\030\002 \002(",
+      "\0132\022.BuildRoadResponse\"^\n\034PlayYearOfPlent" +
+      "yCardResponse\022\036\n\002r1\030\001 \002(\0162\022.ResourceType" +
+      "Proto\022\036\n\002r2\030\002 \002(\0162\022.ResourceTypeProto\"D\n" +
+      "\022BuyDevCardResponse\022.\n\017developmentCard\030\001" +
+      " \002(\0162\025.DevelopmentCardProto\">\n\027BuildSett" +
+      "lementResponse\022#\n\013newBuilding\030\001 \002(\0132\016.Bu" +
+      "ildingProto\"@\n\031UpgradeSettlementResponse" +
+      "\022#\n\013newBuilding\030\001 \002(\0132\016.BuildingProto\"E\n" +
+      "\021BuildRoadResponse\022\023\n\013longestRoad\030\001 \002(\005\022" +
+      "\033\n\007newRoad\030\002 \002(\0132\n.RoadProto\"I\n\026PlayKnig",
+      "htCardResponse\022/\n\022moveRobberResponse\030\001 \002" +
+      "(\0132\023.MoveRobberResponse\"_\n\022MoveRobberRes" +
+      "ponse\022$\n\010resource\030\001 \002(\0162\022.ResourceTypePr" +
+      "oto\022#\n\016robberLocation\030\002 \002(\0132\013.PointProto" +
+      "\"g\n\024AcceptRejectResponse\022\034\n\005trade\030\001 \002(\0132" +
+      "\r.TradeRequest\022!\n\006answer\030\002 \002(\0162\021.TradeSt" +
+      "atusProto\022\016\n\006reason\030\003 \001(\t\"/\n\021GiveBoardRe" +
+      "sponse\022\032\n\005board\030\001 \002(\0132\013.BoardProtoB\032\n\010pr" +
+      "otocolB\016ResponseProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -10716,13 +10937,14 @@ public final class ResponseProtos {
           protocol.TradeProtos.getDescriptor(),
           protocol.EnumProtos.getDescriptor(),
           protocol.BuildProtos.getDescriptor(),
+          protocol.ResourceProtos.getDescriptor(),
         }, assigner);
     internal_static_Response_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Response_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_Response_descriptor,
-        new java.lang.String[] { "SuccessFailResponse", "AcceptRejectResponse", "CurrentBoardResponse", "BuyDevCardResponse", "PlayMonopolyCardResponse", "PlayRoadBuildingCardResponse", "BuildRoadResponse", "MoveRobberResponse", "EndMoveResponse", "BuildSettlementResponse", "UpgradeSettlementResponse", "PlayKnightCardResponse", "PlayYearOfPlentyCardResponse", "Type", });
+        new java.lang.String[] { "SuccessFailResponse", "AcceptRejectResponse", "CurrentBoardResponse", "BuyDevCardResponse", "PlayMonopolyCardResponse", "PlayRoadBuildingCardResponse", "BuildRoadResponse", "MoveRobberResponse", "EndMoveResponse", "BuildSettlementResponse", "UpgradeSettlementResponse", "PlayKnightCardResponse", "PlayYearOfPlentyCardResponse", "ResourceAllocation", "Type", });
     internal_static_SuccessFailResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_SuccessFailResponse_fieldAccessorTable = new
@@ -10805,6 +11027,7 @@ public final class ResponseProtos {
     protocol.TradeProtos.getDescriptor();
     protocol.EnumProtos.getDescriptor();
     protocol.BuildProtos.getDescriptor();
+    protocol.ResourceProtos.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

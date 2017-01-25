@@ -1,14 +1,10 @@
 package board;
 
-import java.awt.Point;
-import java.util.*;
-
-import com.google.protobuf.InvalidProtocolBufferException;
-import game.build.*;
-import protocol.BoardProtos;
-import protocol.BoardProtos.*;
-import protocol.BuildProtos;
+import game.build.Road;
+import protocol.BoardProtos.EdgeProto;
 import protocol.BuildProtos.PointProto;
+
+import java.util.List;
 
 
 /**
@@ -256,5 +252,4 @@ public class Edge
 
 		return e.build();
     }
-
 }

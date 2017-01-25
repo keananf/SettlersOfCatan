@@ -1,25 +1,36 @@
 package server;
 
-import enums.*;
+import enums.Colour;
+import enums.DevelopmentCardType;
+import enums.ResourceType;
 import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
 import exceptions.UnexpectedMoveTypeException;
 import game.Game;
 import game.players.Player;
-import protocol.EnumProtos.*;
-import protocol.MessageProtos;
-import protocol.MessageProtos.*;
-import protocol.ResponseProtos.*;
-import protocol.RequestProtos.*;
-import protocol.ResourceProtos.*;
-import protocol.EventProtos.*;
-import protocol.TradeProtos.*;
+import protocol.EnumProtos.ColourProto;
+import protocol.EnumProtos.DevelopmentCardProto;
+import protocol.EnumProtos.TradeStatusProto;
+import protocol.EventProtos.DiceRoll;
+import protocol.EventProtos.Event;
+import protocol.EventProtos.PlayDevCardEvent;
+import protocol.MessageProtos.Message;
+import protocol.RequestProtos.Request;
+import protocol.ResourceProtos.ResourceAllocation;
+import protocol.ResourceProtos.ResourceCount;
+import protocol.ResponseProtos.AcceptRejectResponse;
+import protocol.ResponseProtos.GiveBoardResponse;
+import protocol.ResponseProtos.Response;
+import protocol.TradeProtos.PlayerTradeProto;
+import protocol.TradeProtos.TradeRequest;
 
-
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Server implements Runnable
@@ -212,6 +223,13 @@ public class Server implements Runnable
 		ListenerThread conn = connections.get(Colour.fromProto(msg.getPlayerColour()));
 		logger.logReceivedMessage(msg);
 
+		// If not valid
+		if(!validateMsg(msg))
+		{
+			conn.sendError(msg);
+			return;
+		}
+
 		// switch on message type
 		switch(msg.getTypeCase())
 		{
@@ -261,7 +279,13 @@ public class Server implements Runnable
 				event.setRobberMove(response.getPlayKnightCardResponse().getMoveRobberResponse().getRobberLocation());
 				break;
 			case MOVEROBBERRESPONSE:
+				// Send new robber location
 				event.setRobberMove(response.getMoveRobberResponse().getRobberLocation());
+				/*broadcastEvent(event.build());
+
+				// Send theft event
+				event.clearRobberMove();
+				TODO event.setTheft();*/
 				break;
 			case PLAYMONOPOLYCARDRESPONSE:
 				event.setPlayedDevCard(setUpDevCardEvent(DevelopmentCardProto.MONOPOLY));
@@ -334,12 +358,12 @@ public class Server implements Runnable
 
 	}
 
-		/**
-         * This method interprets the move sent across the network and attempts
-         * to process it
-         * @param msg the message received from across the network
-         * @return the response message
-         */
+	/**
+	 * This method interprets the move sent across the network and attempts
+	 * to process it
+	 * @param msg the message received from across the network
+	 * @return the response message
+	 */
 	private Response processMove(Message msg, Colour playerColour)
 	{
 		Request request = msg.getRequest();

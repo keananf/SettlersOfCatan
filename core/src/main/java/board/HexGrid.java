@@ -1,10 +1,12 @@
 package board;
 
 import enums.ResourceType;
-import protocol.BoardProtos.*;
+import protocol.BoardProtos.EdgeProto;
+import protocol.BoardProtos.PortProto;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * Class describing the hex board
@@ -353,4 +355,69 @@ public class HexGrid
 
 		return (Port) e;
     }
+
+	/**
+	 * Overwrite this grid's nodes.
+	 * @param nodes the nodes to set
+	 */
+	public void setNodesAndHexes(List<Node> nodes, List<Hex> hexes)
+	{
+		// Add nodes
+		for(Node n : nodes)
+		{
+			this.nodes.put(new Point(n.getX(), n.getY()), n);
+		}
+
+		// Add hexes
+		for(Hex h : hexes)
+		{
+			this.grid.put(new Point(h.getX(), h.getY()), h);
+		}
+
+		// Add references between hexes and nodes
+		for(Node node : nodes)
+		{
+			List<Hex> adjacentHexes = new LinkedList<Hex>();
+			List<BoardElement> neighbours = getNeighbours(node);
+
+			// Find the adjacent hexes
+			for(BoardElement neighbour : neighbours)
+			{
+				if (neighbour instanceof Hex)
+				{
+					adjacentHexes.add((Hex) neighbour);
+				}
+			}
+
+			node.setAdjacentHexes(adjacentHexes);
+			for(Hex hex : adjacentHexes)
+			{
+				hex.addNode(node);
+			}
+		}
+	}
+
+	/**
+	 * Overwrites this grid's edges and ports
+	 * @param edges the edges
+	 * @param ports the ports
+	 */
+	public void setEdgesAndPorts(List<Edge> edges, List<Port> ports)
+	{
+		this.ports = ports;
+		this.edges = edges;
+
+		// If edge is a port, overwrite
+		for(Edge e : edges)
+		{
+			for(Port p : ports)
+			{
+				if(e.equals(p))
+				{
+					e = p;
+				}
+			}
+		}
+
+	}
 }

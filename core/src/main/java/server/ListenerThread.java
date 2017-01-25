@@ -2,9 +2,9 @@ package server;
 
 import enums.Colour;
 import protocol.EnumProtos;
-import protocol.MessageProtos.*;
-import protocol.RequestProtos;
-import protocol.ResponseProtos.*;
+import protocol.MessageProtos.Message;
+import protocol.ResponseProtos.Response;
+import protocol.ResponseProtos.SuccessFailResponse;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -16,6 +16,7 @@ import java.net.Socket;
  */
 public class ListenerThread implements Runnable
 {
+    private Thread thread;
     protected Socket socket;
     private Colour colour;
     private Server server;
@@ -25,6 +26,8 @@ public class ListenerThread implements Runnable
         this.socket = socket;
         this.colour = colour;
         this.server = server;
+        this.thread = new Thread(this);
+        this.thread.start();
     }
 
     @Override

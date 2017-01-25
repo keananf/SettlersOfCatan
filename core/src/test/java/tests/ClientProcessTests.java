@@ -12,11 +12,13 @@ import static org.junit.Assert.assertTrue;
 
 public class ClientProcessTests extends TestHelper
 {
+    ClientGame gameState;
 
     @Before
     public void setUp()
     {
-        game = new ClientGame();
+        reset();
+        gameState = new ClientGame();
     }
 
     @Test
@@ -27,7 +29,7 @@ public class ClientProcessTests extends TestHelper
         BoardProtos.BoardProto board = game.getBoard().getBoard();
 
         // Simulate processing of protobuf
-        HexGrid processedBoard = ((ClientGame) game).setBoard(board);
+        HexGrid processedBoard = ((ClientGame) gameState).setBoard(board);
 
         // Assert all nodes were serialised and deserialised
         for(Node n1 : actualBoard.getNodesAsList())

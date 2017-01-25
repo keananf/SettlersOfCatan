@@ -7,7 +7,7 @@ import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
 import exceptions.UnexpectedMoveTypeException;
-import game.Game;
+import game.GameState;
 import game.players.Player;
 import protocol.EnumProtos.ColourProto;
 import protocol.EnumProtos.DevelopmentCardProto;
@@ -35,7 +35,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Server implements Runnable
 {
-	private Game game;
+	private ServerGame game;
 	private int numConnections;
 	private Map<Colour, ListenerThread> connections;
 	private ServerSocket serverSocket;
@@ -46,7 +46,7 @@ public class Server implements Runnable
 	public Server()
 	{
 		logger = new Logger();
-		game = new Game();
+		game = new ServerGame();
 		movesToProcess = new ConcurrentLinkedQueue<Message>();
 		connections = new HashMap<Colour, ListenerThread>();
 	}
@@ -178,7 +178,7 @@ public class Server implements Runnable
 	{
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(ev);
-		msg.setPlayerColour(Colour.toProto(game.getCurrentPlayer().getColour()));
+		msg.setPlayerColour(Colour.toProto(game.getCurrentPlayer()));
 
 		// TODO deal with AI
 
@@ -270,7 +270,7 @@ public class Server implements Runnable
 				event.setNewBuilding(response.getUpgradeSettlementResponse().getNewBuilding());
 				break;
 			case BUYDEVCARDRESPONSE:
-				event.setBoughtDevCard(Colour.toProto(game.getCurrentPlayer().getColour()));
+				event.setBoughtDevCard(Colour.toProto(game.getCurrentPlayer()));
 				break;
 			case ENDMOVERESPONSE:
 				event.setNewTurn(response.getEndMoveResponse().getNewTurn());
@@ -313,7 +313,7 @@ public class Server implements Runnable
 	{
 		PlayDevCardEvent.Builder ev = PlayDevCardEvent.newBuilder();
 		ev.setType(type);
-		ev.setPlayerColour(Colour.toProto(game.getCurrentPlayer().getColour()));
+		ev.setPlayerColour(Colour.toProto(game.getCurrentPlayer()));
 
 		return ev.build();
 	}
@@ -368,7 +368,7 @@ public class Server implements Runnable
 	{
 		Request request = msg.getRequest();
 		Response.Builder resp = Response.newBuilder();
-		Player copy = game.getCurrentPlayer().copy();
+		Player copy = game.getPlayers().get(game.getCurrentPlayer()).copy();
 		DevelopmentCardType card = null;
 
 		try
@@ -483,21 +483,21 @@ public class Server implements Runnable
 	 */
 	private void getInitialSettlementsAndRoads() throws IOException
 	{
-		Colour current = game.getCurrentPlayer().getColour();
+		Colour current = game.getCurrentPlayer();
 		Colour next =  null;
 
 		// Get settlements and roads forwards from the first player
-		for(int i = 0; i < Game.NUM_PLAYERS; i++)
+		for(int i = 0; i < GameState.NUM_PLAYERS; i++)
 		{
-			next = Colour.values()[(current.ordinal() + i) % Game.NUM_PLAYERS];
+			next = Colour.values()[(current.ordinal() + i) % GameState.NUM_PLAYERS];
 			receiveInitialMoves(next);
 		}
 		
 		// Get second set of settlements and roads in reverse order
-		for(int i = 0; i < Game.NUM_PLAYERS; i--)
+		for(int i = 0; i < GameState.NUM_PLAYERS; i--)
 		{
 			receiveInitialMoves(next);
-			next = Colour.values()[(current.ordinal() - i) % Game.NUM_PLAYERS];
+			next = Colour.values()[(current.ordinal() - i) % GameState.NUM_PLAYERS];
 		}
 	}
 
@@ -606,7 +606,7 @@ public class Server implements Runnable
 	private boolean validateMsg(Message msg) throws IOException
 	{
 		Colour playerColour = Colour.fromProto(msg.getPlayerColour());
-		Colour currentPlayerColour = game.getCurrentPlayer().getColour();
+		Colour currentPlayerColour = game.getCurrentPlayer();
 
 		// If it is not the player's turn, send error and return false
 		if(!playerColour.equals(currentPlayerColour))
@@ -628,7 +628,7 @@ public class Server implements Runnable
 		serverSocket = new ServerSocket(PORT);
 		System.out.println("Server started. Waiting for client(s)...\n");
 
-		while(numConnections++ < Game.NUM_PLAYERS)
+		while(numConnections++ < GameState.NUM_PLAYERS)
 		{
 			Socket connection = serverSocket.accept();
 			

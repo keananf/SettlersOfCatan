@@ -106,7 +106,7 @@ public class EventProcessor implements Runnable
         switch(ev.getTypeCase())
         {
             case GAMEOVER:
-                game.isOver();
+                game.setGameOver();
                 break;
 
             // Change turn

@@ -2,7 +2,7 @@ package client;
 
 import board.*;
 import enums.*;
-import game.Game;
+import game.GameState;
 import game.build.*;
 import protocol.BoardProtos.*;
 import protocol.BuildProtos.*;
@@ -14,8 +14,12 @@ import java.util.*;
  * A game with additional methods for processing protobufs for the client
  * Created by 140001596
  */
-public class ClientGame extends Game
+public class ClientGame extends GameState
 {
+    private boolean gameOver;
+
+    public ClientGame() {}
+
     public Building processNewBuilding(BuildingProto building)
     {
         // Extract information
@@ -128,7 +132,6 @@ public class ClientGame extends Game
         return ports;
     }
 
-
     /**
      * Retrieve the edge objects referred to by the proto
      * @param protos the edge protos
@@ -146,5 +149,21 @@ public class ClientGame extends Game
         }
 
         return edges;
+    }
+
+    /**
+     * @return if the game has ended or not
+     */
+    public boolean isOver()
+    {
+        return gameOver;
+    }
+
+    /**
+     * Once called, the listener thread will terminate the connection to the server
+     */
+    public void setGameOver()
+    {
+        gameOver = true;
     }
 }

@@ -1,13 +1,11 @@
  package board;
 
+import enums.ResourceType;
+import protocol.BoardProtos.HexProto;
+import protocol.BuildProtos.PointProto;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import enums.*;
-import game.build.City;
-import protocol.BoardProtos.*;
-import protocol.BuildProtos.*;
-import protocol.EnumProtos.*;
 
 /**
  * Class representing an individual hex 
@@ -103,4 +101,55 @@ public class Hex extends BoardElement
 
 		return hexBuilder.build();
     }
+
+	/**
+	 * Converts the hex proto back into an internal, usable representation
+	 * @param h
+	 */
+	public static Hex fromProto(HexProto h)
+	{
+		// Extract information and set up object
+		PointProto p = h.getP();
+		int x = p.getX(), y = p.getY();
+		Hex hex = new Hex(x, y);
+
+		// Set remaining fields
+		hex.setDiceRoll(h.getChitNumber());
+		hex.setResource(ResourceType.fromProto(h.getResource()));
+		hex.hasRobber = h.getHasRobber();
+
+		return hex;
+    }
+
+    @Override
+	public boolean equals(Object o)
+	{
+		Hex h = (Hex) o;
+
+		// Ensure properties are the same
+		if(!(h.hasRobber == hasRobber))
+		{
+			return false;
+		}
+		if(!(h.getChit() == getChit()))
+		{
+			return false;
+		}
+		if(!(h.getResource() == getResource()))
+		{
+			return false;
+		}
+
+		// Check nodes for equivalence as well
+		for(Node n : nodes)
+		{
+			// If the object doesn't have all of this hex's nodes
+			if(!(h.getNodes().contains(n)))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
 }

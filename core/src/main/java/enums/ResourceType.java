@@ -36,6 +36,10 @@ public enum ResourceType
 			case GRAIN:
 				resource = ResourceType.Grain;
 				break;
+
+			case GENERIC:
+				resource = ResourceType.Generic;
+				break;
 		}
 
 		return resource;
@@ -65,6 +69,10 @@ public enum ResourceType
 
 			case Grain:
 				resource = ResourceTypeProto.GRAIN;
+				break;
+
+			case Generic:
+				resource = ResourceTypeProto.GENERIC;
 				break;
 		}
 

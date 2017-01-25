@@ -8,6 +8,7 @@ option java_outer_classname = "EventProtos";
 import "build.proto";
 import "enums.proto";
 import "trade.proto";
+import "resources.proto";
 
 //events are very preliminary at this point
 
@@ -25,10 +26,25 @@ message Event
 	PlayDevCardEvent playedDevCard = 6;
 
         TradeRequest transaction = 7;
-        //Theft theft = 7;
         PointProto robberMove = 8;
 	ColourProto newTurn = 9;
+	GameOver gameOver = 10;
+        Theft theft = 11;
     }
+}
+
+
+message GameOver
+{
+    repeated Score scores = 1;     
+    required ColourProto winnter = 2;
+}
+
+message Score
+{
+    required ColourProto colour = 1;
+    required int32 score = 2;
+    
 }
 
 message PlayDevCardEvent 
@@ -42,14 +58,14 @@ message DiceRoll
     required int32 dice = 1;
 }
 
-/*
+
 message Theft
 {
     required ColourProto thief = 1;
     required ColourProto victim = 2;
-    required ResourceType resourceStolen = 3;
+    required ResourceCount resourceStolen = 3;
 }
-*/
+
 
 //======================================================================================================================
 

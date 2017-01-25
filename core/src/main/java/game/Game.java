@@ -1,32 +1,43 @@
 package game;
 
-import enums.*;
+import board.*;
+import enums.Colour;
+import enums.DevelopmentCardType;
+import enums.ResourceType;
 import exceptions.*;
-import game.build.*;
-import game.players.*;
+import game.build.Building;
+import game.build.City;
+import game.build.Road;
+import game.players.NetworkPlayer;
+import game.players.Player;
+import protocol.BoardProtos;
+import protocol.BuildProtos.PointProto;
+import protocol.EnumProtos.ResourceTypeProto;
+import protocol.EnumProtos.ResultProto;
+import protocol.EnumProtos.TradeStatusProto;
+import protocol.RequestProtos.*;
+import protocol.ResourceProtos.ResourceCount;
+import protocol.ResponseProtos.*;
+import protocol.TradeProtos.BankTradeProto;
+import protocol.TradeProtos.PlayerTradeProto;
+import protocol.TradeProtos.PortTradeProto;
 
 import java.net.InetAddress;
-import java.util.*;
-
-import board.*;
-import protocol.EnumProtos.*;
-import protocol.RequestProtos.*;
-import protocol.ResourceProtos.*;
-import protocol.BoardProtos.*;
-import protocol.ResponseProtos.*;
-import protocol.BuildProtos.*;
-import protocol.TradeProtos.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class Game
 {
-	private HexGrid grid;
-	private Map<Colour, Player> players;
-	Random dice;
-	private Player currentPlayer;
+	protected HexGrid grid;
+	private Map<Colour, Player> players; // Protected so that a client does NOT have access to other player info
+	protected Random dice;
+	protected Player currentPlayer;
 	private int current; // index of current player
-	private Player playerWithLongestRoad;
-	private int longestRoad;
-	private int numPlayers;
+	protected Colour playerWithLongestRoad;
+	protected int longestRoad;
+	protected int numPlayers;
 	public static final int NUM_PLAYERS = 4;
 	
 	public Game()
@@ -565,7 +576,8 @@ public class Game
 	private void checkLongestRoad()
 	{
 		Player current = getCurrentPlayer();
-		
+		Player playerWithLongestRoad = players.get(this.playerWithLongestRoad);
+
 		// Calculate who has longest road
 		int length = current.calcRoadLength();
 		if(length > longestRoad)
@@ -579,9 +591,53 @@ public class Game
 			if(playerWithLongestRoad != null) playerWithLongestRoad.setHasLongestRoad(false);
 			
 			longestRoad = length;
-			playerWithLongestRoad = getCurrentPlayer();
+			this.playerWithLongestRoad = getCurrentPlayer().getColour();
 			current.setHasLongestRoad(true);
 		}
+	}
+
+	/**
+	 * @return a representation of the board that is compatible with protofbufs
+	 */
+	public GiveBoardResponse getBoard()
+	{
+		GiveBoardResponse.Builder resp = GiveBoardResponse.newBuilder();
+		BoardProtos.BoardProto.Builder builder = BoardProtos.BoardProto.newBuilder();
+		int index = 0;
+
+		// Add edges
+		for(Edge e : getGrid().getEdgesAsList())
+		{
+			builder.addEdgesBuilder();
+			builder.setEdges(index++, e.toEdgeProto());
+		}
+
+		// Add hexes
+		index = 0;
+		for(Hex h : getGrid().getHexesAsList())
+		{
+			builder.addHexesBuilder();
+			builder.setHexes(index++, h.toHexProto());
+		}
+
+		// Add port
+		index = 0;
+		for(Port p : getGrid().getPortsAsList())
+		{
+			builder.addPortsBuilder();
+			builder.setPorts(index++, p.toPortProto());
+		}
+
+		// Add nodes
+		index = 0;
+		for(Node n : getGrid().getNodesAsList())
+		{
+			builder.addNodesBuilder();
+			builder.setNodes(index++, n.toProto());
+		}
+
+		resp.setBoard(builder.build());
+		return resp.build();
 	}
 
 	/**
@@ -675,49 +731,13 @@ public class Game
 		currentPlayer.setVp(currentPlayer.getVp() + 1);
 	}
 
-	/**
-	 * @return a representation of the board that is compatible with protofbufs
-	 */
-    public GiveBoardResponse getBoard()
-    {
-    	GiveBoardResponse.Builder resp = GiveBoardResponse.newBuilder();
-        BoardProto.Builder builder = BoardProto.newBuilder();
-        int index = 0;
-
-        // Add edges
-        for(Edge e : getGrid().getEdgesAsList())
-        {
-            builder.setEdges(index++, e.toEdgeProto());
-        }
-
-        // Add hexes
-        index = 0;
-        for(Hex h : getGrid().getHexesAsList())
-        {
-            builder.setHexes(index++, h.toHexProto());
-        }
-
-        // Add port
-        index = 0;
-        for(Port p : getGrid().getPortsAsList())
-        {
-            builder.setPorts(index++, p.toPortProto());
-        }
-
-
-        // Add nodes
-        index = 0;
-        for(Node n : getGrid().getNodesAsList())
-        {
-            builder.setNodes(index++, n.toProto());
-        }
-
-        resp.setBoard(builder.build());
-        return resp.build();
-    }
-
 	public void restorePlayerFromCopy(Player copy, DevelopmentCardType card)
 	{
 		players.get(copy.getColour()).restoreCopy(copy, card);
+	}
+
+	public void setTurn(Colour colour)
+	{
+		setCurrentPlayer(players.get(colour));
 	}
 }

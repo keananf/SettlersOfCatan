@@ -1,20 +1,22 @@
 package tests;
 
-import static org.junit.Assert.*;
-
-import java.awt.Point;
-
 import board.Edge;
 import board.Node;
 import enums.Colour;
 import exceptions.*;
-import game.build.*;
+import game.build.Road;
+import game.build.Settlement;
 import game.players.NetworkPlayer;
 import game.players.Player;
+import org.junit.Before;
+import org.junit.Test;
+import protocol.BuildProtos.PointProto;
+import protocol.RequestProtos.BuildSettlementRequest;
 
-import org.junit.*;
-import protocol.RequestProtos.*;
-import protocol.BuildProtos.*;
+import java.awt.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class RoadTests extends TestHelper
 {
@@ -49,7 +51,7 @@ public class RoadTests extends TestHelper
 	{	
 		// Set up player 2
 		Player p2 = new NetworkPlayer(Colour.RED);
-		game.addPlayer(p2);		
+		game.addPlayer(p2);
 
 		// Make roads
 		Edge e1 = n.getEdges().get(0); // Will be first road
@@ -116,8 +118,8 @@ public class RoadTests extends TestHelper
 	public void settlementBreaksRoadTest2() throws SettlementExistsException, CannotAffordException, CannotBuildRoadException, RoadExistsException, IllegalPlacementException {
 		// Set up player 2
 		Player p2 = new NetworkPlayer(Colour.RED);
-		game.addPlayer(p2);	
-		game.setCurrentPlayer(p2);
+		game.addPlayer(p2);
+		game.setCurrentPlayer(p2.getColour());
 		
 		Edge e1 = n.getEdges().get(0); // Will be first road
 		Node n1 = e1.getX().equals(n) ? e1.getY() : e1.getX(); // Opposite end of first road

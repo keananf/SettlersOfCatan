@@ -1,16 +1,25 @@
 package tests;
 
-import static org.junit.Assert.*;
-import board.*;
-import enums.*;
+import board.Edge;
+import board.Hex;
+import board.Node;
+import enums.Colour;
+import enums.DevelopmentCardType;
+import enums.ResourceType;
 import exceptions.*;
-import game.Game;
-import game.build.*;
-import game.players.*;
+import game.build.City;
+import game.build.Road;
+import game.build.Settlement;
+import game.players.NetworkPlayer;
+import game.players.Player;
+import server.ServerGame;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestHelper
 {
-	protected Game game;
+	protected ServerGame game;
 	protected Player p;
 	protected Node n;
 	protected Hex hex;
@@ -114,10 +123,10 @@ public class TestHelper
 
 	protected void reset()
 	{
-		game = new Game();
+		game = new ServerGame();
 		p = new NetworkPlayer(Colour.BLUE);
 		game.addPlayer(p);
-		game.setCurrentPlayer(p);
+		game.setCurrentPlayer(p.getColour());
 		
 		// Find hex without 'Generic'
 		for(int i = 0; i < game.getGrid().nodes.values().size(); i++)

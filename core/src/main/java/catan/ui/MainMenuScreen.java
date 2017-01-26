@@ -33,6 +33,7 @@ public class MainMenuScreen implements Screen
 		// Background
 		Image background = new Image(new Texture(Gdx.files.internal("splash.jpg")));
 		background.setScaling(Scaling.fill);
+		background.setFillParent(true);
 		ui.addActor(background);
 
 		// Menu setup

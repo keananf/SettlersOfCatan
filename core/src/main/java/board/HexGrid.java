@@ -3,6 +3,7 @@ package board;
 import enums.ResourceType;
 import protocol.BoardProtos.EdgeProto;
 import protocol.BoardProtos.PortProto;
+import protocol.BuildProtos;
 
 import java.awt.*;
 import java.util.*;
@@ -329,6 +330,20 @@ public class HexGrid
         return edges;
 
     }
+
+	/**
+	 * @param road the protobuf version of the road to find
+	 * @return the internal version of the road
+	 */
+	public Edge getEdge(BuildProtos.RoadProto road)
+	{
+		// Find nodes and edges
+		Node n1 = getNode(road.getP1().getX(), road.getP1().getY());
+		Node n2 = getNode(road.getP2().getX(), road.getP2().getY());
+		Edge e = n1.findEdge(n2);
+
+		return e;
+	}
 
 	/**
 	 * @param edge the protobuf version of the edge to find

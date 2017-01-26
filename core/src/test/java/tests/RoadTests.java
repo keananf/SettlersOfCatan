@@ -67,6 +67,26 @@ public class RoadTests extends TestHelper
 	}
 
 	@Test
+	public void buildRoadTest2() throws CannotAffordException, CannotBuildRoadException,
+			RoadExistsException, InvalidCoordinatesException, SettlementExistsException
+	{
+		// Set up request
+		RequestProtos.BuildRoadRequest.Builder req = RequestProtos.BuildRoadRequest.newBuilder();
+		req.setEdge(n.getEdges().get(0).toEdgeProto());
+
+		// Grant resources and build settlement so road construction is permitted
+		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(Road.getRoadCost());
+		makeSettlement(p, n);
+
+		// Dont worry about granting resources or anything.
+		// The checks for invalid coordinates happens first.
+		game.buildRoad(req.build(), p.getColour());
+		assertEquals(p.getNumResources(), 0);
+		assertEquals(p.getRoads().size(), 1);
+	}
+
+	@Test
 	public void settlementBreaksRoadTest() throws SettlementExistsException, CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{	
 		// Set up player 2

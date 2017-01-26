@@ -42,7 +42,7 @@ public abstract class GameState
 	/**
 	 * @return the grid
 	 */
-	protected HexGrid getGrid()
+	public HexGrid getGrid()
 	{
 		return grid;
 	}

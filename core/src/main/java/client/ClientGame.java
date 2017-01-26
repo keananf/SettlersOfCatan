@@ -1,14 +1,21 @@
 package client;
 
 import board.*;
-import enums.*;
+import enums.Colour;
+import enums.ResourceType;
 import game.GameState;
-import game.build.*;
+import game.build.Building;
+import game.build.City;
+import game.build.Road;
+import game.build.Settlement;
 import protocol.BoardProtos.*;
-import protocol.BuildProtos.*;
-import protocol.EnumProtos.*;
+import protocol.BuildProtos;
+import protocol.BuildProtos.BuildingProto;
+import protocol.BuildProtos.PointProto;
+import protocol.EnumProtos.BuildingTypeProto;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A game with additional methods for processing protobufs for the client
@@ -17,35 +24,9 @@ import java.util.*;
 public class ClientGame extends GameState
 {
     private boolean gameOver;
+    private int dice;
 
     public ClientGame() {}
-
-    public Building processNewBuilding(BuildingProto building)
-    {
-        // Extract information
-        BuildingTypeProto type = building.getType();
-        PointProto p = building.getP();
-        Node node = grid.getNode(p.getX(), p.getY());
-        Building b = null;
-
-        // Create and add the building
-        switch(type)
-        {
-            case CITY:
-                City c = new City(node, Colour.fromProto(building.getPlayerId()));
-                node.setSettlement(c);
-                b = c;
-                break;
-            case SETTLEMENT:
-                Settlement s = new Settlement(node, Colour.fromProto(building.getPlayerId()));
-                node.setSettlement(s);
-                b = s;
-                break;
-        }
-
-        return b;
-    }
-
 
     /**
      * @return a representation of the board that is compatible with protofbufs
@@ -165,5 +146,72 @@ public class ClientGame extends GameState
     public void setGameOver()
     {
         gameOver = true;
+    }
+
+    /**
+     * Updates the dice roll to the one received from the server
+     * @param dice the new dice roll
+     */
+    public void setDice(int dice)
+    {
+        this.dice = dice;
+    }
+
+    /**
+     * Swap the robber to the given point received from the server
+     * @param robberMove the robber's new position
+     */
+    public void moveRobber(PointProto robberMove)
+    {
+         grid.swapRobbers(grid.getHex(robberMove.getX(), robberMove.getY()));
+    }
+
+    /**
+     * Adds the new road received from the server to the board
+     * @param newRoad the new road to add
+     */
+    public Road processRoad(BuildProtos.RoadProto newRoad)
+    {
+        // Extract information and find edge
+        Edge newEdge = grid.getEdge(newRoad);
+        Colour col = Colour.fromProto(newRoad.getPlayerId());
+
+        // Make new road object
+        Road r = new Road(newEdge, col);
+        newEdge.setRoad(r);
+
+        return r;
+    }
+
+
+    public Building processNewBuilding(BuildingProto building)
+    {
+        // Extract information
+        BuildingTypeProto type = building.getType();
+        PointProto p = building.getP();
+        Node node = grid.getNode(p.getX(), p.getY());
+        Building b = null;
+
+        // Create and add the building
+        switch(type)
+        {
+            case CITY:
+                City c = new City(node, Colour.fromProto(building.getPlayerId()));
+                node.setSettlement(c);
+                b = c;
+                break;
+            case SETTLEMENT:
+                Settlement s = new Settlement(node, Colour.fromProto(building.getPlayerId()));
+                node.setSettlement(s);
+                b = s;
+                break;
+        }
+
+        return b;
+    }
+
+    public int getDice()
+    {
+        return dice;
     }
 }

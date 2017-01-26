@@ -269,7 +269,8 @@ public class HexGrid
      */
     public Hex getHex(int x, int y)
     {
-        return grid.get(new Point(x, y));
+		Point p = new Point(x, y);
+		return grid.containsKey(p) ? grid.get(p) : null;
     }
 
     /**
@@ -280,7 +281,8 @@ public class HexGrid
      */
     public Node getNode(int x, int y)
     {
-        return nodes.get(new Point(x, y));
+    	Point p = new Point(x, y);
+        return nodes.containsKey(p) ? nodes.get(p) : null;
     }
 
     /**

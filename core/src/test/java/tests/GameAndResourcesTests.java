@@ -1,11 +1,18 @@
 package tests;
 
-import static org.junit.Assert.*;
-
+import exceptions.CannotStealException;
+import exceptions.InvalidCoordinatesException;
 import exceptions.SettlementExistsException;
-import game.build.*;
+import game.build.City;
+import game.build.Settlement;
+import org.junit.Before;
+import org.junit.Test;
+import protocol.BoardProtos;
+import protocol.BuildProtos;
+import protocol.EnumProtos;
+import protocol.RequestProtos;
 
-import org.junit.*;
+import static org.junit.Assert.*;
 
 public class GameAndResourcesTests extends TestHelper
 {
@@ -49,6 +56,22 @@ public class GameAndResourcesTests extends TestHelper
 		game.allocateResources(hex.getChit());
 		assertFalse(hasResources(p));
 		assertTrue(p.getResources().get(hex.getResource()) == 0);
+	}
+
+	@Test(expected = InvalidCoordinatesException.class)
+	public void moveRobberInvalidCoordinate() throws InvalidCoordinatesException, CannotStealException
+	{
+		// Make a move robber request with invalid hex coordinates
+		RequestProtos.MoveRobberRequest.Builder req = RequestProtos.MoveRobberRequest.newBuilder();
+		BoardProtos.HexProto.Builder hex = this.hex.toHexProto().toBuilder();
+		BuildProtos.PointProto.Builder point = BuildProtos.PointProto.newBuilder();
+		point.setX(-10);
+		point.setY(-15);
+		hex.setP(point.build());
+		req.setHex(hex.build());
+		req.setColourToTakeFrom(EnumProtos.ColourProto.RED);
+
+		game.moveRobber(req.build(), p.getColour());
 	}
 	
 	@Test

@@ -1,11 +1,16 @@
 package tests;
 
-import static org.junit.Assert.*;
 import board.Node;
 import exceptions.*;
 import game.build.Settlement;
+import org.junit.Before;
+import org.junit.Test;
+import protocol.BuildProtos;
+import protocol.RequestProtos.BuildSettlementRequest;
+import protocol.RequestProtos.UpgradeSettlementRequest;
 
-import org.junit.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SettlementAndCityTests extends TestHelper
 {
@@ -88,5 +93,42 @@ public class SettlementAndCityTests extends TestHelper
 		{
 			e.printStackTrace();
 		}
+	}
+
+	@Test(expected = InvalidCoordinatesException.class)
+	public void invalidCoordinatesSettlement() throws CannotAffordException, InvalidCoordinatesException,
+											IllegalPlacementException, SettlementExistsException
+	{
+		// Create protobuf representation of building a settlement
+		BuildSettlementRequest.Builder req = BuildSettlementRequest.newBuilder();
+		BuildProtos.PointProto.Builder point = BuildProtos.PointProto.newBuilder();
+		point.setX(-10);
+		point.setY(-30);
+		req.setPoint(point.build());
+
+		// Grant resources
+		p.grantResources(Settlement.getSettlementCost());
+
+		// Try to build
+		game.buildSettlement(req.build(), p.getColour());
+	}
+
+
+	@Test(expected = InvalidCoordinatesException.class)
+	public void invalidCoordinatesCity() throws CannotAffordException, InvalidCoordinatesException,
+			IllegalPlacementException, SettlementExistsException, CannotUpgradeException
+	{
+		// Create protobuf representation of building a settlement
+		UpgradeSettlementRequest.Builder req = UpgradeSettlementRequest.newBuilder();
+		BuildProtos.PointProto.Builder point = BuildProtos.PointProto.newBuilder();
+		point.setX(-10);
+		point.setY(-30);
+		req.setPoint(point.build());
+
+		// Grant resources
+		p.grantResources(Settlement.getSettlementCost());
+
+		// Try to build
+		game.upgradeSettlement(req.build(), p.getColour());
 	}
 }

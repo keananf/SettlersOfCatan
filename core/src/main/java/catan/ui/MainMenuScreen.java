@@ -53,6 +53,7 @@ public class MainMenuScreen implements Screen
 					Gdx.app.debug("UI", "Button click: New single player game");
 
 					game.startNewServer();
+					game.setScreen(new GameScreen(game));
 				}
 			});
 			body.addActor(button);
@@ -65,6 +66,7 @@ public class MainMenuScreen implements Screen
 					Gdx.app.debug("UI", "Button click: Host new multiplayer game");
 
 					game.startNewServer();
+					game.setScreen(new GameScreen(game));
 				}
 			});
 			body.addActor(button);
@@ -75,6 +77,8 @@ public class MainMenuScreen implements Screen
 			button.addListener(new ChangeListener() {
 				public void changed(ChangeEvent event, Actor actor) {
 					Gdx.app.debug("UI", "Button click: Join existing multiplayer game");
+
+					game.setScreen(new GameScreen(game));
 				}
 			});
 			body.addActor(button);

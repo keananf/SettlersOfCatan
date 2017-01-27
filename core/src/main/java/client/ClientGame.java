@@ -3,6 +3,7 @@ package client;
 import board.*;
 import enums.*;
 import game.GameState;
+import game.InProgressTurn;
 import game.build.*;
 import protocol.BoardProtos.*;
 import protocol.BuildProtos.*;
@@ -17,8 +18,12 @@ import java.util.*;
 public class ClientGame extends GameState
 {
     private boolean gameOver;
-
-    public ClientGame() {}
+    public InProgressTurn inProgressTurn;
+    
+    public ClientGame() 
+    {
+    	inProgressTurn = new InProgressTurn();
+    }
 
     public Building processNewBuilding(BuildingProto building)
     {

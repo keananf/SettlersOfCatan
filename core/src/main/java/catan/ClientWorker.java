@@ -1,22 +1,22 @@
 import board.Edge;
 import board.Node;
-import game.Game;
+import client.ClientGame;
 import game.InProgressTurn;
 import enums.Move;
 import enums.ClickObject;
 
 public class ClientWorker
 {
-	private Game game;
+	private ClientGame game;
 
-	public ClientWorker(Game game)
+	public ClientWorker(ClientGame game)
 	{
 		this.game = game;
 	}
 
 	public void update()
 	{
-		InProgressTurn inProgressTurn = game.inProgressTurn;
+		InProgressTurn inProgressTurn = ClientGame.inProgressTurn;
 		
 		if(inProgressTurn.chosenMove != null)
 		{

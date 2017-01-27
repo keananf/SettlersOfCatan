@@ -2,6 +2,7 @@ package client;
 
 import board.*;
 import enums.Colour;
+import enums.DevelopmentCardType;
 import enums.ResourceType;
 import game.GameState;
 import game.build.Building;
@@ -15,7 +16,10 @@ import protocol.BuildProtos.PointProto;
 import protocol.EnumProtos;
 import protocol.EnumProtos.BuildingTypeProto;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A game with additional methods for processing protobufs for the client
@@ -25,13 +29,25 @@ public class ClientGame extends GameState
 {
     private boolean gameOver;
     private int dice;
-    private Map<Colour, Integer> scores, devCardsBought, knightsPlayed;
+    private Map<Colour, Integer> scores, boughtDevCards;
+    private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;
 
     public ClientGame()
     {
         scores = new HashMap<Colour, Integer>();
-        devCardsBought = new HashMap<Colour, Integer>();
-        knightsPlayed = new HashMap<Colour, Integer>();
+        boughtDevCards = new HashMap<Colour, Integer>();
+        playedDevCards = new HashMap<Colour, HashMap<DevelopmentCardType, Integer>>();
+
+        // Instantiate the playedDevCards maps
+        for(Colour c : Colour.values())
+        {
+            playedDevCards.put(c, new HashMap<DevelopmentCardType, Integer>());
+
+            for(DevelopmentCardType d : DevelopmentCardType.values())
+            {
+                playedDevCards.get(c).put(d, 0);
+            }
+        }
     }
 
     /**
@@ -217,14 +233,28 @@ public class ClientGame extends GameState
     }
 
     /**
+     * Records the played dev card for the given player
+     * @param type the played card
+     */
+    public void processPlayedDevCard(EnumProtos.DevelopmentCardProto type)
+    {
+        DevelopmentCardType card = DevelopmentCardType.fromProto(type);
+        Map<DevelopmentCardType, Integer> playedCards = playedDevCards.get(currentPlayer);
+
+        // Record card being played
+        int existing = playedCards.get(card);
+        playedCards.put(card, existing + 1);
+    }
+
+    /**
      * Records that the given player bought a dev card
      * @param boughtDevCard
      */
     public void recordDevCard(EnumProtos.ColourProto boughtDevCard)
     {
         Colour c = Colour.fromProto(boughtDevCard);
-        int existing = devCardsBought.containsKey(c) ? devCardsBought.get(c) : 0;
-        devCardsBought.put(c, existing + 1);
+        int existing = boughtDevCards.containsKey(c) ? boughtDevCards.get(c) : 0;
+        boughtDevCards.put(c, existing + 1);
     }
 
     /**
@@ -240,8 +270,16 @@ public class ClientGame extends GameState
      * Return the total amounts of dev cards owned by each player
      * @return
      */
-    public Map<Colour, Integer> getDevCardsBought()
+    public Map<Colour, Integer> getBoughtDevCards()
     {
-        return devCardsBought;
+        return boughtDevCards;
+    }
+
+    /**
+     * @return the map of played dev cards
+     */
+    public Map<Colour,HashMap<DevelopmentCardType,Integer>> getPlayedDevCards()
+    {
+        return playedDevCards;
     }
 }

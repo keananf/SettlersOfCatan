@@ -66,7 +66,7 @@ public class EventProcessor implements Runnable
 
             // Extract and process event
             case EVENT:
-                processEvent(msg.getEvent(), Colour.fromProto(msg.getPlayerColour()));
+                processEvent(msg.getEvent());
                 break;
 
             // Process new board, otherwise ignore
@@ -101,9 +101,8 @@ public class EventProcessor implements Runnable
     /**
      * Processes the event received from the server and updates the game state
      * @param ev the event
-     * @param colour the colour pertaining to the event
      */
-    private void processEvent(Event ev, Colour colour)
+    private void processEvent(Event ev)
     {
         // Switch on type of event
         switch(ev.getTypeCase())
@@ -129,6 +128,10 @@ public class EventProcessor implements Runnable
             case BOUGHTDEVCARD:
                 game.recordDevCard(ev.getBoughtDevCard());
                 break;
+            case PLAYEDDEVCARD:
+                game.processPlayedDevCard(ev.getPlayedDevCard().getType());
+                break;
+
             //TODO complete
         }
     }

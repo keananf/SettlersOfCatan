@@ -1,6 +1,6 @@
 package enums;
 
-import protocol.EnumProtos.*;
+import protocol.EnumProtos.DevelopmentCardProto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +57,36 @@ public enum DevelopmentCardType
 		return proto;
     }
 
+
+    public static DevelopmentCardType fromProto(DevelopmentCardProto type)
+    {
+        DevelopmentCardType card = null;
+
+        // Switch on type
+        switch(type)
+        {
+            case KNIGHT:
+                card = DevelopmentCardType.Knight;
+                break;
+            case LIBRARY:
+                card = DevelopmentCardType.Library;
+                break;
+            case MONOPOLY:
+                card = DevelopmentCardType.Monopoly;
+                break;
+            case ROAD_BUILDING:
+                card = DevelopmentCardType.RoadBuilding;
+                break;
+            case UNIVERSITY:
+                card = DevelopmentCardType.University;
+                break;
+            case YEAR_OF_PLENTY:
+                card = DevelopmentCardType.YearOfPlenty;
+                break;
+        }
+        return card;
+    }
+
     /**
      * @return a map containing the total cost for all resources
      */
@@ -76,5 +106,4 @@ public enum DevelopmentCardType
         // Randomly choose a development card to allocate
         return DevelopmentCardType.values()[rand.nextInt(DevelopmentCardType.values().length)];
     }
-
 }

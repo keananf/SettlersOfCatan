@@ -33,6 +33,7 @@ public class MainMenuScreen implements Screen
 		// Background
 		Image background = new Image(new Texture(Gdx.files.internal("splash.jpg")));
 		background.setScaling(Scaling.fill);
+		background.setFillParent(true);
 		ui.addActor(background);
 
 		// Menu setup
@@ -45,11 +46,15 @@ public class MainMenuScreen implements Screen
 		// Title
 		body.addActor(new Label("Settlers of Catan", game.skin, "title"));
 
+		// Buttons
 		{
 			TextButton button = new TextButton("New single player game", game.skin);
 			button.addListener(new ChangeListener() {
 				public void changed(ChangeEvent event, Actor actor) {
-					Gdx.app.debug("UI", "New single player game");
+					Gdx.app.debug("UI", "Button click: New single player game");
+
+					game.startNewServer();
+					game.setScreen(new GameScreen(game));
 				}
 			});
 			body.addActor(button);
@@ -59,7 +64,10 @@ public class MainMenuScreen implements Screen
 			TextButton button = new TextButton("Host new multiplayer game", game.skin);
 			button.addListener(new ChangeListener() {
 				public void changed(ChangeEvent event, Actor actor) {
-					Gdx.app.debug("UI", "Host new multiplayer game");
+					Gdx.app.debug("UI", "Button click: Host new multiplayer game");
+
+					game.startNewServer();
+					game.setScreen(new GameScreen(game));
 				}
 			});
 			body.addActor(button);
@@ -69,7 +77,9 @@ public class MainMenuScreen implements Screen
 			TextButton button = new TextButton("Join existing multiplayer game", game.skin);
 			button.addListener(new ChangeListener() {
 				public void changed(ChangeEvent event, Actor actor) {
-					Gdx.app.debug("UI", "Join existing multiplayer game");
+					Gdx.app.debug("UI", "Button click: Join existing multiplayer game");
+
+					game.setScreen(new GameScreen(game));
 				}
 			});
 			body.addActor(button);
@@ -106,6 +116,7 @@ public class MainMenuScreen implements Screen
 		ui.dispose();
 	}
 
+	// Required but unused
 	@Override public void pause() {}
 	@Override public void resume() {}
 	@Override public void hide() {}

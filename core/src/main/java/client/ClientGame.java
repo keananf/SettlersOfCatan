@@ -1,14 +1,25 @@
 package client;
 
 import board.*;
-import enums.*;
+import enums.Colour;
+import enums.DevelopmentCardType;
+import enums.ResourceType;
 import game.GameState;
-import game.build.*;
+import game.build.Building;
+import game.build.City;
+import game.build.Road;
+import game.build.Settlement;
 import protocol.BoardProtos.*;
-import protocol.BuildProtos.*;
-import protocol.EnumProtos.*;
+import protocol.BuildProtos;
+import protocol.BuildProtos.BuildingProto;
+import protocol.BuildProtos.PointProto;
+import protocol.EnumProtos;
+import protocol.EnumProtos.BuildingTypeProto;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A game with additional methods for processing protobufs for the client
@@ -17,35 +28,27 @@ import java.util.*;
 public class ClientGame extends GameState
 {
     private boolean gameOver;
+    private int dice;
+    private Map<Colour, Integer> scores, boughtDevCards;
+    private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;
 
-    public ClientGame() {}
-
-    public Building processNewBuilding(BuildingProto building)
+    public ClientGame()
     {
-        // Extract information
-        BuildingTypeProto type = building.getType();
-        PointProto p = building.getP();
-        Node node = grid.getNode(p.getX(), p.getY());
-        Building b = null;
+        scores = new HashMap<Colour, Integer>();
+        boughtDevCards = new HashMap<Colour, Integer>();
+        playedDevCards = new HashMap<Colour, HashMap<DevelopmentCardType, Integer>>();
 
-        // Create and add the building
-        switch(type)
+        // Instantiate the playedDevCards maps
+        for(Colour c : Colour.values())
         {
-            case CITY:
-                City c = new City(node, Colour.fromProto(building.getPlayerId()));
-                node.setSettlement(c);
-                b = c;
-                break;
-            case SETTLEMENT:
-                Settlement s = new Settlement(node, Colour.fromProto(building.getPlayerId()));
-                node.setSettlement(s);
-                b = s;
-                break;
+            playedDevCards.put(c, new HashMap<DevelopmentCardType, Integer>());
+
+            for(DevelopmentCardType d : DevelopmentCardType.values())
+            {
+                playedDevCards.get(c).put(d, 0);
+            }
         }
-
-        return b;
     }
-
 
     /**
      * @return a representation of the board that is compatible with protofbufs
@@ -165,5 +168,118 @@ public class ClientGame extends GameState
     public void setGameOver()
     {
         gameOver = true;
+    }
+
+    /**
+     * Updates the dice roll to the one received from the server
+     * @param dice the new dice roll
+     */
+    public void setDice(int dice)
+    {
+        this.dice = dice;
+    }
+
+    /**
+     * Swap the robber to the given point received from the server
+     * @param robberMove the robber's new position
+     */
+    public void moveRobber(PointProto robberMove)
+    {
+         grid.swapRobbers(grid.getHex(robberMove.getX(), robberMove.getY()));
+    }
+
+    /**
+     * Adds the new road received from the server to the board
+     * @param newRoad the new road to add
+     */
+    public Road processRoad(BuildProtos.RoadProto newRoad)
+    {
+        // Extract information and find edge
+        Edge newEdge = grid.getEdge(newRoad);
+        Colour col = Colour.fromProto(newRoad.getPlayerId());
+
+        // Make new road object
+        Road r = new Road(newEdge, col);
+        newEdge.setRoad(r);
+
+        return r;
+    }
+
+
+    public Building processNewBuilding(BuildingProto building)
+    {
+        // Extract information
+        BuildingTypeProto type = building.getType();
+        PointProto p = building.getP();
+        Node node = grid.getNode(p.getX(), p.getY());
+        Building b = null;
+
+        // Create and add the building
+        switch(type)
+        {
+            case CITY:
+                City c = new City(node, Colour.fromProto(building.getPlayerId()));
+                node.setSettlement(c);
+                b = c;
+                break;
+            case SETTLEMENT:
+                Settlement s = new Settlement(node, Colour.fromProto(building.getPlayerId()));
+                node.setSettlement(s);
+                b = s;
+                break;
+        }
+
+        return b;
+    }
+
+    /**
+     * Records the played dev card for the given player
+     * @param type the played card
+     */
+    public void processPlayedDevCard(EnumProtos.DevelopmentCardProto type)
+    {
+        DevelopmentCardType card = DevelopmentCardType.fromProto(type);
+        Map<DevelopmentCardType, Integer> playedCards = playedDevCards.get(currentPlayer);
+
+        // Record card being played
+        int existing = playedCards.get(card);
+        playedCards.put(card, existing + 1);
+    }
+
+    /**
+     * Records that the given player bought a dev card
+     * @param boughtDevCard
+     */
+    public void recordDevCard(EnumProtos.ColourProto boughtDevCard)
+    {
+        Colour c = Colour.fromProto(boughtDevCard);
+        int existing = boughtDevCards.containsKey(c) ? boughtDevCards.get(c) : 0;
+        boughtDevCards.put(c, existing + 1);
+    }
+
+    /**
+     * Return the current dice roll
+     * @return
+     */
+    public int getDice()
+    {
+        return dice;
+    }
+
+    /**
+     * Return the total amounts of dev cards owned by each player
+     * @return
+     */
+    public Map<Colour, Integer> getBoughtDevCards()
+    {
+        return boughtDevCards;
+    }
+
+    /**
+     * @return the map of played dev cards
+     */
+    public Map<Colour,HashMap<DevelopmentCardType,Integer>> getPlayedDevCards()
+    {
+        return playedDevCards;
     }
 }

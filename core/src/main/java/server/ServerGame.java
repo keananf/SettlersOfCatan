@@ -238,16 +238,23 @@ public class ServerGame extends GameState
 	 * @throws CannotUpgradeException 
 	 * @throws CannotAffordException 
 	 */
-	public UpgradeSettlementResponse upgradeSettlement(UpgradeSettlementRequest move, Colour playerColour) throws CannotAffordException, CannotUpgradeException
+	public UpgradeSettlementResponse upgradeSettlement(UpgradeSettlementRequest move, Colour playerColour)
+			throws CannotAffordException, CannotUpgradeException, InvalidCoordinatesException
 	{
 		UpgradeSettlementResponse.Builder resp = UpgradeSettlementResponse.newBuilder();
         Player p = players.get(playerColour);
-		Node n = grid.getNode(move.getPoint().getX(), move.getPoint().getY());
-		
-		// Try to upgrade settlement
-		p.upgradeSettlement(n);
+		Node node = grid.getNode(move.getPoint().getX(), move.getPoint().getY());
 
-		resp.setNewBuilding(n.getSettlement().toProto());
+		// Invalid request coordinates.
+		if(node == null)
+		{
+			throw new InvalidCoordinatesException(move.getPoint().getX(), move.getPoint().getY());
+		}
+
+		// Try to upgrade settlement
+		p.upgradeSettlement(node);
+
+		resp.setNewBuilding(node.getSettlement().toProto());
 		return resp.build();
     }
 	
@@ -260,13 +267,20 @@ public class ServerGame extends GameState
 	 * @throws CannotAffordException 
 	 * @throws SettlementExistsException 
 	 */
-	public BuildSettlementResponse buildSettlement(BuildSettlementRequest request, Colour playerColour) throws CannotAffordException, IllegalPlacementException, SettlementExistsException
+	public BuildSettlementResponse buildSettlement(BuildSettlementRequest request, Colour playerColour)
+			throws CannotAffordException, IllegalPlacementException, SettlementExistsException, InvalidCoordinatesException
 	{
 		BuildSettlementResponse.Builder resp = BuildSettlementResponse.newBuilder();
         Player p = players.get(playerColour);
         PointProto pointProto = request.getPoint();
 		Node node = grid.getNode(pointProto.getX(), pointProto.getY());
-		
+
+		// Invalid request coordinates.
+		if(node == null)
+		{
+			throw new InvalidCoordinatesException(pointProto.getX(), pointProto.getY());
+		}
+
 		// Try to build settlement
 		p.buildSettlement(node);
 		
@@ -348,7 +362,8 @@ public class ServerGame extends GameState
 	 * @throws CannotStealException if the player cannot steal from the requested player
 	 * @throws DoesNotOwnException if the player does not own a Knight card
 	 */
-	public PlayKnightCardResponse playKnightCard(PlayKnightCardRequest request, Colour playerColour) throws CannotStealException, DoesNotOwnException
+	public PlayKnightCardResponse playKnightCard(PlayKnightCardRequest request, Colour playerColour)
+			throws CannotStealException, DoesNotOwnException, InvalidCoordinatesException
 	{
 		PlayKnightCardResponse.Builder resp = PlayKnightCardResponse.newBuilder();
 
@@ -368,13 +383,20 @@ public class ServerGame extends GameState
 	 * @return return message
 	 * @throws CannotStealException if the specified player cannot provide a resource 
 	 */
-	public MoveRobberResponse moveRobber(MoveRobberRequest move, Colour playerColour) throws CannotStealException
+	public MoveRobberResponse moveRobber(MoveRobberRequest move, Colour playerColour) throws CannotStealException,
+																						InvalidCoordinatesException
 	{
         MoveRobberResponse.Builder resp = MoveRobberResponse.newBuilder();
 
 		// Retrieve the new hex the robber will move to.
         PointProto point = move.getHex().getP();
 		Hex newHex = grid.getHex(point.getX(), point.getY());
+
+		// Invalid request coordinates.
+		if(newHex == null)
+		{
+			throw new InvalidCoordinatesException(point.getX(), point.getY());
+		}
 
 		Colour otherColour = Colour.fromProto(move.getColourToTakeFrom());
 		Player other = players.get(otherColour);
@@ -411,7 +433,8 @@ public class ServerGame extends GameState
 	 * @throws CannotAffordException 
 	 */
 	public PlayRoadBuildingCardResponse playBuildRoadsCard(PlayRoadBuildingCardRequest request, Colour playerColour)
-			throws CannotAffordException, CannotBuildRoadException, RoadExistsException, DoesNotOwnException
+			throws CannotAffordException, CannotBuildRoadException,
+				RoadExistsException, DoesNotOwnException, InvalidCoordinatesException
 	{
 		PlayRoadBuildingCardResponse.Builder resp = PlayRoadBuildingCardResponse.newBuilder();
 
@@ -520,7 +543,8 @@ public class ServerGame extends GameState
 	 * @throws CannotBuildRoadException 
 	 * @throws CannotAffordException 
 	 */
-	public BuildRoadResponse buildRoad(BuildRoadRequest request, Colour colour) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public BuildRoadResponse buildRoad(BuildRoadRequest request, Colour colour) throws CannotAffordException,
+					CannotBuildRoadException, RoadExistsException, InvalidCoordinatesException
 	{
 		Player p = players.get(colour);
 		PointProto p1 = request.getEdge().getP1(), p2 = request.getEdge().getP2();
@@ -528,7 +552,17 @@ public class ServerGame extends GameState
 		Node n2 = grid.getNode(p2.getX(), p2.getY());
 		Edge edge  = null;
         BuildRoadResponse.Builder response = BuildRoadResponse.newBuilder();
-		
+
+        // Check valid coordinates
+        if(n == null)
+		{
+			throw new InvalidCoordinatesException(p1.getX(), p1.getY());
+		}
+		if(n2 == null)
+		{
+			throw new InvalidCoordinatesException(p2.getX(), p2.getY());
+		}
+
 		// Find edge
 		for(Edge e : n.getEdges())
 		{

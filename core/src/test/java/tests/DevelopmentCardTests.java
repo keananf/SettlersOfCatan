@@ -1,24 +1,27 @@
 package tests;
 
-import static org.junit.Assert.*;
+import board.Edge;
+import board.Hex;
+import board.Node;
+import enums.Colour;
+import enums.DevelopmentCardType;
+import enums.ResourceType;
+import exceptions.*;
+import game.build.Road;
+import game.build.Settlement;
+import game.players.NetworkPlayer;
+import game.players.Player;
+import org.junit.Before;
+import org.junit.Test;
+import protocol.BoardProtos.EdgeProto;
+import protocol.BuildProtos;
+import protocol.RequestProtos.*;
+import protocol.ResponseProtos.MoveRobberResponse;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import board.Edge;
-import board.Hex;
-import board.Node;
-import enums.*;
-import exceptions.*;
-import game.build.Road;
-import game.build.Settlement;
-import game.players.*;
-
-import org.junit.*;
-import protocol.BoardProtos.*;
-import protocol.BuildProtos;
-import protocol.RequestProtos.*;
-import protocol.ResponseProtos.*;
+import static org.junit.Assert.*;
 
 public class DevelopmentCardTests extends TestHelper
 {
@@ -103,7 +106,8 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test
-	public void playKnightNoResourcesTest() throws SettlementExistsException, CannotAffordException, IllegalPlacementException, CannotStealException, DoesNotOwnException
+	public void playKnightNoResourcesTest() throws SettlementExistsException, CannotAffordException,
+			IllegalPlacementException, CannotStealException, DoesNotOwnException, InvalidCoordinatesException
 	{
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
@@ -135,7 +139,8 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test(expected = DoesNotOwnException.class)
-	public void cannotPlayKnightTest() throws CannotAffordException, IllegalPlacementException, DoesNotOwnException, CannotStealException
+	public void cannotPlayKnightTest() throws CannotAffordException, IllegalPlacementException,
+			DoesNotOwnException, CannotStealException, InvalidCoordinatesException
 	{
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
@@ -161,7 +166,8 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test
-	public void cannotStealFromSpecifiedPlayerTest() throws CannotAffordException, IllegalPlacementException, DoesNotOwnException
+	public void cannotStealFromSpecifiedPlayerTest() throws CannotAffordException, IllegalPlacementException,
+			DoesNotOwnException, InvalidCoordinatesException
 	{
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
@@ -202,8 +208,9 @@ public class DevelopmentCardTests extends TestHelper
 	}
 	
 	@Test
-	public void playKnightTakeResourceTest() throws SettlementExistsException, CannotAffordException, IllegalPlacementException, CannotStealException
-	{	
+	public void playKnightTakeResourceTest() throws SettlementExistsException, CannotAffordException,
+			IllegalPlacementException, CannotStealException, InvalidCoordinatesException
+	{
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
 		// Grant
@@ -254,7 +261,8 @@ public class DevelopmentCardTests extends TestHelper
 	}
 	
 	@Test
-	public void playBuildRoadsCardTest() throws SettlementExistsException, CannotBuildRoadException, RoadExistsException, CannotAffordException, DoesNotOwnException
+	public void playBuildRoadsCardTest() throws SettlementExistsException, CannotBuildRoadException,
+			RoadExistsException, CannotAffordException, DoesNotOwnException, InvalidCoordinatesException
 	{
 		// Set up entities
 		Edge e1 = n.getEdges().get(0), e2 = n.getEdges().get(1);
@@ -316,7 +324,8 @@ public class DevelopmentCardTests extends TestHelper
 	 * @throws CannotAffordException
 	 */
 	@Test
-	public void playBuildRoadsCardFailure() throws SettlementExistsException, CannotBuildRoadException, CannotAffordException, DoesNotOwnException
+	public void playBuildRoadsCardFailure() throws SettlementExistsException, CannotBuildRoadException,
+			CannotAffordException, DoesNotOwnException, InvalidCoordinatesException
 	{
 		// Set up variables
 		Edge e1 = n.getEdges().get(0);

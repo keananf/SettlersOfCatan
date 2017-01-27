@@ -309,6 +309,7 @@ public abstract class Player
 		spendResources(c.getCost());
 		
 		// Override settlement
+		settlements.remove(node.getSettlement());
 		node.setSettlement(c);
 		settlements.put(p, c);
 	}

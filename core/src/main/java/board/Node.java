@@ -1,13 +1,13 @@
 package board;
 
-import java.util.*;
-
-import enums.Colour;
-import enums.ResourceType;
-import game.build.*;
-import protocol.BoardProtos.*;
+import game.build.Building;
+import game.build.City;
+import protocol.BoardProtos.NodeProto;
 import protocol.BuildProtos;
 import protocol.EnumProtos;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class representing an individual node in catan (intersection of three hexes)

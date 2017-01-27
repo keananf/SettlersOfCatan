@@ -1,13 +1,20 @@
 package game.players;
 
-import java.awt.Point;
-import java.util.*;
-
-import board.*;
-import enums.*;
+import board.Edge;
+import board.Node;
+import enums.Colour;
+import enums.DevelopmentCardType;
+import enums.ResourceType;
 import exceptions.*;
-import game.build.*;
-import protocol.ResourceProtos.*;
+import game.build.Building;
+import game.build.City;
+import game.build.Road;
+import game.build.Settlement;
+import protocol.ResourceProtos.ResourceCount;
+
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 /**
  * Abstract class describing a player (AI, or network)
@@ -245,23 +252,6 @@ public abstract class Player
 
 	/**
 	 * Attempts to purchase a development card for this player
-	 * @return the bought development card
-	 * @throws CannotAffordException
-	 */
-	public DevelopmentCardType buyDevelopmentCard() throws CannotAffordException
-	{
-		DevelopmentCardType card = DevelopmentCardType.chooseRandom(colour);
-		int existing = cards.containsKey(card) ? cards.get(card) : 0;
-
-		// Try to buy a development card
-		spendResources(DevelopmentCardType.getCardCost());
-		cards.put(card, existing + 1);
-
-		return card;
-	}
-
-	/**
-	 * Attempts to purchase a development card for this player
 	 * @param card the desired type. Testing only
 	 * @return the bought development card
 	 * @throws CannotAffordException
@@ -294,6 +284,11 @@ public abstract class Player
 		int existing = cards.containsKey(card) ? cards.get(card) : 0;
 		cards.put(card, existing - 1);
 
+		// Add up knights used
+		if(card.equals(DevelopmentCardType.Knight))
+		{
+			knightsUsed++;
+		}
 	}
 	
 	/**

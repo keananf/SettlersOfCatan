@@ -71,7 +71,7 @@ public enum DevelopmentCardType
         return resources;
     }
 
-    public static DevelopmentCardType chooseRandom(Colour colour)
+    public static DevelopmentCardType chooseRandom()
     {
         // Randomly choose a development card to allocate
         return DevelopmentCardType.values()[rand.nextInt(DevelopmentCardType.values().length)];

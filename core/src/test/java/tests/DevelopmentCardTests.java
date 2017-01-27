@@ -84,7 +84,7 @@ public class DevelopmentCardTests extends TestHelper
 		
 		// Give resources to new player and add them to game
 		grant.put(r, 2);
-		game.addPlayer(p2);		
+		game.addPlayer(p2);
 		p2.grantResources(grant);
 
 		// Set up request

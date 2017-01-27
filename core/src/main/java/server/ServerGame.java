@@ -1,38 +1,51 @@
-package game;
-
-import enums.*;
-import exceptions.*;
-import game.build.*;
-import game.players.*;
-
-import java.net.InetAddress;
-import java.util.*;
+package server;
 
 import board.*;
-import protocol.EnumProtos.*;
+import enums.Colour;
+import enums.DevelopmentCardType;
+import enums.ResourceType;
+import exceptions.*;
+import game.GameState;
+import game.build.Building;
+import game.build.City;
+import game.build.Road;
+import game.players.NetworkPlayer;
+import game.players.Player;
+import game.InProgressTurn;
+import protocol.BoardProtos;
+import protocol.BuildProtos.PointProto;
+import protocol.EnumProtos.ResourceTypeProto;
+import protocol.EnumProtos.ResultProto;
+import protocol.EnumProtos.TradeStatusProto;
 import protocol.RequestProtos.*;
-import protocol.ResourceProtos.*;
-import protocol.BoardProtos.*;
+import protocol.ResourceProtos.ResourceCount;
 import protocol.ResponseProtos.*;
-import protocol.BuildProtos.*;
-import protocol.TradeProtos.*;
+import protocol.TradeProtos.BankTradeProto;
+import protocol.TradeProtos.PlayerTradeProto;
+import protocol.TradeProtos.PortTradeProto;
 
-public class Game
+import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+public class ServerGame extends GameState
 {
-	private HexGrid grid;
-	private Map<Colour, Player> players;
-	Random dice;
-	private Player currentPlayer;
+	private Map<Colour, Player> players; // Protected so that a client does NOT have access to other player info
+	private Random dice;
 	private int current; // index of current player
+
 	private Player playerWithLongestRoad;
 	private int longestRoad;
 	private int numPlayers;
 	public InProgressTurn inProgressTurn;
+
 	public static final int NUM_PLAYERS = 4;
-	
-	public Game()
+
+	public ServerGame()
 	{
-		grid = new HexGrid();
+		super();
 		players = new HashMap<Colour, Player>();
 		dice = new Random();
 		inProgressTurn = new InProgressTurn();
@@ -46,7 +59,7 @@ public class Game
 		int dice = this.dice.nextInt(NUM_PLAYERS);
 		
 		current = dice;
-		setCurrentPlayer(getPlayersAsList()[dice]);
+		setCurrentPlayer(getPlayersAsList()[dice].getColour());
 	}
 
 	/**
@@ -76,7 +89,7 @@ public class Game
 			for(Building building : player.getSettlements().values())
 			{
 				int amount = building instanceof City ? 2 : 1;
-				List<Hex> hexes = ((Building)building).getNode().getHexes();
+				List<Hex> hexes = building.getNode().getHexes();
 				
 				// for each hex on this settlement
 				for(Hex hex : hexes)
@@ -137,24 +150,6 @@ public class Game
 		recipient.spendResources(offer);
 		recipient.grantResources(request);
 		return TradeStatusProto.ACCEPT;
-	}
-
-	/**
-	 * Translates the protobuf representation of a resources allocation into a map.
-	 * @param resources the resources received from the network
-	 * @return a map of resources to number
-	 */
-	private Map<ResourceType,Integer> processResources(ResourceCount resources)
-	{
-		Map<ResourceType,Integer> ret = new HashMap<ResourceType,Integer>();
-
-		ret.put(ResourceType.Brick, resources.hasBrick() ? resources.getBrick() : 0);
-		ret.put(ResourceType.Lumber, resources.hasLumber() ? resources.getLumber() : 0);
-		ret.put(ResourceType.Grain, resources.hasGrain() ? resources.getGrain() : 0);
-		ret.put(ResourceType.Ore, resources.hasOre() ? resources.getOre() : 0);
-		ret.put(ResourceType.Wool, resources.hasWool() ? resources.getWool() : 0);
-
-		return ret;
 	}
 
 	/**
@@ -347,7 +342,7 @@ public class Game
 		
 		// Try to buy card
 		// Return the response with the card parameter set
-        DevelopmentCardType card = p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
+        DevelopmentCardType card = p.buyDevelopmentCard(DevelopmentCardType.chooseRandom());
         resp.setDevelopmentCard(DevelopmentCardType.toProto(card));
 		return resp.build();
 	}
@@ -399,7 +394,7 @@ public class Game
 			// Randomly remove resource
 			if(n.getSettlement() != null && n.getSettlement().getPlayerColour().equals(otherColour))
 			{
-                resp.setResource(ResourceType.toProto(currentPlayer.takeResource(other)));
+                resp.setResource(ResourceType.toProto(players.get(currentPlayer).takeResource(other)));
 				valid = true;
 			}
 		}
@@ -427,7 +422,7 @@ public class Game
 	{
 		PlayRoadBuildingCardResponse.Builder resp = PlayRoadBuildingCardResponse.newBuilder();
 
-		playDevelopmentCard(DevelopmentCardType.RoadBuilding, currentPlayer.getColour());
+		playDevelopmentCard(DevelopmentCardType.RoadBuilding, currentPlayer);
 
 		// Set responses and return
 		resp.setResponse1(buildRoad(request.getRequest1(), playerColour));
@@ -443,7 +438,7 @@ public class Game
 	{
         SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
 
-        playDevelopmentCard(DevelopmentCardType.University, currentPlayer.getColour());
+        playDevelopmentCard(DevelopmentCardType.University, currentPlayer);
         grantVpPoint();
 
         resp.setResult(ResultProto.SUCCESS);
@@ -458,7 +453,7 @@ public class Game
 	{
         SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
 
-		playDevelopmentCard(DevelopmentCardType.Library, currentPlayer.getColour());
+		playDevelopmentCard(DevelopmentCardType.Library, currentPlayer);
 		grantVpPoint();
 
         resp.setResult(ResultProto.SUCCESS);
@@ -474,13 +469,13 @@ public class Game
 	{
 		PlayYearOfPlentyCardResponse.Builder resp = PlayYearOfPlentyCardResponse.newBuilder();
 
-		playDevelopmentCard(DevelopmentCardType.YearOfPlenty, currentPlayer.getColour());
+		playDevelopmentCard(DevelopmentCardType.YearOfPlenty, currentPlayer);
 
 		// Set up grant
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 		grant.put(ResourceType.fromProto(request.getR1()), 1);
 		grant.put(ResourceType.fromProto(request.getR2()), 1);
-		currentPlayer.grantResources(grant);
+		players.get(currentPlayer).grantResources(grant);
 
 		resp.setR1(request.getR1());
 		resp.setR2(request.getR2());
@@ -499,7 +494,7 @@ public class Game
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 		int sum = 0;
 
-		playDevelopmentCard(DevelopmentCardType.Monopoly, currentPlayer.getColour());
+		playDevelopmentCard(DevelopmentCardType.Monopoly, currentPlayer);
 
 		// for each player
 		for(Player p : players.values())
@@ -515,7 +510,7 @@ public class Game
 				sum += num;
 			} 
 			catch (CannotAffordException e) { /* Will never happen */ }
-			currentPlayer.grantResources(grant);
+			players.get(currentPlayer).grantResources(grant);
 		}
 		
 		// Return message is string showing number of resources taken
@@ -566,8 +561,9 @@ public class Game
 	 */
 	private void checkLongestRoad()
 	{
-		Player current = getCurrentPlayer();
-		
+		Player current = players.get(currentPlayer);
+		Player playerWithLongestRoad = players.get(this.playerWithLongestRoad);
+
 		// Calculate who has longest road
 		int length = current.calcRoadLength();
 		if(length > longestRoad)
@@ -581,9 +577,53 @@ public class Game
 			if(playerWithLongestRoad != null) playerWithLongestRoad.setHasLongestRoad(false);
 			
 			longestRoad = length;
-			playerWithLongestRoad = getCurrentPlayer();
+			this.playerWithLongestRoad = currentPlayer;
 			current.setHasLongestRoad(true);
 		}
+	}
+
+	/**
+	 * @return a representation of the board that is compatible with protofbufs
+	 */
+	public GiveBoardResponse getBoard()
+	{
+		GiveBoardResponse.Builder resp = GiveBoardResponse.newBuilder();
+		BoardProtos.BoardProto.Builder builder = BoardProtos.BoardProto.newBuilder();
+		int index = 0;
+
+		// Add edges
+		for(Edge e : getGrid().getEdgesAsList())
+		{
+			builder.addEdgesBuilder();
+			builder.setEdges(index++, e.toEdgeProto());
+		}
+
+		// Add hexes
+		index = 0;
+		for(Hex h : getGrid().getHexesAsList())
+		{
+			builder.addHexesBuilder();
+			builder.setHexes(index++, h.toHexProto());
+		}
+
+		// Add port
+		index = 0;
+		for(Port p : getGrid().getPortsAsList())
+		{
+			builder.addPortsBuilder();
+			builder.setPorts(index++, p.toPortProto());
+		}
+
+		// Add nodes
+		index = 0;
+		for(Node n : getGrid().getNodesAsList())
+		{
+			builder.addNodesBuilder();
+			builder.setNodes(index++, n.toProto());
+		}
+
+		resp.setBoard(builder.build());
+		return resp.build();
 	}
 
 	/**
@@ -594,8 +634,8 @@ public class Game
 	{
 		EndMoveResponse.Builder resp = EndMoveResponse.newBuilder();
 
-		setCurrentPlayer(getPlayersAsList()[++current % NUM_PLAYERS]);
-		resp.setNewTurn(Colour.toProto(currentPlayer.getColour()));
+		setCurrentPlayer(getPlayersAsList()[++current % NUM_PLAYERS].getColour());
+		resp.setNewTurn(Colour.toProto(currentPlayer));
 
 		return resp.build();
 	}
@@ -656,67 +696,11 @@ public class Game
 		players.put(p.getColour(), p);
 	}
 
-	/**
-	 * @return the currentPlayer
-	 */
-	public Player getCurrentPlayer()
-	{
-		return currentPlayer;
-	}
-
-	/**
-	 * @param currentPlayer the currentPlayer to set
-	 */
-	public void setCurrentPlayer(Player currentPlayer)
-	{
-		this.currentPlayer = currentPlayer;
-	}
-
 	private void grantVpPoint()
 	{
+		Player currentPlayer = players.get(this.currentPlayer);
 		currentPlayer.setVp(currentPlayer.getVp() + 1);
 	}
-
-	/**
-	 * @return a representation of the board that is compatible with protofbufs
-	 */
-    public GiveBoardResponse getBoard()
-    {
-    	GiveBoardResponse.Builder resp = GiveBoardResponse.newBuilder();
-        BoardProto.Builder builder = BoardProto.newBuilder();
-        int index = 0;
-
-        // Add edges
-        for(Edge e : getGrid().getEdgesAsList())
-        {
-            builder.setEdges(index++, e.toEdgeProto());
-        }
-
-        // Add hexes
-        index = 0;
-        for(Hex h : getGrid().getHexesAsList())
-        {
-            builder.setHexes(index++, h.toHexProto());
-        }
-
-        // Add port
-        index = 0;
-        for(Port p : getGrid().getPortsAsList())
-        {
-            builder.setPorts(index++, p.toPortProto());
-        }
-
-
-        // Add nodes
-        index = 0;
-        for(Node n : getGrid().getNodesAsList())
-        {
-            builder.setNodes(index++, n.toProto());
-        }
-
-        resp.setBoard(builder.build());
-        return resp.build();
-    }
 
 	public void restorePlayerFromCopy(Player copy, DevelopmentCardType card)
 	{

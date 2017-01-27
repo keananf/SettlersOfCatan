@@ -27,6 +27,7 @@ public class Game
 	private Player playerWithLongestRoad;
 	private int longestRoad;
 	private int numPlayers;
+	protected InProgressTurn inProgressTurn;
 	public static final int NUM_PLAYERS = 4;
 	
 	public Game()
@@ -34,6 +35,7 @@ public class Game
 		grid = new HexGrid();
 		players = new HashMap<Colour, Player>();
 		dice = new Random();
+		inProgressTurn = new InProgressTurn();
 	}
 
 	/**

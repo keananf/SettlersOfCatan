@@ -5,6 +5,7 @@ import board.HexGrid;
 import board.Node;
 import client.ClientGame;
 import enums.Colour;
+import enums.DevelopmentCardType;
 import game.build.City;
 import game.build.Settlement;
 import org.junit.Before;
@@ -122,7 +123,22 @@ public class ClientProcessTests extends TestHelper
     }
 
     @Test
-    public void boughtDevCard()
+    public void playedDevCardTest()
+    {
+        // Set up request
+        EventProtos.Event.Builder ev = EventProtos.Event.newBuilder();
+        EventProtos.PlayDevCardEvent.Builder card = EventProtos.PlayDevCardEvent.newBuilder();
+        card.setPlayerColour(Colour.toProto(p.getColour()));
+        card.setType(EnumProtos.DevelopmentCardProto.KNIGHT);
+        ev.setPlayedDevCard(card.build());
+
+        // Move and check
+        clientGame.setTurn(p.getColour());
+        clientGame.processPlayedDevCard(ev.getPlayedDevCard().getType());
+        assertTrue(clientGame.getPlayedDevCards().get(p.getColour()).get(DevelopmentCardType.Knight) == 1);
+    }
+    @Test
+    public void boughtDevCardTest()
     {
         // Set up request
         EventProtos.Event.Builder ev = EventProtos.Event.newBuilder();
@@ -130,7 +146,7 @@ public class ClientProcessTests extends TestHelper
 
         // Move and check
         clientGame.recordDevCard(ev.getBoughtDevCard());
-        assertTrue(clientGame.getDevCardsBought().get(Colour.RED) == 1);
+        assertTrue(clientGame.getBoughtDevCards().get(Colour.RED) == 1);
     }
 
     @Test

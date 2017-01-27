@@ -126,7 +126,9 @@ public class EventProcessor implements Runnable
             case ROBBERMOVE:
                 game.moveRobber(ev.getRobberMove());
                 break;
-
+            case BOUGHTDEVCARD:
+                game.recordDevCard(ev.getBoughtDevCard());
+                break;
             //TODO complete
         }
     }

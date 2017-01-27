@@ -12,10 +12,10 @@ import protocol.BoardProtos.*;
 import protocol.BuildProtos;
 import protocol.BuildProtos.BuildingProto;
 import protocol.BuildProtos.PointProto;
+import protocol.EnumProtos;
 import protocol.EnumProtos.BuildingTypeProto;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A game with additional methods for processing protobufs for the client
@@ -25,8 +25,14 @@ public class ClientGame extends GameState
 {
     private boolean gameOver;
     private int dice;
+    private Map<Colour, Integer> scores, devCardsBought, knightsPlayed;
 
-    public ClientGame() {}
+    public ClientGame()
+    {
+        scores = new HashMap<Colour, Integer>();
+        devCardsBought = new HashMap<Colour, Integer>();
+        knightsPlayed = new HashMap<Colour, Integer>();
+    }
 
     /**
      * @return a representation of the board that is compatible with protofbufs
@@ -210,8 +216,32 @@ public class ClientGame extends GameState
         return b;
     }
 
+    /**
+     * Records that the given player bought a dev card
+     * @param boughtDevCard
+     */
+    public void recordDevCard(EnumProtos.ColourProto boughtDevCard)
+    {
+        Colour c = Colour.fromProto(boughtDevCard);
+        int existing = devCardsBought.containsKey(c) ? devCardsBought.get(c) : 0;
+        devCardsBought.put(c, existing + 1);
+    }
+
+    /**
+     * Return the current dice roll
+     * @return
+     */
     public int getDice()
     {
         return dice;
+    }
+
+    /**
+     * Return the total amounts of dev cards owned by each player
+     * @return
+     */
+    public Map<Colour, Integer> getDevCardsBought()
+    {
+        return devCardsBought;
     }
 }

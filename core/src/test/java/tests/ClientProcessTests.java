@@ -121,6 +121,17 @@ public class ClientProcessTests extends TestHelper
         assertNotEquals(h, clientGame.getGrid().getHexWithRobber());
     }
 
+    @Test
+    public void boughtDevCard()
+    {
+        // Set up request
+        EventProtos.Event.Builder ev = EventProtos.Event.newBuilder();
+        ev.setBoughtDevCard(EnumProtos.ColourProto.RED);
+
+        // Move and check
+        clientGame.recordDevCard(ev.getBoughtDevCard());
+        assertTrue(clientGame.getDevCardsBought().get(Colour.RED) == 1);
+    }
 
     @Test
     public void diceTest()

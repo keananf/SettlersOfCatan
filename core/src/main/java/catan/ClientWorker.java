@@ -1,6 +1,9 @@
 import board.Edge;
 import board.Node;
 import game.Game;
+import game.InProgressTurn;
+import enums.Move;
+import enums.ClickObject;
 
 public class ClientWorker
 {
@@ -13,11 +16,25 @@ public class ClientWorker
 
 	public void update()
 	{
-		//TODO: check turn in progress
-		//TODO: call sendMove if turn in progress is full
-		//TODO: if action is buying development card call checkCard
-		//TODO: If build action check for clicked node or edge
-		//TODO: call checkMoves passing in clicked node
+		InProgressTurn inProgressTurn = game.inProgressTurn;
+		
+		if(inProgressTurn.chosenMove != null)
+		{
+			sendMove();
+		}
+		else if(inProgressTurn.initialClickObject == ClickObject.CARD)
+		{
+			checkCard();
+		}
+		else if(inProgressTurn.initialClickObject == ClickObject.NODE)
+		{
+			checkBuild(inProgressTurn.chosenNode);
+		}
+		else if(inProgressTurn.initialClickObject == ClickObject.EDGE)
+		{
+			checkBuild(inProgressTurn.chosenEdge);
+		}
+
 	}
 
 	private void checkCard()

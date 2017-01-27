@@ -27,7 +27,7 @@ public class Game
 	private Player playerWithLongestRoad;
 	private int longestRoad;
 	private int numPlayers;
-	protected InProgressTurn inProgressTurn;
+	public InProgressTurn inProgressTurn;
 	public static final int NUM_PLAYERS = 4;
 	
 	public Game()

@@ -1,3 +1,7 @@
+import board.Edge;
+import board.Node;
+import game.Game;
+
 public class ClientWorker
 {
 	private Game game;
@@ -7,7 +11,7 @@ public class ClientWorker
 		this.game = game;
 	}
 
-	public void notify()
+	public void update()
 	{
 		//TODO: check turn in progress
 		//TODO: call sendMove if turn in progress is full
@@ -31,7 +35,7 @@ public class ClientWorker
 		//TODO: exactly the same as above but for edges
 	}
 
-	public sendMove()
+	private void sendMove()
 	{
 		//TODO: create protocol buffer from game state
 		//TODO: send protocol buffer to server

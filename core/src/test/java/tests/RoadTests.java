@@ -93,7 +93,8 @@ public class RoadTests extends TestHelper
 		Player p2 = new NetworkPlayer(Colour.RED);
 		game.addPlayer(p2);
 
-		// Make roads
+
+		// Find edges where roads will be built
 		Edge e1 = n.getEdges().get(0); // Will be first road
 		Node n1 = e1.getX().equals(n) ? e1.getY() : e1.getX(); // Opposite end of first road
 		Edge e2 = n1.getEdges().get(0).equals(e1) ? n1.getEdges().get(1) : n1.getEdges().get(0); // This will be second road

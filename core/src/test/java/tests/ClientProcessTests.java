@@ -1,13 +1,19 @@
 package tests;
 
+import board.Edge;
 import board.Hex;
 import board.HexGrid;
 import board.Node;
 import client.ClientGame;
 import enums.Colour;
 import enums.DevelopmentCardType;
+import exceptions.CannotBuildRoadException;
+import exceptions.RoadExistsException;
+import exceptions.SettlementExistsException;
 import game.build.City;
 import game.build.Settlement;
+import game.players.NetworkPlayer;
+import game.players.Player;
 import org.junit.Before;
 import org.junit.Test;
 import protocol.BoardProtos;
@@ -15,14 +21,12 @@ import protocol.BuildProtos;
 import protocol.EnumProtos;
 import protocol.EventProtos;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import java.awt.*;
 
-public class ClientProcessTests extends TestHelper
+import static org.junit.Assert.*;
+
+public class ClientProcessTests extends ClientTestHelper
 {
-    ClientGame clientGame;
-
     @Before
     public void setUp()
     {
@@ -105,6 +109,133 @@ public class ClientProcessTests extends TestHelper
         clientGame.processRoad(req.build());
         assertTrue(clientGame.getGrid().getEdge(req.build()).getRoad() != null);
         assertTrue(clientGame.getGrid().getEdge(req.build()).getRoad().getPlayerColour().equals(Colour.BLUE));
+    }
+
+    @Test
+    public void settlementBreaksRoadTest()
+    {
+        Player p  = clientGame.getPlayers().get(Colour.BLUE);
+        Player p2 = new NetworkPlayer(Colour.RED);
+
+        // Find edges where roads will be built
+        Edge e1 = n.getEdges().get(0); // Will be first road
+        Node n1 = e1.getX().equals(n) ? e1.getY() : e1.getX(); // Opposite end of first road
+        Edge e2 = n1.getEdges().get(0).equals(e1) ? n1.getEdges().get(1) : n1.getEdges().get(0); // This will be second road
+        Node n2 = e2.getX().equals(n1) ? e2.getY() : e2.getX(); // Opposite end of second road
+        Edge e3 = n2.getEdges().get(0).equals(e2) ? n2.getEdges().get(1) : n2.getEdges().get(0); // Third road
+        Node n3 = e3.getX().equals(n2) ? e3.getY() : e3.getX(); // Opposite end of third road
+        Edge e4 = n3.getEdges().get(0).equals(e3) ? n3.getEdges().get(1) : n3.getEdges().get(0); // Fourth road
+        Node n4 = e4.getX().equals(n3) ? e4.getY() : e4.getX(); // Opposite end of fourth road
+        Edge e5 = n4.getEdges().get(0).equals(e4) ? n4.getEdges().get(1) : n4.getEdges().get(0); // Fifth road
+        Node n5 = e5.getX().equals(n4) ? e5.getY() : e5.getX(); // Opposite end of fifth road
+        Edge e6 = n5.getEdges().get(0).equals(e5) ? n5.getEdges().get(1) : n5.getEdges().get(0); // sixth road
+
+        // Second settlement node to allow building of roads 3 and 4, as roads must be within two
+        // of any settlement
+        Node n6 = e6.getX().equals(n5) ? e6.getY() : e6.getX(); // Opposite end of sixth road
+
+        // Need a settlement before you can build a road.
+        // For roads 1 and 2
+        processSettlementEvent(n, p.getColour());
+
+        // Need a settlement before you can build a road.
+        // For roads 3 and 4
+        processSettlementEvent(n6, p.getColour());
+
+        // Build road 1
+        processRoadEvent(e1, p.getColour());
+
+        // Build second road chained onto the first
+        processRoadEvent(e2, p.getColour());
+
+        // Build third road chained onto the second
+        processRoadEvent(e3, p.getColour());
+
+        // Build foreign settlement
+        processSettlementEvent(n3, p2.getColour());
+
+        // Build sixth road next to settlement 2
+        processRoadEvent(e6, p.getColour());
+
+        // Build fifth road chained onto the sixth
+        processRoadEvent(e5, p.getColour());
+
+        // Build fourth road chained onto the fifth.
+        processRoadEvent(e4, p.getColour());
+
+        // Longest road is 3. Two separate road chains.
+        // Assert that they haven't been merged together
+        assertEquals(3, p.calcRoadLength());
+        assertEquals(2, p.getNumOfRoadChains());
+
+    }
+
+
+    @Test
+    public void settlementBreaksRoadTest2()
+    {
+        Player p  = clientGame.getPlayers().get(Colour.BLUE);
+        Player p2 = new NetworkPlayer(Colour.RED);
+
+        // Find edges to make roads
+        Edge e1 = n.getEdges().get(0); // Will be first road
+        Node n1 = e1.getX().equals(n) ? e1.getY() : e1.getX(); // Opposite end of first road
+        Edge e2 = n1.getEdges().get(0).equals(e1) ? n1.getEdges().get(1) : n1.getEdges().get(0); // This will be second road
+        Node n2 = e2.getX().equals(n1) ? e2.getY() : e2.getX(); // Opposite end of second road
+        Edge e3 = n2.getEdges().get(0).equals(e2) ? n2.getEdges().get(1) : n2.getEdges().get(0); // Third road
+
+        // Need a settlement before you can build a road.
+        processSettlementEvent(n, p.getColour());
+
+        // Build road 1
+        processRoadEvent(e1, p.getColour());
+
+        // Build second road chained onto the first.
+        processRoadEvent(e2, p.getColour());
+
+        // Build third road chained onto the second.
+        processRoadEvent(e3, p.getColour());
+
+        // Build foreign settlement in between second and third road.
+        processSettlementEvent(n2, p2.getColour());
+
+        // Assert previous road chain of length three was broken.
+        assertEquals(2, p.calcRoadLength());
+        assertEquals(2, p.getNumOfRoadChains());
+    }
+
+    /**
+     * Builds roads around a single node, and another somewhere else.
+     * This test asserts the player has 4 roads but that the length of its
+     * longest is 3.
+     * @throws CannotBuildRoadException
+     * @throws RoadExistsException
+     */
+    @Test
+    public void roadLengthTest() throws SettlementExistsException, CannotBuildRoadException, RoadExistsException
+    {
+        Player p  = clientGame.getPlayers().get(Colour.BLUE);
+        Node n2 = game.getGrid().nodes.get(new Point(-1,0));
+
+        // Make two settlements\
+        processSettlementEvent(n, p.getColour());
+        processSettlementEvent(n2, p.getColour());
+
+        // Make three roads
+        for(int i = 0; i < n.getEdges().size(); i++)
+        {
+            Edge e = n.getEdges().get(i);
+            processRoadEvent(e, p.getColour());
+        }
+
+        // Make another road not connected to the first three
+        Edge e = n2.getEdges().get(0);
+        processRoadEvent(e, p.getColour());
+
+        // Ensure four were built but that this player's longest road count
+        // is only 3
+        assertEquals(4, p.getRoads().size());
+        assertEquals(3, p.calcRoadLength());
     }
 
     @Test

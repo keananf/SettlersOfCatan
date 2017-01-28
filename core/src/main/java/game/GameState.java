@@ -1,8 +1,12 @@
 package game;
 
+import board.Edge;
 import board.HexGrid;
+import board.Node;
 import enums.Colour;
 import enums.ResourceType;
+import game.build.Road;
+import game.players.Player;
 import protocol.ResourceProtos.ResourceCount;
 
 import java.util.HashMap;
@@ -11,6 +15,7 @@ import java.util.Map;
 public abstract class GameState
 {
 	protected HexGrid grid;
+	protected Map<Colour, Player> players;
 	protected Colour currentPlayer;
 	protected Colour playerWithLongestRoad;
 	protected int longestRoad;
@@ -19,6 +24,7 @@ public abstract class GameState
 	public GameState()
 	{
 		grid = new HexGrid();
+		players = new HashMap<Colour, Player>();
 	}
 
 	/**
@@ -37,6 +43,67 @@ public abstract class GameState
 		ret.put(ResourceType.Wool, resources.hasWool() ? resources.getWool() : 0);
 
 		return ret;
+	}
+
+	/**
+	 * Checks and updates who has the longest road
+	 */
+	protected void checkLongestRoad()
+	{
+		Player current = players.get(currentPlayer);
+		Player playerWithLongestRoad = players.get(this.playerWithLongestRoad);
+
+		// Calculate who has longest road
+		int length = current.calcRoadLength();
+		if(length > longestRoad)
+		{
+			// Update victory points
+			if(longestRoad >= 5)
+			{
+				playerWithLongestRoad.setVp(playerWithLongestRoad.getVp() - 2);
+			}
+			if (length >= 5) current.setVp(current.getVp() + 2);
+			if(playerWithLongestRoad != null) playerWithLongestRoad.setHasLongestRoad(false);
+
+			longestRoad = length;
+			this.playerWithLongestRoad = currentPlayer;
+			current.setHasLongestRoad(true);
+		}
+	}
+
+	/**
+	 * This API is used for both the client and server when determining
+	 * if a new settlement has broken a road chain.
+	 * @param node
+	 */
+	protected void checkIfRoadBroken(Node node)
+	{
+		// Check all combinations of edges to check if a road chain was broken
+		for(int i = 0; i < node.getEdges().size(); i++)
+		{
+			boolean broken = false;
+			for(int j = 0; j < node.getEdges().size(); j++)
+			{
+				Edge e = node.getEdges().get(i), other = node.getEdges().get(j);
+				Road r = e.getRoad(), otherR = other.getRoad();
+
+				if(e.equals(other)) continue;
+
+				// If this settlement is between two roads of the same colour
+				if(r != null && otherR != null && r.getPlayerColour().equals(otherR.getPlayerColour()))
+				{
+					// retrieve owner of roads and break the road chain
+					players.get(e.getRoad().getPlayerColour()).breakRoad(e, other);
+					broken = true;
+					break;
+				}
+			}
+			if(broken)
+			{
+				checkLongestRoad();
+				break;
+			}
+		}
 	}
 
 	/**
@@ -70,5 +137,13 @@ public abstract class GameState
 	public void setTurn(Colour colour)
 	{
 		setCurrentPlayer(colour);
+	}
+
+	/**
+	 * @return the players
+	 */
+	public Map<Colour, Player> getPlayers()
+	{
+		return players;
 	}
 }

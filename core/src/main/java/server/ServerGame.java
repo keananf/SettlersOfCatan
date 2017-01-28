@@ -8,7 +8,6 @@ import exceptions.*;
 import game.GameState;
 import game.build.Building;
 import game.build.City;
-import game.build.Road;
 import game.players.NetworkPlayer;
 import game.players.Player;
 import protocol.BoardProtos;
@@ -31,7 +30,6 @@ import java.util.Random;
 
 public class ServerGame extends GameState
 {
-	private Map<Colour, Player> players; // Protected so that a client does NOT have access to other player info
 	private Random dice;
 	private int current; // index of current player
 	protected int numPlayers;
@@ -40,7 +38,6 @@ public class ServerGame extends GameState
 	public ServerGame()
 	{
 		super();
-		players = new HashMap<Colour, Player>();
 		dice = new Random();
 	}
 
@@ -284,38 +281,12 @@ public class ServerGame extends GameState
 		// Try to build settlement
 		p.buildSettlement(node);
 		
-		// Check all combinations of edges to check if a road chain was broken
-		for(int i = 0; i < node.getEdges().size(); i++)
-		{
-			boolean broken = false;
-			for(int j = 0; j < node.getEdges().size(); j++)
-			{
-				Edge e = node.getEdges().get(i), other = node.getEdges().get(j);
-				Road r = e.getRoad(), otherR = other.getRoad();
-				
-				if(e.equals(other)) continue;
-				
-				// If this settlement is between two roads of the same colour
-				if(r != null && otherR != null && r.getPlayerColour().equals(otherR.getPlayerColour()))
-				{
-					// retrieve owner of roads and break the road chain
-					players.get(e.getRoad().getPlayerColour()).breakRoad(e, other);
-					broken = true;
-					break;
-				}
-			}
-			if(broken)
-			{
-				checkLongestRoad();
-				break;
-			}
-		}
-		// TODO send out updated road counts
+		checkIfRoadBroken(node);
 
 		resp.setNewBuilding(node.getSettlement().toProto());
         return resp.build();
 	}
-	
+
 	/**
 	 * Checks that the player can buy a development card
 	 * @param type the type of development card to play
@@ -581,32 +552,6 @@ public class ServerGame extends GameState
         response.setLongestRoad(longestRoad);
         response.setNewRoad(edge.getRoad().toProto());
 		return response.build();
-	}
-	
-	/**
-	 * Checks who has the longest road
-	 */
-	private void checkLongestRoad()
-	{
-		Player current = players.get(currentPlayer);
-		Player playerWithLongestRoad = players.get(this.playerWithLongestRoad);
-
-		// Calculate who has longest road
-		int length = current.calcRoadLength();
-		if(length > longestRoad)
-		{
-			// Update victory points
-			if(longestRoad >= 5)
-			{
-				playerWithLongestRoad.setVp(playerWithLongestRoad.getVp() - 2);
-			}
-			if (length >= 5) current.setVp(current.getVp() + 2);
-			if(playerWithLongestRoad != null) playerWithLongestRoad.setHasLongestRoad(false);
-			
-			longestRoad = length;
-			this.playerWithLongestRoad = currentPlayer;
-			current.setHasLongestRoad(true);
-		}
 	}
 
 	/**

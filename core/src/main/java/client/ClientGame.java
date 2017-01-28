@@ -9,6 +9,9 @@ import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
+import game.players.LocalPlayer;
+import game.players.NetworkPlayer;
+import game.players.Player;
 import protocol.BoardProtos.*;
 import protocol.BuildProtos;
 import protocol.BuildProtos.BuildingProto;
@@ -31,9 +34,11 @@ public class ClientGame extends GameState
     private int dice;
     private Map<Colour, Integer> scores, boughtDevCards;
     private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;
+    private Player thisPlayer;
 
     public ClientGame()
     {
+        players = new HashMap<Colour, Player>();
         scores = new HashMap<Colour, Integer>();
         boughtDevCards = new HashMap<Colour, Integer>();
         playedDevCards = new HashMap<Colour, HashMap<DevelopmentCardType, Integer>>();
@@ -47,7 +52,17 @@ public class ClientGame extends GameState
             {
                 playedDevCards.get(c).put(d, 0);
             }
+
+            // Instantiate players as well
+            if(!c.equals(Colour.BLUE))
+                players.put(c, new NetworkPlayer(c));
         }
+
+        // Set up this player
+        thisPlayer = new LocalPlayer(Colour.BLUE); // TODO colour will be allocated from server
+        playerWithLongestRoad = thisPlayer.getColour();
+        currentPlayer = thisPlayer.getColour();
+        players.put(thisPlayer.getColour(), thisPlayer);
     }
 
     /**
@@ -196,16 +211,22 @@ public class ClientGame extends GameState
     {
         // Extract information and find edge
         Edge newEdge = grid.getEdge(newRoad);
-        Colour col = Colour.fromProto(newRoad.getPlayerId());
 
         // Make new road object
-        Road r = new Road(newEdge, col);
+        Road r = new Road(newEdge, currentPlayer);
         newEdge.setRoad(r);
+
+        players.get(currentPlayer).addRoad(newEdge);
+        checkLongestRoad();
 
         return r;
     }
 
-
+    /**
+     * Processes a new bulding, and adds it to the board
+     * @param building the new building
+     * @return the new building
+     */
     public Building processNewBuilding(BuildingProto building)
     {
         // Extract information
@@ -213,6 +234,14 @@ public class ClientGame extends GameState
         PointProto p = building.getP();
         Node node = grid.getNode(p.getX(), p.getY());
         Building b = null;
+
+        // If invalid coordinates
+        if(node == null || (node.getSettlement() != null &&
+                ((node.getSettlement() instanceof Settlement && type.equals(BuildingTypeProto.SETTLEMENT))
+                || (node.getSettlement() instanceof City && type.equals(BuildingTypeProto.CITY)))))
+        {
+            return b;
+        }
 
         // Create and add the building
         switch(type)
@@ -228,7 +257,11 @@ public class ClientGame extends GameState
                 b = s;
                 break;
         }
+        checkIfRoadBroken(node);
 
+        // Updates score
+        int existing = scores.containsKey(currentPlayer) ? scores.get(currentPlayer) : 0;
+        scores.put(currentPlayer, existing + 1);
         return b;
     }
 

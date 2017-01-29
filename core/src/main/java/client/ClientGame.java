@@ -215,7 +215,7 @@ public class ClientGame extends GameState
         Road r = new Road(newEdge, currentPlayer);
         newEdge.setRoad(r);
 
-        players.get(currentPlayer).addRoad(newEdge);
+        ((LocalPlayer)players.get(currentPlayer)).addRoad(newEdge);
         checkLongestRoad(false);
 
         return r;

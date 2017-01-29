@@ -70,7 +70,7 @@ public class ServerGame extends GameState
 			// If 7, check that no one is above the resource limit
 			if(dice == resourceLimit)
 			{
-				grant.putAll(player.loseResources());
+				grant.putAll(((NetworkPlayer) player).loseResources());
                 playerResources.put(player.getColour(), grant);
 				continue;
 			}
@@ -201,7 +201,7 @@ public class ServerGame extends GameState
         // Find the recipient and extract the trade's contents
 		ResourceCount offer = trade.getOffer();
 		ResourceCount request = trade.getRequest();
-		Player recipient = players.get(recipientColour), recipientCopy = recipient.copy();
+		NetworkPlayer recipient = (NetworkPlayer) players.get(recipientColour), recipientCopy = (NetworkPlayer) recipient.copy();
 		Player offerer = players.get(offererColour);
 
 		try
@@ -249,7 +249,7 @@ public class ServerGame extends GameState
 		}
 
 		// Try to upgrade settlement
-		p.upgradeSettlement(node);
+		((NetworkPlayer) p).upgradeSettlement(node);
 
 		resp.setNewBuilding(node.getSettlement().toProto());
 		return resp.build();
@@ -279,7 +279,7 @@ public class ServerGame extends GameState
 		}
 
 		// Try to build settlement
-		p.buildSettlement(node);
+		((NetworkPlayer) p).buildSettlement(node);
 		
 		checkIfRoadBroken(node);
 
@@ -299,7 +299,7 @@ public class ServerGame extends GameState
 	    Player p = players.get(playerColour);
 
 		// Try to play card
-		p.playDevelopmentCard(type);
+		((NetworkPlayer)p).playDevelopmentCard(type);
 		resp.setResult(ResultProto.SUCCESS);
 
 		// Return success message
@@ -320,7 +320,7 @@ public class ServerGame extends GameState
 		
 		// Try to buy card
 		// Return the response with the card parameter set
-        DevelopmentCardType card = p.buyDevelopmentCard(DevelopmentCardType.chooseRandom());
+        DevelopmentCardType card = ((NetworkPlayer)p).buyDevelopmentCard(DevelopmentCardType.chooseRandom());
         resp.setDevelopmentCard(DevelopmentCardType.toProto(card));
 		return resp.build();
 	}
@@ -343,6 +343,11 @@ public class ServerGame extends GameState
 
 		// Perform the swap and take a resource
 		resp.setMoveRobberResponse(moveRobber(request.getRequest(), playerColour));
+
+		// Add up knights used
+		players.get(playerColour).addKnight();
+		checkLargestArmy();
+
 		return resp.build();
 	}
 
@@ -380,7 +385,8 @@ public class ServerGame extends GameState
 			// Randomly remove resource
 			if(n.getSettlement() != null && n.getSettlement().getPlayerColour().equals(otherColour))
 			{
-                resp.setResource(ResourceType.toProto(players.get(currentPlayer).takeResource(other)));
+				NetworkPlayer p = (NetworkPlayer) players.get(currentPlayer);
+                resp.setResource(ResourceType.toProto(p.takeResource(other)));
 				valid = true;
 			}
 		}
@@ -545,7 +551,7 @@ public class ServerGame extends GameState
 		}
 		
 		// Try to build the road and update the longest road 
-		int longestRoad = p.buildRoad(edge);
+		int longestRoad = ((NetworkPlayer)p).buildRoad(edge);
 		checkLongestRoad(false);
 		
 		// return success message
@@ -676,6 +682,6 @@ public class ServerGame extends GameState
 
 	public void restorePlayerFromCopy(Player copy, DevelopmentCardType card)
 	{
-		players.get(copy.getColour()).restoreCopy(copy, card);
+		((NetworkPlayer)players.get(copy.getColour())).restoreCopy(copy, card);
 	}
 }

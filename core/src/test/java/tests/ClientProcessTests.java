@@ -236,7 +236,6 @@ public class ClientProcessTests extends ClientTestHelper
         assertEquals(3, p.calcRoadLength());
     }
 
-
     @Test
     public void largestArmyTest()
     {
@@ -275,11 +274,11 @@ public class ClientProcessTests extends ClientTestHelper
         assertEquals(1, p2.getVp());
 
         // Have player 2 play four knights, so largest army is revoked.
-        for(Hex h : n.getHexes())
+        while(p2.getArmySize() < 4)
         {
+            Hex h = n.getHexes().get(0);
             processPlayKnightEvent(h, p2.getColour());
         }
-        processPlayKnightEvent(n.getHexes().get(0), p2.getColour());
 
         assertEquals(1, p.getVp());
         assertEquals(3, p2.getVp());

@@ -110,7 +110,7 @@ public class GameAndResourcesTests extends TestHelper
 		assertEquals(p.getNumResources(), 1);
 		assertEquals(p2.getNumResources(), 1);
 	}
-	
+
 	@Test
 	public void loseResourcesTest() // If you have over 7 resources, and a 7 is rolled
 	{		

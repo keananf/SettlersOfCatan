@@ -167,9 +167,7 @@ public class ClientProcessTests extends ClientTestHelper
         // Assert that they haven't been merged together
         assertEquals(3, p.calcRoadLength());
         assertEquals(2, p.getNumOfRoadChains());
-
     }
-
 
     @Test
     public void settlementBreaksRoadTest2()
@@ -236,6 +234,64 @@ public class ClientProcessTests extends ClientTestHelper
         // is only 3
         assertEquals(4, p.getRoads().size());
         assertEquals(3, p.calcRoadLength());
+    }
+
+
+    @Test
+    public void longestRoadTest()
+    {
+        Player p  = clientGame.getPlayers().get(Colour.BLUE);
+
+        // Find edges where roads will be built
+        Edge e1 = n.getEdges().get(0); // Will be first road
+        Node n1 = e1.getX().equals(n) ? e1.getY() : e1.getX(); // Opposite end of first road
+        Edge e2 = n1.getEdges().get(0).equals(e1) ? n1.getEdges().get(1) : n1.getEdges().get(0); // This will be second road
+        Node n2 = e2.getX().equals(n1) ? e2.getY() : e2.getX(); // Opposite end of second road
+        Edge e3 = n2.getEdges().get(0).equals(e2) ? n2.getEdges().get(1) : n2.getEdges().get(0); // Third road
+        Node n3 = e3.getX().equals(n2) ? e3.getY() : e3.getX(); // Opposite end of third road
+        Edge e4 = n3.getEdges().get(0).equals(e3) ? n3.getEdges().get(1) : n3.getEdges().get(0); // Fourth road
+        Node n4 = e4.getX().equals(n3) ? e4.getY() : e4.getX(); // Opposite end of fourth road
+        Edge e5 = n4.getEdges().get(0).equals(e4) ? n4.getEdges().get(1) : n4.getEdges().get(0); // Fifth road
+        Node n5 = e5.getX().equals(n4) ? e5.getY() : e5.getX(); // Opposite end of fifth road
+        Edge e6 = n5.getEdges().get(0).equals(e5) ? n5.getEdges().get(1) : n5.getEdges().get(0); // sixth road
+
+        // Second settlement node to allow building of roads 3 and 4, as roads must be within two
+        // of any settlement
+        Node n6 = e6.getX().equals(n5) ? e6.getY() : e6.getX(); // Opposite end of sixth road
+
+        // Need a settlement before you can build a road.
+        // For roads 1 and 2
+        processSettlementEvent(n, p.getColour());
+
+        // Need a settlement before you can build a road.
+        // For roads 3 and 4
+        processSettlementEvent(n6, p.getColour());
+
+        // Build road 1
+        processRoadEvent(e1, p.getColour());
+
+        // Build second road chained onto the first
+        processRoadEvent(e2, p.getColour());
+
+        // Build third road chained onto the second
+        processRoadEvent(e3, p.getColour());
+
+        // Build fourth road chained onto the fifth.
+        processRoadEvent(e4, p.getColour());
+
+        // Build fifth road chained onto the sixth
+        processRoadEvent(e5, p.getColour());
+
+        // Assert longest road
+        assertEquals(5, p.calcRoadLength());
+        assertEquals(1, p.getNumOfRoadChains());
+        assertEquals(4, p.getVp());
+
+        // Build foreign settlement so longest road is revoked.
+        processSettlementEvent(n3, Colour.RED);
+        assertEquals(3, p.calcRoadLength());
+        assertEquals(2, p.getNumOfRoadChains());
+        assertEquals(2, p.getVp());
     }
 
     @Test

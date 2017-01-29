@@ -523,7 +523,7 @@ public abstract class Player
 		}
 
 		// Copy over this player's information
-		p.setVp(vp);
+		p.addVp(vp);
 		p.grantResources(this.resources);
 		p.cards.putAll(this.cards);
 		p.settlements.putAll(this.settlements);
@@ -555,7 +555,7 @@ public abstract class Player
 		}
 		
 		// Copy over this player's information
-		setVp(vp);
+		addVp(vp);
 		grantResources(copy.resources);
 		cards.putAll(copy.cards);
 		settlements.putAll(copy.settlements);
@@ -581,7 +581,7 @@ public abstract class Player
 	/**
 	 * This function increments a player's vp
 	 */
-	public void setVp(int amount)
+	public void addVp(int amount)
 	{
 		vp += amount;
 	}

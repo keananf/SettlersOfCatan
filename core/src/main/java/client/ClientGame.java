@@ -217,7 +217,7 @@ public class ClientGame extends GameState
         newEdge.setRoad(r);
 
         players.get(currentPlayer).addRoad(newEdge);
-        checkLongestRoad();
+        checkLongestRoad(false);
 
         return r;
     }
@@ -260,8 +260,7 @@ public class ClientGame extends GameState
         checkIfRoadBroken(node);
 
         // Updates score
-        int existing = scores.containsKey(currentPlayer) ? scores.get(currentPlayer) : 0;
-        scores.put(currentPlayer, existing + 1);
+        players.get(currentPlayer).addVp(1);
         return b;
     }
 

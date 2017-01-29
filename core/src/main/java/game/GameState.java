@@ -20,6 +20,7 @@ public abstract class GameState
 	protected Colour playerWithLongestRoad;
 	protected int longestRoad;
 	public static final int NUM_PLAYERS = 4;
+	public static final int MIN_ROAD_LENGTH = 5;
 
 	public GameState()
 	{
@@ -47,27 +48,34 @@ public abstract class GameState
 
 	/**
 	 * Checks and updates who has the longest road
+	 * @param broken if this method is being called after a road was broken
 	 */
-	protected void checkLongestRoad()
+	protected void checkLongestRoad(boolean broken)
 	{
-		Player current = players.get(currentPlayer);
 		Player playerWithLongestRoad = players.get(this.playerWithLongestRoad);
 
 		// Calculate who has longest road
-		int length = current.calcRoadLength();
-		if(length > longestRoad)
+		for(Colour c : Colour.values())
 		{
-			// Update victory points
-			if(longestRoad >= 5)
-			{
-				playerWithLongestRoad.setVp(playerWithLongestRoad.getVp() - 2);
-			}
-			if (length >= 5) current.setVp(current.getVp() + 2);
-			if(playerWithLongestRoad != null) playerWithLongestRoad.setHasLongestRoad(false);
+			if(!players.containsKey(c))
+				continue;
 
-			longestRoad = length;
-			this.playerWithLongestRoad = currentPlayer;
-			current.setHasLongestRoad(true);
+			Player player = players.get(c);
+			int length = player.calcRoadLength();
+			if(length > longestRoad || (broken && c.equals(currentPlayer)))
+			{
+				// Update victory points
+				if(longestRoad >= MIN_ROAD_LENGTH)
+				{
+					playerWithLongestRoad.addVp(-2);
+				}
+				if (length >= MIN_ROAD_LENGTH) player.addVp(2);
+				if(playerWithLongestRoad != null) playerWithLongestRoad.setHasLongestRoad(false);
+
+				longestRoad = length;
+				this.playerWithLongestRoad = currentPlayer;
+				player.setHasLongestRoad(true);
+			}
 		}
 	}
 
@@ -100,7 +108,7 @@ public abstract class GameState
 			}
 			if(broken)
 			{
-				checkLongestRoad();
+				checkLongestRoad(broken);
 				break;
 			}
 		}

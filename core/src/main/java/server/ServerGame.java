@@ -546,7 +546,7 @@ public class ServerGame extends GameState
 		
 		// Try to build the road and update the longest road 
 		int longestRoad = p.buildRoad(edge);
-		checkLongestRoad();
+		checkLongestRoad(false);
 		
 		// return success message
         response.setLongestRoad(longestRoad);
@@ -671,7 +671,7 @@ public class ServerGame extends GameState
 	private void grantVpPoint()
 	{
 		Player currentPlayer = players.get(this.currentPlayer);
-		currentPlayer.setVp(currentPlayer.getVp() + 1);
+		currentPlayer.addVp(currentPlayer.getVp() + 1);
 	}
 
 	public void restorePlayerFromCopy(Player copy, DevelopmentCardType card)

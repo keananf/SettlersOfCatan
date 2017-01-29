@@ -1,12 +1,11 @@
 package tests;
 
 import board.Edge;
+import board.Hex;
 import board.Node;
 import client.ClientGame;
 import enums.Colour;
-import protocol.BoardProtos;
-import protocol.BuildProtos;
-import protocol.EnumProtos;
+import protocol.*;
 
 public class ClientTestHelper extends TestHelper
  {
@@ -38,4 +37,17 @@ public class ClientTestHelper extends TestHelper
         clientGame.setTurn(col);
         clientGame.processNewBuilding(req.build());
     }
-}
+
+     public void processPlayKnightEvent(Hex h, Colour player)
+     {
+         // Make a move robber event
+         BuildProtos.PointProto.Builder p = BuildProtos.PointProto.newBuilder();
+         p.setX(h.getX());
+         p.setY(h.getY());
+
+         clientGame.setTurn(player);
+         clientGame.processPlayedDevCard(EnumProtos.DevelopmentCardProto.KNIGHT);
+         clientGame.moveRobber(p.build());
+     }
+
+ }

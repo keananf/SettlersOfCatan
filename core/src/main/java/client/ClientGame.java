@@ -32,14 +32,13 @@ public class ClientGame extends GameState
 {
     private boolean gameOver;
     private int dice;
-    private Map<Colour, Integer> scores, boughtDevCards;
+    private Map<Colour, Integer> boughtDevCards;
     private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;
     private Player thisPlayer;
 
     public ClientGame()
     {
         players = new HashMap<Colour, Player>();
-        scores = new HashMap<Colour, Integer>();
         boughtDevCards = new HashMap<Colour, Integer>();
         playedDevCards = new HashMap<Colour, HashMap<DevelopmentCardType, Integer>>();
 
@@ -276,6 +275,13 @@ public class ClientGame extends GameState
         // Record card being played
         int existing = playedCards.get(card);
         playedCards.put(card, existing + 1);
+
+        // Update largest army
+        if(card.equals(DevelopmentCardType.Knight))
+        {
+            players.get(currentPlayer).addKnight();
+            checkLargestArmy();
+        }
     }
 
     /**

@@ -18,9 +18,12 @@ public abstract class GameState
 	protected Map<Colour, Player> players;
 	protected Colour currentPlayer;
 	protected Colour playerWithLongestRoad;
+	protected Colour playerWithLargestArmy;
 	protected int longestRoad;
+	protected int largestArmy;
 	public static final int NUM_PLAYERS = 4;
 	public static final int MIN_ROAD_LENGTH = 5;
+	public static final int MIN_ARMY_SIZE = 3;
 
 	public GameState()
 	{
@@ -73,7 +76,7 @@ public abstract class GameState
 				if(playerWithLongestRoad != null) playerWithLongestRoad.setHasLongestRoad(false);
 
 				longestRoad = length;
-				this.playerWithLongestRoad = currentPlayer;
+				this.playerWithLongestRoad = c;
 				player.setHasLongestRoad(true);
 			}
 		}
@@ -110,6 +113,38 @@ public abstract class GameState
 			{
 				checkLongestRoad(broken);
 				break;
+			}
+		}
+	}
+
+	/**
+	 * Checks all players for who has the largest army, and updates VP points
+	 */
+	protected void checkLargestArmy()
+	{
+		Player playerWithLargestArmy = players.get(this.playerWithLargestArmy);
+
+		// Calculate who has longest road
+		for(Colour c : Colour.values())
+		{
+			if(!players.containsKey(c))
+				continue;
+
+			Player player = players.get(c);
+			int armySize = player.getArmySize();
+			if(armySize > largestArmy)
+			{
+				// Update victory points
+				if(largestArmy >= MIN_ARMY_SIZE)
+				{
+					playerWithLargestArmy.addVp(-2);
+				}
+				if (armySize >= MIN_ARMY_SIZE) player.addVp(2);
+				if(playerWithLargestArmy != null) playerWithLargestArmy.setHasLargestArmy(false);
+
+				largestArmy = armySize;
+				this.playerWithLargestArmy = c;
+				player.setHasLargestArmy(true);
 			}
 		}
 	}

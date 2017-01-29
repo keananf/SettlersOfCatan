@@ -28,12 +28,13 @@ public abstract class Player
 	private List<List<Road>> roads; 
 	private HashMap<Point, Building> settlements;
 	private int knightsUsed;
-	private boolean hasLongestRoad;
+	private boolean hasLongestRoad, hasLargestArmy;
 	private HashMap<DevelopmentCardType, Integer> cards;
 	private int numResources;
+	private int armySize;
 
-	private static final int THRESHHOLD = 10;
-	
+	private static final int VP_THRESHOLD = 10;
+
 	public Player(Colour colour)
 	{
 		this.colour = colour;
@@ -607,7 +608,7 @@ public abstract class Player
 	 */
 	public boolean hasWon()
 	{
-		return vp >= THRESHHOLD;
+		return vp >= VP_THRESHOLD;
 	}
 	
 	/**
@@ -646,6 +647,13 @@ public abstract class Player
 		
 		return total;
 	}
+	/**
+	 * @return the hasLargestArmy
+	 */
+	public boolean hasLargestArmy()
+	{
+		return hasLargestArmy;
+	}
 
 	/**
 	 * @return the hasLongestRoad
@@ -653,6 +661,14 @@ public abstract class Player
 	public boolean hasLongestRoad()
 	{
 		return hasLongestRoad;
+	}
+
+	/**
+	 * @param hasLargestArmy the hasLargestArmy to set
+	 */
+	public void setHasLargestArmy(boolean hasLargestArmy)
+	{
+		this.hasLargestArmy = hasLargestArmy;
 	}
 
 	/**
@@ -666,5 +682,21 @@ public abstract class Player
 	public int getNumOfRoadChains()
 	{
 		return roads.size();
+	}
+
+	/**
+	 * @return this player's army size
+	 */
+    public int getArmySize()
+	{
+        return armySize;
+    }
+
+	/**
+	 * Adds one knight to the army
+	 */
+	public void addKnight()
+	{
+		armySize++;
 	}
 }

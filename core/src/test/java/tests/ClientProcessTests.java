@@ -238,6 +238,54 @@ public class ClientProcessTests extends ClientTestHelper
 
 
     @Test
+    public void largestArmyTest()
+    {
+        Player p  = clientGame.getPlayers().get(Colour.BLUE);
+        Player p2 = clientGame.getPlayers().get(Colour.RED);
+
+        // Find edges
+        Edge e1 = n.getEdges().get(0);
+        Node n1 = e1.getX().equals(n) ? e1.getY() : e1.getX(); // Opposite end of first edge
+        Edge e2 = n1.getEdges().get(0).equals(e1) ? n1.getEdges().get(1) : n1.getEdges().get(0);
+        Node n2 = e2.getX().equals(n1) ? e2.getY() : e2.getX(); // Opposite end of second edge
+        Edge e3 = n2.getEdges().get(0).equals(e2) ? n2.getEdges().get(1) : n2.getEdges().get(0);
+        Node n3 = e3.getX().equals(n2) ? e3.getY() : e3.getX(); // Opposite end of third edge
+        Edge e4 = n3.getEdges().get(0).equals(e3) ? n3.getEdges().get(1) : n3.getEdges().get(0);
+        Node n4 = e4.getX().equals(n3) ? e4.getY() : e4.getX(); // Opposite end of fourth edge
+        Edge e5 = n4.getEdges().get(0).equals(e4) ? n4.getEdges().get(1) : n4.getEdges().get(0);
+        Node n5 = e5.getX().equals(n4) ? e5.getY() : e5.getX(); // Opposite end of fifth edge
+        Edge e6 = n5.getEdges().get(0).equals(e5) ? n5.getEdges().get(1) : n5.getEdges().get(0);
+        Node n6 = e6.getX().equals(n5) ? e6.getY() : e6.getX(); // Opposite end of sixth edge
+
+        // Need a settlement before you can build a road.
+        // For roads 1 and 2
+        processSettlementEvent(n, p.getColour());
+
+        // Need a settlement so that this player can be stolen from
+        processSettlementEvent(n6, p2.getColour());
+
+        // Player 1 plays three knights
+        for(Hex h : n6.getHexes())
+        {
+            processPlayKnightEvent(h, p.getColour());
+        }
+
+        // Assert largest army
+        assertEquals(3, p.getVp());
+        assertEquals(1, p2.getVp());
+
+        // Have player 2 play four knights, so largest army is revoked.
+        for(Hex h : n.getHexes())
+        {
+            processPlayKnightEvent(h, p2.getColour());
+        }
+        processPlayKnightEvent(n.getHexes().get(0), p2.getColour());
+
+        assertEquals(1, p.getVp());
+        assertEquals(3, p2.getVp());
+    }
+
+    @Test
     public void longestRoadTest()
     {
         Player p  = clientGame.getPlayers().get(Colour.BLUE);

@@ -1,15 +1,19 @@
 package game;
 
 import board.Edge;
+import board.Hex;
 import board.HexGrid;
 import board.Node;
 import enums.Colour;
 import enums.ResourceType;
+import game.build.Building;
+import game.build.City;
 import game.build.Road;
 import game.players.Player;
 import protocol.ResourceProtos.ResourceCount;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class GameState
@@ -29,6 +33,44 @@ public abstract class GameState
 	{
 		grid = new HexGrid();
 		players = new HashMap<Colour, Player>();
+	}
+
+	/**
+	 * Retrieves the resources granted to this specific player based on the dice
+	 * @param dice the dice roll
+	 * @param c the colour to get the new resources for
+	 * @return the map of new resources to grant
+	 */
+	protected Map<ResourceType, Integer> getNewResources(int dice, Colour c)
+	{
+		int resourceLimit = 7;
+		Player player = players.get(c);
+		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+
+		// If 7, check that no one is above the resource limit
+		if(dice == resourceLimit)
+		{
+			grant.putAll(player.loseResources());
+			return grant;
+		}
+
+		// for each of this player's settlements
+		for(Building building : player.getSettlements().values())
+		{
+			int amount = building instanceof City ? 2 : 1;
+			List<Hex> hexes = building.getNode().getHexes();
+
+			// for each hex on this settlement
+			for(Hex hex : hexes)
+			{
+				// If the hex's chit is equal to the dice roll
+				if(hex.getChit() == dice && !hex.hasRobber())
+				{
+					grant.put(hex.getResource(), amount);
+				}
+			}
+		}
+		return grant;
 	}
 
 	/**

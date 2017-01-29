@@ -121,7 +121,7 @@ public class GameAndResourcesTests extends TestHelper
 
 		// A '7' is rolled, so this player must lose it's excess resources
 		game.allocateResources(7);
-		assertTrue(p.getNumResources() == 7);
+		assertEquals(7, p.getNumResources());
 	}
 	
 	@Test

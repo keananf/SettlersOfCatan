@@ -185,12 +185,16 @@ public class ClientGame extends GameState
     }
 
     /**
-     * Updates the dice roll to the one received from the server
+     * Updates the dice roll and allocate resources
      * @param dice the new dice roll
      */
-    public void setDice(int dice)
+    public void processDice(int dice)
     {
         this.dice = dice;
+        Map<ResourceType, Integer> grant = getNewResources(dice, thisPlayer.getColour());
+
+        if(dice != 7)
+            thisPlayer.grantResources(grant);
     }
 
     /**
@@ -258,8 +262,8 @@ public class ClientGame extends GameState
         }
         checkIfRoadBroken(node);
 
-        // Updates score
-        players.get(currentPlayer).addVp(1);
+        // Updates settlement and score
+        players.get(currentPlayer).addSettlement(b);
         return b;
     }
 
@@ -279,6 +283,8 @@ public class ClientGame extends GameState
         // Update largest army
         if(card.equals(DevelopmentCardType.Knight))
         {
+            existing = boughtDevCards.containsKey(currentPlayer) ? boughtDevCards.get(currentPlayer) : 0;
+            boughtDevCards.put(currentPlayer, existing - 1);
             players.get(currentPlayer).addKnight();
             checkLargestArmy();
         }
@@ -319,5 +325,13 @@ public class ClientGame extends GameState
     public Map<Colour,HashMap<DevelopmentCardType,Integer>> getPlayedDevCards()
     {
         return playedDevCards;
+    }
+
+    /**
+     * @return this player
+     */
+    public Player getPlayer()
+    {
+        return thisPlayer;
     }
 }

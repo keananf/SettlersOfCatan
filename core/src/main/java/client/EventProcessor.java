@@ -117,7 +117,7 @@ public class EventProcessor implements Runnable
                 game.processNewBuilding(ev.getNewBuilding());
                 break;
             case DICEROLL:
-                game.setDice(ev.getDiceRoll().getDice());
+                game.processDice(ev.getDiceRoll().getDice());
                 break;
             case NEWROAD:
                 game.processRoad(ev.getNewRoad());

@@ -6,8 +6,6 @@ import enums.DevelopmentCardType;
 import enums.ResourceType;
 import exceptions.*;
 import game.GameState;
-import game.build.Building;
-import game.build.City;
 import game.players.NetworkPlayer;
 import game.players.Player;
 import protocol.BoardProtos;
@@ -24,7 +22,6 @@ import protocol.TradeProtos.PortTradeProto;
 
 import java.net.InetAddress;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -52,49 +49,26 @@ public class ServerGame extends GameState
 		setCurrentPlayer(getPlayersAsList()[dice].getColour());
 	}
 
+
 	/**
 	 * Assigns resources to each player based upon their settlements and the dice
 	 * @param dice the dice roll
-	 * @return 
+	 * @return
 	 */
 	public Map<Colour, Map<ResourceType, Integer>> allocateResources(int dice)
 	{
-		int resourceLimit = 7;
 		Map<Colour, Map<ResourceType, Integer>> playerResources = new HashMap<Colour, Map<ResourceType, Integer>>();
-		
+
 		// for each player
-		for(Player player : getPlayersAsList())
+		for(Player player : players.values())
 		{
-			Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
-			
-			// If 7, check that no one is above the resource limit
-			if(dice == resourceLimit)
-			{
-				grant.putAll(((NetworkPlayer) player).loseResources());
-                playerResources.put(player.getColour(), grant);
-				continue;
-			}
-			
-			// for each of this player's settlements
-			for(Building building : player.getSettlements().values())
-			{
-				int amount = building instanceof City ? 2 : 1;
-				List<Hex> hexes = building.getNode().getHexes();
-				
-				// for each hex on this settlement
-				for(Hex hex : hexes)
-				{
-					// If the hex's chit is equal to the dice roll
-					if(hex.getChit() == dice && !hex.hasRobber())
-					{
-						grant.put(hex.getResource(), amount);
-					}
-				}
-			}
-			player.grantResources(grant);
+			Map<ResourceType, Integer> grant = getNewResources(dice, player.getColour());
+
+			if(dice != 7)
+				player.grantResources(grant);
 			playerResources.put(player.getColour(), grant);
 		}
-		
+
 		return playerResources;
 	}
 

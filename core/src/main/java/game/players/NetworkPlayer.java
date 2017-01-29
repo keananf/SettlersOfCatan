@@ -116,10 +116,7 @@ public class NetworkPlayer extends Player
 
 		// If valid placement, attempt to spend the required resources
 		spendResources(s.getCost());
-		node.setSettlement(s);
-		addVp(1);
-
-		settlements.put(new Point(node.getX(), node.getY()), s);
+		addSettlement(s);
 	}
 
 	/**
@@ -173,40 +170,7 @@ public class NetworkPlayer extends Player
 		// Otherwise build city
 		City c = new City(node, colour);
 		spendResources(c.getCost());
-
-		// Override settlement
-		settlements.remove(node.getSettlement());
-		node.setSettlement(c);
-		settlements.put(p, c);
-		addVp(1);
-	}
-
-	/**
-	 * Checks if a player has more than 7 resource cards.
-	 *
-	 * If so, cards are randomly removed until the player has 7 again.
-	 */
-	public Map<ResourceType, Integer> loseResources()
-	{
-		Random rand = new Random();
-		int resourceLimit = 7;
-		Map<ResourceType, Integer> removed = new HashMap<ResourceType, Integer>();
-
-		// Randomly remove resources until the cap is reached
-		while(numResources > resourceLimit)
-		{
-			ResourceType key = (ResourceType) resources.keySet().toArray()[rand.nextInt(resources.size())];
-
-			if(resources.get(key) > 0)
-			{
-				int existing =  removed.containsKey(key) ? removed.get(key) : 0;
-				resources.put(key, resources.get(key) - 1);
-				removed.put(key, existing + 1);
-				numResources--;
-			}
-		}
-
-		return removed;
+		addSettlement(c);
 	}
 
 	/**

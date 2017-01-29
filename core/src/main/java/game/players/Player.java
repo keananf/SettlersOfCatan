@@ -11,10 +11,8 @@ import game.build.Road;
 import protocol.ResourceProtos;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Abstract class describing a player (AI, or network)
@@ -279,7 +277,33 @@ public abstract class Player
 		}
 	}
 
+	/**
+	 * Checks if a player has more than 7 resource cards.
+	 *
+	 * If so, cards are randomly removed until the player has 7 again.
+	 */
+	public Map<ResourceType, Integer> loseResources()
+	{
+		Random rand = new Random();
+		int resourceLimit = 7;
+		Map<ResourceType, Integer> removed = new HashMap<ResourceType, Integer>();
 
+		// Randomly remove resources until the cap is reached
+		while(numResources > resourceLimit)
+		{
+			ResourceType key = (ResourceType) resources.keySet().toArray()[rand.nextInt(resources.size())];
+
+			if(resources.get(key) > 0)
+			{
+				int existing =  removed.containsKey(key) ? removed.get(key) : 0;
+				resources.put(key, resources.get(key) - 1);
+				removed.put(key, existing + 1);
+				numResources--;
+			}
+		}
+
+		return removed;
+	}
 
 	/**
 	 * @return the victory points for this player
@@ -408,5 +432,21 @@ public abstract class Player
 	public void addKnight()
 	{
 		armySize++;
+	}
+
+	/**
+	 * Adds the new building to this player's list of buildings.
+	 *
+	 * If a city, the original settlement is overriden
+	 * @param b the new building
+	 */
+	public void addSettlement(Building b)
+	{
+		Node node = b.getNode();
+		Point point = new Point(node.getX(), node.getY());
+
+		node.setSettlement(b);
+		addVp(1);
+		settlements.put(point, b);
 	}
 }

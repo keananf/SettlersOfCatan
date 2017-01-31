@@ -194,7 +194,6 @@ public abstract class Player
 	/**
 	 * Checks to see if the user canAfford something
 	 * @param cost
-	 * @throws CannotAffordException
 	 */
 	public boolean canAfford(Map<ResourceType, Integer> cost)
 	{

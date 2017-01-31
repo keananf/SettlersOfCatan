@@ -204,7 +204,6 @@ public class ServerGame extends GameState
 	 * Processes the discard request to ensure that it is valid
 	 * @param discardRequest the resources the player is wishing to discard
 	 * @param col the colour of the player who sent the discard request
-	 * @return whether the discard request failed or not
 	 */
 	public void processDiscard(ResourceCount discardRequest, Colour col)
 			throws CannotAffordException, InvalidDiscardRequest

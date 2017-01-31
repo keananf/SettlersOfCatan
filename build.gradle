@@ -56,6 +56,8 @@ project(":core") {
         testCompile "junit:junit:$junitVersion"
     }
 
+    javadoc.destinationDir = file("${project.rootDir}/doc")
+
     protobuf {
         generatedFilesBaseDir = "$projectDir/gen"
     }

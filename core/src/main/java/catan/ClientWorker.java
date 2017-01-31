@@ -63,7 +63,7 @@ public class ClientWorker
 
 		switch(game.inProgressTurn.chosenMove){
 			case BUILD_ROAD:
-				request.setBuildRoadRequest(setUpRoad(inProgressTurn.chosenEdge,col));
+				request.setBuildRoadRequest(setUpRoad(inProgressTurn.chosenEdge, game.colour));
 				break;
             case BUILD_SETTLEMENT:
 				request.setBuildSettlementRequest(setUpSettlement(x1 ,y1, type, col));//type settlement
@@ -95,11 +95,11 @@ public class ClientWorker
         road.setP1(node.build());
 
         //Node2
-        node.setX(x2);
-        node.setY(y2);
+		node.setX(edge.getY().getX());
+		node.setY(edge.getY().getY());
         road.setP2(node.build());
 
-        road.setPlayerId(col);
+        road.setPlayerId(Colour.toProto(col));
 
         return road.build();
     }

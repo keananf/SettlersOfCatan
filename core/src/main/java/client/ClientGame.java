@@ -19,6 +19,7 @@ public class ClientGame extends GameState
 {
     private boolean gameOver;
     public InProgressTurn inProgressTurn;
+    public Colour colour; //TODO receive colour from server upon connecting and  storing it in this variable
     
     public ClientGame() 
     {

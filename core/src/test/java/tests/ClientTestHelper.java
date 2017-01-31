@@ -5,7 +5,9 @@ import board.Hex;
 import board.Node;
 import client.ClientGame;
 import enums.Colour;
-import protocol.*;
+import protocol.BoardProtos;
+import protocol.BuildProtos;
+import protocol.EnumProtos;
 
 public class ClientTestHelper extends TestHelper
  {
@@ -22,7 +24,14 @@ public class ClientTestHelper extends TestHelper
         req.setPlayerId(Colour.toProto(col));
 
         clientGame.setTurn(col);
-        clientGame.processRoad(req.build());
+        try
+        {
+            clientGame.processRoad(req.build());
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     public void processSettlementEvent(Node node, Colour col)

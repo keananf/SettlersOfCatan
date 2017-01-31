@@ -2,6 +2,8 @@ package game.players;
 
 import board.Edge;
 import enums.Colour;
+import exceptions.CannotBuildRoadException;
+import exceptions.RoadExistsException;
 import game.build.Road;
 
 import java.util.ArrayList;
@@ -18,11 +20,16 @@ public class LocalPlayer extends Player
      * Builds the road for this player (client-side)
      * @param edge the edge to build the road on
      */
-    public void addRoad(Edge edge)
+    public Road addRoad(Edge edge) throws RoadExistsException, CannotBuildRoadException
     {
         boolean valid = false;
         List<Integer> listsAddedTo = new ArrayList<Integer>();
         Road r = new Road(edge, colour);
+
+        if(edge.getRoad() != null)
+        {
+            throw new RoadExistsException(r);
+        }
 
         // Find out where this road is connected
         valid = checkRoadsAndAdd(r, listsAddedTo);
@@ -44,5 +51,8 @@ public class LocalPlayer extends Player
             else if(listsAddedTo.size() > 1)
                 mergeRoads(r, listsAddedTo);
         }
+        else throw new CannotBuildRoadException(r);
+
+        return r;
     }
 }

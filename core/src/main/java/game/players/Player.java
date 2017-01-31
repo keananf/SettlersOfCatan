@@ -28,7 +28,6 @@ public abstract class Player
 	protected boolean hasLongestRoad;
 	protected boolean hasLargestArmy;
 	protected HashMap<DevelopmentCardType, Integer> cards;
-	protected int numResources;
 	protected int armySize;
 
 	private static final int VP_THRESHOLD = 10;
@@ -181,6 +180,11 @@ public abstract class Player
 	 */
 	public int getNumResources()
 	{
+		int numResources = 0;
+		for(Integer i : resources.values())
+		{
+			numResources += i;
+		}
 		return numResources;
 	}
 	
@@ -215,7 +219,6 @@ public abstract class Player
 
 			// Add to overall resource bank
 			resources.put(r, value + existing);
-			numResources += value;
 		}
 	}
 
@@ -273,36 +276,7 @@ public abstract class Player
 
 			// Add to overall resource bank
 			resources.put(r, existing - value);
-			numResources -= value;
 		}
-	}
-
-	/**
-	 * Checks if a player has more than 7 resource cards.
-	 *
-	 * If so, cards are randomly removed until the player has 7 again.
-	 */
-	public Map<ResourceType, Integer> loseResources()
-	{
-		Random rand = new Random();
-		int resourceLimit = 7;
-		Map<ResourceType, Integer> removed = new HashMap<ResourceType, Integer>();
-
-		// Randomly remove resources until the cap is reached
-		while(numResources > resourceLimit)
-		{
-			ResourceType key = (ResourceType) resources.keySet().toArray()[rand.nextInt(resources.size())];
-
-			if(resources.get(key) > 0)
-			{
-				int existing =  removed.containsKey(key) ? removed.get(key) : 0;
-				resources.put(key, resources.get(key) - 1);
-				removed.put(key, existing + 1);
-				numResources--;
-			}
-		}
-
-		return removed;
 	}
 
 	/**

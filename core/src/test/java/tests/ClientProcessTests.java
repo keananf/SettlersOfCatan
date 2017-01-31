@@ -98,18 +98,15 @@ public class ClientProcessTests extends ClientTestHelper
     @Test
     public void roadTest()
     {
-        // Set up request
-        BuildProtos.RoadProto.Builder req = BuildProtos.RoadProto.newBuilder();
-        BoardProtos.EdgeProto e = n.getEdges().get(0).toEdgeProto();
-        BuildProtos.PointProto p1 = e.getP1(), p2 = e.getP2();
-        req.setP1(p1);
-        req.setP2(p2);
-        req.setPlayerId(EnumProtos.ColourProto.BLUE);
+        Edge edge = n.getEdges().get(0);
+
+        // Need a settlement before you can build a road.
+        processSettlementEvent(n, p.getColour());
 
         // Process request
-        clientGame.processRoad(req.build());
-        assertTrue(clientGame.getGrid().getEdge(req.build()).getRoad() != null);
-        assertTrue(clientGame.getGrid().getEdge(req.build()).getRoad().getPlayerColour().equals(Colour.BLUE));
+        processRoadEvent(edge, Colour.BLUE);
+        assertTrue(clientGame.getGrid().getEdge(edge.toEdgeProto()).getRoad() != null);
+        assertTrue(clientGame.getGrid().getEdge(edge.toEdgeProto()).getRoad().getPlayerColour().equals(Colour.BLUE));
     }
 
     @Test
@@ -382,34 +379,6 @@ public class ClientProcessTests extends ClientTestHelper
         // Move and check
         clientGame.recordDevCard(ev.getBoughtDevCard());
         assertTrue(clientGame.getBoughtDevCards().get(Colour.RED) == 1);
-    }
-
-    @Test
-    public void loseResourcesTest()
-    {
-        Node n = clientGame.getGrid().getNode(-1, 0);
-        int dice = n.getHexes().get(0).getChit();
-
-        // Build Settlement so resources can be granted
-        processSettlementEvent(n, p.getColour());
-
-        // Set up request
-        EventProtos.DiceRoll.Builder point = EventProtos.DiceRoll.newBuilder();
-        point.setDice(dice);
-
-        // Assert player has no resources
-        assertEquals(0, clientGame.getPlayer().getNumResources());
-
-        // Grant player 10 resources
-        for(int i = 0; i < 10; i++)
-            clientGame.processDice(point.build().getDice());
-
-
-        // Assert player has 10 resources, then process a '7'
-        assertEquals(clientGame.getDice(), dice);
-        assertEquals(10, clientGame.getPlayer().getNumResources());
-        clientGame.processDice(7);
-        assertEquals(7, clientGame.getPlayer().getNumResources());
     }
 
     @Test

@@ -241,7 +241,6 @@ public class NetworkPlayer extends Player
 	 */
 	public void restoreCopy(Player copy, DevelopmentCardType card)
 	{
-		numResources = 0;
 		resources = new HashMap<ResourceType, Integer>();
 		cards = new HashMap<DevelopmentCardType, Integer>();
 		settlements = new HashMap<Point, Building>();

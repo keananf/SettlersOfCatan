@@ -4,6 +4,8 @@ import board.*;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
+import exceptions.CannotBuildRoadException;
+import exceptions.RoadExistsException;
 import game.GameState;
 import game.build.Building;
 import game.build.City;
@@ -35,9 +37,11 @@ public class ClientGame extends GameState
     private Map<Colour, Integer> boughtDevCards;
     private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;
     private Player thisPlayer;
+    private EventProcessor eventProcessor;
 
     public ClientGame()
     {
+        //eventProcessor = new EventProcessor(new Socket(), this); // TODO set this when joining a lobby
         players = new HashMap<Colour, Player>();
         boughtDevCards = new HashMap<Colour, Integer>();
         playedDevCards = new HashMap<Colour, HashMap<DevelopmentCardType, Integer>>();
@@ -210,16 +214,13 @@ public class ClientGame extends GameState
      * Adds the new road received from the server to the board
      * @param newRoad the new road to add
      */
-    public Road processRoad(BuildProtos.RoadProto newRoad)
+    public Road processRoad(BuildProtos.RoadProto newRoad) throws RoadExistsException, CannotBuildRoadException
     {
         // Extract information and find edge
         Edge newEdge = grid.getEdge(newRoad);
 
         // Make new road object
-        Road r = new Road(newEdge, currentPlayer);
-        newEdge.setRoad(r);
-
-        ((LocalPlayer)players.get(currentPlayer)).addRoad(newEdge);
+        Road r = ((LocalPlayer)players.get(currentPlayer)).addRoad(newEdge);
         checkLongestRoad(false);
 
         return r;

@@ -66,6 +66,7 @@ public class ServerGame extends GameState
 
 			if(dice != 7)
 				player.grantResources(grant);
+
 			playerResources.put(player.getColour(), grant);
 		}
 
@@ -199,7 +200,29 @@ public class ServerGame extends GameState
         return resp.build();
 	}
 
+	/**
+	 * Processes the discard request to ensure that it is valid
+	 * @param discardRequest the resources the player is wishing to discard
+	 * @param col the colour of the player who sent the discard request
+	 * @return whether the discard request failed or not
+	 */
+	public void processDiscard(ResourceCount discardRequest, Colour col)
+			throws CannotAffordException, InvalidDiscardRequest
+	{
+		Player current = players.get(col);
+		int oldAmount = current.getNumResources(), newAmount = 0;
 
+		// If the player can afford the request, then spend the resources
+		current.spendResources(processResources(discardRequest));
+
+		// Invalid request.
+		if((newAmount = current.getNumResources()) > 7)
+		{
+			// Give resources back, and throw exception
+			current.grantResources(discardRequest);
+			throw new InvalidDiscardRequest(oldAmount, newAmount);
+		}
+	}
 
 	/**
 	 * Checks that the player can build a road at the desired location, and builds it.

@@ -50,7 +50,6 @@ public abstract class GameState
 		// If 7, check that no one is above the resource limit
 		if(dice == resourceLimit)
 		{
-			grant.putAll(player.loseResources());
 			return grant;
 		}
 

@@ -41,7 +41,7 @@ public class EventProcessor implements Runnable
                 processMessage();
             }
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -51,7 +51,7 @@ public class EventProcessor implements Runnable
      * Process the next message.
      * @throws IOException
      */
-    private void processMessage() throws IOException
+    private void processMessage() throws Exception
     {
         Message msg = Message.parseFrom(socket.getInputStream());
         logger.logReceivedMessage(msg);
@@ -102,7 +102,7 @@ public class EventProcessor implements Runnable
      * Processes the event received from the server and updates the game state
      * @param ev the event
      */
-    private void processEvent(Event ev)
+    private void processEvent(Event ev) throws Exception
     {
         // Switch on type of event
         switch(ev.getTypeCase())

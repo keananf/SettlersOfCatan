@@ -2,9 +2,7 @@ package tests;
 
 import board.Hex;
 import enums.Colour;
-import exceptions.CannotStealException;
-import exceptions.InvalidCoordinatesException;
-import exceptions.SettlementExistsException;
+import exceptions.*;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
@@ -12,10 +10,7 @@ import game.players.NetworkPlayer;
 import game.players.Player;
 import org.junit.Before;
 import org.junit.Test;
-import protocol.BoardProtos;
-import protocol.BuildProtos;
-import protocol.EnumProtos;
-import protocol.RequestProtos;
+import protocol.*;
 
 import static org.junit.Assert.*;
 
@@ -111,17 +106,50 @@ public class GameAndResourcesTests extends TestHelper
 		assertEquals(p2.getNumResources(), 1);
 	}
 
-	@Test
-	public void loseResourcesTest() // If you have over 7 resources, and a 7 is rolled
-	{		
-		// Grant the player over 7 resources
+	@Test(expected = InvalidDiscardRequest.class)
+	public void invalidDiscardTest() throws InvalidDiscardRequest, CannotAffordException
+	{
+		// Grant player more than 7 resources
 		p.grantResources(Settlement.getSettlementCost());
 		p.grantResources(Settlement.getSettlementCost());
-		assertTrue(p.getNumResources() >= 7);
+		p.grantResources(Settlement.getSettlementCost());
+		assertEquals(12, p.getNumResources());
 
-		// A '7' is rolled, so this player must lose it's excess resources
-		game.allocateResources(7);
-		assertEquals(7, p.getNumResources());
+		// Construct discard request. Discarding one card is NOT enough
+		ResourceProtos.ResourceCount.Builder discard = ResourceProtos.ResourceCount.newBuilder();
+		discard.setLumber(1);
+
+		game.processDiscard(discard.build(), p.getColour());
+	}
+
+	@Test(expected = CannotAffordException.class)
+	public void invalidDiscardTest2() throws InvalidDiscardRequest, CannotAffordException
+	{
+		// Grant player more than 7 resources
+		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(Settlement.getSettlementCost());
+		assertEquals(8, p.getNumResources());
+
+		// Construct discard request. Discarding one card is NOT enough
+		ResourceProtos.ResourceCount.Builder discard = ResourceProtos.ResourceCount.newBuilder();
+		discard.setLumber(3);
+
+		game.processDiscard(discard.build(), p.getColour());
+	}
+
+	@Test
+	public void discardTest() throws InvalidDiscardRequest, CannotAffordException
+	{
+		// Grant player more than 7 resources
+		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(Settlement.getSettlementCost());
+		assertEquals(8, p.getNumResources());
+
+		// Construct discard request
+		ResourceProtos.ResourceCount.Builder discard = ResourceProtos.ResourceCount.newBuilder();
+		discard.setLumber(1);
+
+		game.processDiscard(discard.build(), p.getColour());
 	}
 	
 	@Test

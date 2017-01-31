@@ -124,16 +124,11 @@ public class ClientWorker
 		//TODO: send protocol buffer to server
 	}
 
-	private Builder setUpRoad(Edge edge, Colour col)
+    private BuildRoadRequest setUpRoad(Edge edge, Colour col)
     {
-
-      RoadProto.Builder road = RoadProto.newBuilder();
-        PointProto.Builder node = PointProto.newBuilder();
         BuildRoadRequest.Builder roadRequest = BuildRoadRequest.newBuilder();
-
         roadRequest.setEdge(edge.toEdgeProto());
-        roadRequest.build();
 
-        return roadRequest;
+        return roadRequest.build();
     }
 }

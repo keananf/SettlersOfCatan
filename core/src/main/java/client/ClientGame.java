@@ -77,11 +77,10 @@ public class ClientGame extends GameState
         List<Node> nodes = processNodes(board.getNodesList());
         List<Hex> hexes = processHexes(board.getHexesList());
         List<Port> ports = processPorts(board.getPortsList());
-        List<Edge> edges = processEdges(board.getEdgesList());
 
         // Overwrite current grid
         grid.setNodesAndHexes(nodes, hexes);
-        grid.setEdgesAndPorts(edges, ports);
+        grid.setPorts(ports);
 
         return grid;
     }
@@ -151,25 +150,6 @@ public class ClientGame extends GameState
         }
 
         return ports;
-    }
-
-    /**
-     * Retrieve the edge objects referred to by the proto
-     * @param protos the edge protos
-     */
-    private List<Edge> processEdges(List<EdgeProto> protos)
-    {
-        List<Edge> edges = new ArrayList<Edge>();
-
-        // Add edges
-        for(EdgeProto e : protos)
-        {
-            PointProto p1 = e.getP1(), p2 = e.getP2();
-            Edge newEdge = new Edge(grid.getNode(p1.getX(), p1.getY()), grid.getNode(p2.getX(), p2.getY()));
-            edges.add(newEdge);
-        }
-
-        return edges;
     }
 
     /**

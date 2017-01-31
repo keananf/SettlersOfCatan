@@ -242,7 +242,7 @@ public abstract class Player
 		Point p = new Point(node.getX(), node.getY());
 		Settlement s = new Settlement(node, colour);
 
-		return canAfford(Settlement.getSettlementCost()) && !settlements.containsKey(p) && s.isNearSettlement();
+		return canAfford(Settlement.getSettlementCost()) && !settlements.containsKey(p) && !s.isNearSettlement();
 	}
 
 	/**

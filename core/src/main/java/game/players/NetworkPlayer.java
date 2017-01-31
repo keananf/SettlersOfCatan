@@ -106,6 +106,11 @@ public class NetworkPlayer extends Player
 			addSettlement(s);
 		}
 
+		else if(!canAfford(Settlement.getSettlementCost()))
+		{
+			throw new CannotAffordException(resources, Settlement.getSettlementCost());
+		}
+
 		// Check if empty
 		else if(node.getSettlement() != null)
 		{
@@ -169,11 +174,14 @@ public class NetworkPlayer extends Player
 			spendResources(c.getCost());
 			addSettlement(c);
 		}
+		else if(node.getSettlement() == null)
+		{
+			throw new CannotUpgradeException(node.getX(), node.getY());
+		}
 		else if (!canAfford(City.getCityCost()))
 		{
 			throw new CannotAffordException(getResources(), City.getCityCost());
 		}
-		else throw new CannotUpgradeException(node.getX(), node.getY());
 	}
 
 	/**

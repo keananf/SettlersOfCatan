@@ -7,7 +7,9 @@ import enums.DevelopmentCardType;
 import enums.ResourceType;
 import exceptions.CannotAffordException;
 import game.build.Building;
+import game.build.City;
 import game.build.Road;
+import game.build.Settlement;
 import protocol.ResourceProtos;
 
 import java.awt.*;
@@ -203,6 +205,56 @@ public abstract class Player
 		}
 		
 		return true;
+	}
+
+	/**
+	 * Checks to see if building a road is valid at the given edge
+	 * @param edge the desired road location
+	 * @return if the desired location is valid for a road
+	 */
+	public boolean canBuildRoad(Edge edge)
+	{
+		boolean valid = false;
+
+		// See if the proposed node is connected to any of the current roads
+		for(List<Road> list : roads)
+		{
+			for(Road r : list)
+			{
+				if(r.getEdge().isConnected(edge))
+				{
+					valid = true;
+					break;
+				}
+			}
+		}
+
+		return canAfford(Road.getRoadCost()) && edge.getRoad() == null && valid;
+	}
+
+	/**
+	 * Checks to see if the player can build a settlement
+	 * @param node the desired settlement location
+	 * @return if building a settlement at the given node is legal
+	 */
+	public boolean canBuildSettlement(Node node)
+	{
+		Point p = new Point(node.getX(), node.getY());
+		Settlement s = new Settlement(node, colour);
+
+		return canAfford(Settlement.getSettlementCost()) && !settlements.containsKey(p) && s.isNearSettlement();
+	}
+
+	/**
+	 * Checks to see if the player can build a city
+	 * @param node the desired city location
+	 * @return if building a city at the given node is legal
+	 */
+	public boolean canBuildCity(Node node)
+	{
+		Point p = new Point(node.getX(), node.getY());
+
+		return canAfford(City.getCityCost()) && settlements.containsKey(p) && settlements.get(p) instanceof Settlement;
 	}
 
 	/**

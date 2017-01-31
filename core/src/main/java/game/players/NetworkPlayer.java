@@ -132,11 +132,9 @@ public class NetworkPlayer extends Player
 	 */
 	public DevelopmentCardType buyDevelopmentCard(DevelopmentCardType card) throws CannotAffordException
 	{
-		int existing = cards.containsKey(card) ? cards.get(card) : 0;
-
 		// Try to buy a development card
 		spendResources(DevelopmentCardType.getCardCost());
-		cards.put(card, existing + 1);
+		addDevelopmentCard(card);
 
 		return card;
 	}

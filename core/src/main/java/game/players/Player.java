@@ -477,4 +477,14 @@ public abstract class Player
 		addVp(1);
 		settlements.put(point, b);
 	}
+
+	/**
+	 * Adds the given development card
+	 * @param type the development card to add
+	 */
+    public void addDevelopmentCard(DevelopmentCardType type)
+	{
+		int existing = cards.containsKey(type) ? cards.get(type) : 0;
+		cards.put(type, existing + 1);
+	}
 }

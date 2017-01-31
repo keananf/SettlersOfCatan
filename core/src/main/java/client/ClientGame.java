@@ -31,6 +31,7 @@ import java.util.Map;
 public class ClientGame extends GameState
 {
     private boolean gameOver;
+
     private int dice;
     private Map<Colour, Integer> boughtDevCards;
     private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;

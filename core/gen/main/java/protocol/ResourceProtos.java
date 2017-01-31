@@ -6,13 +6,7 @@ package protocol;
 public final class ResourceProtos {
   private ResourceProtos() {}
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
-
-  public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   public interface ResourceAllocationOrBuilder extends
       // @@protoc_insertion_point(interface_extends:ResourceAllocation)
@@ -43,28 +37,37 @@ public final class ResourceProtos {
   /**
    * Protobuf type {@code ResourceAllocation}
    */
-  public  static final class ResourceAllocation extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class ResourceAllocation extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:ResourceAllocation)
       ResourceAllocationOrBuilder {
     // Use ResourceAllocation.newBuilder() to construct.
-    private ResourceAllocation(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private ResourceAllocation(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private ResourceAllocation() {
-      playerColour_ = 1;
+    private ResourceAllocation(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final ResourceAllocation defaultInstance;
+    public static ResourceAllocation getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public ResourceAllocation getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private ResourceAllocation(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -103,7 +106,7 @@ public final class ResourceProtos {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
                 bitField0_ |= 0x00000002;
-                playerColour_ = rawValue;
+                playerColour_ = value;
               }
               break;
             }
@@ -113,7 +116,7 @@ public final class ResourceProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -124,11 +127,26 @@ public final class ResourceProtos {
       return protocol.ResourceProtos.internal_static_ResourceAllocation_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResourceProtos.internal_static_ResourceAllocation_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResourceProtos.ResourceAllocation.class, protocol.ResourceProtos.ResourceAllocation.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<ResourceAllocation> PARSER =
+        new com.google.protobuf.AbstractParser<ResourceAllocation>() {
+      public ResourceAllocation parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ResourceAllocation(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ResourceAllocation> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -144,17 +162,17 @@ public final class ResourceProtos {
      * <code>required .ResourceCount resources = 1;</code>
      */
     public protocol.ResourceProtos.ResourceCount getResources() {
-      return resources_ == null ? protocol.ResourceProtos.ResourceCount.getDefaultInstance() : resources_;
+      return resources_;
     }
     /**
      * <code>required .ResourceCount resources = 1;</code>
      */
     public protocol.ResourceProtos.ResourceCountOrBuilder getResourcesOrBuilder() {
-      return resources_ == null ? protocol.ResourceProtos.ResourceCount.getDefaultInstance() : resources_;
+      return resources_;
     }
 
     public static final int PLAYERCOLOUR_FIELD_NUMBER = 2;
-    private int playerColour_;
+    private protocol.EnumProtos.ColourProto playerColour_;
     /**
      * <code>required .ColourProto playerColour = 2;</code>
      */
@@ -165,10 +183,13 @@ public final class ResourceProtos {
      * <code>required .ColourProto playerColour = 2;</code>
      */
     public protocol.EnumProtos.ColourProto getPlayerColour() {
-      protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(playerColour_);
-      return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+      return playerColour_;
     }
 
+    private void initFields() {
+      resources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      playerColour_ = protocol.EnumProtos.ColourProto.RED;
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -189,76 +210,40 @@ public final class ResourceProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, getResources());
+        output.writeMessage(1, resources_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, playerColour_);
+        output.writeEnum(2, playerColour_.getNumber());
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getResources());
+          .computeMessageSize(1, resources_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, playerColour_);
+          .computeEnumSize(2, playerColour_.getNumber());
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResourceProtos.ResourceAllocation)) {
-        return super.equals(obj);
-      }
-      protocol.ResourceProtos.ResourceAllocation other = (protocol.ResourceProtos.ResourceAllocation) obj;
-
-      boolean result = true;
-      result = result && (hasResources() == other.hasResources());
-      if (hasResources()) {
-        result = result && getResources()
-            .equals(other.getResources());
-      }
-      result = result && (hasPlayerColour() == other.hasPlayerColour());
-      if (hasPlayerColour()) {
-        result = result && playerColour_ == other.playerColour_;
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasResources()) {
-        hash = (37 * hash) + RESOURCES_FIELD_NUMBER;
-        hash = (53 * hash) + getResources().hashCode();
-      }
-      if (hasPlayerColour()) {
-        hash = (37 * hash) + PLAYERCOLOUR_FIELD_NUMBER;
-        hash = (53 * hash) + playerColour_;
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResourceProtos.ResourceAllocation parseFrom(
@@ -284,57 +269,46 @@ public final class ResourceProtos {
     }
     public static protocol.ResourceProtos.ResourceAllocation parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResourceProtos.ResourceAllocation parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResourceProtos.ResourceAllocation parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResourceProtos.ResourceAllocation parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResourceProtos.ResourceAllocation parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResourceProtos.ResourceAllocation parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResourceProtos.ResourceAllocation prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -342,7 +316,7 @@ public final class ResourceProtos {
      * Protobuf type {@code ResourceAllocation}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:ResourceAllocation)
         protocol.ResourceProtos.ResourceAllocationOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -350,7 +324,7 @@ public final class ResourceProtos {
         return protocol.ResourceProtos.internal_static_ResourceAllocation_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResourceProtos.internal_static_ResourceAllocation_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -363,27 +337,34 @@ public final class ResourceProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getResourcesFieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         if (resourcesBuilder_ == null) {
-          resources_ = null;
+          resources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
         } else {
           resourcesBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
-        playerColour_ = 1;
+        playerColour_ = protocol.EnumProtos.ColourProto.RED;
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -424,32 +405,6 @@ public final class ResourceProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResourceProtos.ResourceAllocation) {
           return mergeFrom((protocol.ResourceProtos.ResourceAllocation)other);
@@ -467,16 +422,17 @@ public final class ResourceProtos {
         if (other.hasPlayerColour()) {
           setPlayerColour(other.getPlayerColour());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasResources()) {
+          
           return false;
         }
         if (!hasPlayerColour()) {
+          
           return false;
         }
         return true;
@@ -491,7 +447,7 @@ public final class ResourceProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResourceProtos.ResourceAllocation) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -501,8 +457,8 @@ public final class ResourceProtos {
       }
       private int bitField0_;
 
-      private protocol.ResourceProtos.ResourceCount resources_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.ResourceProtos.ResourceCount resources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> resourcesBuilder_;
       /**
        * <code>required .ResourceCount resources = 1;</code>
@@ -515,7 +471,7 @@ public final class ResourceProtos {
        */
       public protocol.ResourceProtos.ResourceCount getResources() {
         if (resourcesBuilder_ == null) {
-          return resources_ == null ? protocol.ResourceProtos.ResourceCount.getDefaultInstance() : resources_;
+          return resources_;
         } else {
           return resourcesBuilder_.getMessage();
         }
@@ -556,7 +512,6 @@ public final class ResourceProtos {
       public Builder mergeResources(protocol.ResourceProtos.ResourceCount value) {
         if (resourcesBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              resources_ != null &&
               resources_ != protocol.ResourceProtos.ResourceCount.getDefaultInstance()) {
             resources_ =
               protocol.ResourceProtos.ResourceCount.newBuilder(resources_).mergeFrom(value).buildPartial();
@@ -575,7 +530,7 @@ public final class ResourceProtos {
        */
       public Builder clearResources() {
         if (resourcesBuilder_ == null) {
-          resources_ = null;
+          resources_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
           onChanged();
         } else {
           resourcesBuilder_.clear();
@@ -598,18 +553,17 @@ public final class ResourceProtos {
         if (resourcesBuilder_ != null) {
           return resourcesBuilder_.getMessageOrBuilder();
         } else {
-          return resources_ == null ?
-              protocol.ResourceProtos.ResourceCount.getDefaultInstance() : resources_;
+          return resources_;
         }
       }
       /**
        * <code>required .ResourceCount resources = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> 
           getResourcesFieldBuilder() {
         if (resourcesBuilder_ == null) {
-          resourcesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          resourcesBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder>(
                   getResources(),
                   getParentForChildren(),
@@ -619,7 +573,7 @@ public final class ResourceProtos {
         return resourcesBuilder_;
       }
 
-      private int playerColour_ = 1;
+      private protocol.EnumProtos.ColourProto playerColour_ = protocol.EnumProtos.ColourProto.RED;
       /**
        * <code>required .ColourProto playerColour = 2;</code>
        */
@@ -630,8 +584,7 @@ public final class ResourceProtos {
        * <code>required .ColourProto playerColour = 2;</code>
        */
       public protocol.EnumProtos.ColourProto getPlayerColour() {
-        protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(playerColour_);
-        return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+        return playerColour_;
       }
       /**
        * <code>required .ColourProto playerColour = 2;</code>
@@ -641,7 +594,7 @@ public final class ResourceProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000002;
-        playerColour_ = value.getNumber();
+        playerColour_ = value;
         onChanged();
         return this;
       }
@@ -650,57 +603,20 @@ public final class ResourceProtos {
        */
       public Builder clearPlayerColour() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        playerColour_ = 1;
+        playerColour_ = protocol.EnumProtos.ColourProto.RED;
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:ResourceAllocation)
     }
 
-    // @@protoc_insertion_point(class_scope:ResourceAllocation)
-    private static final protocol.ResourceProtos.ResourceAllocation DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResourceProtos.ResourceAllocation();
+      defaultInstance = new ResourceAllocation(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResourceProtos.ResourceAllocation getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<ResourceAllocation>
-        PARSER = new com.google.protobuf.AbstractParser<ResourceAllocation>() {
-      public ResourceAllocation parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new ResourceAllocation(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<ResourceAllocation> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<ResourceAllocation> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResourceProtos.ResourceAllocation getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:ResourceAllocation)
   }
 
   public interface ResourceCountOrBuilder extends
@@ -755,32 +671,37 @@ public final class ResourceProtos {
   /**
    * Protobuf type {@code ResourceCount}
    */
-  public  static final class ResourceCount extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class ResourceCount extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:ResourceCount)
       ResourceCountOrBuilder {
     // Use ResourceCount.newBuilder() to construct.
-    private ResourceCount(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private ResourceCount(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private ResourceCount() {
-      brick_ = 0;
-      lumber_ = 0;
-      wool_ = 0;
-      grain_ = 0;
-      ore_ = 0;
+    private ResourceCount(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final ResourceCount defaultInstance;
+    public static ResourceCount getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public ResourceCount getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private ResourceCount(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -830,7 +751,7 @@ public final class ResourceProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -841,11 +762,26 @@ public final class ResourceProtos {
       return protocol.ResourceProtos.internal_static_ResourceCount_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResourceProtos.internal_static_ResourceCount_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResourceProtos.ResourceCount.class, protocol.ResourceProtos.ResourceCount.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<ResourceCount> PARSER =
+        new com.google.protobuf.AbstractParser<ResourceCount>() {
+      public ResourceCount parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ResourceCount(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ResourceCount> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -924,6 +860,13 @@ public final class ResourceProtos {
       return ore_;
     }
 
+    private void initFields() {
+      brick_ = 0;
+      lumber_ = 0;
+      wool_ = 0;
+      grain_ = 0;
+      ore_ = 0;
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -936,6 +879,7 @@ public final class ResourceProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt32(1, brick_);
       }
@@ -951,11 +895,12 @@ public final class ResourceProtos {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeInt32(5, ore_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
@@ -979,82 +924,16 @@ public final class ResourceProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(5, ore_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResourceProtos.ResourceCount)) {
-        return super.equals(obj);
-      }
-      protocol.ResourceProtos.ResourceCount other = (protocol.ResourceProtos.ResourceCount) obj;
-
-      boolean result = true;
-      result = result && (hasBrick() == other.hasBrick());
-      if (hasBrick()) {
-        result = result && (getBrick()
-            == other.getBrick());
-      }
-      result = result && (hasLumber() == other.hasLumber());
-      if (hasLumber()) {
-        result = result && (getLumber()
-            == other.getLumber());
-      }
-      result = result && (hasWool() == other.hasWool());
-      if (hasWool()) {
-        result = result && (getWool()
-            == other.getWool());
-      }
-      result = result && (hasGrain() == other.hasGrain());
-      if (hasGrain()) {
-        result = result && (getGrain()
-            == other.getGrain());
-      }
-      result = result && (hasOre() == other.hasOre());
-      if (hasOre()) {
-        result = result && (getOre()
-            == other.getOre());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasBrick()) {
-        hash = (37 * hash) + BRICK_FIELD_NUMBER;
-        hash = (53 * hash) + getBrick();
-      }
-      if (hasLumber()) {
-        hash = (37 * hash) + LUMBER_FIELD_NUMBER;
-        hash = (53 * hash) + getLumber();
-      }
-      if (hasWool()) {
-        hash = (37 * hash) + WOOL_FIELD_NUMBER;
-        hash = (53 * hash) + getWool();
-      }
-      if (hasGrain()) {
-        hash = (37 * hash) + GRAIN_FIELD_NUMBER;
-        hash = (53 * hash) + getGrain();
-      }
-      if (hasOre()) {
-        hash = (37 * hash) + ORE_FIELD_NUMBER;
-        hash = (53 * hash) + getOre();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResourceProtos.ResourceCount parseFrom(
@@ -1080,57 +959,46 @@ public final class ResourceProtos {
     }
     public static protocol.ResourceProtos.ResourceCount parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResourceProtos.ResourceCount parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResourceProtos.ResourceCount parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResourceProtos.ResourceCount parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResourceProtos.ResourceCount parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResourceProtos.ResourceCount parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResourceProtos.ResourceCount prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -1138,7 +1006,7 @@ public final class ResourceProtos {
      * Protobuf type {@code ResourceCount}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:ResourceCount)
         protocol.ResourceProtos.ResourceCountOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -1146,7 +1014,7 @@ public final class ResourceProtos {
         return protocol.ResourceProtos.internal_static_ResourceCount_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResourceProtos.internal_static_ResourceCount_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -1159,15 +1027,18 @@ public final class ResourceProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         brick_ = 0;
@@ -1181,6 +1052,10 @@ public final class ResourceProtos {
         ore_ = 0;
         bitField0_ = (bitField0_ & ~0x00000010);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -1229,32 +1104,6 @@ public final class ResourceProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResourceProtos.ResourceCount) {
           return mergeFrom((protocol.ResourceProtos.ResourceCount)other);
@@ -1281,8 +1130,7 @@ public final class ResourceProtos {
         if (other.hasOre()) {
           setOre(other.getOre());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
@@ -1299,7 +1147,7 @@ public final class ResourceProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResourceProtos.ResourceCount) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -1468,71 +1316,34 @@ public final class ResourceProtos {
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:ResourceCount)
     }
 
-    // @@protoc_insertion_point(class_scope:ResourceCount)
-    private static final protocol.ResourceProtos.ResourceCount DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResourceProtos.ResourceCount();
+      defaultInstance = new ResourceCount(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResourceProtos.ResourceCount getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<ResourceCount>
-        PARSER = new com.google.protobuf.AbstractParser<ResourceCount>() {
-      public ResourceCount parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new ResourceCount(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<ResourceCount> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<ResourceCount> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResourceProtos.ResourceCount getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:ResourceCount)
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_ResourceAllocation_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_ResourceAllocation_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_ResourceCount_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_ResourceCount_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
   }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
+  private static com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
   static {
     java.lang.String[] descriptorData = {
@@ -1560,13 +1371,13 @@ public final class ResourceProtos {
     internal_static_ResourceAllocation_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_ResourceAllocation_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ResourceAllocation_descriptor,
         new java.lang.String[] { "Resources", "PlayerColour", });
     internal_static_ResourceCount_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_ResourceCount_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ResourceCount_descriptor,
         new java.lang.String[] { "Brick", "Lumber", "Wool", "Grain", "Ore", });
     protocol.EnumProtos.getDescriptor();

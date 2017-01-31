@@ -6,13 +6,7 @@ package protocol;
 public final class EnumProtos {
   private EnumProtos() {}
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
-
-  public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   /**
    * Protobuf enum {@code ColourProto}
@@ -22,19 +16,19 @@ public final class EnumProtos {
     /**
      * <code>RED = 1;</code>
      */
-    RED(1),
+    RED(0, 1),
     /**
      * <code>BLUE = 2;</code>
      */
-    BLUE(2),
+    BLUE(1, 2),
     /**
      * <code>ORANGE = 3;</code>
      */
-    ORANGE(3),
+    ORANGE(2, 3),
     /**
      * <code>WHITE = 4;</code>
      */
-    WHITE(4),
+    WHITE(3, 4),
     ;
 
     /**
@@ -55,19 +49,9 @@ public final class EnumProtos {
     public static final int WHITE_VALUE = 4;
 
 
-    public final int getNumber() {
-      return value;
-    }
+    public final int getNumber() { return value; }
 
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
     public static ColourProto valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static ColourProto forNumber(int value) {
       switch (value) {
         case 1: return RED;
         case 2: return BLUE;
@@ -81,17 +65,17 @@ public final class EnumProtos {
         internalGetValueMap() {
       return internalValueMap;
     }
-    private static final com.google.protobuf.Internal.EnumLiteMap<
-        ColourProto> internalValueMap =
+    private static com.google.protobuf.Internal.EnumLiteMap<ColourProto>
+        internalValueMap =
           new com.google.protobuf.Internal.EnumLiteMap<ColourProto>() {
             public ColourProto findValueByNumber(int number) {
-              return ColourProto.forNumber(number);
+              return ColourProto.valueOf(number);
             }
           };
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
         getValueDescriptor() {
-      return getDescriptor().getValues().get(ordinal());
+      return getDescriptor().getValues().get(index);
     }
     public final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptorForType() {
@@ -113,9 +97,11 @@ public final class EnumProtos {
       return VALUES[desc.getIndex()];
     }
 
+    private final int index;
     private final int value;
 
-    private ColourProto(int value) {
+    private ColourProto(int index, int value) {
+      this.index = index;
       this.value = value;
     }
 
@@ -130,31 +116,31 @@ public final class EnumProtos {
     /**
      * <code>BRICK = 1;</code>
      */
-    BRICK(1),
+    BRICK(0, 1),
     /**
      * <code>LUMBER = 2;</code>
      */
-    LUMBER(2),
+    LUMBER(1, 2),
     /**
      * <code>WOOL = 3;</code>
      */
-    WOOL(3),
+    WOOL(2, 3),
     /**
      * <code>GRAIN = 4;</code>
      */
-    GRAIN(4),
+    GRAIN(3, 4),
     /**
      * <code>ORE = 5;</code>
      */
-    ORE(5),
+    ORE(4, 5),
     /**
+     * <code>GENERIC = 6;</code>
+     *
      * <pre>
      * useful within the context of defining a generic port 
      * </pre>
-     *
-     * <code>GENERIC = 6;</code>
      */
-    GENERIC(6),
+    GENERIC(5, 6),
     ;
 
     /**
@@ -178,28 +164,18 @@ public final class EnumProtos {
      */
     public static final int ORE_VALUE = 5;
     /**
+     * <code>GENERIC = 6;</code>
+     *
      * <pre>
      * useful within the context of defining a generic port 
      * </pre>
-     *
-     * <code>GENERIC = 6;</code>
      */
     public static final int GENERIC_VALUE = 6;
 
 
-    public final int getNumber() {
-      return value;
-    }
+    public final int getNumber() { return value; }
 
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
     public static ResourceTypeProto valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static ResourceTypeProto forNumber(int value) {
       switch (value) {
         case 1: return BRICK;
         case 2: return LUMBER;
@@ -215,17 +191,17 @@ public final class EnumProtos {
         internalGetValueMap() {
       return internalValueMap;
     }
-    private static final com.google.protobuf.Internal.EnumLiteMap<
-        ResourceTypeProto> internalValueMap =
+    private static com.google.protobuf.Internal.EnumLiteMap<ResourceTypeProto>
+        internalValueMap =
           new com.google.protobuf.Internal.EnumLiteMap<ResourceTypeProto>() {
             public ResourceTypeProto findValueByNumber(int number) {
-              return ResourceTypeProto.forNumber(number);
+              return ResourceTypeProto.valueOf(number);
             }
           };
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
         getValueDescriptor() {
-      return getDescriptor().getValues().get(ordinal());
+      return getDescriptor().getValues().get(index);
     }
     public final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptorForType() {
@@ -247,9 +223,11 @@ public final class EnumProtos {
       return VALUES[desc.getIndex()];
     }
 
+    private final int index;
     private final int value;
 
-    private ResourceTypeProto(int value) {
+    private ResourceTypeProto(int index, int value) {
+      this.index = index;
       this.value = value;
     }
 
@@ -264,11 +242,11 @@ public final class EnumProtos {
     /**
      * <code>SETTLEMENT = 1;</code>
      */
-    SETTLEMENT(1),
+    SETTLEMENT(0, 1),
     /**
      * <code>CITY = 2;</code>
      */
-    CITY(2),
+    CITY(1, 2),
     ;
 
     /**
@@ -281,19 +259,9 @@ public final class EnumProtos {
     public static final int CITY_VALUE = 2;
 
 
-    public final int getNumber() {
-      return value;
-    }
+    public final int getNumber() { return value; }
 
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
     public static BuildingTypeProto valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static BuildingTypeProto forNumber(int value) {
       switch (value) {
         case 1: return SETTLEMENT;
         case 2: return CITY;
@@ -305,17 +273,17 @@ public final class EnumProtos {
         internalGetValueMap() {
       return internalValueMap;
     }
-    private static final com.google.protobuf.Internal.EnumLiteMap<
-        BuildingTypeProto> internalValueMap =
+    private static com.google.protobuf.Internal.EnumLiteMap<BuildingTypeProto>
+        internalValueMap =
           new com.google.protobuf.Internal.EnumLiteMap<BuildingTypeProto>() {
             public BuildingTypeProto findValueByNumber(int number) {
-              return BuildingTypeProto.forNumber(number);
+              return BuildingTypeProto.valueOf(number);
             }
           };
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
         getValueDescriptor() {
-      return getDescriptor().getValues().get(ordinal());
+      return getDescriptor().getValues().get(index);
     }
     public final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptorForType() {
@@ -337,9 +305,11 @@ public final class EnumProtos {
       return VALUES[desc.getIndex()];
     }
 
+    private final int index;
     private final int value;
 
-    private BuildingTypeProto(int value) {
+    private BuildingTypeProto(int index, int value) {
+      this.index = index;
       this.value = value;
     }
 
@@ -354,33 +324,33 @@ public final class EnumProtos {
     /**
      * <code>KNIGHT = 1;</code>
      */
-    KNIGHT(1),
+    KNIGHT(0, 1),
     /**
      * <code>ROAD_BUILDING = 2;</code>
      */
-    ROAD_BUILDING(2),
+    ROAD_BUILDING(1, 2),
     /**
      * <code>MONOPOLY = 3;</code>
      */
-    MONOPOLY(3),
+    MONOPOLY(2, 3),
     /**
      * <code>YEAR_OF_PLENTY = 4;</code>
      */
-    YEAR_OF_PLENTY(4),
+    YEAR_OF_PLENTY(3, 4),
     /**
      * <code>LIBRARY = 5;</code>
      */
-    LIBRARY(5),
+    LIBRARY(4, 5),
     /**
+     * <code>UNIVERSITY = 69;</code>
+     *
      * <pre>
      *PALACE = 7;
      *MARKET = 8;
      *CHAPEL = 9;
      * </pre>
-     *
-     * <code>UNIVERSITY = 69;</code>
      */
-    UNIVERSITY(69),
+    UNIVERSITY(5, 69),
     ;
 
     /**
@@ -404,30 +374,20 @@ public final class EnumProtos {
      */
     public static final int LIBRARY_VALUE = 5;
     /**
+     * <code>UNIVERSITY = 69;</code>
+     *
      * <pre>
      *PALACE = 7;
      *MARKET = 8;
      *CHAPEL = 9;
      * </pre>
-     *
-     * <code>UNIVERSITY = 69;</code>
      */
     public static final int UNIVERSITY_VALUE = 69;
 
 
-    public final int getNumber() {
-      return value;
-    }
+    public final int getNumber() { return value; }
 
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
     public static DevelopmentCardProto valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static DevelopmentCardProto forNumber(int value) {
       switch (value) {
         case 1: return KNIGHT;
         case 2: return ROAD_BUILDING;
@@ -443,17 +403,17 @@ public final class EnumProtos {
         internalGetValueMap() {
       return internalValueMap;
     }
-    private static final com.google.protobuf.Internal.EnumLiteMap<
-        DevelopmentCardProto> internalValueMap =
+    private static com.google.protobuf.Internal.EnumLiteMap<DevelopmentCardProto>
+        internalValueMap =
           new com.google.protobuf.Internal.EnumLiteMap<DevelopmentCardProto>() {
             public DevelopmentCardProto findValueByNumber(int number) {
-              return DevelopmentCardProto.forNumber(number);
+              return DevelopmentCardProto.valueOf(number);
             }
           };
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
         getValueDescriptor() {
-      return getDescriptor().getValues().get(ordinal());
+      return getDescriptor().getValues().get(index);
     }
     public final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptorForType() {
@@ -475,9 +435,11 @@ public final class EnumProtos {
       return VALUES[desc.getIndex()];
     }
 
+    private final int index;
     private final int value;
 
-    private DevelopmentCardProto(int value) {
+    private DevelopmentCardProto(int index, int value) {
+      this.index = index;
       this.value = value;
     }
 
@@ -492,15 +454,15 @@ public final class EnumProtos {
     /**
      * <code>ACCEPT = 1;</code>
      */
-    ACCEPT(1),
+    ACCEPT(0, 1),
     /**
      * <code>REJECT = 2;</code>
      */
-    REJECT(2),
+    REJECT(1, 2),
     /**
      * <code>PENDING = 3;</code>
      */
-    PENDING(3),
+    PENDING(2, 3),
     ;
 
     /**
@@ -517,19 +479,9 @@ public final class EnumProtos {
     public static final int PENDING_VALUE = 3;
 
 
-    public final int getNumber() {
-      return value;
-    }
+    public final int getNumber() { return value; }
 
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
     public static TradeStatusProto valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static TradeStatusProto forNumber(int value) {
       switch (value) {
         case 1: return ACCEPT;
         case 2: return REJECT;
@@ -542,17 +494,17 @@ public final class EnumProtos {
         internalGetValueMap() {
       return internalValueMap;
     }
-    private static final com.google.protobuf.Internal.EnumLiteMap<
-        TradeStatusProto> internalValueMap =
+    private static com.google.protobuf.Internal.EnumLiteMap<TradeStatusProto>
+        internalValueMap =
           new com.google.protobuf.Internal.EnumLiteMap<TradeStatusProto>() {
             public TradeStatusProto findValueByNumber(int number) {
-              return TradeStatusProto.forNumber(number);
+              return TradeStatusProto.valueOf(number);
             }
           };
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
         getValueDescriptor() {
-      return getDescriptor().getValues().get(ordinal());
+      return getDescriptor().getValues().get(index);
     }
     public final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptorForType() {
@@ -574,9 +526,11 @@ public final class EnumProtos {
       return VALUES[desc.getIndex()];
     }
 
+    private final int index;
     private final int value;
 
-    private TradeStatusProto(int value) {
+    private TradeStatusProto(int index, int value) {
+      this.index = index;
       this.value = value;
     }
 
@@ -591,11 +545,11 @@ public final class EnumProtos {
     /**
      * <code>SUCCESS = 1;</code>
      */
-    SUCCESS(1),
+    SUCCESS(0, 1),
     /**
      * <code>FAILURE = 2;</code>
      */
-    FAILURE(2),
+    FAILURE(1, 2),
     ;
 
     /**
@@ -608,19 +562,9 @@ public final class EnumProtos {
     public static final int FAILURE_VALUE = 2;
 
 
-    public final int getNumber() {
-      return value;
-    }
+    public final int getNumber() { return value; }
 
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
     public static ResultProto valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static ResultProto forNumber(int value) {
       switch (value) {
         case 1: return SUCCESS;
         case 2: return FAILURE;
@@ -632,17 +576,17 @@ public final class EnumProtos {
         internalGetValueMap() {
       return internalValueMap;
     }
-    private static final com.google.protobuf.Internal.EnumLiteMap<
-        ResultProto> internalValueMap =
+    private static com.google.protobuf.Internal.EnumLiteMap<ResultProto>
+        internalValueMap =
           new com.google.protobuf.Internal.EnumLiteMap<ResultProto>() {
             public ResultProto findValueByNumber(int number) {
-              return ResultProto.forNumber(number);
+              return ResultProto.valueOf(number);
             }
           };
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
         getValueDescriptor() {
-      return getDescriptor().getValues().get(ordinal());
+      return getDescriptor().getValues().get(index);
     }
     public final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptorForType() {
@@ -664,9 +608,11 @@ public final class EnumProtos {
       return VALUES[desc.getIndex()];
     }
 
+    private final int index;
     private final int value;
 
-    private ResultProto(int value) {
+    private ResultProto(int index, int value) {
+      this.index = index;
       this.value = value;
     }
 
@@ -678,7 +624,7 @@ public final class EnumProtos {
       getDescriptor() {
     return descriptor;
   }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
+  private static com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
   static {
     java.lang.String[] descriptorData = {

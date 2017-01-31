@@ -6,13 +6,7 @@ package protocol;
 public final class EventProtos {
   private EventProtos() {}
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
-
-  public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   public interface EventOrBuilder extends
       // @@protoc_insertion_point(interface_extends:Event)
@@ -152,33 +146,41 @@ public final class EventProtos {
      * <code>optional .Theft theft = 11;</code>
      */
     protocol.EventProtos.TheftOrBuilder getTheftOrBuilder();
-
-    public protocol.EventProtos.Event.TypeCase getTypeCase();
   }
   /**
    * Protobuf type {@code Event}
    */
-  public  static final class Event extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class Event extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:Event)
       EventOrBuilder {
     // Use Event.newBuilder() to construct.
-    private Event(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private Event(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Event() {
+    private Event(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final Event defaultInstance;
+    public static Event getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public Event getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private Event(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -202,8 +204,7 @@ public final class EventProtos {
               if (typeCase_ == 1) {
                 subBuilder = ((protocol.EventProtos.Error) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.EventProtos.Error.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.EventProtos.Error.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.EventProtos.Error) type_);
                 type_ = subBuilder.buildPartial();
@@ -216,8 +217,7 @@ public final class EventProtos {
               if (typeCase_ == 2) {
                 subBuilder = ((protocol.EventProtos.DiceRoll) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.EventProtos.DiceRoll.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.EventProtos.DiceRoll.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.EventProtos.DiceRoll) type_);
                 type_ = subBuilder.buildPartial();
@@ -230,8 +230,7 @@ public final class EventProtos {
               if (typeCase_ == 3) {
                 subBuilder = ((protocol.BuildProtos.RoadProto) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.BuildProtos.RoadProto.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.BuildProtos.RoadProto.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.BuildProtos.RoadProto) type_);
                 type_ = subBuilder.buildPartial();
@@ -244,8 +243,7 @@ public final class EventProtos {
               if (typeCase_ == 4) {
                 subBuilder = ((protocol.BuildProtos.BuildingProto) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.BuildProtos.BuildingProto.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.BuildProtos.BuildingProto.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.BuildProtos.BuildingProto) type_);
                 type_ = subBuilder.buildPartial();
@@ -260,7 +258,7 @@ public final class EventProtos {
                 unknownFields.mergeVarintField(5, rawValue);
               } else {
                 typeCase_ = 5;
-                type_ = rawValue;
+                type_ = value;
               }
               break;
             }
@@ -269,8 +267,7 @@ public final class EventProtos {
               if (typeCase_ == 6) {
                 subBuilder = ((protocol.EventProtos.PlayDevCardEvent) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.EventProtos.PlayDevCardEvent.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.EventProtos.PlayDevCardEvent.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.EventProtos.PlayDevCardEvent) type_);
                 type_ = subBuilder.buildPartial();
@@ -283,8 +280,7 @@ public final class EventProtos {
               if (typeCase_ == 7) {
                 subBuilder = ((protocol.TradeProtos.TradeRequest) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.TradeProtos.TradeRequest.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.TradeProtos.TradeRequest.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.TradeProtos.TradeRequest) type_);
                 type_ = subBuilder.buildPartial();
@@ -297,8 +293,7 @@ public final class EventProtos {
               if (typeCase_ == 8) {
                 subBuilder = ((protocol.BuildProtos.PointProto) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.BuildProtos.PointProto.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.BuildProtos.PointProto.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.BuildProtos.PointProto) type_);
                 type_ = subBuilder.buildPartial();
@@ -313,7 +308,7 @@ public final class EventProtos {
                 unknownFields.mergeVarintField(9, rawValue);
               } else {
                 typeCase_ = 9;
-                type_ = rawValue;
+                type_ = value;
               }
               break;
             }
@@ -322,8 +317,7 @@ public final class EventProtos {
               if (typeCase_ == 10) {
                 subBuilder = ((protocol.EventProtos.GameOver) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.EventProtos.GameOver.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.EventProtos.GameOver.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.EventProtos.GameOver) type_);
                 type_ = subBuilder.buildPartial();
@@ -336,8 +330,7 @@ public final class EventProtos {
               if (typeCase_ == 11) {
                 subBuilder = ((protocol.EventProtos.Theft) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.EventProtos.Theft.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.EventProtos.Theft.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.EventProtos.Theft) type_);
                 type_ = subBuilder.buildPartial();
@@ -351,7 +344,7 @@ public final class EventProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -362,11 +355,26 @@ public final class EventProtos {
       return protocol.EventProtos.internal_static_Event_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.EventProtos.internal_static_Event_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.EventProtos.Event.class, protocol.EventProtos.Event.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<Event> PARSER =
+        new com.google.protobuf.AbstractParser<Event>() {
+      public Event parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Event(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Event> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -386,19 +394,11 @@ public final class EventProtos {
       GAMEOVER(10),
       THEFT(11),
       TYPE_NOT_SET(0);
-      private final int value;
+      private int value = 0;
       private TypeCase(int value) {
         this.value = value;
       }
-      /**
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
       public static TypeCase valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static TypeCase forNumber(int value) {
         switch (value) {
           case 1: return ERROR;
           case 2: return DICEROLL;
@@ -412,7 +412,8 @@ public final class EventProtos {
           case 10: return GAMEOVER;
           case 11: return THEFT;
           case 0: return TYPE_NOT_SET;
-          default: return null;
+          default: throw new java.lang.IllegalArgumentException(
+            "Value is undefined for this oneof enum.");
         }
       }
       public int getNumber() {
@@ -422,7 +423,7 @@ public final class EventProtos {
 
     public TypeCase
     getTypeCase() {
-      return TypeCase.forNumber(
+      return TypeCase.valueOf(
           typeCase_);
     }
 
@@ -542,9 +543,7 @@ public final class EventProtos {
      */
     public protocol.EnumProtos.ColourProto getBoughtDevCard() {
       if (typeCase_ == 5) {
-        protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(
-            (java.lang.Integer) type_);
-        return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+        return (protocol.EnumProtos.ColourProto) type_;
       }
       return protocol.EnumProtos.ColourProto.RED;
     }
@@ -639,9 +638,7 @@ public final class EventProtos {
      */
     public protocol.EnumProtos.ColourProto getNewTurn() {
       if (typeCase_ == 9) {
-        protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(
-            (java.lang.Integer) type_);
-        return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+        return (protocol.EnumProtos.ColourProto) type_;
       }
       return protocol.EnumProtos.ColourProto.RED;
     }
@@ -698,6 +695,8 @@ public final class EventProtos {
       return protocol.EventProtos.Theft.getDefaultInstance();
     }
 
+    private void initFields() {
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -764,6 +763,7 @@ public final class EventProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (typeCase_ == 1) {
         output.writeMessage(1, (protocol.EventProtos.Error) type_);
       }
@@ -777,7 +777,7 @@ public final class EventProtos {
         output.writeMessage(4, (protocol.BuildProtos.BuildingProto) type_);
       }
       if (typeCase_ == 5) {
-        output.writeEnum(5, ((java.lang.Integer) type_));
+        output.writeEnum(5, ((protocol.EnumProtos.ColourProto) type_).getNumber());
       }
       if (typeCase_ == 6) {
         output.writeMessage(6, (protocol.EventProtos.PlayDevCardEvent) type_);
@@ -789,7 +789,7 @@ public final class EventProtos {
         output.writeMessage(8, (protocol.BuildProtos.PointProto) type_);
       }
       if (typeCase_ == 9) {
-        output.writeEnum(9, ((java.lang.Integer) type_));
+        output.writeEnum(9, ((protocol.EnumProtos.ColourProto) type_).getNumber());
       }
       if (typeCase_ == 10) {
         output.writeMessage(10, (protocol.EventProtos.GameOver) type_);
@@ -797,11 +797,12 @@ public final class EventProtos {
       if (typeCase_ == 11) {
         output.writeMessage(11, (protocol.EventProtos.Theft) type_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
@@ -823,7 +824,7 @@ public final class EventProtos {
       }
       if (typeCase_ == 5) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(5, ((java.lang.Integer) type_));
+          .computeEnumSize(5, ((protocol.EnumProtos.ColourProto) type_).getNumber());
       }
       if (typeCase_ == 6) {
         size += com.google.protobuf.CodedOutputStream
@@ -839,7 +840,7 @@ public final class EventProtos {
       }
       if (typeCase_ == 9) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(9, ((java.lang.Integer) type_));
+          .computeEnumSize(9, ((protocol.EnumProtos.ColourProto) type_).getNumber());
       }
       if (typeCase_ == 10) {
         size += com.google.protobuf.CodedOutputStream
@@ -849,136 +850,16 @@ public final class EventProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(11, (protocol.EventProtos.Theft) type_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.EventProtos.Event)) {
-        return super.equals(obj);
-      }
-      protocol.EventProtos.Event other = (protocol.EventProtos.Event) obj;
-
-      boolean result = true;
-      result = result && getTypeCase().equals(
-          other.getTypeCase());
-      if (!result) return false;
-      switch (typeCase_) {
-        case 1:
-          result = result && getError()
-              .equals(other.getError());
-          break;
-        case 2:
-          result = result && getDiceRoll()
-              .equals(other.getDiceRoll());
-          break;
-        case 3:
-          result = result && getNewRoad()
-              .equals(other.getNewRoad());
-          break;
-        case 4:
-          result = result && getNewBuilding()
-              .equals(other.getNewBuilding());
-          break;
-        case 5:
-          result = result && getBoughtDevCard()
-              .equals(other.getBoughtDevCard());
-          break;
-        case 6:
-          result = result && getPlayedDevCard()
-              .equals(other.getPlayedDevCard());
-          break;
-        case 7:
-          result = result && getTransaction()
-              .equals(other.getTransaction());
-          break;
-        case 8:
-          result = result && getRobberMove()
-              .equals(other.getRobberMove());
-          break;
-        case 9:
-          result = result && getNewTurn()
-              .equals(other.getNewTurn());
-          break;
-        case 10:
-          result = result && getGameOver()
-              .equals(other.getGameOver());
-          break;
-        case 11:
-          result = result && getTheft()
-              .equals(other.getTheft());
-          break;
-        case 0:
-        default:
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      switch (typeCase_) {
-        case 1:
-          hash = (37 * hash) + ERROR_FIELD_NUMBER;
-          hash = (53 * hash) + getError().hashCode();
-          break;
-        case 2:
-          hash = (37 * hash) + DICEROLL_FIELD_NUMBER;
-          hash = (53 * hash) + getDiceRoll().hashCode();
-          break;
-        case 3:
-          hash = (37 * hash) + NEWROAD_FIELD_NUMBER;
-          hash = (53 * hash) + getNewRoad().hashCode();
-          break;
-        case 4:
-          hash = (37 * hash) + NEWBUILDING_FIELD_NUMBER;
-          hash = (53 * hash) + getNewBuilding().hashCode();
-          break;
-        case 5:
-          hash = (37 * hash) + BOUGHTDEVCARD_FIELD_NUMBER;
-          hash = (53 * hash) + getBoughtDevCard().getNumber();
-          break;
-        case 6:
-          hash = (37 * hash) + PLAYEDDEVCARD_FIELD_NUMBER;
-          hash = (53 * hash) + getPlayedDevCard().hashCode();
-          break;
-        case 7:
-          hash = (37 * hash) + TRANSACTION_FIELD_NUMBER;
-          hash = (53 * hash) + getTransaction().hashCode();
-          break;
-        case 8:
-          hash = (37 * hash) + ROBBERMOVE_FIELD_NUMBER;
-          hash = (53 * hash) + getRobberMove().hashCode();
-          break;
-        case 9:
-          hash = (37 * hash) + NEWTURN_FIELD_NUMBER;
-          hash = (53 * hash) + getNewTurn().getNumber();
-          break;
-        case 10:
-          hash = (37 * hash) + GAMEOVER_FIELD_NUMBER;
-          hash = (53 * hash) + getGameOver().hashCode();
-          break;
-        case 11:
-          hash = (37 * hash) + THEFT_FIELD_NUMBER;
-          hash = (53 * hash) + getTheft().hashCode();
-          break;
-        case 0:
-        default:
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.EventProtos.Event parseFrom(
@@ -1004,57 +885,46 @@ public final class EventProtos {
     }
     public static protocol.EventProtos.Event parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.Event parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.Event parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.EventProtos.Event parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.Event parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.Event parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.EventProtos.Event prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -1062,7 +932,7 @@ public final class EventProtos {
      * Protobuf type {@code Event}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:Event)
         protocol.EventProtos.EventOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -1070,7 +940,7 @@ public final class EventProtos {
         return protocol.EventProtos.internal_static_Event_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.EventProtos.internal_static_Event_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -1083,20 +953,27 @@ public final class EventProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         typeCase_ = 0;
         type_ = null;
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -1195,32 +1072,6 @@ public final class EventProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.EventProtos.Event) {
           return mergeFrom((protocol.EventProtos.Event)other);
@@ -1281,54 +1132,62 @@ public final class EventProtos {
             break;
           }
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (hasError()) {
           if (!getError().isInitialized()) {
+            
             return false;
           }
         }
         if (hasDiceRoll()) {
           if (!getDiceRoll().isInitialized()) {
+            
             return false;
           }
         }
         if (hasNewRoad()) {
           if (!getNewRoad().isInitialized()) {
+            
             return false;
           }
         }
         if (hasNewBuilding()) {
           if (!getNewBuilding().isInitialized()) {
+            
             return false;
           }
         }
         if (hasPlayedDevCard()) {
           if (!getPlayedDevCard().isInitialized()) {
+            
             return false;
           }
         }
         if (hasTransaction()) {
           if (!getTransaction().isInitialized()) {
+            
             return false;
           }
         }
         if (hasRobberMove()) {
           if (!getRobberMove().isInitialized()) {
+            
             return false;
           }
         }
         if (hasGameOver()) {
           if (!getGameOver().isInitialized()) {
+            
             return false;
           }
         }
         if (hasTheft()) {
           if (!getTheft().isInitialized()) {
+            
             return false;
           }
         }
@@ -1344,7 +1203,7 @@ public final class EventProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.EventProtos.Event) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -1356,7 +1215,7 @@ public final class EventProtos {
       private java.lang.Object type_;
       public TypeCase
           getTypeCase() {
-        return TypeCase.forNumber(
+        return TypeCase.valueOf(
             typeCase_);
       }
 
@@ -1369,7 +1228,7 @@ public final class EventProtos {
 
       private int bitField0_;
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.EventProtos.Error, protocol.EventProtos.Error.Builder, protocol.EventProtos.ErrorOrBuilder> errorBuilder_;
       /**
        * <code>optional .Error error = 1;</code>
@@ -1486,14 +1345,14 @@ public final class EventProtos {
       /**
        * <code>optional .Error error = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.EventProtos.Error, protocol.EventProtos.Error.Builder, protocol.EventProtos.ErrorOrBuilder> 
           getErrorFieldBuilder() {
         if (errorBuilder_ == null) {
           if (!(typeCase_ == 1)) {
             type_ = protocol.EventProtos.Error.getDefaultInstance();
           }
-          errorBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          errorBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.EventProtos.Error, protocol.EventProtos.Error.Builder, protocol.EventProtos.ErrorOrBuilder>(
                   (protocol.EventProtos.Error) type_,
                   getParentForChildren(),
@@ -1501,11 +1360,10 @@ public final class EventProtos {
           type_ = null;
         }
         typeCase_ = 1;
-        onChanged();;
         return errorBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.EventProtos.DiceRoll, protocol.EventProtos.DiceRoll.Builder, protocol.EventProtos.DiceRollOrBuilder> diceRollBuilder_;
       /**
        * <code>optional .DiceRoll diceRoll = 2;</code>
@@ -1622,14 +1480,14 @@ public final class EventProtos {
       /**
        * <code>optional .DiceRoll diceRoll = 2;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.EventProtos.DiceRoll, protocol.EventProtos.DiceRoll.Builder, protocol.EventProtos.DiceRollOrBuilder> 
           getDiceRollFieldBuilder() {
         if (diceRollBuilder_ == null) {
           if (!(typeCase_ == 2)) {
             type_ = protocol.EventProtos.DiceRoll.getDefaultInstance();
           }
-          diceRollBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          diceRollBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.EventProtos.DiceRoll, protocol.EventProtos.DiceRoll.Builder, protocol.EventProtos.DiceRollOrBuilder>(
                   (protocol.EventProtos.DiceRoll) type_,
                   getParentForChildren(),
@@ -1637,11 +1495,10 @@ public final class EventProtos {
           type_ = null;
         }
         typeCase_ = 2;
-        onChanged();;
         return diceRollBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.RoadProto, protocol.BuildProtos.RoadProto.Builder, protocol.BuildProtos.RoadProtoOrBuilder> newRoadBuilder_;
       /**
        * <code>optional .RoadProto newRoad = 3;</code>
@@ -1758,14 +1615,14 @@ public final class EventProtos {
       /**
        * <code>optional .RoadProto newRoad = 3;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.RoadProto, protocol.BuildProtos.RoadProto.Builder, protocol.BuildProtos.RoadProtoOrBuilder> 
           getNewRoadFieldBuilder() {
         if (newRoadBuilder_ == null) {
           if (!(typeCase_ == 3)) {
             type_ = protocol.BuildProtos.RoadProto.getDefaultInstance();
           }
-          newRoadBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          newRoadBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.RoadProto, protocol.BuildProtos.RoadProto.Builder, protocol.BuildProtos.RoadProtoOrBuilder>(
                   (protocol.BuildProtos.RoadProto) type_,
                   getParentForChildren(),
@@ -1773,11 +1630,10 @@ public final class EventProtos {
           type_ = null;
         }
         typeCase_ = 3;
-        onChanged();;
         return newRoadBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder> newBuildingBuilder_;
       /**
        * <code>optional .BuildingProto newBuilding = 4;</code>
@@ -1894,14 +1750,14 @@ public final class EventProtos {
       /**
        * <code>optional .BuildingProto newBuilding = 4;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder> 
           getNewBuildingFieldBuilder() {
         if (newBuildingBuilder_ == null) {
           if (!(typeCase_ == 4)) {
             type_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
           }
-          newBuildingBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          newBuildingBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder>(
                   (protocol.BuildProtos.BuildingProto) type_,
                   getParentForChildren(),
@@ -1909,7 +1765,6 @@ public final class EventProtos {
           type_ = null;
         }
         typeCase_ = 4;
-        onChanged();;
         return newBuildingBuilder_;
       }
 
@@ -1924,9 +1779,7 @@ public final class EventProtos {
        */
       public protocol.EnumProtos.ColourProto getBoughtDevCard() {
         if (typeCase_ == 5) {
-          protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(
-              (java.lang.Integer) type_);
-          return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+          return (protocol.EnumProtos.ColourProto) type_;
         }
         return protocol.EnumProtos.ColourProto.RED;
       }
@@ -1938,7 +1791,7 @@ public final class EventProtos {
           throw new NullPointerException();
         }
         typeCase_ = 5;
-        type_ = value.getNumber();
+        type_ = value;
         onChanged();
         return this;
       }
@@ -1954,7 +1807,7 @@ public final class EventProtos {
         return this;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.EventProtos.PlayDevCardEvent, protocol.EventProtos.PlayDevCardEvent.Builder, protocol.EventProtos.PlayDevCardEventOrBuilder> playedDevCardBuilder_;
       /**
        * <code>optional .PlayDevCardEvent playedDevCard = 6;</code>
@@ -2071,14 +1924,14 @@ public final class EventProtos {
       /**
        * <code>optional .PlayDevCardEvent playedDevCard = 6;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.EventProtos.PlayDevCardEvent, protocol.EventProtos.PlayDevCardEvent.Builder, protocol.EventProtos.PlayDevCardEventOrBuilder> 
           getPlayedDevCardFieldBuilder() {
         if (playedDevCardBuilder_ == null) {
           if (!(typeCase_ == 6)) {
             type_ = protocol.EventProtos.PlayDevCardEvent.getDefaultInstance();
           }
-          playedDevCardBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          playedDevCardBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.EventProtos.PlayDevCardEvent, protocol.EventProtos.PlayDevCardEvent.Builder, protocol.EventProtos.PlayDevCardEventOrBuilder>(
                   (protocol.EventProtos.PlayDevCardEvent) type_,
                   getParentForChildren(),
@@ -2086,11 +1939,10 @@ public final class EventProtos {
           type_ = null;
         }
         typeCase_ = 6;
-        onChanged();;
         return playedDevCardBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder> transactionBuilder_;
       /**
        * <code>optional .TradeRequest transaction = 7;</code>
@@ -2207,14 +2059,14 @@ public final class EventProtos {
       /**
        * <code>optional .TradeRequest transaction = 7;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder> 
           getTransactionFieldBuilder() {
         if (transactionBuilder_ == null) {
           if (!(typeCase_ == 7)) {
             type_ = protocol.TradeProtos.TradeRequest.getDefaultInstance();
           }
-          transactionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          transactionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder>(
                   (protocol.TradeProtos.TradeRequest) type_,
                   getParentForChildren(),
@@ -2222,11 +2074,10 @@ public final class EventProtos {
           type_ = null;
         }
         typeCase_ = 7;
-        onChanged();;
         return transactionBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> robberMoveBuilder_;
       /**
        * <code>optional .PointProto robberMove = 8;</code>
@@ -2343,14 +2194,14 @@ public final class EventProtos {
       /**
        * <code>optional .PointProto robberMove = 8;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> 
           getRobberMoveFieldBuilder() {
         if (robberMoveBuilder_ == null) {
           if (!(typeCase_ == 8)) {
             type_ = protocol.BuildProtos.PointProto.getDefaultInstance();
           }
-          robberMoveBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          robberMoveBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder>(
                   (protocol.BuildProtos.PointProto) type_,
                   getParentForChildren(),
@@ -2358,7 +2209,6 @@ public final class EventProtos {
           type_ = null;
         }
         typeCase_ = 8;
-        onChanged();;
         return robberMoveBuilder_;
       }
 
@@ -2373,9 +2223,7 @@ public final class EventProtos {
        */
       public protocol.EnumProtos.ColourProto getNewTurn() {
         if (typeCase_ == 9) {
-          protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(
-              (java.lang.Integer) type_);
-          return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+          return (protocol.EnumProtos.ColourProto) type_;
         }
         return protocol.EnumProtos.ColourProto.RED;
       }
@@ -2387,7 +2235,7 @@ public final class EventProtos {
           throw new NullPointerException();
         }
         typeCase_ = 9;
-        type_ = value.getNumber();
+        type_ = value;
         onChanged();
         return this;
       }
@@ -2403,7 +2251,7 @@ public final class EventProtos {
         return this;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.EventProtos.GameOver, protocol.EventProtos.GameOver.Builder, protocol.EventProtos.GameOverOrBuilder> gameOverBuilder_;
       /**
        * <code>optional .GameOver gameOver = 10;</code>
@@ -2520,14 +2368,14 @@ public final class EventProtos {
       /**
        * <code>optional .GameOver gameOver = 10;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.EventProtos.GameOver, protocol.EventProtos.GameOver.Builder, protocol.EventProtos.GameOverOrBuilder> 
           getGameOverFieldBuilder() {
         if (gameOverBuilder_ == null) {
           if (!(typeCase_ == 10)) {
             type_ = protocol.EventProtos.GameOver.getDefaultInstance();
           }
-          gameOverBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          gameOverBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.EventProtos.GameOver, protocol.EventProtos.GameOver.Builder, protocol.EventProtos.GameOverOrBuilder>(
                   (protocol.EventProtos.GameOver) type_,
                   getParentForChildren(),
@@ -2535,11 +2383,10 @@ public final class EventProtos {
           type_ = null;
         }
         typeCase_ = 10;
-        onChanged();;
         return gameOverBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.EventProtos.Theft, protocol.EventProtos.Theft.Builder, protocol.EventProtos.TheftOrBuilder> theftBuilder_;
       /**
        * <code>optional .Theft theft = 11;</code>
@@ -2656,14 +2503,14 @@ public final class EventProtos {
       /**
        * <code>optional .Theft theft = 11;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.EventProtos.Theft, protocol.EventProtos.Theft.Builder, protocol.EventProtos.TheftOrBuilder> 
           getTheftFieldBuilder() {
         if (theftBuilder_ == null) {
           if (!(typeCase_ == 11)) {
             type_ = protocol.EventProtos.Theft.getDefaultInstance();
           }
-          theftBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          theftBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.EventProtos.Theft, protocol.EventProtos.Theft.Builder, protocol.EventProtos.TheftOrBuilder>(
                   (protocol.EventProtos.Theft) type_,
                   getParentForChildren(),
@@ -2671,56 +2518,18 @@ public final class EventProtos {
           type_ = null;
         }
         typeCase_ = 11;
-        onChanged();;
         return theftBuilder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:Event)
     }
 
-    // @@protoc_insertion_point(class_scope:Event)
-    private static final protocol.EventProtos.Event DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.EventProtos.Event();
+      defaultInstance = new Event(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.EventProtos.Event getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<Event>
-        PARSER = new com.google.protobuf.AbstractParser<Event>() {
-      public Event parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new Event(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<Event> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Event> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.EventProtos.Event getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:Event)
   }
 
   public interface GameOverOrBuilder extends
@@ -2763,29 +2572,37 @@ public final class EventProtos {
   /**
    * Protobuf type {@code GameOver}
    */
-  public  static final class GameOver extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class GameOver extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:GameOver)
       GameOverOrBuilder {
     // Use GameOver.newBuilder() to construct.
-    private GameOver(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private GameOver(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private GameOver() {
-      scores_ = java.util.Collections.emptyList();
-      winnter_ = 1;
+    private GameOver(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final GameOver defaultInstance;
+    public static GameOver getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public GameOver getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private GameOver(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -2809,8 +2626,7 @@ public final class EventProtos {
                 scores_ = new java.util.ArrayList<protocol.EventProtos.Score>();
                 mutable_bitField0_ |= 0x00000001;
               }
-              scores_.add(
-                  input.readMessage(protocol.EventProtos.Score.PARSER, extensionRegistry));
+              scores_.add(input.readMessage(protocol.EventProtos.Score.PARSER, extensionRegistry));
               break;
             }
             case 16: {
@@ -2820,7 +2636,7 @@ public final class EventProtos {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
                 bitField0_ |= 0x00000001;
-                winnter_ = rawValue;
+                winnter_ = value;
               }
               break;
             }
@@ -2830,7 +2646,7 @@ public final class EventProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
           scores_ = java.util.Collections.unmodifiableList(scores_);
@@ -2844,11 +2660,26 @@ public final class EventProtos {
       return protocol.EventProtos.internal_static_GameOver_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.EventProtos.internal_static_GameOver_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.EventProtos.GameOver.class, protocol.EventProtos.GameOver.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<GameOver> PARSER =
+        new com.google.protobuf.AbstractParser<GameOver>() {
+      public GameOver parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new GameOver(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<GameOver> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -2888,7 +2719,7 @@ public final class EventProtos {
     }
 
     public static final int WINNTER_FIELD_NUMBER = 2;
-    private int winnter_;
+    private protocol.EnumProtos.ColourProto winnter_;
     /**
      * <code>required .ColourProto winnter = 2;</code>
      */
@@ -2899,10 +2730,13 @@ public final class EventProtos {
      * <code>required .ColourProto winnter = 2;</code>
      */
     public protocol.EnumProtos.ColourProto getWinnter() {
-      protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(winnter_);
-      return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+      return winnter_;
     }
 
+    private void initFields() {
+      scores_ = java.util.Collections.emptyList();
+      winnter_ = protocol.EnumProtos.ColourProto.RED;
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -2925,17 +2759,19 @@ public final class EventProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       for (int i = 0; i < scores_.size(); i++) {
         output.writeMessage(1, scores_.get(i));
       }
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(2, winnter_);
+        output.writeEnum(2, winnter_.getNumber());
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
@@ -2945,53 +2781,18 @@ public final class EventProtos {
       }
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, winnter_);
+          .computeEnumSize(2, winnter_.getNumber());
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.EventProtos.GameOver)) {
-        return super.equals(obj);
-      }
-      protocol.EventProtos.GameOver other = (protocol.EventProtos.GameOver) obj;
-
-      boolean result = true;
-      result = result && getScoresList()
-          .equals(other.getScoresList());
-      result = result && (hasWinnter() == other.hasWinnter());
-      if (hasWinnter()) {
-        result = result && winnter_ == other.winnter_;
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (getScoresCount() > 0) {
-        hash = (37 * hash) + SCORES_FIELD_NUMBER;
-        hash = (53 * hash) + getScoresList().hashCode();
-      }
-      if (hasWinnter()) {
-        hash = (37 * hash) + WINNTER_FIELD_NUMBER;
-        hash = (53 * hash) + winnter_;
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.EventProtos.GameOver parseFrom(
@@ -3017,57 +2818,46 @@ public final class EventProtos {
     }
     public static protocol.EventProtos.GameOver parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.GameOver parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.GameOver parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.EventProtos.GameOver parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.GameOver parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.GameOver parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.EventProtos.GameOver prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -3075,7 +2865,7 @@ public final class EventProtos {
      * Protobuf type {@code GameOver}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:GameOver)
         protocol.EventProtos.GameOverOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -3083,7 +2873,7 @@ public final class EventProtos {
         return protocol.EventProtos.internal_static_GameOver_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.EventProtos.internal_static_GameOver_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -3096,16 +2886,19 @@ public final class EventProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getScoresFieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         if (scoresBuilder_ == null) {
@@ -3114,9 +2907,13 @@ public final class EventProtos {
         } else {
           scoresBuilder_.clear();
         }
-        winnter_ = 1;
+        winnter_ = protocol.EnumProtos.ColourProto.RED;
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -3158,32 +2955,6 @@ public final class EventProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.EventProtos.GameOver) {
           return mergeFrom((protocol.EventProtos.GameOver)other);
@@ -3214,7 +2985,7 @@ public final class EventProtos {
               scores_ = other.scores_;
               bitField0_ = (bitField0_ & ~0x00000001);
               scoresBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getScoresFieldBuilder() : null;
             } else {
               scoresBuilder_.addAllMessages(other.scores_);
@@ -3224,17 +2995,18 @@ public final class EventProtos {
         if (other.hasWinnter()) {
           setWinnter(other.getWinnter());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasWinnter()) {
+          
           return false;
         }
         for (int i = 0; i < getScoresCount(); i++) {
           if (!getScores(i).isInitialized()) {
+            
             return false;
           }
         }
@@ -3250,7 +3022,7 @@ public final class EventProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.EventProtos.GameOver) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -3269,7 +3041,7 @@ public final class EventProtos {
          }
       }
 
-      private com.google.protobuf.RepeatedFieldBuilderV3<
+      private com.google.protobuf.RepeatedFieldBuilder<
           protocol.EventProtos.Score, protocol.EventProtos.Score.Builder, protocol.EventProtos.ScoreOrBuilder> scoresBuilder_;
 
       /**
@@ -3485,11 +3257,11 @@ public final class EventProtos {
            getScoresBuilderList() {
         return getScoresFieldBuilder().getBuilderList();
       }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
+      private com.google.protobuf.RepeatedFieldBuilder<
           protocol.EventProtos.Score, protocol.EventProtos.Score.Builder, protocol.EventProtos.ScoreOrBuilder> 
           getScoresFieldBuilder() {
         if (scoresBuilder_ == null) {
-          scoresBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+          scoresBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               protocol.EventProtos.Score, protocol.EventProtos.Score.Builder, protocol.EventProtos.ScoreOrBuilder>(
                   scores_,
                   ((bitField0_ & 0x00000001) == 0x00000001),
@@ -3500,7 +3272,7 @@ public final class EventProtos {
         return scoresBuilder_;
       }
 
-      private int winnter_ = 1;
+      private protocol.EnumProtos.ColourProto winnter_ = protocol.EnumProtos.ColourProto.RED;
       /**
        * <code>required .ColourProto winnter = 2;</code>
        */
@@ -3511,8 +3283,7 @@ public final class EventProtos {
        * <code>required .ColourProto winnter = 2;</code>
        */
       public protocol.EnumProtos.ColourProto getWinnter() {
-        protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(winnter_);
-        return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+        return winnter_;
       }
       /**
        * <code>required .ColourProto winnter = 2;</code>
@@ -3522,7 +3293,7 @@ public final class EventProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000002;
-        winnter_ = value.getNumber();
+        winnter_ = value;
         onChanged();
         return this;
       }
@@ -3531,57 +3302,20 @@ public final class EventProtos {
        */
       public Builder clearWinnter() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        winnter_ = 1;
+        winnter_ = protocol.EnumProtos.ColourProto.RED;
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:GameOver)
     }
 
-    // @@protoc_insertion_point(class_scope:GameOver)
-    private static final protocol.EventProtos.GameOver DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.EventProtos.GameOver();
+      defaultInstance = new GameOver(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.EventProtos.GameOver getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<GameOver>
-        PARSER = new com.google.protobuf.AbstractParser<GameOver>() {
-      public GameOver parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new GameOver(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<GameOver> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<GameOver> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.EventProtos.GameOver getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:GameOver)
   }
 
   public interface ScoreOrBuilder extends
@@ -3609,29 +3343,37 @@ public final class EventProtos {
   /**
    * Protobuf type {@code Score}
    */
-  public  static final class Score extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class Score extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:Score)
       ScoreOrBuilder {
     // Use Score.newBuilder() to construct.
-    private Score(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private Score(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Score() {
-      colour_ = 1;
-      score_ = 0;
+    private Score(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final Score defaultInstance;
+    public static Score getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public Score getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private Score(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -3657,7 +3399,7 @@ public final class EventProtos {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
                 bitField0_ |= 0x00000001;
-                colour_ = rawValue;
+                colour_ = value;
               }
               break;
             }
@@ -3672,7 +3414,7 @@ public final class EventProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -3683,16 +3425,31 @@ public final class EventProtos {
       return protocol.EventProtos.internal_static_Score_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.EventProtos.internal_static_Score_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.EventProtos.Score.class, protocol.EventProtos.Score.Builder.class);
     }
 
+    public static com.google.protobuf.Parser<Score> PARSER =
+        new com.google.protobuf.AbstractParser<Score>() {
+      public Score parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Score(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Score> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     public static final int COLOUR_FIELD_NUMBER = 1;
-    private int colour_;
+    private protocol.EnumProtos.ColourProto colour_;
     /**
      * <code>required .ColourProto colour = 1;</code>
      */
@@ -3703,8 +3460,7 @@ public final class EventProtos {
      * <code>required .ColourProto colour = 1;</code>
      */
     public protocol.EnumProtos.ColourProto getColour() {
-      protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(colour_);
-      return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+      return colour_;
     }
 
     public static final int SCORE_FIELD_NUMBER = 2;
@@ -3722,6 +3478,10 @@ public final class EventProtos {
       return score_;
     }
 
+    private void initFields() {
+      colour_ = protocol.EnumProtos.ColourProto.RED;
+      score_ = 0;
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -3742,76 +3502,40 @@ public final class EventProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, colour_);
+        output.writeEnum(1, colour_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeInt32(2, score_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, colour_);
+          .computeEnumSize(1, colour_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(2, score_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.EventProtos.Score)) {
-        return super.equals(obj);
-      }
-      protocol.EventProtos.Score other = (protocol.EventProtos.Score) obj;
-
-      boolean result = true;
-      result = result && (hasColour() == other.hasColour());
-      if (hasColour()) {
-        result = result && colour_ == other.colour_;
-      }
-      result = result && (hasScore() == other.hasScore());
-      if (hasScore()) {
-        result = result && (getScore()
-            == other.getScore());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasColour()) {
-        hash = (37 * hash) + COLOUR_FIELD_NUMBER;
-        hash = (53 * hash) + colour_;
-      }
-      if (hasScore()) {
-        hash = (37 * hash) + SCORE_FIELD_NUMBER;
-        hash = (53 * hash) + getScore();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.EventProtos.Score parseFrom(
@@ -3837,57 +3561,46 @@ public final class EventProtos {
     }
     public static protocol.EventProtos.Score parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.Score parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.Score parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.EventProtos.Score parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.Score parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.Score parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.EventProtos.Score prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -3895,7 +3608,7 @@ public final class EventProtos {
      * Protobuf type {@code Score}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:Score)
         protocol.EventProtos.ScoreOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -3903,7 +3616,7 @@ public final class EventProtos {
         return protocol.EventProtos.internal_static_Score_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.EventProtos.internal_static_Score_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -3916,22 +3629,29 @@ public final class EventProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
-        colour_ = 1;
+        colour_ = protocol.EnumProtos.ColourProto.RED;
         bitField0_ = (bitField0_ & ~0x00000001);
         score_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -3968,32 +3688,6 @@ public final class EventProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.EventProtos.Score) {
           return mergeFrom((protocol.EventProtos.Score)other);
@@ -4011,16 +3705,17 @@ public final class EventProtos {
         if (other.hasScore()) {
           setScore(other.getScore());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasColour()) {
+          
           return false;
         }
         if (!hasScore()) {
+          
           return false;
         }
         return true;
@@ -4035,7 +3730,7 @@ public final class EventProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.EventProtos.Score) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -4045,7 +3740,7 @@ public final class EventProtos {
       }
       private int bitField0_;
 
-      private int colour_ = 1;
+      private protocol.EnumProtos.ColourProto colour_ = protocol.EnumProtos.ColourProto.RED;
       /**
        * <code>required .ColourProto colour = 1;</code>
        */
@@ -4056,8 +3751,7 @@ public final class EventProtos {
        * <code>required .ColourProto colour = 1;</code>
        */
       public protocol.EnumProtos.ColourProto getColour() {
-        protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(colour_);
-        return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+        return colour_;
       }
       /**
        * <code>required .ColourProto colour = 1;</code>
@@ -4067,7 +3761,7 @@ public final class EventProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000001;
-        colour_ = value.getNumber();
+        colour_ = value;
         onChanged();
         return this;
       }
@@ -4076,7 +3770,7 @@ public final class EventProtos {
        */
       public Builder clearColour() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        colour_ = 1;
+        colour_ = protocol.EnumProtos.ColourProto.RED;
         onChanged();
         return this;
       }
@@ -4112,53 +3806,16 @@ public final class EventProtos {
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:Score)
     }
 
-    // @@protoc_insertion_point(class_scope:Score)
-    private static final protocol.EventProtos.Score DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.EventProtos.Score();
+      defaultInstance = new Score(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.EventProtos.Score getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<Score>
-        PARSER = new com.google.protobuf.AbstractParser<Score>() {
-      public Score parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new Score(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<Score> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Score> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.EventProtos.Score getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:Score)
   }
 
   public interface PlayDevCardEventOrBuilder extends
@@ -4186,29 +3843,37 @@ public final class EventProtos {
   /**
    * Protobuf type {@code PlayDevCardEvent}
    */
-  public  static final class PlayDevCardEvent extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class PlayDevCardEvent extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:PlayDevCardEvent)
       PlayDevCardEventOrBuilder {
     // Use PlayDevCardEvent.newBuilder() to construct.
-    private PlayDevCardEvent(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private PlayDevCardEvent(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private PlayDevCardEvent() {
-      playerColour_ = 1;
-      type_ = 1;
+    private PlayDevCardEvent(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final PlayDevCardEvent defaultInstance;
+    public static PlayDevCardEvent getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public PlayDevCardEvent getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private PlayDevCardEvent(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -4234,7 +3899,7 @@ public final class EventProtos {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
                 bitField0_ |= 0x00000001;
-                playerColour_ = rawValue;
+                playerColour_ = value;
               }
               break;
             }
@@ -4245,7 +3910,7 @@ public final class EventProtos {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
                 bitField0_ |= 0x00000002;
-                type_ = rawValue;
+                type_ = value;
               }
               break;
             }
@@ -4255,7 +3920,7 @@ public final class EventProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -4266,16 +3931,31 @@ public final class EventProtos {
       return protocol.EventProtos.internal_static_PlayDevCardEvent_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.EventProtos.internal_static_PlayDevCardEvent_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.EventProtos.PlayDevCardEvent.class, protocol.EventProtos.PlayDevCardEvent.Builder.class);
     }
 
+    public static com.google.protobuf.Parser<PlayDevCardEvent> PARSER =
+        new com.google.protobuf.AbstractParser<PlayDevCardEvent>() {
+      public PlayDevCardEvent parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PlayDevCardEvent(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PlayDevCardEvent> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     public static final int PLAYERCOLOUR_FIELD_NUMBER = 1;
-    private int playerColour_;
+    private protocol.EnumProtos.ColourProto playerColour_;
     /**
      * <code>required .ColourProto playerColour = 1;</code>
      */
@@ -4286,12 +3966,11 @@ public final class EventProtos {
      * <code>required .ColourProto playerColour = 1;</code>
      */
     public protocol.EnumProtos.ColourProto getPlayerColour() {
-      protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(playerColour_);
-      return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+      return playerColour_;
     }
 
     public static final int TYPE_FIELD_NUMBER = 2;
-    private int type_;
+    private protocol.EnumProtos.DevelopmentCardProto type_;
     /**
      * <code>required .DevelopmentCardProto type = 2;</code>
      */
@@ -4302,10 +3981,13 @@ public final class EventProtos {
      * <code>required .DevelopmentCardProto type = 2;</code>
      */
     public protocol.EnumProtos.DevelopmentCardProto getType() {
-      protocol.EnumProtos.DevelopmentCardProto result = protocol.EnumProtos.DevelopmentCardProto.valueOf(type_);
-      return result == null ? protocol.EnumProtos.DevelopmentCardProto.KNIGHT : result;
+      return type_;
     }
 
+    private void initFields() {
+      playerColour_ = protocol.EnumProtos.ColourProto.RED;
+      type_ = protocol.EnumProtos.DevelopmentCardProto.KNIGHT;
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -4326,75 +4008,40 @@ public final class EventProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, playerColour_);
+        output.writeEnum(1, playerColour_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, type_);
+        output.writeEnum(2, type_.getNumber());
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, playerColour_);
+          .computeEnumSize(1, playerColour_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, type_);
+          .computeEnumSize(2, type_.getNumber());
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.EventProtos.PlayDevCardEvent)) {
-        return super.equals(obj);
-      }
-      protocol.EventProtos.PlayDevCardEvent other = (protocol.EventProtos.PlayDevCardEvent) obj;
-
-      boolean result = true;
-      result = result && (hasPlayerColour() == other.hasPlayerColour());
-      if (hasPlayerColour()) {
-        result = result && playerColour_ == other.playerColour_;
-      }
-      result = result && (hasType() == other.hasType());
-      if (hasType()) {
-        result = result && type_ == other.type_;
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasPlayerColour()) {
-        hash = (37 * hash) + PLAYERCOLOUR_FIELD_NUMBER;
-        hash = (53 * hash) + playerColour_;
-      }
-      if (hasType()) {
-        hash = (37 * hash) + TYPE_FIELD_NUMBER;
-        hash = (53 * hash) + type_;
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.EventProtos.PlayDevCardEvent parseFrom(
@@ -4420,57 +4067,46 @@ public final class EventProtos {
     }
     public static protocol.EventProtos.PlayDevCardEvent parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.PlayDevCardEvent parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.PlayDevCardEvent parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.EventProtos.PlayDevCardEvent parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.PlayDevCardEvent parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.PlayDevCardEvent parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.EventProtos.PlayDevCardEvent prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -4478,7 +4114,7 @@ public final class EventProtos {
      * Protobuf type {@code PlayDevCardEvent}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:PlayDevCardEvent)
         protocol.EventProtos.PlayDevCardEventOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -4486,7 +4122,7 @@ public final class EventProtos {
         return protocol.EventProtos.internal_static_PlayDevCardEvent_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.EventProtos.internal_static_PlayDevCardEvent_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -4499,22 +4135,29 @@ public final class EventProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
-        playerColour_ = 1;
+        playerColour_ = protocol.EnumProtos.ColourProto.RED;
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = 1;
+        type_ = protocol.EnumProtos.DevelopmentCardProto.KNIGHT;
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -4551,32 +4194,6 @@ public final class EventProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.EventProtos.PlayDevCardEvent) {
           return mergeFrom((protocol.EventProtos.PlayDevCardEvent)other);
@@ -4594,16 +4211,17 @@ public final class EventProtos {
         if (other.hasType()) {
           setType(other.getType());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasPlayerColour()) {
+          
           return false;
         }
         if (!hasType()) {
+          
           return false;
         }
         return true;
@@ -4618,7 +4236,7 @@ public final class EventProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.EventProtos.PlayDevCardEvent) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -4628,7 +4246,7 @@ public final class EventProtos {
       }
       private int bitField0_;
 
-      private int playerColour_ = 1;
+      private protocol.EnumProtos.ColourProto playerColour_ = protocol.EnumProtos.ColourProto.RED;
       /**
        * <code>required .ColourProto playerColour = 1;</code>
        */
@@ -4639,8 +4257,7 @@ public final class EventProtos {
        * <code>required .ColourProto playerColour = 1;</code>
        */
       public protocol.EnumProtos.ColourProto getPlayerColour() {
-        protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(playerColour_);
-        return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+        return playerColour_;
       }
       /**
        * <code>required .ColourProto playerColour = 1;</code>
@@ -4650,7 +4267,7 @@ public final class EventProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000001;
-        playerColour_ = value.getNumber();
+        playerColour_ = value;
         onChanged();
         return this;
       }
@@ -4659,12 +4276,12 @@ public final class EventProtos {
        */
       public Builder clearPlayerColour() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        playerColour_ = 1;
+        playerColour_ = protocol.EnumProtos.ColourProto.RED;
         onChanged();
         return this;
       }
 
-      private int type_ = 1;
+      private protocol.EnumProtos.DevelopmentCardProto type_ = protocol.EnumProtos.DevelopmentCardProto.KNIGHT;
       /**
        * <code>required .DevelopmentCardProto type = 2;</code>
        */
@@ -4675,8 +4292,7 @@ public final class EventProtos {
        * <code>required .DevelopmentCardProto type = 2;</code>
        */
       public protocol.EnumProtos.DevelopmentCardProto getType() {
-        protocol.EnumProtos.DevelopmentCardProto result = protocol.EnumProtos.DevelopmentCardProto.valueOf(type_);
-        return result == null ? protocol.EnumProtos.DevelopmentCardProto.KNIGHT : result;
+        return type_;
       }
       /**
        * <code>required .DevelopmentCardProto type = 2;</code>
@@ -4686,7 +4302,7 @@ public final class EventProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000002;
-        type_ = value.getNumber();
+        type_ = value;
         onChanged();
         return this;
       }
@@ -4695,57 +4311,20 @@ public final class EventProtos {
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        type_ = 1;
+        type_ = protocol.EnumProtos.DevelopmentCardProto.KNIGHT;
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:PlayDevCardEvent)
     }
 
-    // @@protoc_insertion_point(class_scope:PlayDevCardEvent)
-    private static final protocol.EventProtos.PlayDevCardEvent DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.EventProtos.PlayDevCardEvent();
+      defaultInstance = new PlayDevCardEvent(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.EventProtos.PlayDevCardEvent getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<PlayDevCardEvent>
-        PARSER = new com.google.protobuf.AbstractParser<PlayDevCardEvent>() {
-      public PlayDevCardEvent parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new PlayDevCardEvent(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<PlayDevCardEvent> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PlayDevCardEvent> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.EventProtos.PlayDevCardEvent getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:PlayDevCardEvent)
   }
 
   public interface DiceRollOrBuilder extends
@@ -4764,28 +4343,37 @@ public final class EventProtos {
   /**
    * Protobuf type {@code DiceRoll}
    */
-  public  static final class DiceRoll extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class DiceRoll extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:DiceRoll)
       DiceRollOrBuilder {
     // Use DiceRoll.newBuilder() to construct.
-    private DiceRoll(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private DiceRoll(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private DiceRoll() {
-      dice_ = 0;
+    private DiceRoll(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final DiceRoll defaultInstance;
+    public static DiceRoll getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public DiceRoll getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private DiceRoll(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -4815,7 +4403,7 @@ public final class EventProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -4826,11 +4414,26 @@ public final class EventProtos {
       return protocol.EventProtos.internal_static_DiceRoll_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.EventProtos.internal_static_DiceRoll_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.EventProtos.DiceRoll.class, protocol.EventProtos.DiceRoll.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<DiceRoll> PARSER =
+        new com.google.protobuf.AbstractParser<DiceRoll>() {
+      public DiceRoll parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DiceRoll(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DiceRoll> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -4849,6 +4452,9 @@ public final class EventProtos {
       return dice_;
     }
 
+    private void initFields() {
+      dice_ = 0;
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -4865,14 +4471,16 @@ public final class EventProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt32(1, dice_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
@@ -4880,46 +4488,16 @@ public final class EventProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, dice_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.EventProtos.DiceRoll)) {
-        return super.equals(obj);
-      }
-      protocol.EventProtos.DiceRoll other = (protocol.EventProtos.DiceRoll) obj;
-
-      boolean result = true;
-      result = result && (hasDice() == other.hasDice());
-      if (hasDice()) {
-        result = result && (getDice()
-            == other.getDice());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasDice()) {
-        hash = (37 * hash) + DICE_FIELD_NUMBER;
-        hash = (53 * hash) + getDice();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.EventProtos.DiceRoll parseFrom(
@@ -4945,57 +4523,46 @@ public final class EventProtos {
     }
     public static protocol.EventProtos.DiceRoll parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.DiceRoll parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.DiceRoll parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.EventProtos.DiceRoll parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.DiceRoll parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.DiceRoll parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.EventProtos.DiceRoll prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -5003,7 +4570,7 @@ public final class EventProtos {
      * Protobuf type {@code DiceRoll}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:DiceRoll)
         protocol.EventProtos.DiceRollOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -5011,7 +4578,7 @@ public final class EventProtos {
         return protocol.EventProtos.internal_static_DiceRoll_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.EventProtos.internal_static_DiceRoll_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -5024,20 +4591,27 @@ public final class EventProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         dice_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -5070,32 +4644,6 @@ public final class EventProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.EventProtos.DiceRoll) {
           return mergeFrom((protocol.EventProtos.DiceRoll)other);
@@ -5110,13 +4658,13 @@ public final class EventProtos {
         if (other.hasDice()) {
           setDice(other.getDice());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasDice()) {
+          
           return false;
         }
         return true;
@@ -5131,7 +4679,7 @@ public final class EventProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.EventProtos.DiceRoll) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -5172,53 +4720,16 @@ public final class EventProtos {
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:DiceRoll)
     }
 
-    // @@protoc_insertion_point(class_scope:DiceRoll)
-    private static final protocol.EventProtos.DiceRoll DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.EventProtos.DiceRoll();
+      defaultInstance = new DiceRoll(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.EventProtos.DiceRoll getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<DiceRoll>
-        PARSER = new com.google.protobuf.AbstractParser<DiceRoll>() {
-      public DiceRoll parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new DiceRoll(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<DiceRoll> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<DiceRoll> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.EventProtos.DiceRoll getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:DiceRoll)
   }
 
   public interface TheftOrBuilder extends
@@ -5259,29 +4770,37 @@ public final class EventProtos {
   /**
    * Protobuf type {@code Theft}
    */
-  public  static final class Theft extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class Theft extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:Theft)
       TheftOrBuilder {
     // Use Theft.newBuilder() to construct.
-    private Theft(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private Theft(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Theft() {
-      thief_ = 1;
-      victim_ = 1;
+    private Theft(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final Theft defaultInstance;
+    public static Theft getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public Theft getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private Theft(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -5307,7 +4826,7 @@ public final class EventProtos {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
                 bitField0_ |= 0x00000001;
-                thief_ = rawValue;
+                thief_ = value;
               }
               break;
             }
@@ -5318,7 +4837,7 @@ public final class EventProtos {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
                 bitField0_ |= 0x00000002;
-                victim_ = rawValue;
+                victim_ = value;
               }
               break;
             }
@@ -5341,7 +4860,7 @@ public final class EventProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -5352,16 +4871,31 @@ public final class EventProtos {
       return protocol.EventProtos.internal_static_Theft_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.EventProtos.internal_static_Theft_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.EventProtos.Theft.class, protocol.EventProtos.Theft.Builder.class);
     }
 
+    public static com.google.protobuf.Parser<Theft> PARSER =
+        new com.google.protobuf.AbstractParser<Theft>() {
+      public Theft parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Theft(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Theft> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     public static final int THIEF_FIELD_NUMBER = 1;
-    private int thief_;
+    private protocol.EnumProtos.ColourProto thief_;
     /**
      * <code>required .ColourProto thief = 1;</code>
      */
@@ -5372,12 +4906,11 @@ public final class EventProtos {
      * <code>required .ColourProto thief = 1;</code>
      */
     public protocol.EnumProtos.ColourProto getThief() {
-      protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(thief_);
-      return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+      return thief_;
     }
 
     public static final int VICTIM_FIELD_NUMBER = 2;
-    private int victim_;
+    private protocol.EnumProtos.ColourProto victim_;
     /**
      * <code>required .ColourProto victim = 2;</code>
      */
@@ -5388,8 +4921,7 @@ public final class EventProtos {
      * <code>required .ColourProto victim = 2;</code>
      */
     public protocol.EnumProtos.ColourProto getVictim() {
-      protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(victim_);
-      return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+      return victim_;
     }
 
     public static final int RESOURCESTOLEN_FIELD_NUMBER = 3;
@@ -5404,15 +4936,20 @@ public final class EventProtos {
      * <code>required .ResourceCount resourceStolen = 3;</code>
      */
     public protocol.ResourceProtos.ResourceCount getResourceStolen() {
-      return resourceStolen_ == null ? protocol.ResourceProtos.ResourceCount.getDefaultInstance() : resourceStolen_;
+      return resourceStolen_;
     }
     /**
      * <code>required .ResourceCount resourceStolen = 3;</code>
      */
     public protocol.ResourceProtos.ResourceCountOrBuilder getResourceStolenOrBuilder() {
-      return resourceStolen_ == null ? protocol.ResourceProtos.ResourceCount.getDefaultInstance() : resourceStolen_;
+      return resourceStolen_;
     }
 
+    private void initFields() {
+      thief_ = protocol.EnumProtos.ColourProto.RED;
+      victim_ = protocol.EnumProtos.ColourProto.RED;
+      resourceStolen_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -5437,91 +4974,47 @@ public final class EventProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, thief_);
+        output.writeEnum(1, thief_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, victim_);
+        output.writeEnum(2, victim_.getNumber());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeMessage(3, getResourceStolen());
+        output.writeMessage(3, resourceStolen_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, thief_);
+          .computeEnumSize(1, thief_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, victim_);
+          .computeEnumSize(2, victim_.getNumber());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getResourceStolen());
+          .computeMessageSize(3, resourceStolen_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.EventProtos.Theft)) {
-        return super.equals(obj);
-      }
-      protocol.EventProtos.Theft other = (protocol.EventProtos.Theft) obj;
-
-      boolean result = true;
-      result = result && (hasThief() == other.hasThief());
-      if (hasThief()) {
-        result = result && thief_ == other.thief_;
-      }
-      result = result && (hasVictim() == other.hasVictim());
-      if (hasVictim()) {
-        result = result && victim_ == other.victim_;
-      }
-      result = result && (hasResourceStolen() == other.hasResourceStolen());
-      if (hasResourceStolen()) {
-        result = result && getResourceStolen()
-            .equals(other.getResourceStolen());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasThief()) {
-        hash = (37 * hash) + THIEF_FIELD_NUMBER;
-        hash = (53 * hash) + thief_;
-      }
-      if (hasVictim()) {
-        hash = (37 * hash) + VICTIM_FIELD_NUMBER;
-        hash = (53 * hash) + victim_;
-      }
-      if (hasResourceStolen()) {
-        hash = (37 * hash) + RESOURCESTOLEN_FIELD_NUMBER;
-        hash = (53 * hash) + getResourceStolen().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.EventProtos.Theft parseFrom(
@@ -5547,57 +5040,46 @@ public final class EventProtos {
     }
     public static protocol.EventProtos.Theft parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.Theft parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.Theft parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.EventProtos.Theft parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.Theft parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.Theft parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.EventProtos.Theft prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -5605,7 +5087,7 @@ public final class EventProtos {
      * Protobuf type {@code Theft}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:Theft)
         protocol.EventProtos.TheftOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -5613,7 +5095,7 @@ public final class EventProtos {
         return protocol.EventProtos.internal_static_Theft_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.EventProtos.internal_static_Theft_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -5626,29 +5108,36 @@ public final class EventProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getResourceStolenFieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
-        thief_ = 1;
+        thief_ = protocol.EnumProtos.ColourProto.RED;
         bitField0_ = (bitField0_ & ~0x00000001);
-        victim_ = 1;
+        victim_ = protocol.EnumProtos.ColourProto.RED;
         bitField0_ = (bitField0_ & ~0x00000002);
         if (resourceStolenBuilder_ == null) {
-          resourceStolen_ = null;
+          resourceStolen_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
         } else {
           resourceStolenBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -5693,32 +5182,6 @@ public final class EventProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.EventProtos.Theft) {
           return mergeFrom((protocol.EventProtos.Theft)other);
@@ -5739,19 +5202,21 @@ public final class EventProtos {
         if (other.hasResourceStolen()) {
           mergeResourceStolen(other.getResourceStolen());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasThief()) {
+          
           return false;
         }
         if (!hasVictim()) {
+          
           return false;
         }
         if (!hasResourceStolen()) {
+          
           return false;
         }
         return true;
@@ -5766,7 +5231,7 @@ public final class EventProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.EventProtos.Theft) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -5776,7 +5241,7 @@ public final class EventProtos {
       }
       private int bitField0_;
 
-      private int thief_ = 1;
+      private protocol.EnumProtos.ColourProto thief_ = protocol.EnumProtos.ColourProto.RED;
       /**
        * <code>required .ColourProto thief = 1;</code>
        */
@@ -5787,8 +5252,7 @@ public final class EventProtos {
        * <code>required .ColourProto thief = 1;</code>
        */
       public protocol.EnumProtos.ColourProto getThief() {
-        protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(thief_);
-        return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+        return thief_;
       }
       /**
        * <code>required .ColourProto thief = 1;</code>
@@ -5798,7 +5262,7 @@ public final class EventProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000001;
-        thief_ = value.getNumber();
+        thief_ = value;
         onChanged();
         return this;
       }
@@ -5807,12 +5271,12 @@ public final class EventProtos {
        */
       public Builder clearThief() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        thief_ = 1;
+        thief_ = protocol.EnumProtos.ColourProto.RED;
         onChanged();
         return this;
       }
 
-      private int victim_ = 1;
+      private protocol.EnumProtos.ColourProto victim_ = protocol.EnumProtos.ColourProto.RED;
       /**
        * <code>required .ColourProto victim = 2;</code>
        */
@@ -5823,8 +5287,7 @@ public final class EventProtos {
        * <code>required .ColourProto victim = 2;</code>
        */
       public protocol.EnumProtos.ColourProto getVictim() {
-        protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(victim_);
-        return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+        return victim_;
       }
       /**
        * <code>required .ColourProto victim = 2;</code>
@@ -5834,7 +5297,7 @@ public final class EventProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000002;
-        victim_ = value.getNumber();
+        victim_ = value;
         onChanged();
         return this;
       }
@@ -5843,13 +5306,13 @@ public final class EventProtos {
        */
       public Builder clearVictim() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        victim_ = 1;
+        victim_ = protocol.EnumProtos.ColourProto.RED;
         onChanged();
         return this;
       }
 
-      private protocol.ResourceProtos.ResourceCount resourceStolen_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.ResourceProtos.ResourceCount resourceStolen_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> resourceStolenBuilder_;
       /**
        * <code>required .ResourceCount resourceStolen = 3;</code>
@@ -5862,7 +5325,7 @@ public final class EventProtos {
        */
       public protocol.ResourceProtos.ResourceCount getResourceStolen() {
         if (resourceStolenBuilder_ == null) {
-          return resourceStolen_ == null ? protocol.ResourceProtos.ResourceCount.getDefaultInstance() : resourceStolen_;
+          return resourceStolen_;
         } else {
           return resourceStolenBuilder_.getMessage();
         }
@@ -5903,7 +5366,6 @@ public final class EventProtos {
       public Builder mergeResourceStolen(protocol.ResourceProtos.ResourceCount value) {
         if (resourceStolenBuilder_ == null) {
           if (((bitField0_ & 0x00000004) == 0x00000004) &&
-              resourceStolen_ != null &&
               resourceStolen_ != protocol.ResourceProtos.ResourceCount.getDefaultInstance()) {
             resourceStolen_ =
               protocol.ResourceProtos.ResourceCount.newBuilder(resourceStolen_).mergeFrom(value).buildPartial();
@@ -5922,7 +5384,7 @@ public final class EventProtos {
        */
       public Builder clearResourceStolen() {
         if (resourceStolenBuilder_ == null) {
-          resourceStolen_ = null;
+          resourceStolen_ = protocol.ResourceProtos.ResourceCount.getDefaultInstance();
           onChanged();
         } else {
           resourceStolenBuilder_.clear();
@@ -5945,18 +5407,17 @@ public final class EventProtos {
         if (resourceStolenBuilder_ != null) {
           return resourceStolenBuilder_.getMessageOrBuilder();
         } else {
-          return resourceStolen_ == null ?
-              protocol.ResourceProtos.ResourceCount.getDefaultInstance() : resourceStolen_;
+          return resourceStolen_;
         }
       }
       /**
        * <code>required .ResourceCount resourceStolen = 3;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder> 
           getResourceStolenFieldBuilder() {
         if (resourceStolenBuilder_ == null) {
-          resourceStolenBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          resourceStolenBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResourceProtos.ResourceCount, protocol.ResourceProtos.ResourceCount.Builder, protocol.ResourceProtos.ResourceCountOrBuilder>(
                   getResourceStolen(),
                   getParentForChildren(),
@@ -5965,53 +5426,16 @@ public final class EventProtos {
         }
         return resourceStolenBuilder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:Theft)
     }
 
-    // @@protoc_insertion_point(class_scope:Theft)
-    private static final protocol.EventProtos.Theft DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.EventProtos.Theft();
+      defaultInstance = new Theft(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.EventProtos.Theft getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<Theft>
-        PARSER = new com.google.protobuf.AbstractParser<Theft>() {
-      public Theft parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new Theft(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<Theft> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Theft> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.EventProtos.Theft getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:Theft)
   }
 
   public interface ErrorOrBuilder extends
@@ -6035,28 +5459,37 @@ public final class EventProtos {
   /**
    * Protobuf type {@code Error}
    */
-  public  static final class Error extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class Error extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:Error)
       ErrorOrBuilder {
     // Use Error.newBuilder() to construct.
-    private Error(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private Error(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Error() {
-      description_ = "";
+    private Error(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final Error defaultInstance;
+    public static Error getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public Error getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private Error(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -6087,7 +5520,7 @@ public final class EventProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -6098,16 +5531,31 @@ public final class EventProtos {
       return protocol.EventProtos.internal_static_Error_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.EventProtos.internal_static_Error_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.EventProtos.Error.class, protocol.EventProtos.Error.Builder.class);
     }
 
+    public static com.google.protobuf.Parser<Error> PARSER =
+        new com.google.protobuf.AbstractParser<Error>() {
+      public Error parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Error(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Error> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     public static final int DESCRIPTION_FIELD_NUMBER = 1;
-    private volatile java.lang.Object description_;
+    private java.lang.Object description_;
     /**
      * <code>required string description = 1;</code>
      */
@@ -6148,6 +5596,9 @@ public final class EventProtos {
       }
     }
 
+    private void initFields() {
+      description_ = "";
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -6164,60 +5615,33 @@ public final class EventProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, description_);
+        output.writeBytes(1, getDescriptionBytes());
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, description_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getDescriptionBytes());
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.EventProtos.Error)) {
-        return super.equals(obj);
-      }
-      protocol.EventProtos.Error other = (protocol.EventProtos.Error) obj;
-
-      boolean result = true;
-      result = result && (hasDescription() == other.hasDescription());
-      if (hasDescription()) {
-        result = result && getDescription()
-            .equals(other.getDescription());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasDescription()) {
-        hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
-        hash = (53 * hash) + getDescription().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.EventProtos.Error parseFrom(
@@ -6243,57 +5667,46 @@ public final class EventProtos {
     }
     public static protocol.EventProtos.Error parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.Error parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.Error parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.EventProtos.Error parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.EventProtos.Error parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.EventProtos.Error parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.EventProtos.Error prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -6301,7 +5714,7 @@ public final class EventProtos {
      * Protobuf type {@code Error}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:Error)
         protocol.EventProtos.ErrorOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -6309,7 +5722,7 @@ public final class EventProtos {
         return protocol.EventProtos.internal_static_Error_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.EventProtos.internal_static_Error_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -6322,20 +5735,27 @@ public final class EventProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         description_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -6368,32 +5788,6 @@ public final class EventProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.EventProtos.Error) {
           return mergeFrom((protocol.EventProtos.Error)other);
@@ -6410,13 +5804,13 @@ public final class EventProtos {
           description_ = other.description_;
           onChanged();
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasDescription()) {
+          
           return false;
         }
         return true;
@@ -6431,7 +5825,7 @@ public final class EventProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.EventProtos.Error) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -6516,96 +5910,59 @@ public final class EventProtos {
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:Error)
     }
 
-    // @@protoc_insertion_point(class_scope:Error)
-    private static final protocol.EventProtos.Error DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.EventProtos.Error();
+      defaultInstance = new Error(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.EventProtos.Error getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<Error>
-        PARSER = new com.google.protobuf.AbstractParser<Error>() {
-      public Error parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new Error(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<Error> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Error> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.EventProtos.Error getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:Error)
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_Event_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_Event_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_GameOver_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_GameOver_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_Score_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_Score_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_PlayDevCardEvent_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_PlayDevCardEvent_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_DiceRoll_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_DiceRoll_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_Theft_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_Theft_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_Error_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_Error_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
   }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
+  private static com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
   static {
     java.lang.String[] descriptorData = {
@@ -6651,43 +6008,43 @@ public final class EventProtos {
     internal_static_Event_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Event_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_Event_descriptor,
         new java.lang.String[] { "Error", "DiceRoll", "NewRoad", "NewBuilding", "BoughtDevCard", "PlayedDevCard", "Transaction", "RobberMove", "NewTurn", "GameOver", "Theft", "Type", });
     internal_static_GameOver_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_GameOver_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_GameOver_descriptor,
         new java.lang.String[] { "Scores", "Winnter", });
     internal_static_Score_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_Score_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_Score_descriptor,
         new java.lang.String[] { "Colour", "Score", });
     internal_static_PlayDevCardEvent_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_PlayDevCardEvent_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PlayDevCardEvent_descriptor,
         new java.lang.String[] { "PlayerColour", "Type", });
     internal_static_DiceRoll_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_DiceRoll_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_DiceRoll_descriptor,
         new java.lang.String[] { "Dice", });
     internal_static_Theft_descriptor =
       getDescriptor().getMessageTypes().get(5);
     internal_static_Theft_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_Theft_descriptor,
         new java.lang.String[] { "Thief", "Victim", "ResourceStolen", });
     internal_static_Error_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_Error_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_Error_descriptor,
         new java.lang.String[] { "Description", });
     protocol.BuildProtos.getDescriptor();

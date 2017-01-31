@@ -6,13 +6,7 @@ package protocol;
 public final class MessageProtos {
   private MessageProtos() {}
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
-
-  public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   public interface MessageOrBuilder extends
       // @@protoc_insertion_point(interface_extends:Message)
@@ -65,34 +59,41 @@ public final class MessageProtos {
      * <code>optional .Event event = 4;</code>
      */
     protocol.EventProtos.EventOrBuilder getEventOrBuilder();
-
-    public protocol.MessageProtos.Message.TypeCase getTypeCase();
   }
   /**
    * Protobuf type {@code Message}
    */
-  public  static final class Message extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class Message extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:Message)
       MessageOrBuilder {
     // Use Message.newBuilder() to construct.
-    private Message(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private Message(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Message() {
-      playerColour_ = 1;
+    private Message(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final Message defaultInstance;
+    public static Message getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public Message getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private Message(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -118,7 +119,7 @@ public final class MessageProtos {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
                 bitField0_ |= 0x00000001;
-                playerColour_ = rawValue;
+                playerColour_ = value;
               }
               break;
             }
@@ -127,8 +128,7 @@ public final class MessageProtos {
               if (typeCase_ == 2) {
                 subBuilder = ((protocol.RequestProtos.Request) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.RequestProtos.Request.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.RequestProtos.Request.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.RequestProtos.Request) type_);
                 type_ = subBuilder.buildPartial();
@@ -141,8 +141,7 @@ public final class MessageProtos {
               if (typeCase_ == 3) {
                 subBuilder = ((protocol.ResponseProtos.Response) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.Response.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.Response.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.Response) type_);
                 type_ = subBuilder.buildPartial();
@@ -155,8 +154,7 @@ public final class MessageProtos {
               if (typeCase_ == 4) {
                 subBuilder = ((protocol.EventProtos.Event) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.EventProtos.Event.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.EventProtos.Event.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.EventProtos.Event) type_);
                 type_ = subBuilder.buildPartial();
@@ -170,7 +168,7 @@ public final class MessageProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -181,11 +179,26 @@ public final class MessageProtos {
       return protocol.MessageProtos.internal_static_Message_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.MessageProtos.internal_static_Message_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.MessageProtos.Message.class, protocol.MessageProtos.Message.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<Message> PARSER =
+        new com.google.protobuf.AbstractParser<Message>() {
+      public Message parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Message(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Message> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -197,25 +210,18 @@ public final class MessageProtos {
       RESPONSE(3),
       EVENT(4),
       TYPE_NOT_SET(0);
-      private final int value;
+      private int value = 0;
       private TypeCase(int value) {
         this.value = value;
       }
-      /**
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
       public static TypeCase valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static TypeCase forNumber(int value) {
         switch (value) {
           case 2: return REQUEST;
           case 3: return RESPONSE;
           case 4: return EVENT;
           case 0: return TYPE_NOT_SET;
-          default: return null;
+          default: throw new java.lang.IllegalArgumentException(
+            "Value is undefined for this oneof enum.");
         }
       }
       public int getNumber() {
@@ -225,12 +231,12 @@ public final class MessageProtos {
 
     public TypeCase
     getTypeCase() {
-      return TypeCase.forNumber(
+      return TypeCase.valueOf(
           typeCase_);
     }
 
     public static final int PLAYERCOLOUR_FIELD_NUMBER = 1;
-    private int playerColour_;
+    private protocol.EnumProtos.ColourProto playerColour_;
     /**
      * <code>required .ColourProto playerColour = 1;</code>
      */
@@ -241,8 +247,7 @@ public final class MessageProtos {
      * <code>required .ColourProto playerColour = 1;</code>
      */
     public protocol.EnumProtos.ColourProto getPlayerColour() {
-      protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(playerColour_);
-      return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+      return playerColour_;
     }
 
     public static final int REQUEST_FIELD_NUMBER = 2;
@@ -323,6 +328,9 @@ public final class MessageProtos {
       return protocol.EventProtos.Event.getDefaultInstance();
     }
 
+    private void initFields() {
+      playerColour_ = protocol.EnumProtos.ColourProto.RED;
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -357,8 +365,9 @@ public final class MessageProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, playerColour_);
+        output.writeEnum(1, playerColour_.getNumber());
       }
       if (typeCase_ == 2) {
         output.writeMessage(2, (protocol.RequestProtos.Request) type_);
@@ -369,17 +378,18 @@ public final class MessageProtos {
       if (typeCase_ == 4) {
         output.writeMessage(4, (protocol.EventProtos.Event) type_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, playerColour_);
+          .computeEnumSize(1, playerColour_.getNumber());
       }
       if (typeCase_ == 2) {
         size += com.google.protobuf.CodedOutputStream
@@ -393,80 +403,16 @@ public final class MessageProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, (protocol.EventProtos.Event) type_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.MessageProtos.Message)) {
-        return super.equals(obj);
-      }
-      protocol.MessageProtos.Message other = (protocol.MessageProtos.Message) obj;
-
-      boolean result = true;
-      result = result && (hasPlayerColour() == other.hasPlayerColour());
-      if (hasPlayerColour()) {
-        result = result && playerColour_ == other.playerColour_;
-      }
-      result = result && getTypeCase().equals(
-          other.getTypeCase());
-      if (!result) return false;
-      switch (typeCase_) {
-        case 2:
-          result = result && getRequest()
-              .equals(other.getRequest());
-          break;
-        case 3:
-          result = result && getResponse()
-              .equals(other.getResponse());
-          break;
-        case 4:
-          result = result && getEvent()
-              .equals(other.getEvent());
-          break;
-        case 0:
-        default:
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasPlayerColour()) {
-        hash = (37 * hash) + PLAYERCOLOUR_FIELD_NUMBER;
-        hash = (53 * hash) + playerColour_;
-      }
-      switch (typeCase_) {
-        case 2:
-          hash = (37 * hash) + REQUEST_FIELD_NUMBER;
-          hash = (53 * hash) + getRequest().hashCode();
-          break;
-        case 3:
-          hash = (37 * hash) + RESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getResponse().hashCode();
-          break;
-        case 4:
-          hash = (37 * hash) + EVENT_FIELD_NUMBER;
-          hash = (53 * hash) + getEvent().hashCode();
-          break;
-        case 0:
-        default:
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.MessageProtos.Message parseFrom(
@@ -492,57 +438,46 @@ public final class MessageProtos {
     }
     public static protocol.MessageProtos.Message parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.MessageProtos.Message parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.MessageProtos.Message parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.MessageProtos.Message parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.MessageProtos.Message parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.MessageProtos.Message parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.MessageProtos.Message prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -550,7 +485,7 @@ public final class MessageProtos {
      * Protobuf type {@code Message}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:Message)
         protocol.MessageProtos.MessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -558,7 +493,7 @@ public final class MessageProtos {
         return protocol.MessageProtos.internal_static_Message_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.MessageProtos.internal_static_Message_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -571,22 +506,29 @@ public final class MessageProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
-        playerColour_ = 1;
+        playerColour_ = protocol.EnumProtos.ColourProto.RED;
         bitField0_ = (bitField0_ & ~0x00000001);
         typeCase_ = 0;
         type_ = null;
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -641,32 +583,6 @@ public final class MessageProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.MessageProtos.Message) {
           return mergeFrom((protocol.MessageProtos.Message)other);
@@ -698,27 +614,30 @@ public final class MessageProtos {
             break;
           }
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasPlayerColour()) {
+          
           return false;
         }
         if (hasRequest()) {
           if (!getRequest().isInitialized()) {
+            
             return false;
           }
         }
         if (hasResponse()) {
           if (!getResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasEvent()) {
           if (!getEvent().isInitialized()) {
+            
             return false;
           }
         }
@@ -734,7 +653,7 @@ public final class MessageProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.MessageProtos.Message) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -746,7 +665,7 @@ public final class MessageProtos {
       private java.lang.Object type_;
       public TypeCase
           getTypeCase() {
-        return TypeCase.forNumber(
+        return TypeCase.valueOf(
             typeCase_);
       }
 
@@ -759,7 +678,7 @@ public final class MessageProtos {
 
       private int bitField0_;
 
-      private int playerColour_ = 1;
+      private protocol.EnumProtos.ColourProto playerColour_ = protocol.EnumProtos.ColourProto.RED;
       /**
        * <code>required .ColourProto playerColour = 1;</code>
        */
@@ -770,8 +689,7 @@ public final class MessageProtos {
        * <code>required .ColourProto playerColour = 1;</code>
        */
       public protocol.EnumProtos.ColourProto getPlayerColour() {
-        protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(playerColour_);
-        return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+        return playerColour_;
       }
       /**
        * <code>required .ColourProto playerColour = 1;</code>
@@ -781,7 +699,7 @@ public final class MessageProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000001;
-        playerColour_ = value.getNumber();
+        playerColour_ = value;
         onChanged();
         return this;
       }
@@ -790,12 +708,12 @@ public final class MessageProtos {
        */
       public Builder clearPlayerColour() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        playerColour_ = 1;
+        playerColour_ = protocol.EnumProtos.ColourProto.RED;
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.RequestProtos.Request, protocol.RequestProtos.Request.Builder, protocol.RequestProtos.RequestOrBuilder> requestBuilder_;
       /**
        * <code>optional .Request request = 2;</code>
@@ -912,14 +830,14 @@ public final class MessageProtos {
       /**
        * <code>optional .Request request = 2;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.RequestProtos.Request, protocol.RequestProtos.Request.Builder, protocol.RequestProtos.RequestOrBuilder> 
           getRequestFieldBuilder() {
         if (requestBuilder_ == null) {
           if (!(typeCase_ == 2)) {
             type_ = protocol.RequestProtos.Request.getDefaultInstance();
           }
-          requestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          requestBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.RequestProtos.Request, protocol.RequestProtos.Request.Builder, protocol.RequestProtos.RequestOrBuilder>(
                   (protocol.RequestProtos.Request) type_,
                   getParentForChildren(),
@@ -927,11 +845,10 @@ public final class MessageProtos {
           type_ = null;
         }
         typeCase_ = 2;
-        onChanged();;
         return requestBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.Response, protocol.ResponseProtos.Response.Builder, protocol.ResponseProtos.ResponseOrBuilder> responseBuilder_;
       /**
        * <code>optional .Response response = 3;</code>
@@ -1048,14 +965,14 @@ public final class MessageProtos {
       /**
        * <code>optional .Response response = 3;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.Response, protocol.ResponseProtos.Response.Builder, protocol.ResponseProtos.ResponseOrBuilder> 
           getResponseFieldBuilder() {
         if (responseBuilder_ == null) {
           if (!(typeCase_ == 3)) {
             type_ = protocol.ResponseProtos.Response.getDefaultInstance();
           }
-          responseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          responseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.Response, protocol.ResponseProtos.Response.Builder, protocol.ResponseProtos.ResponseOrBuilder>(
                   (protocol.ResponseProtos.Response) type_,
                   getParentForChildren(),
@@ -1063,11 +980,10 @@ public final class MessageProtos {
           type_ = null;
         }
         typeCase_ = 3;
-        onChanged();;
         return responseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.EventProtos.Event, protocol.EventProtos.Event.Builder, protocol.EventProtos.EventOrBuilder> eventBuilder_;
       /**
        * <code>optional .Event event = 4;</code>
@@ -1184,14 +1100,14 @@ public final class MessageProtos {
       /**
        * <code>optional .Event event = 4;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.EventProtos.Event, protocol.EventProtos.Event.Builder, protocol.EventProtos.EventOrBuilder> 
           getEventFieldBuilder() {
         if (eventBuilder_ == null) {
           if (!(typeCase_ == 4)) {
             type_ = protocol.EventProtos.Event.getDefaultInstance();
           }
-          eventBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          eventBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.EventProtos.Event, protocol.EventProtos.Event.Builder, protocol.EventProtos.EventOrBuilder>(
                   (protocol.EventProtos.Event) type_,
                   getParentForChildren(),
@@ -1199,69 +1115,31 @@ public final class MessageProtos {
           type_ = null;
         }
         typeCase_ = 4;
-        onChanged();;
         return eventBuilder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:Message)
     }
 
-    // @@protoc_insertion_point(class_scope:Message)
-    private static final protocol.MessageProtos.Message DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.MessageProtos.Message();
+      defaultInstance = new Message(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.MessageProtos.Message getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<Message>
-        PARSER = new com.google.protobuf.AbstractParser<Message>() {
-      public Message parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new Message(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<Message> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Message> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.MessageProtos.Message getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:Message)
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_Message_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_Message_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
   }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
+  private static com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
   static {
     java.lang.String[] descriptorData = {
@@ -1292,7 +1170,7 @@ public final class MessageProtos {
     internal_static_Message_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Message_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_Message_descriptor,
         new java.lang.String[] { "PlayerColour", "Request", "Response", "Event", "Type", });
     protocol.RequestProtos.getDescriptor();

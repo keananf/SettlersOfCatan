@@ -6,13 +6,7 @@ package protocol;
 public final class ResponseProtos {
   private ResponseProtos() {}
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
-
-  public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   public interface ResponseOrBuilder extends
       // @@protoc_insertion_point(interface_extends:Response)
@@ -199,33 +193,41 @@ public final class ResponseProtos {
      * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
      */
     protocol.ResourceProtos.ResourceAllocationOrBuilder getResourceAllocationOrBuilder();
-
-    public protocol.ResponseProtos.Response.TypeCase getTypeCase();
   }
   /**
    * Protobuf type {@code Response}
    */
-  public  static final class Response extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class Response extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:Response)
       ResponseOrBuilder {
     // Use Response.newBuilder() to construct.
-    private Response(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private Response(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Response() {
+    private Response(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final Response defaultInstance;
+    public static Response getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public Response getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private Response(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -249,8 +251,7 @@ public final class ResponseProtos {
               if (typeCase_ == 1) {
                 subBuilder = ((protocol.ResponseProtos.SuccessFailResponse) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.SuccessFailResponse.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.SuccessFailResponse.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.SuccessFailResponse) type_);
                 type_ = subBuilder.buildPartial();
@@ -263,8 +264,7 @@ public final class ResponseProtos {
               if (typeCase_ == 2) {
                 subBuilder = ((protocol.ResponseProtos.AcceptRejectResponse) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.AcceptRejectResponse.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.AcceptRejectResponse.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.AcceptRejectResponse) type_);
                 type_ = subBuilder.buildPartial();
@@ -277,8 +277,7 @@ public final class ResponseProtos {
               if (typeCase_ == 3) {
                 subBuilder = ((protocol.ResponseProtos.GiveBoardResponse) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.GiveBoardResponse.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.GiveBoardResponse.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.GiveBoardResponse) type_);
                 type_ = subBuilder.buildPartial();
@@ -291,8 +290,7 @@ public final class ResponseProtos {
               if (typeCase_ == 4) {
                 subBuilder = ((protocol.ResponseProtos.BuyDevCardResponse) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.BuyDevCardResponse.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.BuyDevCardResponse.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.BuyDevCardResponse) type_);
                 type_ = subBuilder.buildPartial();
@@ -305,8 +303,7 @@ public final class ResponseProtos {
               if (typeCase_ == 5) {
                 subBuilder = ((protocol.ResponseProtos.PlayMonopolyCardResponse) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.PlayMonopolyCardResponse.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.PlayMonopolyCardResponse.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.PlayMonopolyCardResponse) type_);
                 type_ = subBuilder.buildPartial();
@@ -319,8 +316,7 @@ public final class ResponseProtos {
               if (typeCase_ == 7) {
                 subBuilder = ((protocol.ResponseProtos.PlayRoadBuildingCardResponse) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.PlayRoadBuildingCardResponse.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.PlayRoadBuildingCardResponse.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.PlayRoadBuildingCardResponse) type_);
                 type_ = subBuilder.buildPartial();
@@ -333,8 +329,7 @@ public final class ResponseProtos {
               if (typeCase_ == 8) {
                 subBuilder = ((protocol.ResponseProtos.BuildRoadResponse) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.BuildRoadResponse.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.BuildRoadResponse.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.BuildRoadResponse) type_);
                 type_ = subBuilder.buildPartial();
@@ -347,8 +342,7 @@ public final class ResponseProtos {
               if (typeCase_ == 9) {
                 subBuilder = ((protocol.ResponseProtos.MoveRobberResponse) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.MoveRobberResponse.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.MoveRobberResponse.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.MoveRobberResponse) type_);
                 type_ = subBuilder.buildPartial();
@@ -361,8 +355,7 @@ public final class ResponseProtos {
               if (typeCase_ == 10) {
                 subBuilder = ((protocol.ResponseProtos.EndMoveResponse) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.EndMoveResponse.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.EndMoveResponse.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.EndMoveResponse) type_);
                 type_ = subBuilder.buildPartial();
@@ -375,8 +368,7 @@ public final class ResponseProtos {
               if (typeCase_ == 11) {
                 subBuilder = ((protocol.ResponseProtos.BuildSettlementResponse) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.BuildSettlementResponse.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.BuildSettlementResponse.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.BuildSettlementResponse) type_);
                 type_ = subBuilder.buildPartial();
@@ -389,8 +381,7 @@ public final class ResponseProtos {
               if (typeCase_ == 12) {
                 subBuilder = ((protocol.ResponseProtos.UpgradeSettlementResponse) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.UpgradeSettlementResponse.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.UpgradeSettlementResponse.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.UpgradeSettlementResponse) type_);
                 type_ = subBuilder.buildPartial();
@@ -403,8 +394,7 @@ public final class ResponseProtos {
               if (typeCase_ == 13) {
                 subBuilder = ((protocol.ResponseProtos.PlayKnightCardResponse) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.PlayKnightCardResponse.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.PlayKnightCardResponse.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.PlayKnightCardResponse) type_);
                 type_ = subBuilder.buildPartial();
@@ -417,8 +407,7 @@ public final class ResponseProtos {
               if (typeCase_ == 14) {
                 subBuilder = ((protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResponseProtos.PlayYearOfPlentyCardResponse.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResponseProtos.PlayYearOfPlentyCardResponse.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_);
                 type_ = subBuilder.buildPartial();
@@ -431,8 +420,7 @@ public final class ResponseProtos {
               if (typeCase_ == 15) {
                 subBuilder = ((protocol.ResourceProtos.ResourceAllocation) type_).toBuilder();
               }
-              type_ =
-                  input.readMessage(protocol.ResourceProtos.ResourceAllocation.PARSER, extensionRegistry);
+              type_ = input.readMessage(protocol.ResourceProtos.ResourceAllocation.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom((protocol.ResourceProtos.ResourceAllocation) type_);
                 type_ = subBuilder.buildPartial();
@@ -446,7 +434,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -457,11 +445,26 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_Response_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_Response_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.Response.class, protocol.ResponseProtos.Response.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<Response> PARSER =
+        new com.google.protobuf.AbstractParser<Response>() {
+      public Response parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Response(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Response> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -484,19 +487,11 @@ public final class ResponseProtos {
       PLAYYEAROFPLENTYCARDRESPONSE(14),
       RESOURCEALLOCATION(15),
       TYPE_NOT_SET(0);
-      private final int value;
+      private int value = 0;
       private TypeCase(int value) {
         this.value = value;
       }
-      /**
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
       public static TypeCase valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static TypeCase forNumber(int value) {
         switch (value) {
           case 1: return SUCCESSFAILRESPONSE;
           case 2: return ACCEPTREJECTRESPONSE;
@@ -513,7 +508,8 @@ public final class ResponseProtos {
           case 14: return PLAYYEAROFPLENTYCARDRESPONSE;
           case 15: return RESOURCEALLOCATION;
           case 0: return TYPE_NOT_SET;
-          default: return null;
+          default: throw new java.lang.IllegalArgumentException(
+            "Value is undefined for this oneof enum.");
         }
       }
       public int getNumber() {
@@ -523,7 +519,7 @@ public final class ResponseProtos {
 
     public TypeCase
     getTypeCase() {
-      return TypeCase.forNumber(
+      return TypeCase.valueOf(
           typeCase_);
     }
 
@@ -891,6 +887,8 @@ public final class ResponseProtos {
       return protocol.ResourceProtos.ResourceAllocation.getDefaultInstance();
     }
 
+    private void initFields() {
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -987,6 +985,7 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (typeCase_ == 1) {
         output.writeMessage(1, (protocol.ResponseProtos.SuccessFailResponse) type_);
       }
@@ -1029,11 +1028,12 @@ public final class ResponseProtos {
       if (typeCase_ == 15) {
         output.writeMessage(15, (protocol.ResourceProtos.ResourceAllocation) type_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
@@ -1093,160 +1093,16 @@ public final class ResponseProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(15, (protocol.ResourceProtos.ResourceAllocation) type_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.Response)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.Response other = (protocol.ResponseProtos.Response) obj;
-
-      boolean result = true;
-      result = result && getTypeCase().equals(
-          other.getTypeCase());
-      if (!result) return false;
-      switch (typeCase_) {
-        case 1:
-          result = result && getSuccessFailResponse()
-              .equals(other.getSuccessFailResponse());
-          break;
-        case 2:
-          result = result && getAcceptRejectResponse()
-              .equals(other.getAcceptRejectResponse());
-          break;
-        case 3:
-          result = result && getCurrentBoardResponse()
-              .equals(other.getCurrentBoardResponse());
-          break;
-        case 4:
-          result = result && getBuyDevCardResponse()
-              .equals(other.getBuyDevCardResponse());
-          break;
-        case 5:
-          result = result && getPlayMonopolyCardResponse()
-              .equals(other.getPlayMonopolyCardResponse());
-          break;
-        case 7:
-          result = result && getPlayRoadBuildingCardResponse()
-              .equals(other.getPlayRoadBuildingCardResponse());
-          break;
-        case 8:
-          result = result && getBuildRoadResponse()
-              .equals(other.getBuildRoadResponse());
-          break;
-        case 9:
-          result = result && getMoveRobberResponse()
-              .equals(other.getMoveRobberResponse());
-          break;
-        case 10:
-          result = result && getEndMoveResponse()
-              .equals(other.getEndMoveResponse());
-          break;
-        case 11:
-          result = result && getBuildSettlementResponse()
-              .equals(other.getBuildSettlementResponse());
-          break;
-        case 12:
-          result = result && getUpgradeSettlementResponse()
-              .equals(other.getUpgradeSettlementResponse());
-          break;
-        case 13:
-          result = result && getPlayKnightCardResponse()
-              .equals(other.getPlayKnightCardResponse());
-          break;
-        case 14:
-          result = result && getPlayYearOfPlentyCardResponse()
-              .equals(other.getPlayYearOfPlentyCardResponse());
-          break;
-        case 15:
-          result = result && getResourceAllocation()
-              .equals(other.getResourceAllocation());
-          break;
-        case 0:
-        default:
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      switch (typeCase_) {
-        case 1:
-          hash = (37 * hash) + SUCCESSFAILRESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getSuccessFailResponse().hashCode();
-          break;
-        case 2:
-          hash = (37 * hash) + ACCEPTREJECTRESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getAcceptRejectResponse().hashCode();
-          break;
-        case 3:
-          hash = (37 * hash) + CURRENTBOARDRESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getCurrentBoardResponse().hashCode();
-          break;
-        case 4:
-          hash = (37 * hash) + BUYDEVCARDRESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getBuyDevCardResponse().hashCode();
-          break;
-        case 5:
-          hash = (37 * hash) + PLAYMONOPOLYCARDRESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getPlayMonopolyCardResponse().hashCode();
-          break;
-        case 7:
-          hash = (37 * hash) + PLAYROADBUILDINGCARDRESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getPlayRoadBuildingCardResponse().hashCode();
-          break;
-        case 8:
-          hash = (37 * hash) + BUILDROADRESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getBuildRoadResponse().hashCode();
-          break;
-        case 9:
-          hash = (37 * hash) + MOVEROBBERRESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getMoveRobberResponse().hashCode();
-          break;
-        case 10:
-          hash = (37 * hash) + ENDMOVERESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getEndMoveResponse().hashCode();
-          break;
-        case 11:
-          hash = (37 * hash) + BUILDSETTLEMENTRESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getBuildSettlementResponse().hashCode();
-          break;
-        case 12:
-          hash = (37 * hash) + UPGRADESETTLEMENTRESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getUpgradeSettlementResponse().hashCode();
-          break;
-        case 13:
-          hash = (37 * hash) + PLAYKNIGHTCARDRESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getPlayKnightCardResponse().hashCode();
-          break;
-        case 14:
-          hash = (37 * hash) + PLAYYEAROFPLENTYCARDRESPONSE_FIELD_NUMBER;
-          hash = (53 * hash) + getPlayYearOfPlentyCardResponse().hashCode();
-          break;
-        case 15:
-          hash = (37 * hash) + RESOURCEALLOCATION_FIELD_NUMBER;
-          hash = (53 * hash) + getResourceAllocation().hashCode();
-          break;
-        case 0:
-        default:
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.Response parseFrom(
@@ -1272,57 +1128,46 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.Response parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.Response parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.Response parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.Response parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.Response parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.Response parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.Response prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -1330,7 +1175,7 @@ public final class ResponseProtos {
      * Protobuf type {@code Response}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:Response)
         protocol.ResponseProtos.ResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -1338,7 +1183,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_Response_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_Response_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -1351,20 +1196,27 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         typeCase_ = 0;
         type_ = null;
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -1492,32 +1344,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.Response) {
           return mergeFrom((protocol.ResponseProtos.Response)other);
@@ -1590,79 +1416,92 @@ public final class ResponseProtos {
             break;
           }
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (hasSuccessFailResponse()) {
           if (!getSuccessFailResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasAcceptRejectResponse()) {
           if (!getAcceptRejectResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasCurrentBoardResponse()) {
           if (!getCurrentBoardResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasBuyDevCardResponse()) {
           if (!getBuyDevCardResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasPlayMonopolyCardResponse()) {
           if (!getPlayMonopolyCardResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasPlayRoadBuildingCardResponse()) {
           if (!getPlayRoadBuildingCardResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasBuildRoadResponse()) {
           if (!getBuildRoadResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasMoveRobberResponse()) {
           if (!getMoveRobberResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasEndMoveResponse()) {
           if (!getEndMoveResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasBuildSettlementResponse()) {
           if (!getBuildSettlementResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasUpgradeSettlementResponse()) {
           if (!getUpgradeSettlementResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasPlayKnightCardResponse()) {
           if (!getPlayKnightCardResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasPlayYearOfPlentyCardResponse()) {
           if (!getPlayYearOfPlentyCardResponse().isInitialized()) {
+            
             return false;
           }
         }
         if (hasResourceAllocation()) {
           if (!getResourceAllocation().isInitialized()) {
+            
             return false;
           }
         }
@@ -1678,7 +1517,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.Response) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -1690,7 +1529,7 @@ public final class ResponseProtos {
       private java.lang.Object type_;
       public TypeCase
           getTypeCase() {
-        return TypeCase.forNumber(
+        return TypeCase.valueOf(
             typeCase_);
       }
 
@@ -1703,7 +1542,7 @@ public final class ResponseProtos {
 
       private int bitField0_;
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.SuccessFailResponse, protocol.ResponseProtos.SuccessFailResponse.Builder, protocol.ResponseProtos.SuccessFailResponseOrBuilder> successFailResponseBuilder_;
       /**
        * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
@@ -1820,14 +1659,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .SuccessFailResponse successFailResponse = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.SuccessFailResponse, protocol.ResponseProtos.SuccessFailResponse.Builder, protocol.ResponseProtos.SuccessFailResponseOrBuilder> 
           getSuccessFailResponseFieldBuilder() {
         if (successFailResponseBuilder_ == null) {
           if (!(typeCase_ == 1)) {
             type_ = protocol.ResponseProtos.SuccessFailResponse.getDefaultInstance();
           }
-          successFailResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          successFailResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.SuccessFailResponse, protocol.ResponseProtos.SuccessFailResponse.Builder, protocol.ResponseProtos.SuccessFailResponseOrBuilder>(
                   (protocol.ResponseProtos.SuccessFailResponse) type_,
                   getParentForChildren(),
@@ -1835,11 +1674,10 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 1;
-        onChanged();;
         return successFailResponseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.AcceptRejectResponse, protocol.ResponseProtos.AcceptRejectResponse.Builder, protocol.ResponseProtos.AcceptRejectResponseOrBuilder> acceptRejectResponseBuilder_;
       /**
        * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
@@ -1956,14 +1794,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .AcceptRejectResponse acceptRejectResponse = 2;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.AcceptRejectResponse, protocol.ResponseProtos.AcceptRejectResponse.Builder, protocol.ResponseProtos.AcceptRejectResponseOrBuilder> 
           getAcceptRejectResponseFieldBuilder() {
         if (acceptRejectResponseBuilder_ == null) {
           if (!(typeCase_ == 2)) {
             type_ = protocol.ResponseProtos.AcceptRejectResponse.getDefaultInstance();
           }
-          acceptRejectResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          acceptRejectResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.AcceptRejectResponse, protocol.ResponseProtos.AcceptRejectResponse.Builder, protocol.ResponseProtos.AcceptRejectResponseOrBuilder>(
                   (protocol.ResponseProtos.AcceptRejectResponse) type_,
                   getParentForChildren(),
@@ -1971,11 +1809,10 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 2;
-        onChanged();;
         return acceptRejectResponseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.GiveBoardResponse, protocol.ResponseProtos.GiveBoardResponse.Builder, protocol.ResponseProtos.GiveBoardResponseOrBuilder> currentBoardResponseBuilder_;
       /**
        * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
@@ -2092,14 +1929,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .GiveBoardResponse currentBoardResponse = 3;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.GiveBoardResponse, protocol.ResponseProtos.GiveBoardResponse.Builder, protocol.ResponseProtos.GiveBoardResponseOrBuilder> 
           getCurrentBoardResponseFieldBuilder() {
         if (currentBoardResponseBuilder_ == null) {
           if (!(typeCase_ == 3)) {
             type_ = protocol.ResponseProtos.GiveBoardResponse.getDefaultInstance();
           }
-          currentBoardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          currentBoardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.GiveBoardResponse, protocol.ResponseProtos.GiveBoardResponse.Builder, protocol.ResponseProtos.GiveBoardResponseOrBuilder>(
                   (protocol.ResponseProtos.GiveBoardResponse) type_,
                   getParentForChildren(),
@@ -2107,11 +1944,10 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 3;
-        onChanged();;
         return currentBoardResponseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.BuyDevCardResponse, protocol.ResponseProtos.BuyDevCardResponse.Builder, protocol.ResponseProtos.BuyDevCardResponseOrBuilder> buyDevCardResponseBuilder_;
       /**
        * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
@@ -2228,14 +2064,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .BuyDevCardResponse buyDevCardResponse = 4;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.BuyDevCardResponse, protocol.ResponseProtos.BuyDevCardResponse.Builder, protocol.ResponseProtos.BuyDevCardResponseOrBuilder> 
           getBuyDevCardResponseFieldBuilder() {
         if (buyDevCardResponseBuilder_ == null) {
           if (!(typeCase_ == 4)) {
             type_ = protocol.ResponseProtos.BuyDevCardResponse.getDefaultInstance();
           }
-          buyDevCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          buyDevCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.BuyDevCardResponse, protocol.ResponseProtos.BuyDevCardResponse.Builder, protocol.ResponseProtos.BuyDevCardResponseOrBuilder>(
                   (protocol.ResponseProtos.BuyDevCardResponse) type_,
                   getParentForChildren(),
@@ -2243,11 +2079,10 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 4;
-        onChanged();;
         return buyDevCardResponseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.PlayMonopolyCardResponse, protocol.ResponseProtos.PlayMonopolyCardResponse.Builder, protocol.ResponseProtos.PlayMonopolyCardResponseOrBuilder> playMonopolyCardResponseBuilder_;
       /**
        * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
@@ -2364,14 +2199,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .PlayMonopolyCardResponse playMonopolyCardResponse = 5;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.PlayMonopolyCardResponse, protocol.ResponseProtos.PlayMonopolyCardResponse.Builder, protocol.ResponseProtos.PlayMonopolyCardResponseOrBuilder> 
           getPlayMonopolyCardResponseFieldBuilder() {
         if (playMonopolyCardResponseBuilder_ == null) {
           if (!(typeCase_ == 5)) {
             type_ = protocol.ResponseProtos.PlayMonopolyCardResponse.getDefaultInstance();
           }
-          playMonopolyCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          playMonopolyCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.PlayMonopolyCardResponse, protocol.ResponseProtos.PlayMonopolyCardResponse.Builder, protocol.ResponseProtos.PlayMonopolyCardResponseOrBuilder>(
                   (protocol.ResponseProtos.PlayMonopolyCardResponse) type_,
                   getParentForChildren(),
@@ -2379,11 +2214,10 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 5;
-        onChanged();;
         return playMonopolyCardResponseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.PlayRoadBuildingCardResponse, protocol.ResponseProtos.PlayRoadBuildingCardResponse.Builder, protocol.ResponseProtos.PlayRoadBuildingCardResponseOrBuilder> playRoadBuildingCardResponseBuilder_;
       /**
        * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
@@ -2500,14 +2334,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .PlayRoadBuildingCardResponse playRoadBuildingCardResponse = 7;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.PlayRoadBuildingCardResponse, protocol.ResponseProtos.PlayRoadBuildingCardResponse.Builder, protocol.ResponseProtos.PlayRoadBuildingCardResponseOrBuilder> 
           getPlayRoadBuildingCardResponseFieldBuilder() {
         if (playRoadBuildingCardResponseBuilder_ == null) {
           if (!(typeCase_ == 7)) {
             type_ = protocol.ResponseProtos.PlayRoadBuildingCardResponse.getDefaultInstance();
           }
-          playRoadBuildingCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          playRoadBuildingCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.PlayRoadBuildingCardResponse, protocol.ResponseProtos.PlayRoadBuildingCardResponse.Builder, protocol.ResponseProtos.PlayRoadBuildingCardResponseOrBuilder>(
                   (protocol.ResponseProtos.PlayRoadBuildingCardResponse) type_,
                   getParentForChildren(),
@@ -2515,11 +2349,10 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 7;
-        onChanged();;
         return playRoadBuildingCardResponseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.BuildRoadResponse, protocol.ResponseProtos.BuildRoadResponse.Builder, protocol.ResponseProtos.BuildRoadResponseOrBuilder> buildRoadResponseBuilder_;
       /**
        * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
@@ -2636,14 +2469,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .BuildRoadResponse buildRoadResponse = 8;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.BuildRoadResponse, protocol.ResponseProtos.BuildRoadResponse.Builder, protocol.ResponseProtos.BuildRoadResponseOrBuilder> 
           getBuildRoadResponseFieldBuilder() {
         if (buildRoadResponseBuilder_ == null) {
           if (!(typeCase_ == 8)) {
             type_ = protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
           }
-          buildRoadResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          buildRoadResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.BuildRoadResponse, protocol.ResponseProtos.BuildRoadResponse.Builder, protocol.ResponseProtos.BuildRoadResponseOrBuilder>(
                   (protocol.ResponseProtos.BuildRoadResponse) type_,
                   getParentForChildren(),
@@ -2651,11 +2484,10 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 8;
-        onChanged();;
         return buildRoadResponseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.MoveRobberResponse, protocol.ResponseProtos.MoveRobberResponse.Builder, protocol.ResponseProtos.MoveRobberResponseOrBuilder> moveRobberResponseBuilder_;
       /**
        * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
@@ -2772,14 +2604,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .MoveRobberResponse moveRobberResponse = 9;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.MoveRobberResponse, protocol.ResponseProtos.MoveRobberResponse.Builder, protocol.ResponseProtos.MoveRobberResponseOrBuilder> 
           getMoveRobberResponseFieldBuilder() {
         if (moveRobberResponseBuilder_ == null) {
           if (!(typeCase_ == 9)) {
             type_ = protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
           }
-          moveRobberResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          moveRobberResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.MoveRobberResponse, protocol.ResponseProtos.MoveRobberResponse.Builder, protocol.ResponseProtos.MoveRobberResponseOrBuilder>(
                   (protocol.ResponseProtos.MoveRobberResponse) type_,
                   getParentForChildren(),
@@ -2787,11 +2619,10 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 9;
-        onChanged();;
         return moveRobberResponseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.EndMoveResponse, protocol.ResponseProtos.EndMoveResponse.Builder, protocol.ResponseProtos.EndMoveResponseOrBuilder> endMoveResponseBuilder_;
       /**
        * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
@@ -2908,14 +2739,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .EndMoveResponse endMoveResponse = 10;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.EndMoveResponse, protocol.ResponseProtos.EndMoveResponse.Builder, protocol.ResponseProtos.EndMoveResponseOrBuilder> 
           getEndMoveResponseFieldBuilder() {
         if (endMoveResponseBuilder_ == null) {
           if (!(typeCase_ == 10)) {
             type_ = protocol.ResponseProtos.EndMoveResponse.getDefaultInstance();
           }
-          endMoveResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          endMoveResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.EndMoveResponse, protocol.ResponseProtos.EndMoveResponse.Builder, protocol.ResponseProtos.EndMoveResponseOrBuilder>(
                   (protocol.ResponseProtos.EndMoveResponse) type_,
                   getParentForChildren(),
@@ -2923,11 +2754,10 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 10;
-        onChanged();;
         return endMoveResponseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.BuildSettlementResponse, protocol.ResponseProtos.BuildSettlementResponse.Builder, protocol.ResponseProtos.BuildSettlementResponseOrBuilder> buildSettlementResponseBuilder_;
       /**
        * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
@@ -3044,14 +2874,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .BuildSettlementResponse buildSettlementResponse = 11;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.BuildSettlementResponse, protocol.ResponseProtos.BuildSettlementResponse.Builder, protocol.ResponseProtos.BuildSettlementResponseOrBuilder> 
           getBuildSettlementResponseFieldBuilder() {
         if (buildSettlementResponseBuilder_ == null) {
           if (!(typeCase_ == 11)) {
             type_ = protocol.ResponseProtos.BuildSettlementResponse.getDefaultInstance();
           }
-          buildSettlementResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          buildSettlementResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.BuildSettlementResponse, protocol.ResponseProtos.BuildSettlementResponse.Builder, protocol.ResponseProtos.BuildSettlementResponseOrBuilder>(
                   (protocol.ResponseProtos.BuildSettlementResponse) type_,
                   getParentForChildren(),
@@ -3059,11 +2889,10 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 11;
-        onChanged();;
         return buildSettlementResponseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.UpgradeSettlementResponse, protocol.ResponseProtos.UpgradeSettlementResponse.Builder, protocol.ResponseProtos.UpgradeSettlementResponseOrBuilder> upgradeSettlementResponseBuilder_;
       /**
        * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
@@ -3180,14 +3009,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .UpgradeSettlementResponse upgradeSettlementResponse = 12;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.UpgradeSettlementResponse, protocol.ResponseProtos.UpgradeSettlementResponse.Builder, protocol.ResponseProtos.UpgradeSettlementResponseOrBuilder> 
           getUpgradeSettlementResponseFieldBuilder() {
         if (upgradeSettlementResponseBuilder_ == null) {
           if (!(typeCase_ == 12)) {
             type_ = protocol.ResponseProtos.UpgradeSettlementResponse.getDefaultInstance();
           }
-          upgradeSettlementResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          upgradeSettlementResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.UpgradeSettlementResponse, protocol.ResponseProtos.UpgradeSettlementResponse.Builder, protocol.ResponseProtos.UpgradeSettlementResponseOrBuilder>(
                   (protocol.ResponseProtos.UpgradeSettlementResponse) type_,
                   getParentForChildren(),
@@ -3195,11 +3024,10 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 12;
-        onChanged();;
         return upgradeSettlementResponseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.PlayKnightCardResponse, protocol.ResponseProtos.PlayKnightCardResponse.Builder, protocol.ResponseProtos.PlayKnightCardResponseOrBuilder> playKnightCardResponseBuilder_;
       /**
        * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
@@ -3316,14 +3144,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .PlayKnightCardResponse playKnightCardResponse = 13;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.PlayKnightCardResponse, protocol.ResponseProtos.PlayKnightCardResponse.Builder, protocol.ResponseProtos.PlayKnightCardResponseOrBuilder> 
           getPlayKnightCardResponseFieldBuilder() {
         if (playKnightCardResponseBuilder_ == null) {
           if (!(typeCase_ == 13)) {
             type_ = protocol.ResponseProtos.PlayKnightCardResponse.getDefaultInstance();
           }
-          playKnightCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          playKnightCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.PlayKnightCardResponse, protocol.ResponseProtos.PlayKnightCardResponse.Builder, protocol.ResponseProtos.PlayKnightCardResponseOrBuilder>(
                   (protocol.ResponseProtos.PlayKnightCardResponse) type_,
                   getParentForChildren(),
@@ -3331,11 +3159,10 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 13;
-        onChanged();;
         return playKnightCardResponseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.PlayYearOfPlentyCardResponse, protocol.ResponseProtos.PlayYearOfPlentyCardResponse.Builder, protocol.ResponseProtos.PlayYearOfPlentyCardResponseOrBuilder> playYearOfPlentyCardResponseBuilder_;
       /**
        * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
@@ -3452,14 +3279,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .PlayYearOfPlentyCardResponse playYearOfPlentyCardResponse = 14;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.PlayYearOfPlentyCardResponse, protocol.ResponseProtos.PlayYearOfPlentyCardResponse.Builder, protocol.ResponseProtos.PlayYearOfPlentyCardResponseOrBuilder> 
           getPlayYearOfPlentyCardResponseFieldBuilder() {
         if (playYearOfPlentyCardResponseBuilder_ == null) {
           if (!(typeCase_ == 14)) {
             type_ = protocol.ResponseProtos.PlayYearOfPlentyCardResponse.getDefaultInstance();
           }
-          playYearOfPlentyCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          playYearOfPlentyCardResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.PlayYearOfPlentyCardResponse, protocol.ResponseProtos.PlayYearOfPlentyCardResponse.Builder, protocol.ResponseProtos.PlayYearOfPlentyCardResponseOrBuilder>(
                   (protocol.ResponseProtos.PlayYearOfPlentyCardResponse) type_,
                   getParentForChildren(),
@@ -3467,11 +3294,10 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 14;
-        onChanged();;
         return playYearOfPlentyCardResponseBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResourceProtos.ResourceAllocation, protocol.ResourceProtos.ResourceAllocation.Builder, protocol.ResourceProtos.ResourceAllocationOrBuilder> resourceAllocationBuilder_;
       /**
        * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
@@ -3588,14 +3414,14 @@ public final class ResponseProtos {
       /**
        * <code>optional .ResourceAllocation resourceAllocation = 15;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResourceProtos.ResourceAllocation, protocol.ResourceProtos.ResourceAllocation.Builder, protocol.ResourceProtos.ResourceAllocationOrBuilder> 
           getResourceAllocationFieldBuilder() {
         if (resourceAllocationBuilder_ == null) {
           if (!(typeCase_ == 15)) {
             type_ = protocol.ResourceProtos.ResourceAllocation.getDefaultInstance();
           }
-          resourceAllocationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          resourceAllocationBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResourceProtos.ResourceAllocation, protocol.ResourceProtos.ResourceAllocation.Builder, protocol.ResourceProtos.ResourceAllocationOrBuilder>(
                   (protocol.ResourceProtos.ResourceAllocation) type_,
                   getParentForChildren(),
@@ -3603,56 +3429,18 @@ public final class ResponseProtos {
           type_ = null;
         }
         typeCase_ = 15;
-        onChanged();;
         return resourceAllocationBuilder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:Response)
     }
 
-    // @@protoc_insertion_point(class_scope:Response)
-    private static final protocol.ResponseProtos.Response DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.Response();
+      defaultInstance = new Response(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.Response getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<Response>
-        PARSER = new com.google.protobuf.AbstractParser<Response>() {
-      public Response parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new Response(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<Response> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Response> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.Response getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:Response)
   }
 
   public interface SuccessFailResponseOrBuilder extends
@@ -3669,61 +3457,69 @@ public final class ResponseProtos {
     protocol.EnumProtos.ResultProto getResult();
 
     /**
+     * <code>optional string reason = 2;</code>
+     *
      * <pre>
      *associated with FAILURE results
      * </pre>
-     *
-     * <code>optional string reason = 2;</code>
      */
     boolean hasReason();
     /**
+     * <code>optional string reason = 2;</code>
+     *
      * <pre>
      *associated with FAILURE results
      * </pre>
-     *
-     * <code>optional string reason = 2;</code>
      */
     java.lang.String getReason();
     /**
+     * <code>optional string reason = 2;</code>
+     *
      * <pre>
      *associated with FAILURE results
      * </pre>
-     *
-     * <code>optional string reason = 2;</code>
      */
     com.google.protobuf.ByteString
         getReasonBytes();
   }
   /**
+   * Protobuf type {@code SuccessFailResponse}
+   *
    * <pre>
    * SUCCESS-FAIL RESPONSE (mainly for responding to build/play requests)
    * </pre>
-   *
-   * Protobuf type {@code SuccessFailResponse}
    */
-  public  static final class SuccessFailResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class SuccessFailResponse extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:SuccessFailResponse)
       SuccessFailResponseOrBuilder {
     // Use SuccessFailResponse.newBuilder() to construct.
-    private SuccessFailResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private SuccessFailResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private SuccessFailResponse() {
-      result_ = 1;
-      reason_ = "";
+    private SuccessFailResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final SuccessFailResponse defaultInstance;
+    public static SuccessFailResponse getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public SuccessFailResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private SuccessFailResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -3749,7 +3545,7 @@ public final class ResponseProtos {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
                 bitField0_ |= 0x00000001;
-                result_ = rawValue;
+                result_ = value;
               }
               break;
             }
@@ -3765,7 +3561,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -3776,16 +3572,31 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_SuccessFailResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_SuccessFailResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.SuccessFailResponse.class, protocol.ResponseProtos.SuccessFailResponse.Builder.class);
     }
 
+    public static com.google.protobuf.Parser<SuccessFailResponse> PARSER =
+        new com.google.protobuf.AbstractParser<SuccessFailResponse>() {
+      public SuccessFailResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SuccessFailResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SuccessFailResponse> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     public static final int RESULT_FIELD_NUMBER = 1;
-    private int result_;
+    private protocol.EnumProtos.ResultProto result_;
     /**
      * <code>required .ResultProto result = 1;</code>
      */
@@ -3796,28 +3607,27 @@ public final class ResponseProtos {
      * <code>required .ResultProto result = 1;</code>
      */
     public protocol.EnumProtos.ResultProto getResult() {
-      protocol.EnumProtos.ResultProto result = protocol.EnumProtos.ResultProto.valueOf(result_);
-      return result == null ? protocol.EnumProtos.ResultProto.SUCCESS : result;
+      return result_;
     }
 
     public static final int REASON_FIELD_NUMBER = 2;
-    private volatile java.lang.Object reason_;
+    private java.lang.Object reason_;
     /**
+     * <code>optional string reason = 2;</code>
+     *
      * <pre>
      *associated with FAILURE results
      * </pre>
-     *
-     * <code>optional string reason = 2;</code>
      */
     public boolean hasReason() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
+     * <code>optional string reason = 2;</code>
+     *
      * <pre>
      *associated with FAILURE results
      * </pre>
-     *
-     * <code>optional string reason = 2;</code>
      */
     public java.lang.String getReason() {
       java.lang.Object ref = reason_;
@@ -3834,11 +3644,11 @@ public final class ResponseProtos {
       }
     }
     /**
+     * <code>optional string reason = 2;</code>
+     *
      * <pre>
      *associated with FAILURE results
      * </pre>
-     *
-     * <code>optional string reason = 2;</code>
      */
     public com.google.protobuf.ByteString
         getReasonBytes() {
@@ -3854,6 +3664,10 @@ public final class ResponseProtos {
       }
     }
 
+    private void initFields() {
+      result_ = protocol.EnumProtos.ResultProto.SUCCESS;
+      reason_ = "";
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -3870,75 +3684,40 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, result_);
+        output.writeEnum(1, result_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, reason_);
+        output.writeBytes(2, getReasonBytes());
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, result_);
+          .computeEnumSize(1, result_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, reason_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getReasonBytes());
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.SuccessFailResponse)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.SuccessFailResponse other = (protocol.ResponseProtos.SuccessFailResponse) obj;
-
-      boolean result = true;
-      result = result && (hasResult() == other.hasResult());
-      if (hasResult()) {
-        result = result && result_ == other.result_;
-      }
-      result = result && (hasReason() == other.hasReason());
-      if (hasReason()) {
-        result = result && getReason()
-            .equals(other.getReason());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasResult()) {
-        hash = (37 * hash) + RESULT_FIELD_NUMBER;
-        hash = (53 * hash) + result_;
-      }
-      if (hasReason()) {
-        hash = (37 * hash) + REASON_FIELD_NUMBER;
-        hash = (53 * hash) + getReason().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.SuccessFailResponse parseFrom(
@@ -3964,69 +3743,58 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.SuccessFailResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.SuccessFailResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.SuccessFailResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.SuccessFailResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.SuccessFailResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.SuccessFailResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.SuccessFailResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
     /**
+     * Protobuf type {@code SuccessFailResponse}
+     *
      * <pre>
      * SUCCESS-FAIL RESPONSE (mainly for responding to build/play requests)
      * </pre>
-     *
-     * Protobuf type {@code SuccessFailResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:SuccessFailResponse)
         protocol.ResponseProtos.SuccessFailResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -4034,7 +3802,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_SuccessFailResponse_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_SuccessFailResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -4047,22 +3815,29 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
-        result_ = 1;
+        result_ = protocol.EnumProtos.ResultProto.SUCCESS;
         bitField0_ = (bitField0_ & ~0x00000001);
         reason_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -4099,32 +3874,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.SuccessFailResponse) {
           return mergeFrom((protocol.ResponseProtos.SuccessFailResponse)other);
@@ -4144,13 +3893,13 @@ public final class ResponseProtos {
           reason_ = other.reason_;
           onChanged();
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasResult()) {
+          
           return false;
         }
         return true;
@@ -4165,7 +3914,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.SuccessFailResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -4175,7 +3924,7 @@ public final class ResponseProtos {
       }
       private int bitField0_;
 
-      private int result_ = 1;
+      private protocol.EnumProtos.ResultProto result_ = protocol.EnumProtos.ResultProto.SUCCESS;
       /**
        * <code>required .ResultProto result = 1;</code>
        */
@@ -4186,8 +3935,7 @@ public final class ResponseProtos {
        * <code>required .ResultProto result = 1;</code>
        */
       public protocol.EnumProtos.ResultProto getResult() {
-        protocol.EnumProtos.ResultProto result = protocol.EnumProtos.ResultProto.valueOf(result_);
-        return result == null ? protocol.EnumProtos.ResultProto.SUCCESS : result;
+        return result_;
       }
       /**
        * <code>required .ResultProto result = 1;</code>
@@ -4197,7 +3945,7 @@ public final class ResponseProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000001;
-        result_ = value.getNumber();
+        result_ = value;
         onChanged();
         return this;
       }
@@ -4206,28 +3954,28 @@ public final class ResponseProtos {
        */
       public Builder clearResult() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        result_ = 1;
+        result_ = protocol.EnumProtos.ResultProto.SUCCESS;
         onChanged();
         return this;
       }
 
       private java.lang.Object reason_ = "";
       /**
+       * <code>optional string reason = 2;</code>
+       *
        * <pre>
        *associated with FAILURE results
        * </pre>
-       *
-       * <code>optional string reason = 2;</code>
        */
       public boolean hasReason() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
+       * <code>optional string reason = 2;</code>
+       *
        * <pre>
        *associated with FAILURE results
        * </pre>
-       *
-       * <code>optional string reason = 2;</code>
        */
       public java.lang.String getReason() {
         java.lang.Object ref = reason_;
@@ -4244,11 +3992,11 @@ public final class ResponseProtos {
         }
       }
       /**
+       * <code>optional string reason = 2;</code>
+       *
        * <pre>
        *associated with FAILURE results
        * </pre>
-       *
-       * <code>optional string reason = 2;</code>
        */
       public com.google.protobuf.ByteString
           getReasonBytes() {
@@ -4264,11 +4012,11 @@ public final class ResponseProtos {
         }
       }
       /**
+       * <code>optional string reason = 2;</code>
+       *
        * <pre>
        *associated with FAILURE results
        * </pre>
-       *
-       * <code>optional string reason = 2;</code>
        */
       public Builder setReason(
           java.lang.String value) {
@@ -4281,11 +4029,11 @@ public final class ResponseProtos {
         return this;
       }
       /**
+       * <code>optional string reason = 2;</code>
+       *
        * <pre>
        *associated with FAILURE results
        * </pre>
-       *
-       * <code>optional string reason = 2;</code>
        */
       public Builder clearReason() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -4294,11 +4042,11 @@ public final class ResponseProtos {
         return this;
       }
       /**
+       * <code>optional string reason = 2;</code>
+       *
        * <pre>
        *associated with FAILURE results
        * </pre>
-       *
-       * <code>optional string reason = 2;</code>
        */
       public Builder setReasonBytes(
           com.google.protobuf.ByteString value) {
@@ -4310,53 +4058,16 @@ public final class ResponseProtos {
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:SuccessFailResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:SuccessFailResponse)
-    private static final protocol.ResponseProtos.SuccessFailResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.SuccessFailResponse();
+      defaultInstance = new SuccessFailResponse(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.SuccessFailResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<SuccessFailResponse>
-        PARSER = new com.google.protobuf.AbstractParser<SuccessFailResponse>() {
-      public SuccessFailResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new SuccessFailResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<SuccessFailResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<SuccessFailResponse> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.SuccessFailResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:SuccessFailResponse)
   }
 
   public interface EndMoveResponseOrBuilder extends
@@ -4375,28 +4086,37 @@ public final class ResponseProtos {
   /**
    * Protobuf type {@code EndMoveResponse}
    */
-  public  static final class EndMoveResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class EndMoveResponse extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:EndMoveResponse)
       EndMoveResponseOrBuilder {
     // Use EndMoveResponse.newBuilder() to construct.
-    private EndMoveResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private EndMoveResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private EndMoveResponse() {
-      newTurn_ = 1;
+    private EndMoveResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final EndMoveResponse defaultInstance;
+    public static EndMoveResponse getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public EndMoveResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private EndMoveResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -4422,7 +4142,7 @@ public final class ResponseProtos {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
                 bitField0_ |= 0x00000001;
-                newTurn_ = rawValue;
+                newTurn_ = value;
               }
               break;
             }
@@ -4432,7 +4152,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -4443,16 +4163,31 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_EndMoveResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_EndMoveResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.EndMoveResponse.class, protocol.ResponseProtos.EndMoveResponse.Builder.class);
     }
 
+    public static com.google.protobuf.Parser<EndMoveResponse> PARSER =
+        new com.google.protobuf.AbstractParser<EndMoveResponse>() {
+      public EndMoveResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new EndMoveResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<EndMoveResponse> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     public static final int NEWTURN_FIELD_NUMBER = 1;
-    private int newTurn_;
+    private protocol.EnumProtos.ColourProto newTurn_;
     /**
      * <code>required .ColourProto newTurn = 1;</code>
      */
@@ -4463,10 +4198,12 @@ public final class ResponseProtos {
      * <code>required .ColourProto newTurn = 1;</code>
      */
     public protocol.EnumProtos.ColourProto getNewTurn() {
-      protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(newTurn_);
-      return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+      return newTurn_;
     }
 
+    private void initFields() {
+      newTurn_ = protocol.EnumProtos.ColourProto.RED;
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -4483,60 +4220,33 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, newTurn_);
+        output.writeEnum(1, newTurn_.getNumber());
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, newTurn_);
+          .computeEnumSize(1, newTurn_.getNumber());
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.EndMoveResponse)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.EndMoveResponse other = (protocol.ResponseProtos.EndMoveResponse) obj;
-
-      boolean result = true;
-      result = result && (hasNewTurn() == other.hasNewTurn());
-      if (hasNewTurn()) {
-        result = result && newTurn_ == other.newTurn_;
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasNewTurn()) {
-        hash = (37 * hash) + NEWTURN_FIELD_NUMBER;
-        hash = (53 * hash) + newTurn_;
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.EndMoveResponse parseFrom(
@@ -4562,57 +4272,46 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.EndMoveResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.EndMoveResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.EndMoveResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.EndMoveResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.EndMoveResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.EndMoveResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.EndMoveResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -4620,7 +4319,7 @@ public final class ResponseProtos {
      * Protobuf type {@code EndMoveResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:EndMoveResponse)
         protocol.ResponseProtos.EndMoveResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -4628,7 +4327,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_EndMoveResponse_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_EndMoveResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -4641,20 +4340,27 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
-        newTurn_ = 1;
+        newTurn_ = protocol.EnumProtos.ColourProto.RED;
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -4687,32 +4393,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.EndMoveResponse) {
           return mergeFrom((protocol.ResponseProtos.EndMoveResponse)other);
@@ -4727,13 +4407,13 @@ public final class ResponseProtos {
         if (other.hasNewTurn()) {
           setNewTurn(other.getNewTurn());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasNewTurn()) {
+          
           return false;
         }
         return true;
@@ -4748,7 +4428,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.EndMoveResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -4758,7 +4438,7 @@ public final class ResponseProtos {
       }
       private int bitField0_;
 
-      private int newTurn_ = 1;
+      private protocol.EnumProtos.ColourProto newTurn_ = protocol.EnumProtos.ColourProto.RED;
       /**
        * <code>required .ColourProto newTurn = 1;</code>
        */
@@ -4769,8 +4449,7 @@ public final class ResponseProtos {
        * <code>required .ColourProto newTurn = 1;</code>
        */
       public protocol.EnumProtos.ColourProto getNewTurn() {
-        protocol.EnumProtos.ColourProto result = protocol.EnumProtos.ColourProto.valueOf(newTurn_);
-        return result == null ? protocol.EnumProtos.ColourProto.RED : result;
+        return newTurn_;
       }
       /**
        * <code>required .ColourProto newTurn = 1;</code>
@@ -4780,7 +4459,7 @@ public final class ResponseProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000001;
-        newTurn_ = value.getNumber();
+        newTurn_ = value;
         onChanged();
         return this;
       }
@@ -4789,57 +4468,20 @@ public final class ResponseProtos {
        */
       public Builder clearNewTurn() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        newTurn_ = 1;
+        newTurn_ = protocol.EnumProtos.ColourProto.RED;
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:EndMoveResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:EndMoveResponse)
-    private static final protocol.ResponseProtos.EndMoveResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.EndMoveResponse();
+      defaultInstance = new EndMoveResponse(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.EndMoveResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<EndMoveResponse>
-        PARSER = new com.google.protobuf.AbstractParser<EndMoveResponse>() {
-      public EndMoveResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new EndMoveResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<EndMoveResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<EndMoveResponse> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.EndMoveResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:EndMoveResponse)
   }
 
   public interface PlayMonopolyCardResponseOrBuilder extends
@@ -4867,29 +4509,37 @@ public final class ResponseProtos {
   /**
    * Protobuf type {@code PlayMonopolyCardResponse}
    */
-  public  static final class PlayMonopolyCardResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class PlayMonopolyCardResponse extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:PlayMonopolyCardResponse)
       PlayMonopolyCardResponseOrBuilder {
     // Use PlayMonopolyCardResponse.newBuilder() to construct.
-    private PlayMonopolyCardResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private PlayMonopolyCardResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private PlayMonopolyCardResponse() {
-      numResources_ = 0;
-      resource_ = 1;
+    private PlayMonopolyCardResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final PlayMonopolyCardResponse defaultInstance;
+    public static PlayMonopolyCardResponse getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public PlayMonopolyCardResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private PlayMonopolyCardResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -4920,7 +4570,7 @@ public final class ResponseProtos {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
                 bitField0_ |= 0x00000002;
-                resource_ = rawValue;
+                resource_ = value;
               }
               break;
             }
@@ -4930,7 +4580,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -4941,11 +4591,26 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_PlayMonopolyCardResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_PlayMonopolyCardResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.PlayMonopolyCardResponse.class, protocol.ResponseProtos.PlayMonopolyCardResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<PlayMonopolyCardResponse> PARSER =
+        new com.google.protobuf.AbstractParser<PlayMonopolyCardResponse>() {
+      public PlayMonopolyCardResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PlayMonopolyCardResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PlayMonopolyCardResponse> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -4965,7 +4630,7 @@ public final class ResponseProtos {
     }
 
     public static final int RESOURCE_FIELD_NUMBER = 2;
-    private int resource_;
+    private protocol.EnumProtos.ResourceTypeProto resource_;
     /**
      * <code>required .ResourceTypeProto resource = 2;</code>
      */
@@ -4976,10 +4641,13 @@ public final class ResponseProtos {
      * <code>required .ResourceTypeProto resource = 2;</code>
      */
     public protocol.EnumProtos.ResourceTypeProto getResource() {
-      protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(resource_);
-      return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+      return resource_;
     }
 
+    private void initFields() {
+      numResources_ = 0;
+      resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -5000,17 +4668,19 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt32(1, numResources_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, resource_);
+        output.writeEnum(2, resource_.getNumber());
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
@@ -5020,56 +4690,18 @@ public final class ResponseProtos {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, resource_);
+          .computeEnumSize(2, resource_.getNumber());
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.PlayMonopolyCardResponse)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.PlayMonopolyCardResponse other = (protocol.ResponseProtos.PlayMonopolyCardResponse) obj;
-
-      boolean result = true;
-      result = result && (hasNumResources() == other.hasNumResources());
-      if (hasNumResources()) {
-        result = result && (getNumResources()
-            == other.getNumResources());
-      }
-      result = result && (hasResource() == other.hasResource());
-      if (hasResource()) {
-        result = result && resource_ == other.resource_;
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasNumResources()) {
-        hash = (37 * hash) + NUMRESOURCES_FIELD_NUMBER;
-        hash = (53 * hash) + getNumResources();
-      }
-      if (hasResource()) {
-        hash = (37 * hash) + RESOURCE_FIELD_NUMBER;
-        hash = (53 * hash) + resource_;
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.PlayMonopolyCardResponse parseFrom(
@@ -5095,57 +4727,46 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.PlayMonopolyCardResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.PlayMonopolyCardResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.PlayMonopolyCardResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.PlayMonopolyCardResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.PlayMonopolyCardResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.PlayMonopolyCardResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.PlayMonopolyCardResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -5153,7 +4774,7 @@ public final class ResponseProtos {
      * Protobuf type {@code PlayMonopolyCardResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:PlayMonopolyCardResponse)
         protocol.ResponseProtos.PlayMonopolyCardResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -5161,7 +4782,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_PlayMonopolyCardResponse_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_PlayMonopolyCardResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -5174,22 +4795,29 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         numResources_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
-        resource_ = 1;
+        resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -5226,32 +4854,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.PlayMonopolyCardResponse) {
           return mergeFrom((protocol.ResponseProtos.PlayMonopolyCardResponse)other);
@@ -5269,16 +4871,17 @@ public final class ResponseProtos {
         if (other.hasResource()) {
           setResource(other.getResource());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasNumResources()) {
+          
           return false;
         }
         if (!hasResource()) {
+          
           return false;
         }
         return true;
@@ -5293,7 +4896,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.PlayMonopolyCardResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -5335,7 +4938,7 @@ public final class ResponseProtos {
         return this;
       }
 
-      private int resource_ = 1;
+      private protocol.EnumProtos.ResourceTypeProto resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
       /**
        * <code>required .ResourceTypeProto resource = 2;</code>
        */
@@ -5346,8 +4949,7 @@ public final class ResponseProtos {
        * <code>required .ResourceTypeProto resource = 2;</code>
        */
       public protocol.EnumProtos.ResourceTypeProto getResource() {
-        protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(resource_);
-        return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+        return resource_;
       }
       /**
        * <code>required .ResourceTypeProto resource = 2;</code>
@@ -5357,7 +4959,7 @@ public final class ResponseProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000002;
-        resource_ = value.getNumber();
+        resource_ = value;
         onChanged();
         return this;
       }
@@ -5366,57 +4968,20 @@ public final class ResponseProtos {
        */
       public Builder clearResource() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        resource_ = 1;
+        resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:PlayMonopolyCardResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:PlayMonopolyCardResponse)
-    private static final protocol.ResponseProtos.PlayMonopolyCardResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.PlayMonopolyCardResponse();
+      defaultInstance = new PlayMonopolyCardResponse(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.PlayMonopolyCardResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<PlayMonopolyCardResponse>
-        PARSER = new com.google.protobuf.AbstractParser<PlayMonopolyCardResponse>() {
-      public PlayMonopolyCardResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new PlayMonopolyCardResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<PlayMonopolyCardResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PlayMonopolyCardResponse> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.PlayMonopolyCardResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:PlayMonopolyCardResponse)
   }
 
   public interface PlayRoadBuildingCardResponseOrBuilder extends
@@ -5452,27 +5017,37 @@ public final class ResponseProtos {
   /**
    * Protobuf type {@code PlayRoadBuildingCardResponse}
    */
-  public  static final class PlayRoadBuildingCardResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class PlayRoadBuildingCardResponse extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:PlayRoadBuildingCardResponse)
       PlayRoadBuildingCardResponseOrBuilder {
     // Use PlayRoadBuildingCardResponse.newBuilder() to construct.
-    private PlayRoadBuildingCardResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private PlayRoadBuildingCardResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private PlayRoadBuildingCardResponse() {
+    private PlayRoadBuildingCardResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final PlayRoadBuildingCardResponse defaultInstance;
+    public static PlayRoadBuildingCardResponse getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public PlayRoadBuildingCardResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private PlayRoadBuildingCardResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -5523,7 +5098,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -5534,11 +5109,26 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_PlayRoadBuildingCardResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_PlayRoadBuildingCardResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.PlayRoadBuildingCardResponse.class, protocol.ResponseProtos.PlayRoadBuildingCardResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<PlayRoadBuildingCardResponse> PARSER =
+        new com.google.protobuf.AbstractParser<PlayRoadBuildingCardResponse>() {
+      public PlayRoadBuildingCardResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PlayRoadBuildingCardResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PlayRoadBuildingCardResponse> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -5554,13 +5144,13 @@ public final class ResponseProtos {
      * <code>required .BuildRoadResponse response1 = 1;</code>
      */
     public protocol.ResponseProtos.BuildRoadResponse getResponse1() {
-      return response1_ == null ? protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance() : response1_;
+      return response1_;
     }
     /**
      * <code>required .BuildRoadResponse response1 = 1;</code>
      */
     public protocol.ResponseProtos.BuildRoadResponseOrBuilder getResponse1OrBuilder() {
-      return response1_ == null ? protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance() : response1_;
+      return response1_;
     }
 
     public static final int RESPONSE2_FIELD_NUMBER = 2;
@@ -5575,15 +5165,19 @@ public final class ResponseProtos {
      * <code>required .BuildRoadResponse response2 = 2;</code>
      */
     public protocol.ResponseProtos.BuildRoadResponse getResponse2() {
-      return response2_ == null ? protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance() : response2_;
+      return response2_;
     }
     /**
      * <code>required .BuildRoadResponse response2 = 2;</code>
      */
     public protocol.ResponseProtos.BuildRoadResponseOrBuilder getResponse2OrBuilder() {
-      return response2_ == null ? protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance() : response2_;
+      return response2_;
     }
 
+    private void initFields() {
+      response1_ = protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
+      response2_ = protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -5612,77 +5206,40 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, getResponse1());
+        output.writeMessage(1, response1_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeMessage(2, getResponse2());
+        output.writeMessage(2, response2_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getResponse1());
+          .computeMessageSize(1, response1_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getResponse2());
+          .computeMessageSize(2, response2_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.PlayRoadBuildingCardResponse)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.PlayRoadBuildingCardResponse other = (protocol.ResponseProtos.PlayRoadBuildingCardResponse) obj;
-
-      boolean result = true;
-      result = result && (hasResponse1() == other.hasResponse1());
-      if (hasResponse1()) {
-        result = result && getResponse1()
-            .equals(other.getResponse1());
-      }
-      result = result && (hasResponse2() == other.hasResponse2());
-      if (hasResponse2()) {
-        result = result && getResponse2()
-            .equals(other.getResponse2());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasResponse1()) {
-        hash = (37 * hash) + RESPONSE1_FIELD_NUMBER;
-        hash = (53 * hash) + getResponse1().hashCode();
-      }
-      if (hasResponse2()) {
-        hash = (37 * hash) + RESPONSE2_FIELD_NUMBER;
-        hash = (53 * hash) + getResponse2().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.PlayRoadBuildingCardResponse parseFrom(
@@ -5708,57 +5265,46 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.PlayRoadBuildingCardResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.PlayRoadBuildingCardResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.PlayRoadBuildingCardResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.PlayRoadBuildingCardResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.PlayRoadBuildingCardResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.PlayRoadBuildingCardResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.PlayRoadBuildingCardResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -5766,7 +5312,7 @@ public final class ResponseProtos {
      * Protobuf type {@code PlayRoadBuildingCardResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:PlayRoadBuildingCardResponse)
         protocol.ResponseProtos.PlayRoadBuildingCardResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -5774,7 +5320,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_PlayRoadBuildingCardResponse_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_PlayRoadBuildingCardResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -5787,32 +5333,39 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getResponse1FieldBuilder();
           getResponse2FieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         if (response1Builder_ == null) {
-          response1_ = null;
+          response1_ = protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
         } else {
           response1Builder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         if (response2Builder_ == null) {
-          response2_ = null;
+          response2_ = protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
         } else {
           response2Builder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -5857,32 +5410,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.PlayRoadBuildingCardResponse) {
           return mergeFrom((protocol.ResponseProtos.PlayRoadBuildingCardResponse)other);
@@ -5900,22 +5427,25 @@ public final class ResponseProtos {
         if (other.hasResponse2()) {
           mergeResponse2(other.getResponse2());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasResponse1()) {
+          
           return false;
         }
         if (!hasResponse2()) {
+          
           return false;
         }
         if (!getResponse1().isInitialized()) {
+          
           return false;
         }
         if (!getResponse2().isInitialized()) {
+          
           return false;
         }
         return true;
@@ -5930,7 +5460,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.PlayRoadBuildingCardResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -5940,8 +5470,8 @@ public final class ResponseProtos {
       }
       private int bitField0_;
 
-      private protocol.ResponseProtos.BuildRoadResponse response1_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.ResponseProtos.BuildRoadResponse response1_ = protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.BuildRoadResponse, protocol.ResponseProtos.BuildRoadResponse.Builder, protocol.ResponseProtos.BuildRoadResponseOrBuilder> response1Builder_;
       /**
        * <code>required .BuildRoadResponse response1 = 1;</code>
@@ -5954,7 +5484,7 @@ public final class ResponseProtos {
        */
       public protocol.ResponseProtos.BuildRoadResponse getResponse1() {
         if (response1Builder_ == null) {
-          return response1_ == null ? protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance() : response1_;
+          return response1_;
         } else {
           return response1Builder_.getMessage();
         }
@@ -5995,7 +5525,6 @@ public final class ResponseProtos {
       public Builder mergeResponse1(protocol.ResponseProtos.BuildRoadResponse value) {
         if (response1Builder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              response1_ != null &&
               response1_ != protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance()) {
             response1_ =
               protocol.ResponseProtos.BuildRoadResponse.newBuilder(response1_).mergeFrom(value).buildPartial();
@@ -6014,7 +5543,7 @@ public final class ResponseProtos {
        */
       public Builder clearResponse1() {
         if (response1Builder_ == null) {
-          response1_ = null;
+          response1_ = protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
           onChanged();
         } else {
           response1Builder_.clear();
@@ -6037,18 +5566,17 @@ public final class ResponseProtos {
         if (response1Builder_ != null) {
           return response1Builder_.getMessageOrBuilder();
         } else {
-          return response1_ == null ?
-              protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance() : response1_;
+          return response1_;
         }
       }
       /**
        * <code>required .BuildRoadResponse response1 = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.BuildRoadResponse, protocol.ResponseProtos.BuildRoadResponse.Builder, protocol.ResponseProtos.BuildRoadResponseOrBuilder> 
           getResponse1FieldBuilder() {
         if (response1Builder_ == null) {
-          response1Builder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          response1Builder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.BuildRoadResponse, protocol.ResponseProtos.BuildRoadResponse.Builder, protocol.ResponseProtos.BuildRoadResponseOrBuilder>(
                   getResponse1(),
                   getParentForChildren(),
@@ -6058,8 +5586,8 @@ public final class ResponseProtos {
         return response1Builder_;
       }
 
-      private protocol.ResponseProtos.BuildRoadResponse response2_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.ResponseProtos.BuildRoadResponse response2_ = protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.BuildRoadResponse, protocol.ResponseProtos.BuildRoadResponse.Builder, protocol.ResponseProtos.BuildRoadResponseOrBuilder> response2Builder_;
       /**
        * <code>required .BuildRoadResponse response2 = 2;</code>
@@ -6072,7 +5600,7 @@ public final class ResponseProtos {
        */
       public protocol.ResponseProtos.BuildRoadResponse getResponse2() {
         if (response2Builder_ == null) {
-          return response2_ == null ? protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance() : response2_;
+          return response2_;
         } else {
           return response2Builder_.getMessage();
         }
@@ -6113,7 +5641,6 @@ public final class ResponseProtos {
       public Builder mergeResponse2(protocol.ResponseProtos.BuildRoadResponse value) {
         if (response2Builder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              response2_ != null &&
               response2_ != protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance()) {
             response2_ =
               protocol.ResponseProtos.BuildRoadResponse.newBuilder(response2_).mergeFrom(value).buildPartial();
@@ -6132,7 +5659,7 @@ public final class ResponseProtos {
        */
       public Builder clearResponse2() {
         if (response2Builder_ == null) {
-          response2_ = null;
+          response2_ = protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance();
           onChanged();
         } else {
           response2Builder_.clear();
@@ -6155,18 +5682,17 @@ public final class ResponseProtos {
         if (response2Builder_ != null) {
           return response2Builder_.getMessageOrBuilder();
         } else {
-          return response2_ == null ?
-              protocol.ResponseProtos.BuildRoadResponse.getDefaultInstance() : response2_;
+          return response2_;
         }
       }
       /**
        * <code>required .BuildRoadResponse response2 = 2;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.BuildRoadResponse, protocol.ResponseProtos.BuildRoadResponse.Builder, protocol.ResponseProtos.BuildRoadResponseOrBuilder> 
           getResponse2FieldBuilder() {
         if (response2Builder_ == null) {
-          response2Builder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          response2Builder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.BuildRoadResponse, protocol.ResponseProtos.BuildRoadResponse.Builder, protocol.ResponseProtos.BuildRoadResponseOrBuilder>(
                   getResponse2(),
                   getParentForChildren(),
@@ -6175,53 +5701,16 @@ public final class ResponseProtos {
         }
         return response2Builder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:PlayRoadBuildingCardResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:PlayRoadBuildingCardResponse)
-    private static final protocol.ResponseProtos.PlayRoadBuildingCardResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.PlayRoadBuildingCardResponse();
+      defaultInstance = new PlayRoadBuildingCardResponse(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.PlayRoadBuildingCardResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<PlayRoadBuildingCardResponse>
-        PARSER = new com.google.protobuf.AbstractParser<PlayRoadBuildingCardResponse>() {
-      public PlayRoadBuildingCardResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new PlayRoadBuildingCardResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<PlayRoadBuildingCardResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PlayRoadBuildingCardResponse> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.PlayRoadBuildingCardResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:PlayRoadBuildingCardResponse)
   }
 
   public interface PlayYearOfPlentyCardResponseOrBuilder extends
@@ -6249,29 +5738,37 @@ public final class ResponseProtos {
   /**
    * Protobuf type {@code PlayYearOfPlentyCardResponse}
    */
-  public  static final class PlayYearOfPlentyCardResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class PlayYearOfPlentyCardResponse extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:PlayYearOfPlentyCardResponse)
       PlayYearOfPlentyCardResponseOrBuilder {
     // Use PlayYearOfPlentyCardResponse.newBuilder() to construct.
-    private PlayYearOfPlentyCardResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private PlayYearOfPlentyCardResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private PlayYearOfPlentyCardResponse() {
-      r1_ = 1;
-      r2_ = 1;
+    private PlayYearOfPlentyCardResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final PlayYearOfPlentyCardResponse defaultInstance;
+    public static PlayYearOfPlentyCardResponse getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public PlayYearOfPlentyCardResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private PlayYearOfPlentyCardResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -6297,7 +5794,7 @@ public final class ResponseProtos {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
                 bitField0_ |= 0x00000001;
-                r1_ = rawValue;
+                r1_ = value;
               }
               break;
             }
@@ -6308,7 +5805,7 @@ public final class ResponseProtos {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
                 bitField0_ |= 0x00000002;
-                r2_ = rawValue;
+                r2_ = value;
               }
               break;
             }
@@ -6318,7 +5815,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -6329,16 +5826,31 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_PlayYearOfPlentyCardResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_PlayYearOfPlentyCardResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.PlayYearOfPlentyCardResponse.class, protocol.ResponseProtos.PlayYearOfPlentyCardResponse.Builder.class);
     }
 
+    public static com.google.protobuf.Parser<PlayYearOfPlentyCardResponse> PARSER =
+        new com.google.protobuf.AbstractParser<PlayYearOfPlentyCardResponse>() {
+      public PlayYearOfPlentyCardResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PlayYearOfPlentyCardResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PlayYearOfPlentyCardResponse> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     public static final int R1_FIELD_NUMBER = 1;
-    private int r1_;
+    private protocol.EnumProtos.ResourceTypeProto r1_;
     /**
      * <code>required .ResourceTypeProto r1 = 1;</code>
      */
@@ -6349,12 +5861,11 @@ public final class ResponseProtos {
      * <code>required .ResourceTypeProto r1 = 1;</code>
      */
     public protocol.EnumProtos.ResourceTypeProto getR1() {
-      protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(r1_);
-      return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+      return r1_;
     }
 
     public static final int R2_FIELD_NUMBER = 2;
-    private int r2_;
+    private protocol.EnumProtos.ResourceTypeProto r2_;
     /**
      * <code>required .ResourceTypeProto r2 = 2;</code>
      */
@@ -6365,10 +5876,13 @@ public final class ResponseProtos {
      * <code>required .ResourceTypeProto r2 = 2;</code>
      */
     public protocol.EnumProtos.ResourceTypeProto getR2() {
-      protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(r2_);
-      return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+      return r2_;
     }
 
+    private void initFields() {
+      r1_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+      r2_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -6389,75 +5903,40 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, r1_);
+        output.writeEnum(1, r1_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, r2_);
+        output.writeEnum(2, r2_.getNumber());
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, r1_);
+          .computeEnumSize(1, r1_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, r2_);
+          .computeEnumSize(2, r2_.getNumber());
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.PlayYearOfPlentyCardResponse)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.PlayYearOfPlentyCardResponse other = (protocol.ResponseProtos.PlayYearOfPlentyCardResponse) obj;
-
-      boolean result = true;
-      result = result && (hasR1() == other.hasR1());
-      if (hasR1()) {
-        result = result && r1_ == other.r1_;
-      }
-      result = result && (hasR2() == other.hasR2());
-      if (hasR2()) {
-        result = result && r2_ == other.r2_;
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasR1()) {
-        hash = (37 * hash) + R1_FIELD_NUMBER;
-        hash = (53 * hash) + r1_;
-      }
-      if (hasR2()) {
-        hash = (37 * hash) + R2_FIELD_NUMBER;
-        hash = (53 * hash) + r2_;
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseFrom(
@@ -6483,57 +5962,46 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.PlayYearOfPlentyCardResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -6541,7 +6009,7 @@ public final class ResponseProtos {
      * Protobuf type {@code PlayYearOfPlentyCardResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:PlayYearOfPlentyCardResponse)
         protocol.ResponseProtos.PlayYearOfPlentyCardResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -6549,7 +6017,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_PlayYearOfPlentyCardResponse_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_PlayYearOfPlentyCardResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -6562,22 +6030,29 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
-        r1_ = 1;
+        r1_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         bitField0_ = (bitField0_ & ~0x00000001);
-        r2_ = 1;
+        r2_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -6614,32 +6089,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.PlayYearOfPlentyCardResponse) {
           return mergeFrom((protocol.ResponseProtos.PlayYearOfPlentyCardResponse)other);
@@ -6657,16 +6106,17 @@ public final class ResponseProtos {
         if (other.hasR2()) {
           setR2(other.getR2());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasR1()) {
+          
           return false;
         }
         if (!hasR2()) {
+          
           return false;
         }
         return true;
@@ -6681,7 +6131,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.PlayYearOfPlentyCardResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -6691,7 +6141,7 @@ public final class ResponseProtos {
       }
       private int bitField0_;
 
-      private int r1_ = 1;
+      private protocol.EnumProtos.ResourceTypeProto r1_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
       /**
        * <code>required .ResourceTypeProto r1 = 1;</code>
        */
@@ -6702,8 +6152,7 @@ public final class ResponseProtos {
        * <code>required .ResourceTypeProto r1 = 1;</code>
        */
       public protocol.EnumProtos.ResourceTypeProto getR1() {
-        protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(r1_);
-        return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+        return r1_;
       }
       /**
        * <code>required .ResourceTypeProto r1 = 1;</code>
@@ -6713,7 +6162,7 @@ public final class ResponseProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000001;
-        r1_ = value.getNumber();
+        r1_ = value;
         onChanged();
         return this;
       }
@@ -6722,12 +6171,12 @@ public final class ResponseProtos {
        */
       public Builder clearR1() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        r1_ = 1;
+        r1_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         onChanged();
         return this;
       }
 
-      private int r2_ = 1;
+      private protocol.EnumProtos.ResourceTypeProto r2_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
       /**
        * <code>required .ResourceTypeProto r2 = 2;</code>
        */
@@ -6738,8 +6187,7 @@ public final class ResponseProtos {
        * <code>required .ResourceTypeProto r2 = 2;</code>
        */
       public protocol.EnumProtos.ResourceTypeProto getR2() {
-        protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(r2_);
-        return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+        return r2_;
       }
       /**
        * <code>required .ResourceTypeProto r2 = 2;</code>
@@ -6749,7 +6197,7 @@ public final class ResponseProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000002;
-        r2_ = value.getNumber();
+        r2_ = value;
         onChanged();
         return this;
       }
@@ -6758,57 +6206,20 @@ public final class ResponseProtos {
        */
       public Builder clearR2() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        r2_ = 1;
+        r2_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:PlayYearOfPlentyCardResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:PlayYearOfPlentyCardResponse)
-    private static final protocol.ResponseProtos.PlayYearOfPlentyCardResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.PlayYearOfPlentyCardResponse();
+      defaultInstance = new PlayYearOfPlentyCardResponse(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.PlayYearOfPlentyCardResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<PlayYearOfPlentyCardResponse>
-        PARSER = new com.google.protobuf.AbstractParser<PlayYearOfPlentyCardResponse>() {
-      public PlayYearOfPlentyCardResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new PlayYearOfPlentyCardResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<PlayYearOfPlentyCardResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PlayYearOfPlentyCardResponse> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.PlayYearOfPlentyCardResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:PlayYearOfPlentyCardResponse)
   }
 
   public interface BuyDevCardResponseOrBuilder extends
@@ -6827,28 +6238,37 @@ public final class ResponseProtos {
   /**
    * Protobuf type {@code BuyDevCardResponse}
    */
-  public  static final class BuyDevCardResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class BuyDevCardResponse extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:BuyDevCardResponse)
       BuyDevCardResponseOrBuilder {
     // Use BuyDevCardResponse.newBuilder() to construct.
-    private BuyDevCardResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private BuyDevCardResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private BuyDevCardResponse() {
-      developmentCard_ = 1;
+    private BuyDevCardResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final BuyDevCardResponse defaultInstance;
+    public static BuyDevCardResponse getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public BuyDevCardResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private BuyDevCardResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -6874,7 +6294,7 @@ public final class ResponseProtos {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
                 bitField0_ |= 0x00000001;
-                developmentCard_ = rawValue;
+                developmentCard_ = value;
               }
               break;
             }
@@ -6884,7 +6304,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -6895,16 +6315,31 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_BuyDevCardResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_BuyDevCardResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.BuyDevCardResponse.class, protocol.ResponseProtos.BuyDevCardResponse.Builder.class);
     }
 
+    public static com.google.protobuf.Parser<BuyDevCardResponse> PARSER =
+        new com.google.protobuf.AbstractParser<BuyDevCardResponse>() {
+      public BuyDevCardResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new BuyDevCardResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BuyDevCardResponse> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     public static final int DEVELOPMENTCARD_FIELD_NUMBER = 1;
-    private int developmentCard_;
+    private protocol.EnumProtos.DevelopmentCardProto developmentCard_;
     /**
      * <code>required .DevelopmentCardProto developmentCard = 1;</code>
      */
@@ -6915,10 +6350,12 @@ public final class ResponseProtos {
      * <code>required .DevelopmentCardProto developmentCard = 1;</code>
      */
     public protocol.EnumProtos.DevelopmentCardProto getDevelopmentCard() {
-      protocol.EnumProtos.DevelopmentCardProto result = protocol.EnumProtos.DevelopmentCardProto.valueOf(developmentCard_);
-      return result == null ? protocol.EnumProtos.DevelopmentCardProto.KNIGHT : result;
+      return developmentCard_;
     }
 
+    private void initFields() {
+      developmentCard_ = protocol.EnumProtos.DevelopmentCardProto.KNIGHT;
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -6935,60 +6372,33 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, developmentCard_);
+        output.writeEnum(1, developmentCard_.getNumber());
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, developmentCard_);
+          .computeEnumSize(1, developmentCard_.getNumber());
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.BuyDevCardResponse)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.BuyDevCardResponse other = (protocol.ResponseProtos.BuyDevCardResponse) obj;
-
-      boolean result = true;
-      result = result && (hasDevelopmentCard() == other.hasDevelopmentCard());
-      if (hasDevelopmentCard()) {
-        result = result && developmentCard_ == other.developmentCard_;
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasDevelopmentCard()) {
-        hash = (37 * hash) + DEVELOPMENTCARD_FIELD_NUMBER;
-        hash = (53 * hash) + developmentCard_;
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.BuyDevCardResponse parseFrom(
@@ -7014,57 +6424,46 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.BuyDevCardResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.BuyDevCardResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.BuyDevCardResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.BuyDevCardResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.BuyDevCardResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.BuyDevCardResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.BuyDevCardResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -7072,7 +6471,7 @@ public final class ResponseProtos {
      * Protobuf type {@code BuyDevCardResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:BuyDevCardResponse)
         protocol.ResponseProtos.BuyDevCardResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -7080,7 +6479,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_BuyDevCardResponse_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_BuyDevCardResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -7093,20 +6492,27 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
-        developmentCard_ = 1;
+        developmentCard_ = protocol.EnumProtos.DevelopmentCardProto.KNIGHT;
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -7139,32 +6545,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.BuyDevCardResponse) {
           return mergeFrom((protocol.ResponseProtos.BuyDevCardResponse)other);
@@ -7179,13 +6559,13 @@ public final class ResponseProtos {
         if (other.hasDevelopmentCard()) {
           setDevelopmentCard(other.getDevelopmentCard());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasDevelopmentCard()) {
+          
           return false;
         }
         return true;
@@ -7200,7 +6580,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.BuyDevCardResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -7210,7 +6590,7 @@ public final class ResponseProtos {
       }
       private int bitField0_;
 
-      private int developmentCard_ = 1;
+      private protocol.EnumProtos.DevelopmentCardProto developmentCard_ = protocol.EnumProtos.DevelopmentCardProto.KNIGHT;
       /**
        * <code>required .DevelopmentCardProto developmentCard = 1;</code>
        */
@@ -7221,8 +6601,7 @@ public final class ResponseProtos {
        * <code>required .DevelopmentCardProto developmentCard = 1;</code>
        */
       public protocol.EnumProtos.DevelopmentCardProto getDevelopmentCard() {
-        protocol.EnumProtos.DevelopmentCardProto result = protocol.EnumProtos.DevelopmentCardProto.valueOf(developmentCard_);
-        return result == null ? protocol.EnumProtos.DevelopmentCardProto.KNIGHT : result;
+        return developmentCard_;
       }
       /**
        * <code>required .DevelopmentCardProto developmentCard = 1;</code>
@@ -7232,7 +6611,7 @@ public final class ResponseProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000001;
-        developmentCard_ = value.getNumber();
+        developmentCard_ = value;
         onChanged();
         return this;
       }
@@ -7241,57 +6620,20 @@ public final class ResponseProtos {
        */
       public Builder clearDevelopmentCard() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        developmentCard_ = 1;
+        developmentCard_ = protocol.EnumProtos.DevelopmentCardProto.KNIGHT;
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:BuyDevCardResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:BuyDevCardResponse)
-    private static final protocol.ResponseProtos.BuyDevCardResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.BuyDevCardResponse();
+      defaultInstance = new BuyDevCardResponse(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.BuyDevCardResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<BuyDevCardResponse>
-        PARSER = new com.google.protobuf.AbstractParser<BuyDevCardResponse>() {
-      public BuyDevCardResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new BuyDevCardResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<BuyDevCardResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<BuyDevCardResponse> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.BuyDevCardResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:BuyDevCardResponse)
   }
 
   public interface BuildSettlementResponseOrBuilder extends
@@ -7314,27 +6656,37 @@ public final class ResponseProtos {
   /**
    * Protobuf type {@code BuildSettlementResponse}
    */
-  public  static final class BuildSettlementResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class BuildSettlementResponse extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:BuildSettlementResponse)
       BuildSettlementResponseOrBuilder {
     // Use BuildSettlementResponse.newBuilder() to construct.
-    private BuildSettlementResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private BuildSettlementResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private BuildSettlementResponse() {
+    private BuildSettlementResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final BuildSettlementResponse defaultInstance;
+    public static BuildSettlementResponse getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public BuildSettlementResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private BuildSettlementResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -7372,7 +6724,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -7383,11 +6735,26 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_BuildSettlementResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_BuildSettlementResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.BuildSettlementResponse.class, protocol.ResponseProtos.BuildSettlementResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<BuildSettlementResponse> PARSER =
+        new com.google.protobuf.AbstractParser<BuildSettlementResponse>() {
+      public BuildSettlementResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new BuildSettlementResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BuildSettlementResponse> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -7403,15 +6770,18 @@ public final class ResponseProtos {
      * <code>required .BuildingProto newBuilding = 1;</code>
      */
     public protocol.BuildProtos.BuildingProto getNewBuilding() {
-      return newBuilding_ == null ? protocol.BuildProtos.BuildingProto.getDefaultInstance() : newBuilding_;
+      return newBuilding_;
     }
     /**
      * <code>required .BuildingProto newBuilding = 1;</code>
      */
     public protocol.BuildProtos.BuildingProtoOrBuilder getNewBuildingOrBuilder() {
-      return newBuilding_ == null ? protocol.BuildProtos.BuildingProto.getDefaultInstance() : newBuilding_;
+      return newBuilding_;
     }
 
+    private void initFields() {
+      newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -7432,61 +6802,33 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, getNewBuilding());
+        output.writeMessage(1, newBuilding_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getNewBuilding());
+          .computeMessageSize(1, newBuilding_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.BuildSettlementResponse)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.BuildSettlementResponse other = (protocol.ResponseProtos.BuildSettlementResponse) obj;
-
-      boolean result = true;
-      result = result && (hasNewBuilding() == other.hasNewBuilding());
-      if (hasNewBuilding()) {
-        result = result && getNewBuilding()
-            .equals(other.getNewBuilding());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasNewBuilding()) {
-        hash = (37 * hash) + NEWBUILDING_FIELD_NUMBER;
-        hash = (53 * hash) + getNewBuilding().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.BuildSettlementResponse parseFrom(
@@ -7512,57 +6854,46 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.BuildSettlementResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.BuildSettlementResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.BuildSettlementResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.BuildSettlementResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.BuildSettlementResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.BuildSettlementResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.BuildSettlementResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -7570,7 +6901,7 @@ public final class ResponseProtos {
      * Protobuf type {@code BuildSettlementResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:BuildSettlementResponse)
         protocol.ResponseProtos.BuildSettlementResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -7578,7 +6909,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_BuildSettlementResponse_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_BuildSettlementResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -7591,25 +6922,32 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getNewBuildingFieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         if (newBuildingBuilder_ == null) {
-          newBuilding_ = null;
+          newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
         } else {
           newBuildingBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -7646,32 +6984,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.BuildSettlementResponse) {
           return mergeFrom((protocol.ResponseProtos.BuildSettlementResponse)other);
@@ -7686,16 +6998,17 @@ public final class ResponseProtos {
         if (other.hasNewBuilding()) {
           mergeNewBuilding(other.getNewBuilding());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasNewBuilding()) {
+          
           return false;
         }
         if (!getNewBuilding().isInitialized()) {
+          
           return false;
         }
         return true;
@@ -7710,7 +7023,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.BuildSettlementResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -7720,8 +7033,8 @@ public final class ResponseProtos {
       }
       private int bitField0_;
 
-      private protocol.BuildProtos.BuildingProto newBuilding_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.BuildProtos.BuildingProto newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder> newBuildingBuilder_;
       /**
        * <code>required .BuildingProto newBuilding = 1;</code>
@@ -7734,7 +7047,7 @@ public final class ResponseProtos {
        */
       public protocol.BuildProtos.BuildingProto getNewBuilding() {
         if (newBuildingBuilder_ == null) {
-          return newBuilding_ == null ? protocol.BuildProtos.BuildingProto.getDefaultInstance() : newBuilding_;
+          return newBuilding_;
         } else {
           return newBuildingBuilder_.getMessage();
         }
@@ -7775,7 +7088,6 @@ public final class ResponseProtos {
       public Builder mergeNewBuilding(protocol.BuildProtos.BuildingProto value) {
         if (newBuildingBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              newBuilding_ != null &&
               newBuilding_ != protocol.BuildProtos.BuildingProto.getDefaultInstance()) {
             newBuilding_ =
               protocol.BuildProtos.BuildingProto.newBuilder(newBuilding_).mergeFrom(value).buildPartial();
@@ -7794,7 +7106,7 @@ public final class ResponseProtos {
        */
       public Builder clearNewBuilding() {
         if (newBuildingBuilder_ == null) {
-          newBuilding_ = null;
+          newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
           onChanged();
         } else {
           newBuildingBuilder_.clear();
@@ -7817,18 +7129,17 @@ public final class ResponseProtos {
         if (newBuildingBuilder_ != null) {
           return newBuildingBuilder_.getMessageOrBuilder();
         } else {
-          return newBuilding_ == null ?
-              protocol.BuildProtos.BuildingProto.getDefaultInstance() : newBuilding_;
+          return newBuilding_;
         }
       }
       /**
        * <code>required .BuildingProto newBuilding = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder> 
           getNewBuildingFieldBuilder() {
         if (newBuildingBuilder_ == null) {
-          newBuildingBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          newBuildingBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder>(
                   getNewBuilding(),
                   getParentForChildren(),
@@ -7837,53 +7148,16 @@ public final class ResponseProtos {
         }
         return newBuildingBuilder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:BuildSettlementResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:BuildSettlementResponse)
-    private static final protocol.ResponseProtos.BuildSettlementResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.BuildSettlementResponse();
+      defaultInstance = new BuildSettlementResponse(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.BuildSettlementResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<BuildSettlementResponse>
-        PARSER = new com.google.protobuf.AbstractParser<BuildSettlementResponse>() {
-      public BuildSettlementResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new BuildSettlementResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<BuildSettlementResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<BuildSettlementResponse> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.BuildSettlementResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:BuildSettlementResponse)
   }
 
   public interface UpgradeSettlementResponseOrBuilder extends
@@ -7906,27 +7180,37 @@ public final class ResponseProtos {
   /**
    * Protobuf type {@code UpgradeSettlementResponse}
    */
-  public  static final class UpgradeSettlementResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class UpgradeSettlementResponse extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:UpgradeSettlementResponse)
       UpgradeSettlementResponseOrBuilder {
     // Use UpgradeSettlementResponse.newBuilder() to construct.
-    private UpgradeSettlementResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private UpgradeSettlementResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private UpgradeSettlementResponse() {
+    private UpgradeSettlementResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final UpgradeSettlementResponse defaultInstance;
+    public static UpgradeSettlementResponse getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public UpgradeSettlementResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private UpgradeSettlementResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -7964,7 +7248,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -7975,11 +7259,26 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_UpgradeSettlementResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_UpgradeSettlementResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.UpgradeSettlementResponse.class, protocol.ResponseProtos.UpgradeSettlementResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<UpgradeSettlementResponse> PARSER =
+        new com.google.protobuf.AbstractParser<UpgradeSettlementResponse>() {
+      public UpgradeSettlementResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new UpgradeSettlementResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<UpgradeSettlementResponse> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -7995,15 +7294,18 @@ public final class ResponseProtos {
      * <code>required .BuildingProto newBuilding = 1;</code>
      */
     public protocol.BuildProtos.BuildingProto getNewBuilding() {
-      return newBuilding_ == null ? protocol.BuildProtos.BuildingProto.getDefaultInstance() : newBuilding_;
+      return newBuilding_;
     }
     /**
      * <code>required .BuildingProto newBuilding = 1;</code>
      */
     public protocol.BuildProtos.BuildingProtoOrBuilder getNewBuildingOrBuilder() {
-      return newBuilding_ == null ? protocol.BuildProtos.BuildingProto.getDefaultInstance() : newBuilding_;
+      return newBuilding_;
     }
 
+    private void initFields() {
+      newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -8024,61 +7326,33 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, getNewBuilding());
+        output.writeMessage(1, newBuilding_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getNewBuilding());
+          .computeMessageSize(1, newBuilding_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.UpgradeSettlementResponse)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.UpgradeSettlementResponse other = (protocol.ResponseProtos.UpgradeSettlementResponse) obj;
-
-      boolean result = true;
-      result = result && (hasNewBuilding() == other.hasNewBuilding());
-      if (hasNewBuilding()) {
-        result = result && getNewBuilding()
-            .equals(other.getNewBuilding());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasNewBuilding()) {
-        hash = (37 * hash) + NEWBUILDING_FIELD_NUMBER;
-        hash = (53 * hash) + getNewBuilding().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.UpgradeSettlementResponse parseFrom(
@@ -8104,57 +7378,46 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.UpgradeSettlementResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.UpgradeSettlementResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.UpgradeSettlementResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.UpgradeSettlementResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.UpgradeSettlementResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.UpgradeSettlementResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.UpgradeSettlementResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -8162,7 +7425,7 @@ public final class ResponseProtos {
      * Protobuf type {@code UpgradeSettlementResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:UpgradeSettlementResponse)
         protocol.ResponseProtos.UpgradeSettlementResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -8170,7 +7433,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_UpgradeSettlementResponse_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_UpgradeSettlementResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -8183,25 +7446,32 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getNewBuildingFieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         if (newBuildingBuilder_ == null) {
-          newBuilding_ = null;
+          newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
         } else {
           newBuildingBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -8238,32 +7508,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.UpgradeSettlementResponse) {
           return mergeFrom((protocol.ResponseProtos.UpgradeSettlementResponse)other);
@@ -8278,16 +7522,17 @@ public final class ResponseProtos {
         if (other.hasNewBuilding()) {
           mergeNewBuilding(other.getNewBuilding());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasNewBuilding()) {
+          
           return false;
         }
         if (!getNewBuilding().isInitialized()) {
+          
           return false;
         }
         return true;
@@ -8302,7 +7547,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.UpgradeSettlementResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -8312,8 +7557,8 @@ public final class ResponseProtos {
       }
       private int bitField0_;
 
-      private protocol.BuildProtos.BuildingProto newBuilding_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.BuildProtos.BuildingProto newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder> newBuildingBuilder_;
       /**
        * <code>required .BuildingProto newBuilding = 1;</code>
@@ -8326,7 +7571,7 @@ public final class ResponseProtos {
        */
       public protocol.BuildProtos.BuildingProto getNewBuilding() {
         if (newBuildingBuilder_ == null) {
-          return newBuilding_ == null ? protocol.BuildProtos.BuildingProto.getDefaultInstance() : newBuilding_;
+          return newBuilding_;
         } else {
           return newBuildingBuilder_.getMessage();
         }
@@ -8367,7 +7612,6 @@ public final class ResponseProtos {
       public Builder mergeNewBuilding(protocol.BuildProtos.BuildingProto value) {
         if (newBuildingBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              newBuilding_ != null &&
               newBuilding_ != protocol.BuildProtos.BuildingProto.getDefaultInstance()) {
             newBuilding_ =
               protocol.BuildProtos.BuildingProto.newBuilder(newBuilding_).mergeFrom(value).buildPartial();
@@ -8386,7 +7630,7 @@ public final class ResponseProtos {
        */
       public Builder clearNewBuilding() {
         if (newBuildingBuilder_ == null) {
-          newBuilding_ = null;
+          newBuilding_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
           onChanged();
         } else {
           newBuildingBuilder_.clear();
@@ -8409,18 +7653,17 @@ public final class ResponseProtos {
         if (newBuildingBuilder_ != null) {
           return newBuildingBuilder_.getMessageOrBuilder();
         } else {
-          return newBuilding_ == null ?
-              protocol.BuildProtos.BuildingProto.getDefaultInstance() : newBuilding_;
+          return newBuilding_;
         }
       }
       /**
        * <code>required .BuildingProto newBuilding = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder> 
           getNewBuildingFieldBuilder() {
         if (newBuildingBuilder_ == null) {
-          newBuildingBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          newBuildingBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder>(
                   getNewBuilding(),
                   getParentForChildren(),
@@ -8429,53 +7672,16 @@ public final class ResponseProtos {
         }
         return newBuildingBuilder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:UpgradeSettlementResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:UpgradeSettlementResponse)
-    private static final protocol.ResponseProtos.UpgradeSettlementResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.UpgradeSettlementResponse();
+      defaultInstance = new UpgradeSettlementResponse(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.UpgradeSettlementResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<UpgradeSettlementResponse>
-        PARSER = new com.google.protobuf.AbstractParser<UpgradeSettlementResponse>() {
-      public UpgradeSettlementResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new UpgradeSettlementResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<UpgradeSettlementResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<UpgradeSettlementResponse> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.UpgradeSettlementResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:UpgradeSettlementResponse)
   }
 
   public interface BuildRoadResponseOrBuilder extends
@@ -8507,28 +7713,37 @@ public final class ResponseProtos {
   /**
    * Protobuf type {@code BuildRoadResponse}
    */
-  public  static final class BuildRoadResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class BuildRoadResponse extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:BuildRoadResponse)
       BuildRoadResponseOrBuilder {
     // Use BuildRoadResponse.newBuilder() to construct.
-    private BuildRoadResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private BuildRoadResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private BuildRoadResponse() {
-      longestRoad_ = 0;
+    private BuildRoadResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final BuildRoadResponse defaultInstance;
+    public static BuildRoadResponse getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public BuildRoadResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private BuildRoadResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -8571,7 +7786,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -8582,11 +7797,26 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_BuildRoadResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_BuildRoadResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.BuildRoadResponse.class, protocol.ResponseProtos.BuildRoadResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<BuildRoadResponse> PARSER =
+        new com.google.protobuf.AbstractParser<BuildRoadResponse>() {
+      public BuildRoadResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new BuildRoadResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BuildRoadResponse> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -8617,15 +7847,19 @@ public final class ResponseProtos {
      * <code>required .RoadProto newRoad = 2;</code>
      */
     public protocol.BuildProtos.RoadProto getNewRoad() {
-      return newRoad_ == null ? protocol.BuildProtos.RoadProto.getDefaultInstance() : newRoad_;
+      return newRoad_;
     }
     /**
      * <code>required .RoadProto newRoad = 2;</code>
      */
     public protocol.BuildProtos.RoadProtoOrBuilder getNewRoadOrBuilder() {
-      return newRoad_ == null ? protocol.BuildProtos.RoadProto.getDefaultInstance() : newRoad_;
+      return newRoad_;
     }
 
+    private void initFields() {
+      longestRoad_ = 0;
+      newRoad_ = protocol.BuildProtos.RoadProto.getDefaultInstance();
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -8650,17 +7884,19 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt32(1, longestRoad_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeMessage(2, getNewRoad());
+        output.writeMessage(2, newRoad_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
@@ -8670,57 +7906,18 @@ public final class ResponseProtos {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getNewRoad());
+          .computeMessageSize(2, newRoad_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.BuildRoadResponse)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.BuildRoadResponse other = (protocol.ResponseProtos.BuildRoadResponse) obj;
-
-      boolean result = true;
-      result = result && (hasLongestRoad() == other.hasLongestRoad());
-      if (hasLongestRoad()) {
-        result = result && (getLongestRoad()
-            == other.getLongestRoad());
-      }
-      result = result && (hasNewRoad() == other.hasNewRoad());
-      if (hasNewRoad()) {
-        result = result && getNewRoad()
-            .equals(other.getNewRoad());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasLongestRoad()) {
-        hash = (37 * hash) + LONGESTROAD_FIELD_NUMBER;
-        hash = (53 * hash) + getLongestRoad();
-      }
-      if (hasNewRoad()) {
-        hash = (37 * hash) + NEWROAD_FIELD_NUMBER;
-        hash = (53 * hash) + getNewRoad().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.BuildRoadResponse parseFrom(
@@ -8746,57 +7943,46 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.BuildRoadResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.BuildRoadResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.BuildRoadResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.BuildRoadResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.BuildRoadResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.BuildRoadResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.BuildRoadResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -8804,7 +7990,7 @@ public final class ResponseProtos {
      * Protobuf type {@code BuildRoadResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:BuildRoadResponse)
         protocol.ResponseProtos.BuildRoadResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -8812,7 +7998,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_BuildRoadResponse_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_BuildRoadResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -8825,27 +8011,34 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getNewRoadFieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         longestRoad_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
         if (newRoadBuilder_ == null) {
-          newRoad_ = null;
+          newRoad_ = protocol.BuildProtos.RoadProto.getDefaultInstance();
         } else {
           newRoadBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -8886,32 +8079,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.BuildRoadResponse) {
           return mergeFrom((protocol.ResponseProtos.BuildRoadResponse)other);
@@ -8929,19 +8096,21 @@ public final class ResponseProtos {
         if (other.hasNewRoad()) {
           mergeNewRoad(other.getNewRoad());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasLongestRoad()) {
+          
           return false;
         }
         if (!hasNewRoad()) {
+          
           return false;
         }
         if (!getNewRoad().isInitialized()) {
+          
           return false;
         }
         return true;
@@ -8956,7 +8125,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.BuildRoadResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -8998,8 +8167,8 @@ public final class ResponseProtos {
         return this;
       }
 
-      private protocol.BuildProtos.RoadProto newRoad_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.BuildProtos.RoadProto newRoad_ = protocol.BuildProtos.RoadProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.RoadProto, protocol.BuildProtos.RoadProto.Builder, protocol.BuildProtos.RoadProtoOrBuilder> newRoadBuilder_;
       /**
        * <code>required .RoadProto newRoad = 2;</code>
@@ -9012,7 +8181,7 @@ public final class ResponseProtos {
        */
       public protocol.BuildProtos.RoadProto getNewRoad() {
         if (newRoadBuilder_ == null) {
-          return newRoad_ == null ? protocol.BuildProtos.RoadProto.getDefaultInstance() : newRoad_;
+          return newRoad_;
         } else {
           return newRoadBuilder_.getMessage();
         }
@@ -9053,7 +8222,6 @@ public final class ResponseProtos {
       public Builder mergeNewRoad(protocol.BuildProtos.RoadProto value) {
         if (newRoadBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              newRoad_ != null &&
               newRoad_ != protocol.BuildProtos.RoadProto.getDefaultInstance()) {
             newRoad_ =
               protocol.BuildProtos.RoadProto.newBuilder(newRoad_).mergeFrom(value).buildPartial();
@@ -9072,7 +8240,7 @@ public final class ResponseProtos {
        */
       public Builder clearNewRoad() {
         if (newRoadBuilder_ == null) {
-          newRoad_ = null;
+          newRoad_ = protocol.BuildProtos.RoadProto.getDefaultInstance();
           onChanged();
         } else {
           newRoadBuilder_.clear();
@@ -9095,18 +8263,17 @@ public final class ResponseProtos {
         if (newRoadBuilder_ != null) {
           return newRoadBuilder_.getMessageOrBuilder();
         } else {
-          return newRoad_ == null ?
-              protocol.BuildProtos.RoadProto.getDefaultInstance() : newRoad_;
+          return newRoad_;
         }
       }
       /**
        * <code>required .RoadProto newRoad = 2;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.RoadProto, protocol.BuildProtos.RoadProto.Builder, protocol.BuildProtos.RoadProtoOrBuilder> 
           getNewRoadFieldBuilder() {
         if (newRoadBuilder_ == null) {
-          newRoadBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          newRoadBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.RoadProto, protocol.BuildProtos.RoadProto.Builder, protocol.BuildProtos.RoadProtoOrBuilder>(
                   getNewRoad(),
                   getParentForChildren(),
@@ -9115,53 +8282,16 @@ public final class ResponseProtos {
         }
         return newRoadBuilder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:BuildRoadResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:BuildRoadResponse)
-    private static final protocol.ResponseProtos.BuildRoadResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.BuildRoadResponse();
+      defaultInstance = new BuildRoadResponse(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.BuildRoadResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<BuildRoadResponse>
-        PARSER = new com.google.protobuf.AbstractParser<BuildRoadResponse>() {
-      public BuildRoadResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new BuildRoadResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<BuildRoadResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<BuildRoadResponse> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.BuildRoadResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:BuildRoadResponse)
   }
 
   public interface PlayKnightCardResponseOrBuilder extends
@@ -9184,27 +8314,37 @@ public final class ResponseProtos {
   /**
    * Protobuf type {@code PlayKnightCardResponse}
    */
-  public  static final class PlayKnightCardResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class PlayKnightCardResponse extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:PlayKnightCardResponse)
       PlayKnightCardResponseOrBuilder {
     // Use PlayKnightCardResponse.newBuilder() to construct.
-    private PlayKnightCardResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private PlayKnightCardResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private PlayKnightCardResponse() {
+    private PlayKnightCardResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final PlayKnightCardResponse defaultInstance;
+    public static PlayKnightCardResponse getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public PlayKnightCardResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private PlayKnightCardResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -9242,7 +8382,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -9253,11 +8393,26 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_PlayKnightCardResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_PlayKnightCardResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.PlayKnightCardResponse.class, protocol.ResponseProtos.PlayKnightCardResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<PlayKnightCardResponse> PARSER =
+        new com.google.protobuf.AbstractParser<PlayKnightCardResponse>() {
+      public PlayKnightCardResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PlayKnightCardResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PlayKnightCardResponse> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -9273,15 +8428,18 @@ public final class ResponseProtos {
      * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
      */
     public protocol.ResponseProtos.MoveRobberResponse getMoveRobberResponse() {
-      return moveRobberResponse_ == null ? protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance() : moveRobberResponse_;
+      return moveRobberResponse_;
     }
     /**
      * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
      */
     public protocol.ResponseProtos.MoveRobberResponseOrBuilder getMoveRobberResponseOrBuilder() {
-      return moveRobberResponse_ == null ? protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance() : moveRobberResponse_;
+      return moveRobberResponse_;
     }
 
+    private void initFields() {
+      moveRobberResponse_ = protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -9302,61 +8460,33 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, getMoveRobberResponse());
+        output.writeMessage(1, moveRobberResponse_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getMoveRobberResponse());
+          .computeMessageSize(1, moveRobberResponse_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.PlayKnightCardResponse)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.PlayKnightCardResponse other = (protocol.ResponseProtos.PlayKnightCardResponse) obj;
-
-      boolean result = true;
-      result = result && (hasMoveRobberResponse() == other.hasMoveRobberResponse());
-      if (hasMoveRobberResponse()) {
-        result = result && getMoveRobberResponse()
-            .equals(other.getMoveRobberResponse());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasMoveRobberResponse()) {
-        hash = (37 * hash) + MOVEROBBERRESPONSE_FIELD_NUMBER;
-        hash = (53 * hash) + getMoveRobberResponse().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.PlayKnightCardResponse parseFrom(
@@ -9382,57 +8512,46 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.PlayKnightCardResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.PlayKnightCardResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.PlayKnightCardResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.PlayKnightCardResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.PlayKnightCardResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.PlayKnightCardResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.PlayKnightCardResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -9440,7 +8559,7 @@ public final class ResponseProtos {
      * Protobuf type {@code PlayKnightCardResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:PlayKnightCardResponse)
         protocol.ResponseProtos.PlayKnightCardResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -9448,7 +8567,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_PlayKnightCardResponse_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_PlayKnightCardResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -9461,25 +8580,32 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getMoveRobberResponseFieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         if (moveRobberResponseBuilder_ == null) {
-          moveRobberResponse_ = null;
+          moveRobberResponse_ = protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
         } else {
           moveRobberResponseBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -9516,32 +8642,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.PlayKnightCardResponse) {
           return mergeFrom((protocol.ResponseProtos.PlayKnightCardResponse)other);
@@ -9556,16 +8656,17 @@ public final class ResponseProtos {
         if (other.hasMoveRobberResponse()) {
           mergeMoveRobberResponse(other.getMoveRobberResponse());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasMoveRobberResponse()) {
+          
           return false;
         }
         if (!getMoveRobberResponse().isInitialized()) {
+          
           return false;
         }
         return true;
@@ -9580,7 +8681,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.PlayKnightCardResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -9590,8 +8691,8 @@ public final class ResponseProtos {
       }
       private int bitField0_;
 
-      private protocol.ResponseProtos.MoveRobberResponse moveRobberResponse_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.ResponseProtos.MoveRobberResponse moveRobberResponse_ = protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.MoveRobberResponse, protocol.ResponseProtos.MoveRobberResponse.Builder, protocol.ResponseProtos.MoveRobberResponseOrBuilder> moveRobberResponseBuilder_;
       /**
        * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
@@ -9604,7 +8705,7 @@ public final class ResponseProtos {
        */
       public protocol.ResponseProtos.MoveRobberResponse getMoveRobberResponse() {
         if (moveRobberResponseBuilder_ == null) {
-          return moveRobberResponse_ == null ? protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance() : moveRobberResponse_;
+          return moveRobberResponse_;
         } else {
           return moveRobberResponseBuilder_.getMessage();
         }
@@ -9645,7 +8746,6 @@ public final class ResponseProtos {
       public Builder mergeMoveRobberResponse(protocol.ResponseProtos.MoveRobberResponse value) {
         if (moveRobberResponseBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              moveRobberResponse_ != null &&
               moveRobberResponse_ != protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance()) {
             moveRobberResponse_ =
               protocol.ResponseProtos.MoveRobberResponse.newBuilder(moveRobberResponse_).mergeFrom(value).buildPartial();
@@ -9664,7 +8764,7 @@ public final class ResponseProtos {
        */
       public Builder clearMoveRobberResponse() {
         if (moveRobberResponseBuilder_ == null) {
-          moveRobberResponse_ = null;
+          moveRobberResponse_ = protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance();
           onChanged();
         } else {
           moveRobberResponseBuilder_.clear();
@@ -9687,18 +8787,17 @@ public final class ResponseProtos {
         if (moveRobberResponseBuilder_ != null) {
           return moveRobberResponseBuilder_.getMessageOrBuilder();
         } else {
-          return moveRobberResponse_ == null ?
-              protocol.ResponseProtos.MoveRobberResponse.getDefaultInstance() : moveRobberResponse_;
+          return moveRobberResponse_;
         }
       }
       /**
        * <code>required .MoveRobberResponse moveRobberResponse = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.ResponseProtos.MoveRobberResponse, protocol.ResponseProtos.MoveRobberResponse.Builder, protocol.ResponseProtos.MoveRobberResponseOrBuilder> 
           getMoveRobberResponseFieldBuilder() {
         if (moveRobberResponseBuilder_ == null) {
-          moveRobberResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          moveRobberResponseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.ResponseProtos.MoveRobberResponse, protocol.ResponseProtos.MoveRobberResponse.Builder, protocol.ResponseProtos.MoveRobberResponseOrBuilder>(
                   getMoveRobberResponse(),
                   getParentForChildren(),
@@ -9707,53 +8806,16 @@ public final class ResponseProtos {
         }
         return moveRobberResponseBuilder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:PlayKnightCardResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:PlayKnightCardResponse)
-    private static final protocol.ResponseProtos.PlayKnightCardResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.PlayKnightCardResponse();
+      defaultInstance = new PlayKnightCardResponse(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.PlayKnightCardResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<PlayKnightCardResponse>
-        PARSER = new com.google.protobuf.AbstractParser<PlayKnightCardResponse>() {
-      public PlayKnightCardResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new PlayKnightCardResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<PlayKnightCardResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PlayKnightCardResponse> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.PlayKnightCardResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:PlayKnightCardResponse)
   }
 
   public interface MoveRobberResponseOrBuilder extends
@@ -9785,28 +8847,37 @@ public final class ResponseProtos {
   /**
    * Protobuf type {@code MoveRobberResponse}
    */
-  public  static final class MoveRobberResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class MoveRobberResponse extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:MoveRobberResponse)
       MoveRobberResponseOrBuilder {
     // Use MoveRobberResponse.newBuilder() to construct.
-    private MoveRobberResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private MoveRobberResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private MoveRobberResponse() {
-      resource_ = 1;
+    private MoveRobberResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final MoveRobberResponse defaultInstance;
+    public static MoveRobberResponse getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public MoveRobberResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private MoveRobberResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -9832,7 +8903,7 @@ public final class ResponseProtos {
                 unknownFields.mergeVarintField(1, rawValue);
               } else {
                 bitField0_ |= 0x00000001;
-                resource_ = rawValue;
+                resource_ = value;
               }
               break;
             }
@@ -9855,7 +8926,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -9866,16 +8937,31 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_MoveRobberResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_MoveRobberResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.MoveRobberResponse.class, protocol.ResponseProtos.MoveRobberResponse.Builder.class);
     }
 
+    public static com.google.protobuf.Parser<MoveRobberResponse> PARSER =
+        new com.google.protobuf.AbstractParser<MoveRobberResponse>() {
+      public MoveRobberResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new MoveRobberResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<MoveRobberResponse> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     public static final int RESOURCE_FIELD_NUMBER = 1;
-    private int resource_;
+    private protocol.EnumProtos.ResourceTypeProto resource_;
     /**
      * <code>required .ResourceTypeProto resource = 1;</code>
      */
@@ -9886,8 +8972,7 @@ public final class ResponseProtos {
      * <code>required .ResourceTypeProto resource = 1;</code>
      */
     public protocol.EnumProtos.ResourceTypeProto getResource() {
-      protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(resource_);
-      return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+      return resource_;
     }
 
     public static final int ROBBERLOCATION_FIELD_NUMBER = 2;
@@ -9902,15 +8987,19 @@ public final class ResponseProtos {
      * <code>required .PointProto robberLocation = 2;</code>
      */
     public protocol.BuildProtos.PointProto getRobberLocation() {
-      return robberLocation_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : robberLocation_;
+      return robberLocation_;
     }
     /**
      * <code>required .PointProto robberLocation = 2;</code>
      */
     public protocol.BuildProtos.PointProtoOrBuilder getRobberLocationOrBuilder() {
-      return robberLocation_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : robberLocation_;
+      return robberLocation_;
     }
 
+    private void initFields() {
+      resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+      robberLocation_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -9935,76 +9024,40 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, resource_);
+        output.writeEnum(1, resource_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeMessage(2, getRobberLocation());
+        output.writeMessage(2, robberLocation_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, resource_);
+          .computeEnumSize(1, resource_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getRobberLocation());
+          .computeMessageSize(2, robberLocation_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.MoveRobberResponse)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.MoveRobberResponse other = (protocol.ResponseProtos.MoveRobberResponse) obj;
-
-      boolean result = true;
-      result = result && (hasResource() == other.hasResource());
-      if (hasResource()) {
-        result = result && resource_ == other.resource_;
-      }
-      result = result && (hasRobberLocation() == other.hasRobberLocation());
-      if (hasRobberLocation()) {
-        result = result && getRobberLocation()
-            .equals(other.getRobberLocation());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasResource()) {
-        hash = (37 * hash) + RESOURCE_FIELD_NUMBER;
-        hash = (53 * hash) + resource_;
-      }
-      if (hasRobberLocation()) {
-        hash = (37 * hash) + ROBBERLOCATION_FIELD_NUMBER;
-        hash = (53 * hash) + getRobberLocation().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.MoveRobberResponse parseFrom(
@@ -10030,57 +9083,46 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.MoveRobberResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.MoveRobberResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.MoveRobberResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.MoveRobberResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.MoveRobberResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.MoveRobberResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.MoveRobberResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -10088,7 +9130,7 @@ public final class ResponseProtos {
      * Protobuf type {@code MoveRobberResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:MoveRobberResponse)
         protocol.ResponseProtos.MoveRobberResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -10096,7 +9138,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_MoveRobberResponse_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_MoveRobberResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -10109,27 +9151,34 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getRobberLocationFieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
-        resource_ = 1;
+        resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         bitField0_ = (bitField0_ & ~0x00000001);
         if (robberLocationBuilder_ == null) {
-          robberLocation_ = null;
+          robberLocation_ = protocol.BuildProtos.PointProto.getDefaultInstance();
         } else {
           robberLocationBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -10170,32 +9219,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.MoveRobberResponse) {
           return mergeFrom((protocol.ResponseProtos.MoveRobberResponse)other);
@@ -10213,19 +9236,21 @@ public final class ResponseProtos {
         if (other.hasRobberLocation()) {
           mergeRobberLocation(other.getRobberLocation());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasResource()) {
+          
           return false;
         }
         if (!hasRobberLocation()) {
+          
           return false;
         }
         if (!getRobberLocation().isInitialized()) {
+          
           return false;
         }
         return true;
@@ -10240,7 +9265,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.MoveRobberResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -10250,7 +9275,7 @@ public final class ResponseProtos {
       }
       private int bitField0_;
 
-      private int resource_ = 1;
+      private protocol.EnumProtos.ResourceTypeProto resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
       /**
        * <code>required .ResourceTypeProto resource = 1;</code>
        */
@@ -10261,8 +9286,7 @@ public final class ResponseProtos {
        * <code>required .ResourceTypeProto resource = 1;</code>
        */
       public protocol.EnumProtos.ResourceTypeProto getResource() {
-        protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(resource_);
-        return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+        return resource_;
       }
       /**
        * <code>required .ResourceTypeProto resource = 1;</code>
@@ -10272,7 +9296,7 @@ public final class ResponseProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000001;
-        resource_ = value.getNumber();
+        resource_ = value;
         onChanged();
         return this;
       }
@@ -10281,13 +9305,13 @@ public final class ResponseProtos {
        */
       public Builder clearResource() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        resource_ = 1;
+        resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         onChanged();
         return this;
       }
 
-      private protocol.BuildProtos.PointProto robberLocation_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.BuildProtos.PointProto robberLocation_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> robberLocationBuilder_;
       /**
        * <code>required .PointProto robberLocation = 2;</code>
@@ -10300,7 +9324,7 @@ public final class ResponseProtos {
        */
       public protocol.BuildProtos.PointProto getRobberLocation() {
         if (robberLocationBuilder_ == null) {
-          return robberLocation_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : robberLocation_;
+          return robberLocation_;
         } else {
           return robberLocationBuilder_.getMessage();
         }
@@ -10341,7 +9365,6 @@ public final class ResponseProtos {
       public Builder mergeRobberLocation(protocol.BuildProtos.PointProto value) {
         if (robberLocationBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              robberLocation_ != null &&
               robberLocation_ != protocol.BuildProtos.PointProto.getDefaultInstance()) {
             robberLocation_ =
               protocol.BuildProtos.PointProto.newBuilder(robberLocation_).mergeFrom(value).buildPartial();
@@ -10360,7 +9383,7 @@ public final class ResponseProtos {
        */
       public Builder clearRobberLocation() {
         if (robberLocationBuilder_ == null) {
-          robberLocation_ = null;
+          robberLocation_ = protocol.BuildProtos.PointProto.getDefaultInstance();
           onChanged();
         } else {
           robberLocationBuilder_.clear();
@@ -10383,18 +9406,17 @@ public final class ResponseProtos {
         if (robberLocationBuilder_ != null) {
           return robberLocationBuilder_.getMessageOrBuilder();
         } else {
-          return robberLocation_ == null ?
-              protocol.BuildProtos.PointProto.getDefaultInstance() : robberLocation_;
+          return robberLocation_;
         }
       }
       /**
        * <code>required .PointProto robberLocation = 2;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> 
           getRobberLocationFieldBuilder() {
         if (robberLocationBuilder_ == null) {
-          robberLocationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          robberLocationBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder>(
                   getRobberLocation(),
                   getParentForChildren(),
@@ -10403,53 +9425,16 @@ public final class ResponseProtos {
         }
         return robberLocationBuilder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:MoveRobberResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:MoveRobberResponse)
-    private static final protocol.ResponseProtos.MoveRobberResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.MoveRobberResponse();
+      defaultInstance = new MoveRobberResponse(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.MoveRobberResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<MoveRobberResponse>
-        PARSER = new com.google.protobuf.AbstractParser<MoveRobberResponse>() {
-      public MoveRobberResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new MoveRobberResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<MoveRobberResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<MoveRobberResponse> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.MoveRobberResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:MoveRobberResponse)
   }
 
   public interface AcceptRejectResponseOrBuilder extends
@@ -10479,61 +9464,69 @@ public final class ResponseProtos {
     protocol.EnumProtos.TradeStatusProto getAnswer();
 
     /**
+     * <code>optional string reason = 3;</code>
+     *
      * <pre>
      *associated with REJECT results
      * </pre>
-     *
-     * <code>optional string reason = 3;</code>
      */
     boolean hasReason();
     /**
+     * <code>optional string reason = 3;</code>
+     *
      * <pre>
      *associated with REJECT results
      * </pre>
-     *
-     * <code>optional string reason = 3;</code>
      */
     java.lang.String getReason();
     /**
+     * <code>optional string reason = 3;</code>
+     *
      * <pre>
      *associated with REJECT results
      * </pre>
-     *
-     * <code>optional string reason = 3;</code>
      */
     com.google.protobuf.ByteString
         getReasonBytes();
   }
   /**
+   * Protobuf type {@code AcceptRejectResponse}
+   *
    * <pre>
    * ACCEPT-REJECT RESPONSE (mainly for responding to human trade requests)
    * </pre>
-   *
-   * Protobuf type {@code AcceptRejectResponse}
    */
-  public  static final class AcceptRejectResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class AcceptRejectResponse extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:AcceptRejectResponse)
       AcceptRejectResponseOrBuilder {
     // Use AcceptRejectResponse.newBuilder() to construct.
-    private AcceptRejectResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private AcceptRejectResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private AcceptRejectResponse() {
-      answer_ = 1;
-      reason_ = "";
+    private AcceptRejectResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final AcceptRejectResponse defaultInstance;
+    public static AcceptRejectResponse getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public AcceptRejectResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private AcceptRejectResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -10572,7 +9565,7 @@ public final class ResponseProtos {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
                 bitField0_ |= 0x00000002;
-                answer_ = rawValue;
+                answer_ = value;
               }
               break;
             }
@@ -10588,7 +9581,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -10599,11 +9592,26 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_AcceptRejectResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_AcceptRejectResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.AcceptRejectResponse.class, protocol.ResponseProtos.AcceptRejectResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<AcceptRejectResponse> PARSER =
+        new com.google.protobuf.AbstractParser<AcceptRejectResponse>() {
+      public AcceptRejectResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new AcceptRejectResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<AcceptRejectResponse> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -10619,17 +9627,17 @@ public final class ResponseProtos {
      * <code>required .TradeRequest trade = 1;</code>
      */
     public protocol.TradeProtos.TradeRequest getTrade() {
-      return trade_ == null ? protocol.TradeProtos.TradeRequest.getDefaultInstance() : trade_;
+      return trade_;
     }
     /**
      * <code>required .TradeRequest trade = 1;</code>
      */
     public protocol.TradeProtos.TradeRequestOrBuilder getTradeOrBuilder() {
-      return trade_ == null ? protocol.TradeProtos.TradeRequest.getDefaultInstance() : trade_;
+      return trade_;
     }
 
     public static final int ANSWER_FIELD_NUMBER = 2;
-    private int answer_;
+    private protocol.EnumProtos.TradeStatusProto answer_;
     /**
      * <code>required .TradeStatusProto answer = 2;</code>
      */
@@ -10640,28 +9648,27 @@ public final class ResponseProtos {
      * <code>required .TradeStatusProto answer = 2;</code>
      */
     public protocol.EnumProtos.TradeStatusProto getAnswer() {
-      protocol.EnumProtos.TradeStatusProto result = protocol.EnumProtos.TradeStatusProto.valueOf(answer_);
-      return result == null ? protocol.EnumProtos.TradeStatusProto.ACCEPT : result;
+      return answer_;
     }
 
     public static final int REASON_FIELD_NUMBER = 3;
-    private volatile java.lang.Object reason_;
+    private java.lang.Object reason_;
     /**
+     * <code>optional string reason = 3;</code>
+     *
      * <pre>
      *associated with REJECT results
      * </pre>
-     *
-     * <code>optional string reason = 3;</code>
      */
     public boolean hasReason() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
+     * <code>optional string reason = 3;</code>
+     *
      * <pre>
      *associated with REJECT results
      * </pre>
-     *
-     * <code>optional string reason = 3;</code>
      */
     public java.lang.String getReason() {
       java.lang.Object ref = reason_;
@@ -10678,11 +9685,11 @@ public final class ResponseProtos {
       }
     }
     /**
+     * <code>optional string reason = 3;</code>
+     *
      * <pre>
      *associated with REJECT results
      * </pre>
-     *
-     * <code>optional string reason = 3;</code>
      */
     public com.google.protobuf.ByteString
         getReasonBytes() {
@@ -10698,6 +9705,11 @@ public final class ResponseProtos {
       }
     }
 
+    private void initFields() {
+      trade_ = protocol.TradeProtos.TradeRequest.getDefaultInstance();
+      answer_ = protocol.EnumProtos.TradeStatusProto.ACCEPT;
+      reason_ = "";
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -10722,91 +9734,47 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, getTrade());
+        output.writeMessage(1, trade_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, answer_);
+        output.writeEnum(2, answer_.getNumber());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, reason_);
+        output.writeBytes(3, getReasonBytes());
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getTrade());
+          .computeMessageSize(1, trade_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, answer_);
+          .computeEnumSize(2, answer_.getNumber());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, reason_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, getReasonBytes());
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.AcceptRejectResponse)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.AcceptRejectResponse other = (protocol.ResponseProtos.AcceptRejectResponse) obj;
-
-      boolean result = true;
-      result = result && (hasTrade() == other.hasTrade());
-      if (hasTrade()) {
-        result = result && getTrade()
-            .equals(other.getTrade());
-      }
-      result = result && (hasAnswer() == other.hasAnswer());
-      if (hasAnswer()) {
-        result = result && answer_ == other.answer_;
-      }
-      result = result && (hasReason() == other.hasReason());
-      if (hasReason()) {
-        result = result && getReason()
-            .equals(other.getReason());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasTrade()) {
-        hash = (37 * hash) + TRADE_FIELD_NUMBER;
-        hash = (53 * hash) + getTrade().hashCode();
-      }
-      if (hasAnswer()) {
-        hash = (37 * hash) + ANSWER_FIELD_NUMBER;
-        hash = (53 * hash) + answer_;
-      }
-      if (hasReason()) {
-        hash = (37 * hash) + REASON_FIELD_NUMBER;
-        hash = (53 * hash) + getReason().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.AcceptRejectResponse parseFrom(
@@ -10832,69 +9800,58 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.AcceptRejectResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.AcceptRejectResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.AcceptRejectResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.AcceptRejectResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.AcceptRejectResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.AcceptRejectResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.AcceptRejectResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
     /**
+     * Protobuf type {@code AcceptRejectResponse}
+     *
      * <pre>
      * ACCEPT-REJECT RESPONSE (mainly for responding to human trade requests)
      * </pre>
-     *
-     * Protobuf type {@code AcceptRejectResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:AcceptRejectResponse)
         protocol.ResponseProtos.AcceptRejectResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -10902,7 +9859,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_AcceptRejectResponse_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_AcceptRejectResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -10915,29 +9872,36 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getTradeFieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         if (tradeBuilder_ == null) {
-          trade_ = null;
+          trade_ = protocol.TradeProtos.TradeRequest.getDefaultInstance();
         } else {
           tradeBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
-        answer_ = 1;
+        answer_ = protocol.EnumProtos.TradeStatusProto.ACCEPT;
         bitField0_ = (bitField0_ & ~0x00000002);
         reason_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -10982,32 +9946,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.AcceptRejectResponse) {
           return mergeFrom((protocol.ResponseProtos.AcceptRejectResponse)other);
@@ -11030,19 +9968,21 @@ public final class ResponseProtos {
           reason_ = other.reason_;
           onChanged();
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasTrade()) {
+          
           return false;
         }
         if (!hasAnswer()) {
+          
           return false;
         }
         if (!getTrade().isInitialized()) {
+          
           return false;
         }
         return true;
@@ -11057,7 +9997,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.AcceptRejectResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -11067,8 +10007,8 @@ public final class ResponseProtos {
       }
       private int bitField0_;
 
-      private protocol.TradeProtos.TradeRequest trade_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.TradeProtos.TradeRequest trade_ = protocol.TradeProtos.TradeRequest.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder> tradeBuilder_;
       /**
        * <code>required .TradeRequest trade = 1;</code>
@@ -11081,7 +10021,7 @@ public final class ResponseProtos {
        */
       public protocol.TradeProtos.TradeRequest getTrade() {
         if (tradeBuilder_ == null) {
-          return trade_ == null ? protocol.TradeProtos.TradeRequest.getDefaultInstance() : trade_;
+          return trade_;
         } else {
           return tradeBuilder_.getMessage();
         }
@@ -11122,7 +10062,6 @@ public final class ResponseProtos {
       public Builder mergeTrade(protocol.TradeProtos.TradeRequest value) {
         if (tradeBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              trade_ != null &&
               trade_ != protocol.TradeProtos.TradeRequest.getDefaultInstance()) {
             trade_ =
               protocol.TradeProtos.TradeRequest.newBuilder(trade_).mergeFrom(value).buildPartial();
@@ -11141,7 +10080,7 @@ public final class ResponseProtos {
        */
       public Builder clearTrade() {
         if (tradeBuilder_ == null) {
-          trade_ = null;
+          trade_ = protocol.TradeProtos.TradeRequest.getDefaultInstance();
           onChanged();
         } else {
           tradeBuilder_.clear();
@@ -11164,18 +10103,17 @@ public final class ResponseProtos {
         if (tradeBuilder_ != null) {
           return tradeBuilder_.getMessageOrBuilder();
         } else {
-          return trade_ == null ?
-              protocol.TradeProtos.TradeRequest.getDefaultInstance() : trade_;
+          return trade_;
         }
       }
       /**
        * <code>required .TradeRequest trade = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder> 
           getTradeFieldBuilder() {
         if (tradeBuilder_ == null) {
-          tradeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          tradeBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.TradeProtos.TradeRequest, protocol.TradeProtos.TradeRequest.Builder, protocol.TradeProtos.TradeRequestOrBuilder>(
                   getTrade(),
                   getParentForChildren(),
@@ -11185,7 +10123,7 @@ public final class ResponseProtos {
         return tradeBuilder_;
       }
 
-      private int answer_ = 1;
+      private protocol.EnumProtos.TradeStatusProto answer_ = protocol.EnumProtos.TradeStatusProto.ACCEPT;
       /**
        * <code>required .TradeStatusProto answer = 2;</code>
        */
@@ -11196,8 +10134,7 @@ public final class ResponseProtos {
        * <code>required .TradeStatusProto answer = 2;</code>
        */
       public protocol.EnumProtos.TradeStatusProto getAnswer() {
-        protocol.EnumProtos.TradeStatusProto result = protocol.EnumProtos.TradeStatusProto.valueOf(answer_);
-        return result == null ? protocol.EnumProtos.TradeStatusProto.ACCEPT : result;
+        return answer_;
       }
       /**
        * <code>required .TradeStatusProto answer = 2;</code>
@@ -11207,7 +10144,7 @@ public final class ResponseProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000002;
-        answer_ = value.getNumber();
+        answer_ = value;
         onChanged();
         return this;
       }
@@ -11216,28 +10153,28 @@ public final class ResponseProtos {
        */
       public Builder clearAnswer() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        answer_ = 1;
+        answer_ = protocol.EnumProtos.TradeStatusProto.ACCEPT;
         onChanged();
         return this;
       }
 
       private java.lang.Object reason_ = "";
       /**
+       * <code>optional string reason = 3;</code>
+       *
        * <pre>
        *associated with REJECT results
        * </pre>
-       *
-       * <code>optional string reason = 3;</code>
        */
       public boolean hasReason() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
+       * <code>optional string reason = 3;</code>
+       *
        * <pre>
        *associated with REJECT results
        * </pre>
-       *
-       * <code>optional string reason = 3;</code>
        */
       public java.lang.String getReason() {
         java.lang.Object ref = reason_;
@@ -11254,11 +10191,11 @@ public final class ResponseProtos {
         }
       }
       /**
+       * <code>optional string reason = 3;</code>
+       *
        * <pre>
        *associated with REJECT results
        * </pre>
-       *
-       * <code>optional string reason = 3;</code>
        */
       public com.google.protobuf.ByteString
           getReasonBytes() {
@@ -11274,11 +10211,11 @@ public final class ResponseProtos {
         }
       }
       /**
+       * <code>optional string reason = 3;</code>
+       *
        * <pre>
        *associated with REJECT results
        * </pre>
-       *
-       * <code>optional string reason = 3;</code>
        */
       public Builder setReason(
           java.lang.String value) {
@@ -11291,11 +10228,11 @@ public final class ResponseProtos {
         return this;
       }
       /**
+       * <code>optional string reason = 3;</code>
+       *
        * <pre>
        *associated with REJECT results
        * </pre>
-       *
-       * <code>optional string reason = 3;</code>
        */
       public Builder clearReason() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -11304,11 +10241,11 @@ public final class ResponseProtos {
         return this;
       }
       /**
+       * <code>optional string reason = 3;</code>
+       *
        * <pre>
        *associated with REJECT results
        * </pre>
-       *
-       * <code>optional string reason = 3;</code>
        */
       public Builder setReasonBytes(
           com.google.protobuf.ByteString value) {
@@ -11320,53 +10257,16 @@ public final class ResponseProtos {
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:AcceptRejectResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:AcceptRejectResponse)
-    private static final protocol.ResponseProtos.AcceptRejectResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.AcceptRejectResponse();
+      defaultInstance = new AcceptRejectResponse(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.AcceptRejectResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<AcceptRejectResponse>
-        PARSER = new com.google.protobuf.AbstractParser<AcceptRejectResponse>() {
-      public AcceptRejectResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new AcceptRejectResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<AcceptRejectResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<AcceptRejectResponse> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.AcceptRejectResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:AcceptRejectResponse)
   }
 
   public interface GiveBoardResponseOrBuilder extends
@@ -11389,27 +10289,37 @@ public final class ResponseProtos {
   /**
    * Protobuf type {@code GiveBoardResponse}
    */
-  public  static final class GiveBoardResponse extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class GiveBoardResponse extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:GiveBoardResponse)
       GiveBoardResponseOrBuilder {
     // Use GiveBoardResponse.newBuilder() to construct.
-    private GiveBoardResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private GiveBoardResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private GiveBoardResponse() {
+    private GiveBoardResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final GiveBoardResponse defaultInstance;
+    public static GiveBoardResponse getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public GiveBoardResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private GiveBoardResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -11447,7 +10357,7 @@ public final class ResponseProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -11458,11 +10368,26 @@ public final class ResponseProtos {
       return protocol.ResponseProtos.internal_static_GiveBoardResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.ResponseProtos.internal_static_GiveBoardResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.ResponseProtos.GiveBoardResponse.class, protocol.ResponseProtos.GiveBoardResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<GiveBoardResponse> PARSER =
+        new com.google.protobuf.AbstractParser<GiveBoardResponse>() {
+      public GiveBoardResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new GiveBoardResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<GiveBoardResponse> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -11478,15 +10403,18 @@ public final class ResponseProtos {
      * <code>required .BoardProto board = 1;</code>
      */
     public protocol.BoardProtos.BoardProto getBoard() {
-      return board_ == null ? protocol.BoardProtos.BoardProto.getDefaultInstance() : board_;
+      return board_;
     }
     /**
      * <code>required .BoardProto board = 1;</code>
      */
     public protocol.BoardProtos.BoardProtoOrBuilder getBoardOrBuilder() {
-      return board_ == null ? protocol.BoardProtos.BoardProto.getDefaultInstance() : board_;
+      return board_;
     }
 
+    private void initFields() {
+      board_ = protocol.BoardProtos.BoardProto.getDefaultInstance();
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -11507,61 +10435,33 @@ public final class ResponseProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, getBoard());
+        output.writeMessage(1, board_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getBoard());
+          .computeMessageSize(1, board_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.ResponseProtos.GiveBoardResponse)) {
-        return super.equals(obj);
-      }
-      protocol.ResponseProtos.GiveBoardResponse other = (protocol.ResponseProtos.GiveBoardResponse) obj;
-
-      boolean result = true;
-      result = result && (hasBoard() == other.hasBoard());
-      if (hasBoard()) {
-        result = result && getBoard()
-            .equals(other.getBoard());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasBoard()) {
-        hash = (37 * hash) + BOARD_FIELD_NUMBER;
-        hash = (53 * hash) + getBoard().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.ResponseProtos.GiveBoardResponse parseFrom(
@@ -11587,57 +10487,46 @@ public final class ResponseProtos {
     }
     public static protocol.ResponseProtos.GiveBoardResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.GiveBoardResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.GiveBoardResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.ResponseProtos.GiveBoardResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.ResponseProtos.GiveBoardResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.ResponseProtos.GiveBoardResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.ResponseProtos.GiveBoardResponse prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -11645,7 +10534,7 @@ public final class ResponseProtos {
      * Protobuf type {@code GiveBoardResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:GiveBoardResponse)
         protocol.ResponseProtos.GiveBoardResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -11653,7 +10542,7 @@ public final class ResponseProtos {
         return protocol.ResponseProtos.internal_static_GiveBoardResponse_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.ResponseProtos.internal_static_GiveBoardResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -11666,25 +10555,32 @@ public final class ResponseProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getBoardFieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         if (boardBuilder_ == null) {
-          board_ = null;
+          board_ = protocol.BoardProtos.BoardProto.getDefaultInstance();
         } else {
           boardBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -11721,32 +10617,6 @@ public final class ResponseProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.ResponseProtos.GiveBoardResponse) {
           return mergeFrom((protocol.ResponseProtos.GiveBoardResponse)other);
@@ -11761,16 +10631,17 @@ public final class ResponseProtos {
         if (other.hasBoard()) {
           mergeBoard(other.getBoard());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasBoard()) {
+          
           return false;
         }
         if (!getBoard().isInitialized()) {
+          
           return false;
         }
         return true;
@@ -11785,7 +10656,7 @@ public final class ResponseProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.ResponseProtos.GiveBoardResponse) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -11795,8 +10666,8 @@ public final class ResponseProtos {
       }
       private int bitField0_;
 
-      private protocol.BoardProtos.BoardProto board_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.BoardProtos.BoardProto board_ = protocol.BoardProtos.BoardProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BoardProtos.BoardProto, protocol.BoardProtos.BoardProto.Builder, protocol.BoardProtos.BoardProtoOrBuilder> boardBuilder_;
       /**
        * <code>required .BoardProto board = 1;</code>
@@ -11809,7 +10680,7 @@ public final class ResponseProtos {
        */
       public protocol.BoardProtos.BoardProto getBoard() {
         if (boardBuilder_ == null) {
-          return board_ == null ? protocol.BoardProtos.BoardProto.getDefaultInstance() : board_;
+          return board_;
         } else {
           return boardBuilder_.getMessage();
         }
@@ -11850,7 +10721,6 @@ public final class ResponseProtos {
       public Builder mergeBoard(protocol.BoardProtos.BoardProto value) {
         if (boardBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              board_ != null &&
               board_ != protocol.BoardProtos.BoardProto.getDefaultInstance()) {
             board_ =
               protocol.BoardProtos.BoardProto.newBuilder(board_).mergeFrom(value).buildPartial();
@@ -11869,7 +10739,7 @@ public final class ResponseProtos {
        */
       public Builder clearBoard() {
         if (boardBuilder_ == null) {
-          board_ = null;
+          board_ = protocol.BoardProtos.BoardProto.getDefaultInstance();
           onChanged();
         } else {
           boardBuilder_.clear();
@@ -11892,18 +10762,17 @@ public final class ResponseProtos {
         if (boardBuilder_ != null) {
           return boardBuilder_.getMessageOrBuilder();
         } else {
-          return board_ == null ?
-              protocol.BoardProtos.BoardProto.getDefaultInstance() : board_;
+          return board_;
         }
       }
       /**
        * <code>required .BoardProto board = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BoardProtos.BoardProto, protocol.BoardProtos.BoardProto.Builder, protocol.BoardProtos.BoardProtoOrBuilder> 
           getBoardFieldBuilder() {
         if (boardBuilder_ == null) {
-          boardBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          boardBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BoardProtos.BoardProto, protocol.BoardProtos.BoardProto.Builder, protocol.BoardProtos.BoardProtoOrBuilder>(
                   getBoard(),
                   getParentForChildren(),
@@ -11912,131 +10781,94 @@ public final class ResponseProtos {
         }
         return boardBuilder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:GiveBoardResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:GiveBoardResponse)
-    private static final protocol.ResponseProtos.GiveBoardResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.ResponseProtos.GiveBoardResponse();
+      defaultInstance = new GiveBoardResponse(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.ResponseProtos.GiveBoardResponse getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<GiveBoardResponse>
-        PARSER = new com.google.protobuf.AbstractParser<GiveBoardResponse>() {
-      public GiveBoardResponse parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new GiveBoardResponse(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<GiveBoardResponse> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<GiveBoardResponse> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.ResponseProtos.GiveBoardResponse getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:GiveBoardResponse)
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_Response_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_Response_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_SuccessFailResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_SuccessFailResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_EndMoveResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_EndMoveResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_PlayMonopolyCardResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_PlayMonopolyCardResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_PlayRoadBuildingCardResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_PlayRoadBuildingCardResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_PlayYearOfPlentyCardResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_PlayYearOfPlentyCardResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_BuyDevCardResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_BuyDevCardResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_BuildSettlementResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_BuildSettlementResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_UpgradeSettlementResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_UpgradeSettlementResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_BuildRoadResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_BuildRoadResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_PlayKnightCardResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_PlayKnightCardResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_MoveRobberResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_MoveRobberResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_AcceptRejectResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_AcceptRejectResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_GiveBoardResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_GiveBoardResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
   }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
+  private static com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
   static {
     java.lang.String[] descriptorData = {
@@ -12110,85 +10942,85 @@ public final class ResponseProtos {
     internal_static_Response_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_Response_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_Response_descriptor,
         new java.lang.String[] { "SuccessFailResponse", "AcceptRejectResponse", "CurrentBoardResponse", "BuyDevCardResponse", "PlayMonopolyCardResponse", "PlayRoadBuildingCardResponse", "BuildRoadResponse", "MoveRobberResponse", "EndMoveResponse", "BuildSettlementResponse", "UpgradeSettlementResponse", "PlayKnightCardResponse", "PlayYearOfPlentyCardResponse", "ResourceAllocation", "Type", });
     internal_static_SuccessFailResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_SuccessFailResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_SuccessFailResponse_descriptor,
         new java.lang.String[] { "Result", "Reason", });
     internal_static_EndMoveResponse_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_EndMoveResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EndMoveResponse_descriptor,
         new java.lang.String[] { "NewTurn", });
     internal_static_PlayMonopolyCardResponse_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_PlayMonopolyCardResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PlayMonopolyCardResponse_descriptor,
         new java.lang.String[] { "NumResources", "Resource", });
     internal_static_PlayRoadBuildingCardResponse_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_PlayRoadBuildingCardResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PlayRoadBuildingCardResponse_descriptor,
         new java.lang.String[] { "Response1", "Response2", });
     internal_static_PlayYearOfPlentyCardResponse_descriptor =
       getDescriptor().getMessageTypes().get(5);
     internal_static_PlayYearOfPlentyCardResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PlayYearOfPlentyCardResponse_descriptor,
         new java.lang.String[] { "R1", "R2", });
     internal_static_BuyDevCardResponse_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_BuyDevCardResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_BuyDevCardResponse_descriptor,
         new java.lang.String[] { "DevelopmentCard", });
     internal_static_BuildSettlementResponse_descriptor =
       getDescriptor().getMessageTypes().get(7);
     internal_static_BuildSettlementResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_BuildSettlementResponse_descriptor,
         new java.lang.String[] { "NewBuilding", });
     internal_static_UpgradeSettlementResponse_descriptor =
       getDescriptor().getMessageTypes().get(8);
     internal_static_UpgradeSettlementResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_UpgradeSettlementResponse_descriptor,
         new java.lang.String[] { "NewBuilding", });
     internal_static_BuildRoadResponse_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_BuildRoadResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_BuildRoadResponse_descriptor,
         new java.lang.String[] { "LongestRoad", "NewRoad", });
     internal_static_PlayKnightCardResponse_descriptor =
       getDescriptor().getMessageTypes().get(10);
     internal_static_PlayKnightCardResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PlayKnightCardResponse_descriptor,
         new java.lang.String[] { "MoveRobberResponse", });
     internal_static_MoveRobberResponse_descriptor =
       getDescriptor().getMessageTypes().get(11);
     internal_static_MoveRobberResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_MoveRobberResponse_descriptor,
         new java.lang.String[] { "Resource", "RobberLocation", });
     internal_static_AcceptRejectResponse_descriptor =
       getDescriptor().getMessageTypes().get(12);
     internal_static_AcceptRejectResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_AcceptRejectResponse_descriptor,
         new java.lang.String[] { "Trade", "Answer", "Reason", });
     internal_static_GiveBoardResponse_descriptor =
       getDescriptor().getMessageTypes().get(13);
     internal_static_GiveBoardResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_GiveBoardResponse_descriptor,
         new java.lang.String[] { "Board", });
     protocol.BoardProtos.getDescriptor();

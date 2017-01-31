@@ -6,7 +6,7 @@ import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
 import exceptions.UnexpectedMoveTypeException;
-import game.GameState;
+import game.Game;
 import game.players.NetworkPlayer;
 import game.players.Player;
 import protocol.EnumProtos.ColourProto;
@@ -526,17 +526,17 @@ public class Server implements Runnable
 		Colour next =  null;
 
 		// Get settlements and roads forwards from the first player
-		for(int i = 0; i < GameState.NUM_PLAYERS; i++)
+		for(int i = 0; i < Game.NUM_PLAYERS; i++)
 		{
-			next = Colour.values()[(current.ordinal() + i) % GameState.NUM_PLAYERS];
+			next = Colour.values()[(current.ordinal() + i) % Game.NUM_PLAYERS];
 			receiveInitialMoves(next);
 		}
 		
 		// Get second set of settlements and roads in reverse order
-		for(int i = 0; i < GameState.NUM_PLAYERS; i--)
+		for(int i = 0; i < Game.NUM_PLAYERS; i--)
 		{
 			receiveInitialMoves(next);
-			next = Colour.values()[(current.ordinal() - i) % GameState.NUM_PLAYERS];
+			next = Colour.values()[(current.ordinal() - i) % Game.NUM_PLAYERS];
 		}
 	}
 
@@ -668,7 +668,7 @@ public class Server implements Runnable
 		serverSocket = new ServerSocket(PORT);
 		System.out.println("Server started. Waiting for client(s)...\n");
 
-		while(numConnections++ < GameState.NUM_PLAYERS)
+		while(numConnections++ < Game.NUM_PLAYERS)
 		{
 			Socket connection = serverSocket.accept();
 			

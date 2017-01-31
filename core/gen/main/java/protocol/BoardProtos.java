@@ -6,13 +6,7 @@ package protocol;
 public final class BoardProtos {
   private BoardProtos() {}
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
-
-  public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   public interface EdgeProtoOrBuilder extends
       // @@protoc_insertion_point(interface_extends:EdgeProto)
@@ -47,27 +41,37 @@ public final class BoardProtos {
   /**
    * Protobuf type {@code EdgeProto}
    */
-  public  static final class EdgeProto extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class EdgeProto extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:EdgeProto)
       EdgeProtoOrBuilder {
     // Use EdgeProto.newBuilder() to construct.
-    private EdgeProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private EdgeProto(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private EdgeProto() {
+    private EdgeProto(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final EdgeProto defaultInstance;
+    public static EdgeProto getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public EdgeProto getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private EdgeProto(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -118,7 +122,7 @@ public final class BoardProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -129,11 +133,26 @@ public final class BoardProtos {
       return protocol.BoardProtos.internal_static_EdgeProto_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.BoardProtos.internal_static_EdgeProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.BoardProtos.EdgeProto.class, protocol.BoardProtos.EdgeProto.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<EdgeProto> PARSER =
+        new com.google.protobuf.AbstractParser<EdgeProto>() {
+      public EdgeProto parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new EdgeProto(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<EdgeProto> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -149,13 +168,13 @@ public final class BoardProtos {
      * <code>required .PointProto p1 = 1;</code>
      */
     public protocol.BuildProtos.PointProto getP1() {
-      return p1_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p1_;
+      return p1_;
     }
     /**
      * <code>required .PointProto p1 = 1;</code>
      */
     public protocol.BuildProtos.PointProtoOrBuilder getP1OrBuilder() {
-      return p1_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p1_;
+      return p1_;
     }
 
     public static final int P2_FIELD_NUMBER = 2;
@@ -170,15 +189,19 @@ public final class BoardProtos {
      * <code>required .PointProto p2 = 2;</code>
      */
     public protocol.BuildProtos.PointProto getP2() {
-      return p2_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p2_;
+      return p2_;
     }
     /**
      * <code>required .PointProto p2 = 2;</code>
      */
     public protocol.BuildProtos.PointProtoOrBuilder getP2OrBuilder() {
-      return p2_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p2_;
+      return p2_;
     }
 
+    private void initFields() {
+      p1_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+      p2_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -207,77 +230,40 @@ public final class BoardProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, getP1());
+        output.writeMessage(1, p1_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeMessage(2, getP2());
+        output.writeMessage(2, p2_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getP1());
+          .computeMessageSize(1, p1_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getP2());
+          .computeMessageSize(2, p2_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.BoardProtos.EdgeProto)) {
-        return super.equals(obj);
-      }
-      protocol.BoardProtos.EdgeProto other = (protocol.BoardProtos.EdgeProto) obj;
-
-      boolean result = true;
-      result = result && (hasP1() == other.hasP1());
-      if (hasP1()) {
-        result = result && getP1()
-            .equals(other.getP1());
-      }
-      result = result && (hasP2() == other.hasP2());
-      if (hasP2()) {
-        result = result && getP2()
-            .equals(other.getP2());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasP1()) {
-        hash = (37 * hash) + P1_FIELD_NUMBER;
-        hash = (53 * hash) + getP1().hashCode();
-      }
-      if (hasP2()) {
-        hash = (37 * hash) + P2_FIELD_NUMBER;
-        hash = (53 * hash) + getP2().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.BoardProtos.EdgeProto parseFrom(
@@ -303,57 +289,46 @@ public final class BoardProtos {
     }
     public static protocol.BoardProtos.EdgeProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.BoardProtos.EdgeProto parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.BoardProtos.EdgeProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.BoardProtos.EdgeProto parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.BoardProtos.EdgeProto parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.BoardProtos.EdgeProto parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.BoardProtos.EdgeProto prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -361,7 +336,7 @@ public final class BoardProtos {
      * Protobuf type {@code EdgeProto}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:EdgeProto)
         protocol.BoardProtos.EdgeProtoOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -369,7 +344,7 @@ public final class BoardProtos {
         return protocol.BoardProtos.internal_static_EdgeProto_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.BoardProtos.internal_static_EdgeProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -382,32 +357,39 @@ public final class BoardProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getP1FieldBuilder();
           getP2FieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         if (p1Builder_ == null) {
-          p1_ = null;
+          p1_ = protocol.BuildProtos.PointProto.getDefaultInstance();
         } else {
           p1Builder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         if (p2Builder_ == null) {
-          p2_ = null;
+          p2_ = protocol.BuildProtos.PointProto.getDefaultInstance();
         } else {
           p2Builder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -452,32 +434,6 @@ public final class BoardProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.BoardProtos.EdgeProto) {
           return mergeFrom((protocol.BoardProtos.EdgeProto)other);
@@ -495,22 +451,25 @@ public final class BoardProtos {
         if (other.hasP2()) {
           mergeP2(other.getP2());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasP1()) {
+          
           return false;
         }
         if (!hasP2()) {
+          
           return false;
         }
         if (!getP1().isInitialized()) {
+          
           return false;
         }
         if (!getP2().isInitialized()) {
+          
           return false;
         }
         return true;
@@ -525,7 +484,7 @@ public final class BoardProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.BoardProtos.EdgeProto) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -535,8 +494,8 @@ public final class BoardProtos {
       }
       private int bitField0_;
 
-      private protocol.BuildProtos.PointProto p1_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.BuildProtos.PointProto p1_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> p1Builder_;
       /**
        * <code>required .PointProto p1 = 1;</code>
@@ -549,7 +508,7 @@ public final class BoardProtos {
        */
       public protocol.BuildProtos.PointProto getP1() {
         if (p1Builder_ == null) {
-          return p1_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p1_;
+          return p1_;
         } else {
           return p1Builder_.getMessage();
         }
@@ -590,7 +549,6 @@ public final class BoardProtos {
       public Builder mergeP1(protocol.BuildProtos.PointProto value) {
         if (p1Builder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              p1_ != null &&
               p1_ != protocol.BuildProtos.PointProto.getDefaultInstance()) {
             p1_ =
               protocol.BuildProtos.PointProto.newBuilder(p1_).mergeFrom(value).buildPartial();
@@ -609,7 +567,7 @@ public final class BoardProtos {
        */
       public Builder clearP1() {
         if (p1Builder_ == null) {
-          p1_ = null;
+          p1_ = protocol.BuildProtos.PointProto.getDefaultInstance();
           onChanged();
         } else {
           p1Builder_.clear();
@@ -632,18 +590,17 @@ public final class BoardProtos {
         if (p1Builder_ != null) {
           return p1Builder_.getMessageOrBuilder();
         } else {
-          return p1_ == null ?
-              protocol.BuildProtos.PointProto.getDefaultInstance() : p1_;
+          return p1_;
         }
       }
       /**
        * <code>required .PointProto p1 = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> 
           getP1FieldBuilder() {
         if (p1Builder_ == null) {
-          p1Builder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          p1Builder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder>(
                   getP1(),
                   getParentForChildren(),
@@ -653,8 +610,8 @@ public final class BoardProtos {
         return p1Builder_;
       }
 
-      private protocol.BuildProtos.PointProto p2_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.BuildProtos.PointProto p2_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> p2Builder_;
       /**
        * <code>required .PointProto p2 = 2;</code>
@@ -667,7 +624,7 @@ public final class BoardProtos {
        */
       public protocol.BuildProtos.PointProto getP2() {
         if (p2Builder_ == null) {
-          return p2_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p2_;
+          return p2_;
         } else {
           return p2Builder_.getMessage();
         }
@@ -708,7 +665,6 @@ public final class BoardProtos {
       public Builder mergeP2(protocol.BuildProtos.PointProto value) {
         if (p2Builder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              p2_ != null &&
               p2_ != protocol.BuildProtos.PointProto.getDefaultInstance()) {
             p2_ =
               protocol.BuildProtos.PointProto.newBuilder(p2_).mergeFrom(value).buildPartial();
@@ -727,7 +683,7 @@ public final class BoardProtos {
        */
       public Builder clearP2() {
         if (p2Builder_ == null) {
-          p2_ = null;
+          p2_ = protocol.BuildProtos.PointProto.getDefaultInstance();
           onChanged();
         } else {
           p2Builder_.clear();
@@ -750,18 +706,17 @@ public final class BoardProtos {
         if (p2Builder_ != null) {
           return p2Builder_.getMessageOrBuilder();
         } else {
-          return p2_ == null ?
-              protocol.BuildProtos.PointProto.getDefaultInstance() : p2_;
+          return p2_;
         }
       }
       /**
        * <code>required .PointProto p2 = 2;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> 
           getP2FieldBuilder() {
         if (p2Builder_ == null) {
-          p2Builder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          p2Builder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder>(
                   getP2(),
                   getParentForChildren(),
@@ -770,53 +725,16 @@ public final class BoardProtos {
         }
         return p2Builder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:EdgeProto)
     }
 
-    // @@protoc_insertion_point(class_scope:EdgeProto)
-    private static final protocol.BoardProtos.EdgeProto DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.BoardProtos.EdgeProto();
+      defaultInstance = new EdgeProto(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.BoardProtos.EdgeProto getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<EdgeProto>
-        PARSER = new com.google.protobuf.AbstractParser<EdgeProto>() {
-      public EdgeProto parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new EdgeProto(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<EdgeProto> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<EdgeProto> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.BoardProtos.EdgeProto getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:EdgeProto)
   }
 
   public interface HexProtoOrBuilder extends
@@ -890,31 +808,37 @@ public final class BoardProtos {
   /**
    * Protobuf type {@code HexProto}
    */
-  public  static final class HexProto extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class HexProto extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:HexProto)
       HexProtoOrBuilder {
     // Use HexProto.newBuilder() to construct.
-    private HexProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private HexProto(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private HexProto() {
-      resource_ = 1;
-      nodes_ = java.util.Collections.emptyList();
-      hasRobber_ = false;
-      chitNumber_ = 0;
+    private HexProto(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final HexProto defaultInstance;
+    public static HexProto getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public HexProto getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private HexProto(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -953,7 +877,7 @@ public final class BoardProtos {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
                 bitField0_ |= 0x00000002;
-                resource_ = rawValue;
+                resource_ = value;
               }
               break;
             }
@@ -962,8 +886,7 @@ public final class BoardProtos {
                 nodes_ = new java.util.ArrayList<protocol.BoardProtos.NodeProto>();
                 mutable_bitField0_ |= 0x00000004;
               }
-              nodes_.add(
-                  input.readMessage(protocol.BoardProtos.NodeProto.PARSER, extensionRegistry));
+              nodes_.add(input.readMessage(protocol.BoardProtos.NodeProto.PARSER, extensionRegistry));
               break;
             }
             case 32: {
@@ -982,7 +905,7 @@ public final class BoardProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
           nodes_ = java.util.Collections.unmodifiableList(nodes_);
@@ -996,11 +919,26 @@ public final class BoardProtos {
       return protocol.BoardProtos.internal_static_HexProto_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.BoardProtos.internal_static_HexProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.BoardProtos.HexProto.class, protocol.BoardProtos.HexProto.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<HexProto> PARSER =
+        new com.google.protobuf.AbstractParser<HexProto>() {
+      public HexProto parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new HexProto(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<HexProto> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -1016,17 +954,17 @@ public final class BoardProtos {
      * <code>required .PointProto p = 1;</code>
      */
     public protocol.BuildProtos.PointProto getP() {
-      return p_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p_;
+      return p_;
     }
     /**
      * <code>required .PointProto p = 1;</code>
      */
     public protocol.BuildProtos.PointProtoOrBuilder getPOrBuilder() {
-      return p_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p_;
+      return p_;
     }
 
     public static final int RESOURCE_FIELD_NUMBER = 2;
-    private int resource_;
+    private protocol.EnumProtos.ResourceTypeProto resource_;
     /**
      * <code>required .ResourceTypeProto resource = 2;</code>
      */
@@ -1037,8 +975,7 @@ public final class BoardProtos {
      * <code>required .ResourceTypeProto resource = 2;</code>
      */
     public protocol.EnumProtos.ResourceTypeProto getResource() {
-      protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(resource_);
-      return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+      return resource_;
     }
 
     public static final int NODES_FIELD_NUMBER = 3;
@@ -1106,6 +1043,13 @@ public final class BoardProtos {
       return chitNumber_;
     }
 
+    private void initFields() {
+      p_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+      resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+      nodes_ = java.util.Collections.emptyList();
+      hasRobber_ = false;
+      chitNumber_ = 0;
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -1140,11 +1084,12 @@ public final class BoardProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, getP());
+        output.writeMessage(1, p_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, resource_);
+        output.writeEnum(2, resource_.getNumber());
       }
       for (int i = 0; i < nodes_.size(); i++) {
         output.writeMessage(3, nodes_.get(i));
@@ -1155,21 +1100,22 @@ public final class BoardProtos {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeInt32(5, chitNumber_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getP());
+          .computeMessageSize(1, p_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, resource_);
+          .computeEnumSize(2, resource_.getNumber());
       }
       for (int i = 0; i < nodes_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
@@ -1183,79 +1129,16 @@ public final class BoardProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(5, chitNumber_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.BoardProtos.HexProto)) {
-        return super.equals(obj);
-      }
-      protocol.BoardProtos.HexProto other = (protocol.BoardProtos.HexProto) obj;
-
-      boolean result = true;
-      result = result && (hasP() == other.hasP());
-      if (hasP()) {
-        result = result && getP()
-            .equals(other.getP());
-      }
-      result = result && (hasResource() == other.hasResource());
-      if (hasResource()) {
-        result = result && resource_ == other.resource_;
-      }
-      result = result && getNodesList()
-          .equals(other.getNodesList());
-      result = result && (hasHasRobber() == other.hasHasRobber());
-      if (hasHasRobber()) {
-        result = result && (getHasRobber()
-            == other.getHasRobber());
-      }
-      result = result && (hasChitNumber() == other.hasChitNumber());
-      if (hasChitNumber()) {
-        result = result && (getChitNumber()
-            == other.getChitNumber());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasP()) {
-        hash = (37 * hash) + P_FIELD_NUMBER;
-        hash = (53 * hash) + getP().hashCode();
-      }
-      if (hasResource()) {
-        hash = (37 * hash) + RESOURCE_FIELD_NUMBER;
-        hash = (53 * hash) + resource_;
-      }
-      if (getNodesCount() > 0) {
-        hash = (37 * hash) + NODES_FIELD_NUMBER;
-        hash = (53 * hash) + getNodesList().hashCode();
-      }
-      if (hasHasRobber()) {
-        hash = (37 * hash) + HASROBBER_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-            getHasRobber());
-      }
-      if (hasChitNumber()) {
-        hash = (37 * hash) + CHITNUMBER_FIELD_NUMBER;
-        hash = (53 * hash) + getChitNumber();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.BoardProtos.HexProto parseFrom(
@@ -1281,57 +1164,46 @@ public final class BoardProtos {
     }
     public static protocol.BoardProtos.HexProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.BoardProtos.HexProto parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.BoardProtos.HexProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.BoardProtos.HexProto parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.BoardProtos.HexProto parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.BoardProtos.HexProto parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.BoardProtos.HexProto prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -1339,7 +1211,7 @@ public final class BoardProtos {
      * Protobuf type {@code HexProto}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:HexProto)
         protocol.BoardProtos.HexProtoOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -1347,7 +1219,7 @@ public final class BoardProtos {
         return protocol.BoardProtos.internal_static_HexProto_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.BoardProtos.internal_static_HexProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -1360,26 +1232,29 @@ public final class BoardProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getPFieldBuilder();
           getNodesFieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         if (pBuilder_ == null) {
-          p_ = null;
+          p_ = protocol.BuildProtos.PointProto.getDefaultInstance();
         } else {
           pBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
-        resource_ = 1;
+        resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         bitField0_ = (bitField0_ & ~0x00000002);
         if (nodesBuilder_ == null) {
           nodes_ = java.util.Collections.emptyList();
@@ -1392,6 +1267,10 @@ public final class BoardProtos {
         chitNumber_ = 0;
         bitField0_ = (bitField0_ & ~0x00000010);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -1449,32 +1328,6 @@ public final class BoardProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.BoardProtos.HexProto) {
           return mergeFrom((protocol.BoardProtos.HexProto)other);
@@ -1511,7 +1364,7 @@ public final class BoardProtos {
               nodes_ = other.nodes_;
               bitField0_ = (bitField0_ & ~0x00000004);
               nodesBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getNodesFieldBuilder() : null;
             } else {
               nodesBuilder_.addAllMessages(other.nodes_);
@@ -1524,26 +1377,30 @@ public final class BoardProtos {
         if (other.hasChitNumber()) {
           setChitNumber(other.getChitNumber());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasP()) {
+          
           return false;
         }
         if (!hasResource()) {
+          
           return false;
         }
         if (!hasHasRobber()) {
+          
           return false;
         }
         if (!getP().isInitialized()) {
+          
           return false;
         }
         for (int i = 0; i < getNodesCount(); i++) {
           if (!getNodes(i).isInitialized()) {
+            
             return false;
           }
         }
@@ -1559,7 +1416,7 @@ public final class BoardProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.BoardProtos.HexProto) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -1569,8 +1426,8 @@ public final class BoardProtos {
       }
       private int bitField0_;
 
-      private protocol.BuildProtos.PointProto p_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.BuildProtos.PointProto p_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> pBuilder_;
       /**
        * <code>required .PointProto p = 1;</code>
@@ -1583,7 +1440,7 @@ public final class BoardProtos {
        */
       public protocol.BuildProtos.PointProto getP() {
         if (pBuilder_ == null) {
-          return p_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p_;
+          return p_;
         } else {
           return pBuilder_.getMessage();
         }
@@ -1624,7 +1481,6 @@ public final class BoardProtos {
       public Builder mergeP(protocol.BuildProtos.PointProto value) {
         if (pBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              p_ != null &&
               p_ != protocol.BuildProtos.PointProto.getDefaultInstance()) {
             p_ =
               protocol.BuildProtos.PointProto.newBuilder(p_).mergeFrom(value).buildPartial();
@@ -1643,7 +1499,7 @@ public final class BoardProtos {
        */
       public Builder clearP() {
         if (pBuilder_ == null) {
-          p_ = null;
+          p_ = protocol.BuildProtos.PointProto.getDefaultInstance();
           onChanged();
         } else {
           pBuilder_.clear();
@@ -1666,18 +1522,17 @@ public final class BoardProtos {
         if (pBuilder_ != null) {
           return pBuilder_.getMessageOrBuilder();
         } else {
-          return p_ == null ?
-              protocol.BuildProtos.PointProto.getDefaultInstance() : p_;
+          return p_;
         }
       }
       /**
        * <code>required .PointProto p = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> 
           getPFieldBuilder() {
         if (pBuilder_ == null) {
-          pBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          pBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder>(
                   getP(),
                   getParentForChildren(),
@@ -1687,7 +1542,7 @@ public final class BoardProtos {
         return pBuilder_;
       }
 
-      private int resource_ = 1;
+      private protocol.EnumProtos.ResourceTypeProto resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
       /**
        * <code>required .ResourceTypeProto resource = 2;</code>
        */
@@ -1698,8 +1553,7 @@ public final class BoardProtos {
        * <code>required .ResourceTypeProto resource = 2;</code>
        */
       public protocol.EnumProtos.ResourceTypeProto getResource() {
-        protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(resource_);
-        return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+        return resource_;
       }
       /**
        * <code>required .ResourceTypeProto resource = 2;</code>
@@ -1709,7 +1563,7 @@ public final class BoardProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000002;
-        resource_ = value.getNumber();
+        resource_ = value;
         onChanged();
         return this;
       }
@@ -1718,7 +1572,7 @@ public final class BoardProtos {
        */
       public Builder clearResource() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        resource_ = 1;
+        resource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         onChanged();
         return this;
       }
@@ -1732,7 +1586,7 @@ public final class BoardProtos {
          }
       }
 
-      private com.google.protobuf.RepeatedFieldBuilderV3<
+      private com.google.protobuf.RepeatedFieldBuilder<
           protocol.BoardProtos.NodeProto, protocol.BoardProtos.NodeProto.Builder, protocol.BoardProtos.NodeProtoOrBuilder> nodesBuilder_;
 
       /**
@@ -1948,11 +1802,11 @@ public final class BoardProtos {
            getNodesBuilderList() {
         return getNodesFieldBuilder().getBuilderList();
       }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
+      private com.google.protobuf.RepeatedFieldBuilder<
           protocol.BoardProtos.NodeProto, protocol.BoardProtos.NodeProto.Builder, protocol.BoardProtos.NodeProtoOrBuilder> 
           getNodesFieldBuilder() {
         if (nodesBuilder_ == null) {
-          nodesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+          nodesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               protocol.BoardProtos.NodeProto, protocol.BoardProtos.NodeProto.Builder, protocol.BoardProtos.NodeProtoOrBuilder>(
                   nodes_,
                   ((bitField0_ & 0x00000004) == 0x00000004),
@@ -2026,53 +1880,16 @@ public final class BoardProtos {
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:HexProto)
     }
 
-    // @@protoc_insertion_point(class_scope:HexProto)
-    private static final protocol.BoardProtos.HexProto DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.BoardProtos.HexProto();
+      defaultInstance = new HexProto(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.BoardProtos.HexProto getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<HexProto>
-        PARSER = new com.google.protobuf.AbstractParser<HexProto>() {
-      public HexProto parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new HexProto(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<HexProto> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<HexProto> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.BoardProtos.HexProto getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:HexProto)
   }
 
   public interface NodeProtoOrBuilder extends
@@ -2117,28 +1934,37 @@ public final class BoardProtos {
   /**
    * Protobuf type {@code NodeProto}
    */
-  public  static final class NodeProto extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class NodeProto extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:NodeProto)
       NodeProtoOrBuilder {
     // Use NodeProto.newBuilder() to construct.
-    private NodeProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private NodeProto(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private NodeProto() {
-      buildingType_ = 1;
+    private NodeProto(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final NodeProto defaultInstance;
+    public static NodeProto getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public NodeProto getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private NodeProto(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -2177,7 +2003,7 @@ public final class BoardProtos {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
                 bitField0_ |= 0x00000002;
-                buildingType_ = rawValue;
+                buildingType_ = value;
               }
               break;
             }
@@ -2200,7 +2026,7 @@ public final class BoardProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -2211,11 +2037,26 @@ public final class BoardProtos {
       return protocol.BoardProtos.internal_static_NodeProto_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.BoardProtos.internal_static_NodeProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.BoardProtos.NodeProto.class, protocol.BoardProtos.NodeProto.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<NodeProto> PARSER =
+        new com.google.protobuf.AbstractParser<NodeProto>() {
+      public NodeProto parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new NodeProto(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<NodeProto> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -2231,17 +2072,17 @@ public final class BoardProtos {
      * <code>required .PointProto p = 1;</code>
      */
     public protocol.BuildProtos.PointProto getP() {
-      return p_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p_;
+      return p_;
     }
     /**
      * <code>required .PointProto p = 1;</code>
      */
     public protocol.BuildProtos.PointProtoOrBuilder getPOrBuilder() {
-      return p_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p_;
+      return p_;
     }
 
     public static final int BUILDINGTYPE_FIELD_NUMBER = 2;
-    private int buildingType_;
+    private protocol.EnumProtos.BuildingTypeProto buildingType_;
     /**
      * <code>optional .BuildingTypeProto buildingType = 2;</code>
      */
@@ -2252,8 +2093,7 @@ public final class BoardProtos {
      * <code>optional .BuildingTypeProto buildingType = 2;</code>
      */
     public protocol.EnumProtos.BuildingTypeProto getBuildingType() {
-      protocol.EnumProtos.BuildingTypeProto result = protocol.EnumProtos.BuildingTypeProto.valueOf(buildingType_);
-      return result == null ? protocol.EnumProtos.BuildingTypeProto.SETTLEMENT : result;
+      return buildingType_;
     }
 
     public static final int BUILDING_FIELD_NUMBER = 3;
@@ -2268,15 +2108,20 @@ public final class BoardProtos {
      * <code>optional .BuildingProto building = 3;</code>
      */
     public protocol.BuildProtos.BuildingProto getBuilding() {
-      return building_ == null ? protocol.BuildProtos.BuildingProto.getDefaultInstance() : building_;
+      return building_;
     }
     /**
      * <code>optional .BuildingProto building = 3;</code>
      */
     public protocol.BuildProtos.BuildingProtoOrBuilder getBuildingOrBuilder() {
-      return building_ == null ? protocol.BuildProtos.BuildingProto.getDefaultInstance() : building_;
+      return building_;
     }
 
+    private void initFields() {
+      p_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+      buildingType_ = protocol.EnumProtos.BuildingTypeProto.SETTLEMENT;
+      building_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -2303,92 +2148,47 @@ public final class BoardProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, getP());
+        output.writeMessage(1, p_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, buildingType_);
+        output.writeEnum(2, buildingType_.getNumber());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeMessage(3, getBuilding());
+        output.writeMessage(3, building_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getP());
+          .computeMessageSize(1, p_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, buildingType_);
+          .computeEnumSize(2, buildingType_.getNumber());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getBuilding());
+          .computeMessageSize(3, building_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.BoardProtos.NodeProto)) {
-        return super.equals(obj);
-      }
-      protocol.BoardProtos.NodeProto other = (protocol.BoardProtos.NodeProto) obj;
-
-      boolean result = true;
-      result = result && (hasP() == other.hasP());
-      if (hasP()) {
-        result = result && getP()
-            .equals(other.getP());
-      }
-      result = result && (hasBuildingType() == other.hasBuildingType());
-      if (hasBuildingType()) {
-        result = result && buildingType_ == other.buildingType_;
-      }
-      result = result && (hasBuilding() == other.hasBuilding());
-      if (hasBuilding()) {
-        result = result && getBuilding()
-            .equals(other.getBuilding());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasP()) {
-        hash = (37 * hash) + P_FIELD_NUMBER;
-        hash = (53 * hash) + getP().hashCode();
-      }
-      if (hasBuildingType()) {
-        hash = (37 * hash) + BUILDINGTYPE_FIELD_NUMBER;
-        hash = (53 * hash) + buildingType_;
-      }
-      if (hasBuilding()) {
-        hash = (37 * hash) + BUILDING_FIELD_NUMBER;
-        hash = (53 * hash) + getBuilding().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.BoardProtos.NodeProto parseFrom(
@@ -2414,57 +2214,46 @@ public final class BoardProtos {
     }
     public static protocol.BoardProtos.NodeProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.BoardProtos.NodeProto parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.BoardProtos.NodeProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.BoardProtos.NodeProto parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.BoardProtos.NodeProto parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.BoardProtos.NodeProto parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.BoardProtos.NodeProto prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -2472,7 +2261,7 @@ public final class BoardProtos {
      * Protobuf type {@code NodeProto}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:NodeProto)
         protocol.BoardProtos.NodeProtoOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -2480,7 +2269,7 @@ public final class BoardProtos {
         return protocol.BoardProtos.internal_static_NodeProto_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.BoardProtos.internal_static_NodeProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -2493,34 +2282,41 @@ public final class BoardProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getPFieldBuilder();
           getBuildingFieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         if (pBuilder_ == null) {
-          p_ = null;
+          p_ = protocol.BuildProtos.PointProto.getDefaultInstance();
         } else {
           pBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
-        buildingType_ = 1;
+        buildingType_ = protocol.EnumProtos.BuildingTypeProto.SETTLEMENT;
         bitField0_ = (bitField0_ & ~0x00000002);
         if (buildingBuilder_ == null) {
-          building_ = null;
+          building_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
         } else {
           buildingBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -2569,32 +2365,6 @@ public final class BoardProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.BoardProtos.NodeProto) {
           return mergeFrom((protocol.BoardProtos.NodeProto)other);
@@ -2615,20 +2385,22 @@ public final class BoardProtos {
         if (other.hasBuilding()) {
           mergeBuilding(other.getBuilding());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasP()) {
+          
           return false;
         }
         if (!getP().isInitialized()) {
+          
           return false;
         }
         if (hasBuilding()) {
           if (!getBuilding().isInitialized()) {
+            
             return false;
           }
         }
@@ -2644,7 +2416,7 @@ public final class BoardProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.BoardProtos.NodeProto) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -2654,8 +2426,8 @@ public final class BoardProtos {
       }
       private int bitField0_;
 
-      private protocol.BuildProtos.PointProto p_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.BuildProtos.PointProto p_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> pBuilder_;
       /**
        * <code>required .PointProto p = 1;</code>
@@ -2668,7 +2440,7 @@ public final class BoardProtos {
        */
       public protocol.BuildProtos.PointProto getP() {
         if (pBuilder_ == null) {
-          return p_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p_;
+          return p_;
         } else {
           return pBuilder_.getMessage();
         }
@@ -2709,7 +2481,6 @@ public final class BoardProtos {
       public Builder mergeP(protocol.BuildProtos.PointProto value) {
         if (pBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              p_ != null &&
               p_ != protocol.BuildProtos.PointProto.getDefaultInstance()) {
             p_ =
               protocol.BuildProtos.PointProto.newBuilder(p_).mergeFrom(value).buildPartial();
@@ -2728,7 +2499,7 @@ public final class BoardProtos {
        */
       public Builder clearP() {
         if (pBuilder_ == null) {
-          p_ = null;
+          p_ = protocol.BuildProtos.PointProto.getDefaultInstance();
           onChanged();
         } else {
           pBuilder_.clear();
@@ -2751,18 +2522,17 @@ public final class BoardProtos {
         if (pBuilder_ != null) {
           return pBuilder_.getMessageOrBuilder();
         } else {
-          return p_ == null ?
-              protocol.BuildProtos.PointProto.getDefaultInstance() : p_;
+          return p_;
         }
       }
       /**
        * <code>required .PointProto p = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> 
           getPFieldBuilder() {
         if (pBuilder_ == null) {
-          pBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          pBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder>(
                   getP(),
                   getParentForChildren(),
@@ -2772,7 +2542,7 @@ public final class BoardProtos {
         return pBuilder_;
       }
 
-      private int buildingType_ = 1;
+      private protocol.EnumProtos.BuildingTypeProto buildingType_ = protocol.EnumProtos.BuildingTypeProto.SETTLEMENT;
       /**
        * <code>optional .BuildingTypeProto buildingType = 2;</code>
        */
@@ -2783,8 +2553,7 @@ public final class BoardProtos {
        * <code>optional .BuildingTypeProto buildingType = 2;</code>
        */
       public protocol.EnumProtos.BuildingTypeProto getBuildingType() {
-        protocol.EnumProtos.BuildingTypeProto result = protocol.EnumProtos.BuildingTypeProto.valueOf(buildingType_);
-        return result == null ? protocol.EnumProtos.BuildingTypeProto.SETTLEMENT : result;
+        return buildingType_;
       }
       /**
        * <code>optional .BuildingTypeProto buildingType = 2;</code>
@@ -2794,7 +2563,7 @@ public final class BoardProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000002;
-        buildingType_ = value.getNumber();
+        buildingType_ = value;
         onChanged();
         return this;
       }
@@ -2803,13 +2572,13 @@ public final class BoardProtos {
        */
       public Builder clearBuildingType() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        buildingType_ = 1;
+        buildingType_ = protocol.EnumProtos.BuildingTypeProto.SETTLEMENT;
         onChanged();
         return this;
       }
 
-      private protocol.BuildProtos.BuildingProto building_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.BuildProtos.BuildingProto building_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder> buildingBuilder_;
       /**
        * <code>optional .BuildingProto building = 3;</code>
@@ -2822,7 +2591,7 @@ public final class BoardProtos {
        */
       public protocol.BuildProtos.BuildingProto getBuilding() {
         if (buildingBuilder_ == null) {
-          return building_ == null ? protocol.BuildProtos.BuildingProto.getDefaultInstance() : building_;
+          return building_;
         } else {
           return buildingBuilder_.getMessage();
         }
@@ -2863,7 +2632,6 @@ public final class BoardProtos {
       public Builder mergeBuilding(protocol.BuildProtos.BuildingProto value) {
         if (buildingBuilder_ == null) {
           if (((bitField0_ & 0x00000004) == 0x00000004) &&
-              building_ != null &&
               building_ != protocol.BuildProtos.BuildingProto.getDefaultInstance()) {
             building_ =
               protocol.BuildProtos.BuildingProto.newBuilder(building_).mergeFrom(value).buildPartial();
@@ -2882,7 +2650,7 @@ public final class BoardProtos {
        */
       public Builder clearBuilding() {
         if (buildingBuilder_ == null) {
-          building_ = null;
+          building_ = protocol.BuildProtos.BuildingProto.getDefaultInstance();
           onChanged();
         } else {
           buildingBuilder_.clear();
@@ -2905,18 +2673,17 @@ public final class BoardProtos {
         if (buildingBuilder_ != null) {
           return buildingBuilder_.getMessageOrBuilder();
         } else {
-          return building_ == null ?
-              protocol.BuildProtos.BuildingProto.getDefaultInstance() : building_;
+          return building_;
         }
       }
       /**
        * <code>optional .BuildingProto building = 3;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder> 
           getBuildingFieldBuilder() {
         if (buildingBuilder_ == null) {
-          buildingBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          buildingBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.BuildingProto, protocol.BuildProtos.BuildingProto.Builder, protocol.BuildProtos.BuildingProtoOrBuilder>(
                   getBuilding(),
                   getParentForChildren(),
@@ -2925,53 +2692,16 @@ public final class BoardProtos {
         }
         return buildingBuilder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:NodeProto)
     }
 
-    // @@protoc_insertion_point(class_scope:NodeProto)
-    private static final protocol.BoardProtos.NodeProto DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.BoardProtos.NodeProto();
+      defaultInstance = new NodeProto(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.BoardProtos.NodeProto getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<NodeProto>
-        PARSER = new com.google.protobuf.AbstractParser<NodeProto>() {
-      public NodeProto parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new NodeProto(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<NodeProto> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<NodeProto> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.BoardProtos.NodeProto getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:NodeProto)
   }
 
   public interface PortProtoOrBuilder extends
@@ -3043,31 +2773,37 @@ public final class BoardProtos {
   /**
    * Protobuf type {@code PortProto}
    */
-  public  static final class PortProto extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class PortProto extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:PortProto)
       PortProtoOrBuilder {
     // Use PortProto.newBuilder() to construct.
-    private PortProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private PortProto(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private PortProto() {
-      exchangeResource_ = 1;
-      returnResource_ = 1;
-      exchangeAmount_ = 0;
-      returnAmount_ = 0;
+    private PortProto(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final PortProto defaultInstance;
+    public static PortProto getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public PortProto getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private PortProto(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -3119,7 +2855,7 @@ public final class BoardProtos {
                 unknownFields.mergeVarintField(3, rawValue);
               } else {
                 bitField0_ |= 0x00000004;
-                exchangeResource_ = rawValue;
+                exchangeResource_ = value;
               }
               break;
             }
@@ -3130,7 +2866,7 @@ public final class BoardProtos {
                 unknownFields.mergeVarintField(4, rawValue);
               } else {
                 bitField0_ |= 0x00000008;
-                returnResource_ = rawValue;
+                returnResource_ = value;
               }
               break;
             }
@@ -3150,7 +2886,7 @@ public final class BoardProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -3161,11 +2897,26 @@ public final class BoardProtos {
       return protocol.BoardProtos.internal_static_PortProto_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.BoardProtos.internal_static_PortProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.BoardProtos.PortProto.class, protocol.BoardProtos.PortProto.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<PortProto> PARSER =
+        new com.google.protobuf.AbstractParser<PortProto>() {
+      public PortProto parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PortProto(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PortProto> getParserForType() {
+      return PARSER;
     }
 
     private int bitField0_;
@@ -3181,13 +2932,13 @@ public final class BoardProtos {
      * <code>required .PointProto p1 = 1;</code>
      */
     public protocol.BuildProtos.PointProto getP1() {
-      return p1_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p1_;
+      return p1_;
     }
     /**
      * <code>required .PointProto p1 = 1;</code>
      */
     public protocol.BuildProtos.PointProtoOrBuilder getP1OrBuilder() {
-      return p1_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p1_;
+      return p1_;
     }
 
     public static final int P2_FIELD_NUMBER = 2;
@@ -3202,17 +2953,17 @@ public final class BoardProtos {
      * <code>required .PointProto p2 = 2;</code>
      */
     public protocol.BuildProtos.PointProto getP2() {
-      return p2_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p2_;
+      return p2_;
     }
     /**
      * <code>required .PointProto p2 = 2;</code>
      */
     public protocol.BuildProtos.PointProtoOrBuilder getP2OrBuilder() {
-      return p2_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p2_;
+      return p2_;
     }
 
     public static final int EXCHANGERESOURCE_FIELD_NUMBER = 3;
-    private int exchangeResource_;
+    private protocol.EnumProtos.ResourceTypeProto exchangeResource_;
     /**
      * <code>required .ResourceTypeProto exchangeResource = 3;</code>
      */
@@ -3223,12 +2974,11 @@ public final class BoardProtos {
      * <code>required .ResourceTypeProto exchangeResource = 3;</code>
      */
     public protocol.EnumProtos.ResourceTypeProto getExchangeResource() {
-      protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(exchangeResource_);
-      return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+      return exchangeResource_;
     }
 
     public static final int RETURNRESOURCE_FIELD_NUMBER = 4;
-    private int returnResource_;
+    private protocol.EnumProtos.ResourceTypeProto returnResource_;
     /**
      * <code>required .ResourceTypeProto returnResource = 4;</code>
      */
@@ -3239,8 +2989,7 @@ public final class BoardProtos {
      * <code>required .ResourceTypeProto returnResource = 4;</code>
      */
     public protocol.EnumProtos.ResourceTypeProto getReturnResource() {
-      protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(returnResource_);
-      return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+      return returnResource_;
     }
 
     public static final int EXCHANGEAMOUNT_FIELD_NUMBER = 5;
@@ -3273,6 +3022,14 @@ public final class BoardProtos {
       return returnAmount_;
     }
 
+    private void initFields() {
+      p1_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+      p2_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+      exchangeResource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+      returnResource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
+      exchangeAmount_ = 0;
+      returnAmount_ = 0;
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -3317,17 +3074,18 @@ public final class BoardProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, getP1());
+        output.writeMessage(1, p1_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeMessage(2, getP2());
+        output.writeMessage(2, p2_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeEnum(3, exchangeResource_);
+        output.writeEnum(3, exchangeResource_.getNumber());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeEnum(4, returnResource_);
+        output.writeEnum(4, returnResource_.getNumber());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeInt32(5, exchangeAmount_);
@@ -3335,29 +3093,30 @@ public final class BoardProtos {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeInt32(6, returnAmount_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, getP1());
+          .computeMessageSize(1, p1_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getP2());
+          .computeMessageSize(2, p2_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(3, exchangeResource_);
+          .computeEnumSize(3, exchangeResource_.getNumber());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(4, returnResource_);
+          .computeEnumSize(4, returnResource_.getNumber());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
@@ -3367,89 +3126,16 @@ public final class BoardProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(6, returnAmount_);
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.BoardProtos.PortProto)) {
-        return super.equals(obj);
-      }
-      protocol.BoardProtos.PortProto other = (protocol.BoardProtos.PortProto) obj;
-
-      boolean result = true;
-      result = result && (hasP1() == other.hasP1());
-      if (hasP1()) {
-        result = result && getP1()
-            .equals(other.getP1());
-      }
-      result = result && (hasP2() == other.hasP2());
-      if (hasP2()) {
-        result = result && getP2()
-            .equals(other.getP2());
-      }
-      result = result && (hasExchangeResource() == other.hasExchangeResource());
-      if (hasExchangeResource()) {
-        result = result && exchangeResource_ == other.exchangeResource_;
-      }
-      result = result && (hasReturnResource() == other.hasReturnResource());
-      if (hasReturnResource()) {
-        result = result && returnResource_ == other.returnResource_;
-      }
-      result = result && (hasExchangeAmount() == other.hasExchangeAmount());
-      if (hasExchangeAmount()) {
-        result = result && (getExchangeAmount()
-            == other.getExchangeAmount());
-      }
-      result = result && (hasReturnAmount() == other.hasReturnAmount());
-      if (hasReturnAmount()) {
-        result = result && (getReturnAmount()
-            == other.getReturnAmount());
-      }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasP1()) {
-        hash = (37 * hash) + P1_FIELD_NUMBER;
-        hash = (53 * hash) + getP1().hashCode();
-      }
-      if (hasP2()) {
-        hash = (37 * hash) + P2_FIELD_NUMBER;
-        hash = (53 * hash) + getP2().hashCode();
-      }
-      if (hasExchangeResource()) {
-        hash = (37 * hash) + EXCHANGERESOURCE_FIELD_NUMBER;
-        hash = (53 * hash) + exchangeResource_;
-      }
-      if (hasReturnResource()) {
-        hash = (37 * hash) + RETURNRESOURCE_FIELD_NUMBER;
-        hash = (53 * hash) + returnResource_;
-      }
-      if (hasExchangeAmount()) {
-        hash = (37 * hash) + EXCHANGEAMOUNT_FIELD_NUMBER;
-        hash = (53 * hash) + getExchangeAmount();
-      }
-      if (hasReturnAmount()) {
-        hash = (37 * hash) + RETURNAMOUNT_FIELD_NUMBER;
-        hash = (53 * hash) + getReturnAmount();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.BoardProtos.PortProto parseFrom(
@@ -3475,57 +3161,46 @@ public final class BoardProtos {
     }
     public static protocol.BoardProtos.PortProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.BoardProtos.PortProto parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.BoardProtos.PortProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.BoardProtos.PortProto parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.BoardProtos.PortProto parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.BoardProtos.PortProto parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.BoardProtos.PortProto prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -3533,7 +3208,7 @@ public final class BoardProtos {
      * Protobuf type {@code PortProto}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:PortProto)
         protocol.BoardProtos.PortProtoOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -3541,7 +3216,7 @@ public final class BoardProtos {
         return protocol.BoardProtos.internal_static_PortProto_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.BoardProtos.internal_static_PortProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -3554,40 +3229,47 @@ public final class BoardProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getP1FieldBuilder();
           getP2FieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         if (p1Builder_ == null) {
-          p1_ = null;
+          p1_ = protocol.BuildProtos.PointProto.getDefaultInstance();
         } else {
           p1Builder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         if (p2Builder_ == null) {
-          p2_ = null;
+          p2_ = protocol.BuildProtos.PointProto.getDefaultInstance();
         } else {
           p2Builder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
-        exchangeResource_ = 1;
+        exchangeResource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         bitField0_ = (bitField0_ & ~0x00000004);
-        returnResource_ = 1;
+        returnResource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         bitField0_ = (bitField0_ & ~0x00000008);
         exchangeAmount_ = 0;
         bitField0_ = (bitField0_ & ~0x00000010);
         returnAmount_ = 0;
         bitField0_ = (bitField0_ & ~0x00000020);
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -3648,32 +3330,6 @@ public final class BoardProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.BoardProtos.PortProto) {
           return mergeFrom((protocol.BoardProtos.PortProto)other);
@@ -3703,34 +3359,41 @@ public final class BoardProtos {
         if (other.hasReturnAmount()) {
           setReturnAmount(other.getReturnAmount());
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasP1()) {
+          
           return false;
         }
         if (!hasP2()) {
+          
           return false;
         }
         if (!hasExchangeResource()) {
+          
           return false;
         }
         if (!hasReturnResource()) {
+          
           return false;
         }
         if (!hasExchangeAmount()) {
+          
           return false;
         }
         if (!hasReturnAmount()) {
+          
           return false;
         }
         if (!getP1().isInitialized()) {
+          
           return false;
         }
         if (!getP2().isInitialized()) {
+          
           return false;
         }
         return true;
@@ -3745,7 +3408,7 @@ public final class BoardProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.BoardProtos.PortProto) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -3755,8 +3418,8 @@ public final class BoardProtos {
       }
       private int bitField0_;
 
-      private protocol.BuildProtos.PointProto p1_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.BuildProtos.PointProto p1_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> p1Builder_;
       /**
        * <code>required .PointProto p1 = 1;</code>
@@ -3769,7 +3432,7 @@ public final class BoardProtos {
        */
       public protocol.BuildProtos.PointProto getP1() {
         if (p1Builder_ == null) {
-          return p1_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p1_;
+          return p1_;
         } else {
           return p1Builder_.getMessage();
         }
@@ -3810,7 +3473,6 @@ public final class BoardProtos {
       public Builder mergeP1(protocol.BuildProtos.PointProto value) {
         if (p1Builder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              p1_ != null &&
               p1_ != protocol.BuildProtos.PointProto.getDefaultInstance()) {
             p1_ =
               protocol.BuildProtos.PointProto.newBuilder(p1_).mergeFrom(value).buildPartial();
@@ -3829,7 +3491,7 @@ public final class BoardProtos {
        */
       public Builder clearP1() {
         if (p1Builder_ == null) {
-          p1_ = null;
+          p1_ = protocol.BuildProtos.PointProto.getDefaultInstance();
           onChanged();
         } else {
           p1Builder_.clear();
@@ -3852,18 +3514,17 @@ public final class BoardProtos {
         if (p1Builder_ != null) {
           return p1Builder_.getMessageOrBuilder();
         } else {
-          return p1_ == null ?
-              protocol.BuildProtos.PointProto.getDefaultInstance() : p1_;
+          return p1_;
         }
       }
       /**
        * <code>required .PointProto p1 = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> 
           getP1FieldBuilder() {
         if (p1Builder_ == null) {
-          p1Builder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          p1Builder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder>(
                   getP1(),
                   getParentForChildren(),
@@ -3873,8 +3534,8 @@ public final class BoardProtos {
         return p1Builder_;
       }
 
-      private protocol.BuildProtos.PointProto p2_ = null;
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private protocol.BuildProtos.PointProto p2_ = protocol.BuildProtos.PointProto.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> p2Builder_;
       /**
        * <code>required .PointProto p2 = 2;</code>
@@ -3887,7 +3548,7 @@ public final class BoardProtos {
        */
       public protocol.BuildProtos.PointProto getP2() {
         if (p2Builder_ == null) {
-          return p2_ == null ? protocol.BuildProtos.PointProto.getDefaultInstance() : p2_;
+          return p2_;
         } else {
           return p2Builder_.getMessage();
         }
@@ -3928,7 +3589,6 @@ public final class BoardProtos {
       public Builder mergeP2(protocol.BuildProtos.PointProto value) {
         if (p2Builder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              p2_ != null &&
               p2_ != protocol.BuildProtos.PointProto.getDefaultInstance()) {
             p2_ =
               protocol.BuildProtos.PointProto.newBuilder(p2_).mergeFrom(value).buildPartial();
@@ -3947,7 +3607,7 @@ public final class BoardProtos {
        */
       public Builder clearP2() {
         if (p2Builder_ == null) {
-          p2_ = null;
+          p2_ = protocol.BuildProtos.PointProto.getDefaultInstance();
           onChanged();
         } else {
           p2Builder_.clear();
@@ -3970,18 +3630,17 @@ public final class BoardProtos {
         if (p2Builder_ != null) {
           return p2Builder_.getMessageOrBuilder();
         } else {
-          return p2_ == null ?
-              protocol.BuildProtos.PointProto.getDefaultInstance() : p2_;
+          return p2_;
         }
       }
       /**
        * <code>required .PointProto p2 = 2;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilder<
           protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder> 
           getP2FieldBuilder() {
         if (p2Builder_ == null) {
-          p2Builder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          p2Builder_ = new com.google.protobuf.SingleFieldBuilder<
               protocol.BuildProtos.PointProto, protocol.BuildProtos.PointProto.Builder, protocol.BuildProtos.PointProtoOrBuilder>(
                   getP2(),
                   getParentForChildren(),
@@ -3991,7 +3650,7 @@ public final class BoardProtos {
         return p2Builder_;
       }
 
-      private int exchangeResource_ = 1;
+      private protocol.EnumProtos.ResourceTypeProto exchangeResource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
       /**
        * <code>required .ResourceTypeProto exchangeResource = 3;</code>
        */
@@ -4002,8 +3661,7 @@ public final class BoardProtos {
        * <code>required .ResourceTypeProto exchangeResource = 3;</code>
        */
       public protocol.EnumProtos.ResourceTypeProto getExchangeResource() {
-        protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(exchangeResource_);
-        return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+        return exchangeResource_;
       }
       /**
        * <code>required .ResourceTypeProto exchangeResource = 3;</code>
@@ -4013,7 +3671,7 @@ public final class BoardProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000004;
-        exchangeResource_ = value.getNumber();
+        exchangeResource_ = value;
         onChanged();
         return this;
       }
@@ -4022,12 +3680,12 @@ public final class BoardProtos {
        */
       public Builder clearExchangeResource() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        exchangeResource_ = 1;
+        exchangeResource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         onChanged();
         return this;
       }
 
-      private int returnResource_ = 1;
+      private protocol.EnumProtos.ResourceTypeProto returnResource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
       /**
        * <code>required .ResourceTypeProto returnResource = 4;</code>
        */
@@ -4038,8 +3696,7 @@ public final class BoardProtos {
        * <code>required .ResourceTypeProto returnResource = 4;</code>
        */
       public protocol.EnumProtos.ResourceTypeProto getReturnResource() {
-        protocol.EnumProtos.ResourceTypeProto result = protocol.EnumProtos.ResourceTypeProto.valueOf(returnResource_);
-        return result == null ? protocol.EnumProtos.ResourceTypeProto.BRICK : result;
+        return returnResource_;
       }
       /**
        * <code>required .ResourceTypeProto returnResource = 4;</code>
@@ -4049,7 +3706,7 @@ public final class BoardProtos {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000008;
-        returnResource_ = value.getNumber();
+        returnResource_ = value;
         onChanged();
         return this;
       }
@@ -4058,7 +3715,7 @@ public final class BoardProtos {
        */
       public Builder clearReturnResource() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        returnResource_ = 1;
+        returnResource_ = protocol.EnumProtos.ResourceTypeProto.BRICK;
         onChanged();
         return this;
       }
@@ -4126,53 +3783,16 @@ public final class BoardProtos {
         onChanged();
         return this;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:PortProto)
     }
 
-    // @@protoc_insertion_point(class_scope:PortProto)
-    private static final protocol.BoardProtos.PortProto DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.BoardProtos.PortProto();
+      defaultInstance = new PortProto(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.BoardProtos.PortProto getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<PortProto>
-        PARSER = new com.google.protobuf.AbstractParser<PortProto>() {
-      public PortProto parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new PortProto(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<PortProto> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PortProto> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.BoardProtos.PortProto getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:PortProto)
   }
 
   public interface BoardProtoOrBuilder extends
@@ -4278,31 +3898,37 @@ public final class BoardProtos {
   /**
    * Protobuf type {@code BoardProto}
    */
-  public  static final class BoardProto extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class BoardProto extends
+      com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:BoardProto)
       BoardProtoOrBuilder {
     // Use BoardProto.newBuilder() to construct.
-    private BoardProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private BoardProto(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private BoardProto() {
-      hexes_ = java.util.Collections.emptyList();
-      ports_ = java.util.Collections.emptyList();
-      edges_ = java.util.Collections.emptyList();
-      nodes_ = java.util.Collections.emptyList();
+    private BoardProto(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final BoardProto defaultInstance;
+    public static BoardProto getDefaultInstance() {
+      return defaultInstance;
     }
 
+    public BoardProto getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+        getUnknownFields() {
       return this.unknownFields;
     }
     private BoardProto(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
+      initFields();
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -4326,8 +3952,7 @@ public final class BoardProtos {
                 hexes_ = new java.util.ArrayList<protocol.BoardProtos.HexProto>();
                 mutable_bitField0_ |= 0x00000001;
               }
-              hexes_.add(
-                  input.readMessage(protocol.BoardProtos.HexProto.PARSER, extensionRegistry));
+              hexes_.add(input.readMessage(protocol.BoardProtos.HexProto.PARSER, extensionRegistry));
               break;
             }
             case 18: {
@@ -4335,8 +3960,7 @@ public final class BoardProtos {
                 ports_ = new java.util.ArrayList<protocol.BoardProtos.PortProto>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              ports_.add(
-                  input.readMessage(protocol.BoardProtos.PortProto.PARSER, extensionRegistry));
+              ports_.add(input.readMessage(protocol.BoardProtos.PortProto.PARSER, extensionRegistry));
               break;
             }
             case 26: {
@@ -4344,8 +3968,7 @@ public final class BoardProtos {
                 edges_ = new java.util.ArrayList<protocol.BoardProtos.EdgeProto>();
                 mutable_bitField0_ |= 0x00000004;
               }
-              edges_.add(
-                  input.readMessage(protocol.BoardProtos.EdgeProto.PARSER, extensionRegistry));
+              edges_.add(input.readMessage(protocol.BoardProtos.EdgeProto.PARSER, extensionRegistry));
               break;
             }
             case 34: {
@@ -4353,8 +3976,7 @@ public final class BoardProtos {
                 nodes_ = new java.util.ArrayList<protocol.BoardProtos.NodeProto>();
                 mutable_bitField0_ |= 0x00000008;
               }
-              nodes_.add(
-                  input.readMessage(protocol.BoardProtos.NodeProto.PARSER, extensionRegistry));
+              nodes_.add(input.readMessage(protocol.BoardProtos.NodeProto.PARSER, extensionRegistry));
               break;
             }
           }
@@ -4363,7 +3985,7 @@ public final class BoardProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+            e.getMessage()).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
           hexes_ = java.util.Collections.unmodifiableList(hexes_);
@@ -4386,11 +4008,26 @@ public final class BoardProtos {
       return protocol.BoardProtos.internal_static_BoardProto_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protocol.BoardProtos.internal_static_BoardProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               protocol.BoardProtos.BoardProto.class, protocol.BoardProtos.BoardProto.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<BoardProto> PARSER =
+        new com.google.protobuf.AbstractParser<BoardProto>() {
+      public BoardProto parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new BoardProto(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BoardProto> getParserForType() {
+      return PARSER;
     }
 
     public static final int HEXES_FIELD_NUMBER = 1;
@@ -4533,6 +4170,12 @@ public final class BoardProtos {
       return nodes_.get(index);
     }
 
+    private void initFields() {
+      hexes_ = java.util.Collections.emptyList();
+      ports_ = java.util.Collections.emptyList();
+      edges_ = java.util.Collections.emptyList();
+      nodes_ = java.util.Collections.emptyList();
+    }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -4569,6 +4212,7 @@ public final class BoardProtos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       for (int i = 0; i < hexes_.size(); i++) {
         output.writeMessage(1, hexes_.get(i));
       }
@@ -4581,11 +4225,12 @@ public final class BoardProtos {
       for (int i = 0; i < nodes_.size(); i++) {
         output.writeMessage(4, nodes_.get(i));
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
-      int size = memoizedSize;
+      int size = memoizedSerializedSize;
       if (size != -1) return size;
 
       size = 0;
@@ -4605,61 +4250,16 @@ public final class BoardProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, nodes_.get(i));
       }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
       return size;
     }
 
     private static final long serialVersionUID = 0L;
     @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof protocol.BoardProtos.BoardProto)) {
-        return super.equals(obj);
-      }
-      protocol.BoardProtos.BoardProto other = (protocol.BoardProtos.BoardProto) obj;
-
-      boolean result = true;
-      result = result && getHexesList()
-          .equals(other.getHexesList());
-      result = result && getPortsList()
-          .equals(other.getPortsList());
-      result = result && getEdgesList()
-          .equals(other.getEdgesList());
-      result = result && getNodesList()
-          .equals(other.getNodesList());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (getHexesCount() > 0) {
-        hash = (37 * hash) + HEXES_FIELD_NUMBER;
-        hash = (53 * hash) + getHexesList().hashCode();
-      }
-      if (getPortsCount() > 0) {
-        hash = (37 * hash) + PORTS_FIELD_NUMBER;
-        hash = (53 * hash) + getPortsList().hashCode();
-      }
-      if (getEdgesCount() > 0) {
-        hash = (37 * hash) + EDGES_FIELD_NUMBER;
-        hash = (53 * hash) + getEdgesList().hashCode();
-      }
-      if (getNodesCount() > 0) {
-        hash = (37 * hash) + NODES_FIELD_NUMBER;
-        hash = (53 * hash) + getNodesList().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static protocol.BoardProtos.BoardProto parseFrom(
@@ -4685,57 +4285,46 @@ public final class BoardProtos {
     }
     public static protocol.BoardProtos.BoardProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.BoardProtos.BoardProto parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static protocol.BoardProtos.BoardProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static protocol.BoardProtos.BoardProto parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static protocol.BoardProtos.BoardProto parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+      return PARSER.parseFrom(input);
     }
     public static protocol.BoardProtos.BoardProto parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
+    public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
     public static Builder newBuilder(protocol.BoardProtos.BoardProto prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
+    public Builder toBuilder() { return newBuilder(this); }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -4743,7 +4332,7 @@ public final class BoardProtos {
      * Protobuf type {@code BoardProto}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:BoardProto)
         protocol.BoardProtos.BoardProtoOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -4751,7 +4340,7 @@ public final class BoardProtos {
         return protocol.BoardProtos.internal_static_BoardProto_descriptor;
       }
 
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protocol.BoardProtos.internal_static_BoardProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
@@ -4764,19 +4353,22 @@ public final class BoardProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getHexesFieldBuilder();
           getPortsFieldBuilder();
           getEdgesFieldBuilder();
           getNodesFieldBuilder();
         }
       }
+      private static Builder create() {
+        return new Builder();
+      }
+
       public Builder clear() {
         super.clear();
         if (hexesBuilder_ == null) {
@@ -4804,6 +4396,10 @@ public final class BoardProtos {
           nodesBuilder_.clear();
         }
         return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
       }
 
       public com.google.protobuf.Descriptors.Descriptor
@@ -4866,32 +4462,6 @@ public final class BoardProtos {
         return result;
       }
 
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protocol.BoardProtos.BoardProto) {
           return mergeFrom((protocol.BoardProtos.BoardProto)other);
@@ -4922,7 +4492,7 @@ public final class BoardProtos {
               hexes_ = other.hexes_;
               bitField0_ = (bitField0_ & ~0x00000001);
               hexesBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getHexesFieldBuilder() : null;
             } else {
               hexesBuilder_.addAllMessages(other.hexes_);
@@ -4948,7 +4518,7 @@ public final class BoardProtos {
               ports_ = other.ports_;
               bitField0_ = (bitField0_ & ~0x00000002);
               portsBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getPortsFieldBuilder() : null;
             } else {
               portsBuilder_.addAllMessages(other.ports_);
@@ -4974,7 +4544,7 @@ public final class BoardProtos {
               edges_ = other.edges_;
               bitField0_ = (bitField0_ & ~0x00000004);
               edgesBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getEdgesFieldBuilder() : null;
             } else {
               edgesBuilder_.addAllMessages(other.edges_);
@@ -5000,36 +4570,39 @@ public final class BoardProtos {
               nodes_ = other.nodes_;
               bitField0_ = (bitField0_ & ~0x00000008);
               nodesBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getNodesFieldBuilder() : null;
             } else {
               nodesBuilder_.addAllMessages(other.nodes_);
             }
           }
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
+        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         for (int i = 0; i < getHexesCount(); i++) {
           if (!getHexes(i).isInitialized()) {
+            
             return false;
           }
         }
         for (int i = 0; i < getPortsCount(); i++) {
           if (!getPorts(i).isInitialized()) {
+            
             return false;
           }
         }
         for (int i = 0; i < getEdgesCount(); i++) {
           if (!getEdges(i).isInitialized()) {
+            
             return false;
           }
         }
         for (int i = 0; i < getNodesCount(); i++) {
           if (!getNodes(i).isInitialized()) {
+            
             return false;
           }
         }
@@ -5045,7 +4618,7 @@ public final class BoardProtos {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
           parsedMessage = (protocol.BoardProtos.BoardProto) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
+          throw e;
         } finally {
           if (parsedMessage != null) {
             mergeFrom(parsedMessage);
@@ -5064,7 +4637,7 @@ public final class BoardProtos {
          }
       }
 
-      private com.google.protobuf.RepeatedFieldBuilderV3<
+      private com.google.protobuf.RepeatedFieldBuilder<
           protocol.BoardProtos.HexProto, protocol.BoardProtos.HexProto.Builder, protocol.BoardProtos.HexProtoOrBuilder> hexesBuilder_;
 
       /**
@@ -5280,11 +4853,11 @@ public final class BoardProtos {
            getHexesBuilderList() {
         return getHexesFieldBuilder().getBuilderList();
       }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
+      private com.google.protobuf.RepeatedFieldBuilder<
           protocol.BoardProtos.HexProto, protocol.BoardProtos.HexProto.Builder, protocol.BoardProtos.HexProtoOrBuilder> 
           getHexesFieldBuilder() {
         if (hexesBuilder_ == null) {
-          hexesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+          hexesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               protocol.BoardProtos.HexProto, protocol.BoardProtos.HexProto.Builder, protocol.BoardProtos.HexProtoOrBuilder>(
                   hexes_,
                   ((bitField0_ & 0x00000001) == 0x00000001),
@@ -5304,7 +4877,7 @@ public final class BoardProtos {
          }
       }
 
-      private com.google.protobuf.RepeatedFieldBuilderV3<
+      private com.google.protobuf.RepeatedFieldBuilder<
           protocol.BoardProtos.PortProto, protocol.BoardProtos.PortProto.Builder, protocol.BoardProtos.PortProtoOrBuilder> portsBuilder_;
 
       /**
@@ -5520,11 +5093,11 @@ public final class BoardProtos {
            getPortsBuilderList() {
         return getPortsFieldBuilder().getBuilderList();
       }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
+      private com.google.protobuf.RepeatedFieldBuilder<
           protocol.BoardProtos.PortProto, protocol.BoardProtos.PortProto.Builder, protocol.BoardProtos.PortProtoOrBuilder> 
           getPortsFieldBuilder() {
         if (portsBuilder_ == null) {
-          portsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+          portsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               protocol.BoardProtos.PortProto, protocol.BoardProtos.PortProto.Builder, protocol.BoardProtos.PortProtoOrBuilder>(
                   ports_,
                   ((bitField0_ & 0x00000002) == 0x00000002),
@@ -5544,7 +5117,7 @@ public final class BoardProtos {
          }
       }
 
-      private com.google.protobuf.RepeatedFieldBuilderV3<
+      private com.google.protobuf.RepeatedFieldBuilder<
           protocol.BoardProtos.EdgeProto, protocol.BoardProtos.EdgeProto.Builder, protocol.BoardProtos.EdgeProtoOrBuilder> edgesBuilder_;
 
       /**
@@ -5760,11 +5333,11 @@ public final class BoardProtos {
            getEdgesBuilderList() {
         return getEdgesFieldBuilder().getBuilderList();
       }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
+      private com.google.protobuf.RepeatedFieldBuilder<
           protocol.BoardProtos.EdgeProto, protocol.BoardProtos.EdgeProto.Builder, protocol.BoardProtos.EdgeProtoOrBuilder> 
           getEdgesFieldBuilder() {
         if (edgesBuilder_ == null) {
-          edgesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+          edgesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               protocol.BoardProtos.EdgeProto, protocol.BoardProtos.EdgeProto.Builder, protocol.BoardProtos.EdgeProtoOrBuilder>(
                   edges_,
                   ((bitField0_ & 0x00000004) == 0x00000004),
@@ -5784,7 +5357,7 @@ public final class BoardProtos {
          }
       }
 
-      private com.google.protobuf.RepeatedFieldBuilderV3<
+      private com.google.protobuf.RepeatedFieldBuilder<
           protocol.BoardProtos.NodeProto, protocol.BoardProtos.NodeProto.Builder, protocol.BoardProtos.NodeProtoOrBuilder> nodesBuilder_;
 
       /**
@@ -6000,11 +5573,11 @@ public final class BoardProtos {
            getNodesBuilderList() {
         return getNodesFieldBuilder().getBuilderList();
       }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
+      private com.google.protobuf.RepeatedFieldBuilder<
           protocol.BoardProtos.NodeProto, protocol.BoardProtos.NodeProto.Builder, protocol.BoardProtos.NodeProtoOrBuilder> 
           getNodesFieldBuilder() {
         if (nodesBuilder_ == null) {
-          nodesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+          nodesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               protocol.BoardProtos.NodeProto, protocol.BoardProtos.NodeProto.Builder, protocol.BoardProtos.NodeProtoOrBuilder>(
                   nodes_,
                   ((bitField0_ & 0x00000008) == 0x00000008),
@@ -6014,86 +5587,49 @@ public final class BoardProtos {
         }
         return nodesBuilder_;
       }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
 
       // @@protoc_insertion_point(builder_scope:BoardProto)
     }
 
-    // @@protoc_insertion_point(class_scope:BoardProto)
-    private static final protocol.BoardProtos.BoardProto DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protocol.BoardProtos.BoardProto();
+      defaultInstance = new BoardProto(true);
+      defaultInstance.initFields();
     }
 
-    public static protocol.BoardProtos.BoardProto getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<BoardProto>
-        PARSER = new com.google.protobuf.AbstractParser<BoardProto>() {
-      public BoardProto parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new BoardProto(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<BoardProto> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<BoardProto> getParserForType() {
-      return PARSER;
-    }
-
-    public protocol.BoardProtos.BoardProto getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
+    // @@protoc_insertion_point(class_scope:BoardProto)
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_EdgeProto_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_EdgeProto_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_HexProto_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_HexProto_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_NodeProto_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_NodeProto_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_PortProto_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_PortProto_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_BoardProto_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_BoardProto_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
   }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
+  private static com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
   static {
     java.lang.String[] descriptorData = {
@@ -6133,31 +5669,31 @@ public final class BoardProtos {
     internal_static_EdgeProto_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_EdgeProto_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_EdgeProto_descriptor,
         new java.lang.String[] { "P1", "P2", });
     internal_static_HexProto_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_HexProto_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_HexProto_descriptor,
         new java.lang.String[] { "P", "Resource", "Nodes", "HasRobber", "ChitNumber", });
     internal_static_NodeProto_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_NodeProto_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_NodeProto_descriptor,
         new java.lang.String[] { "P", "BuildingType", "Building", });
     internal_static_PortProto_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_PortProto_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_PortProto_descriptor,
         new java.lang.String[] { "P1", "P2", "ExchangeResource", "ReturnResource", "ExchangeAmount", "ReturnAmount", });
     internal_static_BoardProto_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_BoardProto_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_BoardProto_descriptor,
         new java.lang.String[] { "Hexes", "Ports", "Edges", "Nodes", });
     protocol.EnumProtos.getDescriptor();

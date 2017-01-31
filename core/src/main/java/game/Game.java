@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class GameState
+public abstract class Game
 {
 	protected HexGrid grid;
 	protected Map<Colour, Player> players;
@@ -29,7 +29,7 @@ public abstract class GameState
 	public static final int MIN_ROAD_LENGTH = 5;
 	public static final int MIN_ARMY_SIZE = 3;
 
-	public GameState()
+	public Game()
 	{
 		grid = new HexGrid();
 		players = new HashMap<Colour, Player>();

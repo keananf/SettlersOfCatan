@@ -5,7 +5,7 @@ import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
 import exceptions.*;
-import game.GameState;
+import game.Game;
 import game.players.NetworkPlayer;
 import game.players.Player;
 import protocol.BoardProtos;
@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class ServerGame extends GameState
+public class ServerGame extends Game
 {
 	private Random dice;
 	private int current; // index of current player

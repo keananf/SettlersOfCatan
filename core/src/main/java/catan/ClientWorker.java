@@ -9,6 +9,8 @@ import enums.Colour;
 import enums.Move;
 import enums.ResourceType;
 import game.InProgressTurn;
+import game.build.Building;
+import game.build.Settlement;
 import game.players.Player;
 import protocol.BoardProtos.NodeProto;
 import protocol.BuildProtos.*;
@@ -77,7 +79,33 @@ public class ClientWorker
 		
 		if(checkTurn())
 		{
+			Building building = node.getSettlement();
 			
+			if(building != null)
+			{
+				if(building instanceof Settlement)
+				{
+					if(building.getPlayerColour() == game.getPlayer().getColour())
+					{
+						Player player = game.getPlayer();
+						
+						Map<ResourceType, Integer> playerResources = player.getResources();
+						
+						int ore = playerResources.get(ResourceType.Ore);
+						int grain = playerResources.get(ResourceType.Grain);
+						
+						if(ore >= 3 && grain >= 2)
+						{
+							inProgressTurn.possibilities[1] = Move.UPGRADE_SETTLEMENT;
+						}
+
+					}
+				}
+			}
+			else
+			{
+				//TODO: Determine legality of building a settlement
+			}
 		}
 	}
 

@@ -9,13 +9,10 @@ import enums.Colour;
 import enums.Move;
 import enums.ResourceType;
 import game.InProgressTurn;
-<<<<<<< HEAD
 import game.players.Player;
 import protocol.BoardProtos.NodeProto;
 import protocol.BuildProtos.*;
-=======
 import protocol.BuildProtos.PointProto;
->>>>>>> a74606ec8e02bf6ef6a787695e81b8605ee2666b
 import protocol.BuildProtos.RoadProto;
 import protocol.RequestProtos.*;
 import protocol.RequestProtos.BuildRoadRequest.Builder;

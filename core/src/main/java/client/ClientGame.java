@@ -5,6 +5,7 @@ import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
 import game.GameState;
+import game.InProgressTurn;
 import game.build.Building;
 import game.build.City;
 import game.build.Road;
@@ -31,11 +32,11 @@ import java.util.Map;
 public class ClientGame extends GameState
 {
     private boolean gameOver;
-
     private int dice;
     private Map<Colour, Integer> boughtDevCards;
     private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;
     private Player thisPlayer;
+    public InProgressTurn inProgressTurn;
 
     public ClientGame()
     {

@@ -9,10 +9,16 @@ import enums.Colour;
 import enums.Move;
 import enums.ResourceType;
 import game.InProgressTurn;
+<<<<<<< HEAD
 import game.players.Player;
 import protocol.BoardProtos.NodeProto;
 import protocol.BuildProtos.*;
+=======
+import protocol.BuildProtos.PointProto;
+>>>>>>> a74606ec8e02bf6ef6a787695e81b8605ee2666b
 import protocol.BuildProtos.RoadProto;
+import protocol.RequestProtos.*;
+import protocol.RequestProtos.BuildRoadRequest.Builder;
 import protocol.RequestProtos.Request;
 
 public class ClientWorker
@@ -101,7 +107,7 @@ public class ClientWorker
 
 		switch(game.inProgressTurn.chosenMove){
 			case BUILD_ROAD:
-				request.setBuildRoadRequest(setUpRoad(inProgressTurn.chosenEdge, game.colour));
+				request.setBuildRoadRequest(setUpRoad(inProgressTurn.chosenEdge, game.getPlayer().getColour()));
 				break;
             case BUILD_SETTLEMENT:
 				request.setBuildSettlementRequest(setUpSettlement(x1 ,y1, type, col));//type settlement
@@ -121,24 +127,16 @@ public class ClientWorker
 		//TODO: send protocol buffer to server
 	}
 
-	private RoadProto setUpRoad(Edge edge, Colour col)
+	private Builder setUpRoad(Edge edge, Colour col)
     {
-        RoadProto.Builder road = RoadProto.newBuilder();
-		PointProto.Builder node = PointProto.newBuilder();
 
+      RoadProto.Builder road = RoadProto.newBuilder();
+        PointProto.Builder node = PointProto.newBuilder();
+        BuildRoadRequest.Builder roadRequest = BuildRoadRequest.newBuilder();
 
-        //Node1
-        node.setX(edge.getX().getX());
-        node.setY(edge.getX().getY());
-        road.setP1(node.build());
+        roadRequest.setEdge(edge.toEdgeProto());
+        roadRequest.build();
 
-        //Node2
-		node.setX(edge.getY().getX());
-		node.setY(edge.getY().getY());
-        road.setP2(node.build());
-
-        road.setPlayerId(Colour.toProto(col));
-
-        return road.build();
+        return roadRequest;
     }
 }

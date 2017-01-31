@@ -1,24 +1,28 @@
 package tests;
 
-import static org.junit.Assert.*;
+import board.Edge;
+import board.Hex;
+import board.Node;
+import enums.Colour;
+import enums.DevelopmentCardType;
+import enums.ResourceType;
+import exceptions.*;
+import game.build.Road;
+import game.build.Settlement;
+import game.players.NetworkPlayer;
+import game.players.Player;
+import org.junit.Before;
+import org.junit.Test;
+import protocol.BoardProtos.EdgeProto;
+import protocol.BuildProtos;
+import protocol.RequestProtos;
+import protocol.RequestProtos.*;
+import protocol.ResponseProtos.MoveRobberResponse;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import board.Edge;
-import board.Hex;
-import board.Node;
-import enums.*;
-import exceptions.*;
-import game.build.Road;
-import game.build.Settlement;
-import game.players.*;
-
-import org.junit.*;
-import protocol.BoardProtos.*;
-import protocol.BuildProtos;
-import protocol.RequestProtos.*;
-import protocol.ResponseProtos.*;
+import static org.junit.Assert.*;
 
 public class DevelopmentCardTests extends TestHelper
 {
@@ -69,7 +73,75 @@ public class DevelopmentCardTests extends TestHelper
 
 		assertTrue(p.getDevelopmentCards().get(c) == 0);
 	}
-	
+
+
+	@Test
+	public void largestArmyTest() throws SettlementExistsException, CannotStealException,
+			InvalidCoordinatesException, DoesNotOwnException, CannotAffordException
+	{
+		NetworkPlayer p2 = new NetworkPlayer(Colour.RED);
+		game.addPlayer(p2);
+
+		// Find edges
+		Edge e1 = n.getEdges().get(0);
+		Node n1 = e1.getX().equals(n) ? e1.getY() : e1.getX(); // Opposite end of first edge
+		Edge e2 = n1.getEdges().get(0).equals(e1) ? n1.getEdges().get(1) : n1.getEdges().get(0);
+		Node n2 = e2.getX().equals(n1) ? e2.getY() : e2.getX(); // Opposite end of second edge
+		Edge e3 = n2.getEdges().get(0).equals(e2) ? n2.getEdges().get(1) : n2.getEdges().get(0);
+		Node n3 = e3.getX().equals(n2) ? e3.getY() : e3.getX(); // Opposite end of third edge
+		Edge e4 = n3.getEdges().get(0).equals(e3) ? n3.getEdges().get(1) : n3.getEdges().get(0);
+		Node n4 = e4.getX().equals(n3) ? e4.getY() : e4.getX(); // Opposite end of fourth edge
+		Edge e5 = n4.getEdges().get(0).equals(e4) ? n4.getEdges().get(1) : n4.getEdges().get(0);
+		Node n5 = e5.getX().equals(n4) ? e5.getY() : e5.getX(); // Opposite end of fifth edge
+		Edge e6 = n5.getEdges().get(0).equals(e5) ? n5.getEdges().get(1) : n5.getEdges().get(0);
+		Node n6 = e6.getX().equals(n5) ? e6.getY() : e6.getX(); // Opposite end of sixth edge
+
+		// Make settlement
+		p.grantResources(Settlement.getSettlementCost());
+		makeSettlement(p, n);
+
+		// Need a settlement so that this player can be stolen from
+		p2.grantResources(Settlement.getSettlementCost());
+		makeSettlement(p2, n6);
+
+		// Player 1 plays three knights
+		for(Hex h : n6.getHexes())
+		{
+			RequestProtos.PlayKnightCardRequest.Builder req = RequestProtos.PlayKnightCardRequest.newBuilder();
+			RequestProtos.MoveRobberRequest.Builder internalReq = RequestProtos.MoveRobberRequest.newBuilder();
+			internalReq.setHex(h.toHexProto());
+			internalReq.setColourToTakeFrom(Colour.toProto(p2.getColour()));
+			req.setRequest(internalReq.build());
+
+			// Grant Card
+			p.grantResources(DevelopmentCardType.getCardCost());
+			p.buyDevelopmentCard(DevelopmentCardType.Knight);
+			game.playKnightCard(req.build(), p.getColour());
+		}
+
+		// Assert largest army
+		assertEquals(3, p.getVp());
+		assertEquals(1, p2.getVp());
+
+		// Have player 2 play four knights, so largest army is revoked.
+		while(p2.getArmySize() < 4)
+		{
+			Hex h = n.getHexes().get(0);RequestProtos.PlayKnightCardRequest.Builder req = RequestProtos.PlayKnightCardRequest.newBuilder();
+			RequestProtos.MoveRobberRequest.Builder internalReq = RequestProtos.MoveRobberRequest.newBuilder();
+			internalReq.setHex(h.toHexProto());
+			internalReq.setColourToTakeFrom(Colour.toProto(p.getColour()));
+			req.setRequest(internalReq.build());
+
+			// Grant Card
+			p2.grantResources(DevelopmentCardType.getCardCost());
+			p2.buyDevelopmentCard(DevelopmentCardType.Knight);
+			game.playKnightCard(req.build(), p2.getColour());
+		}
+
+		assertEquals(1, p.getVp());
+		assertEquals(3, p2.getVp());
+	}
+
 	@Test
 	public void playMonopolyTest() throws DoesNotOwnException, CannotAffordException
 	{
@@ -103,7 +175,8 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test
-	public void playKnightNoResourcesTest() throws SettlementExistsException, CannotAffordException, IllegalPlacementException, CannotStealException, DoesNotOwnException
+	public void playKnightNoResourcesTest() throws SettlementExistsException, CannotAffordException,
+			IllegalPlacementException, CannotStealException, DoesNotOwnException, InvalidCoordinatesException
 	{
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
@@ -135,7 +208,8 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test(expected = DoesNotOwnException.class)
-	public void cannotPlayKnightTest() throws CannotAffordException, IllegalPlacementException, DoesNotOwnException, CannotStealException
+	public void cannotPlayKnightTest() throws CannotAffordException, IllegalPlacementException,
+			DoesNotOwnException, CannotStealException, InvalidCoordinatesException
 	{
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
@@ -161,7 +235,8 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test
-	public void cannotStealFromSpecifiedPlayerTest() throws CannotAffordException, IllegalPlacementException, DoesNotOwnException
+	public void cannotStealFromSpecifiedPlayerTest() throws CannotAffordException, IllegalPlacementException,
+			DoesNotOwnException, InvalidCoordinatesException
 	{
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
@@ -202,8 +277,9 @@ public class DevelopmentCardTests extends TestHelper
 	}
 	
 	@Test
-	public void playKnightTakeResourceTest() throws SettlementExistsException, CannotAffordException, IllegalPlacementException, CannotStealException
-	{	
+	public void playKnightTakeResourceTest() throws SettlementExistsException, CannotAffordException,
+			IllegalPlacementException, CannotStealException, InvalidCoordinatesException
+	{
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
 		// Grant
@@ -254,7 +330,8 @@ public class DevelopmentCardTests extends TestHelper
 	}
 	
 	@Test
-	public void playBuildRoadsCardTest() throws SettlementExistsException, CannotBuildRoadException, RoadExistsException, CannotAffordException, DoesNotOwnException
+	public void playBuildRoadsCardTest() throws SettlementExistsException, CannotBuildRoadException,
+			RoadExistsException, CannotAffordException, DoesNotOwnException, InvalidCoordinatesException
 	{
 		// Set up entities
 		Edge e1 = n.getEdges().get(0), e2 = n.getEdges().get(1);
@@ -316,7 +393,8 @@ public class DevelopmentCardTests extends TestHelper
 	 * @throws CannotAffordException
 	 */
 	@Test
-	public void playBuildRoadsCardFailure() throws SettlementExistsException, CannotBuildRoadException, CannotAffordException, DoesNotOwnException
+	public void playBuildRoadsCardFailure() throws SettlementExistsException, CannotBuildRoadException,
+			CannotAffordException, DoesNotOwnException, InvalidCoordinatesException
 	{
 		// Set up variables
 		Edge e1 = n.getEdges().get(0);

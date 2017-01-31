@@ -47,7 +47,6 @@ public class EventProcessor implements Runnable
         }
     }
 
-
     /**
      * Process the next message.
      * @throws IOException
@@ -65,12 +64,17 @@ public class EventProcessor implements Runnable
                 processRequest(msg.getRequest(), Colour.fromProto(msg.getPlayerColour()));
                 break;
 
+            // Extract and process event
             case EVENT:
-                processEvent(msg.getEvent(), Colour.fromProto(msg.getPlayerColour()));
+                processEvent(msg.getEvent());
                 break;
 
-            // Ignore
+            // Process new board, otherwise ignore
             case RESPONSE:
+                if(msg.getResponse().hasCurrentBoardResponse())
+                {
+                    game.setBoard(msg.getResponse().getCurrentBoardResponse().getBoard());
+                }
                 break;
         }
     }
@@ -86,10 +90,9 @@ public class EventProcessor implements Runnable
         switch(req.getTypeCase())
         {
             case TRADEREQUEST:
-
                 break;
 
-            // Error. TODO maybe just request entire state?
+            // Error.
             default:
                 break;
         }
@@ -98,9 +101,8 @@ public class EventProcessor implements Runnable
     /**
      * Processes the event received from the server and updates the game state
      * @param ev the event
-     * @param colour the colour pertaining to the event
      */
-    private void processEvent(Event ev, Colour colour)
+    private void processEvent(Event ev)
     {
         // Switch on type of event
         switch(ev.getTypeCase())
@@ -108,15 +110,29 @@ public class EventProcessor implements Runnable
             case GAMEOVER:
                 game.setGameOver();
                 break;
-
-            // Change turn
             case NEWTURN:
                 game.setTurn(Colour.fromProto(ev.getNewTurn()));
                 break;
-
-            // Add new building to player
             case NEWBUILDING:
                 game.processNewBuilding(ev.getNewBuilding());
+                break;
+            case DICEROLL:
+                game.processDice(ev.getDiceRoll().getDice());
+                break;
+            case NEWROAD:
+                game.processRoad(ev.getNewRoad());
+                break;
+            case ROBBERMOVE:
+                game.moveRobber(ev.getRobberMove());
+                break;
+            case BOUGHTDEVCARD:
+                game.recordDevCard(ev.getBoughtDevCard());
+                break;
+            case PLAYEDDEVCARD:
+                game.processPlayedDevCard(ev.getPlayedDevCard().getType());
+                break;
+
+            //TODO complete
         }
     }
 }

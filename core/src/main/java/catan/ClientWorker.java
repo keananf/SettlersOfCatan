@@ -1,10 +1,15 @@
 package catan;
 
+import java.util.Map;
+
 import board.Edge;
 import board.Node;
 import client.ClientGame;
 import enums.Colour;
+import enums.Move;
+import enums.ResourceType;
 import game.InProgressTurn;
+import game.players.Player;
 import protocol.BoardProtos.NodeProto;
 import protocol.BuildProtos.*;
 import protocol.BuildProtos.RoadProto;
@@ -44,17 +49,50 @@ public class ClientWorker
 
 	private void checkCard()
 	{
-		//TODO: check that the player can buy a development card
+		inProgressTurn.possibilities[0] = Move.CLOSE;
+		
+		if(checkTurn())
+		{
+			Player player = game.getPlayer();
+			
+			Map<ResourceType, Integer> playerResources = player.getResources();
+			
+			int ore = playerResources.get(ResourceType.Ore);
+			int grain = playerResources.get(ResourceType.Grain);
+			int wool = playerResources.get(ResourceType.Wool);
+			
+			if(ore >= 1 && grain >= 1 && wool >= 1)
+			{
+				inProgressTurn.possibilities[1] = Move.BUY_CARD;
+			}
+		}
 	}
 
 	private void checkBuild(Node node)
 	{
-		//TODO: check which build actions the player can take and update game state
+		inProgressTurn.possibilities[0] = Move.CLOSE;
+		
+		if(checkTurn())
+		{
+			
+		}
 	}
 
 	private void checkBuild(Edge edge)
 	{
 		//TODO: exactly the same as above but for edges
+	}
+	
+	private boolean checkTurn()
+	{
+		boolean turn = false;
+		
+		if(game.getCurrentPlayer() == game.getPlayer().getColour())
+		{
+			turn = true;
+		}
+		
+		return turn;
 	}
 
 	private void sendMove()

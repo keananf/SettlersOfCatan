@@ -191,7 +191,7 @@ public class NetworkPlayer extends Player
 	public ResourceType takeResource(Player other)
 	{
 		Random rand = new Random();
-		ResourceType key = ResourceType.Generic;
+		ResourceType key;
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
 		// Check there are resources to take

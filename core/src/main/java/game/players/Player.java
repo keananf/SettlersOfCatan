@@ -33,6 +33,7 @@ public abstract class Player
 	protected int armySize;
 
 	private static final int VP_THRESHOLD = 10;
+	private static final int MIN_SETTLEMENTS = 2;
 
 	public Player(Colour colour)
 	{
@@ -242,7 +243,8 @@ public abstract class Player
 		Point p = new Point(node.getX(), node.getY());
 		Settlement s = new Settlement(node, colour);
 
-		return canAfford(Settlement.getSettlementCost()) && !settlements.containsKey(p) && !s.isNearSettlement();
+		return canAfford(Settlement.getSettlementCost()) && !settlements.containsKey(p)
+				&& !s.isNearSettlement() && (node.isNearRoad(colour) || getSettlements().size() < MIN_SETTLEMENTS);
 	}
 
 	/**

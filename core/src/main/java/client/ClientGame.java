@@ -4,9 +4,8 @@ import board.*;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
-import exceptions.CannotBuildRoadException;
-import exceptions.RoadExistsException;
-import game.GameState;
+import exceptions.*;
+import game.Game;
 import game.build.Building;
 import game.build.City;
 import game.build.Road;
@@ -30,7 +29,7 @@ import java.util.Map;
  * A game with additional methods for processing protobufs for the client
  * Created by 140001596
  */
-public class ClientGame extends GameState
+public class ClientGame extends Game
 {
     private boolean gameOver;
     private int dice;
@@ -41,7 +40,6 @@ public class ClientGame extends GameState
 
     public ClientGame()
     {
-        //eventProcessor = new EventProcessor(new Socket(), this); // TODO set this when joining a lobby
         players = new HashMap<Colour, Player>();
         boughtDevCards = new HashMap<Colour, Integer>();
         playedDevCards = new HashMap<Colour, HashMap<DevelopmentCardType, Integer>>();
@@ -62,7 +60,9 @@ public class ClientGame extends GameState
         }
 
         // Set up this player
-        thisPlayer = new LocalPlayer(Colour.BLUE); // TODO colour will be allocated from server
+        // TODO colour will be allocated from server
+        //eventProcessor = new EventProcessor(new Socket(), this); // TODO set this when joining a lobby
+        thisPlayer = new LocalPlayer(Colour.BLUE);
         playerWithLongestRoad = thisPlayer.getColour();
         currentPlayer = thisPlayer.getColour();
         players.put(thisPlayer.getColour(), thisPlayer);
@@ -71,7 +71,7 @@ public class ClientGame extends GameState
     /**
      * @return a representation of the board that is compatible with protofbufs
      */
-    public HexGrid setBoard(BoardProto board)
+    public HexGrid setBoard(BoardProto board) throws InvalidCoordinatesException, CannotAffordException
     {
         HexGrid grid = new HexGrid();
         List<Node> nodes = processNodes(board.getNodesList());
@@ -106,7 +106,7 @@ public class ClientGame extends GameState
      * Retrieve the node objects referred to by the proto
      * @param protos the node protos
      */
-    private List<Node> processNodes(List<NodeProto> protos)
+    private List<Node> processNodes(List<NodeProto> protos) throws InvalidCoordinatesException, CannotAffordException
     {
         List<Node> nodes = new ArrayList<Node>();
 
@@ -119,7 +119,7 @@ public class ClientGame extends GameState
             // If the node has a building
             if(proto.hasBuilding())
             {
-                node.setSettlement(processNewBuilding(proto.getBuilding()));
+                node.setSettlement(processNewBuilding(proto.getBuilding(), true));
             }
 
             nodes.add(node);
@@ -185,19 +185,34 @@ public class ClientGame extends GameState
      * Swap the robber to the given point received from the server
      * @param robberMove the robber's new position
      */
-    public void moveRobber(PointProto robberMove)
+    public void moveRobber(PointProto robberMove) throws InvalidCoordinatesException
     {
-         grid.swapRobbers(grid.getHex(robberMove.getX(), robberMove.getY()));
+        Hex hex = grid.getHex(robberMove.getX(), robberMove.getY());
+
+        // If invalid coordinates
+        if(hex == null)
+        {
+            throw new InvalidCoordinatesException(robberMove.getX(), robberMove.getY());
+        }
+
+        grid.swapRobbers(hex);
     }
 
     /**
      * Adds the new road received from the server to the board
      * @param newRoad the new road to add
      */
-    public Road processRoad(BuildProtos.RoadProto newRoad) throws RoadExistsException, CannotBuildRoadException
+    public Road processRoad(BuildProtos.RoadProto newRoad) throws RoadExistsException,
+            CannotBuildRoadException, CannotAffordException
     {
         // Extract information and find edge
         Edge newEdge = grid.getEdge(newRoad);
+
+        // Spend resources if it is this player
+        if(currentPlayer.equals(thisPlayer.getColour()))
+        {
+            thisPlayer.spendResources(Road.getRoadCost());
+        }
 
         // Make new road object
         Road r = ((LocalPlayer)players.get(currentPlayer)).addRoad(newEdge);
@@ -211,7 +226,7 @@ public class ClientGame extends GameState
      * @param building the new building
      * @return the new building
      */
-    public Building processNewBuilding(BuildingProto building)
+    public Building processNewBuilding(BuildingProto building, boolean setUp) throws InvalidCoordinatesException, CannotAffordException
     {
         // Extract information
         BuildingTypeProto type = building.getType();
@@ -224,7 +239,15 @@ public class ClientGame extends GameState
                 ((node.getSettlement() instanceof Settlement && type.equals(BuildingTypeProto.SETTLEMENT))
                 || (node.getSettlement() instanceof City && type.equals(BuildingTypeProto.CITY)))))
         {
-            return b;
+            throw new InvalidCoordinatesException(p.getX(), p.getY());
+        }
+
+        // Spend resources if it is this player
+        if(currentPlayer.equals(thisPlayer.getColour()) && !setUp)
+        {
+            Map<ResourceType, Integer> spend = type.equals(BuildingTypeProto.CITY)
+                                                ? City.getCityCost() : Settlement.getSettlementCost();
+            thisPlayer.spendResources(spend);
         }
 
         // Create and add the building
@@ -252,7 +275,7 @@ public class ClientGame extends GameState
      * Records the played dev card for the given player
      * @param type the played card
      */
-    public void processPlayedDevCard(EnumProtos.DevelopmentCardProto type)
+    public void processPlayedDevCard(EnumProtos.DevelopmentCardProto type) throws DoesNotOwnException
     {
         DevelopmentCardType card = DevelopmentCardType.fromProto(type);
         Map<DevelopmentCardType, Integer> playedCards = playedDevCards.get(currentPlayer);
@@ -261,11 +284,17 @@ public class ClientGame extends GameState
         int existing = playedCards.get(card);
         playedCards.put(card, existing + 1);
 
+        // Eliminate one bought dev card from player
+        existing = boughtDevCards.containsKey(currentPlayer) ? boughtDevCards.get(currentPlayer) : 0;
+        if(existing > 0)
+        {
+            boughtDevCards.put(currentPlayer, existing - 1);
+        }
+        else throw new DoesNotOwnException(card, currentPlayer);
+
         // Update largest army
         if(card.equals(DevelopmentCardType.Knight))
         {
-            existing = boughtDevCards.containsKey(currentPlayer) ? boughtDevCards.get(currentPlayer) : 0;
-            boughtDevCards.put(currentPlayer, existing - 1);
             players.get(currentPlayer).addKnight();
             checkLargestArmy();
         }
@@ -275,8 +304,14 @@ public class ClientGame extends GameState
      * Records that the given player bought a dev card
      * @param boughtDevCard
      */
-    public void recordDevCard(EnumProtos.ColourProto boughtDevCard)
+    public void recordDevCard(EnumProtos.ColourProto boughtDevCard) throws CannotAffordException
     {
+        // Spend resources if it is this player
+        if(currentPlayer.equals(thisPlayer.getColour()))
+        {
+            thisPlayer.spendResources(DevelopmentCardType.getCardCost());
+        }
+
         Colour c = Colour.fromProto(boughtDevCard);
         int existing = boughtDevCards.containsKey(c) ? boughtDevCards.get(c) : 0;
         boughtDevCards.put(c, existing + 1);

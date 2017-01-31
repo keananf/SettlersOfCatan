@@ -5,9 +5,16 @@ import board.Hex;
 import board.Node;
 import client.ClientGame;
 import enums.Colour;
+import enums.DevelopmentCardType;
+import enums.ResourceType;
+import game.build.City;
+import game.build.Road;
+import game.build.Settlement;
 import protocol.BoardProtos;
 import protocol.BuildProtos;
 import protocol.EnumProtos;
+
+import java.util.Map;
 
 public class ClientTestHelper extends TestHelper
  {
@@ -23,6 +30,7 @@ public class ClientTestHelper extends TestHelper
         req.setP2(p2);
         req.setPlayerId(Colour.toProto(col));
 
+        clientGame.getPlayer().grantResources(Road.getRoadCost());
         clientGame.setTurn(col);
         try
         {
@@ -34,17 +42,27 @@ public class ClientTestHelper extends TestHelper
         }
     }
 
-    public void processSettlementEvent(Node node, Colour col)
+    public void processSettlementEvent(Node node, Colour col, EnumProtos.BuildingTypeProto type)
     {
         // Set up request
         BuildProtos.BuildingProto.Builder req = BuildProtos.BuildingProto.newBuilder();
         BoardProtos.NodeProto n = node.toProto();
         req.setP(n.getP());
         req.setPlayerId(Colour.toProto(col));
-        req.setType(EnumProtos.BuildingTypeProto.SETTLEMENT);
+        req.setType(type);
+        Map<ResourceType, Integer> grant = type.equals(EnumProtos.BuildingTypeProto.CITY)
+                                        ? City.getCityCost() : Settlement.getSettlementCost();
 
+        clientGame.getPlayer().grantResources(grant);
         clientGame.setTurn(col);
-        clientGame.processNewBuilding(req.build());
+        try
+        {
+            clientGame.processNewBuilding(req.build(), false);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
      public void processPlayKnightEvent(Hex h, Colour player)
@@ -54,9 +72,32 @@ public class ClientTestHelper extends TestHelper
          p.setX(h.getX());
          p.setY(h.getY());
 
+         clientGame.getPlayer().grantResources(DevelopmentCardType.getCardCost());
          clientGame.setTurn(player);
-         clientGame.processPlayedDevCard(EnumProtos.DevelopmentCardProto.KNIGHT);
-         clientGame.moveRobber(p.build());
+         try
+         {
+             clientGame.recordDevCard(Colour.toProto(player));
+             clientGame.processPlayedDevCard(EnumProtos.DevelopmentCardProto.KNIGHT);
+             clientGame.moveRobber(p.build());
+         }
+         catch (Exception e)
+         {
+             e.printStackTrace();
+         }
      }
 
+     public void processPlayedDevCard(EnumProtos.DevelopmentCardProto type, Colour player)
+     {
+         clientGame.getPlayer().grantResources(DevelopmentCardType.getCardCost());
+         clientGame.setTurn(player);
+         try
+         {
+             clientGame.recordDevCard(Colour.toProto(player));
+             clientGame.processPlayedDevCard(type);
+         }
+         catch (Exception e)
+         {
+            e.printStackTrace();
+         }
+     }
  }

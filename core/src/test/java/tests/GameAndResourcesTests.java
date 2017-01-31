@@ -1,11 +1,23 @@
 package tests;
 
-import static org.junit.Assert.*;
-
+import board.Hex;
+import enums.Colour;
+import exceptions.CannotStealException;
+import exceptions.InvalidCoordinatesException;
 import exceptions.SettlementExistsException;
-import game.build.*;
+import game.build.City;
+import game.build.Road;
+import game.build.Settlement;
+import game.players.NetworkPlayer;
+import game.players.Player;
+import org.junit.Before;
+import org.junit.Test;
+import protocol.BoardProtos;
+import protocol.BuildProtos;
+import protocol.EnumProtos;
+import protocol.RequestProtos;
 
-import org.junit.*;
+import static org.junit.Assert.*;
 
 public class GameAndResourcesTests extends TestHelper
 {
@@ -50,7 +62,55 @@ public class GameAndResourcesTests extends TestHelper
 		assertFalse(hasResources(p));
 		assertTrue(p.getResources().get(hex.getResource()) == 0);
 	}
-	
+
+	@Test(expected = InvalidCoordinatesException.class)
+	public void moveRobberInvalidCoordinate() throws InvalidCoordinatesException, CannotStealException
+	{
+		// Make a move robber request with invalid hex coordinates
+		RequestProtos.MoveRobberRequest.Builder req = RequestProtos.MoveRobberRequest.newBuilder();
+		BoardProtos.HexProto.Builder hex = this.hex.toHexProto().toBuilder();
+		BuildProtos.PointProto.Builder point = BuildProtos.PointProto.newBuilder();
+		point.setX(-10);
+		point.setY(-15);
+		hex.setP(point.build());
+		req.setHex(hex.build());
+		req.setColourToTakeFrom(EnumProtos.ColourProto.RED);
+
+		game.moveRobber(req.build(), p.getColour());
+	}
+
+	@Test
+	public void moveRobberTest() throws InvalidCoordinatesException, CannotStealException, SettlementExistsException
+	{
+		// Make a second player
+		Player p2 = new NetworkPlayer(Colour.RED);
+		game.addPlayer(p2);
+
+		// Give player 2 resources to take
+		p2.grantResources(Road.getRoadCost());
+
+		// Grant player 2 a settlement so that player 1 will be allowed to take from them
+		p2.grantResources(Settlement.getSettlementCost());
+		makeSettlement(p2, n);
+
+		// Make a move robber request
+		RequestProtos.MoveRobberRequest.Builder req = RequestProtos.MoveRobberRequest.newBuilder();
+		BoardProtos.HexProto.Builder hex = this.hex.toHexProto().toBuilder();
+		req.setHex(hex.build());
+		req.setColourToTakeFrom(EnumProtos.ColourProto.RED);
+
+		// Test values before move
+		assertEquals(p2.getNumResources(), 2);
+		assertEquals(p.getNumResources(), 0);
+		Hex h = game.getGrid().getHexWithRobber();
+
+		// Move and check
+		game.moveRobber(req.build(), p.getColour());
+		assertNotEquals(h, game.getGrid().getHexWithRobber());
+		assertEquals(p.getNumResources(), 1);
+		assertEquals(p2.getNumResources(), 1);
+	}
+
 	@Test
 	public void loseResourcesTest() // If you have over 7 resources, and a 7 is rolled
 	{		
@@ -61,7 +121,7 @@ public class GameAndResourcesTests extends TestHelper
 
 		// A '7' is rolled, so this player must lose it's excess resources
 		game.allocateResources(7);
-		assertTrue(p.getNumResources() == 7);
+		assertEquals(7, p.getNumResources());
 	}
 	
 	@Test

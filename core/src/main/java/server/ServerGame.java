@@ -6,9 +6,6 @@ import enums.DevelopmentCardType;
 import enums.ResourceType;
 import exceptions.*;
 import game.GameState;
-import game.build.Building;
-import game.build.City;
-import game.build.Road;
 import game.players.NetworkPlayer;
 import game.players.Player;
 import game.InProgressTurn;
@@ -26,13 +23,11 @@ import protocol.TradeProtos.PortTradeProto;
 
 import java.net.InetAddress;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public class ServerGame extends GameState
 {
-	private Map<Colour, Player> players; // Protected so that a client does NOT have access to other player info
 	private Random dice;
 	private int current; // index of current player
 
@@ -46,7 +41,6 @@ public class ServerGame extends GameState
 	public ServerGame()
 	{
 		super();
-		players = new HashMap<Colour, Player>();
 		dice = new Random();
 		inProgressTurn = new InProgressTurn();
 	}
@@ -62,49 +56,26 @@ public class ServerGame extends GameState
 		setCurrentPlayer(getPlayersAsList()[dice].getColour());
 	}
 
+
 	/**
 	 * Assigns resources to each player based upon their settlements and the dice
 	 * @param dice the dice roll
-	 * @return 
+	 * @return
 	 */
 	public Map<Colour, Map<ResourceType, Integer>> allocateResources(int dice)
 	{
-		int resourceLimit = 7;
 		Map<Colour, Map<ResourceType, Integer>> playerResources = new HashMap<Colour, Map<ResourceType, Integer>>();
-		
+
 		// for each player
-		for(Player player : getPlayersAsList())
+		for(Player player : players.values())
 		{
-			Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
-			
-			// If 7, check that no one is above the resource limit
-			if(dice == resourceLimit)
-			{
-				grant.putAll(player.loseResources());
-                playerResources.put(player.getColour(), grant);
-				continue;
-			}
-			
-			// for each of this player's settlements
-			for(Building building : player.getSettlements().values())
-			{
-				int amount = building instanceof City ? 2 : 1;
-				List<Hex> hexes = building.getNode().getHexes();
-				
-				// for each hex on this settlement
-				for(Hex hex : hexes)
-				{
-					// If the hex's chit is equal to the dice roll
-					if(hex.getChit() == dice && !hex.hasRobber())
-					{
-						grant.put(hex.getResource(), amount);
-					}
-				}
-			}
-			player.grantResources(grant);
+			Map<ResourceType, Integer> grant = getNewResources(dice, player.getColour());
+
+			if(dice != 7)
+				player.grantResources(grant);
 			playerResources.put(player.getColour(), grant);
 		}
-		
+
 		return playerResources;
 	}
 
@@ -211,7 +182,7 @@ public class ServerGame extends GameState
         // Find the recipient and extract the trade's contents
 		ResourceCount offer = trade.getOffer();
 		ResourceCount request = trade.getRequest();
-		Player recipient = players.get(recipientColour), recipientCopy = recipient.copy();
+		NetworkPlayer recipient = (NetworkPlayer) players.get(recipientColour), recipientCopy = (NetworkPlayer) recipient.copy();
 		Player offerer = players.get(offererColour);
 
 		try
@@ -245,16 +216,23 @@ public class ServerGame extends GameState
 	 * @throws CannotUpgradeException 
 	 * @throws CannotAffordException 
 	 */
-	public UpgradeSettlementResponse upgradeSettlement(UpgradeSettlementRequest move, Colour playerColour) throws CannotAffordException, CannotUpgradeException
+	public UpgradeSettlementResponse upgradeSettlement(UpgradeSettlementRequest move, Colour playerColour)
+			throws CannotAffordException, CannotUpgradeException, InvalidCoordinatesException
 	{
 		UpgradeSettlementResponse.Builder resp = UpgradeSettlementResponse.newBuilder();
         Player p = players.get(playerColour);
-		Node n = grid.getNode(move.getPoint().getX(), move.getPoint().getY());
-		
-		// Try to upgrade settlement
-		p.upgradeSettlement(n);
+		Node node = grid.getNode(move.getPoint().getX(), move.getPoint().getY());
 
-		resp.setNewBuilding(n.getSettlement().toProto());
+		// Invalid request coordinates.
+		if(node == null)
+		{
+			throw new InvalidCoordinatesException(move.getPoint().getX(), move.getPoint().getY());
+		}
+
+		// Try to upgrade settlement
+		((NetworkPlayer) p).upgradeSettlement(node);
+
+		resp.setNewBuilding(node.getSettlement().toProto());
 		return resp.build();
     }
 	
@@ -267,48 +245,29 @@ public class ServerGame extends GameState
 	 * @throws CannotAffordException 
 	 * @throws SettlementExistsException 
 	 */
-	public BuildSettlementResponse buildSettlement(BuildSettlementRequest request, Colour playerColour) throws CannotAffordException, IllegalPlacementException, SettlementExistsException
+	public BuildSettlementResponse buildSettlement(BuildSettlementRequest request, Colour playerColour)
+			throws CannotAffordException, IllegalPlacementException, SettlementExistsException, InvalidCoordinatesException
 	{
 		BuildSettlementResponse.Builder resp = BuildSettlementResponse.newBuilder();
         Player p = players.get(playerColour);
         PointProto pointProto = request.getPoint();
 		Node node = grid.getNode(pointProto.getX(), pointProto.getY());
-		
-		// Try to build settlement
-		p.buildSettlement(node);
-		
-		// Check all combinations of edges to check if a road chain was broken
-		for(int i = 0; i < node.getEdges().size(); i++)
+
+		// Invalid request coordinates.
+		if(node == null)
 		{
-			boolean broken = false;
-			for(int j = 0; j < node.getEdges().size(); j++)
-			{
-				Edge e = node.getEdges().get(i), other = node.getEdges().get(j);
-				Road r = e.getRoad(), otherR = other.getRoad();
-				
-				if(e.equals(other)) continue;
-				
-				// If this settlement is between two roads of the same colour
-				if(r != null && otherR != null && r.getPlayerColour().equals(otherR.getPlayerColour()))
-				{
-					// retrieve owner of roads and break the road chain
-					players.get(e.getRoad().getPlayerColour()).breakRoad(e, other);
-					broken = true;
-					break;
-				}
-			}
-			if(broken)
-			{
-				checkLongestRoad();
-				break;
-			}
+			throw new InvalidCoordinatesException(pointProto.getX(), pointProto.getY());
 		}
-		// TODO send out updated road counts
+
+		// Try to build settlement
+		((NetworkPlayer) p).buildSettlement(node);
+		
+		checkIfRoadBroken(node);
 
 		resp.setNewBuilding(node.getSettlement().toProto());
         return resp.build();
 	}
-	
+
 	/**
 	 * Checks that the player can buy a development card
 	 * @param type the type of development card to play
@@ -321,7 +280,7 @@ public class ServerGame extends GameState
 	    Player p = players.get(playerColour);
 
 		// Try to play card
-		p.playDevelopmentCard(type);
+		((NetworkPlayer)p).playDevelopmentCard(type);
 		resp.setResult(ResultProto.SUCCESS);
 
 		// Return success message
@@ -342,7 +301,7 @@ public class ServerGame extends GameState
 		
 		// Try to buy card
 		// Return the response with the card parameter set
-        DevelopmentCardType card = p.buyDevelopmentCard(DevelopmentCardType.chooseRandom());
+        DevelopmentCardType card = ((NetworkPlayer)p).buyDevelopmentCard(DevelopmentCardType.chooseRandom());
         resp.setDevelopmentCard(DevelopmentCardType.toProto(card));
 		return resp.build();
 	}
@@ -355,7 +314,8 @@ public class ServerGame extends GameState
 	 * @throws CannotStealException if the player cannot steal from the requested player
 	 * @throws DoesNotOwnException if the player does not own a Knight card
 	 */
-	public PlayKnightCardResponse playKnightCard(PlayKnightCardRequest request, Colour playerColour) throws CannotStealException, DoesNotOwnException
+	public PlayKnightCardResponse playKnightCard(PlayKnightCardRequest request, Colour playerColour)
+			throws CannotStealException, DoesNotOwnException, InvalidCoordinatesException
 	{
 		PlayKnightCardResponse.Builder resp = PlayKnightCardResponse.newBuilder();
 
@@ -364,6 +324,11 @@ public class ServerGame extends GameState
 
 		// Perform the swap and take a resource
 		resp.setMoveRobberResponse(moveRobber(request.getRequest(), playerColour));
+
+		// Add up knights used
+		players.get(playerColour).addKnight();
+		checkLargestArmy();
+
 		return resp.build();
 	}
 
@@ -375,13 +340,20 @@ public class ServerGame extends GameState
 	 * @return return message
 	 * @throws CannotStealException if the specified player cannot provide a resource 
 	 */
-	public MoveRobberResponse moveRobber(MoveRobberRequest move, Colour playerColour) throws CannotStealException
+	public MoveRobberResponse moveRobber(MoveRobberRequest move, Colour playerColour) throws CannotStealException,
+																						InvalidCoordinatesException
 	{
         MoveRobberResponse.Builder resp = MoveRobberResponse.newBuilder();
 
 		// Retrieve the new hex the robber will move to.
         PointProto point = move.getHex().getP();
 		Hex newHex = grid.getHex(point.getX(), point.getY());
+
+		// Invalid request coordinates.
+		if(newHex == null)
+		{
+			throw new InvalidCoordinatesException(point.getX(), point.getY());
+		}
 
 		Colour otherColour = Colour.fromProto(move.getColourToTakeFrom());
 		Player other = players.get(otherColour);
@@ -394,7 +366,8 @@ public class ServerGame extends GameState
 			// Randomly remove resource
 			if(n.getSettlement() != null && n.getSettlement().getPlayerColour().equals(otherColour))
 			{
-                resp.setResource(ResourceType.toProto(players.get(currentPlayer).takeResource(other)));
+				NetworkPlayer p = (NetworkPlayer) players.get(currentPlayer);
+                resp.setResource(ResourceType.toProto(p.takeResource(other)));
 				valid = true;
 			}
 		}
@@ -418,7 +391,8 @@ public class ServerGame extends GameState
 	 * @throws CannotAffordException 
 	 */
 	public PlayRoadBuildingCardResponse playBuildRoadsCard(PlayRoadBuildingCardRequest request, Colour playerColour)
-			throws CannotAffordException, CannotBuildRoadException, RoadExistsException, DoesNotOwnException
+			throws CannotAffordException, CannotBuildRoadException,
+				RoadExistsException, DoesNotOwnException, InvalidCoordinatesException
 	{
 		PlayRoadBuildingCardResponse.Builder resp = PlayRoadBuildingCardResponse.newBuilder();
 
@@ -527,7 +501,8 @@ public class ServerGame extends GameState
 	 * @throws CannotBuildRoadException 
 	 * @throws CannotAffordException 
 	 */
-	public BuildRoadResponse buildRoad(BuildRoadRequest request, Colour colour) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public BuildRoadResponse buildRoad(BuildRoadRequest request, Colour colour) throws CannotAffordException,
+					CannotBuildRoadException, RoadExistsException, InvalidCoordinatesException
 	{
 		Player p = players.get(colour);
 		PointProto p1 = request.getEdge().getP1(), p2 = request.getEdge().getP2();
@@ -535,7 +510,17 @@ public class ServerGame extends GameState
 		Node n2 = grid.getNode(p2.getX(), p2.getY());
 		Edge edge  = null;
         BuildRoadResponse.Builder response = BuildRoadResponse.newBuilder();
-		
+
+        // Check valid coordinates
+        if(n == null)
+		{
+			throw new InvalidCoordinatesException(p1.getX(), p1.getY());
+		}
+		if(n2 == null)
+		{
+			throw new InvalidCoordinatesException(p2.getX(), p2.getY());
+		}
+
 		// Find edge
 		for(Edge e : n.getEdges())
 		{
@@ -547,39 +532,13 @@ public class ServerGame extends GameState
 		}
 		
 		// Try to build the road and update the longest road 
-		int longestRoad = p.buildRoad(edge);
-		checkLongestRoad();
+		int longestRoad = ((NetworkPlayer)p).buildRoad(edge);
+		checkLongestRoad(false);
 		
 		// return success message
         response.setLongestRoad(longestRoad);
         response.setNewRoad(edge.getRoad().toProto());
 		return response.build();
-	}
-	
-	/**
-	 * Checks who has the longest road
-	 */
-	private void checkLongestRoad()
-	{
-		Player current = players.get(currentPlayer);
-		Player playerWithLongestRoad = players.get(this.playerWithLongestRoad);
-
-		// Calculate who has longest road
-		int length = current.calcRoadLength();
-		if(length > longestRoad)
-		{
-			// Update victory points
-			if(longestRoad >= 5)
-			{
-				playerWithLongestRoad.setVp(playerWithLongestRoad.getVp() - 2);
-			}
-			if (length >= 5) current.setVp(current.getVp() + 2);
-			if(playerWithLongestRoad != null) playerWithLongestRoad.setHasLongestRoad(false);
-			
-			longestRoad = length;
-			this.playerWithLongestRoad = currentPlayer;
-			current.setHasLongestRoad(true);
-		}
 	}
 
 	/**
@@ -699,11 +658,11 @@ public class ServerGame extends GameState
 	private void grantVpPoint()
 	{
 		Player currentPlayer = players.get(this.currentPlayer);
-		currentPlayer.setVp(currentPlayer.getVp() + 1);
+		currentPlayer.addVp(currentPlayer.getVp() + 1);
 	}
 
 	public void restorePlayerFromCopy(Player copy, DevelopmentCardType card)
 	{
-		players.get(copy.getColour()).restoreCopy(copy, card);
+		((NetworkPlayer)players.get(copy.getColour())).restoreCopy(copy, card);
 	}
 }

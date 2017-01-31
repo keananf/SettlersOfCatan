@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 public class TestHelper
 {
 	protected ServerGame game;
-	protected Player p;
+	protected NetworkPlayer p;
 	protected Node n;
 	protected Hex hex;
 	
@@ -33,7 +33,7 @@ public class TestHelper
 		// Build settlement
 		try
 		{
-			p.buildSettlement(n);
+			((NetworkPlayer)p).buildSettlement(n);
 		}
 		catch (IllegalPlacementException | CannotAffordException e)
 		{
@@ -54,7 +54,7 @@ public class TestHelper
 		// Build settlement
 		try
 		{
-			p.upgradeSettlement(n);
+			((NetworkPlayer)p).upgradeSettlement(n);
 		}
 		catch (CannotAffordException | CannotUpgradeException e)
 		{
@@ -74,7 +74,7 @@ public class TestHelper
 		assertTrue(hasResources(p));
 		try
 		{
-			p.buildRoad(e);
+			((NetworkPlayer)p).buildRoad(e);
 		}
 		catch (CannotAffordException ex)
 		{
@@ -96,7 +96,7 @@ public class TestHelper
 		assertTrue(hasResources(p));
 		try
 		{
-			c = p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
+			c = ((NetworkPlayer)p).buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
 		}
 		catch (CannotAffordException ex)
 		{

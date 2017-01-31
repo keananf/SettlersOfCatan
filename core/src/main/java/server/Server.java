@@ -8,6 +8,7 @@ import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
 import exceptions.UnexpectedMoveTypeException;
 import game.GameState;
+import game.players.NetworkPlayer;
 import game.players.Player;
 import protocol.EnumProtos.ColourProto;
 import protocol.EnumProtos.DevelopmentCardProto;
@@ -368,7 +369,7 @@ public class Server implements Runnable
 	{
 		Request request = msg.getRequest();
 		Response.Builder resp = Response.newBuilder();
-		Player copy = game.getPlayers().get(game.getCurrentPlayer()).copy();
+		Player copy = ((NetworkPlayer)game.getPlayers().get(game.getCurrentPlayer())).copy();
 		DevelopmentCardType card = null;
 
 		try

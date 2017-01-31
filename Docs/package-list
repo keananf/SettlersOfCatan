@@ -2,6 +2,7 @@ board
 catan
 catan.desktop
 catan.ui
+client
 enums
 exceptions
 game

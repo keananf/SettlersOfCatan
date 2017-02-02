@@ -66,7 +66,8 @@ public class HexGrid
 				}
 			}
 		}
-		setUpEdgesAndNodes();
+		setUpReferences();
+		makePorts();
 	}
 
 	/**
@@ -104,12 +105,9 @@ public class HexGrid
 	/**
 	 * Creates edges and relationships between the different board elements.
 	 * Nodes are given their adjacent hexes, and edges are made between nodes.
-	 * Ports are also made here
 	 */
-	private void setUpEdgesAndNodes()
+	public void setUpReferences()
 	{
-		List<Edge> potentialPorts = new ArrayList<Edge>();
-		
 		// for each node
 		for(Node node : nodes.values())
 		{
@@ -127,10 +125,6 @@ public class HexGrid
 					{
 						e.getX().addEdge(e);
 						e.getY().addEdge(e);
-						if (e.getX().onBoundaries() || e.getY().onBoundaries())
-						{
-							potentialPorts.add(e);
-						}
 					}
 				}
 				
@@ -147,7 +141,23 @@ public class HexGrid
 				hex.addNode(node);
 			}
 		}
-		
+	}
+
+	/**
+	 * Given that setUpReferences() has been called, this makes all ports
+	 */
+	private void makePorts()
+	{
+		List<Edge> potentialPorts = new ArrayList<Edge>();
+
+		for(Edge e : edges)
+		{
+			if (e.getX().onBoundaries() || e.getY().onBoundaries())
+			{
+				potentialPorts.add(e);
+			}
+		}
+
 		ports = Port.makePorts(edges, potentialPorts);
 	}
 
@@ -374,8 +384,9 @@ public class HexGrid
     }
 
 	/**
-	 * Overwrite this grid's nodes.
+	 * Overwrite this grid's nodes and hexes, and set up references between them.
 	 * @param nodes the nodes to set
+	 * @param hexes the hexes to set
 	 */
 	public void setNodesAndHexes(List<Node> nodes, List<Hex> hexes)
 	{
@@ -392,37 +403,47 @@ public class HexGrid
 		}
 
 		// Add references between hexes and nodes
-		for(Node node : nodes)
-		{
-			List<Hex> adjacentHexes = new LinkedList<Hex>();
-			List<BoardElement> neighbours = getNeighbours(node);
+		setUpReferences();
+	}
 
-			// Find the adjacent hexes
-			for(BoardElement neighbour : neighbours)
+	public void setNodesAndHexes(List<Hex> hexes)
+	{
+		// Add hexes
+		for(Hex h : hexes)
+		{
+			this.grid.put(new Point(h.getX(), h.getY()), h);
+		}
+
+		// for each column
+		for(int x = -SIZE_OF_GRID; x <= SIZE_OF_GRID; x++)
+		{
+			// for each row
+			for(int y = -SIZE_OF_GRID; y <= SIZE_OF_GRID; y++)
 			{
-				if (neighbour instanceof Hex)
+				// If in boundaries
+				if(y - 2*x <= 8 && 2*y - x <= 8 && x + y <= 8 &&
+						y - 2*x >= -8 && 2*y - x >= -8 && x + y >= -8)
 				{
-					adjacentHexes.add((Hex) neighbour);
+
+					// Condition for whether or not the coordinate is a node.
+					if(Math.abs(x + y) % 3 != 0 && x + y != 0)
+					{
+						nodes.put(new Point(x, y), new Node(x, y));
+					}
 				}
 			}
-
-			node.setAdjacentHexes(adjacentHexes);
-			for(Hex hex : adjacentHexes)
-			{
-				hex.addNode(node);
-			}
 		}
+
+		setUpReferences();
 	}
 
 	/**
 	 * Overwrites this grid's edges and ports
-	 * @param edges the edges
 	 * @param ports the ports
 	 */
-	public void setEdgesAndPorts(List<Edge> edges, List<Port> ports)
+	public void setPorts(List<Port> ports)
 	{
 		this.ports = ports;
-		this.edges = edges;
 
 		// If edge is a port, overwrite
 		for(Edge e : edges)

@@ -26,24 +26,32 @@ public class EventProcessor implements Runnable
         logger = new Logger();
         this.game = game;
 
-        this.thread = new Thread(this);
-        this.thread.start();
+        thread = new Thread(this);
+        thread.start();
     }
 
     @Override
     public void run()
     {
-        try
+        // Continuously wait for new messages from the server
+        while(!game.isOver())
         {
-            // Continuously wait for new messages from the server
-            while(!game.isOver())
+            try
             {
                 processMessage();
             }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
+            catch(IOException e)
+            {
+                // Fatal error
+                break;
+            }
+            catch (Exception e)
+            {
+                // Error. Invalid event.
+                // TODO request state from server? Or fail?
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -51,7 +59,7 @@ public class EventProcessor implements Runnable
      * Process the next message.
      * @throws IOException
      */
-    private void processMessage() throws IOException
+    private void processMessage() throws Exception
     {
         Message msg = Message.parseFrom(socket.getInputStream());
         logger.logReceivedMessage(msg);
@@ -102,7 +110,7 @@ public class EventProcessor implements Runnable
      * Processes the event received from the server and updates the game state
      * @param ev the event
      */
-    private void processEvent(Event ev)
+    private void processEvent(Event ev) throws Exception
     {
         // Switch on type of event
         switch(ev.getTypeCase())
@@ -114,7 +122,7 @@ public class EventProcessor implements Runnable
                 game.setTurn(Colour.fromProto(ev.getNewTurn()));
                 break;
             case NEWBUILDING:
-                game.processNewBuilding(ev.getNewBuilding());
+                game.processNewBuilding(ev.getNewBuilding(), false);
                 break;
             case DICEROLL:
                 game.processDice(ev.getDiceRoll().getDice());

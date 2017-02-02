@@ -2,12 +2,11 @@ package server;
 
 import enums.Colour;
 import enums.DevelopmentCardType;
-import enums.ResourceType;
 import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
 import exceptions.UnexpectedMoveTypeException;
-import game.GameState;
+import game.Game;
 import game.players.NetworkPlayer;
 import game.players.Player;
 import protocol.EnumProtos.ColourProto;
@@ -18,8 +17,6 @@ import protocol.EventProtos.Event;
 import protocol.EventProtos.PlayDevCardEvent;
 import protocol.MessageProtos.Message;
 import protocol.RequestProtos.Request;
-import protocol.ResourceProtos.ResourceAllocation;
-import protocol.ResourceProtos.ResourceCount;
 import protocol.ResponseProtos.AcceptRejectResponse;
 import protocol.ResponseProtos.GiveBoardResponse;
 import protocol.ResponseProtos.Response;
@@ -29,6 +26,7 @@ import protocol.TradeProtos.TradeRequest;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,8 +62,8 @@ public class Server implements Runnable
 			while (!game.isOver())
 			{
 				int dice = game.generateDiceRoll();
-				Map<Colour, Map<ResourceType, Integer>> resources = game.allocateResources(dice);
-				sendTurns(dice, resources);
+				game.allocateResources(dice);
+				sendTurns(dice);
 
 				// Read moves from queue and log
 				processMessage();
@@ -82,19 +80,33 @@ public class Server implements Runnable
 	/**
 	 * Sends the dice and each player's respective resource count to the player's socket
 	 * @param dice the dice roll to send
-	 * @param resources the map of each 
 	 * @throws IOException 
 	 */
-	private void sendTurns(int dice, Map<Colour, Map<ResourceType, Integer>> resources) throws IOException
-	{		
+	private void sendTurns(int dice) throws IOException
+	{
+		List<Player> discardList = new ArrayList<Player>();
+
 		// For each player
 		for(Colour c : Colour.values())
 		{
-			sendDice(c, dice);
-			sendResources(c, resources.get(c));
+			if(game.getPlayers().containsKey(c))
+			{
+				Player p = game.getPlayers().get(c);
+				sendDice(c, dice);
+
+				if(dice == 7 && p.getNumResources() > 7)
+				{
+					discardList.add(p);
+				}
+			}
+		}
+
+		// Process discard requests if necessary
+		if(discardList.size() > 0)
+		{
+			processDiscardRequests(discardList);
 		}
 	}
-
 
 	/**
 	 * Sends the dice to the player's socket
@@ -115,33 +127,6 @@ public class Server implements Runnable
 		msg.setEvent(ev.build());
 
 		broadcastEvent(ev.build());
-	}
-
-	/**
-	 * Sends the player's resource count to the player's socket
-	 * @param c the colour of the player
-	 * @param resources the map of resources 
-	 * @throws IOException 
-	 */
-	private void sendResources(Colour c, Map<ResourceType, Integer> resources) throws IOException
-	{
-		Message.Builder msg = Message.newBuilder();
-		Response.Builder resp = Response.newBuilder();
-
-		// Set up resourcess
-		ResourceAllocation.Builder alloc = ResourceAllocation.newBuilder();
-		ResourceCount.Builder builder = ResourceCount.newBuilder();
-		builder.setBrick(resources.get(ResourceType.Brick));
-		builder.setGrain(resources.get(ResourceType.Grain));
-		builder.setOre(resources.get(ResourceType.Ore));
-		builder.setLumber(resources.get(ResourceType.Lumber));
-		builder.setWool(resources.get(ResourceType.Wool));
-		alloc.setResources(builder.build());
-		alloc.setPlayerColour(Colour.toProto(c));
-
-		// Set up and send message
-		resp.setResourceAllocation(alloc);
-		connections.get(c).sendMessage(msg.build());
 	}
 	
 	/**
@@ -426,6 +411,9 @@ public class Server implements Runnable
 				case TRADEREQUEST:
 					resp.setAcceptRejectResponse(processTradeType(request.getTradeRequest(), msg));
 					break;
+				case DISCARDREQUEST:
+					game.processDiscard(request.getDiscardRequest(), playerColour);
+					break;
 			}
 		}
 		catch(Exception e)
@@ -438,7 +426,57 @@ public class Server implements Runnable
 		// Return response to be sent back to clients
 		return resp.build();
 	}
-	
+
+	/**
+	 * Block until all players have submitted valid discard requests
+	 * @param discardList the list of players that need to discard resources
+	 */
+	private void processDiscardRequests(List<Player> discardList) throws IOException
+	{
+		Request.TypeCase[] allowedTypes = new Request.TypeCase[1];
+		allowedTypes[0] = Request.TypeCase.DISCARDREQUEST;
+
+		// Get moves from the player until they have completed an initial turn
+		while(waitingForDiscards(discardList))
+		{
+			Colour c = Colour.fromProto(movesToProcess.peek().getPlayerColour());
+			Player p = game.getPlayers().get(c);
+
+			// Try to receive a move
+			try
+			{
+				// Block until we receive a discard request
+				if(movesToProcess.peek().getRequest().getTypeCase().equals(Request.TypeCase.DISCARDREQUEST))
+				{
+					receiveMove(c, allowedTypes, false, false);
+				}
+			}
+
+			// Move was illegal.
+			catch (UnexpectedMoveTypeException e)
+			{
+				if(connections.containsKey(c))
+					connections.get(c).sendError(e.getOriginalMessage());
+			}
+		}
+	}
+
+	/**
+	 * Checks if the given players still need to discard cards or not
+	 * @param discardList the list of players who need to discard
+	 * @return boolean indicating whether ot not
+	 */
+	private boolean waitingForDiscards(List<Player> discardList)
+	{
+		for(Player p : discardList)
+		{
+			if(p.getNumResources() > 7)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Forwards the trade request to the other player and blocks for a response
@@ -488,17 +526,17 @@ public class Server implements Runnable
 		Colour next =  null;
 
 		// Get settlements and roads forwards from the first player
-		for(int i = 0; i < GameState.NUM_PLAYERS; i++)
+		for(int i = 0; i < Game.NUM_PLAYERS; i++)
 		{
-			next = Colour.values()[(current.ordinal() + i) % GameState.NUM_PLAYERS];
+			next = Colour.values()[(current.ordinal() + i) % Game.NUM_PLAYERS];
 			receiveInitialMoves(next);
 		}
 		
 		// Get second set of settlements and roads in reverse order
-		for(int i = 0; i < GameState.NUM_PLAYERS; i--)
+		for(int i = 0; i < Game.NUM_PLAYERS; i--)
 		{
 			receiveInitialMoves(next);
-			next = Colour.values()[(current.ordinal() - i) % GameState.NUM_PLAYERS];
+			next = Colour.values()[(current.ordinal() - i) % Game.NUM_PLAYERS];
 		}
 	}
 
@@ -509,16 +547,16 @@ public class Server implements Runnable
 	 */
 	private void receiveInitialMoves(Colour c) throws IOException
 	{
-		//TODO DOUBLE CHECK
 		Player p = game.getPlayers().get(c);
 		Request.TypeCase[] allowedTypes = new Request.TypeCase[2];
 		allowedTypes[0] = Request.TypeCase.BUILDROADREQUEST;
 		allowedTypes[1] = Request.TypeCase.BUILDSETTLEMENTREQUEST;
 		int oldRoadAmount = p.getRoads().size(), oldSettlementsAmount = p.getSettlements().size();
 		boolean builtSettlement = false, builtRoad = false;
+		int amount = 2;
 
 		// Get moves from the player until they have completed an initial turn
-		while(p.getRoads().size() < oldRoadAmount && p.getSettlements().size() < oldSettlementsAmount)
+		while(p.getRoads().size() - oldRoadAmount < amount && p.getSettlements().size() - oldSettlementsAmount < amount)
 		{
 			// Try to receive a move
 			try
@@ -562,6 +600,7 @@ public class Server implements Runnable
 		if(connections.containsKey(c))
 		{
 			boolean processed = false;
+			game.setCurrentPlayer(c);
 			Message msg = movesToProcess.poll();
 			if(validateMsg(msg) && msg.hasRequest())
 			{
@@ -589,7 +628,7 @@ public class Server implements Runnable
 				// Move was not of a prescribed type
 				if(!processed)
 				{
-						throw new UnexpectedMoveTypeException(msg);
+					throw new UnexpectedMoveTypeException(msg);
 				}
 			}
 			else throw new UnexpectedMoveTypeException(msg);
@@ -629,7 +668,7 @@ public class Server implements Runnable
 		serverSocket = new ServerSocket(PORT);
 		System.out.println("Server started. Waiting for client(s)...\n");
 
-		while(numConnections++ < GameState.NUM_PLAYERS)
+		while(numConnections++ < Game.NUM_PLAYERS)
 		{
 			Socket connection = serverSocket.accept();
 			

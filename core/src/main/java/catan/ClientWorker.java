@@ -104,7 +104,10 @@ public class ClientWorker
 			}
 			else
 			{
-				//TODO: Determine legality of building a settlement
+				if(game.getPlayer().canBuildSettlement())
+				{
+					inProgressTurn.possibilities[1] = Move.BUILD_SETTLEMENT;
+				}
 			}
 		}
 	}

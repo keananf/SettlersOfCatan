@@ -104,7 +104,7 @@ public class ClientWorker
 			}
 			else
 			{
-				if(game.getPlayer().canBuildSettlement())
+				if(game.getPlayer().canBuildSettlement(node))
 				{
 					inProgressTurn.possibilities[1] = Move.BUILD_SETTLEMENT;
 				}
@@ -114,7 +114,12 @@ public class ClientWorker
 
 	private void checkBuild(Edge edge)
 	{
-		//TODO: exactly the same as above but for edges
+		inProgressTurn.possibilities[0] = Move.CLOSE;
+		
+		if(game.getPlayer().canBuildRoad(edge))
+		{
+			inProgressTurn.possibilities[1] = Move.BUILD_ROAD;
+		}
 	}
 	
 	private boolean checkTurn()

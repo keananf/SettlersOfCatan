@@ -13,19 +13,19 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import catan.SettlersOfCatan;
 
 public class GameScreen implements Screen
 {
+	final private AssetManager ASSETS = new AssetManager();
+	final private ModelBatch MODEL_BATCH = new ModelBatch();
+
 	final private PerspectiveCamera cam;
 	final private CameraInputController camController;
-	final private AssetManager assets;
-	final private ModelBatch modelBatch;
-	final private Array<ModelInstance> instances = new Array<ModelInstance>();
+
+	final private Array<ModelInstance> boardInstances= new Array<ModelInstance>();
 	final private Environment environment;
 
 	final private SettlersOfCatan game;
@@ -34,6 +34,7 @@ public class GameScreen implements Screen
 	{
 		this.game = game;
 
+		// init camera
 		cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(0f, 7f, 10f);
 		cam.lookAt(0, 0, 0);
@@ -41,19 +42,40 @@ public class GameScreen implements Screen
 		cam.far = 300f;
 		cam.update();
 
+		// init camera controller
 		camController = new CameraInputController(cam);
 		Gdx.input.setInputProcessor(camController);
 
-		assets = new AssetManager();
-		assets.load("ship.g3db", Model.class);
-		assets.finishLoading();
+		// init external assets
+		initBoard();
+		initUIAssets();
 
-		modelBatch = new ModelBatch();
-		instances.add(new ModelInstance(assets.get("ship.g3db", Model.class)));
-
+		// init environment
 		environment = new Environment();
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+	}
+
+	private void initBoard()
+	{
+		final String[] models = {
+			"claymine",
+			"desert",
+			"grain",
+			"grass",
+			"mountain",
+			"hex"
+		};
+
+		for (String model : models)
+			ASSETS.load("models/"+model+".g3db", Model.class);
+		ASSETS.finishLoading();
+
+		boardInstances.add(new ModelInstance(ASSETS.get("models/hex.g3db", Model.class)));
+	}
+
+	private void initUIAssets()
+	{
 	}
 
 	@Override
@@ -62,9 +84,19 @@ public class GameScreen implements Screen
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		modelBatch.begin(cam);
-		modelBatch.render(instances, environment);
-		modelBatch.end();
+		renderBoard();
+		renderUI();
+	}
+
+	private void renderBoard()
+	{
+		MODEL_BATCH.begin(cam);
+		MODEL_BATCH.render(boardInstances, environment);
+		MODEL_BATCH.end();
+	}
+
+	private void renderUI()
+	{
 	}
 
 	@Override
@@ -75,9 +107,9 @@ public class GameScreen implements Screen
 	@Override
 	public void dispose()
 	{
-		modelBatch.dispose();
-		instances.clear();
-		assets.dispose();
+		ASSETS.dispose();
+		MODEL_BATCH.dispose();
+		boardInstances.clear();
 	}
 
 	// Required but unused

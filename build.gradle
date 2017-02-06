@@ -1,13 +1,8 @@
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
-    }
+buildscript { repositories { jcenter() } }
+
+plugins {
+    id "java"
+    id "com.google.protobuf" version "0.8.0"
 }
 
 allprojects {
@@ -18,20 +13,12 @@ allprojects {
     ext {
         appName = "Settlers of Catan"
         gdxVersion = '1.9.5'
-        roboVMVersion = '2.2.0'
-        box2DLightsVersion = '1.4'
-        ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
         protobufVersion = "3.1.0"
         junitVersion = "4.12"
     }
 
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-    }
+    repositories { jcenter() }
 }
 
 project(":desktop") {

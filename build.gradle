@@ -1,3 +1,6 @@
+/*
+ * Declare Gradle plugins
+ */
 buildscript { repositories { jcenter() } }
 
 plugins {
@@ -5,6 +8,9 @@ plugins {
     id "com.google.protobuf" version "0.8.0"
 }
 
+/*
+ * Config. common to all projects
+ */
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
@@ -21,6 +27,9 @@ allprojects {
     repositories { jcenter() }
 }
 
+/*
+ * Config. specific to desktop project
+ */
 project(":desktop") {
     apply plugin: "java"
 
@@ -32,14 +41,19 @@ project(":desktop") {
     }
 }
 
+/*
+ * Config. specific to core project
+ */
 project(":core") {
     apply plugin: "java"
     apply plugin: "com.google.protobuf"
 
+    // turn on all warnings
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:all"
     }
 
+    // declare dependencies
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
@@ -63,7 +77,6 @@ project(":core") {
     idea {
         module {
             sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java");
-            // If you have additional sourceSets and/or codegen plugins, add all of them
             sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/grpc");
         }
     }

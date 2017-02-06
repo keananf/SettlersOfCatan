@@ -36,6 +36,10 @@ project(":core") {
     apply plugin: "java"
     apply plugin: "com.google.protobuf"
 
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:all"
+    }
+
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"

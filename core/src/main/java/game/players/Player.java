@@ -1,7 +1,6 @@
 package game.players;
 
-import board.Edge;
-import board.Node;
+import board.Board;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
@@ -10,11 +9,16 @@ import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
-import protocol.ResourceProtos;
+import grid.Edge;
+import grid.Node;
+import lobby.Lobby;
+import resource.Resource;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract class describing a player (AI, or network)
@@ -31,18 +35,23 @@ public abstract class Player
 	protected boolean hasLargestArmy;
 	protected HashMap<DevelopmentCardType, Integer> cards;
 	protected int armySize;
+	protected int id;
+	protected String userName;
 
 	private static final int VP_THRESHOLD = 10;
 	private static final int MIN_SETTLEMENTS = 2;
+	private static int index;
 
-	public Player(Colour colour)
+	public Player(Colour colour, String userName)
 	{
 		this.colour = colour;
 		roads = new ArrayList<List<Road>>();
 		settlements = new HashMap<Point, Building>();
 		resources = new HashMap<ResourceType, Integer>();
 		cards = new HashMap<DevelopmentCardType, Integer>();
-		
+		this.userName = userName;
+		id = index++;
+
 		// Initialise resources
 		for(ResourceType r : ResourceType.values())
 		{
@@ -280,7 +289,7 @@ public abstract class Player
 	 * Grants resources to the player
 	 * @param count a map of resources to give to the player
 	 */
-	public void grantResources(ResourceProtos.ResourceCount count) throws CannotAffordException
+	public void grantResources(Resource.Counts count) throws CannotAffordException
 	{
 		Map<ResourceType, Integer> newResources = new HashMap<ResourceType, Integer> ();
 		newResources.put(ResourceType.Brick, count.getBrick());
@@ -299,7 +308,7 @@ public abstract class Player
 	 * wants to construct
 	 * @throws CannotAffordException if the player does not have enough resources
 	 */
-	public void spendResources(ResourceProtos.ResourceCount count) throws CannotAffordException
+	public void spendResources(Resource.Counts count) throws CannotAffordException
 	{
 		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer> ();
 		cost.put(ResourceType.Brick, count.getBrick());
@@ -457,7 +466,7 @@ public abstract class Player
 	/**
 	 * Adds one knight to the army
 	 */
-	public void addKnight()
+	public void addKnightPlayed()
 	{
 		armySize++;
 	}
@@ -480,11 +489,33 @@ public abstract class Player
 
 	/**
 	 * Adds the given development card
-	 * @param type the development card to add
+	 * @param card the development card to add
 	 */
-    public void addDevelopmentCard(DevelopmentCardType type)
+    public void addDevelopmentCard(Board.DevCard card)
 	{
+		DevelopmentCardType type = DevelopmentCardType.fromProto(card);
+
 		int existing = cards.containsKey(type) ? cards.get(type) : 0;
 		cards.put(type, existing + 1);
+	}
+
+	/**
+	 * @return the player settings to be propogated out to the clients
+	 */
+	public Lobby.GameSetup.PlayerSetting getPlayerSettings()
+	{
+		Lobby.GameSetup.PlayerSetting.Builder builder = Lobby.GameSetup.PlayerSetting.newBuilder();
+		Board.Player.Builder player = Board.Player.newBuilder();
+
+		player.setId(getId());
+		builder.setUsername(userName);
+		builder.setPlayer(player.build());
+
+		return builder.build();
+	}
+
+	public Board.Player.Id getId()
+	{
+		return Board.Player.Id.forNumber(id);
 	}
 }

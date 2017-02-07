@@ -1,24 +1,19 @@
 package client;
 
-import board.*;
+import board.Board;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
 import exceptions.*;
 import game.Game;
-import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
 import game.players.LocalPlayer;
 import game.players.NetworkPlayer;
 import game.players.Player;
-import protocol.BoardProtos.*;
-import protocol.BuildProtos;
-import protocol.BuildProtos.BuildingProto;
-import protocol.BuildProtos.PointProto;
-import protocol.EnumProtos;
-import protocol.EnumProtos.BuildingTypeProto;
+import grid.*;
+import lobby.Lobby;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +28,7 @@ public class ClientGame extends Game
 {
     private boolean gameOver;
     private int dice;
+    private Map<Board.Player.Id, Colour> idsToColours;
     private Map<Colour, Integer> boughtDevCards;
     private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;
     private Player thisPlayer;
@@ -40,6 +36,7 @@ public class ClientGame extends Game
 
     public ClientGame()
     {
+        idsToColours = new HashMap<Board.Player.Id, Colour>();
         players = new HashMap<Colour, Player>();
         boughtDevCards = new HashMap<Colour, Integer>();
         playedDevCards = new HashMap<Colour, HashMap<DevelopmentCardType, Integer>>();
@@ -55,46 +52,70 @@ public class ClientGame extends Game
             }
 
             // Instantiate players as well
+            // TODO FOR TESTING ONLY. REMOVE ONCE CLIENT AND SERVER ARE HOOKED UP
             if(!c.equals(Colour.BLUE))
-                players.put(c, new NetworkPlayer(c));
+                players.put(c, new NetworkPlayer(c, c.toString()));
         }
-
-        // Set up this player
-        // TODO colour will be allocated from server
-        //eventProcessor = new EventProcessor(new Socket(), this); // TODO set this when joining a lobby
-        thisPlayer = new LocalPlayer(Colour.BLUE);
-        playerWithLongestRoad = thisPlayer.getColour();
-        currentPlayer = thisPlayer.getColour();
-        players.put(thisPlayer.getColour(), thisPlayer);
     }
 
     /**
      * @return a representation of the board that is compatible with protofbufs
+     * @param beginGame
      */
-    public HexGrid setBoard(BoardProto board) throws InvalidCoordinatesException, CannotAffordException
+    public HexGrid setBoard(Lobby.GameSetup beginGame) throws InvalidCoordinatesException, CannotAffordException
     {
         HexGrid grid = new HexGrid();
-        List<Node> nodes = processNodes(board.getNodesList());
-        List<Hex> hexes = processHexes(board.getHexesList());
-        List<Port> ports = processPorts(board.getPortsList());
+        List<Hex> hexes = processHexes(beginGame.getHexesList());
+        List<Port> ports = processPorts(beginGame.getHarboursList());
+        processPlayerSettings(beginGame.getOwnPlayer(), beginGame.getPlayerSettingsList());
 
         // Overwrite current grid
-        grid.setNodesAndHexes(nodes, hexes);
+        grid.setNodesAndHexes(hexes);
         grid.setPorts(ports);
 
         return grid;
     }
 
     /**
+     * Loads in all the player information
+     * @param ownPlayer this player's information
+     * @param playerSettingsList the list of other players' information
+     */
+    private void processPlayerSettings(Board.Player ownPlayer, List<Lobby.GameSetup.PlayerSetting> playerSettingsList)
+    {
+        // Load in each player's info
+        for(Lobby.GameSetup.PlayerSetting player : playerSettingsList)
+        {
+            enums.Colour col = enums.Colour.fromProto(player.getColour());
+
+            // Check if it is this player
+            if(player.getPlayer().getId().equals(ownPlayer.getId()))
+            {
+                thisPlayer = new LocalPlayer(col, player.getUsername());
+                players.put(col, thisPlayer);
+            }
+            else
+            {
+                players.put(col, new LocalPlayer(col, player.getUsername()));
+            }
+
+            // Add mapping from colours to ids
+            idsToColours.put(player.getPlayer().getId(), col);
+        }
+
+        //eventProcessor = new EventProcessor(new Socket(), this); // TODO set this when joining a lobby
+    }
+
+    /**
      * Retrieve the hex objects referred to by the proto
      * @param protos the hex protos
      */
-    private List<Hex> processHexes(List<HexProto> protos)
+    private List<Hex> processHexes(List<Board.Hex> protos)
     {
         List<Hex> hexes = new ArrayList<Hex>();
 
         // Add nodes
-        for(HexProto proto : protos)
+        for(Board.Hex proto : protos)
         {
             hexes.add(Hex.fromProto(proto));
         }
@@ -103,48 +124,20 @@ public class ClientGame extends Game
     }
 
     /**
-     * Retrieve the node objects referred to by the proto
-     * @param protos the node protos
-     */
-    private List<Node> processNodes(List<NodeProto> protos) throws InvalidCoordinatesException, CannotAffordException
-    {
-        List<Node> nodes = new ArrayList<Node>();
-
-        // Add nodes
-        for(NodeProto proto : protos)
-        {
-            PointProto p1 = proto.getP();
-            Node node = new Node(p1.getX(), p1.getY());
-
-            // If the node has a building
-            if(proto.hasBuilding())
-            {
-                node.setSettlement(processNewBuilding(proto.getBuilding(), true));
-            }
-
-            nodes.add(node);
-        }
-
-        return nodes;
-    }
-
-    /**
      * Retrieve the port objects referred to by the proto
      * @param protos the port protos
      */
-    private List<Port> processPorts(List<PortProto> protos)
+    private List<Port> processPorts(List<Board.Harbour> protos)
     {
         List<Port> ports = new ArrayList<Port>();
 
         // Add ports
-        for(PortProto e : protos)
+        for(Board.Harbour harbour : protos)
         {
-            PointProto p1 = e.getP1(), p2 = e.getP2();
+            Board.Edge e = harbour.getLocation();
+            Board.Point p1 = e.getA(), p2 = e.getB();
             Port port = new Port(grid.getNode(p1.getX(), p1.getY()), grid.getNode(p2.getX(), p2.getY()));
-            port.setExchangeAmount(e.getExchangeAmount());
-            port.setReturnAmount(e.getReturnAmount());
-            port.setExchangeType(ResourceType.fromProto(e.getExchangeResource()));
-            port.setReturnType(ResourceType.fromProto(e.getReturnResource()));
+            port.setExchangeType(ResourceType.fromProto(harbour.getResource()));
 
             ports.add(port);
         }
@@ -185,7 +178,7 @@ public class ClientGame extends Game
      * Swap the robber to the given point received from the server
      * @param robberMove the robber's new position
      */
-    public void moveRobber(PointProto robberMove) throws InvalidCoordinatesException
+    public void moveRobber(Board.Point robberMove) throws InvalidCoordinatesException
     {
         Hex hex = grid.getHex(robberMove.getX(), robberMove.getY());
 
@@ -200,22 +193,24 @@ public class ClientGame extends Game
 
     /**
      * Adds the new road received from the server to the board
-     * @param newRoad the new road to add
+     * @param newRoad the new road to add.
+     * @param instigator the instigator who instigated the event
      */
-    public Road processRoad(BuildProtos.RoadProto newRoad) throws RoadExistsException,
+    public Road processRoad(Board.Edge newRoad, Board.Player instigator) throws RoadExistsException,
             CannotBuildRoadException, CannotAffordException
     {
         // Extract information and find edge
-        Edge newEdge = grid.getEdge(newRoad);
+        Edge newEdge = grid.getEdge(newRoad.getA(), newRoad.getB());
+        Player player = getPlayer(instigator.getId());
 
-        // Spend resources if it is this player
-        if(currentPlayer.equals(thisPlayer.getColour()))
+        // Spend resources if it is this instigator
+        if(player.getColour().equals(thisPlayer.getColour()))
         {
             thisPlayer.spendResources(Road.getRoadCost());
         }
 
         // Make new road object
-        Road r = ((LocalPlayer)players.get(currentPlayer)).addRoad(newEdge);
+        Road r = ((LocalPlayer)players.get(player.getColour())).addRoad(newEdge);
         checkLongestRoad(false);
 
         return r;
@@ -223,96 +218,119 @@ public class ClientGame extends Game
 
     /**
      * Processes a new bulding, and adds it to the board
-     * @param building the new building
-     * @return the new building
+     * @param city the new city
+     * @param instigator the person who built the city
+     * @return the new city
      */
-    public Building processNewBuilding(BuildingProto building, boolean setUp) throws InvalidCoordinatesException, CannotAffordException
+    public City processNewCity(Board.Point city, Board.Player instigator, boolean setUp) throws InvalidCoordinatesException, CannotAffordException
     {
         // Extract information
-        BuildingTypeProto type = building.getType();
-        PointProto p = building.getP();
-        Node node = grid.getNode(p.getX(), p.getY());
-        Building b = null;
+        Node node = grid.getNode(city.getX(), city.getY());
+        Player player = getPlayer(instigator.getId());
 
         // If invalid coordinates
-        if(node == null || (node.getSettlement() != null &&
-                ((node.getSettlement() instanceof Settlement && type.equals(BuildingTypeProto.SETTLEMENT))
-                || (node.getSettlement() instanceof City && type.equals(BuildingTypeProto.CITY)))))
+        if(node == null || (node.getSettlement() != null && node.getSettlement() instanceof City))
         {
-            throw new InvalidCoordinatesException(p.getX(), p.getY());
+            throw new InvalidCoordinatesException(city.getX(), city.getY());
         }
 
         // Spend resources if it is this player
-        if(currentPlayer.equals(thisPlayer.getColour()) && !setUp)
+        if(player.getColour().equals(thisPlayer.getColour()) && !setUp)
         {
-            Map<ResourceType, Integer> spend = type.equals(BuildingTypeProto.CITY)
-                                                ? City.getCityCost() : Settlement.getSettlementCost();
+            Map<ResourceType, Integer> spend = City.getCityCost();
             thisPlayer.spendResources(spend);
         }
 
-        // Create and add the building
-        switch(type)
+        // Create and add the city
+        City c = new City(node, player.getColour());
+
+        // Updates settlement and score
+        players.get(player.getColour()).addSettlement(c);
+        return c;
+    }
+
+    /**
+     * Processes a new bulding, and adds it to the board
+     * @param settlement the new settlement
+     * @param instigator the person who built the settlement
+     * @return the new settlement
+     */
+    public Settlement processNewSettlement(Board.Point settlement, Board.Player instigator, boolean setUp)
+            throws InvalidCoordinatesException, CannotAffordException
+    {
+        // Extract information
+        Node node = grid.getNode(settlement.getX(), settlement.getY());
+        Player player = getPlayer(instigator.getId());
+
+        // If invalid coordinates
+        if(node == null || (node.getSettlement() != null && node.getSettlement() instanceof Settlement))
         {
-            case CITY:
-                City c = new City(node, Colour.fromProto(building.getPlayerId()));
-                node.setSettlement(c);
-                b = c;
-                break;
-            case SETTLEMENT:
-                Settlement s = new Settlement(node, Colour.fromProto(building.getPlayerId()));
-                node.setSettlement(s);
-                b = s;
-                break;
+            throw new InvalidCoordinatesException(settlement.getX(), settlement.getY());
         }
+
+        // Spend resources if it is this player
+        if(player.getColour().equals(thisPlayer.getColour()) && !setUp)
+        {
+            Map<ResourceType, Integer> spend = Settlement.getSettlementCost();
+            thisPlayer.spendResources(spend);
+        }
+
+        // Create and add the settlement
+        Settlement s = new Settlement(node, player.getColour());
         checkIfRoadBroken(node);
 
         // Updates settlement and score
-        players.get(currentPlayer).addSettlement(b);
-        return b;
+        players.get(player.getColour()).addSettlement(s);
+        return s;
     }
 
     /**
      * Records the played dev card for the given player
-     * @param type the played card
+     * @param playedDevCard the played card
      */
-    public void processPlayedDevCard(EnumProtos.DevelopmentCardProto type) throws DoesNotOwnException
+    public void processPlayedDevCard(Board.PlayableDevCard playedDevCard, Board.Player instigator) throws DoesNotOwnException
     {
-        DevelopmentCardType card = DevelopmentCardType.fromProto(type);
+        DevelopmentCardType card = DevelopmentCardType.fromProto(playedDevCard);
         Map<DevelopmentCardType, Integer> playedCards = playedDevCards.get(currentPlayer);
+        Player player = getPlayer(instigator.getId());
 
         // Record card being played
         int existing = playedCards.get(card);
         playedCards.put(card, existing + 1);
 
         // Eliminate one bought dev card from player
-        existing = boughtDevCards.containsKey(currentPlayer) ? boughtDevCards.get(currentPlayer) : 0;
+        existing = boughtDevCards.containsKey(player.getColour()) ? boughtDevCards.get(player.getColour()) : 0;
         if(existing > 0)
         {
-            boughtDevCards.put(currentPlayer, existing - 1);
+            boughtDevCards.put(player.getColour(), existing - 1);
         }
-        else throw new DoesNotOwnException(card, currentPlayer);
+        else throw new DoesNotOwnException(card, player.getColour());
 
         // Update largest army
         if(card.equals(DevelopmentCardType.Knight))
         {
-            players.get(currentPlayer).addKnight();
+            players.get(player.getColour()).addKnightPlayed();
             checkLargestArmy();
         }
     }
 
     /**
      * Records that the given player bought a dev card
-     * @param boughtDevCard
+     * @param boughtDevCard the bought dev card
+     * @param instigator the player who caused the event
      */
-    public void recordDevCard(EnumProtos.ColourProto boughtDevCard) throws CannotAffordException
+    public void recordDevCard(board.Board.DevCard boughtDevCard, Board.Player instigator) throws CannotAffordException
     {
+        Player player = getPlayer(instigator.getId());
+
         // Spend resources if it is this player
-        if(currentPlayer.equals(thisPlayer.getColour()))
+        if(player.getColour().equals(thisPlayer.getColour()))
         {
             thisPlayer.spendResources(DevelopmentCardType.getCardCost());
+            thisPlayer.addDevelopmentCard(boughtDevCard);
         }
 
-        Colour c = Colour.fromProto(boughtDevCard);
+        Colour c = player.getColour();
         int existing = boughtDevCards.containsKey(c) ? boughtDevCards.get(c) : 0;
         boughtDevCards.put(c, existing + 1);
     }
@@ -349,5 +367,16 @@ public class ClientGame extends Game
     public Player getPlayer()
     {
         return thisPlayer;
+    }
+
+    /**
+     * Retrieves the corresponding player
+     * @param id the player's id
+     * @return
+     */
+    private Player getPlayer(Board.Player.Id id)
+    {
+        enums.Colour col = idsToColours.get(id);
+        return players.get(col);
     }
 }

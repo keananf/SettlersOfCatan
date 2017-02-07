@@ -1,7 +1,5 @@
 package game.players;
 
-import board.Edge;
-import board.Node;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
@@ -10,10 +8,14 @@ import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
+import grid.Edge;
+import grid.Node;
+import resource.Resource;
 
-import java.awt.Point;
+import java.awt.*;
 import java.net.InetAddress;
 import java.util.*;
+import java.util.List;
 
 /**
  * Class representing a player from across the network
@@ -22,9 +24,9 @@ public class NetworkPlayer extends Player
 {
 	private InetAddress inetAddress;
 
-	public NetworkPlayer(Colour colour)
+	public NetworkPlayer(Colour colour, String username)
 	{
-		super(colour);
+		super(colour, username);
 	}
 
 
@@ -185,29 +187,29 @@ public class NetworkPlayer extends Player
 	/**
 	 * Take one resource randomly from the other player
 	 * @param other the other player
+	 * @param resource the resource to take
 	 */
-	public ResourceType takeResource(Player other)
+	public void takeResource(Player other, Resource.Kind resource) throws CannotStealException
 	{
 		Random rand = new Random();
 		ResourceType key;
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
-		// Check there are resources to take
-		if(other.getNumResources() == 0) return ResourceType.Generic;
-
-		// Find resource to take
-		while((key = (ResourceType) other.getResources().keySet().toArray()[rand.nextInt(other.getResources().size())]) == ResourceType.Generic || other.getResources().get(key) == 0);
-		grant.put(key, 1);
+		// Check the specified resource can be taken
+		if(!other.getResources().containsKey(resource) || other.getResources().get(resource) == 0)
+		{
+			throw new CannotStealException(colour, other.getColour());
+		}
 
 		try
 		{
+			grant.put(ResourceType.fromProto(resource), 1);
 			other.spendResources(grant);
 		}
 		catch (CannotAffordException e){ /* Cannot happen*/ }
 
 		// Grant and return
 		grantResources(grant);
-		return key;
 	}
 
 	/**
@@ -216,7 +218,7 @@ public class NetworkPlayer extends Player
 	public Player copy()
 	{
 		// Set up player
-		Player p = new NetworkPlayer(colour);
+		Player p = new NetworkPlayer(colour, userName);
 		p.resources = new HashMap<ResourceType, Integer>();
 		p.cards = new HashMap<DevelopmentCardType, Integer>();
 		p.settlements = new HashMap<Point, Building>();

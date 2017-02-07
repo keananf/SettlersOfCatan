@@ -1,11 +1,12 @@
 package game.build;
 
-import enums.*;
+import enums.Colour;
+import enums.ResourceType;
+import grid.Edge;
+import grid.Node;
 
-import java.util.*;
-
-import board.Edge;
-import board.Node;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class describing a settlement

@@ -1,16 +1,13 @@
 package game;
 
-import board.Edge;
-import board.Hex;
-import board.HexGrid;
-import board.Node;
+import grid.*;
 import enums.Colour;
 import enums.ResourceType;
 import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.players.Player;
-import protocol.ResourceProtos.ResourceCount;
+import resource.Resource;
 
 import java.util.HashMap;
 import java.util.List;
@@ -77,15 +74,15 @@ public abstract class Game
 	 * @param resources the resources received from the network
 	 * @return a map of resources to number
 	 */
-	protected Map<ResourceType,Integer> processResources(ResourceCount resources)
+	protected Map<ResourceType,Integer> processResources(Resource.Counts resources)
 	{
 		Map<ResourceType,Integer> ret = new HashMap<ResourceType,Integer>();
 
-		ret.put(ResourceType.Brick, resources.hasBrick() ? resources.getBrick() : 0);
-		ret.put(ResourceType.Lumber, resources.hasLumber() ? resources.getLumber() : 0);
-		ret.put(ResourceType.Grain, resources.hasGrain() ? resources.getGrain() : 0);
-		ret.put(ResourceType.Ore, resources.hasOre() ? resources.getOre() : 0);
-		ret.put(ResourceType.Wool, resources.hasWool() ? resources.getWool() : 0);
+		ret.put(ResourceType.Brick, resources.getBrick());
+		ret.put(ResourceType.Lumber, resources.getLumber());
+		ret.put(ResourceType.Grain, resources.getGrain());
+		ret.put(ResourceType.Ore, resources.getOre());
+		ret.put(ResourceType.Wool, resources.getWool());
 
 		return ret;
 	}

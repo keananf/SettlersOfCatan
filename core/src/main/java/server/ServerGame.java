@@ -1,6 +1,8 @@
 package server;
 
-import board.*;
+import board.Board;
+import catan.EmptyOuterClass;
+import catan.Events;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
@@ -8,17 +10,11 @@ import exceptions.*;
 import game.Game;
 import game.players.NetworkPlayer;
 import game.players.Player;
-import protocol.BoardProtos;
-import protocol.BuildProtos.PointProto;
-import protocol.EnumProtos.ResourceTypeProto;
-import protocol.EnumProtos.ResultProto;
-import protocol.EnumProtos.TradeStatusProto;
-import protocol.RequestProtos.*;
-import protocol.ResourceProtos.ResourceCount;
-import protocol.ResponseProtos.*;
-import protocol.TradeProtos.BankTradeProto;
-import protocol.TradeProtos.PlayerTradeProto;
-import protocol.TradeProtos.PortTradeProto;
+import grid.Hex;
+import grid.Node;
+import grid.Port;
+import lobby.Lobby;
+import resource.Resource;
 
 import java.net.InetAddress;
 import java.util.HashMap;
@@ -72,12 +68,12 @@ public class ServerGame extends Game
 
 		return playerResources;
 	}
-
-	/**
+/*
+	*//**
 	 * If trade was successful, exchange of resources occurs here
 	 * @param trade the trade object detailing the trade
 	 * @return the response status
-	 */
+	 *//*
 	public TradeStatusProto processBankTrade(BankTradeProto trade) throws IllegalBankTradeException, CannotAffordException
 	{
 		int exchangeAmount = 4, offerSum = 0, reqSum = 0;
@@ -117,11 +113,11 @@ public class ServerGame extends Game
 		return TradeStatusProto.ACCEPT;
 	}
 
-	/**
+	*//**
 	 * If trade was successful, exchange of resources occurs here
 	 * @param trade the trade object detailing the trade
 	 * @return the response status
-	 */
+	 *//*
 	public TradeStatusProto processPortTrade(PortTradeProto trade) throws IllegalPortTradeException, CannotAffordException
 	{
 		// Find the port and extract the trade's contents
@@ -162,13 +158,13 @@ public class ServerGame extends Game
 		return TradeStatusProto.ACCEPT;
 	}
 
-	/**
+	*//**
 	 * If trade was successful, exchange of resources occurs here
 	 * @param trade the trade object detailing the trade
 	 * @param offererColour the offerer's colour
 	 * @param recipientColour the recipient's colour
 	 * @return the response status
-	 */
+	 *//*
 	public SuccessFailResponse processPlayerTrade(PlayerTradeProto trade, Colour offererColour, Colour recipientColour)
 	{
         SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
@@ -198,15 +194,14 @@ public class ServerGame extends Game
 		}
 
         return resp.build();
-	}
+	}*/
 
 	/**
 	 * Processes the discard request to ensure that it is valid
 	 * @param discardRequest the resources the player is wishing to discard
 	 * @param col the colour of the player who sent the discard request
-	 * @return whether the discard request failed or not
 	 */
-	public void processDiscard(ResourceCount discardRequest, Colour col)
+	public void processDiscard(Resource.Counts discardRequest, Colour col)
 			throws CannotAffordException, InvalidDiscardRequest
 	{
 		Player current = players.get(col);
@@ -228,176 +223,127 @@ public class ServerGame extends Game
 	 * Checks that the player can build a road at the desired location, and builds it.
 	 * @param move
 	 * @param playerColour the player's colour
-	 * @return the response message to the client
 	 * @throws CannotUpgradeException 
 	 * @throws CannotAffordException 
 	 */
-	public UpgradeSettlementResponse upgradeSettlement(UpgradeSettlementRequest move, Colour playerColour)
+	public void upgradeSettlement(Board.Point move, Colour playerColour)
 			throws CannotAffordException, CannotUpgradeException, InvalidCoordinatesException
 	{
-		UpgradeSettlementResponse.Builder resp = UpgradeSettlementResponse.newBuilder();
-        Player p = players.get(playerColour);
-		Node node = grid.getNode(move.getPoint().getX(), move.getPoint().getY());
+		Player p = players.get(playerColour);
+		Node node = grid.getNode(move.getX(), move.getY());
 
 		// Invalid request coordinates.
 		if(node == null)
 		{
-			throw new InvalidCoordinatesException(move.getPoint().getX(), move.getPoint().getY());
+			throw new InvalidCoordinatesException(move.getX(), move.getY());
 		}
 
 		// Try to upgrade settlement
 		((NetworkPlayer) p).upgradeSettlement(node);
-
-		resp.setNewBuilding(node.getSettlement().toProto());
-		return resp.build();
     }
 	
 	/**
 	 * Checks that the player can build a settlement at the desired location, and builds it.
 	 * @param request the request
      * @param playerColour the player's colour
-	 * @return the response message to the client
 	 * @throws IllegalPlacementException 
 	 * @throws CannotAffordException 
 	 * @throws SettlementExistsException 
 	 */
-	public BuildSettlementResponse buildSettlement(BuildSettlementRequest request, Colour playerColour)
+	public void buildSettlement(Board.Point request, Colour playerColour)
 			throws CannotAffordException, IllegalPlacementException, SettlementExistsException, InvalidCoordinatesException
 	{
-		BuildSettlementResponse.Builder resp = BuildSettlementResponse.newBuilder();
-        Player p = players.get(playerColour);
-        PointProto pointProto = request.getPoint();
-		Node node = grid.getNode(pointProto.getX(), pointProto.getY());
+		Player p = players.get(playerColour);
+        Node node = grid.getNode(request.getX(), request.getY());
 
 		// Invalid request coordinates.
 		if(node == null)
 		{
-			throw new InvalidCoordinatesException(pointProto.getX(), pointProto.getY());
+			throw new InvalidCoordinatesException(request.getX(), request.getY());
 		}
 
 		// Try to build settlement
 		((NetworkPlayer) p).buildSettlement(node);
 		
 		checkIfRoadBroken(node);
-
-		resp.setNewBuilding(node.getSettlement().toProto());
-        return resp.build();
 	}
 
 	/**
 	 * Checks that the player can buy a development card
 	 * @param type the type of development card to play
-	 * @param playerColour the player's colour
-	 * @return the response message to the client
 	 */
-	private SuccessFailResponse playDevelopmentCard(DevelopmentCardType type, Colour playerColour) throws DoesNotOwnException
+	private void playDevelopmentCard(DevelopmentCardType type) throws DoesNotOwnException
 	{
-	    SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
-	    Player p = players.get(playerColour);
+	    Player p = players.get(currentPlayer);
 
 		// Try to play card
 		((NetworkPlayer)p).playDevelopmentCard(type);
-		resp.setResult(ResultProto.SUCCESS);
-
-		// Return success message
-		return resp.build();
 	}
 	
 	/**
 	 * Checks that the player can buy a development card
-	 * @param move the move
-	 * @param playerColour the player's colour
-	 * @return the response message to the client
+	 * @return the bought card
 	 * @throws CannotAffordException 
 	 */
-	public BuyDevCardResponse buyDevelopmentCard(BuyDevCardRequest move, Colour playerColour) throws CannotAffordException
+	public Board.DevCard buyDevelopmentCard() throws CannotAffordException
 	{
-        BuyDevCardResponse.Builder resp = BuyDevCardResponse.newBuilder();
-		Player p = players.get(playerColour);
-		
+        Player p = players.get(currentPlayer);
+
 		// Try to buy card
 		// Return the response with the card parameter set
         DevelopmentCardType card = ((NetworkPlayer)p).buyDevelopmentCard(DevelopmentCardType.chooseRandom());
-        resp.setDevelopmentCard(DevelopmentCardType.toProto(card));
-		return resp.build();
-	}
-
-	/**
-	 * Plays a knight development card if the player has one
-	 * @param request the request
-	 * @param playerColour the player
-	 * @return a response object
-	 * @throws CannotStealException if the player cannot steal from the requested player
-	 * @throws DoesNotOwnException if the player does not own a Knight card
-	 */
-	public PlayKnightCardResponse playKnightCard(PlayKnightCardRequest request, Colour playerColour)
-			throws CannotStealException, DoesNotOwnException, InvalidCoordinatesException
-	{
-		PlayKnightCardResponse.Builder resp = PlayKnightCardResponse.newBuilder();
-
-		// Ensure the player has the dev card, and play it
-		playDevelopmentCard(DevelopmentCardType.Knight, playerColour);
-
-		// Perform the swap and take a resource
-		resp.setMoveRobberResponse(moveRobber(request.getRequest(), playerColour));
-
-		// Add up knights used
-		players.get(playerColour).addKnight();
-		checkLargestArmy();
-
-		return resp.build();
+        return DevelopmentCardType.toProto(card);
 	}
 
 	/**
 	 * Moves the robber and takes a card from the player
 	 * who has a settlement on the hex
-	 * @param move the move
-     * @param playerColour the player's colour
-	 * @return return message
+	 * @param point the point to move the robber to
 	 * @throws CannotStealException if the specified player cannot provide a resource 
 	 */
-	public MoveRobberResponse moveRobber(MoveRobberRequest move, Colour playerColour) throws CannotStealException,
-																						InvalidCoordinatesException
+	public void moveRobber(Board.Point point) throws InvalidCoordinatesException
 	{
-        MoveRobberResponse.Builder resp = MoveRobberResponse.newBuilder();
-
 		// Retrieve the new hex the robber will move to.
-        PointProto point = move.getHex().getP();
-		Hex newHex = grid.getHex(point.getX(), point.getY());
+     	Hex newHex = grid.getHex(point.getX(), point.getY());
 
 		// Invalid request coordinates.
 		if(newHex == null)
 		{
 			throw new InvalidCoordinatesException(point.getX(), point.getY());
 		}
+		
+		// Actually perform swap
+		grid.swapRobbers(newHex);
+	}
 
-		Colour otherColour = Colour.fromProto(move.getColourToTakeFrom());
+	/**
+	 * Attempts to take a resource from the given player.
+	 * @param otherColour the colour to take from
+	 * @param resource the resource to take
+	 * @throws CannotStealException
+	 */
+	public void takeResource(Colour otherColour, Resource.Kind resource) throws CannotStealException
+	{
 		Player other = players.get(otherColour);
 		boolean valid = false;
 
 		// Verify this player can take from the specified one
-		for(Node n : newHex.getNodes())
+		for(Node n : getGrid().getHexWithRobber().getNodes())
 		{
-			// If node has a settlement and it is of the specified colour, then the player can take a card
-			// Randomly remove resource
+			// If node has a settlement and it is of the specified colour
 			if(n.getSettlement() != null && n.getSettlement().getPlayerColour().equals(otherColour))
 			{
 				NetworkPlayer p = (NetworkPlayer) players.get(currentPlayer);
-                resp.setResource(ResourceType.toProto(p.takeResource(other)));
+				p.takeResource(players.get(otherColour), resource);
 				valid = true;
 			}
 		}
-		
-		// Cannot take from this player
-		if(!valid) throw new CannotStealException(playerColour, otherColour);
-		
-		// return success message
-		grid.swapRobbers(newHex);
-		resp.setRobberLocation(point);
-		return resp.build();
-	}
 
-	/**
+		// Cannot take from this player
+		if(!valid) throw new CannotStealException(currentPlayer, otherColour);
+	}
+/*
+	*//**
 	 * Process the playing of the 'Build Roads' development card.
 	 * @param request the request to process
      * @param playerColour the player's colour
@@ -405,7 +351,7 @@ public class ServerGame extends Game
 	 * @throws RoadExistsException 
 	 * @throws CannotBuildRoadException 
 	 * @throws CannotAffordException 
-	 */
+	 *//*
 	public PlayRoadBuildingCardResponse playBuildRoadsCard(PlayRoadBuildingCardRequest request, Colour playerColour)
 			throws CannotAffordException, CannotBuildRoadException,
 				RoadExistsException, DoesNotOwnException, InvalidCoordinatesException
@@ -418,73 +364,47 @@ public class ServerGame extends Game
 		resp.setResponse1(buildRoad(request.getRequest1(), playerColour));
 		resp.setResponse2(buildRoad(request.getRequest2(), playerColour));
 		return resp.build();
-	}
+	}*/
 	
 	/**
 	 * Process the playing of the 'University' development card.
-	 * @return return message
 	 */
-	public SuccessFailResponse playUniversityCard() throws DoesNotOwnException
+	public void playUniversityCard() throws DoesNotOwnException
 	{
-        SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
-
-        playDevelopmentCard(DevelopmentCardType.University, currentPlayer);
         grantVpPoint();
-
-        resp.setResult(ResultProto.SUCCESS);
-        return resp.build();
 	}
 	
 	/**
 	 * Process the playing of the 'Library' development card.
-	 * @return return message
 	 */
-	public SuccessFailResponse playLibraryCard() throws DoesNotOwnException
+	public void playLibraryCard() throws DoesNotOwnException
 	{
-        SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
-
-		playDevelopmentCard(DevelopmentCardType.Library, currentPlayer);
-		grantVpPoint();
-
-        resp.setResult(ResultProto.SUCCESS);
-        return resp.build();
+        grantVpPoint();
 	}
 	
 	/**
-	 * Process the playing of the 'Year of Plenty' development card.
-	 * @param request the request to process
-	 * @return return message
-	 */
-	public PlayYearOfPlentyCardResponse playYearOfPlentyCard(PlayYearOfPlentyCardRequest request) throws DoesNotOwnException
+	 * Choose a new resource as a result of playing a year of plenty card.
+	 * @param r1 the first resource that was chosen
+	 * @param r2 the second resource that was chosen
+	 * */
+	public void chooseResources(Resource.Kind r1, Resource.Kind r2)
 	{
-		PlayYearOfPlentyCardResponse.Builder resp = PlayYearOfPlentyCardResponse.newBuilder();
-
-		playDevelopmentCard(DevelopmentCardType.YearOfPlenty, currentPlayer);
-
 		// Set up grant
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
-		grant.put(ResourceType.fromProto(request.getR1()), 1);
-		grant.put(ResourceType.fromProto(request.getR2()), 1);
+		grant.put(ResourceType.fromProto(r1), 1);
+		grant.put(ResourceType.fromProto(r2), 1);
 		players.get(currentPlayer).grantResources(grant);
-
-		resp.setR1(request.getR1());
-		resp.setR2(request.getR2());
-		return resp.build();
 	}
 	
 	/**
 	 * Process the playing of the 'Monopoly' development card.
-	 * @param request the request to process
-	 * @return return message
+	 * @param r the resource to take
+	 * @return the sum of resources of the given type that were taken
 	 */
-	public PlayMonopolyCardResponse playMonopolyCard(PlayMonopolyCardRequest request) throws DoesNotOwnException
+	public int playMonopolyCard(Resource.Kind r)
 	{
-        PlayMonopolyCardResponse.Builder response = PlayMonopolyCardResponse.newBuilder();
-		ResourceTypeProto r = request.getResource();
-		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+        Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 		int sum = 0;
-
-		playDevelopmentCard(DevelopmentCardType.Monopoly, currentPlayer);
 
 		// for each player
 		for(Player p : players.values())
@@ -504,28 +424,25 @@ public class ServerGame extends Game
 		}
 		
 		// Return message is string showing number of resources taken
-        response.setNumResources(sum);
-		response.setResource(r);
-		return response.build();
+        return sum;
 	}
 	
 	/**
 	 * Checks that the player can build a road at the desired location, and builds it.
-	 * @param request
+	 * @param edge the edge to build a road on
 	 * @return the response message to the client
 	 * @throws RoadExistsException 
 	 * @throws CannotBuildRoadException 
 	 * @throws CannotAffordException 
 	 */
-	public BuildRoadResponse buildRoad(BuildRoadRequest request, Colour colour) throws CannotAffordException,
-					CannotBuildRoadException, RoadExistsException, InvalidCoordinatesException
+	public Events.Event buildRoad(Board.Edge edge) throws CannotAffordException,CannotBuildRoadException,
+			RoadExistsException, InvalidCoordinatesException
 	{
-		Player p = players.get(colour);
-		PointProto p1 = request.getEdge().getP1(), p2 = request.getEdge().getP2();
+		Player p = players.get(currentPlayer);
+		board.Board.Point p1 = edge.getA(), p2 = edge.getB();
 		Node n = grid.getNode(p1.getX(), p1.getY());
 		Node n2 = grid.getNode(p2.getX(), p2.getY());
-		Edge edge  = null;
-        BuildRoadResponse.Builder response = BuildRoadResponse.newBuilder();
+		Events.Event.Builder ev = Events.Event.newBuilder();
 
         // Check valid coordinates
         if(n == null)
@@ -537,41 +454,22 @@ public class ServerGame extends Game
 			throw new InvalidCoordinatesException(p2.getX(), p2.getY());
 		}
 
-		// Find edge
-		for(Edge e : n.getEdges())
-		{
-			if(e.getX().equals(n2) || e.getY().equals(n2))
-			{
-				edge = e;
-				break;
-			}
-		}
-		
 		// Try to build the road and update the longest road 
-		int longestRoad = ((NetworkPlayer)p).buildRoad(edge);
 		checkLongestRoad(false);
 		
 		// return success message
-        response.setLongestRoad(longestRoad);
-        response.setNewRoad(edge.getRoad().toProto());
-		return response.build();
+        ev.setRoadBuilt(edge);
+        ev.setInstigator(players.get(currentPlayer).getPlayerSettings().getPlayer());
+        return ev.build();
 	}
 
 	/**
 	 * @return a representation of the board that is compatible with protofbufs
 	 */
-	public GiveBoardResponse getBoard()
+	public Lobby.GameSetup getGameSettings(Colour request)
 	{
-		GiveBoardResponse.Builder resp = GiveBoardResponse.newBuilder();
-		BoardProtos.BoardProto.Builder builder = BoardProtos.BoardProto.newBuilder();
+		Lobby.GameSetup.Builder builder = Lobby.GameSetup.newBuilder();
 		int index = 0;
-
-		// Add edges
-		for(Edge e : getGrid().getEdgesAsList())
-		{
-			builder.addEdgesBuilder();
-			builder.setEdges(index++, e.toEdgeProto());
-		}
 
 		// Add hexes
 		index = 0;
@@ -581,46 +479,53 @@ public class ServerGame extends Game
 			builder.setHexes(index++, h.toHexProto());
 		}
 
-		// Add port
+		// Add ports
 		index = 0;
 		for(Port p : getGrid().getPortsAsList())
 		{
-			builder.addPortsBuilder();
-			builder.setPorts(index++, p.toPortProto());
+			builder.addHarboursBuilder();
+			builder.setHarbours(index++, p.toPortProto());
 		}
 
-		// Add nodes
+		// Add player settings
 		index = 0;
-		for(Node n : getGrid().getNodesAsList())
+		for(Player p : getPlayersAsList())
 		{
-			builder.addNodesBuilder();
-			builder.setNodes(index++, n.toProto());
+			builder.addPlayerSettingsBuilder();
+			builder.setPlayerSettings(index++, p.getPlayerSettings());
+
+			// set own player
+			if(p.getColour().equals(request))
+			{
+				builder.setOwnPlayer(p.getPlayerSettings().getPlayer());
+			}
 		}
 
-		resp.setBoard(builder.build());
-		return resp.build();
+		return builder.build();
 	}
 
 	/**
 	 * Toggles a player's turn
 	 * @return 
 	 */
-	public EndMoveResponse changeTurn()
+	public Events.Event changeTurn()
 	{
-		EndMoveResponse.Builder resp = EndMoveResponse.newBuilder();
+		Events.Event.Builder resp = Events.Event.newBuilder();
 
+		// Update turn and set event.
+		// TODO incorporate player ids
 		setCurrentPlayer(getPlayersAsList()[++current % NUM_PLAYERS].getColour());
-		resp.setNewTurn(Colour.toProto(currentPlayer));
+		resp.setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance());
 
 		return resp.build();
 	}
 
 	/**
-	 * Generates a random roll between 1 and 12
+	 * Generates a random roll between 2 and 12
 	 */
 	public int generateDiceRoll()
 	{
-		return dice.nextInt(12) + 1;
+		return dice.nextInt(11) + 2;
 	}
 
 	/**
@@ -637,14 +542,6 @@ public class ServerGame extends Game
 		return false;
 	}
 
-	/**
-	 * @return the grid
-	 */
-	public HexGrid getGrid()
-	{
-		return grid;
-	}
-
 	public Map<Colour, Player> getPlayers()
 	{
 		return players;
@@ -655,10 +552,10 @@ public class ServerGame extends Game
 		return players.values().toArray(new Player[]{});
 	}
 
-	public Colour addNetworkPlayer(InetAddress inetAddress)
+	public Colour addNetworkPlayer(InetAddress inetAddress, String name)
 	{
 	    Colour newCol = Colour.values()[numPlayers++];
-		NetworkPlayer p = new NetworkPlayer(newCol);
+		NetworkPlayer p = new NetworkPlayer(newCol, name);
 		p.setInetAddress(inetAddress);
 		
 		players.put(p.getColour(), p);

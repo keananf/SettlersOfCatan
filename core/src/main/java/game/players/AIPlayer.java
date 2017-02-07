@@ -7,9 +7,9 @@ import enums.*;
  */
 public class AIPlayer extends Player
 {
-	public AIPlayer(Colour colour)
+	public AIPlayer(Colour colour, String userName)
 	{
-		super(colour);
+		super(colour, userName);
 	}
 
 }

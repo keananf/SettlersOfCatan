@@ -1,9 +1,7 @@
 package client;
 
-import enums.Colour;
-import protocol.EventProtos.Event;
-import protocol.MessageProtos.Message;
-import protocol.RequestProtos;
+import catan.Events.Event;
+import catan.Messages.Message;
 import server.Logger;
 
 import java.io.IOException;
@@ -67,41 +65,9 @@ public class EventProcessor implements Runnable
         // switch on message type
         switch (msg.getTypeCase())
         {
-            // User request
-            case REQUEST:
-                processRequest(msg.getRequest(), Colour.fromProto(msg.getPlayerColour()));
-                break;
-
             // Extract and process event
             case EVENT:
                 processEvent(msg.getEvent());
-                break;
-
-            // Process new board, otherwise ignore
-            case RESPONSE:
-                if(msg.getResponse().hasCurrentBoardResponse())
-                {
-                    game.setBoard(msg.getResponse().getCurrentBoardResponse().getBoard());
-                }
-                break;
-        }
-    }
-
-    /**
-     * Process the request relayed by the server
-     * @param req the request
-     * @param colour the player who made the request
-     */
-    private void processRequest(RequestProtos.Request req, Colour colour)
-    {
-        // Switch on type of event
-        switch(req.getTypeCase())
-        {
-            case TRADEREQUEST:
-                break;
-
-            // Error.
-            default:
                 break;
         }
     }
@@ -115,30 +81,36 @@ public class EventProcessor implements Runnable
         // Switch on type of event
         switch(ev.getTypeCase())
         {
-            case GAMEOVER:
+            case GAMEWON:
                 game.setGameOver();
+                break;/*
+            case TURNENDED:
+                game.setTurn(); //TODO incorporate player ids
+                break;*/
+            case CITYBUILT:
+                game.processNewCity(ev.getCityBuilt(), ev.getInstigator(), false);
                 break;
-            case NEWTURN:
-                game.setTurn(Colour.fromProto(ev.getNewTurn()));
+            case SETTLEMENTBUILT:
+                game.processNewSettlement(ev.getSettlementBuilt(), ev.getInstigator(), false);
                 break;
-            case NEWBUILDING:
-                game.processNewBuilding(ev.getNewBuilding(), false);
+            case ROADBUILT:
+                game.processRoad(ev.getRoadBuilt(), ev.getInstigator());
                 break;
-            case DICEROLL:
-                game.processDice(ev.getDiceRoll().getDice());
+            case ROLLED:
+                game.processDice(ev.getRolled().getA() + ev.getRolled().getB());
                 break;
-            case NEWROAD:
-                game.processRoad(ev.getNewRoad());
+            case ROBBERMOVED:
+                game.moveRobber(ev.getRobberMoved());
                 break;
-            case ROBBERMOVE:
-                game.moveRobber(ev.getRobberMove());
+            case DEVCARDBOUGHT:
+                game.recordDevCard(ev.getDevCardBought(), ev.getInstigator());
                 break;
-            case BOUGHTDEVCARD:
-                game.recordDevCard(ev.getBoughtDevCard());
+            case DEVCARDPLAYED:
+                game.processPlayedDevCard(ev.getDevCardPlayed(), ev.getInstigator());
                 break;
-            case PLAYEDDEVCARD:
-                game.processPlayedDevCard(ev.getPlayedDevCard().getType());
-                break;
+            case BEGINGAME:
+                game.setBoard(ev.getBeginGame());
+
 
             //TODO complete
         }

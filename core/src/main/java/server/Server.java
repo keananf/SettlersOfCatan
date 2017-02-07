@@ -136,7 +136,7 @@ public class Server implements Runnable
 	private void broadcastBoard() throws IOException
 	{
 		// Set up message
-		GiveBoardResponse board = game.getBoard();
+		GiveBoardResponse board = game.getGameSettings();
 		Message.Builder msg = Message.newBuilder();
 		Response.Builder resp = Response.newBuilder();
 		resp.setCurrentBoardResponse(board);
@@ -376,7 +376,7 @@ public class Server implements Runnable
 					resp.setBuyDevCardResponse(game.buyDevelopmentCard(request.getBuyDevCardRequest(), playerColour));
 					break;
 				case GETBOARDREQUEST:
-					resp.setCurrentBoardResponse(game.getBoard());
+					resp.setCurrentBoardResponse(game.getGameSettings());
 					break;
 				case PLAYROADBUILDINGCARDREQUEST:
 					card = DevelopmentCardType.RoadBuilding;
@@ -399,6 +399,7 @@ public class Server implements Runnable
 					resp.setSuccessFailResponse(game.playUniversityCard());
 					break;
 				case PLAYKNIGHTCARDREQUEST:
+					//send played card event AND THEN knight event
 					card = DevelopmentCardType.Knight;
 					resp.setPlayKnightCardResponse(game.playKnightCard(request.getPlayKnightCardRequest(), playerColour));
 					break;

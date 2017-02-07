@@ -1,10 +1,11 @@
 package game.build;
 
-import enums.*;
+import enums.Colour;
+import enums.ResourceType;
+import grid.Node;
 
-import java.util.*;
-
-import board.Node;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class describing a city

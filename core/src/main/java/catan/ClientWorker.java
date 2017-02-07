@@ -11,8 +11,8 @@ import game.build.Settlement;
 import game.players.Player;
 import protocol.BuildProtos.PointProto;
 import protocol.RequestProtos.*;
-import protocol.RequestProtos.BuildRoadRequest.Builder;
-import protocol.RequestProtos.Request;
+
+import java.util.Map;
 
 public class ClientWorker
 {
@@ -106,10 +106,6 @@ public class ClientWorker
 		}
 	}
 
-    private void checkBuild(Edge edge) {
-        //TODO: exactly the same as above but for edges
-    }
-
     private boolean checkTurn() {
         boolean turn = false;
 
@@ -127,18 +123,6 @@ public class ClientWorker
 		{
 			inProgressTurn.possibilities[1] = Move.BUILD_ROAD;
 		}
-	}
-
-	private boolean checkTurn()
-	{
-		boolean turn = false;
-
-		if(game.getCurrentPlayer() == game.getPlayer().getColour())
-		{
-			turn = true;
-		}
-
-		return turn;
 	}
 
     private Request sendMove() {

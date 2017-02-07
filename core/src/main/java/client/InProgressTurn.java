@@ -1,4 +1,4 @@
-package game;
+package client;
 
 import enums.Move;
 import board.Edge;

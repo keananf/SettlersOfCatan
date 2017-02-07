@@ -8,7 +8,7 @@ import exceptions.*;
 import game.Game;
 import game.players.NetworkPlayer;
 import game.players.Player;
-import game.InProgressTurn;
+import client.InProgressTurn;
 import protocol.BoardProtos;
 import protocol.BuildProtos.PointProto;
 import protocol.EnumProtos.ResourceTypeProto;

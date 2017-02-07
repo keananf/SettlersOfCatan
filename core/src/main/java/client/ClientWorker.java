@@ -1,11 +1,9 @@
-package catan;
+package client;
 
 import board.Edge;
 import board.Node;
-import client.ClientGame;
 import enums.Move;
 import enums.ResourceType;
-import game.InProgressTurn;
 import game.build.Building;
 import game.build.Settlement;
 import game.players.Player;
@@ -48,9 +46,17 @@ public class ClientWorker
 		{
 			checkBuild(inProgressTurn.chosenEdge);
 		}
+		else if(inProgressTurn.initialClickObject == inProgressTurn.initialClickObject.DEVCARD)
+		{
+			checkDevCard();
+		}
 
 	}
 
+	private void checkDevCard()
+	{
+		//TODO: look up game rules and validate
+	}
 	private void checkCard()
 	{
 		inProgressTurn.possibilities[0] = Move.CLOSE;
@@ -146,15 +152,42 @@ public class ClientWorker
             case BUY_CARD:
                 request.setBuyDevCardRequest(buyDevCardRequest());
                 break;
+			case PLAY_ROADBUILDINGCARD:
+			//TODO: PlayRoadBuildingCardRequest
+			case PLAY_MONOPOLYCARD:
+			//TODO: PlayMonopolyCardRequest
+			case PLAY_YEAROFPLENTYCARD:
+			//TODO: PlayYearOfPlentyCardRequest
+			case PLAY_ROADLIBRARYCARD:
+			//TODO: PlayLibraryCardRequest
+			case PLAY_UNIVERSITYCARD:
+			//TODO: PlayUniversityCardRequest
+			case PLAY_KNIGHTCARD:
+			//TODO: PlayKnightCardRequest
+
+
+			//Move Robber
+			//TODO: MoveRobberRequest moveRobberRequest = 12;
+
+			//TradeRequest
+			//TODO: TradeRequest tradeRequest = 14;
+
+			//ResouceCount
+			//TODO: ResourceCount discardRequest = 15;
+
+
+			//moving rubber
             case CLOSE:
                 request.setEndMoveRequest(endMoveRequest());
                 break;
+
+
         }
 
 		toServer(request.build());
     }
 
-    //TODO: send protocol buffer to server
+    //TODO: send protocol buffer to server with codedOutputStream
 	private void toServer(Request request){
 		try {
 			clientSocket = new Socket(InetAddress.getLocalHost(),PORT);

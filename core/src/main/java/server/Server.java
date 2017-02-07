@@ -462,7 +462,7 @@ public class Server implements Runnable
 	}
 
 	/**
-	 * Checks if the given players still need to discard cards or not
+	 * Checks if the given players still need to dis = new Socketcard cards or not
 	 * @param discardList the list of players who need to discard
 	 * @return boolean indicating whether ot not
 	 */

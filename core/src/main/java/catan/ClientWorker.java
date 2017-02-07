@@ -12,12 +12,17 @@ import game.players.Player;
 import protocol.BuildProtos.PointProto;
 import protocol.RequestProtos.*;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.Map;
 
 public class ClientWorker
 {
 	private ClientGame game;
 	private InProgressTurn inProgressTurn = game.inProgressTurn;
+	private Socket clientSocket;
+	private static final int PORT = 12345;
 
 	public ClientWorker(ClientGame game)
 	{
@@ -125,7 +130,7 @@ public class ClientWorker
 		}
 	}
 
-    private Request sendMove() {
+    private void sendMove() {
         Request.Builder request = Request.newBuilder();
 
         switch (game.inProgressTurn.chosenMove) {
@@ -146,20 +151,33 @@ public class ClientWorker
                 break;
         }
 
-        return request.build();
+		toServer(request.build());
     }
 
     //TODO: send protocol buffer to server
+	private void toServer(Request request){
+		try {
+			clientSocket = new Socket(InetAddress.getLocalHost(),PORT);
+			System.out.println("Sending to Server\n");
+
+			request.writeTo(clientSocket.getOutputStream());
+			clientSocket.getOutputStream().flush();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			e.getMessage();
+		}
+	}
 
     private BuildRoadRequest setUpRoad(Edge edge) {
-        BuildRoadRequest.Builder roadRequest = BuildRoadRequest.newBuilder();//TODO: add affordability check, unless done before adding to chosen move
+        BuildRoadRequest.Builder roadRequest = BuildRoadRequest.newBuilder();
         roadRequest.setEdge(edge.toEdgeProto());
 
         return roadRequest.build();
     }
 
     private BuildSettlementRequest setUpSettlement(Node node) {
-        BuildSettlementRequest.Builder settlementRequest = BuildSettlementRequest.newBuilder();//TODO: add affordability check
+        BuildSettlementRequest.Builder settlementRequest = BuildSettlementRequest.newBuilder();
         PointProto.Builder point = PointProto.newBuilder();
 
         point.setX(node.getX());
@@ -172,7 +190,7 @@ public class ClientWorker
     }
 
     private UpgradeSettlementRequest upgradeSettlement(Node node) {
-        if (node.getSettlement() == null) return null;//TODO: add affordability check
+        if (node.getSettlement() == null) return null;
 
         UpgradeSettlementRequest.Builder upgradeRequest = UpgradeSettlementRequest.newBuilder();
         PointProto.Builder point = PointProto.newBuilder();

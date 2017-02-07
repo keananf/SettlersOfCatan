@@ -83,14 +83,7 @@ public class Road implements IBuildable
 	{
 		Edge thisEdge = this.edge, otherEdge = road.edge;
 		
-		// If these two roads share a node
-		if(thisEdge.getX().equals(otherEdge.getX()) || thisEdge.getX().equals(otherEdge.getY()) 
-				|| thisEdge.getY().equals(otherEdge.getX()) || thisEdge.getY().equals(otherEdge.getY()))
-		{
-			return true;
-		}
-		
-		return false;
+		return thisEdge.isConnected(otherEdge);
 	}
 
 	/**

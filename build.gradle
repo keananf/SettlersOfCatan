@@ -56,6 +56,9 @@ project(":core") {
         testCompile "junit:junit:$junitVersion"
     }
 
+
+    javadoc.destinationDir = file("${project.rootDir}/doc")
+
     protobuf {
         generatedFilesBaseDir = "$projectDir/gen"
     }
@@ -67,7 +70,17 @@ project(":core") {
     idea {
         module {
             sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java");
+            // If you have additional sourceSets and/or codegen plugins, add all of them
             sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/grpc");
+        }
+    }
+
+    eclipse {
+        classpath {
+            file.beforeMerged {
+                cp -> cp.entries.add(new org.gradle.plugins.ide.eclipse.model.SourceFolder("${protobuf.generatedFilesBaseDir}/main/java", null))
+                      cp.entries.add(new org.gradle.plugins.ide.eclipse.model.SourceFolder("${protobuf.generatedFilesBaseDir}/main/grpc", null))
+            }
         }
     }
 

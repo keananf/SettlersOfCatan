@@ -252,4 +252,21 @@ public class Edge
 
 		return e.build();
     }
+
+	/**
+	 * Detects whether the two edges are connected
+	 * @param otherEdge the edge to check against
+	 * @return if they're connected
+	 */
+	public boolean isConnected(Edge otherEdge)
+	{
+		// If these two edges share a node
+		if(getX().equals(otherEdge.getX()) || getX().equals(otherEdge.getY())
+				|| getY().equals(otherEdge.getX()) || getY().equals(otherEdge.getY()))
+		{
+			return true;
+		}
+
+		return false;
+    }
 }

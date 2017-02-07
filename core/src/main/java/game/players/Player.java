@@ -7,7 +7,9 @@ import enums.DevelopmentCardType;
 import enums.ResourceType;
 import exceptions.CannotAffordException;
 import game.build.Building;
+import game.build.City;
 import game.build.Road;
+import game.build.Settlement;
 import protocol.ResourceProtos;
 
 import java.awt.*;
@@ -28,10 +30,10 @@ public abstract class Player
 	protected boolean hasLongestRoad;
 	protected boolean hasLargestArmy;
 	protected HashMap<DevelopmentCardType, Integer> cards;
-	protected int numResources;
 	protected int armySize;
 
 	private static final int VP_THRESHOLD = 10;
+	private static final int MIN_SETTLEMENTS = 2;
 
 	public Player(Colour colour)
 	{
@@ -181,13 +183,17 @@ public abstract class Player
 	 */
 	public int getNumResources()
 	{
+		int numResources = 0;
+		for(Integer i : resources.values())
+		{
+			numResources += i;
+		}
 		return numResources;
 	}
 	
 	/**
 	 * Checks to see if the user canAfford something
 	 * @param cost
-	 * @throws CannotAffordException
 	 */
 	public boolean canAfford(Map<ResourceType, Integer> cost)
 	{
@@ -199,6 +205,57 @@ public abstract class Player
 		}
 		
 		return true;
+	}
+
+	/**
+	 * Checks to see if building a road is valid at the given edge
+	 * @param edge the desired road location
+	 * @return if the desired location is valid for a road
+	 */
+	public boolean canBuildRoad(Edge edge)
+	{
+		boolean valid = false;
+
+		// See if the proposed node is connected to any of the current roads
+		for(List<Road> list : roads)
+		{
+			for(Road r : list)
+			{
+				if(r.getEdge().isConnected(edge))
+				{
+					valid = true;
+					break;
+				}
+			}
+		}
+
+		return canAfford(Road.getRoadCost()) && edge.getRoad() == null && valid;
+	}
+
+	/**
+	 * Checks to see if the player can build a settlement
+	 * @param node the desired settlement location
+	 * @return if building a settlement at the given node is legal
+	 */
+	public boolean canBuildSettlement(Node node)
+	{
+		Point p = new Point(node.getX(), node.getY());
+		Settlement s = new Settlement(node, colour);
+
+		return canAfford(Settlement.getSettlementCost()) && !settlements.containsKey(p)
+				&& !s.isNearSettlement() && (node.isNearRoad(colour) || getSettlements().size() < MIN_SETTLEMENTS);
+	}
+
+	/**
+	 * Checks to see if the player can build a city
+	 * @param node the desired city location
+	 * @return if building a city at the given node is legal
+	 */
+	public boolean canBuildCity(Node node)
+	{
+		Point p = new Point(node.getX(), node.getY());
+
+		return canAfford(City.getCityCost()) && settlements.containsKey(p) && settlements.get(p) instanceof Settlement;
 	}
 
 	/**
@@ -215,7 +272,6 @@ public abstract class Player
 
 			// Add to overall resource bank
 			resources.put(r, value + existing);
-			numResources += value;
 		}
 	}
 
@@ -273,36 +329,7 @@ public abstract class Player
 
 			// Add to overall resource bank
 			resources.put(r, existing - value);
-			numResources -= value;
 		}
-	}
-
-	/**
-	 * Checks if a player has more than 7 resource cards.
-	 *
-	 * If so, cards are randomly removed until the player has 7 again.
-	 */
-	public Map<ResourceType, Integer> loseResources()
-	{
-		Random rand = new Random();
-		int resourceLimit = 7;
-		Map<ResourceType, Integer> removed = new HashMap<ResourceType, Integer>();
-
-		// Randomly remove resources until the cap is reached
-		while(numResources > resourceLimit)
-		{
-			ResourceType key = (ResourceType) resources.keySet().toArray()[rand.nextInt(resources.size())];
-
-			if(resources.get(key) > 0)
-			{
-				int existing =  removed.containsKey(key) ? removed.get(key) : 0;
-				resources.put(key, resources.get(key) - 1);
-				removed.put(key, existing + 1);
-				numResources--;
-			}
-		}
-
-		return removed;
 	}
 
 	/**
@@ -448,5 +475,15 @@ public abstract class Player
 		node.setSettlement(b);
 		addVp(1);
 		settlements.put(point, b);
+	}
+
+	/**
+	 * Adds the given development card
+	 * @param type the development card to add
+	 */
+    public void addDevelopmentCard(DevelopmentCardType type)
+	{
+		int existing = cards.containsKey(type) ? cards.get(type) : 0;
+		cards.put(type, existing + 1);
 	}
 }

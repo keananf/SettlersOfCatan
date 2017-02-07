@@ -11,12 +11,9 @@ import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
 
-import java.awt.*;
+import java.awt.Point;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Class representing a player from across the network
@@ -59,7 +56,7 @@ public class NetworkPlayer extends Player
 	public int buildRoad(Edge edge) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
 		boolean valid = false;
-		java.util.List<Integer> listsAddedTo = new ArrayList<Integer>();
+		List<Integer> listsAddedTo = new ArrayList<Integer>();
 		Road r = new Road(edge, colour);
 
 		// Road already here. Cannot build
@@ -102,21 +99,29 @@ public class NetworkPlayer extends Player
 	{
 		Settlement s = new Settlement(node, colour);
 
+		// If valid placement, attempt to spend the required resources
+		if(canBuildSettlement(node))
+		{
+			spendResources(s.getCost());
+			addSettlement(s);
+		}
+
+		else if(!canAfford(Settlement.getSettlementCost()))
+		{
+			throw new CannotAffordException(resources, Settlement.getSettlementCost());
+		}
+
 		// Check if empty
-		if(node.getSettlement() != null)
+		else if(node.getSettlement() != null)
 		{
 			throw new SettlementExistsException(s);
 		}
 
 		// Check if within two nodes of any other settlement
-		if(s.isNearSettlement())
+		else if(s.isNearSettlement())
 		{
 			throw new IllegalPlacementException(s);
 		}
-
-		// If valid placement, attempt to spend the required resources
-		spendResources(s.getCost());
-		addSettlement(s);
 	}
 
 	/**
@@ -127,11 +132,9 @@ public class NetworkPlayer extends Player
 	 */
 	public DevelopmentCardType buyDevelopmentCard(DevelopmentCardType card) throws CannotAffordException
 	{
-		int existing = cards.containsKey(card) ? cards.get(card) : 0;
-
 		// Try to buy a development card
 		spendResources(DevelopmentCardType.getCardCost());
-		cards.put(card, existing + 1);
+		addDevelopmentCard(card);
 
 		return card;
 	}
@@ -161,16 +164,22 @@ public class NetworkPlayer extends Player
 	 */
 	public void upgradeSettlement(Node node) throws CannotAffordException, CannotUpgradeException
 	{
-		Point p = new Point(node.getX(), node.getY());
-
-		// If settlement doesn't yet exist, cannot upgrade
-		if(!settlements.containsKey(p))
+		// Check that the move is legal
+		if (canBuildCity(node))
+		{
+			// Otherwise build city
+			City c = new City(node, colour);
+			spendResources(c.getCost());
+			addSettlement(c);
+		}
+		else if(node.getSettlement() == null)
+		{
 			throw new CannotUpgradeException(node.getX(), node.getY());
-
-		// Otherwise build city
-		City c = new City(node, colour);
-		spendResources(c.getCost());
-		addSettlement(c);
+		}
+		else if (!canAfford(City.getCityCost()))
+		{
+			throw new CannotAffordException(getResources(), City.getCityCost());
+		}
 	}
 
 	/**
@@ -180,7 +189,7 @@ public class NetworkPlayer extends Player
 	public ResourceType takeResource(Player other)
 	{
 		Random rand = new Random();
-		ResourceType key = ResourceType.Generic;
+		ResourceType key;
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
 		// Check there are resources to take
@@ -200,8 +209,6 @@ public class NetworkPlayer extends Player
 		grantResources(grant);
 		return key;
 	}
-
-
 
 	/**
 	 * @return duplicate of this player
@@ -241,7 +248,6 @@ public class NetworkPlayer extends Player
 	 */
 	public void restoreCopy(Player copy, DevelopmentCardType card)
 	{
-		numResources = 0;
 		resources = new HashMap<ResourceType, Integer>();
 		cards = new HashMap<DevelopmentCardType, Integer>();
 		settlements = new HashMap<Point, Building>();

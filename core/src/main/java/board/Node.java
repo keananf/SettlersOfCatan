@@ -1,5 +1,6 @@
 package board;
 
+import enums.Colour;
 import game.build.Building;
 import game.build.City;
 import protocol.BoardProtos.NodeProto;
@@ -164,5 +165,19 @@ public class Node extends BoardElement
 		}
 
 		return nodeBuilder.build();
+    }
+
+	/**
+	 * @return if one of the adjacent edges has a road
+	 * @param colour
+	 */
+	public boolean isNearRoad(Colour colour)
+	{
+		for(Edge e : edges)
+		{
+			if(e.getRoad() != null && e.getRoad().getPlayerColour().equals(colour))
+				return true;
+		}
+		return false;
     }
 }

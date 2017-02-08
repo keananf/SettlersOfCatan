@@ -3,6 +3,8 @@ package enums;
 import resource.Resource;
 import terrain.Terrain;
 
+import java.util.Random;
+
 public enum ResourceType
 {
 	Generic, // Default
@@ -11,6 +13,12 @@ public enum ResourceType
 	Grain, 
 	Brick,
 	Lumber,;
+
+	private static Random rand;
+	static
+	{
+		rand = new Random();
+	}
 
     public static ResourceType fromProto(Resource.Kind r)
 	{
@@ -142,4 +150,12 @@ public enum ResourceType
 		}
 		return r;
 	}
+
+	/**
+	 * @return a random resource type
+	 */
+    public static ResourceType random()
+	{
+		return ResourceType.values()[rand.nextInt(5) + 1];
+    }
 }

@@ -16,7 +16,6 @@ import grid.Port;
 import lobby.Lobby;
 import resource.Resource;
 
-import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -220,22 +219,21 @@ public class ServerGame extends Game
 	}
 
 	/**
-	 * Checks that the player can build a road at the desired location, and builds it.
-	 * @param move
-	 * @param playerColour the player's colour
+	 * Checks that the player can build a city at the desired location, and builds it.
+	 * @param city the point to build the city
 	 * @throws CannotUpgradeException 
 	 * @throws CannotAffordException 
 	 */
-	public void upgradeSettlement(Board.Point move, Colour playerColour)
+	public void upgradeSettlement(Board.Point city)
 			throws CannotAffordException, CannotUpgradeException, InvalidCoordinatesException
 	{
-		Player p = players.get(playerColour);
-		Node node = grid.getNode(move.getX(), move.getY());
+		Player p = players.get(currentPlayer);
+		Node node = grid.getNode(city.getX(), city.getY());
 
 		// Invalid request coordinates.
 		if(node == null)
 		{
-			throw new InvalidCoordinatesException(move.getX(), move.getY());
+			throw new InvalidCoordinatesException(city.getX(), city.getY());
 		}
 
 		// Try to upgrade settlement
@@ -245,15 +243,14 @@ public class ServerGame extends Game
 	/**
 	 * Checks that the player can build a settlement at the desired location, and builds it.
 	 * @param request the request
-     * @param playerColour the player's colour
 	 * @throws IllegalPlacementException 
 	 * @throws CannotAffordException 
 	 * @throws SettlementExistsException 
 	 */
-	public void buildSettlement(Board.Point request, Colour playerColour)
+	public void buildSettlement(Board.Point request)
 			throws CannotAffordException, IllegalPlacementException, SettlementExistsException, InvalidCoordinatesException
 	{
-		Player p = players.get(playerColour);
+		Player p = players.get(currentPlayer);
         Node node = grid.getNode(request.getX(), request.getY());
 
 		// Invalid request coordinates.
@@ -270,13 +267,14 @@ public class ServerGame extends Game
 
 	/**
 	 * Checks that the player can buy a development card
-	 * @param type the type of development card to play
+	 * @param card the card of development card to play
 	 */
-	private void playDevelopmentCard(DevelopmentCardType type) throws DoesNotOwnException
+	public void playDevelopmentCard(Board.PlayableDevCard card) throws DoesNotOwnException
 	{
 	    Player p = players.get(currentPlayer);
 
 		// Try to play card
+		DevelopmentCardType type = DevelopmentCardType.fromProto(card);
 		((NetworkPlayer)p).playDevelopmentCard(type);
 	}
 	
@@ -317,15 +315,34 @@ public class ServerGame extends Game
 	}
 
 	/**
+	 * Attempts to take a RANDOM resource from the given player.
+	 * @param id the id of the player to take from
+	 * @throws CannotStealException
+	 */
+	public void takeResource(Board.Player.Id id) throws CannotStealException
+	{
+		Player other = getPlayer(id);
+		ResourceType r = ResourceType.Generic;
+
+		// Randomly choose resource that the player has
+		while(r == ResourceType.Generic || other.getResources().get(r) == 0)
+		{
+			r = ResourceType.random();
+		}
+
+		takeResource(id, r);
+	}
+
+	/**
 	 * Attempts to take a resource from the given player.
-	 * @param otherColour the colour to take from
+	 * @param id the id of the player to take from
 	 * @param resource the resource to take
 	 * @throws CannotStealException
 	 */
-	public void takeResource(Colour otherColour, Resource.Kind resource) throws CannotStealException
+	public void takeResource(Board.Player.Id id, ResourceType resource) throws CannotStealException
 	{
-		Player other = players.get(otherColour);
 		boolean valid = false;
+		Colour otherColour = getPlayer(id).getColour();
 
 		// Verify this player can take from the specified one
 		for(Node n : getGrid().getHexWithRobber().getNodes())
@@ -383,16 +400,14 @@ public class ServerGame extends Game
 	}
 	
 	/**
-	 * Choose a new resource as a result of playing a year of plenty card.
+	 * Choose a new resource.
 	 * @param r1 the first resource that was chosen
-	 * @param r2 the second resource that was chosen
 	 * */
-	public void chooseResources(Resource.Kind r1, Resource.Kind r2)
+	public void chooseResources(Resource.Kind r1)
 	{
 		// Set up grant
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 		grant.put(ResourceType.fromProto(r1), 1);
-		grant.put(ResourceType.fromProto(r2), 1);
 		players.get(currentPlayer).grantResources(grant);
 	}
 	
@@ -508,24 +523,21 @@ public class ServerGame extends Game
 	 * Toggles a player's turn
 	 * @return 
 	 */
-	public Events.Event changeTurn()
+	public EmptyOuterClass.Empty changeTurn()
 	{
-		Events.Event.Builder resp = Events.Event.newBuilder();
-
 		// Update turn and set event.
-		// TODO incorporate player ids
 		setCurrentPlayer(getPlayersAsList()[++current % NUM_PLAYERS].getColour());
-		resp.setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance());
-
-		return resp.build();
+		return EmptyOuterClass.Empty.getDefaultInstance();
 	}
 
 	/**
 	 * Generates a random roll between 2 and 12
 	 */
-	public int generateDiceRoll()
+	public Board.Roll generateDiceRoll()
 	{
-		return dice.nextInt(11) + 2;
+		Board.Roll.Builder roll = Board.Roll.newBuilder();
+		roll.setA(dice.nextInt(6) + 1).setB(dice.nextInt(6) + 1);
+		return roll.build();
 	}
 
 	/**
@@ -541,26 +553,50 @@ public class ServerGame extends Game
 		
 		return false;
 	}
+	/**
+	 *
+	 * @param joinLobby the join lobby request
+	 * @return the new colour assigned to the player
+	 */
+	public Colour joinGame(Lobby.Join joinLobby) throws GameFullException
+	{
+		// If game is full
+		if(numPlayers == NUM_PLAYERS) throw new GameFullException();
+
+		// Assign colour and id
+	    Colour newCol = Colour.values()[numPlayers++];
+		Board.Player.Id id = Board.Player.Id.forNumber(numPlayers);
+		NetworkPlayer p = new NetworkPlayer(newCol, joinLobby.getUsername());
+		p.setId(id);
+
+		// Add player info and return assigned colour
+		idsToColours.put(id, newCol);
+		players.put(p.getColour(), p);
+		return p.getColour();
+	}
+
+	public Colour joinGame()
+	{
+		// Assign colour and id
+		Colour newCol = Colour.values()[numPlayers++];
+		Board.Player.Id id = Board.Player.Id.forNumber(numPlayers);
+		NetworkPlayer p = new NetworkPlayer(newCol, "");
+		p.setId(id);
+
+		// Add player info and return assigned colour
+		idsToColours.put(id, newCol);
+		players.put(p.getColour(), p);
+		return p.getColour();
+	}
 
 	public Map<Colour, Player> getPlayers()
 	{
 		return players;
 	}
-	
+
 	public Player[] getPlayersAsList()
 	{
 		return players.values().toArray(new Player[]{});
-	}
-
-	public Colour addNetworkPlayer(InetAddress inetAddress, String name)
-	{
-	    Colour newCol = Colour.values()[numPlayers++];
-		NetworkPlayer p = new NetworkPlayer(newCol, name);
-		p.setInetAddress(inetAddress);
-		
-		players.put(p.getColour(), p);
-		
-		return p.getColour();
 	}
 
 	public void addPlayer(Player p)
@@ -574,8 +610,8 @@ public class ServerGame extends Game
 		currentPlayer.addVp(currentPlayer.getVp() + 1);
 	}
 
-	public void restorePlayerFromCopy(Player copy, DevelopmentCardType card)
+	public void restorePlayerFromCopy(Player copy)
 	{
-		((NetworkPlayer)players.get(copy.getColour())).restoreCopy(copy, card);
+		((NetworkPlayer)players.get(copy.getColour())).restoreCopy(copy);
 	}
 }

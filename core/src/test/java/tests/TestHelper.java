@@ -1,8 +1,6 @@
 package tests;
 
-import board.Edge;
-import board.Hex;
-import board.Node;
+import grid.*;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
@@ -124,7 +122,7 @@ public class TestHelper
 	protected void reset()
 	{
 		game = new ServerGame();
-		p = new NetworkPlayer(Colour.BLUE);
+		p = new NetworkPlayer(Colour.BLUE, "");
 		game.addPlayer(p);
 		game.setCurrentPlayer(p.getColour());
 		

@@ -1,24 +1,8 @@
 package tests;
 
-import static org.junit.Assert.*;
-import java.util.*;
-
-import board.Port;
-import enums.*;
-import exceptions.CannotAffordException;
-import exceptions.IllegalBankTradeException;
-import exceptions.IllegalPortTradeException;
-import exceptions.IllegalTradeException;
-import game.players.NetworkPlayer;
-import game.players.Player;
-
-import org.junit.*;
-import protocol.ResourceProtos.*;
-import protocol.TradeProtos.*;
-
 public class TradeTests extends TestHelper
 {
-    @Before
+    /*@Before
     public void setUp()
     {
         reset();
@@ -445,5 +429,5 @@ public class TradeTests extends TestHelper
         proto.setGrain(grain);
 
         return proto;
-    }
+    }*/
 }

@@ -1,7 +1,7 @@
 
 package exceptions;
 
-import board.*;
+import grid.*;
 import game.build.Settlement;
 
 @SuppressWarnings("serial")

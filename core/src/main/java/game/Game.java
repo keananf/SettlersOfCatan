@@ -1,5 +1,6 @@
 package game;
 
+import board.Board;
 import grid.*;
 import enums.Colour;
 import enums.ResourceType;
@@ -17,6 +18,7 @@ public abstract class Game
 {
 	protected HexGrid grid;
 	protected Map<Colour, Player> players;
+	protected Map<Board.Player.Id, Colour> idsToColours;
 	protected Colour currentPlayer;
 	protected Colour playerWithLongestRoad;
 	protected Colour playerWithLargestArmy;
@@ -30,6 +32,7 @@ public abstract class Game
 	{
 		grid = new HexGrid();
 		players = new HashMap<Colour, Player>();
+		idsToColours = new HashMap<Board.Player.Id, Colour>();
 	}
 
 	/**
@@ -226,5 +229,16 @@ public abstract class Game
 	public Map<Colour, Player> getPlayers()
 	{
 		return players;
+	}
+
+	/**
+	 * Retrieves the corresponding player
+	 * @param id the player's id
+	 * @return
+	 */
+	public Player getPlayer(Board.Player.Id id)
+	{
+		enums.Colour col = idsToColours.get(id);
+		return players.get(col);
 	}
 }

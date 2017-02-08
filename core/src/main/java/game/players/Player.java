@@ -35,12 +35,11 @@ public abstract class Player
 	protected boolean hasLargestArmy;
 	protected HashMap<DevelopmentCardType, Integer> cards;
 	protected int armySize;
-	protected int id;
+	protected Board.Player.Id id;
 	protected String userName;
 
 	private static final int VP_THRESHOLD = 10;
 	private static final int MIN_SETTLEMENTS = 2;
-	private static int index;
 
 	public Player(Colour colour, String userName)
 	{
@@ -50,7 +49,6 @@ public abstract class Player
 		resources = new HashMap<ResourceType, Integer>();
 		cards = new HashMap<DevelopmentCardType, Integer>();
 		this.userName = userName;
-		id = index++;
 
 		// Initialise resources
 		for(ResourceType r : ResourceType.values())
@@ -516,6 +514,11 @@ public abstract class Player
 
 	public Board.Player.Id getId()
 	{
-		return Board.Player.Id.forNumber(id);
+		return id;
 	}
+
+    public void setId(Board.Player.Id id)
+	{
+		this.id = id;
+    }
 }

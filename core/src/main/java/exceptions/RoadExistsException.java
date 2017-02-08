@@ -1,6 +1,6 @@
 package exceptions;
 
-import board.*;
+import grid.*;
 import game.build.Road;
 
 @SuppressWarnings("serial")

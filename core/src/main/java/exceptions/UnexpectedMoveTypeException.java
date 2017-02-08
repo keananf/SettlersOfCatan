@@ -1,7 +1,6 @@
 package exceptions;
 
-import protocol.MessageProtos;
-import protocol.MessageProtos.*;
+import catan.Messages.*;
 
 public class UnexpectedMoveTypeException extends Exception
 {
@@ -22,10 +21,7 @@ public class UnexpectedMoveTypeException extends Exception
                 str = "Event";
                 break;
             case REQUEST:
-                str = "Request: " + msg.getRequest().getTypeCase().name();
-                break;
-            case RESPONSE:
-                str = "Response";
+                str = "Request: " + msg.getRequest().getBodyCase().name();
                 break;
         }
 

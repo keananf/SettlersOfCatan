@@ -10,7 +10,6 @@ import game.build.Road;
 import game.build.Settlement;
 import grid.Edge;
 import grid.Node;
-import resource.Resource;
 
 import java.awt.*;
 import java.net.InetAddress;
@@ -136,7 +135,7 @@ public class NetworkPlayer extends Player
 	{
 		// Try to buy a development card
 		spendResources(DevelopmentCardType.getCardCost());
-		addDevelopmentCard(card);
+		addDevelopmentCard(DevelopmentCardType.toProto(card));
 
 		return card;
 	}
@@ -189,10 +188,8 @@ public class NetworkPlayer extends Player
 	 * @param other the other player
 	 * @param resource the resource to take
 	 */
-	public void takeResource(Player other, Resource.Kind resource) throws CannotStealException
+	public void takeResource(Player other, ResourceType resource) throws CannotStealException
 	{
-		Random rand = new Random();
-		ResourceType key;
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
 		// Check the specified resource can be taken
@@ -203,7 +200,7 @@ public class NetworkPlayer extends Player
 
 		try
 		{
-			grant.put(ResourceType.fromProto(resource), 1);
+			grant.put(resource, 1);
 			other.spendResources(grant);
 		}
 		catch (CannotAffordException e){ /* Cannot happen*/ }
@@ -246,9 +243,8 @@ public class NetworkPlayer extends Player
 	/**
 	 * Restores the player to the given state
 	 * @param copy the copy
-	 * @param card the card that was spent
 	 */
-	public void restoreCopy(Player copy, DevelopmentCardType card)
+	public void restoreCopy(Player copy)
 	{
 		resources = new HashMap<ResourceType, Integer>();
 		cards = new HashMap<DevelopmentCardType, Integer>();
@@ -272,10 +268,5 @@ public class NetworkPlayer extends Player
 		hasLargestArmy = copy.hasLargestArmy;
 		armySize = copy.armySize;
 
-		// Re-add the spent card:
-		if(card != null)
-		{
-			cards.put(card, cards.containsKey(card) ? cards.get(card) + 1 : 1);
-		}
 	}
 }

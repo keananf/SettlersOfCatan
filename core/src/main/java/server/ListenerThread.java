@@ -1,10 +1,8 @@
 package server;
 
 import enums.Colour;
-import protocol.EnumProtos;
-import protocol.MessageProtos.Message;
-import protocol.ResponseProtos.Response;
-import protocol.ResponseProtos.SuccessFailResponse;
+import catan.Messages.*;
+import catan.Events.*;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -21,11 +19,11 @@ public class ListenerThread implements Runnable
     private Colour colour;
     private Server server;
 
-    public ListenerThread(Socket socket, Colour colour, Server server)
+    public ListenerThread(Socket socket, Colour c, Server server)
     {
         this.socket = socket;
-        this.colour = colour;
         this.server = server;
+        colour = c;
         this.thread = new Thread(this);
         this.thread.start();
     }
@@ -58,38 +56,27 @@ public class ListenerThread implements Runnable
         {
             // Parse message and add to queue
             Message msg = Message.parseFrom(socket.getInputStream());
-            server.addMessageToProcess(msg);
+            server.addMessageToProcess(msg, colour);
 
         }
     }
 
     /**
      * If an unknown or invalid message is received, then this message sends an error back
-     * @param originalMsg the original message
      */
-    protected void sendError(Message originalMsg) throws IOException
+    protected void sendError() throws IOException
     {
         // Set up result message
-        Response.Builder response = Response.newBuilder();
-        SuccessFailResponse.Builder result = SuccessFailResponse.newBuilder();
-        result.setResult(EnumProtos.ResultProto.FAILURE);
-        result.setReason("Invalid message type");
+        Event.Builder ev = Event.newBuilder();
+        Message.Builder msg = Message.newBuilder();
+        Event.Error.Builder err = Event.Error.newBuilder();
+        err.setDescription("Invalid message type");
+        err.setCause(ErrorCause.UNRECOGNIZED);
 
-        // Set up wrapper response object
-        response.setSuccessFailResponse(result);
-        response.build().writeTo(socket.getOutputStream());
+        ev.setError(err.build());
+        msg.setEvent(ev.build());
 
-    }
-
-    /**
-     * Sends response out to the client
-     * @param response the response message from the last action
-     * @throws IOException
-     */
-    protected void sendResponse(Response response) throws IOException
-    {
-        response.writeTo(socket.getOutputStream());
-        socket.getOutputStream().flush();
+        msg.build().writeTo(socket.getOutputStream());
     }
 
     /**

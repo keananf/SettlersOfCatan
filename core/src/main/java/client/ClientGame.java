@@ -28,7 +28,6 @@ public class ClientGame extends Game
 {
     private boolean gameOver;
     private int dice;
-    private Map<Board.Player.Id, Colour> idsToColours;
     private Map<Colour, Integer> boughtDevCards;
     private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;
     private Player thisPlayer;
@@ -36,8 +35,7 @@ public class ClientGame extends Game
 
     public ClientGame()
     {
-        idsToColours = new HashMap<Board.Player.Id, Colour>();
-        players = new HashMap<Colour, Player>();
+        super();
         boughtDevCards = new HashMap<Colour, Integer>();
         playedDevCards = new HashMap<Colour, HashMap<DevelopmentCardType, Integer>>();
 
@@ -367,16 +365,5 @@ public class ClientGame extends Game
     public Player getPlayer()
     {
         return thisPlayer;
-    }
-
-    /**
-     * Retrieves the corresponding player
-     * @param id the player's id
-     * @return
-     */
-    private Player getPlayer(Board.Player.Id id)
-    {
-        enums.Colour col = idsToColours.get(id);
-        return players.get(col);
     }
 }

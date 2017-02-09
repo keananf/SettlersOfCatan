@@ -9,7 +9,7 @@ public class DoesNotOwnException extends Exception
 {
 	private DevelopmentCardType card;
 	private Colour player;
-	
+
 	public DoesNotOwnException(DevelopmentCardType d, Colour c)
 	{
 		player = c;
@@ -18,7 +18,6 @@ public class DoesNotOwnException extends Exception
 
 	public String getMessage()
 	{
-		return String.format("Player %s cannot play %s",
-				player.toString(), card.toString());
+		return String.format("Player %s cannot play %s", player.toString(), card.toString());
 	}
 }

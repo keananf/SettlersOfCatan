@@ -8,7 +8,7 @@ import game.build.Settlement;
 public class SettlementExistsException extends Exception
 {
 	private Settlement settlement;
-	
+
 	public SettlementExistsException(Settlement settlement)
 	{
 		this.settlement = settlement;
@@ -17,8 +17,7 @@ public class SettlementExistsException extends Exception
 	public String getMessage()
 	{
 		Node n = settlement.getNode();
-		
-		return String.format("Settlement at node (%d,%d) already exists\n",
-				n.getX(), n.getY());
+
+		return String.format("Settlement at node (%d,%d) already exists\n", n.getX(), n.getY());
 	}
 }

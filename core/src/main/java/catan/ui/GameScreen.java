@@ -1,31 +1,41 @@
 package catan.ui;
 
-import com.badlogic.gdx.Game;
+import java.awt.Point;
+import java.util.Map.Entry;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import board.Hex;
 import catan.SettlersOfCatan;
 
 public class GameScreen implements Screen
 {
-	final private AssetManager ASSETS = new AssetManager();
+	final private AssMan assets = new AssMan();
 	final private ModelBatch MODEL_BATCH = new ModelBatch();
+	final private ShapeRenderer SHAPE_REND = new ShapeRenderer();
 
-	final private PerspectiveCamera cam;
+	final private Camera cam;
 	final private CameraInputController camController;
 
-	final private Array<ModelInstance> boardInstances= new Array<ModelInstance>();
+	final private Array<ModelInstance> boardInstances = new Array<ModelInstance>();
 	final private Environment environment;
 
 	final private SettlersOfCatan game;
@@ -35,11 +45,11 @@ public class GameScreen implements Screen
 		this.game = game;
 
 		// init camera
-		cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam = new PerspectiveCamera(90f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(0f, 7f, 10f);
 		cam.lookAt(0, 0, 0);
-		cam.near = 1f;
-		cam.far = 300f;
+		cam.near = 0.11f;
+		cam.far = 1000f;
 		cam.update();
 
 		// init camera controller
@@ -48,55 +58,49 @@ public class GameScreen implements Screen
 
 		// init external assets
 		initBoard();
-		initUIAssets();
 
 		// init environment
 		environment = new Environment();
-		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
 	}
 
 	private void initBoard()
 	{
-		final String[] models = {
-			"claymine",
-			"desert",
-			"grain",
-			"grass",
-			"mountain",
-			"hex"
-		};
+		assets.load("models/hex.g3db", Model.class);
+		assets.finishLoading();
 
-		for (String model : models)
-			ASSETS.load("models/"+model+".g3db", Model.class);
-		ASSETS.finishLoading();
+		for(Entry<Point, Hex> coord : game.state.getGrid().grid.entrySet())
+		{
+			float x = (float)(coord.getKey().getX());
+			float y = (float)(coord.getKey().getY());
+			Vector3 pos = new Vector3(
+					(float)(x + (y*Math.cos(Math.PI/3))),
+					0f,
+					(float)(y*Math.cos(Math.PI/6) - (x*Math.sin(Math.PI/6))));
 
-		boardInstances.add(new ModelInstance(ASSETS.get("models/hex.g3db", Model.class)));
-	}
+			ModelInstance hex = new ModelInstance(
+					assets.getModel("hex.g3db"),
+					pos);
 
-	private void initUIAssets()
-	{
+			boardInstances.add(hex);
+		}
 	}
 
 	@Override
 	public void render(final float delta)
 	{
-		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
+		camController.update();
 		renderBoard();
-		renderUI();
 	}
 
 	private void renderBoard()
 	{
 		MODEL_BATCH.begin(cam);
+		MODEL_BATCH.render(UITools.getAxesInst());
 		MODEL_BATCH.render(boardInstances, environment);
 		MODEL_BATCH.end();
-	}
-
-	private void renderUI()
-	{
 	}
 
 	@Override
@@ -107,7 +111,7 @@ public class GameScreen implements Screen
 	@Override
 	public void dispose()
 	{
-		ASSETS.dispose();
+		assets.dispose();
 		MODEL_BATCH.dispose();
 		boardInstances.clear();
 	}

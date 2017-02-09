@@ -6,12 +6,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import catan.ui.SplashScreen;
+import client.ClientGame;
 import server.Server;
 
 public class SettlersOfCatan extends Game
 {
 	public Skin skin;
 	private Server serv;
+	public ClientGame state = new ClientGame();
 
 	@Override
 	public void create()

@@ -23,13 +23,13 @@ public class TestHelper
 	protected NetworkPlayer p;
 	protected Node n;
 	protected Hex hex;
-	
+
 	protected Settlement makeSettlement(Player p, Node n) throws SettlementExistsException
 	{
 		assertTrue(hasResources(p));
 		int oldSize = p.getSettlements().size();
 		int oldResources = p.getNumResources();
-		
+
 		// Build settlement
 		try
 		{
@@ -54,7 +54,7 @@ public class TestHelper
 		// Build settlement
 		try
 		{
-			((NetworkPlayer)p).upgradeSettlement(n);
+			p.upgradeSettlement(n);
 		}
 		catch (CannotAffordException | CannotUpgradeException e)
 		{
@@ -70,11 +70,11 @@ public class TestHelper
 	protected Road buildRoad(Edge e) throws CannotBuildRoadException, RoadExistsException
 	{
 		int oldSize = p.getRoads().size();
-		
+
 		assertTrue(hasResources(p));
 		try
 		{
-			((NetworkPlayer)p).buildRoad(e);
+			p.buildRoad(e);
 		}
 		catch (CannotAffordException ex)
 		{
@@ -87,16 +87,16 @@ public class TestHelper
 
 		return p.getRoads().get(p.getRoads().size() - 1);
 	}
-	
+
 	protected DevelopmentCardType buyDevelopmentCard() throws CannotAffordException
 	{
 		int oldSize = p.getDevelopmentCards().size();
 		DevelopmentCardType c = DevelopmentCardType.Knight;
-		
+
 		assertTrue(hasResources(p));
 		try
 		{
-			c = ((NetworkPlayer)p).buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
+			c = p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
 		}
 		catch (CannotAffordException ex)
 		{
@@ -127,30 +127,30 @@ public class TestHelper
 		p = new NetworkPlayer(Colour.BLUE);
 		game.addPlayer(p);
 		game.setCurrentPlayer(p.getColour());
-		
+
 		// Find hex without 'Generic'
 		for(int i = 0; i < game.getGrid().nodes.values().size(); i++)
 		{
 			n = (Node) game.getGrid().nodes.values().toArray()[i];
 			hex = n.getHexes().get(0);
-			
+
 			// for each hex
 			boolean valid = true;
 			for(Hex h : n.getHexes())
-			{				
+			{
 				for(Hex h2 : n.getHexes())
 					if(h2.getChit() == h.getChit() && !h.equals(h2))
 					{
 						valid = false;
 						break;
 					}
-				
+
 			}
-			
+
 			// Skip if this one isn't the desert
 			if(valid && hex.getResource() != ResourceType.Generic && !hex.hasRobber())
 				break;
-			
+
 		}
 	}
 }

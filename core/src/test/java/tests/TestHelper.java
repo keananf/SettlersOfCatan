@@ -54,7 +54,7 @@ public class TestHelper
 		// Build settlement
 		try
 		{
-			((NetworkPlayer)p).upgradeSettlement(n);
+			p.upgradeSettlement(n);
 		}
 		catch (CannotAffordException | CannotUpgradeException e)
 		{
@@ -74,7 +74,7 @@ public class TestHelper
 		assertTrue(hasResources(p));
 		try
 		{
-			((NetworkPlayer)p).buildRoad(e);
+			p.buildRoad(e);
 		}
 		catch (CannotAffordException ex)
 		{
@@ -96,7 +96,7 @@ public class TestHelper
 		assertTrue(hasResources(p));
 		try
 		{
-			c = ((NetworkPlayer)p).buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
+			c = p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
 		}
 		catch (CannotAffordException ex)
 		{

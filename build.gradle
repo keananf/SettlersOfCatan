@@ -6,6 +6,7 @@ buildscript { repositories { jcenter() } }
 plugins {
     id "java"
     id "com.google.protobuf" version "0.8.0"
+    id "com.diffplug.gradle.spotless" version "3.0.0"
 }
 
 /*
@@ -47,6 +48,7 @@ project(":desktop") {
 project(":core") {
     apply plugin: "java"
     apply plugin: "com.google.protobuf"
+    apply plugin: "com.diffplug.gradle.spotless"
 
     // turn on all warnings
     tasks.withType(JavaCompile) {
@@ -59,6 +61,15 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.google.protobuf:protobuf-java:$protobufVersion"
         testCompile "junit:junit:$junitVersion"
+    }
+
+    // format source code
+    spotless {
+        java {
+            eclipseFormatFile("../config/format.xml")
+            removeUnusedImports()
+            paddedCell()
+        }
     }
 
     javadoc.destinationDir = file("${project.rootDir}/doc")

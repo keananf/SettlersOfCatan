@@ -6,20 +6,13 @@ import java.util.Map.Entry;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -30,10 +23,9 @@ public class GameScreen implements Screen
 {
 	final private AssMan assets = new AssMan();
 	final private ModelBatch MODEL_BATCH = new ModelBatch();
-	final private ShapeRenderer SHAPE_REND = new ShapeRenderer();
 
 	final private Camera cam;
-	final private CameraInputController camController;
+	final private SpinCamController camController;
 
 	final private Array<ModelInstance> boardInstances = new Array<ModelInstance>();
 	final private Environment environment;
@@ -45,15 +37,15 @@ public class GameScreen implements Screen
 		this.game = game;
 
 		// init camera
-		cam = new PerspectiveCamera(90f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam = new PerspectiveCamera(75f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(0f, 7f, 10f);
 		cam.lookAt(0, 0, 0);
-		cam.near = 0.11f;
-		cam.far = 1000f;
+		cam.near = 0.1f;
+		cam.far = 200;
 		cam.update();
 
 		// init camera controller
-		camController = new CameraInputController(cam);
+		camController = new SpinCamController(cam);
 		Gdx.input.setInputProcessor(camController);
 
 		// init external assets

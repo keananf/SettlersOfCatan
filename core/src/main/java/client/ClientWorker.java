@@ -153,10 +153,13 @@ public class ClientWorker
                 request.setBuyDevCardRequest(buyDevCardRequest());
                 break;
 			case PLAY_ROADBUILDINGCARD:
-			//TODO: PlayRoadBuildingCardRequest
+			    request.setPlayRoadBuildingCardRequest(playRoadBuildCard(inProgressTurn.chosenEdges));
+				break;
 			case PLAY_MONOPOLYCARD:
-			//TODO: PlayMonopolyCardRequest
+				request.setPlayMonopolyCardRequest(playMonopolyCard(inProgressTurn.chosenResource));
+				break;
 			case PLAY_YEAROFPLENTYCARD:
+				request.setPlayYearOfPlentyCardRequest(playYearOfPlentyCard(inProgressTurn.chosenResources));
 			//TODO: PlayYearOfPlentyCardRequest
 			case PLAY_ROADLIBRARYCARD:
 			//TODO: PlayLibraryCardRequest
@@ -164,7 +167,6 @@ public class ClientWorker
 			//TODO: PlayUniversityCardRequest
 			case PLAY_KNIGHTCARD:
 			//TODO: PlayKnightCardRequest
-
 
 			//Move Robber
 			//TODO: MoveRobberRequest moveRobberRequest = 12;
@@ -202,7 +204,19 @@ public class ClientWorker
 		}
 	}
 
-    private BuildRoadRequest setUpRoad(Edge edge) {
+	private PlayYearOfPlentyCardRequest playYearOfPlentyCard(ResourceType[] resources){
+
+	}
+
+	private PlayRoadBuildingCardRequest playRoadBuildCard(Edge[] edges){
+
+	}
+
+	private PlayMonopolyCardRequest playMonopolyCard(ResourceType resource){
+
+	}
+
+	private BuildRoadRequest setUpRoad(Edge edge) {
         BuildRoadRequest.Builder roadRequest = BuildRoadRequest.newBuilder();
         roadRequest.setEdge(edge.toEdgeProto());
 

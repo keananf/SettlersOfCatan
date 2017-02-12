@@ -4,6 +4,7 @@ import enums.Move;
 import board.Edge;
 import board.Node;
 import enums.ClickObject;
+import enums.ResourceType;
 
 public class InProgressTurn 
 {
@@ -13,4 +14,7 @@ public class InProgressTurn
 	
 	public Node chosenNode;
 	public Edge chosenEdge;
+	public Edge[] chosenEdges = new Edge[2];
+	public ResourceType chosenResource;
+	public ResourceType[] chosenResources;
 }

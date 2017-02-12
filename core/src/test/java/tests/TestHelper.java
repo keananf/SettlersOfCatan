@@ -33,7 +33,7 @@ public class TestHelper
 		// Build settlement
 		try
 		{
-			((NetworkPlayer)p).buildSettlement(n);
+			((NetworkPlayer) p).buildSettlement(n);
 		}
 		catch (IllegalPlacementException | CannotAffordException e)
 		{
@@ -112,10 +112,10 @@ public class TestHelper
 
 	protected boolean hasResources(Player p)
 	{
-		for(ResourceType r : p.getResources().keySet())
+		for (ResourceType r : p.getResources().keySet())
 		{
-			if(p.getResources().get(r) > 0)
-				return true;
+			if (p.getResources().get(r) > 0) return true;
+
 		}
 
 		return false;
@@ -129,17 +129,17 @@ public class TestHelper
 		game.setCurrentPlayer(p.getColour());
 
 		// Find hex without 'Generic'
-		for(int i = 0; i < game.getGrid().nodes.values().size(); i++)
+		for (int i = 0; i < game.getGrid().nodes.values().size(); i++)
 		{
 			n = (Node) game.getGrid().nodes.values().toArray()[i];
 			hex = n.getHexes().get(0);
 
 			// for each hex
 			boolean valid = true;
-			for(Hex h : n.getHexes())
+			for (Hex h : n.getHexes())
 			{
-				for(Hex h2 : n.getHexes())
-					if(h2.getChit() == h.getChit() && !h.equals(h2))
+				for (Hex h2 : n.getHexes())
+					if (h2.getChit() == h.getChit() && !h.equals(h2))
 					{
 						valid = false;
 						break;
@@ -148,9 +148,7 @@ public class TestHelper
 			}
 
 			// Skip if this one isn't the desert
-			if(valid && hex.getResource() != ResourceType.Generic && !hex.hasRobber())
-				break;
-
+			if (valid && hex.getResource() != ResourceType.Generic && !hex.hasRobber()) break;
 		}
 	}
 }

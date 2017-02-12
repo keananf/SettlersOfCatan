@@ -25,11 +25,13 @@ public class GameAndResourcesTests extends TestHelper
 	@Test
 	public void makeGameTest()
 	{
-		assertTrue(game.getGrid().grid.values().size() == 19); // number of hexes
-		assertTrue(game.getGrid().nodes.values().size() == 54); // number of nodes
+		assertTrue(game.getGrid().grid.values().size() == 19); // number of
+																// hexes
+		assertTrue(game.getGrid().nodes.values().size() == 54); // number of
+																// nodes
 		assertTrue(game.getGrid().ports.size() == 9); // number of ports
 	}
-	
+
 	@Test
 	public void collectResourcesTest() throws SettlementExistsException
 	{
@@ -46,7 +48,7 @@ public class GameAndResourcesTests extends TestHelper
 
 	@Test
 	public void collectResourcesWithRobberTest() throws SettlementExistsException
-	{		
+	{
 		// Make a settlement and toggle the robber on its hex
 		p.grantResources(Settlement.getSettlementCost());
 		makeSettlement(p, n);
@@ -84,7 +86,8 @@ public class GameAndResourcesTests extends TestHelper
 		// Give player 2 resources to take
 		p2.grantResources(Road.getRoadCost());
 
-		// Grant player 2 a settlement so that player 1 will be allowed to take from them
+		// Grant player 2 a settlement so that player 1 will be allowed to take
+		// from them
 		p2.grantResources(Settlement.getSettlementCost());
 		makeSettlement(p2, n);
 
@@ -151,7 +154,7 @@ public class GameAndResourcesTests extends TestHelper
 
 		game.processDiscard(discard.build(), p.getColour());
 	}
-	
+
 	@Test
 	public void collectResourcesCityTest() throws SettlementExistsException
 	{
@@ -170,4 +173,3 @@ public class GameAndResourcesTests extends TestHelper
 		assertTrue(p.getResources().get(hex.getResource()) == 2);
 	}
 }
-

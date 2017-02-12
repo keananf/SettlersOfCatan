@@ -10,27 +10,28 @@ import protocol.MessageProtos.Message;
  */
 public class Logger
 {
-    public void logReceivedMessage(Message msg)
-    {
-        Colour col = Colour.fromProto(msg.getPlayerColour());
-        String str = String.format("RECEIVED: Message of type %s from player %s.\n", msg.getTypeCase().name(), col.toString());
+	public void logReceivedMessage(Message msg)
+	{
+		Colour col = Colour.fromProto(msg.getPlayerColour());
+		String str = String.format("RECEIVED: Message of type %s from player %s.\n", msg.getTypeCase().name(),
+				col.toString());
 
-        switch(msg.getTypeCase())
-        {
-            case REQUEST:
-                str = String.format(str + "Type of Request:  %s", msg.getRequest().getTypeCase().name());
-                break;
+		switch (msg.getTypeCase())
+		{
+		case REQUEST:
+			str = String.format(str + "Type of Request:  %s", msg.getRequest().getTypeCase().name());
+			break;
 
-            case EVENT:
-                str = String.format(str + "Type of Event:  %s", msg.getEvent().getTypeCase().name());
-                break;
+		case EVENT:
+			str = String.format(str + "Type of Event:  %s", msg.getEvent().getTypeCase().name());
+			break;
 
-            case RESPONSE:
-                str = String.format(str + "Type of Response:  %s", msg.getResponse().getTypeCase().name());
-                break;
-        }
+		case RESPONSE:
+			str = String.format(str + "Type of Response:  %s", msg.getResponse().getTypeCase().name());
+			break;
+		}
 
-        Gdx.app.debug("Server", str);
-    }
+		Gdx.app.debug("Server", str);
+	}
 
 }

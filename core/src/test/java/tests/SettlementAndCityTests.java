@@ -22,9 +22,9 @@ public class SettlementAndCityTests extends TestHelper
 		reset();
 	}
 
-
 	@Test(expected = CannotAffordException.class)
-	public void cannotBuildSettlementTest() throws CannotAffordException, IllegalPlacementException, SettlementExistsException
+	public void cannotBuildSettlementTest()
+			throws CannotAffordException, IllegalPlacementException, SettlementExistsException
 	{
 		p.buildSettlement(n);
 	}
@@ -74,14 +74,14 @@ public class SettlementAndCityTests extends TestHelper
 		makeSettlement(p, n);
 		makeSettlement(p, n);
 	}
-	
+
 	@Test(expected = IllegalPlacementException.class)
 	public void tooCloseToSettlementTest() throws SettlementExistsException, IllegalPlacementException
 	{
 		// Grant resources and build first settlement
 		p.grantResources(Settlement.getSettlementCost());
 		makeSettlement(p, n);
-		
+
 		// Find adjacent node
 		Node x = n.getEdges().get(0).getX(), y = n.getEdges().get(0).getY();
 		Node n2 = x.equals(n) ? y : x;
@@ -99,7 +99,7 @@ public class SettlementAndCityTests extends TestHelper
 
 	@Test(expected = InvalidCoordinatesException.class)
 	public void invalidCoordinatesSettlement() throws CannotAffordException, InvalidCoordinatesException,
-											IllegalPlacementException, SettlementExistsException
+			IllegalPlacementException, SettlementExistsException
 	{
 		// Create protobuf representation of building a settlement
 		BuildSettlementRequest.Builder req = BuildSettlementRequest.newBuilder();
@@ -114,7 +114,6 @@ public class SettlementAndCityTests extends TestHelper
 		// Try to build
 		game.buildSettlement(req.build(), p.getColour());
 	}
-
 
 	@Test(expected = InvalidCoordinatesException.class)
 	public void invalidCoordinatesCity() throws CannotAffordException, InvalidCoordinatesException,
@@ -134,7 +133,6 @@ public class SettlementAndCityTests extends TestHelper
 		game.upgradeSettlement(req.build(), p.getColour());
 	}
 
-
 	@Test
 	public void buildSettlementTest2() throws CannotAffordException, InvalidCoordinatesException,
 			IllegalPlacementException, SettlementExistsException
@@ -153,10 +151,9 @@ public class SettlementAndCityTests extends TestHelper
 		game.buildSettlement(req.build(), p.getColour());
 	}
 
-
 	@Test
-	public void buildCityTest2() throws CannotAffordException, InvalidCoordinatesException,
-			IllegalPlacementException, SettlementExistsException, CannotUpgradeException
+	public void buildCityTest2() throws CannotAffordException, InvalidCoordinatesException, IllegalPlacementException,
+			SettlementExistsException, CannotUpgradeException
 	{
 		// Grant resources and build settlement so it can be upgraded
 		p.grantResources(Settlement.getSettlementCost());

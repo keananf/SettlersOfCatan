@@ -54,7 +54,7 @@ public class TestHelper
 		// Build settlement
 		try
 		{
-			((NetworkPlayer) p).upgradeSettlement(n);
+			p.upgradeSettlement(n);
 		}
 		catch (CannotAffordException | CannotUpgradeException e)
 		{
@@ -74,7 +74,7 @@ public class TestHelper
 		assertTrue(hasResources(p));
 		try
 		{
-			((NetworkPlayer) p).buildRoad(e);
+			p.buildRoad(e);
 		}
 		catch (CannotAffordException ex)
 		{
@@ -96,7 +96,7 @@ public class TestHelper
 		assertTrue(hasResources(p));
 		try
 		{
-			c = ((NetworkPlayer) p).buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
+			c = p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
 		}
 		catch (CannotAffordException ex)
 		{
@@ -115,6 +115,7 @@ public class TestHelper
 		for (ResourceType r : p.getResources().keySet())
 		{
 			if (p.getResources().get(r) > 0) return true;
+
 		}
 
 		return false;
@@ -148,7 +149,6 @@ public class TestHelper
 
 			// Skip if this one isn't the desert
 			if (valid && hex.getResource() != ResourceType.Generic && !hex.hasRobber()) break;
-
 		}
 	}
 }

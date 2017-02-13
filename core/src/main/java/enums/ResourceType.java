@@ -5,75 +5,71 @@ import protocol.EnumProtos.*;
 public enum ResourceType
 {
 	Generic, // Default
-	Wool,
-	Ore,
-	Grain, 
-	Brick,
-	Lumber,;
+	Wool, Ore, Grain, Brick, Lumber,;
 
-    public static ResourceType fromProto(ResourceTypeProto r)
+	public static ResourceType fromProto(ResourceTypeProto r)
 	{
 		ResourceType resource = ResourceType.Brick;
 
-		switch(r)
+		switch (r)
 		{
-			case BRICK:
-				resource = ResourceType.Brick;
-				break;
+		case BRICK:
+			resource = ResourceType.Brick;
+			break;
 
-			case WOOL:
-				resource = ResourceType.Wool;
-				break;
+		case WOOL:
+			resource = ResourceType.Wool;
+			break;
 
-			case LUMBER:
-				resource = ResourceType.Lumber;
-				break;
+		case LUMBER:
+			resource = ResourceType.Lumber;
+			break;
 
-			case ORE:
-				resource = ResourceType.Ore;
-				break;
+		case ORE:
+			resource = ResourceType.Ore;
+			break;
 
-			case GRAIN:
-				resource = ResourceType.Grain;
-				break;
+		case GRAIN:
+			resource = ResourceType.Grain;
+			break;
 
-			case GENERIC:
-				resource = ResourceType.Generic;
-				break;
+		case GENERIC:
+			resource = ResourceType.Generic;
+			break;
 		}
 
 		return resource;
-    }
+	}
 
 	public static ResourceTypeProto toProto(ResourceType r)
 	{
 		ResourceTypeProto resource = ResourceTypeProto.BRICK;
 
-		switch(r)
+		switch (r)
 		{
-			case Brick:
-				resource = ResourceTypeProto.BRICK;
-				break;
+		case Brick:
+			resource = ResourceTypeProto.BRICK;
+			break;
 
-			case Wool:
-				resource = ResourceTypeProto.WOOL;
-				break;
+		case Wool:
+			resource = ResourceTypeProto.WOOL;
+			break;
 
-			case Lumber:
-				resource = ResourceTypeProto.LUMBER;
-				break;
+		case Lumber:
+			resource = ResourceTypeProto.LUMBER;
+			break;
 
-			case Ore:
-				resource = ResourceTypeProto.ORE;
-				break;
+		case Ore:
+			resource = ResourceTypeProto.ORE;
+			break;
 
-			case Grain:
-				resource = ResourceTypeProto.GRAIN;
-				break;
+		case Grain:
+			resource = ResourceTypeProto.GRAIN;
+			break;
 
-			case Generic:
-				resource = ResourceTypeProto.GENERIC;
-				break;
+		case Generic:
+			resource = ResourceTypeProto.GENERIC;
+			break;
 		}
 
 		return resource;

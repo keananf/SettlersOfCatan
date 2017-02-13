@@ -1,6 +1,10 @@
 package catan.ui;
 
-import com.badlogic.gdx.Input;
+import java.util.ArrayList;
+import java.util.HashSet;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
@@ -13,7 +17,7 @@ public final class SpinCamController implements InputProcessor
 	private static final float ZOOM_RATE = 0.9f;
 
 	private final Camera camera;
-	private boolean leftHeld, rightHeld, upHeld, downHeld;
+	private final HashSet<Integer> heldKeys = new HashSet<Integer>();
 
 	public SpinCamController(final Camera camera)
 	{
@@ -21,45 +25,41 @@ public final class SpinCamController implements InputProcessor
 	}
 
 	public void update() {
-		if (leftHeld)
-			camera.rotateAround(ORIGIN, Y_AXIS, -SPIN_RATE);
-		if (rightHeld)
-			camera.rotateAround(ORIGIN, Y_AXIS, SPIN_RATE);
-		if (upHeld)
-			camera.position.scl(ZOOM_RATE);
-		if (downHeld)
-			camera.position.scl(1/ZOOM_RATE);
+		boolean changed = false;
 
-		camera.update();
+		if (heldKeys.contains(Keys.LEFT)) {
+			camera.rotateAround(ORIGIN, Y_AXIS, -SPIN_RATE);
+			changed = true;
+		}
+		if (heldKeys.contains(Keys.RIGHT)) {
+			camera.rotateAround(ORIGIN, Y_AXIS, SPIN_RATE);
+			changed = true;
+		}
+		if (heldKeys.contains(Keys.UP)) {
+			camera.position.scl(ZOOM_RATE);
+			changed = true;
+		}
+		if (heldKeys.contains(Keys.DOWN)) {
+			camera.position.scl(1/ZOOM_RATE);
+			changed = true;
+		}
+
+		if (changed) {
+			camera.update();
+		}
 	}
 
 	@Override
 	public boolean keyDown(int keycode)
 	{
-		if (keycode == Input.Keys.LEFT)
-			leftHeld = true;
-		if (keycode == Input.Keys.RIGHT)
-			rightHeld = true;
-		if (keycode == Input.Keys.UP)
-			upHeld = true;
-		if (keycode == Input.Keys.DOWN)
-			downHeld = true;
-
+		heldKeys.add(keycode);
 		return true;
 	}
 
 	@Override
 	public boolean keyUp(int keycode)
 	{
-		if (keycode == Input.Keys.LEFT)
-			leftHeld = false;
-		if (keycode == Input.Keys.RIGHT)
-			rightHeld = false;
-		if (keycode == Input.Keys.UP)
-			upHeld = false;
-		if (keycode == Input.Keys.DOWN)
-			downHeld = false;
-
+		heldKeys.remove(keycode);
 		return true;
 	}
 

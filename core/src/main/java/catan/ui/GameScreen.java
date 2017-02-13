@@ -95,14 +95,8 @@ public class GameScreen implements Screen
 	private void renderBoard()
 	{
 		MODEL_BATCH.begin(cam);
-		MODEL_BATCH.render(UITools.getAxesInst());
 		MODEL_BATCH.render(boardInstances, environment);
 		MODEL_BATCH.end();
-	}
-
-	@Override
-	public void resize(final int width, final int height)
-	{
 	}
 
 	@Override
@@ -114,6 +108,7 @@ public class GameScreen implements Screen
 	}
 
 	// Required but unused
+	@Override public void resize(final int width, final int height) {}
 	@Override public void pause() {}
 	@Override public void resume() {}
 	@Override public void hide() {}

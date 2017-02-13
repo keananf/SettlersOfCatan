@@ -45,6 +45,7 @@ public final class SpinCamController implements InputProcessor
 		}
 
 		if (changed) {
+			Gdx.graphics.requestRendering();
 			camera.update();
 		}
 	}

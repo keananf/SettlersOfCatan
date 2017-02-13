@@ -19,6 +19,8 @@ public class SettlersOfCatan extends Game
 	public void create()
 	{
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		Gdx.graphics.setContinuousRendering(false);
+
 		skin = new Skin(Gdx.files.internal("skin.json"));
 
 		// start off at the splash screen

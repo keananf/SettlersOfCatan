@@ -1,4 +1,4 @@
- package board;
+package board;
 
 import enums.ResourceType;
 import protocol.BoardProtos.HexProto;
@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class representing an individual hex 
+ * Class representing an individual hex
+ * 
  * @author 140001596
  */
 public class Hex extends BoardElement
@@ -17,7 +18,7 @@ public class Hex extends BoardElement
 	private int diceRoll;
 	private boolean hasRobber;
 	private List<Node> nodes;
-	
+
 	public Hex(int x, int y)
 	{
 		super(x, y);
@@ -28,11 +29,11 @@ public class Hex extends BoardElement
 	/**
 	 * @return the resource
 	 */
-	public ResourceType getResource() 
+	public ResourceType getResource()
 	{
 		return resource;
 	}
-	
+
 	/**
 	 * @param resource the resource to set
 	 */
@@ -80,12 +81,12 @@ public class Hex extends BoardElement
 	/**
 	 * @return a version of this object compatible with protobufs.
 	 */
-    public HexProto toHexProto()
+	public HexProto toHexProto()
 	{
 		int index = 0;
- 		PointProto.Builder coords = PointProto.newBuilder();
- 		coords.setX(getX());
- 		coords.setY(getY());
+		PointProto.Builder coords = PointProto.newBuilder();
+		coords.setX(getX());
+		coords.setY(getY());
 
 		HexProto.Builder hexBuilder = HexProto.newBuilder();
 		hexBuilder.setChitNumber(diceRoll);
@@ -94,16 +95,17 @@ public class Hex extends BoardElement
 		hexBuilder.setHasRobber(hasRobber);
 
 		// Add nodes
-		for(Node n : nodes)
+		for (Node n : nodes)
 		{
 			hexBuilder.addNodes(index++, n.toProto());
 		}
 
 		return hexBuilder.build();
-    }
+	}
 
 	/**
 	 * Converts the hex proto back into an internal, usable representation
+	 * 
 	 * @param h
 	 */
 	public static Hex fromProto(HexProto h)
@@ -119,35 +121,23 @@ public class Hex extends BoardElement
 		hex.hasRobber = h.getHasRobber();
 
 		return hex;
-    }
+	}
 
-    @Override
+	@Override
 	public boolean equals(Object o)
 	{
 		Hex h = (Hex) o;
 
 		// Ensure properties are the same
-		if(!(h.hasRobber == hasRobber))
-		{
-			return false;
-		}
-		if(!(h.getChit() == getChit()))
-		{
-			return false;
-		}
-		if(!(h.getResource() == getResource()))
-		{
-			return false;
-		}
+		if (!(h.hasRobber == hasRobber)) { return false; }
+		if (!(h.getChit() == getChit())) { return false; }
+		if (!(h.getResource() == getResource())) { return false; }
 
 		// Check nodes for equivalence as well
-		for(Node n : nodes)
+		for (Node n : nodes)
 		{
 			// If the object doesn't have all of this hex's nodes
-			if(!(h.getNodes().contains(n)))
-			{
-				return false;
-			}
+			if (!(h.getNodes().contains(n))) { return false; }
 		}
 
 		return true;

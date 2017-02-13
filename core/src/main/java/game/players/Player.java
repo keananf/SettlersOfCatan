@@ -18,9 +18,10 @@ import java.util.List;
 
 /**
  * Abstract class describing a player (AI, or network)
+ * 
  * @author 140001596
  */
-public abstract class Player 
+public abstract class Player
 {
 	protected int vp; // Victory points
 	protected Colour colour;
@@ -42,11 +43,11 @@ public abstract class Player
 		settlements = new HashMap<Point, Building>();
 		resources = new HashMap<ResourceType, Integer>();
 		cards = new HashMap<DevelopmentCardType, Integer>();
-		
+
 		// Initialise resources
-		for(ResourceType r : ResourceType.values())
+		for (ResourceType r : ResourceType.values())
 		{
-			if(r == ResourceType.Generic) continue;
+			if (r == ResourceType.Generic) continue;
 			resources.put(r, 0);
 		}
 	}
@@ -55,38 +56,38 @@ public abstract class Player
 	 * @return the length of this player's longest road
 	 */
 	public int calcRoadLength()
-	{	
+	{
 		int longest = 0;
-		for(List<Road> list : roads)
+		for (List<Road> list : roads)
 		{
-			if (list.size() > longest) 
-				longest = list.size();
+			if (list.size() > longest) longest = list.size();
 		}
-		
+
 		return longest;
 	}
 
 	/**
 	 * Checks the new road against all other lists of connected roads.
 	 * 
-	 * If it is connected to one of the connected lists, then
-	 * it is added and all the members' of that list are updated to reflect
-	 * the new chain length
+	 * If it is connected to one of the connected lists, then it is added and
+	 * all the members' of that list are updated to reflect the new chain length
+	 * 
 	 * @param r the new road
-	 * @param listsAddedTo the list which records if more than one list was added to
-	 * (i.e. this new road connects two previously separate ones)
+	 * @param listsAddedTo the list which records if more than one list was
+	 *            added to (i.e. this new road connects two previously separate
+	 *            ones)
 	 * @return boolean dictating whether or not this method was successful
 	 */
 	protected boolean checkRoadsAndAdd(Road r, List<Integer> listsAddedTo)
 	{
 		boolean isConnected = false, valid = false;
 		int index = 0;
-		
+
 		// Check if this road is adjacent to any others
 		for (List<Road> list : roads)
 		{
-			isConnected  = false;
-			for(Road road : list)
+			isConnected = false;
+			for (Road road : list)
 			{
 				Edge e = r.getEdge(), e2 = road.getEdge();
 				if (r.isConnected(road))
@@ -94,31 +95,35 @@ public abstract class Player
 					// Find if the joined node has a settlement on it
 					Node joinedNode = e.getX().equals(e2.getX()) || e.getX().equals(e2.getY()) ? e.getX() : e.getY();
 					Building building = joinedNode.getSettlement();
-					
-					// If there is a settlement and it is not foreign, then the join is not broken
-					if((building ==  null) || (building != null && building.getPlayerColour().equals(r.getPlayerColour())))
+
+					// If there is a settlement and it is not foreign, then the
+					// join is not broken
+					if ((building == null)
+							|| (building != null && building.getPlayerColour().equals(r.getPlayerColour())))
 					{
 						isConnected = true;
 						listsAddedTo.add(index++);
 					}
-					break;	
+					break;
 				}
 			}
-			
+
 			// Update list
-			if(isConnected)
+			if (isConnected)
 			{
 				list.add(r);
 				valid = true;
 			}
-			else index++;
+			else
+				index++;
 		}
-		
+
 		return valid;
 	}
 
 	/**
 	 * Finds the road chain these two edges belong to, and breaks it into two
+	 * 
 	 * @param e the first edge
 	 * @param other the other edge
 	 */
@@ -128,52 +133,55 @@ public abstract class Player
 		List<Road> newList2 = new ArrayList<Road>();
 		boolean isConnected = false;
 		int index = 0;
-		
+
 		// For each road chain
-		for(List<Road> subList : roads)
+		for (List<Road> subList : roads)
 		{
 			// For each road in the chain
-			for(Road road : subList)
+			for (Road road : subList)
 			{
 				// Divide up subList
-				if(e.getRoad().isConnected(road))
+				if (e.getRoad().isConnected(road))
 				{
 					isConnected = true;
 					newList1.add(road);
 				}
-				else if(other.getRoad().isConnected(road))
+				else if (other.getRoad().isConnected(road))
 				{
 					isConnected = true;
 					newList2.add(road);
 				}
 			}
 			index++;
-			if(isConnected) break;
+			if (isConnected) break;
 		}
-		
+
 		// Remove old list and add two new ones
 		roads.remove(index - 1);
 		roads.add(newList1);
 		roads.add(newList2);
 	}
-	
+
 	/**
-	 * Merges two roads together if a road was recently built which connects
-	 * to previously separate ones
+	 * Merges two roads together if a road was recently built which connects to
+	 * previously separate ones
+	 * 
 	 * @param r the new road
-	 * @param listsAddedTo the number of lists (of adjacent roads) it was added to 
+	 * @param listsAddedTo the number of lists (of adjacent roads) it was added
+	 *            to
 	 */
 	protected void mergeRoads(Road r, List<Integer> listsAddedTo)
 	{
-		for(int i = 1; i < listsAddedTo.size(); i++)
+		for (int i = 1; i < listsAddedTo.size(); i++)
 		{
 			List<Road> last = roads.get(listsAddedTo.get(i - 1));
 			List<Road> current = roads.get(listsAddedTo.get(i));
-			
-			// Remove the duplicate road in one of the lists and add it to the other one.
+
+			// Remove the duplicate road in one of the lists and add it to the
+			// other one.
 			last.remove(r);
 			current.addAll(last);
-			
+
 			roads.remove(last);
 		}
 	}
@@ -184,31 +192,32 @@ public abstract class Player
 	public int getNumResources()
 	{
 		int numResources = 0;
-		for(Integer i : resources.values())
+		for (Integer i : resources.values())
 		{
 			numResources += i;
 		}
 		return numResources;
 	}
-	
+
 	/**
 	 * Checks to see if the user canAfford something
+	 * 
 	 * @param cost
 	 */
 	public boolean canAfford(Map<ResourceType, Integer> cost)
 	{
 		// Check if the player can afford this before initiating the purchase
-		for(ResourceType r : cost.keySet())
+		for (ResourceType r : cost.keySet())
 		{
-			if(resources.get(r) < cost.get(r))
-				return false;
+			if (resources.get(r) < cost.get(r)) return false;
 		}
-		
+
 		return true;
 	}
 
 	/**
 	 * Checks to see if building a road is valid at the given edge
+	 * 
 	 * @param edge the desired road location
 	 * @return if the desired location is valid for a road
 	 */
@@ -217,11 +226,11 @@ public abstract class Player
 		boolean valid = false;
 
 		// See if the proposed node is connected to any of the current roads
-		for(List<Road> list : roads)
+		for (List<Road> list : roads)
 		{
-			for(Road r : list)
+			for (Road r : list)
 			{
-				if(r.getEdge().isConnected(edge))
+				if (r.getEdge().isConnected(edge))
 				{
 					valid = true;
 					break;
@@ -234,6 +243,7 @@ public abstract class Player
 
 	/**
 	 * Checks to see if the player can build a settlement
+	 * 
 	 * @param node the desired settlement location
 	 * @return if building a settlement at the given node is legal
 	 */
@@ -242,12 +252,13 @@ public abstract class Player
 		Point p = new Point(node.getX(), node.getY());
 		Settlement s = new Settlement(node, colour);
 
-		return canAfford(Settlement.getSettlementCost()) && !settlements.containsKey(p)
-				&& !s.isNearSettlement() && (node.isNearRoad(colour) || getSettlements().size() < MIN_SETTLEMENTS);
+		return canAfford(Settlement.getSettlementCost()) && !settlements.containsKey(p) && !s.isNearSettlement()
+				&& (node.isNearRoad(colour) || getSettlements().size() < MIN_SETTLEMENTS);
 	}
 
 	/**
 	 * Checks to see if the player can build a city
+	 * 
 	 * @param node the desired city location
 	 * @return if building a city at the given node is legal
 	 */
@@ -260,12 +271,13 @@ public abstract class Player
 
 	/**
 	 * Grants resources to the player
+	 * 
 	 * @param newResources a map of resources to give to the player
 	 */
 	public void grantResources(Map<ResourceType, Integer> newResources)
 	{
 		// Add each new resource and its amount to the player's resource bank
-		for(ResourceType r : newResources.keySet())
+		for (ResourceType r : newResources.keySet())
 		{
 			int value = newResources.get(r);
 			int existing = resources.containsKey(r) ? resources.get(r) : 0;
@@ -277,11 +289,12 @@ public abstract class Player
 
 	/**
 	 * Grants resources to the player
+	 * 
 	 * @param count a map of resources to give to the player
 	 */
 	public void grantResources(ResourceProtos.ResourceCount count) throws CannotAffordException
 	{
-		Map<ResourceType, Integer> newResources = new HashMap<ResourceType, Integer> ();
+		Map<ResourceType, Integer> newResources = new HashMap<ResourceType, Integer>();
 		newResources.put(ResourceType.Brick, count.getBrick());
 		newResources.put(ResourceType.Wool, count.getWool());
 		newResources.put(ResourceType.Ore, count.getOre());
@@ -291,16 +304,17 @@ public abstract class Player
 		grantResources(newResources);
 	}
 
-
 	/**
 	 * Spends resources to the player
+	 * 
 	 * @param count the resources describing the IBuildable that the player
-	 * wants to construct
-	 * @throws CannotAffordException if the player does not have enough resources
+	 *            wants to construct
+	 * @throws CannotAffordException if the player does not have enough
+	 *             resources
 	 */
 	public void spendResources(ResourceProtos.ResourceCount count) throws CannotAffordException
 	{
-		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer> ();
+		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer>();
 		cost.put(ResourceType.Brick, count.getBrick());
 		cost.put(ResourceType.Wool, count.getWool());
 		cost.put(ResourceType.Ore, count.getOre());
@@ -312,17 +326,18 @@ public abstract class Player
 
 	/**
 	 * Spends resources to the player
+	 * 
 	 * @param cost a map of resources describing the IBuildable that the player
-	 * wants to construct
-	 * @throws CannotAffordException if the player does not have enough resources
+	 *            wants to construct
+	 * @throws CannotAffordException if the player does not have enough
+	 *             resources
 	 */
 	public void spendResources(Map<ResourceType, Integer> cost) throws CannotAffordException
 	{
-		if(!canAfford(cost))
-			throw new CannotAffordException(resources, cost);
+		if (!canAfford(cost)) throw new CannotAffordException(resources, cost);
 
 		// Subtract each resource and its amount from the player's resource bank
-		for(ResourceType r : cost.keySet())
+		for (ResourceType r : cost.keySet())
 		{
 			int value = cost.get(r);
 			int existing = resources.get(r);
@@ -363,7 +378,7 @@ public abstract class Player
 	{
 		this.colour = colour;
 	}
-	
+
 	/**
 	 * @return whether or not the player has enough victory points to win.
 	 */
@@ -371,7 +386,7 @@ public abstract class Player
 	{
 		return vp >= VP_THRESHOLD;
 	}
-	
+
 	/**
 	 * @return the player's resources
 	 */
@@ -379,7 +394,7 @@ public abstract class Player
 	{
 		return resources;
 	}
-	
+
 	/**
 	 * @return the settlements the player has built
 	 */
@@ -395,19 +410,20 @@ public abstract class Player
 	{
 		return cards;
 	}
-	
+
 	/**
 	 * @return the roads the player has built
 	 */
 	public List<Road> getRoads()
 	{
 		List<Road> total = new ArrayList<Road>();
-		
-		for(List<Road> list : roads)
+
+		for (List<Road> list : roads)
 			total.addAll(list);
-		
+
 		return total;
 	}
+
 	/**
 	 * @return the hasLargestArmy
 	 */
@@ -448,10 +464,10 @@ public abstract class Player
 	/**
 	 * @return this player's army size
 	 */
-    public int getArmySize()
+	public int getArmySize()
 	{
-        return armySize;
-    }
+		return armySize;
+	}
 
 	/**
 	 * Adds one knight to the army
@@ -465,6 +481,7 @@ public abstract class Player
 	 * Adds the new building to this player's list of buildings.
 	 *
 	 * If a city, the original settlement is overriden
+	 * 
 	 * @param b the new building
 	 */
 	public void addSettlement(Building b)
@@ -479,9 +496,10 @@ public abstract class Player
 
 	/**
 	 * Adds the given development card
+	 * 
 	 * @param type the development card to add
 	 */
-    public void addDevelopmentCard(DevelopmentCardType type)
+	public void addDevelopmentCard(DevelopmentCardType type)
 	{
 		int existing = cards.containsKey(type) ? cards.get(type) : 0;
 		cards.put(type, existing + 1);

@@ -85,6 +85,7 @@ public class GameScreen implements Screen
 	@Override
 	public void render(final float delta)
 	{
+		Gdx.gl.glClearColor(0/255, 128/255, 255/255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		camController.update();
@@ -94,14 +95,8 @@ public class GameScreen implements Screen
 	private void renderBoard()
 	{
 		MODEL_BATCH.begin(cam);
-		MODEL_BATCH.render(UITools.getAxesInst());
 		MODEL_BATCH.render(boardInstances, environment);
 		MODEL_BATCH.end();
-	}
-
-	@Override
-	public void resize(final int width, final int height)
-	{
 	}
 
 	@Override
@@ -113,6 +108,7 @@ public class GameScreen implements Screen
 	}
 
 	// Required but unused
+	@Override public void resize(final int width, final int height) {}
 	@Override public void pause() {}
 	@Override public void resume() {}
 	@Override public void hide() {}

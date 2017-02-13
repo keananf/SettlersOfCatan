@@ -13,10 +13,12 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import board.Hex;
+
 import catan.SettlersOfCatan;
 
 public class GameScreen implements Screen
@@ -41,7 +43,7 @@ public class GameScreen implements Screen
 		cam.position.set(0f, 7f, 10f);
 		cam.lookAt(0, 0, 0);
 		cam.near = 0.1f;
-		cam.far = 200;
+		cam.far = 200f;
 		cam.update();
 
 		// init camera controller
@@ -54,6 +56,7 @@ public class GameScreen implements Screen
 		// init environment
 		environment = new Environment();
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
+		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 	}
 
 	private void initBoard()

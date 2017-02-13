@@ -1,6 +1,5 @@
 package catan.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
@@ -10,7 +9,7 @@ public final class SpinCamController implements InputProcessor
 {
 	private static final Vector3 ORIGIN = new Vector3(0f, 0f, 0f);
 	private static final Vector3 Y_AXIS = new Vector3(0f, 1f, 0f);
-	private static final float SPIN_RATE = 1f;
+	private static final float SPIN_RATE = 4f;
 
 	private final Camera camera;
 	private boolean leftHeld, rightHeld;

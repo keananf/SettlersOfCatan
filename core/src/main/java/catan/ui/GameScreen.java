@@ -66,19 +66,20 @@ public class GameScreen implements Screen
 
 		for(Entry<Point, Hex> coord : game.state.getGrid().grid.entrySet())
 		{
-			float x = (float)(coord.getKey().getX());
-			float y = (float)(coord.getKey().getY());
-			Vector3 pos = new Vector3(
-					(float)(x + (y*Math.cos(Math.PI/3))),
-					0f,
-					(float)(y*Math.cos(Math.PI/6) - (x*Math.sin(Math.PI/6))));
 
 			ModelInstance hex = new ModelInstance(
 					assets.getModel("hex.g3db"),
-					pos);
+					hexPointToCartVec(coord.getKey()));
 
 			boardInstances.add(hex);
 		}
+	}
+
+	private static final Vector3 hexPointToCartVec(Point p)
+	{
+		final float x = (float)(p.getX());
+		final float y = (float)(p.getY());
+		return new Vector3(x, 0f, (float)((2*y-x)/Math.sqrt(3)));
 	}
 
 	@Override

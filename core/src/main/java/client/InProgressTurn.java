@@ -1,5 +1,7 @@
 package client;
 
+import board.Hex;
+import enums.Colour;
 import enums.Move;
 import board.Edge;
 import board.Node;
@@ -17,4 +19,6 @@ public class InProgressTurn
 	public Edge[] chosenEdges = new Edge[2];
 	public ResourceType chosenResource;
 	public ResourceType[] chosenResources;
+    public Hex chosenHex;
+	public Colour chosenColour;
 }

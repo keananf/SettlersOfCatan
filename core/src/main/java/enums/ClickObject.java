@@ -5,5 +5,5 @@ public enum ClickObject
 	EDGE,
 	NODE,
 	CARD,
-	DEVCARD;
+	DEVCARD, TRADEREQUEST;
 }

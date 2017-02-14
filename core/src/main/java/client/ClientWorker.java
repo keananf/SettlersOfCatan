@@ -1,7 +1,9 @@
 package client;
 
 import board.Edge;
+import board.Hex;
 import board.Node;
+import enums.Colour;
 import enums.Move;
 import enums.ResourceType;
 import game.build.Building;
@@ -9,6 +11,7 @@ import game.build.Settlement;
 import game.players.Player;
 import protocol.BuildProtos.PointProto;
 import protocol.RequestProtos.*;
+import protocol.TradeProtos.*;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -50,12 +53,26 @@ public class ClientWorker
 		{
 			checkDevCard();
 		}
+		else if(inProgressTurn.initialClickObject == inProgressTurn.initialClickObject.TRADEREQUEST){
+			//TODO: implement player trade and bank trade
+		}
 
 	}
 
 	private void checkDevCard()
 	{
 		//TODO: look up game rules and validate
+		inProgressTurn.possibilities[0] = Move.CLOSE;
+
+		if(checkTurn()){
+			Player player = game.getPlayer();
+			// switch to see if card typ being played belongs to  player and set possibilities 1
+			// -->
+			//inProgressTurn.possibilities[1] = Move.PLAY...
+			//make sure colour isn't your own and is present around hex
+		}
+
+
 	}
 	private void checkCard()
 	{
@@ -160,25 +177,19 @@ public class ClientWorker
 				break;
 			case PLAY_YEAROFPLENTYCARD:
 				request.setPlayYearOfPlentyCardRequest(playYearOfPlentyCard(inProgressTurn.chosenResources));
-			//TODO: PlayYearOfPlentyCardRequest
+				break;
 			case PLAY_ROADLIBRARYCARD:
-			//TODO: PlayLibraryCardRequest
+				request.setPlayLibraryCardRequest(playLibraryCard());
+				break;
 			case PLAY_UNIVERSITYCARD:
-			//TODO: PlayUniversityCardRequest
+				request.setPlayUniversityCardRequest(playUniversityCard());
+				break;
 			case PLAY_KNIGHTCARD:
-			//TODO: PlayKnightCardRequest
-
-			//Move Robber
-			//TODO: MoveRobberRequest moveRobberRequest = 12;
-
-			//TradeRequest
-			//TODO: TradeRequest tradeRequest = 14;
-
-			//ResouceCount
-			//TODO: ResourceCount discardRequest = 15;
-
-
-			//moving rubber
+				request.setPlayKnightCardRequest(playKnightCard(inProgressTurn.chosenHex, inProgressTurn.chosenColour));
+				break;
+			case TRADE_REQUEST:
+				request.setTradeRequest(tradeRequest());
+				break;
             case CLOSE:
                 request.setEndMoveRequest(endMoveRequest());
                 break;
@@ -189,7 +200,10 @@ public class ClientWorker
 		toServer(request.build());
     }
 
-    //TODO: send protocol buffer to server with codedOutputStream
+
+
+
+	//TODO: send protocol buffer to server with codedOutputStream
 	private void toServer(Request request){
 		try {
 			clientSocket = new Socket(InetAddress.getLocalHost(),PORT);
@@ -204,26 +218,82 @@ public class ClientWorker
 		}
 	}
 
-	private PlayYearOfPlentyCardRequest playYearOfPlentyCard(ResourceType[] resources){
 
+
+	private PlayKnightCardRequest playKnightCard(Hex hex, Colour colour) {
+		if(hex == null || colour == null) return null;
+
+		PlayKnightCardRequest.Builder knightCardRequest = PlayKnightCardRequest.newBuilder();
+		MoveRobberRequest.Builder moveRobber = MoveRobberRequest.newBuilder();
+
+		moveRobber.setColourToTakeFrom(Colour.toProto(colour));
+		moveRobber.setHex(hex.toHexProto());
+
+		knightCardRequest.setRequest(moveRobber.build());
+		return knightCardRequest.build();
+	}
+
+	private TradeRequest tradeRequest() {
+		return TradeRequest.newBuilder().build();
+	}
+
+	private PlayUniversityCardRequest playUniversityCard() {
+		return PlayUniversityCardRequest.newBuilder().build();
+	}
+
+	private PlayLibraryCardRequest playLibraryCard() {
+		return PlayLibraryCardRequest.newBuilder().build();
+	}
+
+	private PlayYearOfPlentyCardRequest playYearOfPlentyCard(ResourceType[] resources){
+		if(resources==null || resources[0]==null || resources[1]==null) return null;
+
+		PlayYearOfPlentyCardRequest.Builder yearOfPlentyCardRequest = PlayYearOfPlentyCardRequest.newBuilder();
+
+		yearOfPlentyCardRequest.setR1(ResourceType.toProto(resources[0]));
+		yearOfPlentyCardRequest.setR2(ResourceType.toProto(resources[1]));
+
+		return yearOfPlentyCardRequest.build();
 	}
 
 	private PlayRoadBuildingCardRequest playRoadBuildCard(Edge[] edges){
 
+		if(edges==null || edges[0]==null || edges[1]==null) return null;
+
+		PlayRoadBuildingCardRequest.Builder roadBuildingCardRequest = PlayRoadBuildingCardRequest.newBuilder();
+		BuildRoadRequest.Builder buildRoadRequest = BuildRoadRequest.newBuilder();
+
+		buildRoadRequest.setEdge(edges[0].toEdgeProto());
+		roadBuildingCardRequest.setRequest1(buildRoadRequest.build());
+
+		buildRoadRequest.setEdge(edges[1].toEdgeProto());
+		roadBuildingCardRequest.setRequest2(buildRoadRequest.build());
+
+
+		return roadBuildingCardRequest.build();
 	}
 
 	private PlayMonopolyCardRequest playMonopolyCard(ResourceType resource){
+		if(resource==null) return null;
 
+		PlayMonopolyCardRequest.Builder monopolyCardRequest = PlayMonopolyCardRequest.newBuilder();
+		monopolyCardRequest.setResource(ResourceType.toProto(resource));
+
+		return monopolyCardRequest.build();
 	}
 
 	private BuildRoadRequest setUpRoad(Edge edge) {
-        BuildRoadRequest.Builder roadRequest = BuildRoadRequest.newBuilder();
+        if(edge==null) return null;
+
+		BuildRoadRequest.Builder roadRequest = BuildRoadRequest.newBuilder();
         roadRequest.setEdge(edge.toEdgeProto());
 
         return roadRequest.build();
     }
 
     private BuildSettlementRequest setUpSettlement(Node node) {
+		if(node == null) return null;
+
         BuildSettlementRequest.Builder settlementRequest = BuildSettlementRequest.newBuilder();
         PointProto.Builder point = PointProto.newBuilder();
 

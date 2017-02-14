@@ -1,6 +1,8 @@
 package AI;
 
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
 
 import client.ClientGame;
 import enums.Difficulty;
@@ -21,5 +23,34 @@ public abstract class AICore
 		this.player = player;
 	}
 	
+	public MoveEntry selectMove(ArrayList<MoveEntry> moves)
+	{
+		MoveEntry selectedMove = null;
+		int maxRank = -1;
+		ArrayList<MoveEntry> optimalMoves = new ArrayList<MoveEntry>();
+		
+		for(MoveEntry entry : moves)
+		{
+			if(entry.getRank() > maxRank)
+			{
+				maxRank = entry.getRank();
+				optimalMoves.clear();
+				optimalMoves.add(entry);
+			}
+			else if(entry.getRank() == maxRank)
+			{
+				optimalMoves.add(entry);
+			}
+		}
+		
+		if(optimalMoves.size() > 1)
+		{
+			Random r = new Random();
+			selectedMove = optimalMoves.get(r.nextInt(optimalMoves.size() - 1));		
+		}
 	
+		
+		return selectedMove;
+		
+	}
 }

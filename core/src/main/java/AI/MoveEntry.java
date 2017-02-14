@@ -10,6 +10,7 @@ public class MoveEntry
 	private Node node;
 	private Edge edge;
 	private Move move;
+	private int rank;
 	
 	public MoveEntry(Node node, Move move)
 	{
@@ -56,6 +57,16 @@ public class MoveEntry
 		}
 		
 		return retEdge;
+	}
+	
+	public int getRank()
+	{
+		return rank;
+	}
+	
+	public void setRank(int rank)
+	{
+		this.rank = rank;
 	}
 	
 	

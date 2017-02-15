@@ -17,8 +17,9 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-import board.Hex;
+import enums.ResourceType;
 
+import board.Hex;
 import catan.SettlersOfCatan;
 
 public class GameScreen implements Screen
@@ -27,10 +28,10 @@ public class GameScreen implements Screen
 	final private ModelBatch MODEL_BATCH = new ModelBatch();
 
 	final private Camera cam;
-	final private SpinCamController camController;
+	final private CatanCamController camController;
 
 	final private Array<ModelInstance> boardInstances = new Array<ModelInstance>();
-	final private Environment environment;
+	final private Environment environment = new Environment();
 
 	final private SettlersOfCatan game;
 
@@ -42,36 +43,69 @@ public class GameScreen implements Screen
 		cam = new PerspectiveCamera(75f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(0f, 7f, 10f);
 		cam.lookAt(0, 0, 0);
-		cam.near = 0.1f;
-		cam.far = 200f;
+		cam.near = 0.01f;
+		cam.far = 300f;
 		cam.update();
 
 		// init camera controller
-		camController = new SpinCamController(cam);
+		camController = new CatanCamController(cam);
 		Gdx.input.setInputProcessor(camController);
 
-		// init external assets
-		initBoard();
-
 		// init environment
-		environment = new Environment();
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+
+		initBoard();
 	}
 
 	private void initBoard()
 	{
 		assets.load("models/hex.g3db", Model.class);
+		assets.load("models/grass.g3db", Model.class);
+		assets.load("models/grain.g3db", Model.class);
+		assets.load("models/claymine.g3db", Model.class);
+		assets.load("models/mountain.g3db", Model.class);
+		assets.load("models/desert.g3db", Model.class);
 		assets.finishLoading();
 
 		for(Entry<Point, Hex> coord : game.state.getGrid().grid.entrySet())
 		{
-
 			ModelInstance hex = new ModelInstance(
 					assets.getModel("hex.g3db"),
 					hexPointToCartVec(coord.getKey()));
 
+			hex.transform.scale(1.2f, 1f, 1.2f);
 			boardInstances.add(hex);
+
+			Model resourceModel = null;
+			switch(coord.getValue().getResource())
+			{
+				case Brick:
+					resourceModel = assets.getModel("claymine.g3db");
+					break;
+				case Lumber:
+					resourceModel = assets.getModel("grass.g3db");
+					break;
+				case Generic:
+					resourceModel = assets.getModel("desert.g3db");
+					break;
+				case Wool:
+					resourceModel = assets.getModel("grass.g3db");
+					break;
+				case Grain:
+					resourceModel = assets.getModel("grain.g3db");
+					break;
+				case Ore:
+					resourceModel = assets.getModel("mountain.g3db");
+					break;
+				default:
+					assert(false);
+			}
+
+			Vector3 resourcePos = hexPointToCartVec(coord.getKey());
+			resourcePos.y += 0.2;
+			ModelInstance resource = new ModelInstance(resourceModel, resourcePos);;
+			boardInstances.add(resource);
 		}
 	}
 

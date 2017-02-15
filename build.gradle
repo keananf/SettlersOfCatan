@@ -100,7 +100,19 @@ project(":core") {
             }
         }
     }
+
+    task fbx << {
+        FileTree inputFiles = sourceSets.getByName("main").resources
+        PatternSet fbxFiles = new PatternSet().include({ def f -> f.getName().endsWith(".fbx") })
+        inputFiles.matching(fbxFiles).each { f ->
+            String out = (String)projectDir + "/assets/models/" + f.getName().replace(".fbx", ".g3db")
+            println "Converting ${f} to ${out}"
+            def proc  = "/usr/local/bin/fbx-conv ${f} ${out}".execute();
+            proc.waitFor();
+        }
+    }
 }
+
 
 tasks.eclipse.doLast {
     delete ".project"

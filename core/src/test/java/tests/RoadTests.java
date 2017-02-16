@@ -76,7 +76,7 @@ public class RoadTests extends TestHelper
 		// Dont worry about granting resources or anything.
 		// The checks for invalid coordinates happens first.
 		game.setTurn(p.getColour());
-		game.buildRoad(e.build());
+		buildRoad(n.getEdges().get(0));
 		assertEquals(p.getNumResources(), 0);
 		assertEquals(p.getRoads().size(), 1);
 	}
@@ -182,9 +182,8 @@ public class RoadTests extends TestHelper
 		buildRoad(e3);
 	
 		// Build foreign settlement in between second and third road.
-		Board.Point point = n2.toProto();
-		game.setTurn(p2.getColour());
-		game.buildSettlement(point);
+		p2.grantResources(Settlement.getSettlementCost());
+		makeSettlement(p2, n2);
 
 		// Assert previous road chain of length three was broken.
 		assertEquals(2, p.calcRoadLength());

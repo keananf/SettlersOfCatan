@@ -508,6 +508,7 @@ public abstract class Player
 		player.setId(getId());
 		builder.setUsername(userName);
 		builder.setPlayer(player.build());
+		builder.setColour(Colour.toProto(getColour()));
 
 		return builder.build();
 	}

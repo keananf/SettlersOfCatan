@@ -95,7 +95,7 @@ public class GameAndResourcesTests extends TestHelper
 		// Move and check
 		game.setTurn(p.getColour());
 		game.moveRobber(point.build());
-		game.takeResource(Board.Player.Id.PLAYER_2);
+		game.takeResource(p2.getId());
 		assertNotEquals(h, game.getGrid().getHexWithRobber());
 		assertEquals(p.getNumResources(), 1);
 		assertEquals(p2.getNumResources(), 1);

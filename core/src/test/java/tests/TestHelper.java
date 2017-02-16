@@ -1,5 +1,6 @@
 package tests;
 
+import board.Board;
 import grid.*;
 import enums.Colour;
 import enums.DevelopmentCardType;
@@ -123,6 +124,7 @@ public class TestHelper
 	{
 		game = new ServerGame();
 		p = new NetworkPlayer(Colour.BLUE, "");
+		p.setId(Board.Player.Id.PLAYER_1);
 		game.addPlayer(p);
 		game.setCurrentPlayer(p.getColour());
 		

@@ -159,11 +159,11 @@ public class SettlementAndCityTests extends TestHelper
 
 		// Create protobuf representation of building a settlement
 		Board.Point.Builder point = Board.Point.newBuilder();
-		point.setX(-10);
-		point.setY(-30);
+		point.setX(n.getX());
+		point.setY(n.getY());
 
 		// Grant resources
-		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(City.getCityCost());
 
 		// Try to build
 		game.setTurn(p.getColour());

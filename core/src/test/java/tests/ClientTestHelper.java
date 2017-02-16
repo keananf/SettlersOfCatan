@@ -5,25 +5,38 @@ import client.ClientGame;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
+import exceptions.CannotAffordException;
+import exceptions.InvalidCoordinatesException;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
+import game.players.LocalPlayer;
+import game.players.Player;
 import grid.Edge;
 import grid.Hex;
 import grid.Node;
-import org.junit.BeforeClass;
+import org.junit.Before;
 
 import java.util.Map;
 
 public class ClientTestHelper extends TestHelper
 {
-    ClientGame clientGame;
-    protected static Board.Player player;
+    protected ClientGame clientGame;
+    protected Player clientPlayer;
+    private Board.Player player;
 
-    @BeforeClass
-    public static void setUp()
+    @Before
+    public void start() throws CannotAffordException, InvalidCoordinatesException
     {
-        player = Board.Player.newBuilder().setId(Board.Player.Id.PLAYER_1).build();
+        reset();
+        clientGame = new ClientGame();
+        clientPlayer = new LocalPlayer(Colour.BLUE, "");
+        clientPlayer.setId(Board.Player.Id.PLAYER_1);
+        clientGame.addPlayer(clientPlayer);
+
+        player = Board.Player.newBuilder().setId(clientPlayer.getId()).build();
+        clientGame.setBoard(game.getGameSettings(clientPlayer.getColour()));
+        clientPlayer = clientGame.getPlayer(clientPlayer.getId());
     }
 
     public void processRoadEvent(Edge edge, Colour col)
@@ -31,6 +44,7 @@ public class ClientTestHelper extends TestHelper
         // Set up request
         Board.Edge e = edge.toEdgeProto();
 
+        player = Board.Player.newBuilder().setId(clientGame.getPlayer(col).getId()).build();
         clientGame.getPlayer().grantResources(Road.getRoadCost());
         clientGame.setTurn(col);
         try
@@ -49,6 +63,7 @@ public class ClientTestHelper extends TestHelper
         Board.Point n = node.toProto();
         Map<ResourceType, Integer> grant = Settlement.getSettlementCost();
 
+        player = Board.Player.newBuilder().setId(clientGame.getPlayer(col).getId()).build();
         clientGame.getPlayer().grantResources(grant);
         clientGame.setTurn(col);
         try
@@ -67,6 +82,7 @@ public class ClientTestHelper extends TestHelper
         Board.Point n = node.toProto();
         Map<ResourceType, Integer> grant = City.getCityCost();
 
+        player = Board.Player.newBuilder().setId(clientGame.getPlayer(col).getId()).build();
         clientGame.getPlayer().grantResources(grant);
         clientGame.setTurn(col);
         try
@@ -84,6 +100,7 @@ public class ClientTestHelper extends TestHelper
          // Make a move robber event
          Board.Point point = h.toHexProto().getLocation();
 
+         player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();
          clientGame.getPlayer().grantResources(DevelopmentCardType.getCardCost());
          clientGame.setTurn(c);
          try
@@ -102,6 +119,7 @@ public class ClientTestHelper extends TestHelper
     {
         clientGame.getPlayer().grantResources(DevelopmentCardType.getCardCost());
         clientGame.setTurn(c);
+        player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();
         try
         {
             clientGame.recordDevCard(type, player);
@@ -116,6 +134,8 @@ public class ClientTestHelper extends TestHelper
      {
          clientGame.getPlayer().grantResources(DevelopmentCardType.getCardCost());
          clientGame.setTurn(c);
+
+         player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();
          try
          {
              clientGame.recordDevCard(type, player);

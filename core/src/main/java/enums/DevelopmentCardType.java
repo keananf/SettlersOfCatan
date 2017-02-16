@@ -83,6 +83,7 @@ public enum DevelopmentCardType
 
                     //TODO COMPLETE
                 }
+                break;
             }
 
             case PLAYABLEDEVCARD:
@@ -103,6 +104,7 @@ public enum DevelopmentCardType
                         type = DevelopmentCardType.YearOfPlenty;
                         break;
                 }
+                break;
             }
         }
         return type;

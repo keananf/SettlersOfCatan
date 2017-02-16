@@ -388,6 +388,7 @@ public class ServerGame extends Game
 	 */
 	public void playUniversityCard() throws DoesNotOwnException
 	{
+		((NetworkPlayer)players.get(currentPlayer)).playDevelopmentCard(DevelopmentCardType.University);
         grantVpPoint();
 	}
 	
@@ -396,6 +397,7 @@ public class ServerGame extends Game
 	 */
 	public void playLibraryCard() throws DoesNotOwnException
 	{
+		((NetworkPlayer)players.get(currentPlayer)).playDevelopmentCard(DevelopmentCardType.Library);
         grantVpPoint();
 	}
 	
@@ -453,7 +455,7 @@ public class ServerGame extends Game
 	public Events.Event buildRoad(Board.Edge edge) throws CannotAffordException,CannotBuildRoadException,
 			RoadExistsException, InvalidCoordinatesException
 	{
-		Player p = players.get(currentPlayer);
+		NetworkPlayer p = (NetworkPlayer) players.get(currentPlayer);
 		board.Board.Point p1 = edge.getA(), p2 = edge.getB();
 		Node n = grid.getNode(p1.getX(), p1.getY());
 		Node n2 = grid.getNode(p2.getX(), p2.getY());
@@ -469,7 +471,8 @@ public class ServerGame extends Game
 			throw new InvalidCoordinatesException(p2.getX(), p2.getY());
 		}
 
-		// Try to build the road and update the longest road 
+		// Try to build the road and update the longest road
+		p.buildRoad(grid.getEdge(p1, p2));
 		checkLongestRoad(false);
 		
 		// return success message
@@ -597,11 +600,6 @@ public class ServerGame extends Game
 	public Player[] getPlayersAsList()
 	{
 		return players.values().toArray(new Player[]{});
-	}
-
-	public void addPlayer(Player p)
-	{
-		players.put(p.getColour(), p);
 	}
 
 	private void grantVpPoint()

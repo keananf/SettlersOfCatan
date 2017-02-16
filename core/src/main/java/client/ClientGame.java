@@ -10,7 +10,6 @@ import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
 import game.players.LocalPlayer;
-import game.players.NetworkPlayer;
 import game.players.Player;
 import grid.*;
 import lobby.Lobby;
@@ -51,8 +50,8 @@ public class ClientGame extends Game
 
             // Instantiate players as well
             // TODO FOR TESTING ONLY. REMOVE ONCE CLIENT AND SERVER ARE HOOKED UP
-            if(!c.equals(Colour.BLUE))
-                players.put(c, new NetworkPlayer(c, c.toString()));
+            //if(!c.equals(Colour.BLUE))
+               // players.put(c, new LocalPlayer(c, c.toString()));
         }
     }
 
@@ -85,16 +84,18 @@ public class ClientGame extends Game
         for(Lobby.GameSetup.PlayerSetting player : playerSettingsList)
         {
             enums.Colour col = enums.Colour.fromProto(player.getColour());
+            LocalPlayer newPlayer = new LocalPlayer(col, player.getUsername());
+            newPlayer.setId(player.getPlayer().getId());
 
             // Check if it is this player
             if(player.getPlayer().getId().equals(ownPlayer.getId()))
             {
-                thisPlayer = new LocalPlayer(col, player.getUsername());
+                thisPlayer = newPlayer;
                 players.put(col, thisPlayer);
             }
             else
             {
-                players.put(col, new LocalPlayer(col, player.getUsername()));
+                players.put(col, newPlayer);
             }
 
             // Add mapping from colours to ids

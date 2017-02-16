@@ -233,6 +233,16 @@ public abstract class Game
 
 	/**
 	 * Retrieves the corresponding player
+	 * @param col the player's colour
+	 * @return
+	 */
+	public Player getPlayer(Colour col)
+	{
+		return players.get(col);
+	}
+
+	/**
+	 * Retrieves the corresponding player
 	 * @param id the player's id
 	 * @return
 	 */
@@ -240,5 +250,11 @@ public abstract class Game
 	{
 		enums.Colour col = idsToColours.get(id);
 		return players.get(col);
+	}
+
+	public void addPlayer(Player clientPlayer)
+	{
+		idsToColours.put(clientPlayer.getId(), clientPlayer.getColour());
+		players.put(clientPlayer.getColour(), clientPlayer);
 	}
 }

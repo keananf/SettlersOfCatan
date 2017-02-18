@@ -147,4 +147,9 @@ public class Hex extends BoardElement
 
 		return true;
 	}
+
+	public void toggleHasRobber()
+	{
+		hasRobber = !hasRobber;
+	}
 }

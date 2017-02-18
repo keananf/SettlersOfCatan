@@ -41,7 +41,6 @@ public class ClientProcessTests extends ClientTestHelper
         // Assert all hexes were serialised and deserialised
         for(Hex h1 : actualBoard.getHexesAsList())
         {
-            System.out.println(h1.getResource());
             assertTrue(processedBoard.getHexesAsList().contains(h1));
         }
     }

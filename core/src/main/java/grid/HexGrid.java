@@ -270,6 +270,20 @@ public class HexGrid
 		return hexWithRobber;
 	}
 
+	public Hex getDesert()
+	{
+		Hex desert = null;
+		for(Hex h : grid.values())
+		{
+			if(h.getResource().equals(ResourceType.Generic))
+			{
+				desert = h;
+				break;
+			}
+		}
+		return desert;
+	}
+
     /**
      * Retrieve the hex at the given coordinates
      * @param x the x coordinate
@@ -395,6 +409,13 @@ public class HexGrid
 		for(Hex h : hexes)
 		{
 			this.grid.put(new Point(h.getX(), h.getY()), h);
+
+			// Set default robber
+			if(h.getResource().equals(ResourceType.Generic) && hexWithRobber.getResource().equals(ResourceType.Generic))
+			{
+				h.toggleHasRobber();
+				hexWithRobber = h;
+			}
 		}
 
 		// for each column

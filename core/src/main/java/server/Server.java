@@ -5,7 +5,6 @@ import catan.Events.Event;
 import catan.Messages.Message;
 import catan.Requests.Request;
 import enums.Colour;
-import exceptions.UnexpectedMoveTypeException;
 import game.Game;
 import game.players.NetworkPlayer;
 import game.players.Player;
@@ -15,6 +14,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Server implements Runnable
@@ -26,13 +26,22 @@ public class Server implements Runnable
 	private static final int PORT = 12345;
 	private Logger logger;
 	private ConcurrentHashMap<Colour, Queue<Message>> movesToProcess;
+	private HashMap<Colour, List<Request.BodyCase>> expectedMoves;
 
 	public Server()
 	{
 		logger = new Logger();
 		game = new ServerGame();
+
+		// Set up
 		movesToProcess = new ConcurrentHashMap<Colour, Queue<Message>>();
+		expectedMoves = new HashMap<Colour, List<Request.BodyCase>>();
 		connections = new HashMap<Colour, ListenerThread>();
+		for(Colour c : Colour.values())
+		{
+			movesToProcess.put(c, new ArrayBlockingQueue<Message>(10));
+			expectedMoves.put(c, new ArrayList<>());
+		}
 	}
 
 	public void run()
@@ -51,7 +60,8 @@ public class Server implements Runnable
 				sendTurns(dice);
 
 				// Read moves from queue and log
-				processMessage();
+				Message msg = movesToProcess.get(game.getCurrentPlayer()).poll();
+				processMessage(msg);
 			}
 		}
 		catch (IOException e)
@@ -63,132 +73,11 @@ public class Server implements Runnable
 	}
 
 	/**
-	 * Sends the dice and each player's respective resource count to the player's socket
-	 * @param dice the dice roll to send
-	 * @throws IOException 
-	 */
-	private void sendTurns(Board.Roll dice) throws IOException
-	{
-		List<Player> discardList = new ArrayList<Player>();
-		int sum = dice.getA() + dice.getB();
-
-		// For each player
-		for(Colour c : Colour.values())
-		{
-			if(game.getPlayers().containsKey(c))
-			{
-				Player p = game.getPlayers().get(c);
-				sendDice(dice);
-
-				if(sum == 7 && p.getNumResources() > 7)
-				{
-					discardList.add(p);
-				}
-			}
-		}
-
-		// Process discard requests if necessary
-		if(discardList.size() > 0)
-		{
-			processDiscardRequests(discardList);
-		}
-	}
-
-	/**
-	 * Sends the dice to the player's socket
-	 * @param roll the dice roll to send
-	 * @throws IOException
-	 */
-	private void sendDice(Board.Roll roll) throws IOException
-	{
-		// Set up event
-		Event.Builder ev = Event.newBuilder();
-		ev.setRolled(roll);
-
-		sendEvents(ev.build());
-	}
-	
-	/**
-	 * Serialises and Broadcasts the board to each connected player
-	 * @throws IOException
-	 */
-	private void broadcastBoard() throws IOException
-	{
-		// Set up message
-		Message.Builder msg = Message.newBuilder();
-		Event.Builder ev = Event.newBuilder();
-
-		// TODO deal with ai
-
-		// For each player
-		for(Colour c : Colour.values())
-		{
-			// Set up the board and the info indicating which player
-			Lobby.GameSetup board = game.getGameSettings(c);
-			ev.setBeginGame(board);
-			msg.setEvent(ev.build());
-
-			if(connections.containsKey(c))
-			{
-				connections.get(c).sendMessage(msg.build());
-
-			}
-		}
-	}
-
-	/**
-	 * Serialises and Broadcasts the event to each connected player
-	 * @throws IOException
-	 */
-	private void broadcastEvent(Event ev) throws IOException
-	{
-		Message.Builder msg = Message.newBuilder();
-		msg.setEvent(ev);
-
-		// TODO deal with AI
-
-		// For each player
-		for(Colour c : Colour.values())
-		{
-			if(connections.containsKey(c))
-			{
-				connections.get(c).sendMessage(msg.build());
-			}
-		}
-	}
-/*
-
-	*/
-/**
-	 * Simply forwards the trade offer to the intended recipients
-	 * @param msg the original message
-	 * @param playerTrade the internal trade request inside the message
-	 *//*
-
-	private void forwardTradeOffer(Message msg, PlayerTradeProto playerTrade) throws IOException
-	{
-		List<ColourProto> options = playerTrade.getRecipientsList();
-
-		// For each player
-		for(Colour c : Colour.values())
-		{
-			// TODO deal with AI
-			if(connections.containsKey(c) && options.contains(Colour.toProto(c)))
-			{
-				connections.get(c).sendMessage(msg);
-			}
-		}
-
-	}
-*/
-
-	/**
 	 * Process the next message, and send any responses and events.
 	 * @throws IOException
 	 */
-	private void processMessage() throws IOException
+	private void processMessage(Message msg) throws IOException
 	{
-		Message msg = movesToProcess.get(game.getCurrentPlayer()).poll();
 		ListenerThread conn = connections.get(game.getCurrentPlayer());
 		logger.logReceivedMessage(msg);
 
@@ -254,10 +143,10 @@ public class Server implements Runnable
 	 * @param msg the message received from across the network
 	 * @return the response message
 	 */
-	private Event processMove(Message msg, Colour colour)
+	private Event processMove(Message msg, Colour colour) throws IOException
 	{
 		Request request = msg.getRequest();
-		Event.Builder resp = Event.newBuilder();
+		Event.Builder ev = Event.newBuilder();
 		Player copy = ((NetworkPlayer)game.getPlayers().get(game.getCurrentPlayer())).copy();
 
 		try
@@ -268,18 +157,18 @@ public class Server implements Runnable
 			{
 				case BUILDROAD:
 					game.buildRoad(request.getBuildRoad());
-					resp.setRoadBuilt(request.getBuildRoad());
+					ev.setRoadBuilt(request.getBuildRoad());
 					break;
 				case BUILDSETTLEMENT:
 					game.buildSettlement(request.getBuildSettlement());
-					resp.setSettlementBuilt(request.getBuildSettlement());
+					ev.setSettlementBuilt(request.getBuildSettlement());
 					break;
 				case BUILDCITY:
 					game.upgradeSettlement(request.getBuildCity());
-					resp.setCityBuilt(request.getBuildCity());
+					ev.setCityBuilt(request.getBuildCity());
 					break;
 				case BUYDEVCARD:
-					resp.setDevCardBought(game.buyDevelopmentCard());
+					ev.setDevCardBought(game.buyDevelopmentCard());
 					break;
 				case JOINLOBBY:
 					// TODO what event does this get sent as
@@ -287,25 +176,28 @@ public class Server implements Runnable
 					break;
 				case MOVEROBBER:
 					game.moveRobber(request.getMoveRobber());
-					resp.setRobberMoved(request.getMoveRobber());
+					ev.setRobberMoved(request.getMoveRobber());
 					break;
 				case DISCARDRESOURCES:
 					game.processDiscard(request.getDiscardResources(), colour);
-					resp.setCardsDiscarded(request.getDiscardResources());
+					ev.setCardsDiscarded(request.getDiscardResources());
 					break;
 				case ENDTURN:
-					resp.setTurnEnded(game.changeTurn());
+					if(canEndTurn())
+					{
+						ev.setTurnEnded(game.changeTurn());
+					}
 					break;
 				case CHOOSERESOURCE:
 					game.chooseResources(request.getChooseResource());
-					resp.setResourceChosen(request.getChooseResource());
+					ev.setResourceChosen(request.getChooseResource());
 					break;
 				case ROLLDICE:
-					resp.setRolled(game.generateDiceRoll());
+					ev.setRolled(game.generateDiceRoll());
 					break;
 				case PLAYDEVCARD:
 					game.playDevelopmentCard(request.getPlayDevCard());
-					resp.setDevCardPlayed(request.getPlayDevCard());
+					ev.setDevCardPlayed(request.getPlayDevCard());
 					break;
 				case SUBMITTARGETPLAYER:
 					game.takeResource(request.getSubmitTargetPlayer().getId());
@@ -318,11 +210,159 @@ public class Server implements Runnable
 		{
 			// Error. Reset player and return exception message
 			game.restorePlayerFromCopy(copy);
-			// TODO set error response correctly
+			connections.get(colour).sendError();
 		}
-		
-		// Return response to be sent back to clients
-		return resp.build();
+
+		// Remove move from expected list, and add any new ones
+		if(expectedMoves.get(colour).contains(request.getBodyCase()))
+		{
+			expectedMoves.get(colour).remove(request.getBodyCase());
+		}
+		updateExpectedMoves(request, colour);
+
+		return ev.build();
+	}
+
+	/**
+	 * Updates the expected moves for the given player
+	 * @param req the request that just succeeded
+	 * @param colour the player's colour
+	 */
+	private void updateExpectedMoves(Request req, Colour colour)
+	{
+		List<Request.BodyCase> moves = expectedMoves.get(colour);
+
+		// Switch on request type
+		switch(req.getBodyCase())
+		{
+			// Expect for the player to send a steal request next
+			case MOVEROBBER:
+				moves.add(Request.BodyCase.SUBMITTARGETPLAYER);
+				break;
+
+			// Add expected moves based on recently played dev card
+			case PLAYDEVCARD:
+			{
+				switch(req.getPlayDevCard())
+				{
+					case KNIGHT:
+						moves.add(Request.BodyCase.MOVEROBBER);
+						break;
+					case YEAR_OF_PLENTY:
+						moves.add(Request.BodyCase.CHOOSERESOURCE);
+						moves.add(Request.BodyCase.CHOOSERESOURCE);
+						break;
+					case ROAD_BUILDING:
+						moves.add(Request.BodyCase.BUILDROAD);
+						moves.add(Request.BodyCase.BUILDROAD);
+						break;
+
+					// TODO
+					case MONOPOLY:
+						break;
+				}
+				break;
+			}
+
+			// No new expected moves
+			default:
+				break;
+		}
+	}
+
+	/**
+	 * Sends the dice and each player's respective resource count to the player's socket
+	 * @param dice the dice roll to send
+	 * @throws IOException
+	 */
+	private void sendTurns(Board.Roll dice) throws IOException
+	{
+		List<Player> discardList = new ArrayList<Player>();
+		int sum = dice.getA() + dice.getB();
+
+		// For each player
+		for(Colour c : Colour.values())
+		{
+			if(game.getPlayers().containsKey(c))
+			{
+				Player p = game.getPlayers().get(c);
+				sendDice(dice);
+
+				if(sum == 7 && p.getNumResources() > 7)
+				{
+					discardList.add(p);
+				}
+			}
+		}
+
+		// Process discard requests if necessary
+		if(discardList.size() > 0)
+		{
+			processDiscardRequests(discardList);
+		}
+	}
+
+	/**
+	 * Sends the dice to the player's socket
+	 * @param roll the dice roll to send
+	 * @throws IOException
+	 */
+	private void sendDice(Board.Roll roll) throws IOException
+	{
+		// Set up event
+		Event.Builder ev = Event.newBuilder();
+		ev.setRolled(roll);
+
+		sendEvents(ev.build());
+	}
+
+	/**
+	 * Serialises and Broadcasts the board to each connected player
+	 * @throws IOException
+	 */
+	private void broadcastBoard() throws IOException
+	{
+		// Set up message
+		Message.Builder msg = Message.newBuilder();
+		Event.Builder ev = Event.newBuilder();
+
+		// TODO deal with ai
+
+		// For each player
+		for(Colour c : Colour.values())
+		{
+			// Set up the board and the info indicating which player
+			Lobby.GameSetup board = game.getGameSettings(c);
+			ev.setBeginGame(board);
+			msg.setEvent(ev.build());
+
+			if(connections.containsKey(c))
+			{
+				connections.get(c).sendMessage(msg.build());
+
+			}
+		}
+	}
+
+	/**
+	 * Serialises and Broadcasts the event to each connected player
+	 * @throws IOException
+	 */
+	private void broadcastEvent(Event ev) throws IOException
+	{
+		Message.Builder msg = Message.newBuilder();
+		msg.setEvent(ev);
+
+		// TODO deal with AI
+
+		// For each player
+		for(Colour c : Colour.values())
+		{
+			if(connections.containsKey(c))
+			{
+				connections.get(c).sendMessage(msg.build());
+			}
+		}
 	}
 
 	/**
@@ -331,9 +371,6 @@ public class Server implements Runnable
 	 */
 	private void processDiscardRequests(List<Player> discardList) throws IOException
 	{
-		Request.BodyCase[] allowedTypes = new Request.BodyCase[1];
-		allowedTypes[0] = Request.BodyCase.DISCARDRESOURCES;
-
 		// Get moves from the player until they have completed an initial turn
 		while(waitingForDiscards(discardList))
 		{
@@ -341,29 +378,11 @@ public class Server implements Runnable
 			for(Player p : discardList)
 			{
 				Colour c = p.getColour();
-				Queue<Message> queue = movesToProcess.get(c);
+				expectedMoves.get(c).add(Request.BodyCase.DISCARDRESOURCES);
+				game.setCurrentPlayer(c);
 
-				// See if the most recent received message is of the correct type
-				Request req = queue.peek().getRequest();
-				if(queue.isEmpty() || !req.getBodyCase().equals(Request.BodyCase.DISCARDRESOURCES))
-				{
-					// Throw away invalid message
-					queue.poll();
-					continue;
-				}
-
-				// Try to receive a move
-				try
-				{
-					receiveMove(c, allowedTypes, false, false);
-				}
-
-				// Move was illegal.
-				catch (UnexpectedMoveTypeException e)
-				{
-					if(connections.containsKey(c))
-						connections.get(c).sendError();
-				}
+				Message msg = movesToProcess.get(c).poll();
+				processMessage(msg);
 			}
 		}
 	}
@@ -375,19 +394,194 @@ public class Server implements Runnable
 	 */
 	private boolean waitingForDiscards(List<Player> discardList)
 	{
-		for(Player p : discardList)
+		List<Player> list = new ArrayList<>();
+		list.addAll(discardList);
+
+		for(Player p : list)
 		{
-			if(p.getNumResources() > 7)
+			if(p.getNumResources() <= 7)
 			{
-				return true;
+				discardList.remove(p);
 			}
 		}
-		return false;
+
+		return discardList.size() > 0;
 	}
+
+	/**
+	 * Get initial placements from each of the connections
+	 * and send them to the game.
+	 */
+	private void getInitialSettlementsAndRoads() throws IOException
+	{
+		Board.Player.Id current = game.getPlayer(game.getCurrentPlayer()).getId();
+		Board.Player.Id next = null;
+
+		// Get settlements and roads forwards from the first player
+		for(int i = 0; i < Game.NUM_PLAYERS; i++)
+		{
+			next = Board.Player.Id.values()[(current.ordinal() + i) % Game.NUM_PLAYERS];
+			receiveInitialMoves(game.getPlayer(next).getColour());
+		}
+		
+		// Get second set of settlements and roads in reverse order
+		for(int i = Game.NUM_PLAYERS - 1; i >= 0; i--)
+		{
+			receiveInitialMoves(game.getPlayer(next).getColour());
+			next = Board.Player.Id.values()[(current.ordinal() + i) % Game.NUM_PLAYERS];
+		}
+	}
+
+	/**
+	 * Receives the initial moves for each player in the appropriate order
+	 * @param c the player to receive the initial moves from
+	 * @throws IOException
+	 */
+	private void receiveInitialMoves(Colour c) throws IOException
+	{
+		Player p = game.getPlayers().get(c);
+		int oldRoadAmount = p.getRoads().size(), oldSettlementsAmount = p.getSettlements().size();
+
+		// Loop until player sends valid new settlement
+		while(p.getSettlements().size() < oldSettlementsAmount)
+		{
+			expectedMoves.get(c).add(Request.BodyCase.BUILDSETTLEMENT);
+			game.setCurrentPlayer(c);
+
+			Message msg = movesToProcess.get(c).poll();
+			processMessage(msg);
+		}
+
+		// Loop until player sends valid new road
+		while(p.getRoads().size() < oldRoadAmount)
+		{
+			expectedMoves.get(c).add(Request.BodyCase.BUILDROAD);
+			game.setCurrentPlayer(c);
+
+			Message msg = movesToProcess.get(c).poll();
+			processMessage(msg);
+		}
+	}
+
+	/**
+	 * Checks that the given player is currently able to make a move of the given type
+	 * @param msg the received message
+	 * @param col the current turn
+	 * @return true / false depending on legality of move
+	 */
+	private boolean isExpected(Message msg, Colour col)
+	{
+		Request.BodyCase type = msg.getTypeCase().equals(Message.TypeCase.REQUEST) ? msg.getRequest().getBodyCase() : null;
+
+		if(type == null || !expectedMoves.get(col).contains(type))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Ensures the message in the queue pertains to the current player
+	 * @param msg the message polled from the queue
+	 * @return a boolean indicating success or not
+	 * @throws IOException
+	 */
+	private boolean validateMsg(Message msg, Colour col) throws IOException
+	{
+		Colour playerColour = col;
+		Colour currentPlayerColour = game.getCurrentPlayer();
+
+		// If it is not the player's turn, the message type is unknown OR the given request is NOT expected
+		// send error and return false
+		//TODO
+		if(!playerColour.equals(currentPlayerColour) || !isExpected(msg, col))
+		{
+			connections.get(playerColour).sendError();
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checks to see if there are any expected moves
+	 * @return if the turn can be ended
+	 */
+	private boolean canEndTurn()
+	{
+		boolean valid = true;
+
+		// Check if any expected moves first
+		for(List<Request.BodyCase> expected : expectedMoves.values())
+		{
+			if(expected.size() > 0)
+			{
+				valid = false;
+			}
+		}
+
+		return valid;
+	}
+
+	/**
+	 * Loops until four players have been found.
+	 * TODO incorporate AI
+	 * @throws IOException 
+	 */
+	private void getPlayers() throws IOException
+	{
+		serverSocket = new ServerSocket(PORT);
+		System.out.println("Server started. Waiting for client(s)...\n");
+
+		while(numConnections++ < Game.NUM_PLAYERS)
+		{
+			Socket connection = serverSocket.accept();
+			
+			if (connection != null)
+			{
+				Colour c = game.joinGame();
+				connections.put(c, new ListenerThread(connection, c,  this));
+				System.out.println(String.format("Player %d connected", numConnections));
+			}
+		}
+		
+		System.out.println("All Players connected. Starting game...\n");
+	}
+
+	public void addMessageToProcess(Message msg, Colour colour) throws IOException
+	{
+		movesToProcess.get(colour).add(msg);
+	}
+
+
 /*
 
 	*/
 /**
+ * Simply forwards the trade offer to the intended recipients
+ * @param msg the original message
+ * @param playerTrade the internal trade request inside the message
+ *//*
+
+	private void forwardTradeOffer(Message msg, PlayerTradeProto playerTrade) throws IOException
+	{
+		List<ColourProto> options = playerTrade.getRecipientsList();
+
+		// For each player
+		for(Colour c : Colour.values())
+		{
+			// TODO deal with AI
+			if(connections.containsKey(c) && options.contains(Colour.toProto(c)))
+			{
+				connections.get(c).sendMessage(msg);
+			}
+		}
+
+	}
+*/
+
+	/**
 	 * Forwards the trade request to the other player and blocks for a response
 	 * @param request the trade request
 	 * @param msg the original request, received from across the network
@@ -427,175 +621,4 @@ public class Server implements Runnable
 	}
 
 */
-	/**
-	 * Get initial placements from each of the connections
-	 * and send them to the game.
-	 */
-	private void getInitialSettlementsAndRoads() throws IOException
-	{
-		Colour current = game.getCurrentPlayer();
-		Colour next =  null;
-
-		// Get settlements and roads forwards from the first player
-		for(int i = 0; i < Game.NUM_PLAYERS; i++)
-		{
-			next = Colour.values()[(current.ordinal() + i) % Game.NUM_PLAYERS];
-			receiveInitialMoves(next);
-		}
-		
-		// Get second set of settlements and roads in reverse order
-		for(int i = 0; i < Game.NUM_PLAYERS; i--)
-		{
-			receiveInitialMoves(next);
-			next = Colour.values()[(current.ordinal() - i) % Game.NUM_PLAYERS];
-		}
-	}
-
-	/**
-	 * Receives the initial moves for each player in the appropriate order
-	 * @param c the player to receive the initial moves from
-	 * @throws IOException
-	 */
-	private void receiveInitialMoves(Colour c) throws IOException
-	{
-		Player p = game.getPlayers().get(c);
-		Request.BodyCase[] allowedTypes = new Request.BodyCase[2];
-		allowedTypes[0] = Request.BodyCase.BUILDROAD;
-		allowedTypes[1] = Request.BodyCase.BUILDSETTLEMENT;
-		int oldRoadAmount = p.getRoads().size(), oldSettlementsAmount = p.getSettlements().size();
-		boolean builtSettlement = false, builtRoad = false;
-		int amount = 2;
-
-		// Get moves from the player until they have completed an initial turn
-		while(p.getRoads().size() - oldRoadAmount < amount && p.getSettlements().size() - oldSettlementsAmount < amount)
-		{
-			// Try to receive a move
-			try
-			{
-				// Check return value and validity of move
-				Request.BodyCase ret = receiveMove(c, allowedTypes, builtRoad, builtSettlement);
-				if(ret == Request.BodyCase.BUILDSETTLEMENT)
-				{
-					builtSettlement = true;
-				}
-				else if(ret == Request.BodyCase.BUILDROAD)
-				{
-					builtRoad = true;
-				}
-			}
-
-			// Move was illegal.
-			catch (UnexpectedMoveTypeException e)
-			{
-				if(connections.containsKey(c))
-					connections.get(c).sendError();
-			}
-		}
-	}
-
-	/**
-	 * Receive an initial move. Must be of type BuildRoadRequest OR BuildSettlementRequest
-	 * @param c the player colour
-	 * @param allowedTypes the array of allowed move types
-	 * @param builtRoad
-	 *@param builtSettlement @throws UnexpectedMoveTypeException if the move is of an expected type
-	 */
-	private Request.BodyCase receiveMove(Colour c, Request.BodyCase[] allowedTypes, boolean builtRoad, boolean builtSettlement)
-			throws UnexpectedMoveTypeException, IOException
-	{
-		//TODO DOUBLE CHECK
-		Request.BodyCase ret = null;
-
-		// Try to parse a move from the player. If it is not of
-		// the prescribed types, then an exception is thrown
-		if(connections.containsKey(c))
-		{
-			boolean processed = false;
-			game.setCurrentPlayer(c);
-			Message msg = movesToProcess.get(c).poll();
-			if(validateMsg(msg, c) && msg.getTypeCase().equals(Message.TypeCase.REQUEST))
-			{
-				Request.BodyCase msgType = msg.getRequest().getBodyCase();
-
-				// Ensure this message is of an allowed type
-				for(Request.BodyCase type : allowedTypes)
-				{
-					// If valid move type
-					if(msgType.equals(type))
-					{
-						// If the player hasn't already done this in the initial move
-						if(builtRoad && msgType == Request.BodyCase.BUILDROAD ||
-								builtSettlement && msgType == Request.BodyCase.BUILDSETTLEMENT)
-						{
-							throw new UnexpectedMoveTypeException(msg);
-						}
-
-						processMove(msg, c);
-						processed = true;
-						ret = type;
-						break;
-					}
-				}
-				// Move was not of a prescribed type
-				if(!processed)
-				{
-					throw new UnexpectedMoveTypeException(msg);
-				}
-			}
-			else throw new UnexpectedMoveTypeException(msg);
-		}
-
-		return ret;
-	}
-
-	/**
-	 * Ensures the message in the queue pertains to the current player
-	 * @param msg the message polled from the queue
-	 * @return a boolean indicating success or not
-	 * @throws IOException
-	 */
-	private boolean validateMsg(Message msg, Colour col) throws IOException
-	{
-		Colour playerColour = col;
-		Colour currentPlayerColour = game.getCurrentPlayer();
-
-		// If it is not the player's turn, send error and return false
-		if(!playerColour.equals(currentPlayerColour))
-		{
-			connections.get(playerColour).sendError();
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Loops until four players have been found.
-	 * TODO incorporate AI
-	 * @throws IOException 
-	 */
-	private void getPlayers() throws IOException
-	{
-		serverSocket = new ServerSocket(PORT);
-		System.out.println("Server started. Waiting for client(s)...\n");
-
-		while(numConnections++ < Game.NUM_PLAYERS)
-		{
-			Socket connection = serverSocket.accept();
-			
-			if (connection != null)
-			{
-				Colour c = game.joinGame();
-				connections.put(c, new ListenerThread(connection, c,  this));
-				System.out.println(String.format("Player %d connected", numConnections));
-			}
-		}
-		
-		System.out.println("All Players connected. Starting game...\n");
-	}
-
-	public void addMessageToProcess(Message msg, Colour colour) throws IOException
-	{
-		movesToProcess.get(colour).add(msg);
-	}
 }

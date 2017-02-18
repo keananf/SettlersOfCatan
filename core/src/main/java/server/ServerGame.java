@@ -204,17 +204,17 @@ public class ServerGame extends Game
 			throws CannotAffordException, InvalidDiscardRequest
 	{
 		Player current = players.get(col);
-		int oldAmount = current.getNumResources(), newAmount = 0;
+		int oldAmount = current.getNumResources();
 
 		// If the player can afford the request, then spend the resources
 		current.spendResources(processResources(discardRequest));
 
 		// Invalid request.
-		if((newAmount = current.getNumResources()) > 7)
+		if(current.getNumResources() > 7)
 		{
 			// Give resources back, and throw exception
 			current.grantResources(discardRequest);
-			throw new InvalidDiscardRequest(oldAmount, newAmount);
+			throw new InvalidDiscardRequest(oldAmount, current.getNumResources());
 		}
 	}
 

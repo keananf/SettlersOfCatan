@@ -32,9 +32,14 @@ public class TestHelper
 		// Build settlement
 		try
 		{
-			((NetworkPlayer)p).buildSettlement(n);
+			game.setTurn(p.getColour());
+			game.buildSettlement(n.toProto());
 		}
 		catch (IllegalPlacementException | CannotAffordException e)
+		{
+			e.printStackTrace();
+		}
+		catch (InvalidCoordinatesException e)
 		{
 			e.printStackTrace();
 		}

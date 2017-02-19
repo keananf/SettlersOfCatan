@@ -1,7 +1,6 @@
 package server;
 
 import catan.Messages.Message;
-import com.badlogic.gdx.Gdx;
 
 /**
  * Created by 140001596 on 1/10/17.
@@ -23,7 +22,8 @@ public class Logger
                 break;
         }
 
-        Gdx.app.debug("Server", str);
+        // TODO uncomment.
+        //Gdx.app.debug("Server", str);
     }
 
 }

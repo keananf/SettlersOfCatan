@@ -76,7 +76,7 @@ public class Server implements Runnable
 	 * Process the next message, and send any responses and events.
 	 * @throws IOException
 	 */
-	private void processMessage(Message msg) throws IOException
+	public void processMessage(Message msg) throws IOException
 	{
 		ListenerThread conn = connections.get(game.getCurrentPlayer());
 		logger.logReceivedMessage(msg);
@@ -148,6 +148,7 @@ public class Server implements Runnable
 		Request request = msg.getRequest();
 		Event.Builder ev = Event.newBuilder();
 		Player copy = ((NetworkPlayer)game.getPlayers().get(game.getCurrentPlayer())).copy();
+		boolean invalid = false;
 
 		try
 		{
@@ -171,7 +172,7 @@ public class Server implements Runnable
 					ev.setDevCardBought(game.buyDevelopmentCard());
 					break;
 				case JOINLOBBY:
-					// TODO what event does this get sent as
+					// TODO what event does this get sent as?
 					Colour col = game.joinGame(request.getJoinLobby());
 					break;
 				case MOVEROBBER:
@@ -187,6 +188,7 @@ public class Server implements Runnable
 					{
 						ev.setTurnEnded(game.changeTurn());
 					}
+					else ev.setError(Event.Error.newBuilder().setDescription("Cannot end turn yet."));
 					break;
 				case CHOOSERESOURCE:
 					game.chooseResources(request.getChooseResource());
@@ -210,15 +212,22 @@ public class Server implements Runnable
 		{
 			// Error. Reset player and return exception message
 			game.restorePlayerFromCopy(copy);
-			connections.get(colour).sendError();
+			invalid = true;
+
+			if(connections.containsKey(colour))
+				ev.setError(connections.get(colour).getError());
 		}
 
-		// Remove move from expected list, and add any new ones
-		if(expectedMoves.get(colour).contains(request.getBodyCase()))
+		// Update expected moves if no error from the previously processed one
+		if(!ev.getTypeCase().equals(Event.TypeCase.ERROR) && !invalid)
 		{
-			expectedMoves.get(colour).remove(request.getBodyCase());
+			// Remove move from expected list, and add any new ones
+			if(expectedMoves.get(colour).contains(request.getBodyCase()))
+			{
+				expectedMoves.get(colour).remove(request.getBodyCase());
+			}
+			updateExpectedMoves(request, colour);
 		}
-		updateExpectedMoves(request, colour);
 
 		return ev.build();
 	}
@@ -472,8 +481,9 @@ public class Server implements Runnable
 	private boolean isExpected(Message msg, Colour col)
 	{
 		Request.BodyCase type = msg.getTypeCase().equals(Message.TypeCase.REQUEST) ? msg.getRequest().getBodyCase() : null;
+		List<Request.BodyCase> expected = expectedMoves.get(col);
 
-		if(type == null || !expectedMoves.get(col).contains(type))
+		if(type == null || (!expected.contains(type) && expected.size() > 0))
 		{
 			return false;
 		}
@@ -494,7 +504,6 @@ public class Server implements Runnable
 
 		// If it is not the player's turn, the message type is unknown OR the given request is NOT expected
 		// send error and return false
-		//TODO
 		if(!playerColour.equals(currentPlayerColour) || !isExpected(msg, col))
 		{
 			connections.get(playerColour).sendError();
@@ -554,6 +563,15 @@ public class Server implements Runnable
 		movesToProcess.get(colour).add(msg);
 	}
 
+	public void setGame(ServerGame game)
+	{
+		this.game = game;
+	}
+
+	public List<Request.BodyCase> getExpectedMoves(Colour colour)
+	{
+		return expectedMoves.get(colour);
+	}
 
 /*
 

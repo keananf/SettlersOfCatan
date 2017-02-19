@@ -276,6 +276,13 @@ public class ServerGame extends Game
 		// Try to play card
 		DevelopmentCardType type = DevelopmentCardType.fromProto(card);
 		((NetworkPlayer)p).playDevelopmentCard(type);
+
+		// Update army if necessary
+		if(type.equals(DevelopmentCardType.Knight))
+		{
+			p.addKnightPlayed();
+			checkLargestArmy();
+		}
 	}
 	
 	/**
@@ -323,6 +330,9 @@ public class ServerGame extends Game
 	{
 		Player other = getPlayer(id);
 		ResourceType r = ResourceType.Generic;
+
+		if(other.getNumResources() == 0)
+			return;
 
 		// Randomly choose resource that the player has
 		while(r == ResourceType.Generic || other.getResources().get(r) == 0)

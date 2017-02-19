@@ -64,19 +64,14 @@ public class ListenerThread implements Runnable
     /**
      * If an unknown or invalid message is received, then this message sends an error back
      */
-    protected void sendError() throws IOException
+    protected Event.Error getError() throws IOException
     {
         // Set up result message
-        Event.Builder ev = Event.newBuilder();
-        Message.Builder msg = Message.newBuilder();
         Event.Error.Builder err = Event.Error.newBuilder();
         err.setDescription("Invalid message type");
         err.setCause(ErrorCause.UNRECOGNIZED);
 
-        ev.setError(err.build());
-        msg.setEvent(ev.build());
-
-        msg.build().writeTo(socket.getOutputStream());
+        return err.build();
     }
 
     /**
@@ -89,5 +84,12 @@ public class ListenerThread implements Runnable
         // Serialise and Send
         msg.writeTo(socket.getOutputStream());
         socket.getOutputStream().flush();
+    }
+
+    public void sendError() throws IOException
+    {
+        Message.Builder msg = Message.newBuilder();
+        msg.setEvent(Event.newBuilder().setError(getError()).build());
+        sendMessage(msg.build());
     }
 }

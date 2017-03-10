@@ -6,6 +6,7 @@ import enums.DevelopmentCardType;
 import enums.ResourceType;
 import exceptions.*;
 import game.Game;
+import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
@@ -367,4 +368,5 @@ public class ClientGame extends Game
     {
         return thisPlayer;
     }
+
 }

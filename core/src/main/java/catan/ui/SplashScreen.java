@@ -50,7 +50,8 @@ public class SplashScreen implements Screen
 		ui.act(delta);
 		ui.draw();
 
-		if (Gdx.input.justTouched()) {
+		if (Gdx.input.justTouched())
+		{
 			game.setScreen(new MainMenuScreen(game));
 		}
 	}
@@ -67,8 +68,23 @@ public class SplashScreen implements Screen
 		ui.dispose();
 	}
 
-	@Override public void pause() {}
-	@Override public void resume() {}
-	@Override public void hide() {}
-	@Override public void show() {}
+	@Override
+	public void pause()
+	{
+	}
+
+	@Override
+	public void resume()
+	{
+	}
+
+	@Override
+	public void hide()
+	{
+	}
+
+	@Override
+	public void show()
+	{
+	}
 }

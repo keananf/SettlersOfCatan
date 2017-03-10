@@ -25,5 +25,4 @@ public class Logger
         // TODO uncomment.
         //Gdx.app.debug("Server", str);
     }
-
 }

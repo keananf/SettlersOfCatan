@@ -4,12 +4,12 @@ import intergroup.Messages.*;
 
 public class UnexpectedMoveTypeException extends Exception
 {
-    private Message msg;
+	private Message msg;
 
-    public UnexpectedMoveTypeException(Message msg)
-    {
-        this.msg = msg;
-    }
+	public UnexpectedMoveTypeException(Message msg)
+	{
+		this.msg = msg;
+	}
 
     @Override
     public String getMessage()
@@ -25,11 +25,11 @@ public class UnexpectedMoveTypeException extends Exception
                 break;
         }
 
-        return String.format("Unexpected Message Type: %s", str);
-    }
+		return String.format("Unexpected Message Type: %s", str);
+	}
 
-    public Message getOriginalMessage()
-    {
-        return msg;
-    }
+	public Message getOriginalMessage()
+	{
+		return msg;
+	}
 }

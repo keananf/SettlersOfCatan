@@ -165,4 +165,3 @@ public class GameAndResourcesTests extends TestHelper
 		assertTrue(p.getResources().get(hex.getResource()) == 2);
 	}
 }
-

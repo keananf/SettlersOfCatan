@@ -44,8 +44,10 @@ public class MainMenuScreen implements Screen
 		// Buttons
 		{
 			TextButton button = new TextButton("New single player game", game.skin);
-			button.addListener(new ChangeListener() {
-				public void changed(ChangeEvent event, Actor actor) {
+			button.addListener(new ChangeListener()
+			{
+				public void changed(ChangeEvent event, Actor actor)
+				{
 					Gdx.app.debug("UI", "Button click: New single player game");
 
 					game.startNewServer();
@@ -57,8 +59,10 @@ public class MainMenuScreen implements Screen
 
 		{
 			TextButton button = new TextButton("Host new multiplayer game", game.skin);
-			button.addListener(new ChangeListener() {
-				public void changed(ChangeEvent event, Actor actor) {
+			button.addListener(new ChangeListener()
+			{
+				public void changed(ChangeEvent event, Actor actor)
+				{
 					Gdx.app.debug("UI", "Button click: Host new multiplayer game");
 
 					game.startNewServer();
@@ -70,8 +74,10 @@ public class MainMenuScreen implements Screen
 
 		{
 			TextButton button = new TextButton("Join existing multiplayer game", game.skin);
-			button.addListener(new ChangeListener() {
-				public void changed(ChangeEvent event, Actor actor) {
+			button.addListener(new ChangeListener()
+			{
+				public void changed(ChangeEvent event, Actor actor)
+				{
 					Gdx.app.debug("UI", "Button click: Join existing multiplayer game");
 
 					game.setScreen(new GameScreen(game));
@@ -82,8 +88,10 @@ public class MainMenuScreen implements Screen
 
 		{
 			TextButton button = new TextButton("Quit", game.skin);
-			button.addListener(new ChangeListener() {
-				public void changed(ChangeEvent event, Actor actor) {
+			button.addListener(new ChangeListener()
+			{
+				public void changed(ChangeEvent event, Actor actor)
+				{
 					Gdx.app.exit();
 				}
 			});
@@ -112,8 +120,23 @@ public class MainMenuScreen implements Screen
 	}
 
 	// Required but unused
-	@Override public void pause() {}
-	@Override public void resume() {}
-	@Override public void hide() {}
-	@Override public void show() {}
+	@Override
+	public void pause()
+	{
+	}
+
+	@Override
+	public void resume()
+	{
+	}
+
+	@Override
+	public void hide()
+	{
+	}
+
+	@Override
+	public void show()
+	{
+	}
 }

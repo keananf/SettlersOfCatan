@@ -1,4 +1,3 @@
-
 package exceptions;
 
 import grid.*;
@@ -22,3 +21,4 @@ public class SettlementExistsException extends Exception
 				n.getX(), n.getY());
 	}
 }
+

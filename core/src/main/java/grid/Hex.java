@@ -1,11 +1,11 @@
- package grid;
+package grid;
 
- import intergroup.board.Board;
- import enums.ResourceType;
- import intergroup.terrain.Terrain;
+import intergroup.board.Board;
+import enums.ResourceType;
+import intergroup.terrain.Terrain;
 
- import java.util.ArrayList;
- import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class representing an individual hex 

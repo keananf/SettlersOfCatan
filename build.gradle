@@ -1,15 +1,17 @@
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
-    }
+/*
+ * Declare Gradle plugins
+ */
+buildscript { repositories { jcenter() } }
+
+plugins {
+    id "java"
+    id "com.google.protobuf" version "0.8.0"
+    id "com.diffplug.gradle.spotless" version "3.0.0"
 }
 
+/*
+ * Config. common to all projects
+ */
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
@@ -18,22 +20,17 @@ allprojects {
     ext {
         appName = "Settlers of Catan"
         gdxVersion = '1.9.5'
-        roboVMVersion = '2.2.0'
-        box2DLightsVersion = '1.4'
-        ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
         protobufVersion = "3.1.0"
         junitVersion = "4.12"
     }
 
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-    }
+    repositories { jcenter() }
 }
 
+/*
+ * Config. specific to desktop project
+ */
 project(":desktop") {
     apply plugin: "java"
 
@@ -45,10 +42,20 @@ project(":desktop") {
     }
 }
 
+/*
+ * Config. specific to core project
+ */
 project(":core") {
     apply plugin: "java"
     apply plugin: "com.google.protobuf"
+    apply plugin: "com.diffplug.gradle.spotless"
 
+    // turn on all warnings
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:all"
+    }
+
+    // declare dependencies
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
@@ -56,8 +63,22 @@ project(":core") {
         testCompile "junit:junit:$junitVersion"
     }
 
+    // format source code
+    spotless {
+        java {
+            eclipseFormatFile("../config/format.xml")
+            removeUnusedImports()
+            paddedCell()
+        }
+    }
+
+    javadoc.destinationDir = file("${project.rootDir}/doc")
+
     protobuf {
         generatedFilesBaseDir = "$projectDir/gen"
+        protoc {
+            artifact = 'com.google.protobuf:protoc:3.0.0'
+        }
     }
 
     clean {
@@ -67,7 +88,6 @@ project(":core") {
     idea {
         module {
             sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java");
-            // If you have additional sourceSets and/or codegen plugins, add all of them
             sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/grpc");
         }
     }

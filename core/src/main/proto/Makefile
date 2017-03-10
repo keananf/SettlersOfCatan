@@ -17,4 +17,4 @@ java:
 	$(CC) -I . $(PROTO_FILES) --java_out=../java
 
 clean:
-	rm -r build
+	rm -r ../java/intergroup

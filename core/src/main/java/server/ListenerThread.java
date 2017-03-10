@@ -8,16 +8,15 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
- * Class which simply listens to a socket.
- * The successfully received message is added to a ConcurrentLinkedQueue.
- * Created by 140001596.
+ * Class which simply listens to a socket. The successfully received message is
+ * added to a ConcurrentLinkedQueue. Created by 140001596.
  */
 public class ListenerThread implements Runnable
 {
-    private Thread thread;
-    protected Socket socket;
-    private Colour colour;
-    private Server server;
+	private Thread thread;
+	protected Socket socket;
+	private Colour colour;
+	private Server server;
 
     public ListenerThread(Socket socket, Colour c, Server server)
     {
@@ -28,21 +27,20 @@ public class ListenerThread implements Runnable
         this.thread.start();
     }
 
-    @Override
-    public void run()
-    {
-        // Continually poll for new messages
-        try
-        {
-            receiveMoves();
-        }
-        catch (IOException e)
-        {
-            // TODO replace with AI
-            e.printStackTrace();
-        }
-    }
-
+	@Override
+	public void run()
+	{
+		// Continually poll for new messages
+		try
+		{
+			receiveMoves();
+		}
+		catch (IOException e)
+		{
+			// TODO replace with AI
+			e.printStackTrace();
+		}
+	}
 
     /**
      * Listens for moves from the current player
@@ -57,9 +55,8 @@ public class ListenerThread implements Runnable
             // Parse message and add to queue
             Message msg = Message.parseFrom(socket.getInputStream());
             server.addMessageToProcess(msg, colour);
-
-        }
-    }
+		}
+	}
 
     /**
      * If an unknown or invalid message is received, then this message sends an error back

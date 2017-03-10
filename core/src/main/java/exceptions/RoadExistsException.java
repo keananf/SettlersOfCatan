@@ -21,3 +21,4 @@ public class RoadExistsException extends Exception
 				n1.getX(), n1.getY(), n2.getX(), n2.getY());
 	}
 }
+

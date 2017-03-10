@@ -1,8 +1,8 @@
  package grid;
 
- import board.Board;
+ import intergroup.board.Board;
  import enums.ResourceType;
- import terrain.Terrain;
+ import intergroup.terrain.Terrain;
 
  import java.util.ArrayList;
  import java.util.List;

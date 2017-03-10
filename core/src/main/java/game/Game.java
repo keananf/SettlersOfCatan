@@ -1,6 +1,6 @@
 package game;
 
-import board.Board;
+import intergroup.board.Board;
 import grid.*;
 import enums.Colour;
 import enums.ResourceType;
@@ -8,7 +8,7 @@ import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.players.Player;
-import resource.Resource;
+import intergroup.resource.Resource;
 
 import java.util.HashMap;
 import java.util.List;

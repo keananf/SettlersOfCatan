@@ -1,6 +1,6 @@
 package enums;
 
-import lobby.Lobby;
+import intergroup.lobby.Lobby;
 
 public enum Colour
 {

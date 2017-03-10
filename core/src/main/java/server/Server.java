@@ -1,14 +1,14 @@
 package server;
 
-import board.Board;
-import catan.Events.Event;
-import catan.Messages.Message;
-import catan.Requests.Request;
 import enums.Colour;
 import game.Game;
 import game.players.NetworkPlayer;
 import game.players.Player;
-import lobby.Lobby;
+import intergroup.Events.*;
+import intergroup.Messages.Message;
+import intergroup.Requests.Request;
+import intergroup.board.Board;
+import intergroup.lobby.Lobby;
 
 import java.io.IOException;
 import java.net.ServerSocket;

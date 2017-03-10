@@ -1,7 +1,7 @@
 package client;
 
-import catan.Events.Event;
-import catan.Messages.Message;
+import intergroup.Events.Event;
+import intergroup.Messages.Message;
 import server.Logger;
 
 import java.io.IOException;

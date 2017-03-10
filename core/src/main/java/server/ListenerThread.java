@@ -1,8 +1,8 @@
 package server;
 
 import enums.Colour;
-import catan.Messages.*;
-import catan.Events.*;
+import intergroup.Messages.*;
+import intergroup.Events.*;
 
 import java.io.IOException;
 import java.net.Socket;

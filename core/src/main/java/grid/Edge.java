@@ -1,6 +1,6 @@
 package grid;
 
-import board.Board;
+import intergroup.board.Board;
 import game.build.Road;
 
 import java.util.List;

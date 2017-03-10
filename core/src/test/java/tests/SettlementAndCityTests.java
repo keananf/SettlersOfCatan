@@ -1,6 +1,6 @@
 package tests;
 
-import board.Board;
+import intergroup.board.Board;
 import grid.*;
 import exceptions.*;
 import game.build.City;

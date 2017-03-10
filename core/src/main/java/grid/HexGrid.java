@@ -1,6 +1,6 @@
 package grid;
 
-import board.Board;
+import intergroup.board.Board;
 import enums.ResourceType;
 
 import java.awt.*;

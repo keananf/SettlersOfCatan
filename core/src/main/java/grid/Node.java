@@ -1,6 +1,6 @@
 package grid;
 
-import board.Board;
+import intergroup.board.Board;
 import enums.Colour;
 import game.build.Building;
 

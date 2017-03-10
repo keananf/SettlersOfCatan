@@ -1,6 +1,6 @@
 package game.players;
 
-import board.Board;
+import intergroup.board.Board;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
@@ -11,8 +11,8 @@ import game.build.Road;
 import game.build.Settlement;
 import grid.Edge;
 import grid.Node;
-import lobby.Lobby;
-import resource.Resource;
+import intergroup.lobby.Lobby;
+import intergroup.resource.Resource;
 
 import java.awt.*;
 import java.util.ArrayList;

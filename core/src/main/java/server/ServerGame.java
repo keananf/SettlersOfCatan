@@ -1,8 +1,7 @@
 package server;
 
-import board.Board;
-import catan.EmptyOuterClass;
-import catan.Events;
+import intergroup.board.Board;
+import intergroup.*;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
@@ -13,8 +12,8 @@ import game.players.Player;
 import grid.Hex;
 import grid.Node;
 import grid.Port;
-import lobby.Lobby;
-import resource.Resource;
+import intergroup.lobby.Lobby;
+import intergroup.resource.Resource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -466,7 +465,7 @@ public class ServerGame extends Game
 			RoadExistsException, InvalidCoordinatesException
 	{
 		NetworkPlayer p = (NetworkPlayer) players.get(currentPlayer);
-		board.Board.Point p1 = edge.getA(), p2 = edge.getB();
+		Board.Point p1 = edge.getA(), p2 = edge.getB();
 		Node n = grid.getNode(p1.getX(), p1.getY());
 		Node n2 = grid.getNode(p2.getX(), p2.getY());
 		Events.Event.Builder ev = Events.Event.newBuilder();

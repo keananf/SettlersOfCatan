@@ -1,7 +1,7 @@
 package exceptions;
 
 import enums.ResourceType;
-import resource.Resource;
+import intergroup.resource.Resource;
 
 import java.util.*;
 

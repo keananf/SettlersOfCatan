@@ -1,6 +1,6 @@
 package server;
 
-import catan.Messages.Message;
+import intergroup.Messages.Message;
 
 /**
  * Created by 140001596 on 1/10/17.

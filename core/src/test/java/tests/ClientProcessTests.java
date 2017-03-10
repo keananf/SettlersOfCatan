@@ -1,6 +1,6 @@
 package tests;
 
-import board.Board;
+import intergroup.board.Board;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import exceptions.*;
@@ -13,7 +13,7 @@ import grid.Edge;
 import grid.Hex;
 import grid.HexGrid;
 import grid.Node;
-import lobby.Lobby;
+import intergroup.lobby.Lobby;
 import org.junit.Test;
 
 import java.awt.*;

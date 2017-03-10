@@ -1,6 +1,6 @@
 package client;
 
-import board.Board;
+import intergroup.board.Board;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
@@ -12,7 +12,7 @@ import game.build.Settlement;
 import game.players.LocalPlayer;
 import game.players.Player;
 import grid.*;
-import lobby.Lobby;
+import intergroup.lobby.Lobby;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -318,7 +318,7 @@ public class ClientGame extends Game
      * @param boughtDevCard the bought dev card
      * @param instigator the player who caused the event
      */
-    public void recordDevCard(board.Board.DevCard boughtDevCard, Board.Player instigator) throws CannotAffordException
+    public void recordDevCard(Board.DevCard boughtDevCard, Board.Player instigator) throws CannotAffordException
     {
         Player player = getPlayer(instigator.getId());
 

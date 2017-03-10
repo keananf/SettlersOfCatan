@@ -1,7 +1,7 @@
 package enums;
 
-import board.Board;
-import board.Board.PlayableDevCard;
+import intergroup.board.Board;
+import intergroup.board.Board.PlayableDevCard;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;

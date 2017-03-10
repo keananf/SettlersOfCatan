@@ -1,8 +1,8 @@
 package tests;
 
-import board.Board;
-import catan.Messages;
-import catan.Requests;
+import intergroup.board.Board;
+import intergroup.Messages;
+import intergroup.Requests;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
@@ -16,7 +16,7 @@ import grid.Hex;
 import grid.Node;
 import org.junit.Before;
 import org.junit.Test;
-import resource.Resource;
+import intergroup.resource.Resource;
 import server.Server;
 
 import java.io.IOException;

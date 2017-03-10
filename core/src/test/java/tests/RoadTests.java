@@ -1,6 +1,6 @@
 package tests;
 
-import board.Board;
+import intergroup.board.Board;
 import grid.*;
 import enums.Colour;
 import exceptions.*;

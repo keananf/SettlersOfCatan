@@ -1,6 +1,6 @@
 package tests;
 
-import board.Board;
+import intergroup.board.Board;
 import grid.*;
 import enums.Colour;
 import exceptions.*;
@@ -11,7 +11,7 @@ import game.players.NetworkPlayer;
 import game.players.Player;
 import org.junit.Before;
 import org.junit.Test;
-import resource.Resource;
+import intergroup.resource.Resource;
 
 import static org.junit.Assert.*;
 

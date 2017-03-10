@@ -1,7 +1,7 @@
 package enums;
 
-import resource.Resource;
-import terrain.Terrain;
+import intergroup.resource.Resource;
+import intergroup.terrain.Terrain;
 
 import java.util.Random;
 

@@ -1,6 +1,6 @@
 package tests;
 
-import board.Board;
+import intergroup.board.Board;
 import client.ClientGame;
 import enums.Colour;
 import enums.DevelopmentCardType;

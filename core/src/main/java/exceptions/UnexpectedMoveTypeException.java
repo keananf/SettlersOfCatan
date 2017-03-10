@@ -1,6 +1,6 @@
 package exceptions;
 
-import catan.Messages.*;
+import intergroup.Messages.*;
 
 public class UnexpectedMoveTypeException extends Exception
 {

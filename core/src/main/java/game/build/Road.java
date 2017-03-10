@@ -1,6 +1,6 @@
 package game.build;
 
-import board.Board;
+import intergroup.board.Board;
 import enums.Colour;
 import enums.ResourceType;
 import grid.Edge;

@@ -1,0 +1,44 @@
+syntax = "proto3";
+package intergroup;
+
+import "empty.proto";
+import "board/board.proto";
+import "resource/resource.proto";
+import "lobby/lobby.proto";
+import "trade/trade.proto";
+
+enum ErrorCause {
+  UNKNOWN = 0;
+}
+
+message Event {
+  board.Player instigator = 1;
+  oneof type {
+    Error error = 2;
+    board.Roll rolled = 3;
+    board.Edge roadBuilt = 4;
+    board.Point settlementBuilt = 5;
+    board.Point cityBuilt = 6;
+    board.DevCard devCardBought = 7;
+    board.PlayableDevCard devCardPlayed = 8;
+    board.Point robberMoved = 9;
+    board.Steal resourceStolen = 10;
+    resource.Kind resourceChosen = 11;
+    resource.Counts cardsDiscarded = 12;
+    trade.WithBank bankTrade = 13;
+    trade.WithPlayer playerTrade = 14;
+    Empty turnEnded = 15;
+    Empty gameWon = 16;
+    lobby.GameSetup beginGame = 17;
+    lobby.Usernames lobbyUpdate = 18;
+    board.MultiSteal monopolyResolution = 19;
+    string chatMessage = 20;
+  }
+
+  message Error {
+    ErrorCause cause = 1;
+    string description = 2;
+  }
+}
+
+

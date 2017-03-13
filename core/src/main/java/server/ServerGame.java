@@ -1,19 +1,22 @@
 package server;
 
-import intergroup.board.Board;
-import intergroup.*;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
 import exceptions.*;
 import game.Game;
+import game.build.Road;
 import game.players.NetworkPlayer;
 import game.players.Player;
 import grid.Hex;
 import grid.Node;
 import grid.Port;
+import intergroup.EmptyOuterClass;
+import intergroup.Events;
+import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.resource.Resource;
+import intergroup.trade.Trade;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,112 +69,128 @@ public class ServerGame extends Game
 
 		return playerResources;
 	}
-/*
-	*//**
-	 * If trade was successful, exchange of resources occurs here
-	 * @param trade the trade object detailing the trade
-	 * @return the response status
-	 *//*
-	public TradeStatusProto processBankTrade(BankTradeProto trade) throws IllegalBankTradeException, CannotAffordException
+
+	/**
+	 * Determines whether or not the given trade type is for a port or bank
+	 * @param trade
+	 * @return the trade if nothing went wrong
+	 */
+	public Trade.WithBank determineTradeType(Trade.WithBank trade)
+			throws IllegalBankTradeException, CannotAffordException, IllegalPortTradeException
 	{
-		int exchangeAmount = 4, offerSum = 0, reqSum = 0;
+		ResourceType offerType = null, requestType = null;
 
 		// Extract the trade's contents
-		Player recipient = players.get(Colour.fromProto(trade.getPlayer()));
-		Map<ResourceType, Integer> request = processResources(trade.getRequestResources());
-		Map<ResourceType, Integer> offer = processResources(trade.getOfferResources());
+		Player current = getPlayer(currentPlayer);
+		Map<ResourceType, Integer> request = processResources(trade.getWanting());
+		Map<ResourceType, Integer> offer = processResources(trade.getOffering());
 
 		// Check that the player can afford the offer
-		if(!recipient.canAfford(offer))
+		if(!current.canAfford(offer) || offer.size() < 1)
 		{
-			throw new CannotAffordException(recipient.getResources(), offer);
+			throw new CannotAffordException(current.getResources(), offer);
 		}
 
-		// Check that requested trade is allowed
+		// Must only be requesting one type of resource and giving one type of resource
+		if(offer.size() > 1 || request.size() != 1)
+		{
+			throw new IllegalBankTradeException(current.getColour());
+		}
+
+		// Retrieve resources
 		for(ResourceType r : ResourceType.values())
 		{
-			// sum up total quantities of offer and request
-			offerSum += offer.containsKey(r) ? offer.get(r) : 0;
-			reqSum += request.containsKey(r) ? request.get(r) : 0;
-
-			// If too little or too many resources for a trade on this port
-			if(offer.containsKey(r) && offer.get(r) % exchangeAmount != 0)
-				throw new IllegalBankTradeException(recipient.getColour());
+			if(request.containsKey(r)) requestType = r;
+			if(offer.containsKey(r)) offerType = r;
 		}
 
-		// If request doesn't match what the offer should give
-		if(offerSum / reqSum != exchangeAmount)
+		// Check all roads this player owns
+		for(Road r: current.getRoads())
 		{
-			throw new IllegalBankTradeException(recipient.getColour());
+			Port p = (Port) r.getEdge();
+			// If this road is on a port and the resource types match up
+			if(r.getEdge() instanceof Port &&
+					(p.getExchangeType().equals(offerType) || p.getExchangeType().equals(ResourceType.Generic)) &&
+					offer.get(offerType) / request.get(requestType) == Port.EXCHANGE_AMOUNT)
+				return processPortTrade(trade, (Port)r.getEdge(), requestType, offerType);
+		}
+
+		// Otherwise assume it is with the bank
+		return processBankTrade(trade, requestType, offerType);
+	}
+
+	/**
+	 * If trade was successful, exchange of resources occurs here
+	 * @param trade the trade object detailing the trade
+	 * @param requestType the request type
+	 * @param offerType  the offer type
+	 * @return the response status
+	 */
+	private Trade.WithBank processBankTrade(Trade.WithBank trade, ResourceType requestType, ResourceType offerType)
+			throws IllegalBankTradeException, CannotAffordException
+	{
+		int exchangeAmount = 4;
+
+		// Extract the trade's contents
+		Player current = getPlayer(currentPlayer);
+		Map<ResourceType, Integer> request = processResources(trade.getWanting());
+		Map<ResourceType, Integer> offer = processResources(trade.getOffering());
+
+		// If request doesn't match what the offer should give
+		if(offer.get(offerType) % exchangeAmount != 0 || offer.get(offerType) / request.get(requestType) != exchangeAmount)
+		{
+			throw new IllegalBankTradeException(current.getColour());
 		}
 
 		// Perform swap and return
-		recipient.spendResources(offer);
-		recipient.grantResources(request);
-		return TradeStatusProto.ACCEPT;
+		current.spendResources(offer);
+		current.grantResources(request);
+		return trade;
 	}
 
-	*//**
+	/**
 	 * If trade was successful, exchange of resources occurs here
 	 * @param trade the trade object detailing the trade
+	 * @param port the port that is being traded with
+	 * @param requestType the request type
+	 * @param offerType  the offer type
 	 * @return the response status
-	 *//*
-	public TradeStatusProto processPortTrade(PortTradeProto trade) throws IllegalPortTradeException, CannotAffordException
+	 */
+	private Trade.WithBank processPortTrade(Trade.WithBank trade, Port port, ResourceType requestType, ResourceType offerType)
+			throws IllegalPortTradeException, CannotAffordException
 	{
-		// Find the port and extract the trade's contents
-		Player recipient = players.get(Colour.fromProto(trade.getPlayer()));
-		Map<ResourceType, Integer> request = processResources(trade.getRequestResources());
-		Map<ResourceType, Integer> offer = processResources(trade.getOfferResources());
-		Port port = grid.getPort(trade.getPort());
-		int offerSum = 0, reqSum = 0;
-		int exchangeAmount = port.getExchangeAmount();
+		int exchangeAmount = 3;
 
-		// Check that the player can afford the offer
-		if(!recipient.canAfford(offer))
-		{
-			throw new CannotAffordException(recipient.getResources(), offer);
-		}
-
-		// Check that requested trade is allowed
-		for(ResourceType r : ResourceType.values())
-		{
-			// sum up total quantities of offer and request
-			offerSum += offer.containsKey(r) ? offer.get(r) : 0;
-			reqSum += request.containsKey(r) ? request.get(r) : 0;
-
-			// If too little or too many resources for a trade on this port
-			if(offer.containsKey(r) && offer.get(r) % exchangeAmount != 0)
-				throw new IllegalPortTradeException(recipient.getColour(), port);
-		}
+		// Extract the trade's contents
+		Player current = getPlayer(currentPlayer);
+		Map<ResourceType, Integer> request = processResources(trade.getWanting());
+		Map<ResourceType, Integer> offer = processResources(trade.getOffering());
 
 		// If request doesn't match what the offer should give
-		if(offerSum / reqSum != exchangeAmount)
+		if(offer.get(offerType) % exchangeAmount != 0 || offer.get(offerType) / request.get(requestType) != exchangeAmount)
 		{
-			throw new IllegalPortTradeException(recipient.getColour(), port);
+			throw new IllegalPortTradeException(current.getColour(), port);
 		}
 
 		// Exchange resources
-		port.exchange(recipient, offer, request);
+		port.exchange(current, offer, request);
 
-		return TradeStatusProto.ACCEPT;
+		return trade;
 	}
 
-	*//**
+	/**
 	 * If trade was successful, exchange of resources occurs here
 	 * @param trade the trade object detailing the trade
-	 * @param offererColour the offerer's colour
-	 * @param recipientColour the recipient's colour
 	 * @return the response status
-	 *//*
-	public SuccessFailResponse processPlayerTrade(PlayerTradeProto trade, Colour offererColour, Colour recipientColour)
+	 */
+	public Trade.WithPlayer processPlayerTrade(Trade.WithPlayer trade)
 	{
-        SuccessFailResponse.Builder resp = SuccessFailResponse.newBuilder();
-
         // Find the recipient and extract the trade's contents
-		ResourceCount offer = trade.getOffer();
-		ResourceCount request = trade.getRequest();
+		Resource.Counts offer = trade.getOffering();
+		Resource.Counts request = trade.getWanting();
+		Colour recipientColour = getPlayer(trade.getOther().getId()).getColour();
 		NetworkPlayer recipient = (NetworkPlayer) players.get(recipientColour), recipientCopy = (NetworkPlayer) recipient.copy();
-		Player offerer = players.get(offererColour);
+		Player offerer = players.get(currentPlayer);
 
 		try
 		{
@@ -181,18 +200,15 @@ public class ServerGame extends Game
 			
 			recipient.spendResources(request);
 			offerer.grantResources(request);
-        	resp.setResult(ResultProto.SUCCESS);
 		}
 		catch(CannotAffordException e)
 		{
 			// Reset recipient and throw exception. Offerer is reset in above method
-			recipient.restoreCopy(recipientCopy, null);
-
-			resp.setResult(ResultProto.FAILURE);
+			recipient.restoreCopy(recipientCopy);
 		}
 
-        return resp.build();
-	}*/
+        return trade;
+	}
 
 	/**
 	 * Processes the discard request to ensure that it is valid
@@ -276,11 +292,18 @@ public class ServerGame extends Game
 		DevelopmentCardType type = DevelopmentCardType.fromProto(card);
 		((NetworkPlayer)p).playDevelopmentCard(type);
 
-		// Update army if necessary
-		if(type.equals(DevelopmentCardType.Knight))
+		// Perform any additional actions not accomplished through
+		// updating expected moves (i.e. road building, year of plenty)
+		switch(type)
 		{
-			p.addKnightPlayed();
-			checkLargestArmy();
+			// Update army if necessary
+			case Knight:
+				p.addKnightPlayed();
+				checkLargestArmy();
+				break;
+
+			default:
+				break;
 		}
 	}
 	
@@ -368,30 +391,7 @@ public class ServerGame extends Game
 		// Cannot take from this player
 		if(!valid) throw new CannotStealException(currentPlayer, otherColour);
 	}
-/*
-	*//**
-	 * Process the playing of the 'Build Roads' development card.
-	 * @param request the request to process
-     * @param playerColour the player's colour
-	 * @return return message
-	 * @throws RoadExistsException 
-	 * @throws CannotBuildRoadException 
-	 * @throws CannotAffordException 
-	 *//*
-	public PlayRoadBuildingCardResponse playBuildRoadsCard(PlayRoadBuildingCardRequest request, Colour playerColour)
-			throws CannotAffordException, CannotBuildRoadException,
-				RoadExistsException, DoesNotOwnException, InvalidCoordinatesException
-	{
-		PlayRoadBuildingCardResponse.Builder resp = PlayRoadBuildingCardResponse.newBuilder();
 
-		playDevelopmentCard(DevelopmentCardType.RoadBuilding, currentPlayer);
-
-		// Set responses and return
-		resp.setResponse1(buildRoad(request.getRequest1(), playerColour));
-		resp.setResponse2(buildRoad(request.getRequest2(), playerColour));
-		return resp.build();
-	}*/
-	
 	/**
 	 * Process the playing of the 'University' development card.
 	 */
@@ -400,7 +400,7 @@ public class ServerGame extends Game
 		((NetworkPlayer)players.get(currentPlayer)).playDevelopmentCard(DevelopmentCardType.University);
         grantVpPoint();
 	}
-	
+
 	/**
 	 * Process the playing of the 'Library' development card.
 	 */
@@ -568,9 +568,9 @@ public class ServerGame extends Game
 	/**
 	 *
 	 * @param joinLobby the join lobby request
-	 * @return the new colour assigned to the player
+	 * @return the updated list of usernames
 	 */
-	public Colour joinGame(Lobby.Join joinLobby) throws GameFullException
+	public Lobby.Usernames joinGame(Lobby.Join joinLobby) throws GameFullException
 	{
 		// If game is full
 		if(numPlayers == NUM_PLAYERS) throw new GameFullException();
@@ -584,7 +584,15 @@ public class ServerGame extends Game
 		// Add player info and return assigned colour
 		idsToColours.put(id, newCol);
 		players.put(p.getColour(), p);
-		return p.getColour();
+
+		// Add all users to update message
+		Lobby.Usernames.Builder users = Lobby.Usernames.newBuilder();
+		for(Player player : players.values())
+		{
+			users.addUsername(player.getUsername());
+		}
+
+		return users.build();
 	}
 
 	public Colour joinGame()

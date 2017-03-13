@@ -1,7 +1,5 @@
 package tests;
 
-import intergroup.board.Board;
-import grid.*;
 import enums.Colour;
 import exceptions.*;
 import game.build.City;
@@ -9,9 +7,11 @@ import game.build.Road;
 import game.build.Settlement;
 import game.players.NetworkPlayer;
 import game.players.Player;
+import grid.Hex;
+import intergroup.board.Board;
+import intergroup.resource.Resource;
 import org.junit.Before;
 import org.junit.Test;
-import intergroup.resource.Resource;
 
 import static org.junit.Assert.*;
 
@@ -164,4 +164,5 @@ public class GameAndResourcesTests extends TestHelper
 		assertTrue(hasResources(p));
 		assertTrue(p.getResources().get(hex.getResource()) == 2);
 	}
+
 }

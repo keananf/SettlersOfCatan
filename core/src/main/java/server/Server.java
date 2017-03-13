@@ -31,6 +31,7 @@ public class Server implements Runnable
 	private ConcurrentLinkedQueue<ReceivedMessage> movesToProcess;
 	private HashMap<Colour, List<Request.BodyCase>> expectedMoves;
 	private Trade.WithPlayer currentTrade;
+	private boolean tradePhase;
 
 	public Server()
 	{
@@ -89,7 +90,10 @@ public class Server implements Runnable
 		// If not valid
 		if(!validateMsg(msg, col))
 		{
-			conn.sendError();
+			if(conn != null)
+			{
+				conn.sendError();
+			}
 			return;
 		}
 
@@ -103,7 +107,10 @@ public class Server implements Runnable
 				break;
 
 			default:
-				conn.sendError();
+				if(conn != null)
+				{
+					conn.sendError();
+				}
 		}
 	}
 
@@ -196,6 +203,8 @@ public class Server implements Runnable
 					if(canEndTurn())
 					{
 						ev.setTurnEnded(game.changeTurn());
+						tradePhase = false;
+						currentTrade = null;
 					}
 					else ev.setError(Event.Error.newBuilder().setDescription("Cannot end turn yet."));
 					break;
@@ -245,7 +254,8 @@ public class Server implements Runnable
 		}
 
 		// Add expected trade response for other player
-		if(ev.getTypeCase().equals(Event.TypeCase.PLAYERTRADE) && !invalid)
+		if(request.getBodyCase().equals(Request.BodyCase.INITIATETRADE)
+				&& request.getInitiateTrade().getTradeCase().equals(Trade.Kind.TradeCase.PLAYER) && !invalid)
 		{
 			updateExpectedMoves(request, game.getPlayer(request.getInitiateTrade().getPlayer().getOther().getId()).getColour());
 		}
@@ -470,6 +480,13 @@ public class Server implements Runnable
 		Request.BodyCase type = msg.getTypeCase().equals(Message.TypeCase.REQUEST) ? msg.getRequest().getBodyCase() : null;
 		List<Request.BodyCase> expected = expectedMoves.get(col);
 
+		// If in trade phase and the given message isn't a trade
+		if(tradePhase && (!msg.getRequest().getBodyCase().equals(Request.BodyCase.INITIATETRADE) && game.getCurrentPlayer().equals(col))
+				|| (!msg.getRequest().getBodyCase().equals(Request.BodyCase.SUBMITTRADERESPONSE) && !game.getCurrentPlayer().equals(col)) )
+		{
+			return false;
+		}
+
 		// If it's not your turn and there are no expected moves from you
 		if(expected.size() == 0 && !game.getCurrentPlayer().equals(col))
 		{
@@ -499,7 +516,6 @@ public class Server implements Runnable
 		// send error and return false
 		if(!isExpected(msg, col))
 		{
-			connections.get(playerColour).sendError();
 			return false;
 		}
 
@@ -573,8 +589,10 @@ public class Server implements Runnable
 	 */
 	private void forwardTradeOffer(Message msg, Trade.WithPlayer playerTrade) throws IOException
 	{
-		// For each player
-		connections.get(game.getPlayer(playerTrade.getOther().getId()).getColour()).sendMessage(msg);
+		Colour col = game.getPlayer(playerTrade.getOther().getId()).getColour();
+
+		if(connections.containsKey(col))
+			connections.get(col).sendMessage(msg);
 	}
 
 	/**
@@ -586,6 +604,8 @@ public class Server implements Runnable
 	private Trade.WithBank processTradeType(Trade.Kind request, Message msg) throws IllegalPortTradeException,
 			IllegalBankTradeException, CannotAffordException, IOException
 	{
+		tradePhase = true;
+
 		// Switch on trade type
 		switch(request.getTradeCase())
 		{
@@ -601,5 +621,9 @@ public class Server implements Runnable
 		}
 
 		return request.getBank();
+	}
+
+	public boolean isTradePhase() {
+		return tradePhase;
 	}
 }

@@ -1,16 +1,15 @@
 package exceptions;
 
-import protocol.MessageProtos;
-import protocol.MessageProtos.*;
+import intergroup.Messages.*;
 
 public class UnexpectedMoveTypeException extends Exception
 {
-    private Message msg;
+	private Message msg;
 
-    public UnexpectedMoveTypeException(Message msg)
-    {
-        this.msg = msg;
-    }
+	public UnexpectedMoveTypeException(Message msg)
+	{
+		this.msg = msg;
+	}
 
     @Override
     public String getMessage()
@@ -22,18 +21,15 @@ public class UnexpectedMoveTypeException extends Exception
                 str = "Event";
                 break;
             case REQUEST:
-                str = "Request: " + msg.getRequest().getTypeCase().name();
-                break;
-            case RESPONSE:
-                str = "Response";
+                str = "Request: " + msg.getRequest().getBodyCase().name();
                 break;
         }
 
-        return String.format("Unexpected Message Type: %s", str);
-    }
+		return String.format("Unexpected Message Type: %s", str);
+	}
 
-    public Message getOriginalMessage()
-    {
-        return msg;
-    }
+	public Message getOriginalMessage()
+	{
+		return msg;
+	}
 }

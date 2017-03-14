@@ -12,12 +12,11 @@ public class CannotStealException extends Exception
 		this.taker = taker;
 		this.other = other;
 	}
-	
+
 	public String getMessage()
 	{
-		return String.format("Player %s cannot take resource from %s.", 
-				taker.toString(), other.toString());
-		
+		return String.format("Player %s cannot take resource from %s.", taker.toString(), other.toString());
+
 	}
 
 }

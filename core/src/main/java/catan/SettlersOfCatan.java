@@ -6,17 +6,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import catan.ui.SplashScreen;
+import client.ClientGame;
 import server.Server;
 
 public class SettlersOfCatan extends Game
 {
 	public Skin skin;
 	private Server serv;
+	public ClientGame state = new ClientGame();
 
 	@Override
 	public void create()
 	{
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		Gdx.graphics.setContinuousRendering(false);
+
 		skin = new Skin(Gdx.files.internal("skin.json"));
 
 		// start off at the splash screen

@@ -1,7 +1,7 @@
 package tests;
 
-import board.Edge;
-import board.Node;
+import intergroup.board.Board;
+import grid.*;
 import enums.Colour;
 import exceptions.*;
 import game.build.Road;
@@ -10,10 +10,6 @@ import game.players.NetworkPlayer;
 import game.players.Player;
 import org.junit.Before;
 import org.junit.Test;
-import protocol.BoardProtos;
-import protocol.BuildProtos.PointProto;
-import protocol.RequestProtos;
-import protocol.RequestProtos.BuildSettlementRequest;
 
 import java.awt.*;
 
@@ -53,17 +49,16 @@ public class RoadTests extends TestHelper
 			RoadExistsException, InvalidCoordinatesException
 	{
 		// Set up request with invalid coordinates
-		RequestProtos.BuildRoadRequest.Builder req = RequestProtos.BuildRoadRequest.newBuilder();
-		BoardProtos.EdgeProto.Builder e = n.getEdges().get(0).toEdgeProto().toBuilder();
-		PointProto.Builder point = PointProto.newBuilder();
+		Board.Edge.Builder e = n.getEdges().get(0).toEdgeProto().toBuilder();
+		Board.Point.Builder point = Board.Point.newBuilder();
 		point.setY(-30);
 		point.setX(-10);
-		e.setP1(point);
-		req.setEdge(e.build());
+		e.setA(point);
 
 		// Dont worry about granting resources or anything.
 		// The checks for invalid coordinates happens first.
-		game.buildRoad(req.build(), p.getColour());
+		game.setTurn(p.getColour());
+		game.buildRoad(e.build());
 	}
 
 	@Test
@@ -71,8 +66,7 @@ public class RoadTests extends TestHelper
 			RoadExistsException, InvalidCoordinatesException, SettlementExistsException
 	{
 		// Set up request
-		RequestProtos.BuildRoadRequest.Builder req = RequestProtos.BuildRoadRequest.newBuilder();
-		req.setEdge(n.getEdges().get(0).toEdgeProto());
+		Board.Edge.Builder e = n.getEdges().get(0).toEdgeProto().toBuilder();
 
 		// Grant resources and build settlement so road construction is permitted
 		p.grantResources(Settlement.getSettlementCost());
@@ -81,7 +75,8 @@ public class RoadTests extends TestHelper
 
 		// Dont worry about granting resources or anything.
 		// The checks for invalid coordinates happens first.
-		game.buildRoad(req.build(), p.getColour());
+		game.setTurn(p.getColour());
+		buildRoad(n.getEdges().get(0));
 		assertEquals(p.getNumResources(), 0);
 		assertEquals(p.getRoads().size(), 1);
 	}
@@ -90,7 +85,7 @@ public class RoadTests extends TestHelper
 	public void settlementBreaksRoadTest() throws SettlementExistsException, CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{	
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.RED);
+		Player p2 = new NetworkPlayer(Colour.RED, "");
 		game.addPlayer(p2);
 
 
@@ -160,7 +155,7 @@ public class RoadTests extends TestHelper
 			CannotBuildRoadException, RoadExistsException, IllegalPlacementException, InvalidCoordinatesException
 	{
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.RED);
+		Player p2 = new NetworkPlayer(Colour.RED, "");
 		game.addPlayer(p2);
 		game.setCurrentPlayer(p2.getColour());
 		
@@ -188,12 +183,7 @@ public class RoadTests extends TestHelper
 	
 		// Build foreign settlement in between second and third road.
 		p2.grantResources(Settlement.getSettlementCost());
-		BuildSettlementRequest.Builder req = BuildSettlementRequest.newBuilder();
-		PointProto.Builder point = PointProto.newBuilder();
-		point.setX(n2.getX());
-		point.setY(n2.getY());
-		req.setPoint(point.build());
-		game.buildSettlement(req.build(), p2.getColour());
+		makeSettlement(p2, n2);
 
 		// Assert previous road chain of length three was broken.
 		assertEquals(2, p.calcRoadLength());

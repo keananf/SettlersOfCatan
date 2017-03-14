@@ -1,6 +1,5 @@
 package tests;
 
-import board.Hex;
 import enums.Colour;
 import exceptions.*;
 import game.build.City;
@@ -8,9 +7,11 @@ import game.build.Road;
 import game.build.Settlement;
 import game.players.NetworkPlayer;
 import game.players.Player;
+import grid.Hex;
+import intergroup.board.Board;
+import intergroup.resource.Resource;
 import org.junit.Before;
 import org.junit.Test;
-import protocol.*;
 
 import static org.junit.Assert.*;
 
@@ -62,23 +63,18 @@ public class GameAndResourcesTests extends TestHelper
 	public void moveRobberInvalidCoordinate() throws InvalidCoordinatesException, CannotStealException
 	{
 		// Make a move robber request with invalid hex coordinates
-		RequestProtos.MoveRobberRequest.Builder req = RequestProtos.MoveRobberRequest.newBuilder();
-		BoardProtos.HexProto.Builder hex = this.hex.toHexProto().toBuilder();
-		BuildProtos.PointProto.Builder point = BuildProtos.PointProto.newBuilder();
-		point.setX(-10);
-		point.setY(-15);
-		hex.setP(point.build());
-		req.setHex(hex.build());
-		req.setColourToTakeFrom(EnumProtos.ColourProto.RED);
+		Board.Point.Builder point = Board.Point.newBuilder().setX(-10).setY(-15);
 
-		game.moveRobber(req.build(), p.getColour());
+		game.setTurn(p.getColour());
+		game.moveRobber(point.build());
 	}
 
 	@Test
 	public void moveRobberTest() throws InvalidCoordinatesException, CannotStealException, SettlementExistsException
 	{
 		// Make a second player
-		Player p2 = new NetworkPlayer(Colour.RED);
+		Player p2 = new NetworkPlayer(Colour.RED, "");
+		p2.setId(Board.Player.Id.PLAYER_2);
 		game.addPlayer(p2);
 
 		// Give player 2 resources to take
@@ -89,10 +85,7 @@ public class GameAndResourcesTests extends TestHelper
 		makeSettlement(p2, n);
 
 		// Make a move robber request
-		RequestProtos.MoveRobberRequest.Builder req = RequestProtos.MoveRobberRequest.newBuilder();
-		BoardProtos.HexProto.Builder hex = this.hex.toHexProto().toBuilder();
-		req.setHex(hex.build());
-		req.setColourToTakeFrom(EnumProtos.ColourProto.RED);
+		Board.Point.Builder point = Board.Point.newBuilder().setX(hex.getX()).setY(hex.getY());
 
 		// Test values before move
 		assertEquals(p2.getNumResources(), 2);
@@ -100,7 +93,9 @@ public class GameAndResourcesTests extends TestHelper
 		Hex h = game.getGrid().getHexWithRobber();
 
 		// Move and check
-		game.moveRobber(req.build(), p.getColour());
+		game.setTurn(p.getColour());
+		game.moveRobber(point.build());
+		game.takeResource(p2.getId());
 		assertNotEquals(h, game.getGrid().getHexWithRobber());
 		assertEquals(p.getNumResources(), 1);
 		assertEquals(p2.getNumResources(), 1);
@@ -116,7 +111,7 @@ public class GameAndResourcesTests extends TestHelper
 		assertEquals(12, p.getNumResources());
 
 		// Construct discard request. Discarding one card is NOT enough
-		ResourceProtos.ResourceCount.Builder discard = ResourceProtos.ResourceCount.newBuilder();
+		Resource.Counts.Builder discard = Resource.Counts.newBuilder();
 		discard.setLumber(1);
 
 		game.processDiscard(discard.build(), p.getColour());
@@ -130,8 +125,8 @@ public class GameAndResourcesTests extends TestHelper
 		p.grantResources(Settlement.getSettlementCost());
 		assertEquals(8, p.getNumResources());
 
-		// Construct discard request. Discarding one card is NOT enough
-		ResourceProtos.ResourceCount.Builder discard = ResourceProtos.ResourceCount.newBuilder();
+		// Construct discard request. Don't have enough
+		Resource.Counts.Builder discard = Resource.Counts.newBuilder();
 		discard.setLumber(3);
 
 		game.processDiscard(discard.build(), p.getColour());
@@ -146,7 +141,7 @@ public class GameAndResourcesTests extends TestHelper
 		assertEquals(8, p.getNumResources());
 
 		// Construct discard request
-		ResourceProtos.ResourceCount.Builder discard = ResourceProtos.ResourceCount.newBuilder();
+		Resource.Counts.Builder discard = Resource.Counts.newBuilder();
 		discard.setLumber(1);
 
 		game.processDiscard(discard.build(), p.getColour());
@@ -169,5 +164,5 @@ public class GameAndResourcesTests extends TestHelper
 		assertTrue(hasResources(p));
 		assertTrue(p.getResources().get(hex.getResource()) == 2);
 	}
-}
 
+}

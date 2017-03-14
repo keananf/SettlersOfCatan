@@ -1,6 +1,6 @@
 package exceptions;
 
-import board.*;
+import grid.*;
 import game.build.Road;
 
 @SuppressWarnings("serial")
@@ -21,3 +21,4 @@ public class RoadExistsException extends Exception
 				n1.getX(), n1.getY(), n2.getX(), n2.getY());
 	}
 }
+

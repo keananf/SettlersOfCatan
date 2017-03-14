@@ -1,7 +1,7 @@
 package exceptions;
 
 import enums.ResourceType;
-import protocol.ResourceProtos;
+import intergroup.resource.Resource;
 
 import java.util.*;
 
@@ -17,7 +17,7 @@ public class CannotAffordException extends Exception
 		this.cost = cost;
     }
 
-	public CannotAffordException(Map<ResourceType, Integer> resources, ResourceProtos.ResourceCount offer)
+	public CannotAffordException(Map<ResourceType, Integer> resources, Resource.Counts offer)
 	{
 		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer> ();
 		cost.put(ResourceType.Brick, offer.getBrick());

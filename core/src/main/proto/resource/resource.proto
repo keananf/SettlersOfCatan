@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package intergroup.resource;
+
+enum Kind {
+  GENERIC = 0;
+  BRICK = 1;
+  LUMBER = 2;
+  WOOL = 3;
+  GRAIN = 4;
+  ORE = 5;
+}
+
+message Counts {
+  int32 brick = 1;
+  int32 lumber = 2;
+  int32 wool = 3;
+  int32 grain = 4;
+  int32 ore = 5;
+}

@@ -4,6 +4,7 @@ public enum ClickObject
 {
 	EDGE,
 	NODE,
-	CARD,
-	DEVCARD, TRADEREQUEST;
+    BUYDEVCARD, 
+	TRADEREQUEST, 
+	PLAYDEVCARD;
 }

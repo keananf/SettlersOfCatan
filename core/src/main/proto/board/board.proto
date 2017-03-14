@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+import "terrain/terrain.proto";
+import "resource/resource.proto";
+
+package intergroup.board;
+
+message Player {
+  Id id = 1;
+
+  enum Id {
+    PLAYER_1 = 0;
+    PLAYER_2 = 1;
+    PLAYER_3 = 2;
+    PLAYER_4 = 3;
+    PLAYER_5 = 4;
+    PLAYER_6 = 5;
+  }
+}
+
+message Point {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message Edge {
+  Point a = 1;
+  Point b = 2;
+}
+
+message Roll {
+  int32 a = 1;
+  int32 b = 2;
+  repeated ResourceAllocation resourceAllocation = 3;
+}
+
+message ResourceAllocation {
+    Player player = 1;
+    resource.Counts resources = 2;
+}
+enum PlayableDevCard {
+  KNIGHT = 0;
+  ROAD_BUILDING = 1;
+  MONOPOLY = 2;
+  YEAR_OF_PLENTY = 3; 
+}
+
+message DevCard {
+  oneof card {
+    Empty unknown = 1;
+    PlayableDevCard playableDevCard = 2;
+    VictoryPoint victoryPoint = 3;
+  }
+}
+
+message Steal {
+  Player victim = 1;
+  resource.Kind resource = 2;
+  int32 quantity = 3;
+}
+
+//for stealing from multiple people
+message MultiSteal {
+    repeated Steal thefts = 1;
+}
+enum VictoryPoint {
+  CHAPEL = 0;
+  LIBRARY = 1;
+  MARKET = 2;
+  PALACE = 3;
+  UNIVERSITY = 4;
+}
+
+message Hex {
+    board.Point location = 1;
+    terrain.Kind terrain = 2;
+    int32 numberToken = 3;
+}
+
+message Harbour {
+    board.Edge location = 1;
+    resource.Kind resource = 2; 
+}
+
+message Empty {}
+

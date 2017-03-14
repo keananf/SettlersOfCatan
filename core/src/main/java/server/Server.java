@@ -138,6 +138,7 @@ public class Server implements Runnable
 			case BANKTRADE:
 			case PLAYERTRADE:
 			case LOBBYUPDATE:
+			case CHATMESSAGE:
 				broadcastEvent(event);
 				break;
 
@@ -239,8 +240,10 @@ public class Server implements Runnable
 						currentTrade = null; // TODO send rejection?
 						return null;
 					}
+				case CHATMESSAGE:
+					ev.setChatMessage(request.getChatMessage());
+					break;
 
-				//TODO INCORPORATE TRADING, chatting
 			}
 		}
 		catch(Exception e)

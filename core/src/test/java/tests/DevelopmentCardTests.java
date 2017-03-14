@@ -118,19 +118,19 @@ public class DevelopmentCardTests extends TestHelper
 			p.grantResources(DevelopmentCardType.getCardCost());
 			p.buyDevelopmentCard(DevelopmentCardType.Knight);
 			assertEquals(0, server.getExpectedMoves(p.getColour()).size());
-			server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+			server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 			assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 
 			// Now set up move robber request
 			req.clearPlayDevCard();
 			req.setMoveRobber(h.toHexProto().getLocation());
-			server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+			server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 			assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 
 			// Set player to take colour from
 			req.clearMoveRobber();
 			req.setSubmitTargetPlayer(Board.Player.newBuilder().setId(game.getPlayer(p2.getColour()).getId()).build());
-			server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+			server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 			assertEquals(0, server.getExpectedMoves(p.getColour()).size());
 
 		}
@@ -151,19 +151,19 @@ public class DevelopmentCardTests extends TestHelper
 			p2.grantResources(DevelopmentCardType.getCardCost());
 			p2.buyDevelopmentCard(DevelopmentCardType.Knight);
 			assertEquals(0, server.getExpectedMoves(p2.getColour()).size());
-			server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+			server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p2.getColour());
 			assertEquals(1, server.getExpectedMoves(p2.getColour()).size());
 
 			// Now set up move robber request
 			req.clearPlayDevCard();
 			req.setMoveRobber(h.toHexProto().getLocation());
-			server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+			server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p2.getColour());
 			assertEquals(1, server.getExpectedMoves(p2.getColour()).size());
 
 			// Set player to take colour from
 			req.clearMoveRobber();
 			req.setSubmitTargetPlayer(Board.Player.newBuilder().setId(game.getPlayer(p.getColour()).getId()).build());
-			server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+			server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p2.getColour());
 			assertEquals(0, server.getExpectedMoves(p2.getColour()).size());
 		}
 
@@ -225,20 +225,20 @@ public class DevelopmentCardTests extends TestHelper
 		req.setPlayDevCard(Board.PlayableDevCard.KNIGHT);
 		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Knight) == 1);
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Knight) == 0);
 
 		// Now set up move robber request
 		req.clearPlayDevCard();
 		req.setMoveRobber(hex.toHexProto().getLocation());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 
 		// Set player to take colour from
 		req.clearMoveRobber();
 		req.setSubmitTargetPlayer(Board.Player.newBuilder().setId(game.getPlayer(p2.getColour()).getId()).build());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
 				
 		// Assert that swap happened, but that no resource was taken
@@ -264,7 +264,7 @@ public class DevelopmentCardTests extends TestHelper
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
 
 		// Play move and assert robber wasn't moved
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertTrue(oldHex.hasRobber());
 		assertFalse(hasResources(p));
 		assertTrue(hasResources(p2));
@@ -293,13 +293,13 @@ public class DevelopmentCardTests extends TestHelper
 		p.grantResources(DevelopmentCardType.getCardCost());
 		p.buyDevelopmentCard(DevelopmentCardType.Knight);
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 
 		// Now set up move robber request, ensure robber was moved
 		req.clearPlayDevCard();
 		req.setMoveRobber(hex.toHexProto().getLocation());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 		assertFalse(oldHex.hasRobber());
 		assertFalse(oldHex.equals(game.getGrid().getHexWithRobber()));
@@ -309,7 +309,7 @@ public class DevelopmentCardTests extends TestHelper
 		req.setSubmitTargetPlayer(Board.Player.newBuilder().setId(game.getPlayer(p2.getColour()).getId()).build());
 
 		// Play move and assert resources weren't stolen, and that a move is still expected
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 		assertFalse(hasResources(p));
 		assertTrue(hasResources(p2));
@@ -338,20 +338,20 @@ public class DevelopmentCardTests extends TestHelper
 		Requests.Request.Builder req = Requests.Request.newBuilder();
 		req.setPlayDevCard(Board.PlayableDevCard.KNIGHT);
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 
 		// Now set up move robber request
 		req.clearPlayDevCard();
 		req.setMoveRobber(hex.toHexProto().getLocation());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 
 		// Set player to take colour from
 		req.clearMoveRobber();
 		req.setSubmitTargetPlayer(Board.Player.newBuilder().setId(game.getPlayer(p2.getColour()).getId()).build());
 		assertFalse(hasResources(p));
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
 
 		assertFalse(oldHex.equals(game.getGrid().getHexWithRobber()));
@@ -372,18 +372,18 @@ public class DevelopmentCardTests extends TestHelper
 		Requests.Request.Builder req = Requests.Request.newBuilder();
 		req.setPlayDevCard(Board.PlayableDevCard.YEAR_OF_PLENTY);
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(2, server.getExpectedMoves(p.getColour()).size());
 
 		// Now set up choose resource request, and request it
 		req.clearPlayDevCard();
 		req.setChooseResource(Resource.Kind.BRICK);
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 		assertTrue(1 == p.getResources().get(ResourceType.Brick));
 
 		// Choose same resource again
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
 		assertTrue(2 == p.getResources().get(ResourceType.Brick));
 	}
@@ -406,19 +406,19 @@ public class DevelopmentCardTests extends TestHelper
 		Requests.Request.Builder req = Requests.Request.newBuilder();
 		req.setPlayDevCard(Board.PlayableDevCard.ROAD_BUILDING);
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(2, server.getExpectedMoves(p.getColour()).size());
 
 		// Now request to build a road
 		req.clearPlayDevCard();
 		req.setBuildRoad(e1.toEdgeProto());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 		assertEquals(1, p.getRoads().size());
 
 		// Build road again
 		req.setBuildRoad(e2.toEdgeProto());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
 		assertEquals(2, p.getRoads().size());
 
@@ -455,20 +455,20 @@ public class DevelopmentCardTests extends TestHelper
 		Requests.Request.Builder req = Requests.Request.newBuilder();
 		req.setPlayDevCard(Board.PlayableDevCard.ROAD_BUILDING);
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(2, server.getExpectedMoves(p.getColour()).size());
 
 		// Now request to build a road
 		req.clearPlayDevCard();
 		req.setBuildRoad(e1.toEdgeProto());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 		assertEquals(1, p.getRoads().size());
 		assertTrue(p.getRoads().get(0).getEdge().equals(e1));
 
 		// ATTEMPT to build road in same location
 		req.setBuildRoad(e1.toEdgeProto());
-		server.processMessage(Messages.Message.newBuilder().setRequest(req).build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 
 		// Assert that server is STILL expecting a new road request, & only one road was built
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());

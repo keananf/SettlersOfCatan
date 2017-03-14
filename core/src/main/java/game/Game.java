@@ -81,11 +81,17 @@ public abstract class Game
 	{
 		Map<ResourceType,Integer> ret = new HashMap<ResourceType,Integer>();
 
-		ret.put(ResourceType.Brick, resources.getBrick());
-		ret.put(ResourceType.Lumber, resources.getLumber());
-		ret.put(ResourceType.Grain, resources.getGrain());
-		ret.put(ResourceType.Ore, resources.getOre());
-		ret.put(ResourceType.Wool, resources.getWool());
+		// Add all resources with amounts
+		if(resources.getBrick() > 0)
+			ret.put(ResourceType.Brick, resources.getBrick());
+		if(resources.getLumber() > 0)
+			ret.put(ResourceType.Lumber, resources.getLumber());
+		if(resources.getGrain() > 0)
+			ret.put(ResourceType.Grain, resources.getGrain());
+		if(resources.getOre() > 0)
+			ret.put(ResourceType.Ore, resources.getOre());
+		if(resources.getWool() > 0)
+			ret.put(ResourceType.Wool, resources.getWool());
 
 		return ret;
 	}

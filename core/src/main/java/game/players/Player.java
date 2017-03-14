@@ -522,4 +522,8 @@ public abstract class Player
 	{
 		this.id = id;
     }
+
+	public String getUsername() {
+		return userName;
+	}
 }

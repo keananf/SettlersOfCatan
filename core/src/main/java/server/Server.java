@@ -1,32 +1,37 @@
 package server;
 
 import enums.Colour;
+import exceptions.CannotAffordException;
+import exceptions.IllegalBankTradeException;
+import exceptions.IllegalPortTradeException;
 import game.Game;
 import game.players.NetworkPlayer;
 import game.players.Player;
-import intergroup.Events.*;
+import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import intergroup.Requests.Request;
 import intergroup.board.Board;
 import intergroup.lobby.Lobby;
+import intergroup.trade.Trade;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Server implements Runnable
 {
 	private ServerGame game;
-	private int numConnections;;
+	private int numConnections;
 	private Map<Colour, ListenerThread> connections;
 	private ServerSocket serverSocket;
 	private static final int PORT = 12345;
 	private Logger logger;
-	private ConcurrentHashMap<Colour, Queue<Message>> movesToProcess;
+	private ConcurrentLinkedQueue<ReceivedMessage> movesToProcess;
 	private HashMap<Colour, List<Request.BodyCase>> expectedMoves;
+	private Trade.WithPlayer currentTrade;
+	private boolean tradePhase;
 
 	public Server()
 	{
@@ -34,12 +39,11 @@ public class Server implements Runnable
 		game = new ServerGame();
 
 		// Set up
-		movesToProcess = new ConcurrentHashMap<Colour, Queue<Message>>();
+		movesToProcess = new ConcurrentLinkedQueue<ReceivedMessage>();
 		expectedMoves = new HashMap<Colour, List<Request.BodyCase>>();
 		connections = new HashMap<Colour, ListenerThread>();
 		for(Colour c : Colour.values())
 		{
-			movesToProcess.put(c, new ArrayBlockingQueue<Message>(10));
 			expectedMoves.put(c, new ArrayList<>());
 		}
 	}
@@ -56,12 +60,14 @@ public class Server implements Runnable
 			while (!game.isOver())
 			{
 				Board.Roll dice = game.generateDiceRoll();
+
+				// TODO Adjust so turn message has resources
 				game.allocateResources(dice.getA() + dice.getB());
 				sendTurns(dice);
 
 				// Read moves from queue and log
-				Message msg = movesToProcess.get(game.getCurrentPlayer()).poll();
-				processMessage(msg);
+				ReceivedMessage msg = movesToProcess.poll();
+				processMessage(msg.getMsg(), msg.getCol());
 			}
 		}
 		catch (IOException e)
@@ -76,15 +82,18 @@ public class Server implements Runnable
 	 * Process the next message, and send any responses and events.
 	 * @throws IOException
 	 */
-	public void processMessage(Message msg) throws IOException
+	public void processMessage(Message msg, Colour col) throws IOException
 	{
-		ListenerThread conn = connections.get(game.getCurrentPlayer());
+		ListenerThread conn = connections.get(col);
 		logger.logReceivedMessage(msg);
 
 		// If not valid
-		if(!validateMsg(msg, game.getCurrentPlayer()))
+		if(!validateMsg(msg, col))
 		{
-			conn.sendError();
+			if(conn != null)
+			{
+				conn.sendError();
+			}
 			return;
 		}
 
@@ -93,12 +102,15 @@ public class Server implements Runnable
 		{
 			// User request
 			case REQUEST:
-				Event ev = processMove(msg, game.getCurrentPlayer());
+				Event ev = processMove(msg, col);
 				sendEvents(ev);
 				break;
 
 			default:
-				conn.sendError();
+				if(conn != null)
+				{
+					conn.sendError();
+				}
 		}
 	}
 
@@ -108,6 +120,8 @@ public class Server implements Runnable
 	 */
 	private void sendEvents(Event event) throws IOException
 	{
+		if(event == null) return;
+
 		// Switch on message type to interpret which event(s) need to be sent out
 		switch (event.getTypeCase())
 		{
@@ -121,6 +135,10 @@ public class Server implements Runnable
 			case ROBBERMOVED:
 			case CITYBUILT:
 			case ROADBUILT:
+			case BANKTRADE:
+			case PLAYERTRADE:
+			case LOBBYUPDATE:
+			case CHATMESSAGE:
 				broadcastEvent(event);
 				break;
 
@@ -147,7 +165,7 @@ public class Server implements Runnable
 	{
 		Request request = msg.getRequest();
 		Event.Builder ev = Event.newBuilder();
-		Player copy = ((NetworkPlayer)game.getPlayers().get(game.getCurrentPlayer())).copy();
+		Player copy = ((NetworkPlayer)game.getPlayers().get(colour)).copy();
 		boolean invalid = false;
 
 		try
@@ -172,8 +190,7 @@ public class Server implements Runnable
 					ev.setDevCardBought(game.buyDevelopmentCard());
 					break;
 				case JOINLOBBY:
-					// TODO what event does this get sent as?
-					Colour col = game.joinGame(request.getJoinLobby());
+					ev.setLobbyUpdate(game.joinGame(request.getJoinLobby()));
 					break;
 				case MOVEROBBER:
 					game.moveRobber(request.getMoveRobber());
@@ -187,6 +204,8 @@ public class Server implements Runnable
 					if(canEndTurn())
 					{
 						ev.setTurnEnded(game.changeTurn());
+						tradePhase = false;
+						currentTrade = null;
 					}
 					else ev.setError(Event.Error.newBuilder().setDescription("Cannot end turn yet."));
 					break;
@@ -204,8 +223,27 @@ public class Server implements Runnable
 				case SUBMITTARGETPLAYER:
 					game.takeResource(request.getSubmitTargetPlayer().getId());
 					break;
+				case INITIATETRADE:
+					processTradeType(request.getInitiateTrade(), msg);
+					break;
+				case SUBMITTRADERESPONSE:
+					// TODO timeouts?
+					if(currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT))
+					{
+						ev.setPlayerTrade(currentTrade);
+						game.processPlayerTrade(currentTrade);
+						currentTrade = null;
+						break;
+					}
+					else
+					{
+						currentTrade = null; // TODO send rejection?
+						return null;
+					}
+				case CHATMESSAGE:
+					ev.setChatMessage(request.getChatMessage());
+					break;
 
-				//TODO INCORPORATE TRADING
 			}
 		}
 		catch(Exception e)
@@ -218,8 +256,15 @@ public class Server implements Runnable
 				ev.setError(connections.get(colour).getError());
 		}
 
+		// Add expected trade response for other player
+		if(request.getBodyCase().equals(Request.BodyCase.INITIATETRADE)
+				&& request.getInitiateTrade().getTradeCase().equals(Trade.Kind.TradeCase.PLAYER) && !invalid)
+		{
+			updateExpectedMoves(request, game.getPlayer(request.getInitiateTrade().getPlayer().getOther().getId()).getColour());
+		}
+
 		// Update expected moves if no error from the previously processed one
-		if(!ev.getTypeCase().equals(Event.TypeCase.ERROR) && !invalid)
+		else if(!ev.getTypeCase().equals(Event.TypeCase.ERROR) && !invalid)
 		{
 			// Remove move from expected list, and add any new ones
 			if(expectedMoves.get(colour).contains(request.getBodyCase()))
@@ -247,6 +292,11 @@ public class Server implements Runnable
 			// Expect for the player to send a steal request next
 			case MOVEROBBER:
 				moves.add(Request.BodyCase.SUBMITTARGETPLAYER);
+				break;
+
+			// Add that a response is expected from this player
+			case INITIATETRADE:
+				moves.add(Request.BodyCase.SUBMITTRADERESPONSE);
 				break;
 
 			// Add expected moves based on recently played dev card
@@ -286,7 +336,6 @@ public class Server implements Runnable
 	 */
 	private void sendTurns(Board.Roll dice) throws IOException
 	{
-		List<Player> discardList = new ArrayList<Player>();
 		int sum = dice.getA() + dice.getB();
 
 		// For each player
@@ -299,15 +348,9 @@ public class Server implements Runnable
 
 				if(sum == 7 && p.getNumResources() > 7)
 				{
-					discardList.add(p);
+					expectedMoves.get(c).add(Request.BodyCase.DISCARDRESOURCES);
 				}
 			}
-		}
-
-		// Process discard requests if necessary
-		if(discardList.size() > 0)
-		{
-			processDiscardRequests(discardList);
 		}
 	}
 
@@ -335,8 +378,6 @@ public class Server implements Runnable
 		Message.Builder msg = Message.newBuilder();
 		Event.Builder ev = Event.newBuilder();
 
-		// TODO deal with ai
-
 		// For each player
 		for(Colour c : Colour.values())
 		{
@@ -362,8 +403,6 @@ public class Server implements Runnable
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(ev);
 
-		// TODO deal with AI
-
 		// For each player
 		for(Colour c : Colour.values())
 		{
@@ -372,49 +411,6 @@ public class Server implements Runnable
 				connections.get(c).sendMessage(msg.build());
 			}
 		}
-	}
-
-	/**
-	 * Block until all players have submitted valid discard requests
-	 * @param discardList the list of players that need to discard resources
-	 */
-	private void processDiscardRequests(List<Player> discardList) throws IOException
-	{
-		// Get moves from the player until they have completed an initial turn
-		while(waitingForDiscards(discardList))
-		{
-			// cycle through players trying to find a move of the correct type
-			for(Player p : discardList)
-			{
-				Colour c = p.getColour();
-				expectedMoves.get(c).add(Request.BodyCase.DISCARDRESOURCES);
-				game.setCurrentPlayer(c);
-
-				Message msg = movesToProcess.get(c).poll();
-				processMessage(msg);
-			}
-		}
-	}
-
-	/**
-	 * Checks if the given players still need to discard cards or not
-	 * @param discardList the list of players who need to discard
-	 * @return boolean indicating whether ot not
-	 */
-	private boolean waitingForDiscards(List<Player> discardList)
-	{
-		List<Player> list = new ArrayList<>();
-		list.addAll(discardList);
-
-		for(Player p : list)
-		{
-			if(p.getNumResources() <= 7)
-			{
-				discardList.remove(p);
-			}
-		}
-
-		return discardList.size() > 0;
 	}
 
 	/**
@@ -457,8 +453,10 @@ public class Server implements Runnable
 			expectedMoves.get(c).add(Request.BodyCase.BUILDSETTLEMENT);
 			game.setCurrentPlayer(c);
 
-			Message msg = movesToProcess.get(c).poll();
-			processMessage(msg);
+			ReceivedMessage msg = movesToProcess.poll();
+			if(!msg.getCol().equals(c)) continue;
+
+			processMessage(msg.getMsg(), msg.getCol());
 		}
 
 		// Loop until player sends valid new road
@@ -467,8 +465,10 @@ public class Server implements Runnable
 			expectedMoves.get(c).add(Request.BodyCase.BUILDROAD);
 			game.setCurrentPlayer(c);
 
-			Message msg = movesToProcess.get(c).poll();
-			processMessage(msg);
+			ReceivedMessage msg = movesToProcess.poll();
+			if(!msg.getCol().equals(c)) continue;
+
+			processMessage(msg.getMsg(), msg.getCol());
 		}
 	}
 
@@ -483,6 +483,20 @@ public class Server implements Runnable
 		Request.BodyCase type = msg.getTypeCase().equals(Message.TypeCase.REQUEST) ? msg.getRequest().getBodyCase() : null;
 		List<Request.BodyCase> expected = expectedMoves.get(col);
 
+		// If in trade phase and the given message isn't a trade
+		if(tradePhase && (!msg.getRequest().getBodyCase().equals(Request.BodyCase.INITIATETRADE) && game.getCurrentPlayer().equals(col))
+				|| (!msg.getRequest().getBodyCase().equals(Request.BodyCase.SUBMITTRADERESPONSE) && !game.getCurrentPlayer().equals(col)) )
+		{
+			return false;
+		}
+
+		// If it's not your turn and there are no expected moves from you
+		if(expected.size() == 0 && !game.getCurrentPlayer().equals(col))
+		{
+			return false;
+		}
+
+		// If not a request or the move is not expected
 		if(type == null || (!expected.contains(type) && expected.size() > 0))
 		{
 			return false;
@@ -500,13 +514,11 @@ public class Server implements Runnable
 	private boolean validateMsg(Message msg, Colour col) throws IOException
 	{
 		Colour playerColour = col;
-		Colour currentPlayerColour = game.getCurrentPlayer();
 
 		// If it is not the player's turn, the message type is unknown OR the given request is NOT expected
 		// send error and return false
-		if(!playerColour.equals(currentPlayerColour) || !isExpected(msg, col))
+		if(!isExpected(msg, col))
 		{
-			connections.get(playerColour).sendError();
 			return false;
 		}
 
@@ -558,9 +570,9 @@ public class Server implements Runnable
 		System.out.println("All Players connected. Starting game...\n");
 	}
 
-	public void addMessageToProcess(Message msg, Colour colour) throws IOException
+	public void addMessageToProcess(ReceivedMessage msg) throws IOException
 	{
-		movesToProcess.get(colour).add(msg);
+		movesToProcess.add(msg);
 	}
 
 	public void setGame(ServerGame game)
@@ -573,70 +585,48 @@ public class Server implements Runnable
 		return expectedMoves.get(colour);
 	}
 
-/*
-
-	*/
-/**
- * Simply forwards the trade offer to the intended recipients
- * @param msg the original message
- * @param playerTrade the internal trade request inside the message
- *//*
-
-	private void forwardTradeOffer(Message msg, PlayerTradeProto playerTrade) throws IOException
+	/**
+	 * Simply forwards the trade offer to the intended recipients
+	 * @param msg the original message
+	 * @param playerTrade the internal trade request inside the message
+	 */
+	private void forwardTradeOffer(Message msg, Trade.WithPlayer playerTrade) throws IOException
 	{
-		List<ColourProto> options = playerTrade.getRecipientsList();
+		Colour col = game.getPlayer(playerTrade.getOther().getId()).getColour();
 
-		// For each player
-		for(Colour c : Colour.values())
-		{
-			// TODO deal with AI
-			if(connections.containsKey(c) && options.contains(Colour.toProto(c)))
-			{
-				connections.get(c).sendMessage(msg);
-			}
-		}
-
+		if(connections.containsKey(col))
+			connections.get(col).sendMessage(msg);
 	}
-*/
 
 	/**
 	 * Forwards the trade request to the other player and blocks for a response
 	 * @param request the trade request
 	 * @param msg the original request, received from across the network
 	 * @return the status of the trade "accepted, denied, offer"
-	 *//*
-
-	private AcceptRejectResponse processTradeType(TradeRequest request, Message msg) throws IllegalPortTradeException,
-																						IllegalBankTradeException,
-																						CannotAffordException,
-																						IOException
+	 */
+	private Trade.WithBank processTradeType(Trade.Kind request, Message msg) throws IllegalPortTradeException,
+			IllegalBankTradeException, CannotAffordException, IOException
 	{
-		//TODO DOUBLE CHECK
-		// Set up response object
-		AcceptRejectResponse.Builder resp = AcceptRejectResponse.newBuilder();
-		resp.setTrade(request);
+		tradePhase = true;
 
 		// Switch on trade type
-		switch(request.getContentsCase())
+		switch(request.getTradeCase())
 		{
 			// Simply forward the message
-			case PLAYERTRADE:
-				forwardTradeOffer(msg, request.getPlayerTrade());
-				resp.setAnswer(TradeStatusProto.PENDING);
-				break;
+			case PLAYER:
+				currentTrade = request.getPlayer();
+				forwardTradeOffer(msg, request.getPlayer());
+				return null;
 
-			// Process the trade and ensure it is legal
-			case PORTTRADE:
-				resp.setAnswer(game.processPortTrade(request.getPortTrade()));
-				break;
-
-			case BANKTRADE:
-				resp.setAnswer(game.processBankTrade(request.getBankTrade()));
+			case BANK:
+				game.determineTradeType(request.getBank());
 				break;
 		}
 
-		return resp.build();
+		return request.getBank();
 	}
 
-*/
+	public boolean isTradePhase() {
+		return tradePhase;
+	}
 }

@@ -1,12 +1,11 @@
 package grid;
 
-import intergroup.board.Board;
 import enums.ResourceType;
+import exceptions.CannotAffordException;
+import game.players.Player;
+import intergroup.board.Board;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Class describing a port
@@ -15,6 +14,7 @@ import java.util.Random;
 public class Port extends Edge 
 {
 	private ResourceType exchangeType;
+	public static final int EXCHANGE_AMOUNT = 3, RETURN_AMOUNT = 1;
 	
 	public Port(Node x, Node y)
 	{
@@ -182,28 +182,17 @@ public class Port extends Edge
 	{
 		this.exchangeType = exchangeType;
 	}
-/*
-	*//**
+
+	/**
 	 * Performs the port trade
 	 * @param offerer the offerer
 	 * @param offer the offer
 	 * @param request the request
-	 *//*
-    public void exchange(Player offerer, Map<ResourceType, Integer> offer, Map<ResourceType, Integer> request) throws IllegalPortTradeException, CannotAffordException
+	 */
+    public void exchange(Player offerer, Map<ResourceType, Integer> offer, Map<ResourceType, Integer> request)
+			throws CannotAffordException
 	{
-		// Can only get one resource from a port, and it must be the same resource as what is offered
-		if((request.get(ResourceType.Brick) == 1 && (request.get(ResourceType.Grain)== 1 || request.get(ResourceType.Ore)== 1 || request.get(ResourceType.Wool) == 1
-				|| request.get(ResourceType.Lumber) == 1)) || ( !receiveType.equals(ResourceType.Generic)
-				&& ((request.get(ResourceType.Brick) == 1 && !receiveType.equals(ResourceType.Brick))
-				|| (request.get(ResourceType.Lumber) == 1 && !receiveType.equals(ResourceType.Lumber))
-				|| (request.get(ResourceType.Wool) == 1 && !receiveType.equals(ResourceType.Wool))
-				|| (request.get(ResourceType.Grain) == 1 && !receiveType.equals(ResourceType.Grain))
-				|| (request.get(ResourceType.Ore) == 1 && !receiveType.equals(ResourceType.Ore)))))
-		{
-			throw new IllegalPortTradeException(offerer.getColour(), this);
-		}
-
 		offerer.spendResources(offer);
 		offerer.grantResources(request);
-    }*/
+    }
 }

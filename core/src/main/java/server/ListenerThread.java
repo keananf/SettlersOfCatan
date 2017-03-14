@@ -54,7 +54,7 @@ public class ListenerThread implements Runnable
         {
             // Parse message and add to queue
             Message msg = Message.parseFrom(socket.getInputStream());
-            server.addMessageToProcess(msg, colour);
+            server.addMessageToProcess(new ReceivedMessage(colour, msg));
 		}
 	}
 

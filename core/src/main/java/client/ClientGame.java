@@ -30,7 +30,6 @@ public class ClientGame extends Game
     private Map<Colour, Integer> boughtDevCards;
     private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;
     private Player thisPlayer;
-    private EventProcessor eventProcessor;
 
     public ClientGame()
     {
@@ -47,11 +46,6 @@ public class ClientGame extends Game
             {
                 playedDevCards.get(c).put(d, 0);
             }
-
-            // Instantiate players as well
-            // TODO FOR TESTING ONLY. REMOVE ONCE CLIENT AND SERVER ARE HOOKED UP
-            //if(!c.equals(Colour.BLUE))
-               // players.put(c, new LocalPlayer(c, c.toString()));
         }
     }
 

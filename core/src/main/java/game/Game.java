@@ -1,13 +1,16 @@
 package game;
 
-import intergroup.board.Board;
-import grid.*;
 import enums.Colour;
 import enums.ResourceType;
 import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.players.Player;
+import grid.Edge;
+import grid.Hex;
+import grid.HexGrid;
+import grid.Node;
+import intergroup.board.Board;
 import intergroup.resource.Resource;
 
 import java.util.HashMap;
@@ -94,6 +97,23 @@ public abstract class Game
 			ret.put(ResourceType.Wool, resources.getWool());
 
 		return ret;
+	}
+
+	/**
+	 * Converts a map of resources into an object combatible with protobufs
+	 * @param map the map to convert
+	 * @return the protobuf representation of the map
+	 */
+	public Resource.Counts processResources(Map<ResourceType, Integer> map)
+	{
+		Resource.Counts.Builder resources = Resource.Counts.newBuilder();
+		resources.setGrain(map.containsKey(ResourceType.Grain) ? map.get(ResourceType.Grain) : 0);
+		resources.setBrick(map.containsKey(ResourceType.Brick) ? map.get(ResourceType.Brick) : 0);
+		resources.setOre(map.containsKey(ResourceType.Ore) ? map.get(ResourceType.Ore) : 0);
+		resources.setWool(map.containsKey(ResourceType.Wool) ? map.get(ResourceType.Wool) : 0);
+		resources.setLumber(map.containsKey(ResourceType.Lumber) ? map.get(ResourceType.Lumber) : 0);
+
+		return resources.build();
 	}
 
 	/**
@@ -263,4 +283,5 @@ public abstract class Game
 		idsToColours.put(clientPlayer.getId(), clientPlayer.getColour());
 		players.put(clientPlayer.getColour(), clientPlayer);
 	}
+
 }

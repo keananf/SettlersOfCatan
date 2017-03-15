@@ -164,7 +164,12 @@ public class ClientGame extends Game
         Map<ResourceType, Integer> grant = getNewResources(dice, thisPlayer.getColour());
 
         if(dice != 7)
-            thisPlayer.grantResources(grant);
+            try {
+                thisPlayer.grantResources(grant, bank);
+            }
+            catch (BankLimitException e) {
+                e.printStackTrace();
+            }
     }
 
     /**
@@ -196,10 +201,10 @@ public class ClientGame extends Game
         Edge newEdge = grid.getEdge(newRoad.getA(), newRoad.getB());
         Player player = getPlayer(instigator.getId());
 
-        // Spend resources if it is this instigator
-        if(player.getColour().equals(thisPlayer.getColour()))
+        // Spend resources if it is not a preliminary move
+        if(player.getRoads().size() < 2)
         {
-            thisPlayer.spendResources(Road.getRoadCost());
+            player.spendResources(Road.getRoadCost(), bank);
         }
 
         // Make new road object
@@ -215,7 +220,7 @@ public class ClientGame extends Game
      * @param instigator the person who built the city
      * @return the new city
      */
-    public City processNewCity(Board.Point city, Board.Player instigator, boolean setUp) throws InvalidCoordinatesException, CannotAffordException
+    public City processNewCity(Board.Point city, Board.Player instigator) throws InvalidCoordinatesException, CannotAffordException
     {
         // Extract information
         Node node = grid.getNode(city.getX(), city.getY());
@@ -227,14 +232,9 @@ public class ClientGame extends Game
             throw new InvalidCoordinatesException(city.getX(), city.getY());
         }
 
-        // Spend resources if it is this player
-        if(player.getColour().equals(thisPlayer.getColour()) && !setUp)
-        {
-            Map<ResourceType, Integer> spend = City.getCityCost();
-            thisPlayer.spendResources(spend);
-        }
 
         // Create and add the city
+        player.spendResources(City.getCityCost(), bank);
         City c = new City(node, player.getColour());
 
         // Updates settlement and score
@@ -248,7 +248,7 @@ public class ClientGame extends Game
      * @param instigator the person who built the settlement
      * @return the new settlement
      */
-    public Settlement processNewSettlement(Board.Point settlement, Board.Player instigator, boolean setUp)
+    public Settlement processNewSettlement(Board.Point settlement, Board.Player instigator)
             throws InvalidCoordinatesException, CannotAffordException
     {
         // Extract information
@@ -261,11 +261,11 @@ public class ClientGame extends Game
             throw new InvalidCoordinatesException(settlement.getX(), settlement.getY());
         }
 
-        // Spend resources if it is this player
-        if(player.getColour().equals(thisPlayer.getColour()) && !setUp)
+        // Spend resources if this is not an initial move
+        if(player.getSettlements().size() < 2)
         {
             Map<ResourceType, Integer> spend = Settlement.getSettlementCost();
-            thisPlayer.spendResources(spend);
+            player.spendResources(spend, bank);
         }
 
         // Create and add the settlement
@@ -315,11 +315,11 @@ public class ClientGame extends Game
     public void recordDevCard(Board.DevCard boughtDevCard, Board.Player instigator) throws CannotAffordException
     {
         Player player = getPlayer(instigator.getId());
+        player.spendResources(DevelopmentCardType.getCardCost(), bank);
 
         // Spend resources if it is this player
         if(player.getColour().equals(thisPlayer.getColour()))
         {
-            thisPlayer.spendResources(DevelopmentCardType.getCardCost());
             thisPlayer.addDevelopmentCard(boughtDevCard);
         }
 

@@ -40,7 +40,7 @@ public class DevelopmentCardTests extends TestHelper
 	@Test(expected = CannotAffordException.class)
 	public void cannotBuyDevCardTest() throws CannotAffordException
 	{
-		p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
+		p.buyDevelopmentCard(game.getBank());
 	}
 	
 	@Test(expected = DoesNotOwnException.class)
@@ -51,21 +51,21 @@ public class DevelopmentCardTests extends TestHelper
 	}	
 
 	@Test
-	public void buyDevelopmentCardTest() throws CannotAffordException
+	public void buyDevelopmentCardTest() throws CannotAffordException, BankLimitException
 	{
 		// Grant resources and buy a card
 		assertTrue(p.getDevelopmentCards().size() == 0);
-		p.grantResources(DevelopmentCardType.getCardCost());
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		buyDevelopmentCard();
 		assertTrue(p.getDevelopmentCards().size() > 0);
 	}
 	
 	@Test
-	public void playAndRemoveDevelopmentCardTest() throws CannotAffordException, DoesNotOwnException
+	public void playAndRemoveDevelopmentCardTest() throws CannotAffordException, DoesNotOwnException, BankLimitException
 	{
 		// Grant resources and buy a card
 		assertTrue(p.getDevelopmentCards().size() == 0);
-		p.grantResources(DevelopmentCardType.getCardCost());
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		DevelopmentCardType c = buyDevelopmentCard();
 		assertTrue(p.getDevelopmentCards().get(c) == 1);
 		
@@ -79,7 +79,7 @@ public class DevelopmentCardTests extends TestHelper
 
 	@Test
 	public void largestArmyTest() throws SettlementExistsException, CannotStealException,
-			InvalidCoordinatesException, DoesNotOwnException, CannotAffordException, IOException
+			InvalidCoordinatesException, DoesNotOwnException, CannotAffordException, IOException, BankLimitException
 	{
 		NetworkPlayer p2 = new NetworkPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
@@ -100,11 +100,11 @@ public class DevelopmentCardTests extends TestHelper
 		Node n6 = e6.getX().equals(n5) ? e6.getY() : e6.getX(); // Opposite end of sixth edge
 
 		// Make settlement
-		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n);
 
 		// Need a settlement so that this player can be stolen from
-		p2.grantResources(Settlement.getSettlementCost());
+		p2.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p2, n6);
 		game.setCurrentPlayer(p.getColour());
 
@@ -115,8 +115,8 @@ public class DevelopmentCardTests extends TestHelper
 
 			// Set up knight card request, grant the card, play the card
 			req.setPlayDevCard(Board.PlayableDevCard.KNIGHT);
-			p.grantResources(DevelopmentCardType.getCardCost());
-			p.buyDevelopmentCard(DevelopmentCardType.Knight);
+			p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+			p.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
 			assertEquals(0, server.getExpectedMoves(p.getColour()).size());
 			server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 			assertEquals(1, server.getExpectedMoves(p.getColour()).size());
@@ -148,8 +148,8 @@ public class DevelopmentCardTests extends TestHelper
 
 			// Set up knight card request, grant the card, play the card
 			req.setPlayDevCard(Board.PlayableDevCard.KNIGHT);
-			p2.grantResources(DevelopmentCardType.getCardCost());
-			p2.buyDevelopmentCard(DevelopmentCardType.Knight);
+			p2.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+			p2.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
 			assertEquals(0, server.getExpectedMoves(p2.getColour()).size());
 			server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p2.getColour());
 			assertEquals(1, server.getExpectedMoves(p2.getColour()).size());
@@ -209,14 +209,14 @@ public class DevelopmentCardTests extends TestHelper
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
 		// Grant
-		p.grantResources(DevelopmentCardType.getCardCost());
-		p.buyDevelopmentCard(DevelopmentCardType.Knight);
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+		p.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
 
 		// Set up player 2
 		Player p2 = new NetworkPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		game.addPlayer(p2);
-		p2.grantResources(Settlement.getSettlementCost());
+		p2.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p2, hex.getNodes().get(0));
 		game.setCurrentPlayer(p.getColour());
 
@@ -255,7 +255,7 @@ public class DevelopmentCardTests extends TestHelper
 
 		// Set up player 2
 		Player p2 = new NetworkPlayer(Colour.RED, "");
-		p2.grantResources(DevelopmentCardType.getCardCost());
+		p2.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		game.addPlayer(p2);
 
 		// Set up request, don't grant card
@@ -276,13 +276,13 @@ public class DevelopmentCardTests extends TestHelper
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
 		// Grant
-		p.grantResources(DevelopmentCardType.getCardCost());
-		p.buyDevelopmentCard(DevelopmentCardType.Knight);
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+		p.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
 
 		// Set up player 2
 		Player p2 = new NetworkPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
-		p2.grantResources(DevelopmentCardType.getCardCost());
+		p2.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		game.addPlayer(p2);
 
 		// Set up request
@@ -290,8 +290,8 @@ public class DevelopmentCardTests extends TestHelper
 
 		// Set up knight card request, grant the card, play the card
 		req.setPlayDevCard(Board.PlayableDevCard.KNIGHT);
-		p.grantResources(DevelopmentCardType.getCardCost());
-		p.buyDevelopmentCard(DevelopmentCardType.Knight);
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+		p.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
 		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
@@ -322,15 +322,15 @@ public class DevelopmentCardTests extends TestHelper
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
 		// Grant
-		p.grantResources(DevelopmentCardType.getCardCost());
-		p.buyDevelopmentCard(DevelopmentCardType.Knight);
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+		p.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
 
 		// Set up player 2, make settlement, grant resources so one can be taken
 		Player p2 = new NetworkPlayer(Colour.RED,"");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		game.addPlayer(p2);
-		p2.grantResources(Settlement.getSettlementCost());
-		p2.grantResources(Settlement.getSettlementCost());
+		p2.grantResources(Settlement.getSettlementCost(), game.getBank());
+		p2.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p2, hex.getNodes().get(0));
 		game.setCurrentPlayer(p.getColour());
 
@@ -365,8 +365,8 @@ public class DevelopmentCardTests extends TestHelper
 	public void playYearOfPlentyTest() throws Exception
 	{
 		// Grant
-		p.grantResources(DevelopmentCardType.getCardCost());
-		p.buyDevelopmentCard(DevelopmentCardType.YearOfPlenty);
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+		p.buyDevelopmentCard(DevelopmentCardType.YearOfPlenty, game.getBank());
 
 		// Set up YOP card request, play the card
 		Requests.Request.Builder req = Requests.Request.newBuilder();
@@ -393,13 +393,13 @@ public class DevelopmentCardTests extends TestHelper
 	{
 		// Set up entities
 		Edge e1 = n.getEdges().get(0), e2 = n.getEdges().get(1);
-		p.grantResources(DevelopmentCardType.getCardCost());
-		p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+		p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
 
 		// Grant resources and make settlement
-		p.grantResources(Settlement.getSettlementCost());
-		p.grantResources(Road.getRoadCost());
-		p.grantResources(Road.getRoadCost());
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		p.grantResources(Road.getRoadCost(), game.getBank());
 		makeSettlement(p, n);
 
 		// Set up Road building card request, play the card
@@ -441,14 +441,14 @@ public class DevelopmentCardTests extends TestHelper
 		int oldResources = 0;
 		
 		// Set up development card
-		p.grantResources(DevelopmentCardType.getCardCost());
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		DevelopmentCardType card = DevelopmentCardType.RoadBuilding;
-		p.buyDevelopmentCard(card);
+		p.buyDevelopmentCard(card, game.getBank());
 
 		// Grant resources and make settlement
-		p.grantResources(Settlement.getSettlementCost());
-		p.grantResources(Road.getRoadCost());
-		p.grantResources(Road.getRoadCost());
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		p.grantResources(Road.getRoadCost(), game.getBank());
 		makeSettlement(p, n);
 
 		// Set up Road building card request, play the card
@@ -477,11 +477,11 @@ public class DevelopmentCardTests extends TestHelper
 	}
 	
 	@Test
-	public void playLibraryTest() throws DoesNotOwnException, CannotAffordException
+	public void playLibraryTest() throws DoesNotOwnException, CannotAffordException, BankLimitException
 	{
 		// Grant Card
-		p.grantResources(DevelopmentCardType.getCardCost());
-		p.buyDevelopmentCard(DevelopmentCardType.Library);
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+		p.buyDevelopmentCard(DevelopmentCardType.Library, game.getBank());
 
 		// Play move and assert vp has increased
 		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Library) == 1);
@@ -492,11 +492,11 @@ public class DevelopmentCardTests extends TestHelper
 	}
 	
 	@Test
-	public void playUniversityTest() throws DoesNotOwnException, CannotAffordException
+	public void playUniversityTest() throws DoesNotOwnException, CannotAffordException, BankLimitException
 	{
 		// Grant Card
-		p.grantResources(DevelopmentCardType.getCardCost());
-		p.buyDevelopmentCard(DevelopmentCardType.University);
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+		p.buyDevelopmentCard(DevelopmentCardType.University, game.getBank());
 
 		// Play move and assert vp has increased
 		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.University) == 1);

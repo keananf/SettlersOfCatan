@@ -1,5 +1,6 @@
 package enums;
 
+import game.Bank;
 import intergroup.board.Board;
 import intergroup.board.Board.PlayableDevCard;
 import java.util.HashMap;
@@ -124,10 +125,19 @@ public enum DevelopmentCardType
         return resources;
     }
 
-    public static DevelopmentCardType chooseRandom()
+    public static DevelopmentCardType chooseRandom(Bank bank)
     {
+        DevelopmentCardType type = null;
+
         // Randomly choose a development card to allocate
-        return DevelopmentCardType.values()[rand.nextInt(DevelopmentCardType.values().length)];
+        while(type == null || bank.getAvailableDevCards().get(type) == 0)
+        {
+            type = DevelopmentCardType.values()[rand.nextInt(DevelopmentCardType.values().length)];
+        }
+
+        // Eliminate from bank
+        bank.getAvailableDevCards().put(type, bank.getAvailableDevCards().get(type) - 1);
+        return type;
     }
 
     public static DevelopmentCardType fromProto(PlayableDevCard playedDevCard)

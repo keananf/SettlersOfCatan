@@ -18,9 +18,7 @@ import intergroup.lobby.Lobby;
 import intergroup.resource.Resource;
 import intergroup.trade.Trade;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class ServerGame extends Game
 {
@@ -55,16 +53,51 @@ public class ServerGame extends Game
 	public Map<Colour, Map<ResourceType, Integer>> allocateResources(int dice)
 	{
 		Map<Colour, Map<ResourceType, Integer>> playerResources = new HashMap<Colour, Map<ResourceType, Integer>>();
+		List<ResourceType> list = new ArrayList<ResourceType>();
 
 		// for each player
 		for(Player player : players.values())
 		{
-			Map<ResourceType, Integer> grant = getNewResources(dice, player.getColour());
-
 			if(dice != 7)
-				player.grantResources(grant);
+			{
+				Map<ResourceType, Integer> grant = getNewResources(dice, player.getColour());
+				playerResources.put(player.getColour(), grant);
+			}
 
-			playerResources.put(player.getColour(), grant);
+		}
+
+		// For each resource type, ensure there is enough to go around
+		for(ResourceType r : ResourceType.values())
+		{
+			int total = bank.getAvailableResources().get(r);
+
+			// For each player's new amount of 'r'
+			for(Colour c : playerResources.keySet())
+			{
+				total -= playerResources.get(c).containsKey(r) ? playerResources.get(c).get(r) : 0;
+			}
+
+			// Not enough
+			if(total < 0) list.add(r);
+		}
+
+		// Eliminate invalid resources from being distributed
+		for(ResourceType r : list)
+		{
+			for(Colour c : playerResources.keySet())
+			{
+				playerResources.get(c).remove(r);
+			}
+		}
+
+		// Now, grant resources
+		for(Colour c : playerResources.keySet())
+		{
+			try
+			{
+				getPlayer(c).grantResources(playerResources.get(c), bank);
+			}
+			catch (BankLimitException e) {}
 		}
 
 		return playerResources;
@@ -76,7 +109,7 @@ public class ServerGame extends Game
 	 * @return the trade if nothing went wrong
 	 */
 	public Trade.WithBank determineTradeType(Trade.WithBank trade)
-			throws IllegalBankTradeException, CannotAffordException, IllegalPortTradeException
+			throws IllegalBankTradeException, CannotAffordException, IllegalPortTradeException, BankLimitException
 	{
 		ResourceType offerType = null, requestType = null;
 
@@ -143,8 +176,15 @@ public class ServerGame extends Game
 		}
 
 		// Perform swap and return
-		current.spendResources(offer);
-		current.grantResources(request);
+		try
+		{
+			current.spendResources(offer, bank);
+			current.grantResources(request, bank);
+		}
+		catch (BankLimitException e)
+		{
+			e.printStackTrace();
+		}
 		return trade;
 	}
 
@@ -157,7 +197,7 @@ public class ServerGame extends Game
 	 * @return the response status
 	 */
 	private Trade.WithBank processPortTrade(Trade.WithBank trade, Port port, ResourceType requestType, ResourceType offerType)
-			throws IllegalPortTradeException, CannotAffordException
+			throws IllegalPortTradeException, CannotAffordException, BankLimitException
 	{
 		int exchangeAmount = 3;
 
@@ -173,7 +213,7 @@ public class ServerGame extends Game
 		}
 
 		// Exchange resources
-		port.exchange(current, offer, request);
+		port.exchange(current, offer, request,bank);
 
 		return trade;
 	}
@@ -183,28 +223,33 @@ public class ServerGame extends Game
 	 * @param trade the trade object detailing the trade
 	 * @return the response status
 	 */
-	public Trade.WithPlayer processPlayerTrade(Trade.WithPlayer trade)
+	public Trade.WithPlayer processPlayerTrade(Trade.WithPlayer trade) throws IllegalTradeException
 	{
         // Find the recipient and extract the trade's contents
 		Resource.Counts offer = trade.getOffering();
 		Resource.Counts request = trade.getWanting();
 		Colour recipientColour = getPlayer(trade.getOther().getId()).getColour();
-		NetworkPlayer recipient = (NetworkPlayer) players.get(recipientColour), recipientCopy = (NetworkPlayer) recipient.copy();
+		NetworkPlayer recipient = (NetworkPlayer) players.get(recipientColour);
 		Player offerer = players.get(currentPlayer);
+
+		// Both players need to be able to afford the trade
+		if(!offerer.canAfford(processResources(offer)) || !recipient.canAfford(processResources(request)))
+		{
+			throw new IllegalTradeException(offerer.getColour(), recipientColour);
+		}
 
 		try
 		{
 			// Exchange resources
-			offerer.spendResources(offer);
-			recipient.grantResources(offer);
+			offerer.spendResources(offer, bank);
+			recipient.grantResources(offer, bank);
 			
-			recipient.spendResources(request);
-			offerer.grantResources(request);
+			recipient.spendResources(request, bank);
+			offerer.grantResources(request, bank);
 		}
-		catch(CannotAffordException e)
+		catch(CannotAffordException | BankLimitException e)
 		{
-			// Reset recipient and throw exception. Offerer is reset in above method
-			recipient.restoreCopy(recipientCopy);
+			e.printStackTrace();
 		}
 
         return trade;
@@ -220,17 +265,21 @@ public class ServerGame extends Game
 	{
 		Player current = players.get(col);
 		int oldAmount = current.getNumResources();
+		int discardAmount = 0;
 
-		// If the player can afford the request, then spend the resources
-		current.spendResources(processResources(discardRequest));
-
-		// Invalid request.
-		if(current.getNumResources() > 7)
+		for(ResourceType r : processResources(discardRequest).keySet())
 		{
-			// Give resources back, and throw exception
-			current.grantResources(discardRequest);
+			discardAmount += processResources(discardRequest).get(r);
+		}
+
+		// Invalid request
+		if(oldAmount - discardAmount > 7)
+		{
 			throw new InvalidDiscardRequest(oldAmount, current.getNumResources());
 		}
+
+		// If the player can afford the request, then spend the resources
+		current.spendResources(processResources(discardRequest), bank);
 	}
 
 	/**
@@ -240,7 +289,7 @@ public class ServerGame extends Game
 	 * @throws CannotAffordException 
 	 */
 	public void upgradeSettlement(Board.Point city)
-			throws CannotAffordException, CannotUpgradeException, InvalidCoordinatesException
+			throws CannotAffordException, CannotUpgradeException, InvalidCoordinatesException, BankLimitException
 	{
 		Player p = players.get(currentPlayer);
 		Node node = grid.getNode(city.getX(), city.getY());
@@ -251,8 +300,16 @@ public class ServerGame extends Game
 			throw new InvalidCoordinatesException(city.getX(), city.getY());
 		}
 
+		// Cannot upgrade
+		if(bank.getAvailableCities() == 0)
+		{
+			throw new BankLimitException(String.format("No more cities available"));
+		}
+
 		// Try to upgrade settlement
-		((NetworkPlayer) p).upgradeSettlement(node);
+		((NetworkPlayer) p).upgradeSettlement(node, bank);
+		bank.setAvailableSettlements(p.getColour(), bank.getAvailableSettlements(p.getColour()) + 1);
+		bank.setAvailableCities(p.getColour(),bank.getAvailableCities(p.getColour()) - 1);
     }
 	
 	/**
@@ -263,7 +320,7 @@ public class ServerGame extends Game
 	 * @throws SettlementExistsException 
 	 */
 	public void buildSettlement(Board.Point request)
-			throws CannotAffordException, IllegalPlacementException, SettlementExistsException, InvalidCoordinatesException
+			throws CannotAffordException, IllegalPlacementException, SettlementExistsException, InvalidCoordinatesException, BankLimitException
 	{
 		Player p = players.get(currentPlayer);
         Node node = grid.getNode(request.getX(), request.getY());
@@ -274,8 +331,15 @@ public class ServerGame extends Game
 			throw new InvalidCoordinatesException(request.getX(), request.getY());
 		}
 
+		// Cannot upgrade
+		if(bank.getAvailableSettlements() == 0)
+		{
+			throw new BankLimitException(String.format("No more settlements available"));
+		}
+
 		// Try to build settlement
-		((NetworkPlayer) p).buildSettlement(node);
+		((NetworkPlayer) p).buildSettlement(node, bank);
+		bank.setAvailableSettlements(p.getColour(), bank.getAvailableSettlements(p.getColour()) - 1);
 		
 		checkIfRoadBroken(node);
 	}
@@ -312,13 +376,19 @@ public class ServerGame extends Game
 	 * @return the bought card
 	 * @throws CannotAffordException 
 	 */
-	public Board.DevCard buyDevelopmentCard() throws CannotAffordException
+	public Board.DevCard buyDevelopmentCard() throws CannotAffordException, BankLimitException
 	{
         Player p = players.get(currentPlayer);
 
+		// Cannot upgrade
+		if(bank.getNumAvailableDevCards() == 0)
+		{
+			throw new BankLimitException(String.format("No more settlements available"));
+		}
+
 		// Try to buy card
 		// Return the response with the card parameter set
-        DevelopmentCardType card = ((NetworkPlayer)p).buyDevelopmentCard(DevelopmentCardType.chooseRandom());
+        DevelopmentCardType card = ((NetworkPlayer)p).buyDevelopmentCard(bank);
         return DevelopmentCardType.toProto(card);
 	}
 
@@ -383,7 +453,7 @@ public class ServerGame extends Game
 			if(n.getSettlement() != null && n.getSettlement().getPlayerColour().equals(otherColour))
 			{
 				NetworkPlayer p = (NetworkPlayer) players.get(currentPlayer);
-				p.takeResource(players.get(otherColour), resource);
+				p.takeResource(players.get(otherColour), resource, bank);
 				valid = true;
 			}
 		}
@@ -414,12 +484,12 @@ public class ServerGame extends Game
 	 * Choose a new resource.
 	 * @param r1 the first resource that was chosen
 	 * */
-	public void chooseResources(Resource.Kind r1)
+	public void chooseResources(Resource.Kind r1) throws BankLimitException
 	{
 		// Set up grant
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 		grant.put(ResourceType.fromProto(r1), 1);
-		players.get(currentPlayer).grantResources(grant);
+		players.get(currentPlayer).grantResources(grant,bank);
 	}
 	
 	/**
@@ -442,11 +512,11 @@ public class ServerGame extends Game
 				// Give p's resources of type 'r' to currentPlayer
 				int num = p.getResources().get(ResourceType.fromProto(r));
 				grant.put(ResourceType.fromProto(r), num);
-				p.spendResources(grant);
+				p.spendResources(grant, bank);
 				sum += num;
-			} 
-			catch (CannotAffordException e) { /* Will never happen */ }
-			players.get(currentPlayer).grantResources(grant);
+				players.get(currentPlayer).grantResources(grant, bank);
+			}
+			catch (CannotAffordException | BankLimitException e) { /* Will never happen */ }
 		}
 		
 		// Return message is string showing number of resources taken
@@ -461,8 +531,8 @@ public class ServerGame extends Game
 	 * @throws CannotBuildRoadException 
 	 * @throws CannotAffordException 
 	 */
-	public Events.Event buildRoad(Board.Edge edge) throws CannotAffordException,CannotBuildRoadException,
-			RoadExistsException, InvalidCoordinatesException
+	public Events.Event buildRoad(Board.Edge edge) throws CannotAffordException, CannotBuildRoadException,
+			RoadExistsException, InvalidCoordinatesException, BankLimitException
 	{
 		NetworkPlayer p = (NetworkPlayer) players.get(currentPlayer);
 		Board.Point p1 = edge.getA(), p2 = edge.getB();
@@ -480,8 +550,15 @@ public class ServerGame extends Game
 			throw new InvalidCoordinatesException(p2.getX(), p2.getY());
 		}
 
+		// Cannot upgrade
+		if(bank.getAvailableRoads(p.getColour()) == 0)
+		{
+			throw new BankLimitException(String.format("No more roads available"));
+		}
+
 		// Try to build the road and update the longest road
-		p.buildRoad(grid.getEdge(p1, p2));
+		p.buildRoad(grid.getEdge(p1, p2), bank);
+        bank.setAvailableRoads(p.getColour(), bank.getAvailableRoads(p.getColour()) - 1);
 		checkLongestRoad(false);
 		
 		// return success message
@@ -623,10 +700,5 @@ public class ServerGame extends Game
 	{
 		Player currentPlayer = players.get(this.currentPlayer);
 		currentPlayer.addVp(currentPlayer.getVp() + 1);
-	}
-
-	public void restorePlayerFromCopy(Player copy)
-	{
-		((NetworkPlayer)players.get(copy.getColour())).restoreCopy(copy);
 	}
 }

@@ -45,10 +45,10 @@ public class ClientTestHelper extends TestHelper
         Board.Edge e = edge.toEdgeProto();
 
         player = Board.Player.newBuilder().setId(clientGame.getPlayer(col).getId()).build();
-        clientGame.getPlayer().grantResources(Road.getRoadCost());
-        clientGame.setTurn(col);
         try
         {
+            clientGame.getPlayer(col).grantResources(Road.getRoadCost(), game.getBank());
+            clientGame.setTurn(col);
             clientGame.processRoad(e, player);
         }
         catch (Exception ex)
@@ -64,11 +64,11 @@ public class ClientTestHelper extends TestHelper
         Map<ResourceType, Integer> grant = Settlement.getSettlementCost();
 
         player = Board.Player.newBuilder().setId(clientGame.getPlayer(col).getId()).build();
-        clientGame.getPlayer().grantResources(grant);
-        clientGame.setTurn(col);
         try
         {
-            clientGame.processNewSettlement(n, player, false);
+            clientGame.getPlayer(col).grantResources(grant, game.getBank());
+            clientGame.setTurn(col);
+            clientGame.processNewSettlement(n, player);
         }
         catch (Exception e)
         {
@@ -83,11 +83,11 @@ public class ClientTestHelper extends TestHelper
         Map<ResourceType, Integer> grant = City.getCityCost();
 
         player = Board.Player.newBuilder().setId(clientGame.getPlayer(col).getId()).build();
-        clientGame.getPlayer().grantResources(grant);
-        clientGame.setTurn(col);
         try
         {
-            clientGame.processNewCity(n, player, false);
+            clientGame.getPlayer(col).grantResources(grant, game.getBank());
+            clientGame.setTurn(col);
+            clientGame.processNewCity(n, player);
         }
         catch (Exception e)
         {
@@ -101,10 +101,10 @@ public class ClientTestHelper extends TestHelper
          Board.Point point = h.toHexProto().getLocation();
 
          player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();
-         clientGame.getPlayer().grantResources(DevelopmentCardType.getCardCost());
-         clientGame.setTurn(c);
          try
          {
+             clientGame.getPlayer(c).grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+             clientGame.setTurn(c);
              clientGame.recordDevCard(Board.DevCard.newBuilder().setPlayableDevCard(Board.PlayableDevCard.KNIGHT).build(), player);
              clientGame.processPlayedDevCard(Board.PlayableDevCard.KNIGHT, player);
              clientGame.moveRobber(point);
@@ -117,11 +117,11 @@ public class ClientTestHelper extends TestHelper
 
     public void processBoughtDevCard(Board.DevCard type, Colour c)
     {
-        clientGame.getPlayer().grantResources(DevelopmentCardType.getCardCost());
-        clientGame.setTurn(c);
-        player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();
         try
         {
+            clientGame.getPlayer(c).grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+            clientGame.setTurn(c);
+            player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();
             clientGame.recordDevCard(type, player);
         }
         catch (Exception e)
@@ -132,12 +132,12 @@ public class ClientTestHelper extends TestHelper
 
      public void processPlayedDevCard(Board.DevCard type, Colour c)
      {
-         clientGame.getPlayer().grantResources(DevelopmentCardType.getCardCost());
-         clientGame.setTurn(c);
-
-         player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();
          try
          {
+             clientGame.getPlayer(c).grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+             clientGame.setTurn(c);
+
+             player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();
              clientGame.recordDevCard(type, player);
              clientGame.processPlayedDevCard(type.getPlayableDevCard(), player);
          }

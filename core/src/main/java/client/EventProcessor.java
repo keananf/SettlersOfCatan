@@ -70,10 +70,10 @@ public class EventProcessor implements Runnable
 				game.setTurn(); //TODO incorporate player ids
 				break;*/
 			case CITYBUILT:
-				game.processNewCity(ev.getCityBuilt(),ev.getInstigator(),false);
+				game.processNewCity(ev.getCityBuilt(),ev.getInstigator());
 				break;
 			case SETTLEMENTBUILT:
-				game.processNewSettlement(ev.getSettlementBuilt(),ev.getInstigator(),false);
+				game.processNewSettlement(ev.getSettlementBuilt(),ev.getInstigator());
 				break;
 			case ROADBUILT:
 				game.processRoad(ev.getRoadBuilt(),ev.getInstigator());

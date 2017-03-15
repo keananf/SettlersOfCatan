@@ -1,16 +1,18 @@
 package game.players;
 
-import intergroup.board.Board;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
+import exceptions.BankLimitException;
 import exceptions.CannotAffordException;
+import game.Bank;
 import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
 import grid.Edge;
 import grid.Node;
+import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.resource.Resource;
 
@@ -270,8 +272,10 @@ public abstract class Player
 	 * Grants resources to the player
 	 * @param newResources a map of resources to give to the player
 	 */
-	public void grantResources(Map<ResourceType, Integer> newResources)
+	public void grantResources(Map<ResourceType, Integer> newResources, Bank bank) throws BankLimitException
 	{
+		bank.spendResources(newResources);
+
 		// Add each new resource and its amount to the player's resource bank
 		for(ResourceType r : newResources.keySet())
 		{
@@ -287,7 +291,7 @@ public abstract class Player
 	 * Grants resources to the player
 	 * @param count a map of resources to give to the player
 	 */
-	public void grantResources(Resource.Counts count) throws CannotAffordException
+	public void grantResources(Resource.Counts count, Bank bank) throws CannotAffordException, BankLimitException
 	{
 		Map<ResourceType, Integer> newResources = new HashMap<ResourceType, Integer> ();
 		newResources.put(ResourceType.Brick, count.getBrick());
@@ -296,7 +300,7 @@ public abstract class Player
 		newResources.put(ResourceType.Grain, count.getGrain());
 		newResources.put(ResourceType.Lumber, count.getLumber());
 
-		grantResources(newResources);
+		grantResources(newResources, bank);
 	}
 
 
@@ -306,7 +310,7 @@ public abstract class Player
 	 * wants to construct
 	 * @throws CannotAffordException if the player does not have enough resources
 	 */
-	public void spendResources(Resource.Counts count) throws CannotAffordException
+	public void spendResources(Resource.Counts count, Bank bank) throws CannotAffordException
 	{
 		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer> ();
 		cost.put(ResourceType.Brick, count.getBrick());
@@ -315,7 +319,7 @@ public abstract class Player
 		cost.put(ResourceType.Grain, count.getGrain());
 		cost.put(ResourceType.Lumber, count.getLumber());
 
-		spendResources(cost);
+		spendResources(cost, bank);
 	}
 
 	/**
@@ -324,7 +328,7 @@ public abstract class Player
 	 * wants to construct
 	 * @throws CannotAffordException if the player does not have enough resources
 	 */
-	public void spendResources(Map<ResourceType, Integer> cost) throws CannotAffordException
+	public void spendResources(Map<ResourceType, Integer> cost, Bank bank) throws CannotAffordException
 	{
 		if(!canAfford(cost))
 			throw new CannotAffordException(resources, cost);
@@ -338,6 +342,7 @@ public abstract class Player
 			// Add to overall resource bank
 			resources.put(r, existing - value);
 		}
+		bank.grantResources(cost);
 	}
 
 	/**

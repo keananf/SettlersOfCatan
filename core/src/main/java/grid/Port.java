@@ -1,7 +1,9 @@
 package grid;
 
 import enums.ResourceType;
+import exceptions.BankLimitException;
 import exceptions.CannotAffordException;
+import game.Bank;
 import game.players.Player;
 import intergroup.board.Board;
 
@@ -189,10 +191,10 @@ public class Port extends Edge
 	 * @param offer the offer
 	 * @param request the request
 	 */
-    public void exchange(Player offerer, Map<ResourceType, Integer> offer, Map<ResourceType, Integer> request)
-			throws CannotAffordException
+    public void exchange(Player offerer, Map<ResourceType, Integer> offer, Map<ResourceType, Integer> request, Bank bank)
+			throws CannotAffordException, BankLimitException
 	{
-		offerer.spendResources(offer);
-		offerer.grantResources(request);
+		offerer.spendResources(offer, bank);
+		offerer.grantResources(request, bank);
     }
 }

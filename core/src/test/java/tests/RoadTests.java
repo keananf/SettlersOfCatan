@@ -25,28 +25,28 @@ public class RoadTests extends TestHelper
 	}
 
 	@Test
-	public void buildRoadTest() throws SettlementExistsException, CannotBuildRoadException, RoadExistsException
+	public void buildRoadTest() throws SettlementExistsException, CannotBuildRoadException, RoadExistsException, BankLimitException
 	{
 		// Grant resources and make settlement
-		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n);
 		
 		// Grant resources and Build road
-		p.grantResources(Road.getRoadCost());
-		buildRoad(n.getEdges().get(0));
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		buildRoad(p, n.getEdges().get(0));
 	}
 	
 	@Test(expected = CannotBuildRoadException.class)
-	public void cannotBuildRoadTest() throws CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public void cannotBuildRoadTest() throws CannotAffordException, CannotBuildRoadException, RoadExistsException, BankLimitException
 	{		
 		// Cannot build because there is no settlement
-		p.grantResources(Road.getRoadCost());
-		buildRoad(n.getEdges().get(0));
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		buildRoad(p, n.getEdges().get(0));
 	}
 
 	@Test(expected = InvalidCoordinatesException.class)
 	public void invalidCoordinatesTest() throws CannotAffordException, CannotBuildRoadException,
-			RoadExistsException, InvalidCoordinatesException
+			RoadExistsException, InvalidCoordinatesException, BankLimitException
 	{
 		// Set up request with invalid coordinates
 		Board.Edge.Builder e = n.getEdges().get(0).toEdgeProto().toBuilder();
@@ -63,26 +63,27 @@ public class RoadTests extends TestHelper
 
 	@Test
 	public void buildRoadTest2() throws CannotAffordException, CannotBuildRoadException,
-			RoadExistsException, InvalidCoordinatesException, SettlementExistsException
+			RoadExistsException, InvalidCoordinatesException, SettlementExistsException, BankLimitException
 	{
 		// Set up request
 		Board.Edge.Builder e = n.getEdges().get(0).toEdgeProto().toBuilder();
 
 		// Grant resources and build settlement so road construction is permitted
-		p.grantResources(Settlement.getSettlementCost());
-		p.grantResources(Road.getRoadCost());
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
+		p.grantResources(Road.getRoadCost(), game.getBank());
 		makeSettlement(p, n);
 
 		// Dont worry about granting resources or anything.
 		// The checks for invalid coordinates happens first.
 		game.setTurn(p.getColour());
-		buildRoad(n.getEdges().get(0));
+		buildRoad(p, n.getEdges().get(0));
 		assertEquals(p.getNumResources(), 0);
 		assertEquals(p.getRoads().size(), 1);
 	}
 
 	@Test
-	public void settlementBreaksRoadTest() throws SettlementExistsException, CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public void settlementBreaksRoadTest() throws SettlementExistsException, CannotAffordException,
+			BankLimitException, CannotBuildRoadException, RoadExistsException
 	{	
 		// Set up player 2
 		Player p2 = new NetworkPlayer(Colour.RED, "");
@@ -108,41 +109,41 @@ public class RoadTests extends TestHelper
 		
 		// Need a settlement before you can build a road.
 		// For roads 1 and 2
-		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n);
 		
 		// Need a settlement before you can build a road.
 		// For roads 3 and 4
-		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n6);
 		
 		// Build road 1
-		p.grantResources(Road.getRoadCost());
-		buildRoad(e1);
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		buildRoad(p, e1);
 		
 		// Build second road chained onto the first
-		p.grantResources(Road.getRoadCost());
-		buildRoad(e2);
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		buildRoad(p, e2);
 		
 		// Build third road chained onto the second
-		p.grantResources(Road.getRoadCost());
-		buildRoad(e3);
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		buildRoad(p, e3);
 		
 		// Build foreign settlement
-		p2.grantResources(Settlement.getSettlementCost());
+		p2.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p2, n3);
 		
 		// Build sixth road next to settlement 2
-		p.grantResources(Road.getRoadCost());
-		buildRoad(e6);
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		buildRoad(p, e6);
 		
 		// Build fifth road chained onto the sixth
-		p.grantResources(Road.getRoadCost());
-		buildRoad(e5);
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		buildRoad(p, e5);
 		
 		// Build fourth road chained onto the fifth.
-		p.grantResources(Road.getRoadCost());
-		buildRoad(e4);
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		buildRoad(p, e4);
 		
 		// Longest road is 3. Two separate road chains.
 		// Assert that they haven't been merged together
@@ -153,6 +154,7 @@ public class RoadTests extends TestHelper
 	@Test
 	public void settlementBreaksRoadTest2() throws SettlementExistsException, CannotAffordException,
 			CannotBuildRoadException, RoadExistsException, IllegalPlacementException, InvalidCoordinatesException
+			, BankLimitException
 	{
 		// Set up player 2
 		Player p2 = new NetworkPlayer(Colour.RED, "");
@@ -166,23 +168,23 @@ public class RoadTests extends TestHelper
 		Edge e3 = n2.getEdges().get(0).equals(e2) ? n2.getEdges().get(1) : n2.getEdges().get(0); // Third road 
 
 		// Need a settlement before you can build a road.
-		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n);
 		
 		// Build road 1
-		p.grantResources(Road.getRoadCost());
-		buildRoad(e1);
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		buildRoad(p, e1);
 		
 		// Build second road chained onto the first.
-		p.grantResources(Road.getRoadCost());
-		buildRoad(e2);
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		buildRoad(p, e2);
 		
 		// Build third road chained onto the second. 
-		p.grantResources(Road.getRoadCost());
-		buildRoad(e3);
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		buildRoad(p, e3);
 	
 		// Build foreign settlement in between second and third road.
-		p2.grantResources(Settlement.getSettlementCost());
+		p2.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p2, n2);
 
 		// Assert previous road chain of length three was broken.
@@ -191,15 +193,16 @@ public class RoadTests extends TestHelper
 	}
 	
 	@Test(expected = CannotAffordException.class)
-	public void cannotAffordRoadTest() throws SettlementExistsException, CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public void cannotAffordRoadTest() throws SettlementExistsException, CannotAffordException,
+			CannotBuildRoadException, RoadExistsException, BankLimitException
 	{
 		// Need a settlement before you can build a road.
-		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n);
 
 		// Try to build a road with no resources
 		assertFalse(hasResources(p));
-		p.buildRoad(n.getEdges().get(0));
+		p.buildRoad(n.getEdges().get(0), game.getBank());
 	}
 	
 	/**
@@ -210,30 +213,30 @@ public class RoadTests extends TestHelper
 	 * @throws RoadExistsException 
 	 */
 	@Test 
-	public void roadLengthTest() throws SettlementExistsException, CannotBuildRoadException, RoadExistsException
+	public void roadLengthTest() throws SettlementExistsException, CannotBuildRoadException, RoadExistsException, BankLimitException
 	{
 		Node n2 = game.getGrid().nodes.get(new Point(-1,0));
 		
 		// Make two settlements
-		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n);
-		p.grantResources(Settlement.getSettlementCost());
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n2);
 		
 		// Make three roads
 		for(int i = 0; i < n.getEdges().size(); i++)
 		{
 			Edge e = n.getEdges().get(i);
-			p.grantResources(Road.getRoadCost());
+			p.grantResources(Road.getRoadCost(), game.getBank());
 			
 			// Build road
-			buildRoad(e);
+			buildRoad(p, e);
 		}
 		
 		// Make another road
 		Edge e = n2.getEdges().get(0);
-		p.grantResources(Road.getRoadCost());
-		buildRoad(e);
+		p.grantResources(Road.getRoadCost(), game.getBank());
+		buildRoad(p, e);
 		
 		// Ensure four were built but that this player's longest road count
 		// is only 3

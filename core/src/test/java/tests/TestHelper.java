@@ -39,7 +39,7 @@ public class TestHelper
 		{
 			e.printStackTrace();
 		}
-		catch (InvalidCoordinatesException e)
+		catch (InvalidCoordinatesException | BankLimitException e)
 		{
 			e.printStackTrace();
 		}
@@ -51,38 +51,49 @@ public class TestHelper
 		return (Settlement) p.getSettlements().values().toArray()[p.getSettlements().values().size() - 1];
 	}
 
-	protected City makeCity(Node n)
+	protected City makeCity(Player p, Node n)
 	{
 		assertTrue(hasResources(p));
+		int old = p.getSettlements().size();
 
 		// Build settlement
 		try
 		{
-			((NetworkPlayer)p).upgradeSettlement(n);
+			game.setTurn(p.getColour());
+			game.upgradeSettlement(n.toProto());
 		}
 		catch (CannotAffordException | CannotUpgradeException e)
 		{
 			e.printStackTrace();
 		}
+		catch (BankLimitException | InvalidCoordinatesException e)
+		{
+			e.printStackTrace();
+		}
 
 		// Test it was built correctly and that resources were taken away
-		assertTrue(p.getSettlements().size() == 1);
+		assertTrue(p.getSettlements().size() == old);
 
 		return (City) p.getSettlements().values().toArray()[p.getSettlements().values().size() - 1];
 	}
 
-	protected Road buildRoad(Edge e) throws CannotBuildRoadException, RoadExistsException
+	protected Road buildRoad(Player p, Edge e) throws CannotBuildRoadException, RoadExistsException
 	{
 		int oldSize = p.getRoads().size();
 		
 		assertTrue(hasResources(p));
 		try
 		{
-			((NetworkPlayer)p).buildRoad(e);
+			game.setCurrentPlayer(p.getColour());
+			game.buildRoad(e.toEdgeProto());
 		}
 		catch (CannotAffordException ex)
 		{
 			ex.printStackTrace();
+		}
+		catch (InvalidCoordinatesException | BankLimitException e1)
+		{
+			e1.printStackTrace();
 		}
 
 		// Test it was built correctly and that resources were taken away
@@ -100,7 +111,7 @@ public class TestHelper
 		assertTrue(hasResources(p));
 		try
 		{
-			c = ((NetworkPlayer)p).buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
+			c = ((NetworkPlayer)p).buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
 		}
 		catch (CannotAffordException ex)
 		{

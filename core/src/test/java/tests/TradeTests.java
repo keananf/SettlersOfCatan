@@ -35,8 +35,8 @@ public class TradeTests extends TestHelper
         server = new Server();
         server.setGame(game);
     }
-    @Test
-    public void illegalTradeTest()
+    @Test(expected = IllegalTradeException.class)
+    public void illegalTradeTest() throws IllegalTradeException
     {
         // Set up player 2
         Player p2 = new NetworkPlayer(Colour.RED, "");
@@ -59,13 +59,10 @@ public class TradeTests extends TestHelper
         // Exception thrown and caught in processMove
         assertTrue(p.getNumResources() == 0 && p2.getNumResources() == 0);
         game.processPlayerTrade(playerTrade.build());
-
-        // assert failed
-        assertTrue(p.getNumResources() == 0 && p2.getNumResources() == 0);
     }
 
     @Test
-    public void playerTradeTest() throws IllegalTradeException
+    public void playerTradeTest() throws IllegalTradeException, BankLimitException
     {
         // Set up player 2
         Player p2 = new NetworkPlayer(Colour.RED, "");
@@ -75,10 +72,10 @@ public class TradeTests extends TestHelper
         // set up resources
         Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
         grant.put(ResourceType.Brick, 1);
-        p2.grantResources(grant);
+        p2.grantResources(grant, game.getBank());
         grant.put(ResourceType.Brick, 0);
         grant.put(ResourceType.Grain, 1);
-        p.grantResources(grant);
+        p.grantResources(grant, game.getBank());
 
         // Set up playerTrade move and offer and request
         Resource.Counts.Builder resource = Resource.Counts.newBuilder();
@@ -111,7 +108,7 @@ public class TradeTests extends TestHelper
 
     @Test(expected = CannotAffordException.class)
     public void cannotAffordBankTradeTest() throws IllegalTradeException, IllegalPortTradeException,
-            CannotAffordException, IllegalBankTradeException
+            CannotAffordException, IllegalBankTradeException, BankLimitException
     {
         Trade.WithBank.Builder trade = setUpBankTrade(new HashMap<ResourceType, Integer>(), new HashMap<ResourceType, Integer>());
         game.determineTradeType(trade.build());
@@ -119,15 +116,16 @@ public class TradeTests extends TestHelper
 
     @Test(expected = IllegalBankTradeException.class)
     public void invalidPortTradeRequestTest() throws IllegalTradeException, IllegalPortTradeException,
-            CannotAffordException, IllegalBankTradeException, SettlementExistsException, CannotBuildRoadException, RoadExistsException
+            CannotAffordException, IllegalBankTradeException, SettlementExistsException,
+            CannotBuildRoadException, RoadExistsException, BankLimitException
     {
         Port port = game.getGrid().ports.get(0);
 
         // Build settlement and road on port
-        p.grantResources(Settlement.getSettlementCost());
+        p.grantResources(Settlement.getSettlementCost(), game.getBank());
         makeSettlement(p, port.getX());
-        p.grantResources(Road.getRoadCost());
-        buildRoad(port);
+        p.grantResources(Road.getRoadCost(), game.getBank());
+        buildRoad(p, port);
 
         // Set up trade
         ResourceType receiveType = ResourceType.Brick;
@@ -138,7 +136,7 @@ public class TradeTests extends TestHelper
         // Give player resources in prep for trade
         Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
         grant.put(exchangeType, Port.EXCHANGE_AMOUNT);
-        p.grantResources(grant);
+        p.grantResources(grant, game.getBank());
         Trade.WithBank.Builder portTrade = setUpBankTrade(grant, req);
 
         // Mess up port trade so error is thrown. Request another resource as well.
@@ -154,15 +152,16 @@ public class TradeTests extends TestHelper
 
     @Test
     public void portTradeTest() throws IllegalTradeException, IllegalPortTradeException, CannotAffordException,
-            IllegalBankTradeException, SettlementExistsException, CannotBuildRoadException, RoadExistsException
+            IllegalBankTradeException, SettlementExistsException, CannotBuildRoadException, RoadExistsException,
+            BankLimitException
     {
         Port port = game.getGrid().ports.get(0);
 
         // Build settlement and road on port
-        p.grantResources(Settlement.getSettlementCost());
+        p.grantResources(Settlement.getSettlementCost(), game.getBank());
         makeSettlement(p, port.getX());
-        p.grantResources(Road.getRoadCost());
-        buildRoad(port);
+        p.grantResources(Road.getRoadCost(), game.getBank());
+        buildRoad(p, port);
 
         // Set up trade
         ResourceType receiveType = ResourceType.Brick;
@@ -173,7 +172,7 @@ public class TradeTests extends TestHelper
         // Give player resources in prep for trade
         Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
         grant.put(exchangeType, Port.EXCHANGE_AMOUNT);
-        p.grantResources(grant);
+        p.grantResources(grant, game.getBank());
         Trade.WithBank.Builder portTrade = setUpBankTrade(grant, req);
 
         // assert resources are set up
@@ -188,15 +187,16 @@ public class TradeTests extends TestHelper
 
     @Test(expected = IllegalBankTradeException.class)
     public void portIllegalDoubleTradeTest() throws IllegalTradeException, IllegalPortTradeException,
-            CannotAffordException, SettlementExistsException, CannotBuildRoadException, RoadExistsException, IllegalBankTradeException
+            CannotAffordException, SettlementExistsException, CannotBuildRoadException, RoadExistsException,
+            IllegalBankTradeException, BankLimitException
     {
         Port port = game.getGrid().ports.get(0);
 
         // Build settlement and road on port
-        p.grantResources(Settlement.getSettlementCost());
+        p.grantResources(Settlement.getSettlementCost(), game.getBank());
         makeSettlement(p, port.getX());
-        p.grantResources(Road.getRoadCost());
-        buildRoad(port);
+        p.grantResources(Road.getRoadCost(), game.getBank());
+        buildRoad(p, port);
 
         // Set up trade
         ResourceType receiveType = ResourceType.Brick;
@@ -207,7 +207,7 @@ public class TradeTests extends TestHelper
         // Give player resources in prep for trade
         Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
         grant.put(exchangeType, Port.EXCHANGE_AMOUNT * 2);
-        p.grantResources(grant);
+        p.grantResources(grant, game.getBank());
         Trade.WithBank.Builder portTrade = setUpBankTrade(grant, req);
 
         // Mess up port trade so error is thrown. Request another resource as well.
@@ -223,15 +223,15 @@ public class TradeTests extends TestHelper
 
     @Test
     public void portDoubleTradeTest() throws IllegalTradeException, IllegalPortTradeException, CannotAffordException,
-            IllegalBankTradeException, CannotBuildRoadException, RoadExistsException, SettlementExistsException
+            IllegalBankTradeException, CannotBuildRoadException, RoadExistsException, SettlementExistsException, BankLimitException
     {
         Port port = game.getGrid().ports.get(0);
 
         // Build settlement and road on port
-        p.grantResources(Settlement.getSettlementCost());
+        p.grantResources(Settlement.getSettlementCost(), game.getBank());
         makeSettlement(p, port.getX());
-        p.grantResources(Road.getRoadCost());
-        buildRoad(port);
+        p.grantResources(Road.getRoadCost(), game.getBank());
+        buildRoad(p, port);
 
         // Set up trade
         ResourceType receiveType = ResourceType.Brick;
@@ -242,7 +242,7 @@ public class TradeTests extends TestHelper
         // Give player resources in prep for trade
         Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
         grant.put(exchangeType, Port.EXCHANGE_AMOUNT * 2);
-        p.grantResources(grant);
+        p.grantResources(grant, game.getBank());
         Trade.WithBank.Builder portTrade = setUpBankTrade(grant, req);
 
         // assert resources are set up
@@ -256,13 +256,13 @@ public class TradeTests extends TestHelper
     }
 
     @Test
-    public void emptyTradeTest() throws IllegalTradeException
+    public void emptyTradeTest() throws IllegalTradeException, BankLimitException
     {
         // Set up player 2
         Player p2 = new NetworkPlayer(Colour.RED, "");
         Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
         grant.put(ResourceType.Brick, 1);
-        p2.grantResources(grant);
+        p2.grantResources(grant, game.getBank());
         p2.setId(Board.Player.Id.PLAYER_2);
         game.addPlayer(p2);
 
@@ -286,7 +286,8 @@ public class TradeTests extends TestHelper
     }
 
     @Test(expected = IllegalBankTradeException.class)
-    public void bankTradeIllegalAmounts() throws CannotAffordException, IllegalBankTradeException, IllegalPortTradeException
+    public void bankTradeIllegalAmounts() throws CannotAffordException, IllegalBankTradeException,
+            IllegalPortTradeException, BankLimitException
     {
         // Set up offers and requests
         Map<ResourceType, Integer> offer = new HashMap<ResourceType, Integer>();
@@ -296,7 +297,7 @@ public class TradeTests extends TestHelper
 
         // Grant player the offer so that the trade and complete
         // Assert resources are set up correctly
-        p.grantResources(offer);
+        p.grantResources(offer, game.getBank());
         assertTrue(p.getNumResources() == 3);
         assertEquals(new Integer(p.getResources().get(ResourceType.Grain)), new Integer(3));
         assertEquals(new Integer(p.getResources().get(ResourceType.Ore)), new Integer(0));
@@ -307,7 +308,8 @@ public class TradeTests extends TestHelper
     }
 
     @Test(expected = IllegalBankTradeException.class)
-    public void bankTradeIllegalAmounts2() throws CannotAffordException, IllegalBankTradeException, IllegalPortTradeException
+    public void bankTradeIllegalAmounts2() throws CannotAffordException, IllegalBankTradeException, IllegalPortTradeException,
+            BankLimitException
     {
         // Set up offers and requests
         Map<ResourceType, Integer> offer = new HashMap<ResourceType, Integer>();
@@ -317,7 +319,7 @@ public class TradeTests extends TestHelper
 
         // Grant player the offer so that the trade and complete
         // Assert resources are set up correctly
-        p.grantResources(offer);
+        p.grantResources(offer, game.getBank());
         assertTrue(p.getNumResources() == 5);
         assertEquals(new Integer(p.getResources().get(ResourceType.Grain)), new Integer(5));
         assertEquals(new Integer(p.getResources().get(ResourceType.Ore)), new Integer(0));
@@ -328,7 +330,8 @@ public class TradeTests extends TestHelper
     }
 
     @Test
-    public void bankTradeDoubleTrade() throws CannotAffordException, IllegalBankTradeException, IllegalPortTradeException
+    public void bankTradeDoubleTrade() throws CannotAffordException, IllegalBankTradeException,
+            IllegalPortTradeException, BankLimitException
     {
         // Set up offers and requests
         Map<ResourceType, Integer> offer = new HashMap<ResourceType, Integer>();
@@ -338,7 +341,7 @@ public class TradeTests extends TestHelper
 
         // Grant player the offer so that the trade and complete
         // Assert resources are set up correctly
-        p.grantResources(offer);
+        p.grantResources(offer, game.getBank());
         assertTrue(p.getNumResources() == 8);
         assertEquals(new Integer(p.getResources().get(ResourceType.Grain)), new Integer(8));
         assertEquals(new Integer(p.getResources().get(ResourceType.Ore)), new Integer(0));
@@ -354,7 +357,8 @@ public class TradeTests extends TestHelper
     }
 
     @Test(expected = IllegalBankTradeException.class)
-    public void bankTradeDoubleTradeInvalidRequest() throws CannotAffordException, IllegalBankTradeException, IllegalPortTradeException
+    public void bankTradeDoubleTradeInvalidRequest() throws CannotAffordException, IllegalBankTradeException,
+            IllegalPortTradeException, BankLimitException
     {
         // Set up offers and requests
         Map<ResourceType, Integer> offer = new HashMap<ResourceType, Integer>();
@@ -364,7 +368,7 @@ public class TradeTests extends TestHelper
 
         // Grant player the offer so that the trade and complete
         // Assert resources are set up correctly
-        p.grantResources(offer);
+        p.grantResources(offer, game.getBank());
         assertTrue(p.getNumResources() == 8);
         assertEquals(new Integer(p.getResources().get(ResourceType.Grain)), new Integer(8));
         assertEquals(new Integer(p.getResources().get(ResourceType.Ore)), new Integer(0));
@@ -375,7 +379,8 @@ public class TradeTests extends TestHelper
     }
 
     @Test
-    public void bankTradeTest() throws CannotAffordException, IllegalBankTradeException, IllegalPortTradeException
+    public void bankTradeTest() throws CannotAffordException, IllegalBankTradeException,
+            IllegalPortTradeException, BankLimitException
     {
         // Set up offers and requests
         Map<ResourceType, Integer> offer = new HashMap<ResourceType, Integer>();
@@ -385,7 +390,7 @@ public class TradeTests extends TestHelper
 
         // Grant player the offer so that the trade and complete
         // Assert resources are set up correctly
-        p.grantResources(offer);
+        p.grantResources(offer, game.getBank());
         assertTrue(p.getNumResources() == 4);
         assertEquals(new Integer(p.getResources().get(ResourceType.Grain)), new Integer(4));
         assertEquals(new Integer(p.getResources().get(ResourceType.Ore)), new Integer(0));
@@ -401,7 +406,7 @@ public class TradeTests extends TestHelper
     }
 
     @Test
-    public void tradePhaseTest() throws SettlementExistsException, IOException
+    public void tradePhaseTest() throws SettlementExistsException, IOException, BankLimitException
     {
         // Set up player 2
         Player p2 = new NetworkPlayer(Colour.RED, "");
@@ -422,13 +427,13 @@ public class TradeTests extends TestHelper
         // allocate resources so trade will succeed
         Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
         grant.put(ResourceType.Brick, 1);
-        p2.grantResources(grant);
+        p2.grantResources(grant, game.getBank());
         grant.put(ResourceType.Brick, 0);
         grant.put(ResourceType.Grain, 1);
-        p.grantResources(grant);
+        p.grantResources(grant, game.getBank());
 
         // Build settlement. IN BUILD PHASE
-        p.grantResources(Settlement.getSettlementCost());
+        p.grantResources(Settlement.getSettlementCost(), game.getBank());
         makeSettlement(p, n);
 
         // Assert resources set up
@@ -459,7 +464,7 @@ public class TradeTests extends TestHelper
 
         // Try to upgrade settlement. WONT WORK BECAUSE NOW IN TRADE PHASE
         int old = p.getNumResources();
-        p.grantResources(City.getCityCost());
+        p.grantResources(City.getCityCost(), game.getBank());
         assertTrue(p.getNumResources() > old);
         server.processMessage(Messages.Message.newBuilder().setRequest(
                 Requests.Request.newBuilder().setBuildCity(n.toProto()).build()).build(), p.getColour());

@@ -286,4 +286,8 @@ public abstract class Game
 		players.put(clientPlayer.getColour(), clientPlayer);
 	}
 
+	public Bank getBank()
+	{
+		return bank;
+	}
 }

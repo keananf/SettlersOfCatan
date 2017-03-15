@@ -217,7 +217,7 @@ public class ClientProcessTests extends ClientTestHelper
     }
 
     @Test
-    public void largestArmyTest()
+    public void largestArmyTest() throws BankLimitException
     {
         Player p  = clientPlayer;
         Player p2 = new LocalPlayer(Colour.RED, "");
@@ -358,6 +358,7 @@ public class ClientProcessTests extends ClientTestHelper
     @Test
     public void diceAndResourceTest()
     {
+        Player p  = clientPlayer;
         Node n = clientGame.getGrid().getNode(-1, 0);
         int dice = n.getHexes().get(0).getChit();
 

@@ -1,11 +1,11 @@
 package server;
 
 import enums.Colour;
+import exceptions.BankLimitException;
 import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
 import game.Game;
-import game.players.NetworkPlayer;
 import game.players.Player;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
@@ -17,7 +17,10 @@ import intergroup.trade.Trade;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Server implements Runnable
@@ -165,7 +168,6 @@ public class Server implements Runnable
 	{
 		Request request = msg.getRequest();
 		Event.Builder ev = Event.newBuilder();
-		Player copy = ((NetworkPlayer)game.getPlayers().get(colour)).copy();
 		boolean invalid = false;
 
 		try
@@ -248,8 +250,6 @@ public class Server implements Runnable
 		}
 		catch(Exception e)
 		{
-			// Error. Reset player and return exception message
-			game.restorePlayerFromCopy(copy);
 			invalid = true;
 
 			if(connections.containsKey(colour))
@@ -605,7 +605,7 @@ public class Server implements Runnable
 	 * @return the status of the trade "accepted, denied, offer"
 	 */
 	private Trade.WithBank processTradeType(Trade.Kind request, Message msg) throws IllegalPortTradeException,
-			IllegalBankTradeException, CannotAffordException, IOException
+			IllegalBankTradeException, CannotAffordException, IOException, BankLimitException
 	{
 		tradePhase = true;
 

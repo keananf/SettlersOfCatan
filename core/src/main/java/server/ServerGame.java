@@ -40,15 +40,13 @@ public class ServerGame extends Game
 		Map<Colour, Map<ResourceType, Integer>> playerResources = new HashMap<Colour, Map<ResourceType, Integer>>();
 		List<ResourceType> list = new ArrayList<ResourceType>();
 
-		// for each player
+		if(dice == 7) return playerResources;
+
+		// for each player, figure out what their grant should be
 		for(Player player : players.values())
 		{
-			if(dice != 7)
-			{
-				Map<ResourceType, Integer> grant = getNewResources(dice, player.getColour());
-				playerResources.put(player.getColour(), grant);
-			}
-
+			Map<ResourceType, Integer> grant = getNewResources(dice, player.getColour());
+			playerResources.put(player.getColour(), grant);
 		}
 
 		// For each resource type, ensure there is enough to go around
@@ -56,7 +54,7 @@ public class ServerGame extends Game
 		{
 			int total = bank.getAvailableResources().get(r);
 
-			// For each player's new amount of 'r'
+			// Subtract each player's new amount of 'r'
 			for(Colour c : playerResources.keySet())
 			{
 				total -= playerResources.get(c).containsKey(r) ? playerResources.get(c).get(r) : 0;
@@ -66,7 +64,7 @@ public class ServerGame extends Game
 			if(total < 0) list.add(r);
 		}
 
-		// Eliminate invalid resources from being distributed
+		// Prevent invalid resources from being distributed
 		for(ResourceType r : list)
 		{
 			for(Colour c : playerResources.keySet())

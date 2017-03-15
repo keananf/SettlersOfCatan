@@ -1,6 +1,8 @@
 package tests;
 
 import enums.Colour;
+import enums.DevelopmentCardType;
+import enums.ResourceType;
 import exceptions.*;
 import game.build.City;
 import game.build.Road;
@@ -12,6 +14,8 @@ import intergroup.board.Board;
 import intergroup.resource.Resource;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -206,6 +210,61 @@ public class GameAndResourcesTests extends TestHelper
 		p.grantResources(Road.getRoadCost(), game.getBank());
 		buildRoad(p, n.getEdges().get(0));
 		assertTrue(game.getBank().getAvailableRoads() == roadLimit - 1);
+	}
 
+	@Test(expected = BankLimitException.class)
+	public void devCardLimitTest() throws BankLimitException, CannotAffordException
+	{
+		game.setCurrentPlayer(p.getColour());
+
+		// Grant player all dev cards
+		int amount = game.getBank().getNumAvailableDevCards();
+		for(int i = 0; i < amount; i++)
+		{
+			p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+			game.buyDevelopmentCard();
+		}
+
+		int num = 0;
+		// Check number of dev cards
+		for(DevelopmentCardType d : p.getDevelopmentCards().keySet())
+		{
+			num+= p.getDevelopmentCards().get(d);
+		}
+
+		// Assert player has all dev cards
+		assertEquals(amount, num);
+
+		// Try to buy one more to cause exception
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+		game.buyDevelopmentCard();
+	}
+
+	@Test
+	public void resourceLimitTest() throws BankLimitException, CannotAffordException, SettlementExistsException
+	{
+		int amount = 19;
+
+		// Make settlement
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
+		makeSettlement(p, n);
+
+		// Get chit and simulate a dice roll 19 times.
+		// Grants all of this resource.
+		int chit = n.getHexes().get(0).getChit();
+		ResourceType r = n.getHexes().get(0).getResource();
+		for(int i = 0; i < amount; i++)
+		{
+			game.allocateResources(chit);
+		}
+
+		// Assert player has all of this resource
+		assertTrue(p.getResources().get(r) == amount);
+		assertTrue(0 == game.getBank().getAvailableResources().get(r));
+
+		// Attempt to grant again, and check that the resulting map is empty
+		Map<Colour, Map<ResourceType, Integer>> map = game.allocateResources(chit);
+		assertTrue(map.get(p.getColour()).size() == 0);
+		assertTrue(map.size() == 1);
 	}
 }

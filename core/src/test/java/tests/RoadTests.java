@@ -57,7 +57,7 @@ public class RoadTests extends TestHelper
 
 		// Dont worry about granting resources or anything.
 		// The checks for invalid coordinates happens first.
-		game.setTurn(p.getColour());
+		game.setCurrentPlayer(p.getColour());
 		game.buildRoad(e.build());
 	}
 
@@ -75,7 +75,7 @@ public class RoadTests extends TestHelper
 
 		// Dont worry about granting resources or anything.
 		// The checks for invalid coordinates happens first.
-		game.setTurn(p.getColour());
+		game.setCurrentPlayer(p.getColour());
 		buildRoad(p, n.getEdges().get(0));
 		assertEquals(p.getNumResources(), 0);
 		assertEquals(p.getRoads().size(), 1);

@@ -65,7 +65,7 @@ public class GameAndResourcesTests extends TestHelper
 		// Make a move robber request with invalid hex coordinates
 		Board.Point.Builder point = Board.Point.newBuilder().setX(-10).setY(-15);
 
-		game.setTurn(p.getColour());
+		game.setCurrentPlayer(p.getColour());
 		game.moveRobber(point.build());
 	}
 
@@ -94,7 +94,7 @@ public class GameAndResourcesTests extends TestHelper
 		Hex h = game.getGrid().getHexWithRobber();
 
 		// Move and check
-		game.setTurn(p.getColour());
+		game.setCurrentPlayer(p.getColour());
 		game.moveRobber(point.build());
 		game.takeResource(p2.getId());
 		assertNotEquals(h, game.getGrid().getHexWithRobber());

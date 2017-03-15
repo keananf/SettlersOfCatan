@@ -32,7 +32,7 @@ public class TestHelper
 		// Build settlement
 		try
 		{
-			game.setTurn(p.getColour());
+			game.setCurrentPlayer(p.getColour());
 			game.buildSettlement(n.toProto());
 		}
 		catch (IllegalPlacementException | CannotAffordException e)
@@ -59,7 +59,7 @@ public class TestHelper
 		// Build settlement
 		try
 		{
-			game.setTurn(p.getColour());
+			game.setCurrentPlayer(p.getColour());
 			game.upgradeSettlement(n.toProto());
 		}
 		catch (CannotAffordException | CannotUpgradeException e)

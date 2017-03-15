@@ -23,27 +23,12 @@ import java.util.*;
 public class ServerGame extends Game
 {
 	private Random dice;
-	private int current; // index of current player
-	protected int numPlayers;
-	public static final int NUM_PLAYERS = 4;
 
 	public ServerGame()
 	{
 		super();
 		dice = new Random();
 	}
-
-	/**
-	 * Chooses first player.
-	 */
-	public void chooseFirstPlayer()
-	{
-		int dice = this.dice.nextInt(NUM_PLAYERS);
-		
-		current = dice;
-		setCurrentPlayer(getPlayersAsList()[dice].getColour());
-	}
-
 
 	/**
 	 * Assigns resources to each player based upon their settlements and the dice
@@ -497,30 +482,39 @@ public class ServerGame extends Game
 	 * @param r the resource to take
 	 * @return the sum of resources of the given type that were taken
 	 */
-	public int playMonopolyCard(Resource.Kind r)
+	public Board.MultiSteal playMonopolyCard(Resource.Kind r)
 	{
-        Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+		Board.MultiSteal.Builder multiSteal = Board.MultiSteal.newBuilder();
+		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+		ResourceType type = ResourceType.fromProto(r);
 		int sum = 0;
 
 		// for each player
 		for(Player p : players.values())
 		{
-			if(p.equals(currentPlayer)) continue;
-			
+			if(p.getColour().equals(currentPlayer)) continue;
+			int num = p.getResources().get(type);
+
 			try
 			{
 				// Give p's resources of type 'r' to currentPlayer
-				int num = p.getResources().get(ResourceType.fromProto(r));
-				grant.put(ResourceType.fromProto(r), num);
+				grant.put(type, num);
 				p.spendResources(grant, bank);
 				sum += num;
 				players.get(currentPlayer).grantResources(grant, bank);
 			}
 			catch (CannotAffordException | BankLimitException e) { /* Will never happen */ }
+
+			// Set up steal event
+			Board.Steal.Builder steal = Board.Steal.newBuilder();
+			steal.setQuantity(num).setResource(r);
+			steal.setVictim(Board.Player.newBuilder().setId(p.getId()).build());
+			multiSteal.addThefts(steal.build());
 		}
-		
-		// Return message is string showing number of resources taken
-        return sum;
+
+		// Grant resources
+		grant.put(type, sum);
+		return multiSteal.build();
 	}
 	
 	/**
@@ -615,7 +609,7 @@ public class ServerGame extends Game
 	public EmptyOuterClass.Empty changeTurn()
 	{
 		// Update turn and set event.
-		setCurrentPlayer(getPlayersAsList()[++current % NUM_PLAYERS].getColour());
+		setCurrentPlayer(getNextPlayer());
 		return EmptyOuterClass.Empty.getDefaultInstance();
 	}
 
@@ -689,11 +683,6 @@ public class ServerGame extends Game
 	public Map<Colour, Player> getPlayers()
 	{
 		return players;
-	}
-
-	public Player[] getPlayersAsList()
-	{
-		return players.values().toArray(new Player[]{});
 	}
 
 	private void grantVpPoint()

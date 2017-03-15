@@ -1,8 +1,5 @@
 package tests;
 
-import intergroup.board.Board;
-import intergroup.Messages;
-import intergroup.Requests;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
@@ -14,12 +11,17 @@ import game.players.Player;
 import grid.Edge;
 import grid.Hex;
 import grid.Node;
+import intergroup.Messages;
+import intergroup.Requests;
+import intergroup.board.Board;
+import intergroup.resource.Resource;
 import org.junit.Before;
 import org.junit.Test;
-import intergroup.resource.Resource;
 import server.Server;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -170,38 +172,49 @@ public class DevelopmentCardTests extends TestHelper
 		assertEquals(1, p.getVp());
 		assertEquals(3, p2.getVp());
 	}
-/*
+
 	@Test
-	public void playMonopolyTest() throws DoesNotOwnException, CannotAffordException
+	public void playMonopolyTest() throws DoesNotOwnException, CannotAffordException, IOException, BankLimitException
 	{
 		// Grant Card
-		p.grantResources(DevelopmentCardType.getCardCost());
-		p.buyDevelopmentCard(DevelopmentCardType.Monopoly);
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+		p.buyDevelopmentCard(DevelopmentCardType.Monopoly, game.getBank());
 
-		// Set-up resources to be taken when playing the development card 
-		Player p2 = new NetworkPlayer(Colour.RED, "");
+		// Set up resources grant
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 		ResourceType r = ResourceType.Brick;
-		
-		// Give resources to new player and add them to game
 		grant.put(r, 2);
-		game.addPlayer(p2);
-		p2.grantResources(grant);
 
-		// Set up request
-		PlayMonopolyCardRequest.Builder request = PlayMonopolyCardRequest.newBuilder();
-		request.setResource(ResourceType.toProto(r));
+		// Set-up resources to be taken when playing the development card 
+		Player p2 = new NetworkPlayer(Colour.RED, ""), p3 = new NetworkPlayer(Colour.ORANGE, "");
+		p2.grantResources(grant, game.getBank());
+		p2.setId(Board.Player.Id.PLAYER_2);
+		p3.grantResources(grant, game.getBank());
+		p3.setId(Board.Player.Id.PLAYER_3);
+		game.addPlayer(p2);
+		game.addPlayer(p3);
+
+		// Set up knight card request, play the card
+		Requests.Request.Builder req = Requests.Request.newBuilder();
+		req.setPlayDevCard(Board.PlayableDevCard.MONOPOLY);
+		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Monopoly) == 1);
+		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
+		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
+		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Monopoly) == 0);
+
+		// Set up choose resource request
+		req.clearPlayDevCard().setChooseResource(ResourceType.toProto(r));
 
 		// Play request and assert resources were transferred
 		assertEquals(2, p2.getNumResources());
+		assertEquals(2, p3.getNumResources());
 		assertEquals(0, p.getNumResources());
-		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Monopoly) == 1);
-
-		game.playMonopolyCard(request.build());
+		server.processMessage(Messages.Message.newBuilder().setRequest(req).build(), p.getColour());
 		assertEquals(0, p2.getNumResources());
-		assertEquals(2, p.getNumResources());
-		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Monopoly) == 0);
-	}*/
+		assertEquals(0, p3.getNumResources());
+		assertEquals(4, p.getNumResources());
+	}
 
 	@Test
 	public void playKnightNoResourcesTest() throws Exception
@@ -220,7 +233,7 @@ public class DevelopmentCardTests extends TestHelper
 		makeSettlement(p2, hex.getNodes().get(0));
 		game.setCurrentPlayer(p.getColour());
 
-		// Set up knight card request, grant the card, play the card
+		// Set up knight card request, play the card
 		Requests.Request.Builder req = Requests.Request.newBuilder();
 		req.setPlayDevCard(Board.PlayableDevCard.KNIGHT);
 		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Knight) == 1);

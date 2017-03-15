@@ -28,6 +28,8 @@ public abstract class Game
 	protected int longestRoad;
 	protected int largestArmy;
 	protected Bank bank;
+	protected int numPlayers;
+	protected int current; // index of current player
 	public static final int NUM_PLAYERS = 4;
 	public static final int MIN_ROAD_LENGTH = 5;
 	public static final int MIN_ARMY_SIZE = 3;
@@ -46,7 +48,7 @@ public abstract class Game
 	 * @param c the colour to get the new resources for
 	 * @return the map of new resources to grant
 	 */
-	protected Map<ResourceType, Integer> getNewResources(int dice, Colour c)
+	public Map<ResourceType, Integer> getNewResources(int dice, Colour c)
 	{
 		int resourceLimit = 7;
 		Player player = players.get(c);
@@ -218,6 +220,15 @@ public abstract class Game
 		}
 	}
 
+
+	/**
+	 * Chooses first player.
+	 */
+	public void chooseFirstPlayer()
+	{
+		setCurrentPlayer(getPlayer(Board.Player.Id.PLAYER_1).getColour());
+	}
+
 	/**
 	 * @return the grid
 	 */
@@ -243,12 +254,16 @@ public abstract class Game
 	}
 
 	/**
-	 * Sets the turn to the given colour
-	 * @param colour the new turn
+	 * @return the next player
 	 */
-	public void setTurn(Colour colour)
+	public Colour getNextPlayer()
 	{
-		setCurrentPlayer(colour);
+		return getPlayer(Board.Player.Id.values()[++current % NUM_PLAYERS]).getColour();
+	}
+
+	public Player[] getPlayersAsList()
+	{
+		return players.values().toArray(new Player[]{});
 	}
 
 	/**

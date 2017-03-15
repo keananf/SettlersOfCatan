@@ -65,10 +65,9 @@ public class EventProcessor implements Runnable
 			case GAMEWON:
 				game.setGameOver();
 				break;
-			/*
 			case TURNENDED:
-				game.setTurn(); //TODO incorporate player ids
-				break;*/
+				game.setCurrentPlayer(game.getNextPlayer());
+				break;
 			case CITYBUILT:
 				game.processNewCity(ev.getCityBuilt(),ev.getInstigator());
 				break;
@@ -79,7 +78,7 @@ public class EventProcessor implements Runnable
 				game.processRoad(ev.getRoadBuilt(),ev.getInstigator());
 				break;
 			case ROLLED:
-				game.processDice(ev.getRolled().getA()+ev.getRolled().getB());
+				game.processDice(ev.getRolled().getA()+ev.getRolled().getB(), ev.getRolled().getResourceAllocationList());
 				break;
 			case ROBBERMOVED:
 				game.moveRobber(ev.getRobberMoved());
@@ -92,7 +91,34 @@ public class EventProcessor implements Runnable
 				break;
 			case BEGINGAME:
 				game.setBoard(ev.getBeginGame());
-
+				break;
+			case CHATMESSAGE:
+				game.writeMessage(ev.getChatMessage(), ev.getInstigator());
+				break;
+			case BANKTRADE:
+				game.processBankTrade(ev.getBankTrade(), ev.getInstigator());
+				break;
+			case PLAYERTRADE:
+				game.processPlayerTrade(ev.getPlayerTrade(), ev.getInstigator());
+				break;
+			case LOBBYUPDATE:
+				game.processPlayers(ev.getLobbyUpdate(), ev.getInstigator());
+				break;
+			case CARDSDISCARDED:
+				game.processDiscard(ev.getCardsDiscarded(), ev.getInstigator());
+				break;
+			case MONOPOLYRESOLUTION:
+				game.processMonopoly(ev.getMonopolyResolution(), ev.getInstigator());
+				break;
+			case RESOURCECHOSEN:
+				game.processResourceChosen(ev.getResourceChosen(), ev.getInstigator());
+				break;
+			case RESOURCESTOLEN:
+				game.processResourcesStolen(ev.getResourceStolen(), ev.getInstigator());
+				break;
+			case ERROR:
+				// TODO display error?
+				break;
 		}
     }
 	/**

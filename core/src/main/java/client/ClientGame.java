@@ -4,12 +4,8 @@ import board.*;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
-<<<<<<< HEAD
-import game.GameState;
-=======
 import exceptions.*;
 import game.Game;
->>>>>>> branch 'master' of https://github.com/keananf/SettlersOfCatan
 import game.build.Building;
 import game.build.City;
 import game.build.Road;

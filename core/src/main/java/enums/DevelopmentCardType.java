@@ -136,7 +136,7 @@ public enum DevelopmentCardType
             return DevelopmentCardType.Knight;
 
         if(playedDevCard.equals(PlayableDevCard.MONOPOLY))
-            return DevelopmentCardType.YearOfPlenty;
+            return DevelopmentCardType.Monopoly;
 
         if(playedDevCard.equals(PlayableDevCard.ROAD_BUILDING))
             return DevelopmentCardType.RoadBuilding;

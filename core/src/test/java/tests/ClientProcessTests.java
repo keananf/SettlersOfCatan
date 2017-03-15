@@ -1,8 +1,8 @@
 package tests;
 
-import intergroup.board.Board;
 import enums.Colour;
 import enums.DevelopmentCardType;
+import enums.ResourceType;
 import exceptions.*;
 import game.build.Building;
 import game.build.City;
@@ -13,10 +13,17 @@ import grid.Edge;
 import grid.Hex;
 import grid.HexGrid;
 import grid.Node;
+import intergroup.board.Board;
 import intergroup.lobby.Lobby;
+import intergroup.resource.Resource;
+import intergroup.trade.Trade;
 import org.junit.Test;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -340,6 +347,98 @@ public class ClientProcessTests extends ClientTestHelper
     }
 
     @Test
+    public void stealTest() throws CannotAffordException
+    {
+        Player p  = clientPlayer;
+        Player p2 = new LocalPlayer(Colour.RED, "");
+        p2.setId(Board.Player.Id.PLAYER_2);
+        clientGame.addPlayer(p2);
+
+        // Set up resources
+        ResourceType r = ResourceType.Brick;
+        Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+        resources.put(r, 3);
+        p2.grantResources(resources);
+
+        // Set up Steal
+        Board.Steal.Builder steal = Board.Steal.newBuilder();
+        steal.setQuantity(resources.get(r)).setResource(ResourceType.toProto(r));
+        steal.setVictim(Board.Player.newBuilder().setId(p2.getId()).build());
+
+        // Assert resources before and after steal
+        assertTrue(0 == p.getResources().get(r));
+        assertTrue(0 == p.getNumResources());
+        assertTrue(resources.get(r) == p2.getResources().get(r));
+        assertTrue(resources.get(r) == p2.getNumResources());
+        clientGame.processResourcesStolen(steal.build(), Board.Player.newBuilder().setId(p.getId()).build());
+        assertTrue(0 == p2.getResources().get(r));
+        assertTrue(0 == p2.getNumResources());
+        assertTrue(resources.get(r) == p.getResources().get(r));
+        assertTrue(resources.get(r) == p.getNumResources());
+    }
+
+    @Test
+    public void bankTradeTest() throws CannotAffordException
+    {
+        Player p = clientPlayer;
+
+        // Set up offering and wanting
+        ResourceType r = ResourceType.Brick, r2 = ResourceType.Grain;
+        Map<ResourceType, Integer> offering = new HashMap<ResourceType, Integer>();
+        Map<ResourceType, Integer> wanting = new HashMap<ResourceType, Integer>();
+        offering.put(r, 4);
+        wanting.put(r2, 1);
+        p.grantResources(offering);
+
+        // Set up Trade
+        Trade.WithBank.Builder bankTrade = Trade.WithBank.newBuilder();
+        bankTrade.setOffering(processResources(offering)).setWanting(processResources(wanting));
+
+        // Assert offering before and after steal
+        assertTrue(offering.get(r) == p.getResources().get(r));
+        assertTrue(offering.get(r) == p.getNumResources());
+        assertTrue(p.getResources().get(r2) == 0);
+        clientGame.processBankTrade(bankTrade.build(), Board.Player.newBuilder().setId(p.getId()).build());
+        assertTrue(wanting.get(r2) == p.getResources().get(r2));
+        assertTrue(wanting.get(r2) == p.getNumResources());
+        assertTrue(0 == p.getResources().get(r));
+    }
+
+    @Test
+    public void playerTradeTest() throws CannotAffordException
+    {
+        Player p  = clientPlayer;
+        Player p2 = new LocalPlayer(Colour.RED, "");
+        p2.setId(Board.Player.Id.PLAYER_2);
+        clientGame.addPlayer(p2);
+
+        // Set up offering and wanting
+        ResourceType r = ResourceType.Brick, r2 = ResourceType.Grain;
+        Map<ResourceType, Integer> offering = new HashMap<ResourceType, Integer>();
+        Map<ResourceType, Integer> wanting = new HashMap<ResourceType, Integer>();
+        offering.put(r, 1);
+        wanting.put(r2, 1);
+        p.grantResources(offering);
+        p2.grantResources(wanting);
+
+        // Set up Trade
+        Trade.WithPlayer.Builder playerTrade = Trade.WithPlayer.newBuilder();
+        playerTrade.setOffering(processResources(offering)).setWanting(processResources(wanting));
+        playerTrade.setOther(Board.Player.newBuilder().setId(p2.getId()));
+
+        // Assert offering before and after steal
+        assertTrue(offering.get(r) == p.getResources().get(r));
+        assertTrue(offering.get(r) == p.getNumResources());
+        assertTrue(wanting.get(r2) == p2.getResources().get(r2));
+        assertTrue(wanting.get(r2) == p2.getNumResources());
+        clientGame.processPlayerTrade(playerTrade.build(), Board.Player.newBuilder().setId(p.getId()).build());
+        assertTrue(offering.get(r) == p2.getResources().get(r));
+        assertTrue(offering.get(r) == p2.getNumResources());
+        assertTrue(wanting.get(r2) == p.getResources().get(r2));
+        assertTrue(wanting.get(r2) == p.getNumResources());
+    }
+
+    @Test
     public void playedDevCardTest() throws DoesNotOwnException
     {
         // Move and check
@@ -360,14 +459,31 @@ public class ClientProcessTests extends ClientTestHelper
     {
         Node n = clientGame.getGrid().getNode(-1, 0);
         int dice = n.getHexes().get(0).getChit();
+        List<Board.ResourceAllocation> list = new ArrayList<Board.ResourceAllocation>();
 
         // Build Settlement so resources can be granted
         processSettlementEvent(n, p.getColour());
 
+        list.add(Board.ResourceAllocation.newBuilder()
+                .setPlayer(Board.Player.newBuilder().setId(p.getId()).build())
+                .setResources(processResources(clientGame.getNewResources(dice, p.getColour()))).build());
+
         // Move and check
         assertEquals(0, clientGame.getPlayer().getNumResources());
-        clientGame.processDice(dice);
+        clientGame.processDice(dice, list);
         assertEquals(clientGame.getDice(), dice);
         assertEquals(1, clientGame.getPlayer().getNumResources());
+    }
+
+    private Resource.Counts processResources(Map<ResourceType, Integer> newResources)
+    {
+        Resource.Counts.Builder resources = Resource.Counts.newBuilder();
+        resources.setGrain(newResources.containsKey(ResourceType.Grain) ? newResources.get(ResourceType.Grain) : 0);
+        resources.setBrick(newResources.containsKey(ResourceType.Brick) ? newResources.get(ResourceType.Brick) : 0);
+        resources.setLumber(newResources.containsKey(ResourceType.Lumber) ? newResources.get(ResourceType.Lumber) : 0);
+        resources.setWool(newResources.containsKey(ResourceType.Wool) ? newResources.get(ResourceType.Wool) : 0);
+        resources.setOre(newResources.containsKey(ResourceType.Ore) ? newResources.get(ResourceType.Ore) : 0);
+
+        return resources.build();
     }
 }

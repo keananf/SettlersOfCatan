@@ -31,7 +31,7 @@ public class Server implements Runnable
 	private ConcurrentLinkedQueue<ReceivedMessage> movesToProcess;
 	private HashMap<Colour, List<Request.BodyCase>> expectedMoves;
 	private Trade.WithPlayer currentTrade;
-	private boolean tradePhase;
+	private boolean tradePhase, monopoly;
 
 	public Server()
 	{
@@ -210,8 +210,16 @@ public class Server implements Runnable
 					else ev.setError(Event.Error.newBuilder().setDescription("Cannot end turn yet."));
 					break;
 				case CHOOSERESOURCE:
-					game.chooseResources(request.getChooseResource());
-					ev.setResourceChosen(request.getChooseResource());
+					if(monopoly)
+					{
+						ev.setMonopolyResolution(game.playMonopolyCard(request.getChooseResource()));
+						monopoly = false;
+					}
+					else
+					{
+						game.chooseResources(request.getChooseResource());
+						ev.setResourceChosen(request.getChooseResource());
+					}
 					break;
 				case ROLLDICE:
 					ev.setRolled(game.generateDiceRoll());
@@ -315,9 +323,9 @@ public class Server implements Runnable
 						moves.add(Request.BodyCase.BUILDROAD);
 						moves.add(Request.BodyCase.BUILDROAD);
 						break;
-
-					// TODO
 					case MONOPOLY:
+						monopoly = true;
+						moves.add(Request.BodyCase.CHOOSERESOURCE);
 						break;
 				}
 				break;

@@ -108,7 +108,7 @@ public class SettlementAndCityTests extends TestHelper
 		p.grantResources(Settlement.getSettlementCost());
 
 		// Try to build
-		game.setTurn(p.getColour());
+		game.setCurrentPlayer(p.getColour());
 		game.buildSettlement(point.build());
 	}
 
@@ -126,7 +126,7 @@ public class SettlementAndCityTests extends TestHelper
 		p.grantResources(Settlement.getSettlementCost());
 
 		// Try to build
-		game.setTurn(p.getColour());
+		game.setCurrentPlayer(p.getColour());
 		game.upgradeSettlement(point.build());
 	}
 
@@ -144,7 +144,7 @@ public class SettlementAndCityTests extends TestHelper
 		p.grantResources(Settlement.getSettlementCost());
 
 		// Try to build
-		game.setTurn(p.getColour());
+		game.setCurrentPlayer(p.getColour());
 		game.buildSettlement(point.build());
 	}
 
@@ -166,7 +166,7 @@ public class SettlementAndCityTests extends TestHelper
 		p.grantResources(City.getCityCost());
 
 		// Try to build
-		game.setTurn(p.getColour());
+		game.setCurrentPlayer(p.getColour());
 		game.upgradeSettlement(point.build());
 		assertEquals(p.getSettlements().size(), 1);
 		assertTrue(p.getSettlements().get(new Point(n.getX(), n.getY())) instanceof City);

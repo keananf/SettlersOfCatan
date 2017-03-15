@@ -13,6 +13,8 @@ import game.players.Player;
 import grid.*;
 import intergroup.board.Board;
 import intergroup.lobby.Lobby;
+import intergroup.resource.Resource;
+import intergroup.trade.Trade;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,13 +32,16 @@ public class ClientGame extends Game
     private Map<Colour, Integer> boughtDevCards;
     private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;
     private Player thisPlayer;
-    private EventProcessor eventProcessor;
+    private ChatBoard chatBoard;
+    private List<String> usersInLobby;
 
     public ClientGame()
     {
         super();
         boughtDevCards = new HashMap<Colour, Integer>();
         playedDevCards = new HashMap<Colour, HashMap<DevelopmentCardType, Integer>>();
+        chatBoard = new ChatBoard();
+        usersInLobby = new ArrayList<String>(NUM_PLAYERS);
 
         // Instantiate the playedDevCards maps
         for(Colour c : Colour.values())
@@ -47,11 +52,6 @@ public class ClientGame extends Game
             {
                 playedDevCards.get(c).put(d, 0);
             }
-
-            // Instantiate players as well
-            // TODO FOR TESTING ONLY. REMOVE ONCE CLIENT AND SERVER ARE HOOKED UP
-            //if(!c.equals(Colour.BLUE))
-               // players.put(c, new LocalPlayer(c, c.toString()));
         }
     }
 
@@ -101,8 +101,6 @@ public class ClientGame extends Game
             // Add mapping from colours to ids
             idsToColours.put(player.getPlayer().getId(), col);
         }
-
-        //eventProcessor = new EventProcessor(new Socket(), this); // TODO set this when joining a lobby
     }
 
     /**
@@ -145,6 +143,22 @@ public class ClientGame extends Game
     }
 
     /**
+     * Processes the user who just joined the lobby
+     * @param lobbyUpdate the list of players in the lobby
+     * @param instigator
+     */
+    public void processPlayers(Lobby.Usernames lobbyUpdate, Board.Player instigator)
+    {
+        for(String username : lobbyUpdate.getUsernameList())
+        {
+            if(!usersInLobby.contains(username))
+            {
+                usersInLobby.add(username);
+            }
+        }
+    }
+
+    /**
      * @return if the game has ended or not
      */
     public boolean isOver()
@@ -161,16 +175,35 @@ public class ClientGame extends Game
     }
 
     /**
+     * Writes the given string to the chatBoard
+     * @param chatMessage
+     */
+    public void writeMessage(String chatMessage, Board.Player instigator)
+    {
+        Player p = getPlayer(instigator.getId());
+        chatBoard.writeMessage(chatMessage, p.getUsername(), p.getColour());
+    }
+
+    /**
      * Updates the dice roll and allocate resources
      * @param dice the new dice roll
+     * @param resourceAllocationList
      */
-    public void processDice(int dice)
+    public void processDice(int dice, List<Board.ResourceAllocation> resourceAllocationList)
     {
         this.dice = dice;
-        Map<ResourceType, Integer> grant = getNewResources(dice, thisPlayer.getColour());
 
         if(dice != 7)
-            thisPlayer.grantResources(grant);
+        {
+            // For each player's new resources
+            for(Board.ResourceAllocation alloc : resourceAllocationList)
+            {
+                Map<ResourceType, Integer> grant = processResources(alloc.getResources());
+                Player p = getPlayer(alloc.getPlayer().getId());
+
+                p.grantResources(grant);
+            }
+        }
     }
 
     /**
@@ -203,10 +236,7 @@ public class ClientGame extends Game
         Player player = getPlayer(instigator.getId());
 
         // Spend resources if it is this instigator
-        if(player.getColour().equals(thisPlayer.getColour()))
-        {
-            thisPlayer.spendResources(Road.getRoadCost());
-        }
+        player.spendResources(Road.getRoadCost());
 
         // Make new road object
         Road r = ((LocalPlayer)players.get(player.getColour())).addRoad(newEdge);
@@ -233,12 +263,8 @@ public class ClientGame extends Game
             throw new InvalidCoordinatesException(city.getX(), city.getY());
         }
 
-        // Spend resources if it is this player
-        if(player.getColour().equals(thisPlayer.getColour()) && !setUp)
-        {
-            Map<ResourceType, Integer> spend = City.getCityCost();
-            thisPlayer.spendResources(spend);
-        }
+        // Spend resources
+        player.spendResources(City.getCityCost());
 
         // Create and add the city
         City c = new City(node, player.getColour());
@@ -267,12 +293,8 @@ public class ClientGame extends Game
             throw new InvalidCoordinatesException(settlement.getX(), settlement.getY());
         }
 
-        // Spend resources if it is this player
-        if(player.getColour().equals(thisPlayer.getColour()) && !setUp)
-        {
-            Map<ResourceType, Integer> spend = Settlement.getSettlementCost();
-            thisPlayer.spendResources(spend);
-        }
+        // Spend resources
+        player.spendResources(Settlement.getSettlementCost());
 
         // Create and add the settlement
         Settlement s = new Settlement(node, player.getColour());
@@ -321,17 +343,120 @@ public class ClientGame extends Game
     public void recordDevCard(Board.DevCard boughtDevCard, Board.Player instigator) throws CannotAffordException
     {
         Player player = getPlayer(instigator.getId());
+        player.spendResources(DevelopmentCardType.getCardCost());
 
         // Spend resources if it is this player
         if(player.getColour().equals(thisPlayer.getColour()))
         {
-            thisPlayer.spendResources(DevelopmentCardType.getCardCost());
             thisPlayer.addDevelopmentCard(boughtDevCard);
         }
 
+        // Update number of dev cards each player is known to have
         Colour c = player.getColour();
         int existing = boughtDevCards.containsKey(c) ? boughtDevCards.get(c) : 0;
         boughtDevCards.put(c, existing + 1);
+    }
+
+    /**
+     * Processes a bank trade
+     * @param bankTrade the bank trade
+     */
+    public void processBankTrade(Trade.WithBank bankTrade, Board.Player instigator) throws CannotAffordException
+    {
+        Map<ResourceType, Integer> offering = processResources(bankTrade.getOffering());
+        Map<ResourceType, Integer> wanting = processResources(bankTrade.getWanting());
+        Player p = getPlayer(instigator.getId());
+
+        // Update resources
+        p.spendResources(offering);
+        p.grantResources(wanting);
+    }
+
+    /**
+     * Processes a player trade
+     * @param playerTrade the player trade
+     */
+    public void processPlayerTrade(Trade.WithPlayer playerTrade, Board.Player sender) throws CannotAffordException
+    {
+        Map<ResourceType, Integer> offering = processResources(playerTrade.getOffering());
+        Map<ResourceType, Integer> wanting = processResources(playerTrade.getWanting());
+        Player instigator = getPlayer(sender.getId());
+        Player recipient = getPlayer(playerTrade.getOther().getId());
+
+        // Update resources
+        instigator.spendResources(offering);
+        instigator.grantResources(wanting);
+        recipient.spendResources(wanting);
+        recipient.grantResources(offering);
+    }
+
+    /**
+     * Processes the cards this player had to discard
+     * @param cardsDiscarded the discarded resources
+     * @param instigator the player who discarded them
+     */
+    public void processDiscard(Resource.Counts cardsDiscarded, Board.Player instigator) throws CannotAffordException
+    {
+        Player p = getPlayer(instigator.getId());
+        p.spendResources(processResources(cardsDiscarded));
+    }
+
+    /**
+     * Processes the cards this player had to discard
+     * @param steal the stolen resources
+     * @param instigator the player who stole them
+     */
+    public void processResourcesStolen(Board.Steal steal, Board.Player instigator) throws CannotAffordException
+    {
+        Player p = getPlayer(instigator.getId());
+        Player p2 = getPlayer(steal.getVictim().getId());
+        ResourceType r = ResourceType.fromProto(steal.getResource());
+        int quantity = steal.getQuantity();
+
+        // Update resources
+        Map<ResourceType, Integer> stolen = new HashMap<ResourceType, Integer>();
+        stolen.put(r, quantity);
+        p2.spendResources(stolen);
+        p.grantResources(stolen);
+
+    }
+
+    /**
+     * Processes the cards this player had to discard
+     * @param multiSteal the resources taken from each user
+     * @param instigator the player who stole them
+     */
+    public void processMonopoly(Board.MultiSteal multiSteal, Board.Player instigator) throws CannotAffordException
+    {
+        Player p = getPlayer(instigator.getId());
+
+        // For each player stolen from
+        for(Board.Steal steal : multiSteal.getTheftsList())
+        {
+            Player p2 = getPlayer(steal.getVictim().getId());
+            ResourceType r = ResourceType.fromProto(steal.getResource());
+            int quantity = steal.getQuantity();
+
+            // Update resources
+            Map<ResourceType, Integer> stolen = new HashMap<ResourceType, Integer>();
+            stolen.put(r, quantity);
+            p2.spendResources(stolen);
+            p.grantResources(stolen);
+        }
+    }
+
+    /**
+     * Processes the cards this player had to discard
+     * @param resource the stolen resources
+     * @param instigator the player who stole them
+     */
+    public void processResourceChosen(Resource.Kind resource, Board.Player instigator)
+    {
+        Player p = getPlayer(instigator.getId());
+        Map<ResourceType, Integer> map = new HashMap<ResourceType, Integer>();
+        map.put(ResourceType.fromProto(resource), 1);
+
+        p.grantResources(map);
     }
 
     /**

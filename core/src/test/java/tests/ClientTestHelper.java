@@ -45,8 +45,8 @@ public class ClientTestHelper extends TestHelper
         Board.Edge e = edge.toEdgeProto();
 
         player = Board.Player.newBuilder().setId(clientGame.getPlayer(col).getId()).build();
-        clientGame.getPlayer().grantResources(Road.getRoadCost());
-        clientGame.setTurn(col);
+        clientGame.getPlayer(col).grantResources(Road.getRoadCost());
+        clientGame.setCurrentPlayer(col);
         try
         {
             clientGame.processRoad(e, player);
@@ -64,8 +64,8 @@ public class ClientTestHelper extends TestHelper
         Map<ResourceType, Integer> grant = Settlement.getSettlementCost();
 
         player = Board.Player.newBuilder().setId(clientGame.getPlayer(col).getId()).build();
-        clientGame.getPlayer().grantResources(grant);
-        clientGame.setTurn(col);
+        clientGame.getPlayer(col).grantResources(grant);
+        clientGame.setCurrentPlayer(col);
         try
         {
             clientGame.processNewSettlement(n, player, false);
@@ -83,8 +83,8 @@ public class ClientTestHelper extends TestHelper
         Map<ResourceType, Integer> grant = City.getCityCost();
 
         player = Board.Player.newBuilder().setId(clientGame.getPlayer(col).getId()).build();
-        clientGame.getPlayer().grantResources(grant);
-        clientGame.setTurn(col);
+        clientGame.getPlayer(col).grantResources(grant);
+        clientGame.setCurrentPlayer(col);
         try
         {
             clientGame.processNewCity(n, player, false);
@@ -101,8 +101,8 @@ public class ClientTestHelper extends TestHelper
          Board.Point point = h.toHexProto().getLocation();
 
          player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();
-         clientGame.getPlayer().grantResources(DevelopmentCardType.getCardCost());
-         clientGame.setTurn(c);
+         clientGame.getPlayer(c).grantResources(DevelopmentCardType.getCardCost());
+         clientGame.setCurrentPlayer(c);
          try
          {
              clientGame.recordDevCard(Board.DevCard.newBuilder().setPlayableDevCard(Board.PlayableDevCard.KNIGHT).build(), player);
@@ -117,8 +117,8 @@ public class ClientTestHelper extends TestHelper
 
     public void processBoughtDevCard(Board.DevCard type, Colour c)
     {
-        clientGame.getPlayer().grantResources(DevelopmentCardType.getCardCost());
-        clientGame.setTurn(c);
+        clientGame.getPlayer(c).grantResources(DevelopmentCardType.getCardCost());
+        clientGame.setCurrentPlayer(c);
         player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();
         try
         {
@@ -132,8 +132,8 @@ public class ClientTestHelper extends TestHelper
 
      public void processPlayedDevCard(Board.DevCard type, Colour c)
      {
-         clientGame.getPlayer().grantResources(DevelopmentCardType.getCardCost());
-         clientGame.setTurn(c);
+         clientGame.getPlayer(c).grantResources(DevelopmentCardType.getCardCost());
+         clientGame.setCurrentPlayer(c);
 
          player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();
          try

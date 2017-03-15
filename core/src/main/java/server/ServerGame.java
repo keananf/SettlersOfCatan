@@ -25,27 +25,12 @@ import java.util.Random;
 public class ServerGame extends Game
 {
 	private Random dice;
-	private int current; // index of current player
-	protected int numPlayers;
-	public static final int NUM_PLAYERS = 4;
 
 	public ServerGame()
 	{
 		super();
 		dice = new Random();
 	}
-
-	/**
-	 * Chooses first player.
-	 */
-	public void chooseFirstPlayer()
-	{
-		int dice = this.dice.nextInt(NUM_PLAYERS);
-		
-		current = dice;
-		setCurrentPlayer(getPlayersAsList()[dice].getColour());
-	}
-
 
 	/**
 	 * Assigns resources to each player based upon their settlements and the dice
@@ -538,7 +523,7 @@ public class ServerGame extends Game
 	public EmptyOuterClass.Empty changeTurn()
 	{
 		// Update turn and set event.
-		setCurrentPlayer(getPlayersAsList()[++current % NUM_PLAYERS].getColour());
+		setCurrentPlayer(getNextPlayer());
 		return EmptyOuterClass.Empty.getDefaultInstance();
 	}
 
@@ -612,11 +597,6 @@ public class ServerGame extends Game
 	public Map<Colour, Player> getPlayers()
 	{
 		return players;
-	}
-
-	public Player[] getPlayersAsList()
-	{
-		return players.values().toArray(new Player[]{});
 	}
 
 	private void grantVpPoint()

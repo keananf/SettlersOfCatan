@@ -27,12 +27,14 @@ public abstract class Game
 	protected Colour playerWithLargestArmy;
 	protected int longestRoad;
 	protected int largestArmy;
+	protected Bank bank;
 	public static final int NUM_PLAYERS = 4;
 	public static final int MIN_ROAD_LENGTH = 5;
 	public static final int MIN_ARMY_SIZE = 3;
 
 	public Game()
 	{
+		bank = new Bank();
 		grid = new HexGrid();
 		players = new HashMap<Colour, Player>();
 		idsToColours = new HashMap<Board.Player.Id, Colour>();

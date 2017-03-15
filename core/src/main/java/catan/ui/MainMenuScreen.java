@@ -1,23 +1,18 @@
 package catan.ui;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
 import catan.SettlersOfCatan;
 
 public class MainMenuScreen implements Screen
@@ -49,8 +44,10 @@ public class MainMenuScreen implements Screen
 		// Buttons
 		{
 			TextButton button = new TextButton("New single player game", game.skin);
-			button.addListener(new ChangeListener() {
-				public void changed(ChangeEvent event, Actor actor) {
+			button.addListener(new ChangeListener()
+			{
+				public void changed(ChangeEvent event, Actor actor)
+				{
 					Gdx.app.debug("UI", "Button click: New single player game");
 
 					game.startNewServer();
@@ -62,8 +59,10 @@ public class MainMenuScreen implements Screen
 
 		{
 			TextButton button = new TextButton("Host new multiplayer game", game.skin);
-			button.addListener(new ChangeListener() {
-				public void changed(ChangeEvent event, Actor actor) {
+			button.addListener(new ChangeListener()
+			{
+				public void changed(ChangeEvent event, Actor actor)
+				{
 					Gdx.app.debug("UI", "Button click: Host new multiplayer game");
 
 					game.startNewServer();
@@ -75,8 +74,10 @@ public class MainMenuScreen implements Screen
 
 		{
 			TextButton button = new TextButton("Join existing multiplayer game", game.skin);
-			button.addListener(new ChangeListener() {
-				public void changed(ChangeEvent event, Actor actor) {
+			button.addListener(new ChangeListener()
+			{
+				public void changed(ChangeEvent event, Actor actor)
+				{
 					Gdx.app.debug("UI", "Button click: Join existing multiplayer game");
 
 					game.setScreen(new GameScreen(game));
@@ -87,8 +88,10 @@ public class MainMenuScreen implements Screen
 
 		{
 			TextButton button = new TextButton("Quit", game.skin);
-			button.addListener(new ChangeListener() {
-				public void changed(ChangeEvent event, Actor actor) {
+			button.addListener(new ChangeListener()
+			{
+				public void changed(ChangeEvent event, Actor actor)
+				{
 					Gdx.app.exit();
 				}
 			});
@@ -117,8 +120,23 @@ public class MainMenuScreen implements Screen
 	}
 
 	// Required but unused
-	@Override public void pause() {}
-	@Override public void resume() {}
-	@Override public void hide() {}
-	@Override public void show() {}
+	@Override
+	public void pause()
+	{
+	}
+
+	@Override
+	public void resume()
+	{
+	}
+
+	@Override
+	public void hide()
+	{
+	}
+
+	@Override
+	public void show()
+	{
+	}
 }

@@ -1,14 +1,12 @@
 package tests;
 
-import board.Node;
+import intergroup.board.Board;
+import grid.*;
 import exceptions.*;
 import game.build.City;
 import game.build.Settlement;
 import org.junit.Before;
 import org.junit.Test;
-import protocol.BuildProtos;
-import protocol.RequestProtos.BuildSettlementRequest;
-import protocol.RequestProtos.UpgradeSettlementRequest;
 
 import java.awt.*;
 
@@ -102,17 +100,16 @@ public class SettlementAndCityTests extends TestHelper
 											IllegalPlacementException, SettlementExistsException
 	{
 		// Create protobuf representation of building a settlement
-		BuildSettlementRequest.Builder req = BuildSettlementRequest.newBuilder();
-		BuildProtos.PointProto.Builder point = BuildProtos.PointProto.newBuilder();
+		Board.Point.Builder point = Board.Point.newBuilder();
 		point.setX(-10);
 		point.setY(-30);
-		req.setPoint(point.build());
 
 		// Grant resources
 		p.grantResources(Settlement.getSettlementCost());
 
 		// Try to build
-		game.buildSettlement(req.build(), p.getColour());
+		game.setCurrentPlayer(p.getColour());
+		game.buildSettlement(point.build());
 	}
 
 
@@ -121,17 +118,16 @@ public class SettlementAndCityTests extends TestHelper
 			IllegalPlacementException, SettlementExistsException, CannotUpgradeException
 	{
 		// Create protobuf representation of building a settlement
-		UpgradeSettlementRequest.Builder req = UpgradeSettlementRequest.newBuilder();
-		BuildProtos.PointProto.Builder point = BuildProtos.PointProto.newBuilder();
+		Board.Point.Builder point = Board.Point.newBuilder();
 		point.setX(-10);
 		point.setY(-30);
-		req.setPoint(point.build());
 
 		// Grant resources
 		p.grantResources(Settlement.getSettlementCost());
 
 		// Try to build
-		game.upgradeSettlement(req.build(), p.getColour());
+		game.setCurrentPlayer(p.getColour());
+		game.upgradeSettlement(point.build());
 	}
 
 
@@ -140,17 +136,16 @@ public class SettlementAndCityTests extends TestHelper
 			IllegalPlacementException, SettlementExistsException
 	{
 		// Create protobuf representation of building a settlement
-		BuildSettlementRequest.Builder req = BuildSettlementRequest.newBuilder();
-		BuildProtos.PointProto.Builder point = BuildProtos.PointProto.newBuilder();
+		Board.Point.Builder point = Board.Point.newBuilder();
 		point.setX(n.getX());
 		point.setY(n.getY());
-		req.setPoint(point.build());
 
 		// Grant resources
 		p.grantResources(Settlement.getSettlementCost());
 
 		// Try to build
-		game.buildSettlement(req.build(), p.getColour());
+		game.setCurrentPlayer(p.getColour());
+		game.buildSettlement(point.build());
 	}
 
 
@@ -163,17 +158,16 @@ public class SettlementAndCityTests extends TestHelper
 		makeSettlement(p, n);
 
 		// Create protobuf representation of building a settlement
-		UpgradeSettlementRequest.Builder req = UpgradeSettlementRequest.newBuilder();
-		BuildProtos.PointProto.Builder point = BuildProtos.PointProto.newBuilder();
+		Board.Point.Builder point = Board.Point.newBuilder();
 		point.setX(n.getX());
 		point.setY(n.getY());
-		req.setPoint(point.build());
 
 		// Grant resources
 		p.grantResources(City.getCityCost());
 
 		// Try to build
-		game.upgradeSettlement(req.build(), p.getColour());
+		game.setCurrentPlayer(p.getColour());
+		game.upgradeSettlement(point.build());
 		assertEquals(p.getSettlements().size(), 1);
 		assertTrue(p.getSettlements().get(new Point(n.getX(), n.getY())) instanceof City);
 	}

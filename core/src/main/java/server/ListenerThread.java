@@ -1,50 +1,46 @@
 package server;
 
 import enums.Colour;
-import protocol.EnumProtos;
-import protocol.MessageProtos.Message;
-import protocol.ResponseProtos.Response;
-import protocol.ResponseProtos.SuccessFailResponse;
+import intergroup.Messages.*;
+import intergroup.Events.*;
 
 import java.io.IOException;
 import java.net.Socket;
 
 /**
- * Class which simply listens to a socket.
- * The successfully received message is added to a ConcurrentLinkedQueue.
- * Created by 140001596.
+ * Class which simply listens to a socket. The successfully received message is
+ * added to a ConcurrentLinkedQueue. Created by 140001596.
  */
 public class ListenerThread implements Runnable
 {
-    private Thread thread;
-    protected Socket socket;
-    private Colour colour;
-    private Server server;
+	private Thread thread;
+	protected Socket socket;
+	private Colour colour;
+	private Server server;
 
-    public ListenerThread(Socket socket, Colour colour, Server server)
+    public ListenerThread(Socket socket, Colour c, Server server)
     {
         this.socket = socket;
-        this.colour = colour;
         this.server = server;
+        colour = c;
         this.thread = new Thread(this);
         this.thread.start();
     }
 
-    @Override
-    public void run()
-    {
-        // Continually poll for new messages
-        try
-        {
-            receiveMoves();
-        }
-        catch (IOException e)
-        {
-            // TODO replace with AI
-            e.printStackTrace();
-        }
-    }
-
+	@Override
+	public void run()
+	{
+		// Continually poll for new messages
+		try
+		{
+			receiveMoves();
+		}
+		catch (IOException e)
+		{
+			// TODO replace with AI
+			e.printStackTrace();
+		}
+	}
 
     /**
      * Listens for moves from the current player
@@ -58,38 +54,21 @@ public class ListenerThread implements Runnable
         {
             // Parse message and add to queue
             Message msg = Message.parseFrom(socket.getInputStream());
-            server.addMessageToProcess(msg);
-
-        }
-    }
+            server.addMessageToProcess(new ReceivedMessage(colour, msg));
+		}
+	}
 
     /**
      * If an unknown or invalid message is received, then this message sends an error back
-     * @param originalMsg the original message
      */
-    protected void sendError(Message originalMsg) throws IOException
+    protected Event.Error getError() throws IOException
     {
         // Set up result message
-        Response.Builder response = Response.newBuilder();
-        SuccessFailResponse.Builder result = SuccessFailResponse.newBuilder();
-        result.setResult(EnumProtos.ResultProto.FAILURE);
-        result.setReason("Invalid message type");
+        Event.Error.Builder err = Event.Error.newBuilder();
+        err.setDescription("Invalid message type");
+        err.setCause(ErrorCause.UNRECOGNIZED);
 
-        // Set up wrapper response object
-        response.setSuccessFailResponse(result);
-        response.build().writeTo(socket.getOutputStream());
-
-    }
-
-    /**
-     * Sends response out to the client
-     * @param response the response message from the last action
-     * @throws IOException
-     */
-    protected void sendResponse(Response response) throws IOException
-    {
-        response.writeTo(socket.getOutputStream());
-        socket.getOutputStream().flush();
+        return err.build();
     }
 
     /**
@@ -102,5 +81,12 @@ public class ListenerThread implements Runnable
         // Serialise and Send
         msg.writeTo(socket.getOutputStream());
         socket.getOutputStream().flush();
+    }
+
+    public void sendError() throws IOException
+    {
+        Message.Builder msg = Message.newBuilder();
+        msg.setEvent(Event.newBuilder().setError(getError()).build());
+        sendMessage(msg.build());
     }
 }

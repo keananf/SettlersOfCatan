@@ -1,7 +1,6 @@
-
 package exceptions;
 
-import board.*;
+import grid.*;
 import game.build.Settlement;
 
 @SuppressWarnings("serial")
@@ -22,3 +21,4 @@ public class SettlementExistsException extends Exception
 				n.getX(), n.getY());
 	}
 }
+

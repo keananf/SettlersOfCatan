@@ -1,12 +1,13 @@
 package game.build;
 
-import java.util.*;
+import intergroup.board.Board;
+import enums.Colour;
+import enums.ResourceType;
+import grid.Edge;
+import grid.Node;
 
-import board.Node;
-import com.sun.org.apache.xalan.internal.xsltc.runtime.*;
-import enums.*;
-import board.*;
-import protocol.BuildProtos.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class describing a road
@@ -102,24 +103,9 @@ public class Road implements IBuildable
 	/**
 	 * @return A representation of this road compatible with protobufs for serialisation
 	 */
-	public RoadProto.Builder toProto()
+	public Board.Edge toProto()
 	{
-		RoadProto.Builder road = RoadProto.newBuilder();
-		PointProto.Builder p = PointProto.newBuilder();
-		Node x = edge.getX(), y = edge.getY();
-
-		// Node 1
-		p.setX(x.getX());
-		p.setY(x.getY());
-		road.setP1(p.build());
-
-		// Node 2
-		p.setX(y.getX());
-		p.setY(y.getY());
-		road.setP2(p.build());
-
-		road.setPlayerId(Colour.toProto(playerColour));
-
-		return road;
+		// TODO needs colour
+		return edge.toEdgeProto();
 	}
 }

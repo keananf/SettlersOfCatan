@@ -1,16 +1,14 @@
 package game;
 
-import board.Edge;
-import board.Hex;
-import board.HexGrid;
-import board.Node;
+import intergroup.board.Board;
+import grid.*;
 import enums.Colour;
 import enums.ResourceType;
 import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.players.Player;
-import protocol.ResourceProtos.ResourceCount;
+import intergroup.resource.Resource;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +18,14 @@ public abstract class Game
 {
 	protected HexGrid grid;
 	protected Map<Colour, Player> players;
+	protected Map<Board.Player.Id, Colour> idsToColours;
 	protected Colour currentPlayer;
 	protected Colour playerWithLongestRoad;
 	protected Colour playerWithLargestArmy;
 	protected int longestRoad;
 	protected int largestArmy;
+	protected int numPlayers;
+	protected int current; // index of current player
 	public static final int NUM_PLAYERS = 4;
 	public static final int MIN_ROAD_LENGTH = 5;
 	public static final int MIN_ARMY_SIZE = 3;
@@ -33,6 +34,7 @@ public abstract class Game
 	{
 		grid = new HexGrid();
 		players = new HashMap<Colour, Player>();
+		idsToColours = new HashMap<Board.Player.Id, Colour>();
 	}
 
 	/**
@@ -41,7 +43,7 @@ public abstract class Game
 	 * @param c the colour to get the new resources for
 	 * @return the map of new resources to grant
 	 */
-	protected Map<ResourceType, Integer> getNewResources(int dice, Colour c)
+	public Map<ResourceType, Integer> getNewResources(int dice, Colour c)
 	{
 		int resourceLimit = 7;
 		Player player = players.get(c);
@@ -77,15 +79,21 @@ public abstract class Game
 	 * @param resources the resources received from the network
 	 * @return a map of resources to number
 	 */
-	protected Map<ResourceType,Integer> processResources(ResourceCount resources)
+	protected Map<ResourceType,Integer> processResources(Resource.Counts resources)
 	{
 		Map<ResourceType,Integer> ret = new HashMap<ResourceType,Integer>();
 
-		ret.put(ResourceType.Brick, resources.hasBrick() ? resources.getBrick() : 0);
-		ret.put(ResourceType.Lumber, resources.hasLumber() ? resources.getLumber() : 0);
-		ret.put(ResourceType.Grain, resources.hasGrain() ? resources.getGrain() : 0);
-		ret.put(ResourceType.Ore, resources.hasOre() ? resources.getOre() : 0);
-		ret.put(ResourceType.Wool, resources.hasWool() ? resources.getWool() : 0);
+		// Add all resources with amounts
+		if(resources.getBrick() > 0)
+			ret.put(ResourceType.Brick, resources.getBrick());
+		if(resources.getLumber() > 0)
+			ret.put(ResourceType.Lumber, resources.getLumber());
+		if(resources.getGrain() > 0)
+			ret.put(ResourceType.Grain, resources.getGrain());
+		if(resources.getOre() > 0)
+			ret.put(ResourceType.Ore, resources.getOre());
+		if(resources.getWool() > 0)
+			ret.put(ResourceType.Wool, resources.getWool());
 
 		return ret;
 	}
@@ -190,6 +198,15 @@ public abstract class Game
 		}
 	}
 
+
+	/**
+	 * Chooses first player.
+	 */
+	public void chooseFirstPlayer()
+	{
+		setCurrentPlayer(getPlayer(Board.Player.Id.PLAYER_1).getColour());
+	}
+
 	/**
 	 * @return the grid
 	 */
@@ -215,12 +232,16 @@ public abstract class Game
 	}
 
 	/**
-	 * Sets the turn to the given colour
-	 * @param colour the new turn
+	 * @return the next player
 	 */
-	public void setTurn(Colour colour)
+	public Colour getNextPlayer()
 	{
-		setCurrentPlayer(colour);
+		return getPlayer(Board.Player.Id.values()[++current % NUM_PLAYERS]).getColour();
+	}
+
+	public Player[] getPlayersAsList()
+	{
+		return players.values().toArray(new Player[]{});
 	}
 
 	/**
@@ -229,5 +250,32 @@ public abstract class Game
 	public Map<Colour, Player> getPlayers()
 	{
 		return players;
+	}
+
+	/**
+	 * Retrieves the corresponding player
+	 * @param col the player's colour
+	 * @return
+	 */
+	public Player getPlayer(Colour col)
+	{
+		return players.get(col);
+	}
+
+	/**
+	 * Retrieves the corresponding player
+	 * @param id the player's id
+	 * @return
+	 */
+	public Player getPlayer(Board.Player.Id id)
+	{
+		enums.Colour col = idsToColours.get(id);
+		return players.get(col);
+	}
+
+	public void addPlayer(Player clientPlayer)
+	{
+		idsToColours.put(clientPlayer.getId(), clientPlayer.getColour());
+		players.put(clientPlayer.getColour(), clientPlayer);
 	}
 }

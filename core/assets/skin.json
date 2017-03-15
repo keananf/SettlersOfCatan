@@ -4,8 +4,8 @@
 		orangey: { r:1, g:0.576, b:0, a: 1 }
 	},
 	com.badlogic.gdx.graphics.g2d.BitmapFont: {
-		display: { file: luminari.fnt },
-		body: { file: opensans.fnt }
+		display: { file: fonts/luminari.fnt },
+		body: { file: fonts/opensans.fnt }
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		default: {

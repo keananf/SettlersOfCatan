@@ -1,8 +1,7 @@
 package tests;
 
-import board.Edge;
-import board.Hex;
-import board.Node;
+import intergroup.board.Board;
+import grid.*;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
@@ -33,9 +32,14 @@ public class TestHelper
 		// Build settlement
 		try
 		{
-			((NetworkPlayer)p).buildSettlement(n);
+			game.setCurrentPlayer(p.getColour());
+			game.buildSettlement(n.toProto());
 		}
 		catch (IllegalPlacementException | CannotAffordException e)
+		{
+			e.printStackTrace();
+		}
+		catch (InvalidCoordinatesException e)
 		{
 			e.printStackTrace();
 		}
@@ -54,7 +58,7 @@ public class TestHelper
 		// Build settlement
 		try
 		{
-			((NetworkPlayer)p).upgradeSettlement(n);
+			p.upgradeSettlement(n);
 		}
 		catch (CannotAffordException | CannotUpgradeException e)
 		{
@@ -74,7 +78,7 @@ public class TestHelper
 		assertTrue(hasResources(p));
 		try
 		{
-			((NetworkPlayer)p).buildRoad(e);
+			p.buildRoad(e);
 		}
 		catch (CannotAffordException ex)
 		{
@@ -124,7 +128,8 @@ public class TestHelper
 	protected void reset()
 	{
 		game = new ServerGame();
-		p = new NetworkPlayer(Colour.BLUE);
+		p = new NetworkPlayer(Colour.BLUE, "");
+		p.setId(Board.Player.Id.PLAYER_1);
 		game.addPlayer(p);
 		game.setCurrentPlayer(p.getColour());
 		

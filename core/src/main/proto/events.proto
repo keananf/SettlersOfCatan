@@ -1,75 +1,44 @@
-syntax = "proto2";
+syntax = "proto3";
+package intergroup;
 
-option java_package = "protocol";
-option go_package = "protocol";
+import "empty.proto";
+import "board/board.proto";
+import "resource/resource.proto";
+import "lobby/lobby.proto";
+import "trade/trade.proto";
 
-option java_outer_classname = "EventProtos";
+enum ErrorCause {
+  UNKNOWN = 0;
+}
 
-import "build.proto";
-import "enums.proto";
-import "trade.proto";
-import "resources.proto";
+message Event {
+  board.Player instigator = 1;
+  oneof type {
+    Error error = 2;
+    board.Roll rolled = 3;
+    board.Edge roadBuilt = 4;
+    board.Point settlementBuilt = 5;
+    board.Point cityBuilt = 6;
+    board.DevCard devCardBought = 7;
+    board.PlayableDevCard devCardPlayed = 8;
+    board.Point robberMoved = 9;
+    board.Steal resourceStolen = 10;
+    resource.Kind resourceChosen = 11;
+    resource.Counts cardsDiscarded = 12;
+    trade.WithBank bankTrade = 13;
+    trade.WithPlayer playerTrade = 14;
+    Empty turnEnded = 15;
+    Empty gameWon = 16;
+    lobby.GameSetup beginGame = 17;
+    lobby.Usernames lobbyUpdate = 18;
+    board.MultiSteal monopolyResolution = 19;
+    string chatMessage = 20;
+  }
 
-//events are very preliminary at this point
-
-message Event 
-{
-    oneof type 
-    {
-        Error error = 1;
-
-        DiceRoll diceRoll = 2;
-
-        RoadProto newRoad = 3;
-        BuildingProto newBuilding = 4;
-        ColourProto boughtDevCard = 5;
-	PlayDevCardEvent playedDevCard = 6;
-
-        TradeRequest transaction = 7;
-        PointProto robberMove = 8;
-	ColourProto newTurn = 9;
-	GameOver gameOver = 10;
-        Theft theft = 11;
-    }
+  message Error {
+    ErrorCause cause = 1;
+    string description = 2;
+  }
 }
 
 
-message GameOver
-{
-    repeated Score scores = 1;     
-    required ColourProto winnter = 2;
-}
-
-message Score
-{
-    required ColourProto colour = 1;
-    required int32 score = 2;
-    
-}
-
-message PlayDevCardEvent 
-{
-    required ColourProto playerColour = 1;
-    required DevelopmentCardProto type = 2;
-}
-
-message DiceRoll 
-{
-    required int32 dice = 1;
-}
-
-
-message Theft
-{
-    required ColourProto thief = 1;
-    required ColourProto victim = 2;
-    required ResourceCount resourceStolen = 3;
-}
-
-
-//======================================================================================================================
-
-message Error 
-{
-    required string description = 1;
-}

@@ -1,44 +1,40 @@
 package tests;
 
-import board.Edge;
-import board.Hex;
-import board.HexGrid;
-import board.Node;
-import client.ClientGame;
 import enums.Colour;
 import enums.DevelopmentCardType;
+import enums.ResourceType;
 import exceptions.*;
+import game.build.Building;
 import game.build.City;
 import game.build.Settlement;
-import game.players.NetworkPlayer;
+import game.players.LocalPlayer;
 import game.players.Player;
-import org.junit.Before;
+import grid.Edge;
+import grid.Hex;
+import grid.HexGrid;
+import grid.Node;
+import intergroup.board.Board;
+import intergroup.lobby.Lobby;
+import intergroup.resource.Resource;
+import intergroup.trade.Trade;
 import org.junit.Test;
-import protocol.BoardProtos;
-import protocol.BuildProtos;
-import protocol.EnumProtos;
-import protocol.EventProtos;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
 public class ClientProcessTests extends ClientTestHelper
 {
-    @Before
-    public void setUp() throws CannotAffordException, InvalidCoordinatesException
-    {
-        reset();
-        clientGame = new ClientGame();
-        clientGame.setBoard(game.getBoard().getBoard());
-    }
-
     @Test
     public void processBoardTest() throws CannotAffordException, InvalidCoordinatesException
     {
         // Retrieve board and its protobuf representation
         HexGrid actualBoard = game.getGrid();
-        BoardProtos.BoardProto board = game.getBoard().getBoard();
+        Lobby.GameSetup board = game.getGameSettings(clientPlayer.getColour());
 
         // Simulate processing of protobuf
         HexGrid processedBoard = clientGame.setBoard(board);
@@ -59,52 +55,52 @@ public class ClientProcessTests extends ClientTestHelper
     @Test
     public void settlementTest()
     {
-        BuildProtos.PointProto.Builder p1 = BuildProtos.PointProto.newBuilder();
-        p1.setX(n.getX());
-        p1.setY(n.getY());
+        Board.Point p1 = n.toProto();
 
         // Process request
-        processSettlementEvent(n, p.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n, p.getColour());
         assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getSettlement() != null);
         assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getSettlement() instanceof Settlement);
-        assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getSettlement().getPlayerColour().equals(Colour.BLUE));
+        assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getSettlement().getPlayerColour().equals(clientPlayer.getColour()));
     }
 
 
     @Test
     public void cityTest()
     {
-        BuildProtos.PointProto.Builder p1 = BuildProtos.PointProto.newBuilder();
-        p1.setX(n.getX());
-        p1.setY(n.getY());
+        Board.Point p1 = n.toProto();
 
         // Process request
-        processSettlementEvent(n, p.getColour(), EnumProtos.BuildingTypeProto.CITY);
+        processCityEvent(n, clientPlayer.getColour());
+        Building settlement = clientGame.getGrid().getNode(p1.getX(), p1.getY()).getSettlement();
 
         assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getSettlement() != null);
-        assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getSettlement() instanceof City);
-        assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getSettlement().getPlayerColour().equals(Colour.BLUE));
+        assertTrue(settlement instanceof City);
+        assertTrue(settlement.getPlayerColour().equals(clientPlayer.getColour()));
     }
 
     @Test
     public void roadTest()
     {
         Edge edge = n.getEdges().get(0);
+        Board.Point p1 = edge.toEdgeProto().getA(), p2 = edge.toEdgeProto().getB();
 
         // Need a settlement before you can build a road.
-        processSettlementEvent(n, p.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n, clientPlayer.getColour());
 
         // Process request
-        processRoadEvent(edge, Colour.BLUE);
-        assertTrue(clientGame.getGrid().getEdge(edge.toEdgeProto()).getRoad() != null);
-        assertTrue(clientGame.getGrid().getEdge(edge.toEdgeProto()).getRoad().getPlayerColour().equals(Colour.BLUE));
+        processRoadEvent(edge, clientPlayer.getColour());
+        assertTrue(clientGame.getGrid().getEdge(p1, p2).getRoad() != null);
+        assertTrue(clientGame.getGrid().getEdge(p1, p2).getRoad().getPlayerColour().equals(clientPlayer.getColour()));
     }
 
     @Test
     public void settlementBreaksRoadTest()
     {
-        Player p  = clientGame.getPlayers().get(Colour.BLUE);
-        Player p2 = new NetworkPlayer(Colour.RED);
+        Player p  = clientPlayer;
+        Player p2 = new LocalPlayer(Colour.RED, "");
+        p2.setId(Board.Player.Id.PLAYER_2);
+        clientGame.addPlayer(p2);
 
         // Find edges where roads will be built
         Edge e1 = n.getEdges().get(0); // Will be first road
@@ -125,11 +121,11 @@ public class ClientProcessTests extends ClientTestHelper
 
         // Need a settlement before you can build a road.
         // For roads 1 and 2
-        processSettlementEvent(n, p.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n, p.getColour());
 
         // Need a settlement before you can build a road.
         // For roads 3 and 4
-        processSettlementEvent(n6, p.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n6, p.getColour());
 
         // Build road 1
         processRoadEvent(e1, p.getColour());
@@ -141,7 +137,7 @@ public class ClientProcessTests extends ClientTestHelper
         processRoadEvent(e3, p.getColour());
 
         // Build foreign settlement
-        processSettlementEvent(n3, p2.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n3, p2.getColour());
 
         // Build sixth road next to settlement 2
         processRoadEvent(e6, p.getColour());
@@ -161,8 +157,10 @@ public class ClientProcessTests extends ClientTestHelper
     @Test
     public void settlementBreaksRoadTest2()
     {
-        Player p  = clientGame.getPlayers().get(Colour.BLUE);
-        Player p2 = new NetworkPlayer(Colour.RED);
+        Player p  = clientPlayer;
+        Player p2 = new LocalPlayer(Colour.RED, "");
+        p2.setId(Board.Player.Id.PLAYER_2);
+        clientGame.addPlayer(p2);
 
         // Find edges to make roads
         Edge e1 = n.getEdges().get(0); // Will be first road
@@ -172,7 +170,7 @@ public class ClientProcessTests extends ClientTestHelper
         Edge e3 = n2.getEdges().get(0).equals(e2) ? n2.getEdges().get(1) : n2.getEdges().get(0); // Third road
 
         // Need a settlement before you can build a road.
-        processSettlementEvent(n, p.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n, p.getColour());
 
         // Build road 1
         processRoadEvent(e1, p.getColour());
@@ -184,7 +182,7 @@ public class ClientProcessTests extends ClientTestHelper
         processRoadEvent(e3, p.getColour());
 
         // Build foreign settlement in between second and third road.
-        processSettlementEvent(n2, p2.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n2, p2.getColour());
 
         // Assert previous road chain of length three was broken.
         assertEquals(2, p.calcRoadLength());
@@ -201,12 +199,12 @@ public class ClientProcessTests extends ClientTestHelper
     @Test
     public void roadLengthTest() throws SettlementExistsException, CannotBuildRoadException, RoadExistsException
     {
-        Player p  = clientGame.getPlayers().get(Colour.BLUE);
+        Player p  = clientPlayer;
         Node n2 = game.getGrid().nodes.get(new Point(-1,0));
 
         // Make two settlements\
-        processSettlementEvent(n, p.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
-        processSettlementEvent(n2, p.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n, p.getColour());
+        processSettlementEvent(n2, p.getColour());
 
         // Make three roads
         for(int i = 0; i < n.getEdges().size(); i++)
@@ -228,8 +226,10 @@ public class ClientProcessTests extends ClientTestHelper
     @Test
     public void largestArmyTest()
     {
-        Player p  = clientGame.getPlayers().get(Colour.BLUE);
-        Player p2 = clientGame.getPlayers().get(Colour.RED);
+        Player p  = clientPlayer;
+        Player p2 = new LocalPlayer(Colour.RED, "");
+        p2.setId(Board.Player.Id.PLAYER_2);
+        clientGame.addPlayer(p2);
 
         // Find edges
         Edge e1 = n.getEdges().get(0);
@@ -247,10 +247,10 @@ public class ClientProcessTests extends ClientTestHelper
 
         // Need a settlement before you can build a road.
         // For roads 1 and 2
-        processSettlementEvent(n, p.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n, p.getColour());
 
         // Need a settlement so that this player can be stolen from
-        processSettlementEvent(n6, p2.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n6, p2.getColour());
 
         // Player 1 plays three knights
         for(Hex h : n6.getHexes())
@@ -276,7 +276,10 @@ public class ClientProcessTests extends ClientTestHelper
     @Test
     public void longestRoadTest()
     {
-        Player p  = clientGame.getPlayers().get(Colour.BLUE);
+        Player p  = clientPlayer;
+        Player p2 = new LocalPlayer(Colour.RED, "");
+        p2.setId(Board.Player.Id.PLAYER_2);
+        clientGame.addPlayer(p2);
 
         // Find edges where roads will be built
         Edge e1 = n.getEdges().get(0); // Will be first road
@@ -297,11 +300,11 @@ public class ClientProcessTests extends ClientTestHelper
 
         // Need a settlement before you can build a road.
         // For roads 1 and 2
-        processSettlementEvent(n, p.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n, p.getColour());
 
         // Need a settlement before you can build a road.
         // For roads 3 and 4
-        processSettlementEvent(n6, p.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n6, p.getColour());
 
         // Build road 1
         processRoadEvent(e1, p.getColour());
@@ -324,7 +327,7 @@ public class ClientProcessTests extends ClientTestHelper
         assertEquals(4, p.getVp());
 
         // Build foreign settlement so longest road is revoked.
-        processSettlementEvent(n3, Colour.RED, EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n3, p2.getColour());
         assertEquals(3, p.calcRoadLength());
         assertEquals(2, p.getNumOfRoadChains());
         assertEquals(2, p.getVp());
@@ -336,34 +339,119 @@ public class ClientProcessTests extends ClientTestHelper
         Hex h = game.getGrid().getHexWithRobber();
 
         // Set up request
-        BuildProtos.PointProto.Builder point = BuildProtos.PointProto.newBuilder();
-        point.setX(hex.getX());
-        point.setY(hex.getY());
+        Board.Point point = h.toHexProto().getLocation();
 
         // Move and check
-        clientGame.moveRobber(point.build());
+        clientGame.moveRobber(point);
         assertNotEquals(h, clientGame.getGrid().getHexWithRobber());
+    }
+
+    @Test
+    public void stealTest() throws CannotAffordException
+    {
+        Player p  = clientPlayer;
+        Player p2 = new LocalPlayer(Colour.RED, "");
+        p2.setId(Board.Player.Id.PLAYER_2);
+        clientGame.addPlayer(p2);
+
+        // Set up resources
+        ResourceType r = ResourceType.Brick;
+        Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+        resources.put(r, 3);
+        p2.grantResources(resources);
+
+        // Set up Steal
+        Board.Steal.Builder steal = Board.Steal.newBuilder();
+        steal.setQuantity(resources.get(r)).setResource(ResourceType.toProto(r));
+        steal.setVictim(Board.Player.newBuilder().setId(p2.getId()).build());
+
+        // Assert resources before and after steal
+        assertTrue(0 == p.getResources().get(r));
+        assertTrue(0 == p.getNumResources());
+        assertTrue(resources.get(r) == p2.getResources().get(r));
+        assertTrue(resources.get(r) == p2.getNumResources());
+        clientGame.processResourcesStolen(steal.build(), Board.Player.newBuilder().setId(p.getId()).build());
+        assertTrue(0 == p2.getResources().get(r));
+        assertTrue(0 == p2.getNumResources());
+        assertTrue(resources.get(r) == p.getResources().get(r));
+        assertTrue(resources.get(r) == p.getNumResources());
+    }
+
+    @Test
+    public void bankTradeTest() throws CannotAffordException
+    {
+        Player p = clientPlayer;
+
+        // Set up offering and wanting
+        ResourceType r = ResourceType.Brick, r2 = ResourceType.Grain;
+        Map<ResourceType, Integer> offering = new HashMap<ResourceType, Integer>();
+        Map<ResourceType, Integer> wanting = new HashMap<ResourceType, Integer>();
+        offering.put(r, 4);
+        wanting.put(r2, 1);
+        p.grantResources(offering);
+
+        // Set up Trade
+        Trade.WithBank.Builder bankTrade = Trade.WithBank.newBuilder();
+        bankTrade.setOffering(processResources(offering)).setWanting(processResources(wanting));
+
+        // Assert offering before and after steal
+        assertTrue(offering.get(r) == p.getResources().get(r));
+        assertTrue(offering.get(r) == p.getNumResources());
+        assertTrue(p.getResources().get(r2) == 0);
+        clientGame.processBankTrade(bankTrade.build(), Board.Player.newBuilder().setId(p.getId()).build());
+        assertTrue(wanting.get(r2) == p.getResources().get(r2));
+        assertTrue(wanting.get(r2) == p.getNumResources());
+        assertTrue(0 == p.getResources().get(r));
+    }
+
+    @Test
+    public void playerTradeTest() throws CannotAffordException
+    {
+        Player p  = clientPlayer;
+        Player p2 = new LocalPlayer(Colour.RED, "");
+        p2.setId(Board.Player.Id.PLAYER_2);
+        clientGame.addPlayer(p2);
+
+        // Set up offering and wanting
+        ResourceType r = ResourceType.Brick, r2 = ResourceType.Grain;
+        Map<ResourceType, Integer> offering = new HashMap<ResourceType, Integer>();
+        Map<ResourceType, Integer> wanting = new HashMap<ResourceType, Integer>();
+        offering.put(r, 1);
+        wanting.put(r2, 1);
+        p.grantResources(offering);
+        p2.grantResources(wanting);
+
+        // Set up Trade
+        Trade.WithPlayer.Builder playerTrade = Trade.WithPlayer.newBuilder();
+        playerTrade.setOffering(processResources(offering)).setWanting(processResources(wanting));
+        playerTrade.setOther(Board.Player.newBuilder().setId(p2.getId()));
+
+        // Assert offering before and after steal
+        assertTrue(offering.get(r) == p.getResources().get(r));
+        assertTrue(offering.get(r) == p.getNumResources());
+        assertTrue(wanting.get(r2) == p2.getResources().get(r2));
+        assertTrue(wanting.get(r2) == p2.getNumResources());
+        clientGame.processPlayerTrade(playerTrade.build(), Board.Player.newBuilder().setId(p.getId()).build());
+        assertTrue(offering.get(r) == p2.getResources().get(r));
+        assertTrue(offering.get(r) == p2.getNumResources());
+        assertTrue(wanting.get(r2) == p.getResources().get(r2));
+        assertTrue(wanting.get(r2) == p.getNumResources());
     }
 
     @Test
     public void playedDevCardTest() throws DoesNotOwnException
     {
         // Move and check
-        processPlayedDevCard(EnumProtos.DevelopmentCardProto.LIBRARY, p.getColour());
-        assertTrue(clientGame.getPlayedDevCards().get(p.getColour()).get(DevelopmentCardType.Library) == 1);
+        processPlayedDevCard(Board.DevCard.newBuilder().setPlayableDevCard(Board.PlayableDevCard.YEAR_OF_PLENTY).build(), clientPlayer.getColour());
+        assertTrue(clientGame.getPlayedDevCards().get(p.getColour()).get(DevelopmentCardType.YearOfPlenty) == 1);
     }
 
     @Test
     public void boughtDevCardTest() throws CannotAffordException
     {
         // Set up request
-        EventProtos.Event.Builder ev = EventProtos.Event.newBuilder();
-        ev.setBoughtDevCard(EnumProtos.ColourProto.RED);
-
-        // Move and check
-        clientGame.getPlayer().grantResources(DevelopmentCardType.getCardCost());
-        clientGame.recordDevCard(ev.getBoughtDevCard());
-        assertTrue(clientGame.getBoughtDevCards().get(Colour.RED) == 1);
+        processBoughtDevCard(Board.DevCard.newBuilder().setPlayableDevCard(Board.PlayableDevCard.MONOPOLY).build(), clientPlayer.getColour());
+        assertTrue(clientGame.getBoughtDevCards().get(clientPlayer.getColour()) == 1);
     }
 
     @Test
@@ -371,18 +459,31 @@ public class ClientProcessTests extends ClientTestHelper
     {
         Node n = clientGame.getGrid().getNode(-1, 0);
         int dice = n.getHexes().get(0).getChit();
+        List<Board.ResourceAllocation> list = new ArrayList<Board.ResourceAllocation>();
 
         // Build Settlement so resources can be granted
-        processSettlementEvent(n, p.getColour(), EnumProtos.BuildingTypeProto.SETTLEMENT);
+        processSettlementEvent(n, p.getColour());
 
-        // Set up request
-        EventProtos.DiceRoll.Builder point = EventProtos.DiceRoll.newBuilder();
-        point.setDice(dice);
+        list.add(Board.ResourceAllocation.newBuilder()
+                .setPlayer(Board.Player.newBuilder().setId(p.getId()).build())
+                .setResources(processResources(clientGame.getNewResources(dice, p.getColour()))).build());
 
         // Move and check
         assertEquals(0, clientGame.getPlayer().getNumResources());
-        clientGame.processDice(point.build().getDice());
+        clientGame.processDice(dice, list);
         assertEquals(clientGame.getDice(), dice);
         assertEquals(1, clientGame.getPlayer().getNumResources());
+    }
+
+    private Resource.Counts processResources(Map<ResourceType, Integer> newResources)
+    {
+        Resource.Counts.Builder resources = Resource.Counts.newBuilder();
+        resources.setGrain(newResources.containsKey(ResourceType.Grain) ? newResources.get(ResourceType.Grain) : 0);
+        resources.setBrick(newResources.containsKey(ResourceType.Brick) ? newResources.get(ResourceType.Brick) : 0);
+        resources.setLumber(newResources.containsKey(ResourceType.Lumber) ? newResources.get(ResourceType.Lumber) : 0);
+        resources.setWool(newResources.containsKey(ResourceType.Wool) ? newResources.get(ResourceType.Wool) : 0);
+        resources.setOre(newResources.containsKey(ResourceType.Ore) ? newResources.get(ResourceType.Ore) : 0);
+
+        return resources.build();
     }
 }

@@ -1,248 +1,228 @@
 package client;
 
-import board.Edge;
-import board.Node;
-import enums.Move;
-import enums.ResourceType;
+import enums.ClickObject;
+import enums.DevelopmentCardType;
 import game.build.Building;
 import game.build.Settlement;
 import game.players.Player;
-import protocol.BuildProtos.PointProto;
-import protocol.RequestProtos.*;
+import grid.Edge;
+import grid.Node;
+import intergroup.EmptyOuterClass;
+import intergroup.Requests;
+import intergroup.lobby.Lobby;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Map;
 
 public class ClientWorker
 {
 	private ClientGame game;
-	private InProgressTurn inProgressTurn = game.inProgressTurn;
+	private InProgressTurn inProgressTurn;
 	private Socket clientSocket;
 	private static final int PORT = 12345;
 
-	public ClientWorker(ClientGame game)
+	public ClientWorker(ClientGame game, String host) throws IOException
 	{
+		inProgressTurn = new InProgressTurn();
 		this.game = game;
+		clientSocket = new Socket(host, PORT);
 	}
 
+	/**
+	 * Updates the turn in progress
+	 */
 	public void update()
 	{
-		
-		if(inProgressTurn.chosenMove != null)
+		ClickObject obj = inProgressTurn.getInitialClickObject();
+
+		if(inProgressTurn.getChosenMove() != null)
 		{
 			sendMove();
-		}
-		else if(inProgressTurn.initialClickObject == inProgressTurn.initialClickObject.CARD)
-		{
-			checkCard();
-		}
-		else if(inProgressTurn.initialClickObject == inProgressTurn.initialClickObject.NODE)
-		{
-			checkBuild(inProgressTurn.chosenNode);
-		}
-		else if(inProgressTurn.initialClickObject == inProgressTurn.initialClickObject.EDGE)
-		{
-			checkBuild(inProgressTurn.chosenEdge);
-		}
-		else if(inProgressTurn.initialClickObject == inProgressTurn.initialClickObject.DEVCARD)
-		{
-			checkDevCard();
+			return;
 		}
 
+		// Perform action based upon what type of object was last selected
+		switch(obj)
+		{
+			case BUYDEVCARD:
+				checkBuyDevCard();
+				break;
+			case PLAYDEVCARD:
+				checkPlayDevCard(inProgressTurn.getChosenCard());
+				break;
+			case EDGE:
+				checkBuildRoad(inProgressTurn.getChosenEdge());
+				break;
+			case NODE:
+				checkBuild(inProgressTurn.getChosenNode());
+				break;
+			case TRADEREQUEST:
+				//TODO
+				break;
+
+		}
 	}
 
-	private void checkDevCard()
+	/**
+	 * Checks the player can play the given card
+	 * @param type the type of card wanting to be played
+	 */
+	private void checkPlayDevCard(DevelopmentCardType type)
 	{
-		//TODO: look up game rules and validate
-	}
-	private void checkCard()
-	{
-		inProgressTurn.possibilities[0] = Move.CLOSE;
-		
+		// If player's turn
 		if(checkTurn())
 		{
 			Player player = game.getPlayer();
-			
-			Map<ResourceType, Integer> playerResources = player.getResources();
-			
-			int ore = playerResources.get(ResourceType.Ore);
-			int grain = playerResources.get(ResourceType.Grain);
-			int wool = playerResources.get(ResourceType.Wool);
-			
-			if(ore >= 1 && grain >= 1 && wool >= 1)
+
+			// If the player owns the provided card
+			if(player.getDevelopmentCards().containsKey(type) && player.getDevelopmentCards().get(type) > 0)
 			{
-				inProgressTurn.possibilities[1] = Move.BUY_CARD;
+				inProgressTurn.addPossibility(Requests.Request.BodyCase.PLAYDEVCARD);
+			}
+			else inProgressTurn.getPossibilities().remove(Requests.Request.BodyCase.PLAYDEVCARD);
+		}
+		else inProgressTurn.getPossibilities().remove(Requests.Request.BodyCase.PLAYDEVCARD);
+	}
+
+	/**
+	 * Checks to see if the player can buy a dev card
+	 */
+	private void checkBuyDevCard()
+	{
+		// If player's turn
+		if(checkTurn())
+		{
+			Player player = game.getPlayer();
+
+			if(player.canAfford(DevelopmentCardType.getCardCost()))
+			{
+				inProgressTurn.addPossibility(Requests.Request.BodyCase.BUYDEVCARD);
 			}
 		}
 	}
 
+	/**
+	 * Checks if a city or settlement can be built on the given nodeS
+	 * @param node the desired settlement / city location
+	 */
 	private void checkBuild(Node node)
 	{
-		inProgressTurn.possibilities[0] = Move.CLOSE;
-		
+		// If player's turn
 		if(checkTurn())
 		{
 			Building building = node.getSettlement();
-			
-			if(building != null)
-			{
-				if(building instanceof Settlement)
-				{
-					if(building.getPlayerColour() == game.getPlayer().getColour())
-					{
-						Player player = game.getPlayer();
-						
-						Map<ResourceType, Integer> playerResources = player.getResources();
-						
-						int ore = playerResources.get(ResourceType.Ore);
-						int grain = playerResources.get(ResourceType.Grain);
-						
-						if(ore >= 3 && grain >= 2)
-						{
-							inProgressTurn.possibilities[1] = Move.UPGRADE_SETTLEMENT;
-						}
 
-					}
+			// If there is a settlement present
+			if(building != null && building instanceof Settlement)
+			{
+				if(game.getPlayer().canBuildCity(node))
+				{
+					inProgressTurn.addPossibility(Requests.Request.BodyCase.BUILDCITY);
 				}
 			}
 			else
 			{
 				if(game.getPlayer().canBuildSettlement(node))
 				{
-					inProgressTurn.possibilities[1] = Move.BUILD_SETTLEMENT;
+					inProgressTurn.addPossibility(Requests.Request.BodyCase.BUILDSETTLEMENT);
 				}
 			}
 		}
 	}
 
-    private boolean checkTurn() {
+	/**
+	 * @return whether or not it is the player's turn
+	 */
+    private boolean checkTurn()
+	{
         boolean turn = false;
 
-        if (game.getCurrentPlayer() == game.getPlayer().getColour()) {
+        if (game.getCurrentPlayer() == game.getPlayer().getColour())
+        {
             turn = true;
         }
 
         return turn;
     }
-	private void checkBuild(Edge edge)
-	{
-		inProgressTurn.possibilities[0] = Move.CLOSE;
 
+	/**
+	 * Checks to see if the player can build a road
+	 * @param edge the desired road location
+	 */
+	private void checkBuildRoad(Edge edge)
+	{
 		if(game.getPlayer().canBuildRoad(edge))
 		{
-			inProgressTurn.possibilities[1] = Move.BUILD_ROAD;
+			inProgressTurn.addPossibility(Requests.Request.BodyCase.BUILDROAD);
 		}
 	}
 
-    private void sendMove() {
-        Request.Builder request = Request.newBuilder();
+	/**
+	 * Switches on the move type to ascertain which proto message to form
+	 */
+    private void sendMove()
+	{
+        Requests.Request.Builder request = Requests.Request.newBuilder();
 
-        switch (game.inProgressTurn.chosenMove) {
-            case BUILD_ROAD:
-                request.setBuildRoadRequest(setUpRoad(inProgressTurn.chosenEdge));
+        switch (inProgressTurn.getChosenMove())
+		{
+			case BUILDROAD:
+                request.setBuildRoad(inProgressTurn.getChosenEdge().toEdgeProto());
                 break;
-            case BUILD_SETTLEMENT:
-                request.setBuildSettlementRequest(setUpSettlement(inProgressTurn.chosenNode));//just Settlement
+            case BUILDSETTLEMENT:
+                request.setBuildSettlement(inProgressTurn.getChosenNode().toProto());
                 break;
-            case UPGRADE_SETTLEMENT:
-                request.setUpradeSettlementRequest(upgradeSettlement(inProgressTurn.chosenNode));// becomes city
+			case BUILDCITY:
+                request.setBuildCity(inProgressTurn.getChosenNode().toProto());
                 break;
-            case BUY_CARD:
-                request.setBuyDevCardRequest(buyDevCardRequest());
-                break;
-			case PLAY_ROADBUILDINGCARD:
-			//TODO: PlayRoadBuildingCardRequest
-			case PLAY_MONOPOLYCARD:
-			//TODO: PlayMonopolyCardRequest
-			case PLAY_YEAROFPLENTYCARD:
-			//TODO: PlayYearOfPlentyCardRequest
-			case PLAY_ROADLIBRARYCARD:
-			//TODO: PlayLibraryCardRequest
-			case PLAY_UNIVERSITYCARD:
-			//TODO: PlayUniversityCardRequest
-			case PLAY_KNIGHTCARD:
-			//TODO: PlayKnightCardRequest
+			case CHATMESSAGE:
+				request.setChatMessage(inProgressTurn.getChatMessage());
+				break;
+			case JOINLOBBY:
+				request.setJoinLobby(getJoinLobby());
+				break;
+			case MOVEROBBER:
+				request.setMoveRobber(inProgressTurn.getChosenHex().toHexProto().getLocation());
+				break;
 
-
-			//Move Robber
-			//TODO: MoveRobberRequest moveRobberRequest = 12;
-
-			//TradeRequest
-			//TODO: TradeRequest tradeRequest = 14;
-
-			//ResouceCount
-			//TODO: ResourceCount discardRequest = 15;
-
-
-			//moving rubber
-            case CLOSE:
-                request.setEndMoveRequest(endMoveRequest());
-                break;
-
-
+			// Require empty request bodies
+			case ROLLDICE:
+				request.setRollDice(EmptyOuterClass.Empty.getDefaultInstance());
+				break;
+			case ENDTURN:
+				request.setEndTurn(EmptyOuterClass.Empty.getDefaultInstance());
+				break;
+			case BUYDEVCARD:
+				request.setBuyDevCard(EmptyOuterClass.Empty.getDefaultInstance());
+				break;
         }
 
-		toServer(request.build());
+		sendToServer(request.build());
     }
 
-    //TODO: send protocol buffer to server with codedOutputStream
-	private void toServer(Request request){
-		try {
-			clientSocket = new Socket(InetAddress.getLocalHost(),PORT);
-			System.out.println("Sending to Server\n");
-
+	//TODO: send protocol buffer to server with codedOutputStream
+	private void sendToServer(Requests.Request request)
+	{
+		try
+		{
 			request.writeTo(clientSocket.getOutputStream());
 			clientSocket.getOutputStream().flush();
-
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 			e.getMessage();
 		}
 	}
 
-    private BuildRoadRequest setUpRoad(Edge edge) {
-        BuildRoadRequest.Builder roadRequest = BuildRoadRequest.newBuilder();
-        roadRequest.setEdge(edge.toEdgeProto());
 
-        return roadRequest.build();
-    }
+	/**
+	 * @return a join lobby event for this player
+	 */
+	private Lobby.Join getJoinLobby()
+	{
+		// TODO update gameID?
+		return Lobby.Join.newBuilder().setUsername(game.getPlayer().getUsername()).setGameId(0).build();
+	}
 
-    private BuildSettlementRequest setUpSettlement(Node node) {
-        BuildSettlementRequest.Builder settlementRequest = BuildSettlementRequest.newBuilder();
-        PointProto.Builder point = PointProto.newBuilder();
-
-        point.setX(node.getX());
-        point.setY(node.getY());
-
-        settlementRequest.setPoint(point.build());
-        return settlementRequest.build();
-
-
-    }
-
-    private UpgradeSettlementRequest upgradeSettlement(Node node) {
-        if (node.getSettlement() == null) return null;
-
-        UpgradeSettlementRequest.Builder upgradeRequest = UpgradeSettlementRequest.newBuilder();
-        PointProto.Builder point = PointProto.newBuilder();
-
-        point.setX(node.getX());
-        point.setY(node.getY());
-
-        upgradeRequest.setPoint(point.build());
-        return upgradeRequest.build();
-
-    }
-
-    private BuyDevCardRequest buyDevCardRequest() {
-        BuyDevCardRequest.Builder buyDevCard = BuyDevCardRequest.newBuilder();
-        return buyDevCard.build();
-    }
-
-    private EndMoveRequest endMoveRequest() {
-        EndMoveRequest.Builder endMove = EndMoveRequest.newBuilder();
-        return endMove.build();
-    }
 }

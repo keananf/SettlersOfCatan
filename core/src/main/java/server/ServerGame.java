@@ -370,9 +370,8 @@ public class ServerGame extends Game
 		}
 
 		// Try to buy card
-		// Return the response with the card parameter set
         DevelopmentCardType card = ((NetworkPlayer)p).buyDevelopmentCard(bank);
-        return DevelopmentCardType.toProto(card);
+		return DevelopmentCardType.toProto(card);
 	}
 
 	/**
@@ -443,24 +442,6 @@ public class ServerGame extends Game
 
 		// Cannot take from this player
 		if(!valid) throw new CannotStealException(currentPlayer, otherColour);
-	}
-
-	/**
-	 * Process the playing of the 'University' development card.
-	 */
-	public void playUniversityCard() throws DoesNotOwnException
-	{
-		((NetworkPlayer)players.get(currentPlayer)).playDevelopmentCard(DevelopmentCardType.University);
-        grantVpPoint();
-	}
-
-	/**
-	 * Process the playing of the 'Library' development card.
-	 */
-	public void playLibraryCard() throws DoesNotOwnException
-	{
-		((NetworkPlayer)players.get(currentPlayer)).playDevelopmentCard(DevelopmentCardType.Library);
-        grantVpPoint();
 	}
 	
 	/**

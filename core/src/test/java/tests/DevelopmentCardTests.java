@@ -494,14 +494,13 @@ public class DevelopmentCardTests extends TestHelper
 	{
 		// Grant Card
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
-		p.buyDevelopmentCard(DevelopmentCardType.Library, game.getBank());
 
 		// Play move and assert vp has increased
-		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Library) == 1);
+		assertFalse(p.getDevelopmentCards().containsKey(DevelopmentCardType.Library));
 		assertEquals(0, p.getVp());
-		game.playLibraryCard();
+		p.buyDevelopmentCard(DevelopmentCardType.Library, game.getBank());
 		assertEquals(1, p.getVp());
-		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Library) == 0);
+		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Library) == 1);
 	}
 	
 	@Test
@@ -509,13 +508,12 @@ public class DevelopmentCardTests extends TestHelper
 	{
 		// Grant Card
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
-		p.buyDevelopmentCard(DevelopmentCardType.University, game.getBank());
 
 		// Play move and assert vp has increased
-		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.University) == 1);
+		assertFalse(p.getDevelopmentCards().containsKey(DevelopmentCardType.University));
 		assertEquals(0, p.getVp());
-		game.playUniversityCard();
+		p.buyDevelopmentCard(DevelopmentCardType.University, game.getBank());
 		assertEquals(1, p.getVp());
-		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.University) == 0);
+		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.University) == 1);
 	}
 }

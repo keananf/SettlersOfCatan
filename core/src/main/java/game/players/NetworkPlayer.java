@@ -139,7 +139,6 @@ public class NetworkPlayer extends Player
 		spendResources(DevelopmentCardType.getCardCost(), bank);
 		DevelopmentCardType card = DevelopmentCardType.chooseRandom(bank);
 		addDevelopmentCard(DevelopmentCardType.toProto(card));
-
 		return card;
 	}
 

@@ -500,6 +500,12 @@ public abstract class Player
 
 		int existing = cards.containsKey(type) ? cards.get(type) : 0;
 		cards.put(type, existing + 1);
+
+		// Grant VP point if necessary
+		if(type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University))
+		{
+			vp++;
+		}
 	}
 
 	/**

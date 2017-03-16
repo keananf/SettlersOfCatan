@@ -80,6 +80,8 @@ public class MainMenuScreen implements Screen
 				{
 					Gdx.app.debug("UI", "Button click: Join existing multiplayer game");
 
+					// TODO retrieve host name from text user entered in
+					// TODO game.startRemoteClient(hostname);
 					game.setScreen(new GameScreen(game));
 				}
 			});

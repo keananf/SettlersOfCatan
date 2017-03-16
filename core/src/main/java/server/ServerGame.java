@@ -615,25 +615,23 @@ public class ServerGame extends Game
 		
 		return false;
 	}
+
 	/**
 	 *
 	 * @param joinLobby the join lobby request
+	 * @param colour
 	 * @return the updated list of usernames
 	 */
-	public Lobby.Usernames joinGame(Lobby.Join joinLobby) throws GameFullException
+	public Lobby.Usernames joinGame(Lobby.Join joinLobby, Colour colour) throws GameFullException
 	{
-		// If game is full
-		if(numPlayers == NUM_PLAYERS) throw new GameFullException();
+		// If player not registered yet
+		if(colour == null)
+		{
+			colour = joinGame();
+		}
 
-		// Assign colour and id
-	    Colour newCol = Colour.values()[numPlayers++];
-		Board.Player.Id id = Board.Player.Id.forNumber(numPlayers);
-		NetworkPlayer p = new NetworkPlayer(newCol, joinLobby.getUsername());
-		p.setId(id);
-
-		// Add player info and return assigned colour
-		idsToColours.put(id, newCol);
-		players.put(p.getColour(), p);
+		Player p = players.get(colour);
+		p.setUserName(joinLobby.getUsername());
 
 		// Add all users to update message
 		Lobby.Usernames.Builder users = Lobby.Usernames.newBuilder();
@@ -645,8 +643,11 @@ public class ServerGame extends Game
 		return users.build();
 	}
 
-	public Colour joinGame()
+	public Colour joinGame() throws GameFullException
 	{
+		// If game is full
+		if(numPlayers == NUM_PLAYERS) throw new GameFullException();
+
 		// Assign colour and id
 		Colour newCol = Colour.values()[numPlayers++];
 		Board.Player.Id id = Board.Player.Id.forNumber(numPlayers);
@@ -662,11 +663,5 @@ public class ServerGame extends Game
 	public Map<Colour, Player> getPlayers()
 	{
 		return players;
-	}
-
-	private void grantVpPoint()
-	{
-		Player currentPlayer = players.get(this.currentPlayer);
-		currentPlayer.addVp(currentPlayer.getVp() + 1);
 	}
 }

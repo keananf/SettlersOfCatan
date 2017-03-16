@@ -13,8 +13,9 @@ public class LocalClientConnection implements IClientConnection
     private LocalServerConnection conn;
     protected ConcurrentLinkedQueue<Messages.Message> fromClient;
 
-    public LocalClientConnection()
+    public LocalClientConnection(LocalServerConnection conn)
     {
+        this.conn = conn;
         fromClient = new ConcurrentLinkedQueue<Messages.Message>();
     }
 

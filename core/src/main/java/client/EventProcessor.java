@@ -1,14 +1,11 @@
 package client;
 
 import connection.IServerConnection;
-import connection.LocalServerConnection;
-import connection.RemoteServerConnection;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import server.Logger;
 
 import java.io.IOException;
-import java.net.Socket;
 
 /**
  * Class which continuously listens for updates from the server Created by
@@ -20,14 +17,7 @@ public class EventProcessor implements Runnable
 	private IServerConnection conn;
 	private Logger logger;
 
-	public EventProcessor(Socket socket, ClientGame game)
-	{
-		conn = new RemoteServerConnection(socket);
-		logger = new Logger();
-		this.game = game;
-    }
-
-	public EventProcessor(LocalServerConnection conn, ClientGame game)
+	public EventProcessor(IServerConnection conn, ClientGame game)
 	{
 		this.conn = conn;
 		logger = new Logger();

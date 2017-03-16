@@ -1,6 +1,7 @@
 package server;
 
 import enums.Colour;
+import exceptions.GameFullException;
 import game.Game;
 import game.players.Player;
 import intergroup.Events.Event;
@@ -20,12 +21,12 @@ import java.util.Map;
 
 public class Server implements Runnable
 {
-	private MessageProcessor msgProc;
-	private ServerGame game;
-	private int numConnections;
-	private Map<Colour, ListenerThread> connections;
-	private ServerSocket serverSocket;
-	private static final int PORT = 12345;
+	protected MessageProcessor msgProc;
+	protected ServerGame game;
+	protected int numConnections;
+	protected Map<Colour, ListenerThread> connections;
+	protected ServerSocket serverSocket;
+	protected static final int PORT = 12345;
 
 	public Server()
 	{
@@ -212,7 +213,6 @@ public class Server implements Runnable
 
 	/**
 	 * Loops until four players have been found.
-	 * TODO incorporate AI
 	 * @throws IOException 
 	 */
 	private void getPlayers() throws IOException
@@ -223,13 +223,19 @@ public class Server implements Runnable
 		serverSocket = new ServerSocket(PORT);
 		System.out.println("Server started. Waiting for client(s)...\n");
 
+		// Loop until all players found
 		while(numConnections < Game.NUM_PLAYERS)
 		{
 			Socket connection = serverSocket.accept();
 			
 			if (connection != null)
 			{
-				Colour c = game.joinGame();
+				Colour c = null;
+				try
+				{
+					c = game.joinGame();
+				}
+				catch (GameFullException e) {}
 				connections.put(c, new ListenerThread(connection, c,  this));
 				System.out.println(String.format("Player %d connected", numConnections));
 				numConnections++;

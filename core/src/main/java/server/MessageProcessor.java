@@ -114,7 +114,7 @@ public class MessageProcessor
                     ev.setDevCardBought(game.buyDevelopmentCard());
                     break;
                 case JOINLOBBY:
-                    ev.setLobbyUpdate(game.joinGame(request.getJoinLobby()));
+                    ev.setLobbyUpdate(game.joinGame(request.getJoinLobby(), colour));
                     break;
                 case MOVEROBBER:
                     game.moveRobber(request.getMoveRobber());

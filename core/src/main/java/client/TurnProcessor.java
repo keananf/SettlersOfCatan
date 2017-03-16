@@ -1,8 +1,6 @@
 package client;
 
 import connection.IServerConnection;
-import connection.LocalServerConnection;
-import connection.RemoteServerConnection;
 import enums.ResourceType;
 import intergroup.EmptyOuterClass;
 import intergroup.Messages;
@@ -11,22 +9,13 @@ import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.trade.Trade;
 
-import java.net.Socket;
-
 public class TurnProcessor
 {
 	private ClientGame game;
 	private TurnInProgress turn;
 	private IServerConnection conn;
 
-	public TurnProcessor(Socket clientSocket, ClientGame game)
-	{
-		turn = new TurnInProgress();
-		this.game = game;
-		conn = new RemoteServerConnection(clientSocket);
-	}
-
-	public TurnProcessor(LocalServerConnection conn, ClientGame game)
+	public TurnProcessor(IServerConnection conn, ClientGame game)
 	{
 		turn = new TurnInProgress();
 		this.game = game;

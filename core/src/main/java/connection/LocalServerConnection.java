@@ -18,6 +18,11 @@ public class LocalServerConnection implements IServerConnection
         fromServer = new ConcurrentLinkedQueue<Messages.Message>();
     }
 
+    public void setConn(LocalClientConnection conn)
+    {
+        this.conn = conn;
+    }
+
     @Override
     public Messages.Message getMessageFromServer()
     {
@@ -31,5 +36,10 @@ public class LocalServerConnection implements IServerConnection
     public void sendMessageToServer(Messages.Message message)
     {
         conn.fromClient.add(message);
+    }
+
+    public LocalClientConnection getConn()
+    {
+        return conn;
     }
 }

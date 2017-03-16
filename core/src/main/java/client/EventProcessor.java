@@ -1,5 +1,8 @@
 package client;
 
+import connection.IServerConnection;
+import connection.LocalServerConnection;
+import connection.RemoteServerConnection;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import server.Logger;
@@ -14,15 +17,22 @@ import java.net.Socket;
 public class EventProcessor implements Runnable
 {
 	private ClientGame game;
-	private Socket socket;
+	private IServerConnection conn;
 	private Logger logger;
 
 	public EventProcessor(Socket socket, ClientGame game)
 	{
-		this.socket = socket;
+		conn = new RemoteServerConnection(socket);
 		logger = new Logger();
 		this.game = game;
     }
+
+	public EventProcessor(LocalServerConnection conn, ClientGame game)
+	{
+		this.conn = conn;
+		logger = new Logger();
+		this.game = game;
+	}
 
     @Override
     public void run()
@@ -124,7 +134,7 @@ public class EventProcessor implements Runnable
 	 */
 	private void processMessage() throws Exception
 	{
-		Message msg = Message.parseFrom(socket.getInputStream());
+		Message msg = conn.getMessageFromServer();
 		logger.logReceivedMessage(msg);
 
 		// switch on message type

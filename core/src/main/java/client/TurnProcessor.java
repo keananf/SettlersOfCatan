@@ -1,27 +1,38 @@
 package client;
 
+import connection.IServerConnection;
+import connection.LocalServerConnection;
+import connection.RemoteServerConnection;
 import enums.ResourceType;
 import intergroup.EmptyOuterClass;
+import intergroup.Messages;
 import intergroup.Requests;
 import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.trade.Trade;
 
-import java.io.IOException;
 import java.net.Socket;
 
 public class TurnProcessor
 {
 	private ClientGame game;
 	private TurnInProgress turn;
-	private Socket clientSocket;
+	private IServerConnection conn;
 
 	public TurnProcessor(Socket clientSocket, ClientGame game)
 	{
 		turn = new TurnInProgress();
 		this.game = game;
-		this.clientSocket = clientSocket;
+		conn = new RemoteServerConnection(clientSocket);
 	}
+
+	public TurnProcessor(LocalServerConnection conn, ClientGame game)
+	{
+		turn = new TurnInProgress();
+		this.game = game;
+		this.conn = conn;
+	}
+
 
 	/**
 	 * Switches on the move type to ascertain which proto message to form
@@ -90,17 +101,7 @@ public class TurnProcessor
 	 */
 	private void sendToServer(Requests.Request request)
 	{
-		// TODO: send protocol buffer to server with codedOutputStream
-		try
-		{
-			request.writeTo(clientSocket.getOutputStream());
-			clientSocket.getOutputStream().flush();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			e.getMessage();
-		}
+		conn.sendMessageToServer(Messages.Message.newBuilder().setRequest(request).build());
 	}
 
 	/**

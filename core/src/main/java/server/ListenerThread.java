@@ -1,5 +1,8 @@
 package server;
 
+import connection.IClientConnection;
+import connection.LocalClientConnection;
+import connection.RemoteClientConnection;
 import enums.Colour;
 import intergroup.Messages.*;
 import intergroup.Events.*;
@@ -14,13 +17,22 @@ import java.net.Socket;
 public class ListenerThread implements Runnable
 {
 	private Thread thread;
-	protected Socket socket;
+	protected IClientConnection conn;
 	private Colour colour;
 	private Server server;
 
     public ListenerThread(Socket socket, Colour c, Server server)
     {
-        this.socket = socket;
+        this.conn = new RemoteClientConnection(socket);
+        this.server = server;
+        colour = c;
+        this.thread = new Thread(this);
+        this.thread.start();
+    }
+
+    public ListenerThread(LocalClientConnection conn, Colour c, Server server)
+    {
+        this.conn = conn;
         this.server = server;
         colour = c;
         this.thread = new Thread(this);
@@ -53,7 +65,7 @@ public class ListenerThread implements Runnable
         while(true)
         {
             // Parse message and add to queue
-            Message msg = Message.parseFrom(socket.getInputStream());
+            Message msg = conn.getMessageFromClient();
             server.addMessageToProcess(new ReceivedMessage(colour, msg));
 		}
 	}
@@ -78,9 +90,7 @@ public class ListenerThread implements Runnable
      */
     public void sendMessage(Message msg) throws IOException
     {
-        // Serialise and Send
-        msg.writeTo(socket.getOutputStream());
-        socket.getOutputStream().flush();
+        conn.sendMessageToClient(msg);
     }
 
     public void sendError() throws IOException

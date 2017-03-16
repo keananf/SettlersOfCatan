@@ -16,6 +16,7 @@ import intergroup.resource.Resource;
 import intergroup.trade.Trade;
 import org.junit.Before;
 import org.junit.Test;
+import server.ReceivedMessage;
 import server.Server;
 
 import java.io.IOException;
@@ -444,17 +445,19 @@ public class TradeTests extends TestHelper
 
         // INITIATE TRADE PHASE
         assertFalse(server.isTradePhase());
-        server.processMessage(Messages.Message.newBuilder().setRequest(
+        server.addMessageToProcess(new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(
                 Requests.Request.newBuilder().setInitiateTrade(
-                        Trade.Kind.newBuilder().setPlayer(playerTrade.build()).build()).build()).build(), p.getColour());
+                        Trade.Kind.newBuilder().setPlayer(playerTrade.build()).build()).build()).build()));
+        server.processMessage();
 
         // Assert it is the trade phase, and that player red has an expected move
         assertTrue(server.isTradePhase());
         assertTrue(server.getExpectedMoves(Colour.RED).get(0).equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE));
 
         // Player red accepts. Assert trade occurred and that it is still trade phase
-        server.processMessage(Messages.Message.newBuilder().setRequest(
-                Requests.Request.newBuilder().setSubmitTradeResponseValue(Trade.Response.ACCEPT.getNumber()).build()).build(), p2.getColour());
+        server.addMessageToProcess(new ReceivedMessage(p2.getColour(), Messages.Message.newBuilder().setRequest(
+                Requests.Request.newBuilder().setSubmitTradeResponseValue(Trade.Response.ACCEPT.getNumber()).build()).build()));
+        server.processMessage();
         assertTrue(1 == p.getResources().get(ResourceType.Brick) && 1 == p.getNumResources());
         assertTrue(0 == p.getResources().get(ResourceType.Grain));
         assertTrue(1 == p2.getResources().get(ResourceType.Grain) && 1 == p2.getNumResources());
@@ -466,8 +469,9 @@ public class TradeTests extends TestHelper
         int old = p.getNumResources();
         p.grantResources(City.getCityCost(), game.getBank());
         assertTrue(p.getNumResources() > old);
-        server.processMessage(Messages.Message.newBuilder().setRequest(
-                Requests.Request.newBuilder().setBuildCity(n.toProto()).build()).build(), p.getColour());
+        server.addMessageToProcess(new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(
+                Requests.Request.newBuilder().setBuildCity(n.toProto()).build()).build()));
+        server.processMessage();
 
         assertTrue(p.getNumResources() > old);
         assertTrue(p.getSettlements().size() == 1);

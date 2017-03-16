@@ -15,12 +15,10 @@ public class TurnProcessor
 	private ClientGame game;
 	private Turn turn;
 	private Socket clientSocket;
-	private MoveValidator moveValidator;
 
 	public TurnProcessor(Socket clientSocket, ClientGame game)
 	{
 		turn = new Turn();
-		moveValidator = new MoveValidator(game, turn);
 		this.game = game;
 		this.clientSocket = clientSocket;
 	}

@@ -10,7 +10,7 @@ import java.util.List;
  * Class uniquely describing an edge (between two edges)
  * @author 140001596
  */
-public class Edge
+public class Edge implements BoardElement
 {
 	private Node x, y; // way of uniquely describing an edge
 	private Road  road;

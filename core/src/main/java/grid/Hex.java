@@ -11,7 +11,7 @@ import java.util.List;
  * Class representing an individual hex 
  * @author 140001596
  */
-public class Hex extends BoardElement
+public class Hex extends GridElement
 {
 	private Terrain.Kind terrain;
 	private ResourceType resource;

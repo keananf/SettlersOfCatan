@@ -14,7 +14,6 @@ import java.net.Socket;
 public class EventProcessor implements Runnable
 {
 	private ClientGame game;
-	private Thread thread;
 	private Socket socket;
 	private Logger logger;
 
@@ -23,9 +22,6 @@ public class EventProcessor implements Runnable
 		this.socket = socket;
 		logger = new Logger();
 		this.game = game;
-
-        thread = new Thread(this);
-        thread.start();
     }
 
     @Override

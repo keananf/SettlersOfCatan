@@ -11,7 +11,7 @@ import java.util.List;
  * Class representing an individual node in catan (intersection of three hexes)
  * @author 140001596
  */
-public class Node extends BoardElement
+public class Node extends GridElement
 {
 	private List<Hex> hexes;
 	private List<Edge> edges;

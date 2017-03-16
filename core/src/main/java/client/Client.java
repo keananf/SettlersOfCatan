@@ -12,7 +12,9 @@ public class Client
     private ClientGame state;
     private Socket socket;
     private EventProcessor eventProcessor;
+    private Thread evProcessor;
     private TurnProcessor turnProcessor;
+    private MoveProcessor moveProcessor;
     private static final int PORT = 12345;
 
     public Client()
@@ -45,8 +47,28 @@ public class Client
     private void setUp()
     {
         this.state = new ClientGame();
+        this.moveProcessor = new MoveProcessor(state);
         this.eventProcessor = new EventProcessor(socket, state);
         this.turnProcessor = new TurnProcessor(socket, state);
+
+        evProcessor = new Thread(eventProcessor);
+        evProcessor.start();
+    }
+
+    /**
+     * Shuts down a client by terminating the socket and the event processor thread.
+     */
+    private void shutDown()
+    {
+        try
+        {
+            evProcessor.join();
+            socket.close();
+        }
+        catch (IOException | InterruptedException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public ClientGame getState()

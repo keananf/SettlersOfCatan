@@ -1,45 +1,10 @@
 package grid;
 
-public abstract class BoardElement
+/**
+ * Class representing anything on a catan board.
+ * (Edge, Node, or Hex)
+ * @author 140001596
+ */
+public interface BoardElement
 {
-	private int x, y; // coordinates
-	protected BoardElement(int x, int y)
-	{
-		setX(x);
-		setY(y);
-	}
-	
-	/**
-	 * @return the x
-	 */
-	public int getX()
-	{
-		return x;
-	}
-
-	/**
-	 * @param x the x to set
-	 */
-	public void setX(int x)
-	{
-		this.x = x;
-	}
-
-	/**
-	 * @return the y
-	 */
-	public int getY()
-	{
-		return y;
-	}
-
-	/**
-	 * @param y the y to set
-	 */
-	public void setY(int y)
-	{
-		this.y = y;
-	}
-
-
 }

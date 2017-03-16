@@ -13,12 +13,12 @@ import java.net.Socket;
 public class TurnProcessor
 {
 	private ClientGame game;
-	private Turn turn;
+	private TurnInProgress turn;
 	private Socket clientSocket;
 
 	public TurnProcessor(Socket clientSocket, ClientGame game)
 	{
-		turn = new Turn();
+		turn = new TurnInProgress();
 		this.game = game;
 		this.clientSocket = clientSocket;
 	}
@@ -145,7 +145,7 @@ public class TurnProcessor
 		return kind.build();
 	}
 
-	public Turn getTurn()
+	public TurnInProgress getTurn()
 	{
 		return turn;
 	}

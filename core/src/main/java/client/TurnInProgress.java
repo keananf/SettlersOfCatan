@@ -12,7 +12,7 @@ import intergroup.trade.Trade;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Turn
+public class TurnInProgress
 {
 	private Requests.Request.BodyCase chosenMove;
 
@@ -29,7 +29,7 @@ public class Turn
 	private Trade.Response tradeResponse;
 	private Colour target;
 
-	public Turn()
+	public TurnInProgress()
 	{
 		reset();
 	}

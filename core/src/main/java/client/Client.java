@@ -76,7 +76,7 @@ public class Client
         return state;
     }
 
-    public Turn getTurn()
+    public TurnInProgress getTurn()
     {
         return turnProcessor.getTurn();
     }

@@ -64,7 +64,7 @@ public class MoveProcessor
      * @param turn the turn
      * @return list of possible choices from this proposed turn
      */
-    public List<Requests.Request.BodyCase> processTurn(Turn turn)
+    public List<Requests.Request.BodyCase> processTurn(TurnInProgress turn)
     {
         List<Requests.Request.BodyCase> possibilities = new ArrayList<Requests.Request.BodyCase>();
 

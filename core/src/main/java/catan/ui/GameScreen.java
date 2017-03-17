@@ -14,12 +14,15 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.g3d.attributes.IntAttribute;
 import com.badlogic.gdx.utils.Array;
 
 import enums.ResourceType;
 
 import board.Hex;
+
 import catan.SettlersOfCatan;
 
 public class GameScreen implements Screen
@@ -29,6 +32,7 @@ public class GameScreen implements Screen
 
 	final private Camera cam;
 	final private CatanCamController camController;
+	final private CameraInputController debugController;
 
 	final private Array<ModelInstance> boardInstances = new Array<ModelInstance>();
 	final private Environment environment = new Environment();
@@ -40,16 +44,17 @@ public class GameScreen implements Screen
 		this.game = game;
 
 		// init camera
-		cam = new PerspectiveCamera(75f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(0f, 7f, 10f);
-		cam.lookAt(0, 0, 0);
-		cam.near = 0.01f;
-		cam.far = 300f;
+		cam = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam.position.set(10f, 8f, 0f);
+		cam.lookAt(0, 0, 0); // look at centre of world
+		cam.near = 0.01f; // closest things to be rendered
+		cam.far = 300f; // furthest things to be rendered
 		cam.update();
 
 		// init camera controller
 		camController = new CatanCamController(cam);
-		Gdx.input.setInputProcessor(camController);
+		debugController = new CameraInputController(cam);
+		Gdx.input.setInputProcessor(debugController);
 
 		// init environment
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
@@ -74,7 +79,6 @@ public class GameScreen implements Screen
 					assets.getModel("hex.g3db"),
 					hexPointToCartVec(coord.getKey()));
 
-			hex.transform.scale(1.2f, 1f, 1.2f);
 			boardInstances.add(hex);
 
 			Model resourceModel = null;
@@ -103,7 +107,7 @@ public class GameScreen implements Screen
 			}
 
 			Vector3 resourcePos = hexPointToCartVec(coord.getKey());
-			resourcePos.y += 0.2;
+			resourcePos.y += 0.1f;
 			ModelInstance resource = new ModelInstance(resourceModel, resourcePos);;
 			boardInstances.add(resource);
 		}

@@ -15,7 +15,7 @@ public final class CatanCamController implements InputProcessor
 	private static final Vector3 Y_AXIS = new Vector3(0f, 1f, 0f);
 	private static final float SPIN_RATE = 4f;
 	private static final float ZOOM_RATE = 0.9f;
-	private static final float MAX_DIST = 10f;
+	private static final float MAX_DIST = 20f;
 	private static final float MIN_DIST = 5f;
 
 	private final Camera camera;

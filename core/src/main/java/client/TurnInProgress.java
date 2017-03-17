@@ -11,6 +11,7 @@ import intergroup.trade.Trade;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TurnInProgress
 {
@@ -24,10 +25,12 @@ public class TurnInProgress
 	private Colour chosenColour;
 	private DevelopmentCardType chosenCard;
 	private String chatMessage;
-	private BankTrade bankTrade;
-	private PlayerTrade playerTrade;
+	private Trade.WithBank bankTrade;
+	private Trade.WithPlayer playerTrade;
 	private Trade.Response tradeResponse;
 	private Colour target;
+	private ConcurrentLinkedQueue<Requests.Request.BodyCase> expectedMoves;
+	private boolean tradePhase;
 
 	public TurnInProgress()
 	{
@@ -36,6 +39,7 @@ public class TurnInProgress
 
 	public void reset()
 	{
+		tradePhase = false;
 		chosenCard = null;
 		chosenColour = null;
 		chosenEdge = null;
@@ -48,6 +52,12 @@ public class TurnInProgress
 		tradeResponse = null;
 		target = null;
 		chosenResources = new HashMap<ResourceType, Integer>();
+		expectedMoves = new ConcurrentLinkedQueue<Requests.Request.BodyCase>();
+	}
+
+	protected ConcurrentLinkedQueue<Requests.Request.BodyCase> getExpectedMoves()
+	{
+		return expectedMoves;
 	}
 
 	public Requests.Request.BodyCase getChosenMove()
@@ -141,22 +151,22 @@ public class TurnInProgress
 		this.chatMessage = chatMessage;
 	}
 
-	public PlayerTrade getPlayerTrade()
+	public Trade.WithPlayer getPlayerTrade()
 	{
 		return playerTrade;
 	}
 
-	public void setPlayerTrade(PlayerTrade playerTrade)
+	public void setPlayerTrade(Trade.WithPlayer playerTrade)
 	{
 		this.playerTrade = playerTrade;
 	}
 
-	public BankTrade getBankTrade()
+	public Trade.WithBank getBankTrade()
 	{
 		return bankTrade;
 	}
 
-	public void setBankTrade(BankTrade bankTrade)
+	public void setBankTrade(Trade.WithBank bankTrade)
 	{
 		this.bankTrade = bankTrade;
 	}
@@ -179,5 +189,15 @@ public class TurnInProgress
 	public void setTarget(Colour target)
 	{
 		this.target = target;
+	}
+
+	public boolean isTradePhase()
+	{
+		return tradePhase;
+	}
+
+	public void setTradePhase(boolean tradePhase)
+	{
+		this.tradePhase = tradePhase;
 	}
 }

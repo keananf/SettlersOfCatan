@@ -84,7 +84,7 @@ public abstract class Game
 	 * @param resources the resources received from the network
 	 * @return a map of resources to number
 	 */
-	protected Map<ResourceType,Integer> processResources(Resource.Counts resources)
+	public Map<ResourceType,Integer> processResources(Resource.Counts resources)
 	{
 		Map<ResourceType,Integer> ret = new HashMap<ResourceType,Integer>();
 

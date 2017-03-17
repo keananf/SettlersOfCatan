@@ -90,7 +90,6 @@ public class MessageProcessor
     {
         Requests.Request request = msg.getRequest();
         Events.Event.Builder ev = Events.Event.newBuilder();
-        boolean invalid = false;
 
         try
         {
@@ -153,7 +152,9 @@ public class MessageProcessor
                     ev.setDevCardPlayed(request.getPlayDevCard());
                     break;
                 case SUBMITTARGETPLAYER:
-                    game.takeResource(request.getSubmitTargetPlayer().getId());
+                    //TODO fix with expected move. NOT random
+                    Board.Steal steal = game.takeResource(request.getSubmitTargetPlayer().getId());
+                    if(steal != null) ev.setResourceStolen(steal);
                     break;
                 case INITIATETRADE:
                     Trade.WithBank trade = processTradeType(request.getInitiateTrade(), msg);
@@ -186,13 +187,13 @@ public class MessageProcessor
 
         // Add expected trade response for other player
         if(request.getBodyCase().equals(Requests.Request.BodyCase.INITIATETRADE)
-                && request.getInitiateTrade().getTradeCase().equals(Trade.Kind.TradeCase.PLAYER) && !invalid)
+                && request.getInitiateTrade().getTradeCase().equals(Trade.Kind.TradeCase.PLAYER))
         {
             updateExpectedMoves(request, game.getPlayer(request.getInitiateTrade().getPlayer().getOther().getId()).getColour());
         }
 
         // Update expected moves if no error from the previously processed one
-        else if(!ev.getTypeCase().equals(Events.Event.TypeCase.ERROR) && !invalid)
+        else if(!ev.getTypeCase().equals(Events.Event.TypeCase.ERROR))
         {
             // Remove move from expected list, and add any new ones
             if(expectedMoves.get(colour).contains(request.getBodyCase()))

@@ -3,9 +3,11 @@ package client;
 import connection.IServerConnection;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
+import intergroup.Requests;
 import server.Logger;
 
 import java.io.IOException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Class which continuously listens for updates from the server Created by
@@ -13,15 +15,21 @@ import java.io.IOException;
  */
 public class EventProcessor implements Runnable
 {
-	private ClientGame game;
-	private IServerConnection conn;
+	private final TurnInProgress turn;
+	private final Client client;
+	private final ClientGame game;
+	private final IServerConnection conn;
 	private Logger logger;
+	private ConcurrentLinkedQueue<Requests.Request.BodyCase> expectedMoves;
 
-	public EventProcessor(IServerConnection conn, ClientGame game)
+	public EventProcessor(IServerConnection conn, Client client)
 	{
+		this.turn = client.getTurn();
+		expectedMoves = turn.getExpectedMoves();
 		this.conn = conn;
 		logger = new Logger();
-		this.game = game;
+		this.client = client;
+		this.game = client.getState();
 	}
 
     @Override
@@ -55,6 +63,8 @@ public class EventProcessor implements Runnable
      */
     private void processEvent(Event ev) throws Exception
     {
+		updateExpectedMoves(ev);
+
         // Switch on type of event
         switch(ev.getTypeCase())
 		{
@@ -62,6 +72,7 @@ public class EventProcessor implements Runnable
 				game.setGameOver();
 				break;
 			case TURNENDED:
+				turn.setTradePhase(false);
 				game.setCurrentPlayer(game.getNextPlayer());
 				break;
 			case CITYBUILT:
@@ -92,10 +103,15 @@ public class EventProcessor implements Runnable
 				game.writeMessage(ev.getChatMessage(), ev.getInstigator());
 				break;
 			case BANKTRADE:
+				turn.setTradePhase(true);
 				game.processBankTrade(ev.getBankTrade(), ev.getInstigator());
 				break;
 			case PLAYERTRADE:
-				game.processPlayerTrade(ev.getPlayerTrade(), ev.getInstigator());
+				turn.setTradePhase(true);
+				if(turn.getPlayerTrade() != null)
+				{
+					game.processPlayerTrade(ev.getPlayerTrade(), ev.getInstigator());
+				}
 				break;
 			case LOBBYUPDATE:
 				game.processPlayers(ev.getLobbyUpdate(), ev.getInstigator());
@@ -117,6 +133,103 @@ public class EventProcessor implements Runnable
 				break;
 		}
     }
+
+	private void updateExpectedMoves(Event ev)
+	{
+		// If not this player's turn,
+		if(!ev.hasInstigator() || (ev.getInstigator().getId() != game.getPlayer().getId() && !ev.getTypeCase().equals(Event.TypeCase.ROLLED)))
+		{
+			return;
+		}
+
+		// Switch on request type
+		switch(ev.getTypeCase())
+		{
+			// Add expected moves based on recently played dev card
+			case DEVCARDPLAYED:
+			{
+				switch(ev.getDevCardPlayed())
+				{
+					case KNIGHT:
+						expectedMoves.add(Requests.Request.BodyCase.MOVEROBBER);
+						break;
+					case YEAR_OF_PLENTY:
+						expectedMoves.add(Requests.Request.BodyCase.CHOOSERESOURCE);
+						expectedMoves.add(Requests.Request.BodyCase.CHOOSERESOURCE);
+						break;
+					case ROAD_BUILDING:
+						expectedMoves.add(Requests.Request.BodyCase.BUILDROAD);
+						expectedMoves.add(Requests.Request.BodyCase.BUILDROAD);
+						break;
+					case MONOPOLY:
+						expectedMoves.add(Requests.Request.BodyCase.CHOOSERESOURCE);
+						break;
+				}
+				break;
+			}
+
+			case ROLLED:
+				int dice = ev.getRolled().getA() + ev.getRolled().getB();
+				if(dice == 7)
+				{
+					expectedMoves.add(Requests.Request.BodyCase.DISCARDRESOURCES);
+					if(ev.getInstigator().getId() == game.getPlayer().getId())
+					{
+						expectedMoves.add(Requests.Request.BodyCase.MOVEROBBER);
+					}
+				}
+				break;
+
+			// Expect for the player to send a steal request next
+			case ROBBERMOVED:
+				expectedMoves.add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+				if(expectedMoves.contains(Requests.Request.BodyCase.MOVEROBBER))
+				{
+					expectedMoves.remove(Requests.Request.BodyCase.MOVEROBBER);
+				}
+				break;
+
+			// Remove expected moves if necessary
+			case MONOPOLYRESOLUTION:
+			case RESOURCECHOSEN:
+				if(expectedMoves.contains(Requests.Request.BodyCase.CHOOSERESOURCE))
+				{
+					expectedMoves.remove(Requests.Request.BodyCase.CHOOSERESOURCE);
+				}
+				break;
+			case ROADBUILT:
+				if(expectedMoves.contains(Requests.Request.BodyCase.BUILDROAD))
+				{
+					expectedMoves.remove(Requests.Request.BodyCase.BUILDROAD);
+				}
+				break;
+			case RESOURCESTOLEN:
+				if(expectedMoves.contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER))
+				{
+					expectedMoves.remove(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+				}
+				break;
+			case PLAYERTRADE:
+				if(turn.getPlayerTrade() != null && expectedMoves.contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
+				{
+					expectedMoves.remove(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
+					turn.setPlayerTrade(null);
+				}
+				else turn.setPlayerTrade(ev.getPlayerTrade());
+				break;
+			case CARDSDISCARDED:
+				if(expectedMoves.contains(Requests.Request.BodyCase.DISCARDRESOURCES))
+				{
+					expectedMoves.remove(Requests.Request.BodyCase.DISCARDRESOURCES);
+				}
+				break;
+
+			// No new expected moves
+			default:
+				break;
+		}
+	}
+
 	/**
 	 * Process the next message.
 	 * 

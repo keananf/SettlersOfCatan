@@ -174,4 +174,20 @@ public class Bank
                 availableDevCards.get(DevelopmentCardType.YearOfPlenty) + availableDevCards.get(DevelopmentCardType.University)
                 + availableDevCards.get(DevelopmentCardType.Library) + availableDevCards.get(DevelopmentCardType.RoadBuilding);
     }
+
+    /**
+     * Checks to see if the bank canAfford something
+     * @param cost the cost
+     */
+    public boolean canAfford(Map<ResourceType, Integer> cost)
+    {
+        // Check if the player can afford this before initiating the purchase
+        for(ResourceType r : cost.keySet())
+        {
+            if(availableResources.get(r) < cost.get(r))
+                return false;
+        }
+
+        return true;
+    }
 }

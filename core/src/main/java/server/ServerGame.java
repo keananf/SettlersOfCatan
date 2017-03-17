@@ -400,13 +400,13 @@ public class ServerGame extends Game
 	 * @param id the id of the player to take from
 	 * @throws CannotStealException
 	 */
-	public void takeResource(Board.Player.Id id) throws CannotStealException
+	public Board.Steal takeResource(Board.Player.Id id) throws CannotStealException
 	{
 		Player other = getPlayer(id);
 		ResourceType r = ResourceType.Generic;
 
 		if(other.getNumResources() == 0)
-			return;
+			return null;
 
 		// Randomly choose resource that the player has
 		while(r == ResourceType.Generic || other.getResources().get(r) == 0)
@@ -414,7 +414,7 @@ public class ServerGame extends Game
 			r = ResourceType.random();
 		}
 
-		takeResource(id, r);
+		return takeResource(id, r);
 	}
 
 	/**
@@ -423,7 +423,7 @@ public class ServerGame extends Game
 	 * @param resource the resource to take
 	 * @throws CannotStealException
 	 */
-	public void takeResource(Board.Player.Id id, ResourceType resource) throws CannotStealException
+	public Board.Steal takeResource(Board.Player.Id id, ResourceType resource) throws CannotStealException
 	{
 		boolean valid = false;
 		Colour otherColour = getPlayer(id).getColour();
@@ -442,6 +442,9 @@ public class ServerGame extends Game
 
 		// Cannot take from this player
 		if(!valid) throw new CannotStealException(currentPlayer, otherColour);
+
+		return Board.Steal.newBuilder().setVictim(Board.Player.newBuilder().setId(id).build())
+				.setResource(ResourceType.toProto(resource)).setQuantity(1).build();
 	}
 	
 	/**

@@ -14,6 +14,7 @@ public abstract class Client
     protected TurnProcessor turnProcessor;
     protected MoveProcessor moveProcessor;
     protected static final int PORT = 12345;
+    private TurnInProgress turn;
 
 
     /**
@@ -26,14 +27,19 @@ public abstract class Client
      */
     protected void setUp(IServerConnection conn)
     {
-        this.moveProcessor = new MoveProcessor(state);
-        this.eventProcessor = new EventProcessor(conn, state);
-        this.turnProcessor = new TurnProcessor(conn, state);
+        this.turn = new TurnInProgress();
+        this.moveProcessor = new MoveProcessor(this);
+        this.eventProcessor = new EventProcessor(conn, this);
+        this.turnProcessor = new TurnProcessor(conn, this);
 
         evProcessor = new Thread(eventProcessor);
         evProcessor.start();
     }
 
+    public void sendTurn()
+    {
+        turnProcessor.sendMove();
+    }
 
     /**
      * Shuts down a client by terminating the socket and the event processor thread.
@@ -58,5 +64,10 @@ public abstract class Client
     public TurnInProgress getTurn()
     {
         return turnProcessor.getTurn();
+    }
+
+    public MoveProcessor getMoveProcessor()
+    {
+        return moveProcessor;
     }
 }

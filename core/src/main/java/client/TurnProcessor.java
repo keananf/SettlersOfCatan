@@ -1,6 +1,7 @@
 package client;
 
 import connection.IServerConnection;
+import enums.DevelopmentCardType;
 import enums.ResourceType;
 import intergroup.EmptyOuterClass;
 import intergroup.Messages;
@@ -11,14 +12,16 @@ import intergroup.trade.Trade;
 
 public class TurnProcessor
 {
-	private ClientGame game;
-	private TurnInProgress turn;
-	private IServerConnection conn;
+	private final ClientGame game;
+	private final Client client;
+	private final TurnInProgress turn;
+	private final IServerConnection conn;
 
-	public TurnProcessor(IServerConnection conn, ClientGame game)
+	public TurnProcessor(IServerConnection conn, Client client)
 	{
-		turn = new TurnInProgress();
-		this.game = game;
+		turn = client.getTurn();
+		this.client = client;
+		this.game = client.getState();
 		this.conn = conn;
 	}
 
@@ -26,7 +29,7 @@ public class TurnProcessor
 	/**
 	 * Switches on the move type to ascertain which proto message to form
 	 */
-    private void sendMove()
+	protected void sendMove()
 	{
         Requests.Request.Builder request = Requests.Request.newBuilder();
 
@@ -63,7 +66,7 @@ public class TurnProcessor
 				request.setSubmitTradeResponse(turn.getTradeResponse());
 				break;
 			case PLAYDEVCARD:
-				// TODO
+				request.setPlayDevCard(DevelopmentCardType.toProto(turn.getChosenCard()).getPlayableDevCard());
 				break;
 			case SUBMITTARGETPLAYER:
 				request.setSubmitTargetPlayer(Board.Player.newBuilder().setId(game.getPlayer(turn.getTarget()).getId()).build());
@@ -81,7 +84,12 @@ public class TurnProcessor
 				break;
         }
 
-		sendToServer(request.build());
+        // Send to server if it is a valid move
+		if(client.getMoveProcessor().validateMsg(request.build()))
+		{
+			sendToServer(request.build());
+		}
+		// TODO else display error?
     }
 
 	/**
@@ -114,22 +122,11 @@ public class TurnProcessor
 		// If a player trade
 		if(turn.getPlayerTrade() != null)
 		{
-			PlayerTrade p = turn.getPlayerTrade();
-
-			// Set up player trade
-			player.setOther(Board.Player.newBuilder().setId(game.getPlayer(p.getOther()).getId()).build());
-			player.setWanting(game.processResources(p.getWanting()));
-			player.setOffering(game.processResources(p.getOffer()));
-
-			kind.setPlayer(player.build()).build();
+			kind.setPlayer(turn.getPlayerTrade()).build();
 		}
 		else if(turn.getBankTrade() != null)
 		{
-			BankTrade b  = turn.getBankTrade();
-			bank.setOffering(game.processResources(b.getOffer()));
-			bank.setWanting((game.processResources(b.getWanting())));
-
-			kind.setBank(bank.build()).build();
+			kind.setBank(turn.getBankTrade()).build();
 		}
 
 		return kind.build();

@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package intergroup.trade;
+
+import "resource/resource.proto";
+import "board/board.proto";
+
+message Kind {
+  oneof trade {
+    WithPlayer player = 1;
+    WithBank bank = 2;
+  }
+}
+
+enum Response {
+  REJECT = 0;
+  ACCEPT = 1;
+}
+
+message WithBank {
+  resource.Counts offering = 1;
+  resource.Counts wanting = 2;
+}
+
+message WithPlayer {
+  board.Player other = 1;
+  resource.Counts offering = 2;
+  resource.Counts wanting = 3;
+}

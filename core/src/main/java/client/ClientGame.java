@@ -1,24 +1,20 @@
 package client;
 
-import board.*;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
 import exceptions.*;
 import game.Game;
-import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
 import game.players.LocalPlayer;
-import game.players.NetworkPlayer;
 import game.players.Player;
-import protocol.BoardProtos.*;
-import protocol.BuildProtos;
-import protocol.BuildProtos.BuildingProto;
-import protocol.BuildProtos.PointProto;
-import protocol.EnumProtos;
-import protocol.EnumProtos.BuildingTypeProto;
+import grid.*;
+import intergroup.board.Board;
+import intergroup.lobby.Lobby;
+import intergroup.resource.Resource;
+import intergroup.trade.Trade;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,332 +27,481 @@ import java.util.Map;
  */
 public class ClientGame extends Game
 {
-	private boolean gameOver;
-	private int dice;
-	private Map<Colour, Integer> boughtDevCards;
-	private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;
-	private Player thisPlayer;
-	private EventProcessor eventProcessor;
+    private boolean gameOver;
+    private int dice;
+    private Map<Colour, Integer> boughtDevCards;
+    private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;
+    private Player thisPlayer;
+    private ChatBoard chatBoard;
+    private List<String> usersInLobby;
 
-	public ClientGame()
-	{
-		players = new HashMap<Colour, Player>();
-		boughtDevCards = new HashMap<Colour, Integer>();
-		playedDevCards = new HashMap<Colour, HashMap<DevelopmentCardType, Integer>>();
+    public ClientGame()
+    {
+        super();
+        boughtDevCards = new HashMap<Colour, Integer>();
+        playedDevCards = new HashMap<Colour, HashMap<DevelopmentCardType, Integer>>();
+        chatBoard = new ChatBoard();
+        usersInLobby = new ArrayList<String>(NUM_PLAYERS);
 
-		// Instantiate the playedDevCards maps
-		for (Colour c : Colour.values())
-		{
-			playedDevCards.put(c, new HashMap<DevelopmentCardType, Integer>());
+        // Instantiate the playedDevCards maps
+        for(Colour c : Colour.values())
+        {
+            playedDevCards.put(c, new HashMap<DevelopmentCardType, Integer>());
 
-			for (DevelopmentCardType d : DevelopmentCardType.values())
-			{
-				playedDevCards.get(c).put(d, 0);
-			}
+            for(DevelopmentCardType d : DevelopmentCardType.values())
+            {
+                playedDevCards.get(c).put(d, 0);
+            }
+        }
+    }
 
-			// Instantiate players as well
-			if (!c.equals(Colour.BLUE)) players.put(c, new NetworkPlayer(c));
-		}
+    /**
+     * @return a representation of the board that is compatible with protofbufs
+     * @param beginGame
+     */
+    public HexGrid setBoard(Lobby.GameSetup beginGame) throws InvalidCoordinatesException, CannotAffordException
+    {
+        HexGrid grid = new HexGrid();
+        List<Hex> hexes = processHexes(beginGame.getHexesList());
+        List<Port> ports = processPorts(beginGame.getHarboursList());
+        processPlayerSettings(beginGame.getOwnPlayer(), beginGame.getPlayerSettingsList());
 
-		// Set up this player
-		// TODO colour will be allocated from server
-		// eventProcessor = new EventProcessor(new Socket(), this); // TODO set
-		// this when joining a lobby
-		thisPlayer = new LocalPlayer(Colour.BLUE);
-		playerWithLongestRoad = thisPlayer.getColour();
-		currentPlayer = thisPlayer.getColour();
-		players.put(thisPlayer.getColour(), thisPlayer);
-	}
+        // Overwrite current grid
+        grid.setNodesAndHexes(hexes);
+        grid.setPorts(ports);
 
-	/**
-	 * @return a representation of the board that is compatible with protofbufs
-	 */
-	public HexGrid setBoard(BoardProto board) throws InvalidCoordinatesException, CannotAffordException
-	{
-		HexGrid grid = new HexGrid();
-		List<Node> nodes = processNodes(board.getNodesList());
-		List<Hex> hexes = processHexes(board.getHexesList());
-		List<Port> ports = processPorts(board.getPortsList());
+        return grid;
+    }
 
-		// Overwrite current grid
-		grid.setNodesAndHexes(nodes, hexes);
-		grid.setPorts(ports);
+    /**
+     * Loads in all the player information
+     * @param ownPlayer this player's information
+     * @param playerSettingsList the list of other players' information
+     */
+    private void processPlayerSettings(Board.Player ownPlayer, List<Lobby.GameSetup.PlayerSetting> playerSettingsList)
+    {
+        // Load in each player's info
+        for(Lobby.GameSetup.PlayerSetting player : playerSettingsList)
+        {
+            enums.Colour col = enums.Colour.fromProto(player.getColour());
+            LocalPlayer newPlayer = new LocalPlayer(col, player.getUsername());
+            newPlayer.setId(player.getPlayer().getId());
 
-		return grid;
-	}
+            // Check if it is this player
+            if(player.getPlayer().getId().equals(ownPlayer.getId()))
+            {
+                thisPlayer = newPlayer;
+                players.put(col, thisPlayer);
+            }
+            else
+            {
+                players.put(col, newPlayer);
+            }
 
-	/**
-	 * Retrieve the hex objects referred to by the proto
-	 * 
-	 * @param protos the hex protos
-	 */
-	private List<Hex> processHexes(List<HexProto> protos)
-	{
-		List<Hex> hexes = new ArrayList<Hex>();
+            // Add mapping from colours to ids
+            idsToColours.put(player.getPlayer().getId(), col);
+        }
+    }
 
-		// Add nodes
-		for (HexProto proto : protos)
-		{
-			hexes.add(Hex.fromProto(proto));
-		}
+    /**
+     * Retrieve the hex objects referred to by the proto
+     * @param protos the hex protos
+     */
+    private List<Hex> processHexes(List<Board.Hex> protos)
+    {
+        List<Hex> hexes = new ArrayList<Hex>();
 
-		return hexes;
-	}
+        // Add nodes
+        for(Board.Hex proto : protos)
+        {
+            hexes.add(Hex.fromProto(proto));
+        }
 
-	/**
-	 * Retrieve the node objects referred to by the proto
-	 * 
-	 * @param protos the node protos
-	 */
-	private List<Node> processNodes(List<NodeProto> protos) throws InvalidCoordinatesException, CannotAffordException
-	{
-		List<Node> nodes = new ArrayList<Node>();
+        return hexes;
+    }
 
-		// Add nodes
-		for (NodeProto proto : protos)
-		{
-			PointProto p1 = proto.getP();
-			Node node = new Node(p1.getX(), p1.getY());
+    /**
+     * Retrieve the port objects referred to by the proto
+     * @param protos the port protos
+     */
+    private List<Port> processPorts(List<Board.Harbour> protos)
+    {
+        List<Port> ports = new ArrayList<Port>();
 
-			// If the node has a building
-			if (proto.hasBuilding())
-			{
-				node.setSettlement(processNewBuilding(proto.getBuilding(), true));
-			}
+        // Add ports
+        for(Board.Harbour harbour : protos)
+        {
+            Board.Edge e = harbour.getLocation();
+            Board.Point p1 = e.getA(), p2 = e.getB();
+            Port port = new Port(grid.getNode(p1.getX(), p1.getY()), grid.getNode(p2.getX(), p2.getY()));
+            port.setExchangeType(ResourceType.fromProto(harbour.getResource()));
 
-			nodes.add(node);
-		}
+            ports.add(port);
+        }
 
-		return nodes;
-	}
+        return ports;
+    }
 
-	/**
-	 * Retrieve the port objects referred to by the proto
-	 * 
-	 * @param protos the port protos
-	 */
-	private List<Port> processPorts(List<PortProto> protos)
-	{
-		List<Port> ports = new ArrayList<Port>();
+    /**
+     * Processes the user who just joined the lobby
+     * @param lobbyUpdate the list of players in the lobby
+     * @param instigator
+     */
+    public void processPlayers(Lobby.Usernames lobbyUpdate, Board.Player instigator)
+    {
+        for(String username : lobbyUpdate.getUsernameList())
+        {
+            if(!usersInLobby.contains(username))
+            {
+                usersInLobby.add(username);
+            }
+        }
+    }
 
-		// Add ports
-		for (PortProto e : protos)
-		{
-			PointProto p1 = e.getP1(), p2 = e.getP2();
-			Port port = new Port(grid.getNode(p1.getX(), p1.getY()), grid.getNode(p2.getX(), p2.getY()));
-			port.setExchangeAmount(e.getExchangeAmount());
-			port.setReturnAmount(e.getReturnAmount());
-			port.setExchangeType(ResourceType.fromProto(e.getExchangeResource()));
-			port.setReturnType(ResourceType.fromProto(e.getReturnResource()));
+    /**
+     * @return if the game has ended or not
+     */
+    public boolean isOver()
+    {
+        return gameOver;
+    }
 
-			ports.add(port);
-		}
+    /**
+     * Once called, the listener thread will terminate the connection to the server
+     */
+    public void setGameOver()
+    {
+        gameOver = true;
+    }
 
-		return ports;
-	}
+    /**
+     * Writes the given string to the chatBoard
+     * @param chatMessage
+     */
+    public void writeMessage(String chatMessage, Board.Player instigator)
+    {
+        Player p = getPlayer(instigator.getId());
+        chatBoard.writeMessage(chatMessage, p.getUsername(), p.getColour());
+    }
 
-	/**
-	 * @return if the game has ended or not
-	 */
-	public boolean isOver()
-	{
-		return gameOver;
-	}
+    /**
+     * Updates the dice roll and allocate resources
+     * @param dice the new dice roll
+     * @param resourceAllocationList
+     */
+    public void processDice(int dice, List<Board.ResourceAllocation> resourceAllocationList)
+    {
+        this.dice = dice;
 
-	/**
-	 * Once called, the listener thread will terminate the connection to the
-	 * server
-	 */
-	public void setGameOver()
-	{
-		gameOver = true;
-	}
+        if(dice != 7)
+        {
+            // For each player's new resources
+            for(Board.ResourceAllocation alloc : resourceAllocationList)
+            {
+                Map<ResourceType, Integer> grant = processResources(alloc.getResources());
+                Player p = getPlayer(alloc.getPlayer().getId());
 
-	/**
-	 * Updates the dice roll and allocate resources
-	 * 
-	 * @param dice the new dice roll
-	 */
-	public void processDice(int dice)
-	{
-		this.dice = dice;
-		Map<ResourceType, Integer> grant = getNewResources(dice, thisPlayer.getColour());
+                try
+                {
+                    p.grantResources(grant, bank);
+                }
+                catch (BankLimitException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
-		if (dice != 7) thisPlayer.grantResources(grant);
-	}
+    /**
+     * Swap the robber to the given point received from the server
+     * @param robberMove the robber's new position
+     */
+    public void moveRobber(Board.Point robberMove) throws InvalidCoordinatesException
+    {
+        Hex hex = grid.getHex(robberMove.getX(), robberMove.getY());
 
-	/**
-	 * Swap the robber to the given point received from the server
-	 * 
-	 * @param robberMove the robber's new position
-	 */
-	public void moveRobber(PointProto robberMove) throws InvalidCoordinatesException
-	{
-		Hex hex = grid.getHex(robberMove.getX(), robberMove.getY());
+        // If invalid coordinates
+        if(hex == null)
+        {
+            throw new InvalidCoordinatesException(robberMove.getX(), robberMove.getY());
+        }
 
-		// If invalid coordinates
-		if (hex == null) { throw new InvalidCoordinatesException(robberMove.getX(), robberMove.getY()); }
+        grid.swapRobbers(hex);
+    }
 
-		grid.swapRobbers(hex);
-	}
+    /**
+     * Adds the new road received from the server to the board
+     * @param newRoad the new road to add.
+     * @param instigator the instigator who instigated the event
+     */
+    public Road processRoad(Board.Edge newRoad, Board.Player instigator) throws RoadExistsException,
+            CannotBuildRoadException, CannotAffordException
+    {
+        // Extract information and find edge
+        Edge newEdge = grid.getEdge(newRoad.getA(), newRoad.getB());
+        Player player = getPlayer(instigator.getId());
 
-	/**
-	 * Adds the new road received from the server to the board
-	 * 
-	 * @param newRoad the new road to add
-	 */
-	public Road processRoad(BuildProtos.RoadProto newRoad)
-			throws RoadExistsException, CannotBuildRoadException, CannotAffordException
-	{
-		// Extract information and find edge
-		Edge newEdge = grid.getEdge(newRoad);
+        // Spend resources if it is not a preliminary move
+        if(player.getRoads().size() > 2)
+        {
+            player.spendResources(Road.getRoadCost(), bank);
+        }
 
-		// Spend resources if it is this player
-		if (currentPlayer.equals(thisPlayer.getColour()))
-		{
-			thisPlayer.spendResources(Road.getRoadCost());
-		}
+        // Make new road object
+        Road r = ((LocalPlayer)players.get(player.getColour())).addRoad(newEdge);
+        checkLongestRoad(false);
 
-		// Make new road object
-		Road r = ((LocalPlayer) players.get(currentPlayer)).addRoad(newEdge);
-		checkLongestRoad(false);
+        return r;
+    }
 
-		return r;
-	}
+    /**
+     * Processes a new bulding, and adds it to the board
+     * @param city the new city
+     * @param instigator the person who built the city
+     * @return the new city
+     */
+    public City processNewCity(Board.Point city, Board.Player instigator) throws InvalidCoordinatesException, CannotAffordException
+    {
+        // Extract information
+        Node node = grid.getNode(city.getX(), city.getY());
+        Player player = getPlayer(instigator.getId());
 
-	/**
-	 * Processes a new bulding, and adds it to the board
-	 * 
-	 * @param building the new building
-	 * @return the new building
-	 */
-	public Building processNewBuilding(BuildingProto building, boolean setUp)
-			throws InvalidCoordinatesException, CannotAffordException
-	{
-		// Extract information
-		BuildingTypeProto type = building.getType();
-		PointProto p = building.getP();
-		Node node = grid.getNode(p.getX(), p.getY());
-		Building b = null;
+        // If invalid coordinates
+        if(node == null || (node.getSettlement() != null && node.getSettlement() instanceof City))
+        {
+            throw new InvalidCoordinatesException(city.getX(), city.getY());
+        }
 
-		// If invalid coordinates
-		if (node == null || (node.getSettlement() != null
-				&& ((node.getSettlement() instanceof Settlement && type.equals(BuildingTypeProto.SETTLEMENT))
-						|| (node.getSettlement() instanceof City
-								&& type.equals(BuildingTypeProto.CITY))))) { throw new InvalidCoordinatesException(
-										p.getX(), p.getY()); }
+        // Create and add the city
+        player.spendResources(City.getCityCost(), bank);
+        City c = new City(node, player.getColour());
 
-		// Spend resources if it is this player
-		if (currentPlayer.equals(thisPlayer.getColour()) && !setUp)
-		{
-			Map<ResourceType, Integer> spend = type.equals(BuildingTypeProto.CITY) ? City.getCityCost()
-					: Settlement.getSettlementCost();
-			thisPlayer.spendResources(spend);
-		}
+        // Updates settlement and score
+        players.get(player.getColour()).addSettlement(c);
+        return c;
+    }
 
-		// Create and add the building
-		switch (type)
-		{
-		case CITY:
-			City c = new City(node, Colour.fromProto(building.getPlayerId()));
-			node.setSettlement(c);
-			b = c;
-			break;
-		case SETTLEMENT:
-			Settlement s = new Settlement(node, Colour.fromProto(building.getPlayerId()));
-			node.setSettlement(s);
-			b = s;
-			break;
-		}
-		checkIfRoadBroken(node);
+    /**
+     * Processes a new bulding, and adds it to the board
+     * @param settlement the new settlement
+     * @param instigator the person who built the settlement
+     * @return the new settlement
+     */
+    public Settlement processNewSettlement(Board.Point settlement, Board.Player instigator)
+            throws InvalidCoordinatesException, CannotAffordException
+    {
+        // Extract information
+        Node node = grid.getNode(settlement.getX(), settlement.getY());
+        Player player = getPlayer(instigator.getId());
 
-		// Updates settlement and score
-		players.get(currentPlayer).addSettlement(b);
-		return b;
-	}
+        // If invalid coordinates
+        if(node == null || (node.getSettlement() != null && node.getSettlement() instanceof Settlement))
+        {
+            throw new InvalidCoordinatesException(settlement.getX(), settlement.getY());
+        }
 
-	/**
-	 * Records the played dev card for the given player
-	 * 
-	 * @param type the played card
-	 */
-	public void processPlayedDevCard(EnumProtos.DevelopmentCardProto type) throws DoesNotOwnException
-	{
-		DevelopmentCardType card = DevelopmentCardType.fromProto(type);
-		Map<DevelopmentCardType, Integer> playedCards = playedDevCards.get(currentPlayer);
+        // Spend resources if this is not an initial move
+        if(player.getSettlements().size() > 2)
+        {
+            player.spendResources(Settlement.getSettlementCost(), bank);
+        }
 
-		// Record card being played
-		int existing = playedCards.get(card);
-		playedCards.put(card, existing + 1);
+        // Create and add the settlement
+        Settlement s = new Settlement(node, player.getColour());
+        checkIfRoadBroken(node);
 
-		// Eliminate one bought dev card from player
-		existing = boughtDevCards.containsKey(currentPlayer) ? boughtDevCards.get(currentPlayer) : 0;
-		if (existing > 0)
-		{
-			boughtDevCards.put(currentPlayer, existing - 1);
-		}
-		else
-			throw new DoesNotOwnException(card, currentPlayer);
+        // Updates settlement and score
+        players.get(player.getColour()).addSettlement(s);
+        return s;
+    }
 
-		// Update largest army
-		if (card.equals(DevelopmentCardType.Knight))
-		{
-			players.get(currentPlayer).addKnight();
-			checkLargestArmy();
-		}
-	}
+    /**
+     * Records the played dev card for the given player
+     * @param playedDevCard the played card
+     */
+    public void processPlayedDevCard(Board.PlayableDevCard playedDevCard, Board.Player instigator) throws DoesNotOwnException
+    {
+        DevelopmentCardType card = DevelopmentCardType.fromProto(playedDevCard);
+        Map<DevelopmentCardType, Integer> playedCards = playedDevCards.get(currentPlayer);
+        Player player = getPlayer(instigator.getId());
 
-	/**
-	 * Records that the given player bought a dev card
-	 * 
-	 * @param boughtDevCard
-	 */
-	public void recordDevCard(EnumProtos.ColourProto boughtDevCard) throws CannotAffordException
-	{
-		// Spend resources if it is this player
-		if (currentPlayer.equals(thisPlayer.getColour()))
-		{
-			thisPlayer.spendResources(DevelopmentCardType.getCardCost());
-		}
+        // Record card being played
+        int existing = playedCards.get(card);
+        playedCards.put(card, existing + 1);
 
-		Colour c = Colour.fromProto(boughtDevCard);
-		int existing = boughtDevCards.containsKey(c) ? boughtDevCards.get(c) : 0;
-		boughtDevCards.put(c, existing + 1);
-	}
+        // Eliminate one bought dev card from player
+        existing = boughtDevCards.containsKey(player.getColour()) ? boughtDevCards.get(player.getColour()) : 0;
+        if(existing > 0)
+        {
+            boughtDevCards.put(player.getColour(), existing - 1);
+        }
+        else throw new DoesNotOwnException(card, player.getColour());
 
-	/**
-	 * Return the current dice roll
-	 * 
-	 * @return
-	 */
-	public int getDice()
-	{
-		return dice;
-	}
+        // Update largest army
+        if(card.equals(DevelopmentCardType.Knight))
+        {
+            players.get(player.getColour()).addKnightPlayed();
+            checkLargestArmy();
+        }
+    }
 
-	/**
-	 * Return the total amounts of dev cards owned by each player
-	 * 
-	 * @return
-	 */
-	public Map<Colour, Integer> getBoughtDevCards()
-	{
-		return boughtDevCards;
-	}
+    /**
+     * Records that the given player bought a dev card
+     * @param boughtDevCard the bought dev card
+     * @param instigator the player who caused the event
+     */
+    public void recordDevCard(Board.DevCard boughtDevCard, Board.Player instigator) throws CannotAffordException
+    {
+        Player player = getPlayer(instigator.getId());
+        player.spendResources(DevelopmentCardType.getCardCost(), bank);
 
-	/**
-	 * @return the map of played dev cards
-	 */
-	public Map<Colour, HashMap<DevelopmentCardType, Integer>> getPlayedDevCards()
-	{
-		return playedDevCards;
-	}
+        // Spend resources if it is this player
+        if(player.getColour().equals(thisPlayer.getColour()))
+        {
+            thisPlayer.addDevelopmentCard(boughtDevCard);
+        }
 
-	/**
-	 * @return this player
-	 */
-	public Player getPlayer()
-	{
-		return thisPlayer;
-	}
+        // Update number of dev cards each player is known to have
+        Colour c = player.getColour();
+        int existing = boughtDevCards.containsKey(c) ? boughtDevCards.get(c) : 0;
+        boughtDevCards.put(c, existing + 1);
+    }
+
+    /**
+     * Processes a bank trade
+     * @param bankTrade the bank trade
+     */
+    public void processBankTrade(Trade.WithBank bankTrade, Board.Player instigator) throws CannotAffordException, BankLimitException
+    {
+        Map<ResourceType, Integer> offering = processResources(bankTrade.getOffering());
+        Map<ResourceType, Integer> wanting = processResources(bankTrade.getWanting());
+        Player p = getPlayer(instigator.getId());
+
+        // Update resources
+        p.spendResources(offering, bank);
+        p.grantResources(wanting, bank);
+    }
+
+    /**
+     * Processes a player trade
+     * @param playerTrade the player trade
+     */
+    public void processPlayerTrade(Trade.WithPlayer playerTrade, Board.Player sender) throws CannotAffordException, BankLimitException
+    {
+        Map<ResourceType, Integer> offering = processResources(playerTrade.getOffering());
+        Map<ResourceType, Integer> wanting = processResources(playerTrade.getWanting());
+        Player instigator = getPlayer(sender.getId());
+        Player recipient = getPlayer(playerTrade.getOther().getId());
+
+        // Update resources
+        instigator.spendResources(offering, bank);
+        instigator.grantResources(wanting, bank);
+        recipient.spendResources(wanting, bank);
+        recipient.grantResources(offering, bank);
+    }
+
+    /**
+     * Processes the cards this player had to discard
+     * @param cardsDiscarded the discarded resources
+     * @param instigator the player who discarded them
+     */
+    public void processDiscard(Resource.Counts cardsDiscarded, Board.Player instigator) throws CannotAffordException, BankLimitException
+    {
+        Player p = getPlayer(instigator.getId());
+        p.spendResources(processResources(cardsDiscarded), bank);
+    }
+
+    /**
+     * Processes the cards this player had to discard
+     * @param steal the stolen resources
+     * @param instigator the player who stole them
+     */
+    public void processResourcesStolen(Board.Steal steal, Board.Player instigator) throws CannotAffordException, BankLimitException
+    {
+        Player p = getPlayer(instigator.getId());
+        Player p2 = getPlayer(steal.getVictim().getId());
+        ResourceType r = ResourceType.fromProto(steal.getResource());
+        int quantity = steal.getQuantity();
+
+        // Update resources
+        Map<ResourceType, Integer> stolen = new HashMap<ResourceType, Integer>();
+        stolen.put(r, quantity);
+        p2.spendResources(stolen, bank);
+        p.grantResources(stolen, bank);
+
+    }
+
+    /**
+     * Processes the cards this player had to discard
+     * @param multiSteal the resources taken from each user
+     * @param instigator the player who stole them
+     */
+    public void processMonopoly(Board.MultiSteal multiSteal, Board.Player instigator) throws CannotAffordException, BankLimitException
+    {
+        Player p = getPlayer(instigator.getId());
+
+        // For each player stolen from
+        for(Board.Steal steal : multiSteal.getTheftsList())
+        {
+            Player p2 = getPlayer(steal.getVictim().getId());
+            ResourceType r = ResourceType.fromProto(steal.getResource());
+            int quantity = steal.getQuantity();
+
+            // Update resources
+            Map<ResourceType, Integer> stolen = new HashMap<ResourceType, Integer>();
+            stolen.put(r, quantity);
+            p2.spendResources(stolen, bank);
+            p.grantResources(stolen, bank);
+        }
+    }
+
+    /**
+     * Processes the cards this player had to discard
+     * @param resource the stolen resources
+     * @param instigator the player who stole them
+     */
+    public void processResourceChosen(Resource.Kind resource, Board.Player instigator) throws BankLimitException
+    {
+        Player p = getPlayer(instigator.getId());
+        Map<ResourceType, Integer> map = new HashMap<ResourceType, Integer>();
+        map.put(ResourceType.fromProto(resource), 1);
+
+        p.grantResources(map, bank);
+    }
+
+    /**
+     * Return the current dice roll
+     * @return
+     */
+    public int getDice()
+    {
+        return dice;
+    }
+
+    /**
+     * Return the total amounts of dev cards owned by each player
+     * @return
+     */
+    public Map<Colour, Integer> getBoughtDevCards()
+    {
+        return boughtDevCards;
+    }
+
+    /**
+     * @return the map of played dev cards
+     */
+    public Map<Colour,HashMap<DevelopmentCardType,Integer>> getPlayedDevCards()
+    {
+        return playedDevCards;
+    }
+
+    /**
+     * @return this player
+     */
+    public Player getPlayer()
+    {
+        return thisPlayer;
+    }
+
 }

@@ -1,8 +1,6 @@
 package catan.ui;
 
-import java.awt.Point;
-import java.util.Map.Entry;
-
+import catan.SettlersOfCatan;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
@@ -16,10 +14,10 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import grid.Hex;
 
-import board.Hex;
-
-import catan.SettlersOfCatan;
+import java.awt.*;
+import java.util.Map.Entry;
 
 public class GameScreen implements Screen
 {

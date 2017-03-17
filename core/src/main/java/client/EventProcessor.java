@@ -1,9 +1,7 @@
 package client;
 
-import enums.Colour;
-import protocol.EventProtos.Event;
-import protocol.MessageProtos.Message;
-import protocol.RequestProtos;
+import intergroup.Events.Event;
+import intergroup.Messages.Message;
 import server.Logger;
 
 import java.io.IOException;
@@ -26,35 +24,103 @@ public class EventProcessor implements Runnable
 		logger = new Logger();
 		this.game = game;
 
-		thread = new Thread(this);
-		thread.start();
-	}
+        thread = new Thread(this);
+        thread.start();
+    }
 
-	@Override
-	public void run()
-	{
-		// Continuously wait for new messages from the server
-		while (!game.isOver())
+    @Override
+    public void run()
+    {
+        // Continuously wait for new messages from the server
+        while(!game.isOver())
+        {
+            try
+            {
+                processMessage();
+            }
+            catch(IOException e)
+            {
+                // Fatal error
+                break;
+            }
+            catch (Exception e)
+            {
+                // Error. Invalid event.
+                // TODO request state from server? Or fail?
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    /**
+     * Processes the event received from the server and updates the game state
+     * @param ev the event
+     */
+    private void processEvent(Event ev) throws Exception
+    {
+        // Switch on type of event
+        switch(ev.getTypeCase())
 		{
-			try
-			{
-				processMessage();
-			}
-			catch (IOException e)
-			{
-				// Fatal error
+			case GAMEWON:
+				game.setGameOver();
 				break;
-			}
-			catch (Exception e)
-			{
-				// Error. Invalid event.
-				// TODO request state from server? Or fail?
-				e.printStackTrace();
-			}
-
+			case TURNENDED:
+				game.setCurrentPlayer(game.getNextPlayer());
+				break;
+			case CITYBUILT:
+				game.processNewCity(ev.getCityBuilt(),ev.getInstigator());
+				break;
+			case SETTLEMENTBUILT:
+				game.processNewSettlement(ev.getSettlementBuilt(),ev.getInstigator());
+				break;
+			case ROADBUILT:
+				game.processRoad(ev.getRoadBuilt(),ev.getInstigator());
+				break;
+			case ROLLED:
+				game.processDice(ev.getRolled().getA()+ev.getRolled().getB(), ev.getRolled().getResourceAllocationList());
+				break;
+			case ROBBERMOVED:
+				game.moveRobber(ev.getRobberMoved());
+				break;
+			case DEVCARDBOUGHT:
+				game.recordDevCard(ev.getDevCardBought(),ev.getInstigator());
+				break;
+			case DEVCARDPLAYED:
+				game.processPlayedDevCard(ev.getDevCardPlayed(),ev.getInstigator());
+				break;
+			case BEGINGAME:
+				game.setBoard(ev.getBeginGame());
+				break;
+			case CHATMESSAGE:
+				game.writeMessage(ev.getChatMessage(), ev.getInstigator());
+				break;
+			case BANKTRADE:
+				game.processBankTrade(ev.getBankTrade(), ev.getInstigator());
+				break;
+			case PLAYERTRADE:
+				game.processPlayerTrade(ev.getPlayerTrade(), ev.getInstigator());
+				break;
+			case LOBBYUPDATE:
+				game.processPlayers(ev.getLobbyUpdate(), ev.getInstigator());
+				break;
+			case CARDSDISCARDED:
+				game.processDiscard(ev.getCardsDiscarded(), ev.getInstigator());
+				break;
+			case MONOPOLYRESOLUTION:
+				game.processMonopoly(ev.getMonopolyResolution(), ev.getInstigator());
+				break;
+			case RESOURCECHOSEN:
+				game.processResourceChosen(ev.getResourceChosen(), ev.getInstigator());
+				break;
+			case RESOURCESTOLEN:
+				game.processResourcesStolen(ev.getResourceStolen(), ev.getInstigator());
+				break;
+			case ERROR:
+				// TODO display error?
+				break;
 		}
-	}
-
+    }
 	/**
 	 * Process the next message.
 	 * 
@@ -68,82 +134,11 @@ public class EventProcessor implements Runnable
 		// switch on message type
 		switch (msg.getTypeCase())
 		{
-		// User request
-		case REQUEST:
-			processRequest(msg.getRequest(), Colour.fromProto(msg.getPlayerColour()));
-			break;
 
-		// Extract and process event
-		case EVENT:
-			processEvent(msg.getEvent());
-			break;
-
-		// Process new board, otherwise ignore
-		case RESPONSE:
-			if (msg.getResponse().hasCurrentBoardResponse())
-			{
-				game.setBoard(msg.getResponse().getCurrentBoardResponse().getBoard());
-			}
-			break;
-		}
-	}
-
-	/**
-	 * Process the request relayed by the server
-	 * 
-	 * @param req the request
-	 * @param colour the player who made the request
-	 */
-	private void processRequest(RequestProtos.Request req, Colour colour)
-	{
-		// Switch on type of event
-		switch (req.getTypeCase())
-		{
-		case TRADEREQUEST:
-			break;
-
-		// Error.
-		default:
-			break;
-		}
-	}
-
-	/**
-	 * Processes the event received from the server and updates the game state
-	 * 
-	 * @param ev the event
-	 */
-	private void processEvent(Event ev) throws Exception
-	{
-		// Switch on type of event
-		switch (ev.getTypeCase())
-		{
-		case GAMEOVER:
-			game.setGameOver();
-			break;
-		case NEWTURN:
-			game.setTurn(Colour.fromProto(ev.getNewTurn()));
-			break;
-		case NEWBUILDING:
-			game.processNewBuilding(ev.getNewBuilding(), false);
-			break;
-		case DICEROLL:
-			game.processDice(ev.getDiceRoll().getDice());
-			break;
-		case NEWROAD:
-			game.processRoad(ev.getNewRoad());
-			break;
-		case ROBBERMOVE:
-			game.moveRobber(ev.getRobberMove());
-			break;
-		case BOUGHTDEVCARD:
-			game.recordDevCard(ev.getBoughtDevCard());
-			break;
-		case PLAYEDDEVCARD:
-			game.processPlayedDevCard(ev.getPlayedDevCard().getType());
-			break;
-
-		// TODO complete
+			// Extract and process event
+			case EVENT:
+				processEvent(msg.getEvent());
+				break;
 		}
 	}
 }

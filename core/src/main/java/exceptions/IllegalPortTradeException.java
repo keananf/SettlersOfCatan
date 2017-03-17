@@ -1,6 +1,7 @@
 package exceptions;
 
-import board.Port;
+
+import grid.Port;
 import enums.Colour;
 
 public class IllegalPortTradeException extends Exception

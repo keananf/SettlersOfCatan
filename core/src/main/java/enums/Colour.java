@@ -4,10 +4,7 @@ import intergroup.lobby.Lobby;
 
 public enum Colour
 {
-	BLUE,
-	RED,
-	ORANGE,
-	WHITE;
+	BLUE, RED, ORANGE, WHITE;
 
 	/**
 	 * Translate from the protobuf enum to an internally used enum
@@ -19,14 +16,14 @@ public enum Colour
 	{
 		switch (colourToTakeFrom)
 		{
-			case BLUE:
-				return Colour.BLUE;
-			case RED:
-				return Colour.RED;
-			case ORANGE:
-				return Colour.ORANGE;
-			case WHITE:
-				return Colour.WHITE;
+		case BLUE:
+			return Colour.BLUE;
+		case RED:
+			return Colour.RED;
+		case ORANGE:
+			return Colour.ORANGE;
+		case WHITE:
+			return Colour.WHITE;
 
 		}
 
@@ -34,7 +31,8 @@ public enum Colour
 	}
 
 	/**
-	 * Translates the colour value into an enum which is compatible with protobufs
+	 * Translates the colour value into an enum which is compatible with
+	 * protobufs
 	 *
 	 * @param col the colour to translate
 	 * @return the protobuf compatible enum
@@ -45,18 +43,18 @@ public enum Colour
 
 		switch (col)
 		{
-			case BLUE:
-				p = Lobby.GameSetup.PlayerSetting.Colour.BLUE;
-				break;
-			case RED:
-				p = Lobby.GameSetup.PlayerSetting.Colour.RED;
-				break;
-			case ORANGE:
-				p = Lobby.GameSetup.PlayerSetting.Colour.ORANGE;
-				break;
-			case WHITE:
-				p = Lobby.GameSetup.PlayerSetting.Colour.WHITE;
-				break;
+		case BLUE:
+			p = Lobby.GameSetup.PlayerSetting.Colour.BLUE;
+			break;
+		case RED:
+			p = Lobby.GameSetup.PlayerSetting.Colour.RED;
+			break;
+		case ORANGE:
+			p = Lobby.GameSetup.PlayerSetting.Colour.ORANGE;
+			break;
+		case WHITE:
+			p = Lobby.GameSetup.PlayerSetting.Colour.WHITE;
+			break;
 		}
 
 		return p;

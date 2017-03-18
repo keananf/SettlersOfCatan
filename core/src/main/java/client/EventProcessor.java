@@ -137,6 +137,12 @@ public class EventProcessor implements Runnable
 
 	private void updateExpectedMoves(Event ev)
 	{
+		// Add roll dice if necessary
+		if(game.getCurrentPlayer().equals(game.getPlayer().getColour()) && ev.getTypeCase().equals(Event.TypeCase.TURNENDED))
+		{
+			expectedMoves.add(Requests.Request.BodyCase.ROLLDICE);
+		}
+
 		// If not this player's turn,
 		if(!ev.hasInstigator() || (ev.getInstigator().getId() != game.getPlayer().getId() && !ev.getTypeCase().equals(Event.TypeCase.ROLLED)))
 		{

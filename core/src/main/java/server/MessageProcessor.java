@@ -79,7 +79,7 @@ public class MessageProcessor
             default:
                 break;
         }
-        
+
         return Events.Event.newBuilder().setError(Events.Event.
                 Error.newBuilder().setDescription("Move type unexpected or invalid.").build()).build();
     }
@@ -240,6 +240,11 @@ public class MessageProcessor
                 }
                 break;
 
+            // Add that a dice roll is expected as the first move for the new player
+            case ENDTURN:
+                expectedMoves.get(game.getCurrentPlayer()).add(Requests.Request.BodyCase.ROLLDICE);
+                break;
+
             // Add that a response is expected from this player
             case INITIATETRADE:
                 moves.add(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
@@ -366,7 +371,7 @@ public class MessageProcessor
     {
         Requests.Request.BodyCase type = msg.getTypeCase().equals(Messages.Message.TypeCase.REQUEST) ? msg.getRequest().getBodyCase() : null;
         List<Requests.Request.BodyCase> expected = expectedMoves.get(col);
-
+        
         // If in trade phase and the given message isn't a trade
         if(tradePhase && (!msg.getRequest().getBodyCase().equals(Requests.Request.BodyCase.INITIATETRADE) && game.getCurrentPlayer().equals(col))
                 || (!msg.getRequest().getBodyCase().equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !game.getCurrentPlayer().equals(col)) )

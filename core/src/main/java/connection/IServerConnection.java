@@ -10,4 +10,6 @@ public interface IServerConnection
 {
     Messages.Message getMessageFromServer();
     void sendMessageToServer(Messages.Message message);
+
+    void shutDown();
 }

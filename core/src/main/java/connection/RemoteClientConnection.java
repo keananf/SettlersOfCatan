@@ -21,29 +21,49 @@ public class RemoteClientConnection implements IClientConnection
     @Override
     public void sendMessageToClient(Messages.Message message)
     {
-        try
+        if(conn != null)
         {
-            message.writeTo(conn.getOutputStream());
-            conn.getOutputStream().flush();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
+            try
+            {
+                message.writeTo(conn.getOutputStream());
+                conn.getOutputStream().flush();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     public Messages.Message getMessageFromClient()
     {
+        if(conn != null)
+        {
+            try
+            {
+                return Messages.Message.parseFrom(conn.getInputStream());
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void shutDown()
+    {
         try
         {
-            return Messages.Message.parseFrom(conn.getInputStream());
+            conn.close();
+            conn = null;
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
-
-        return null;
     }
 }

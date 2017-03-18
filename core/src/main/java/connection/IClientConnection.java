@@ -10,4 +10,6 @@ public interface IClientConnection
 {
     void sendMessageToClient(Messages.Message message);
     Messages.Message getMessageFromClient();
+
+    void shutDown();
 }

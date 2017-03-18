@@ -15,6 +15,7 @@ public abstract class Client
     protected MoveProcessor moveProcessor;
     protected static final int PORT = 12345;
     private TurnInProgress turn;
+    private IServerConnection conn;
 
 
     /**
@@ -27,6 +28,7 @@ public abstract class Client
      */
     protected void setUp(IServerConnection conn)
     {
+        this.conn = conn;
         this.turn = new TurnInProgress();
         this.moveProcessor = new MoveProcessor(this);
         this.eventProcessor = new EventProcessor(conn, this);
@@ -46,6 +48,7 @@ public abstract class Client
      */
     public void shutDown()
     {
+        conn.shutDown();
         try
         {
             evProcessor.join();

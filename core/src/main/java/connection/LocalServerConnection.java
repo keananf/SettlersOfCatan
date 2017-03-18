@@ -38,6 +38,13 @@ public class LocalServerConnection implements IServerConnection
         conn.fromClient.add(message);
     }
 
+    @Override
+    public void shutDown()
+    {
+        conn = null;
+        fromServer = null;
+    }
+
     public LocalClientConnection getConn()
     {
         return conn;

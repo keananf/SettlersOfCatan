@@ -11,8 +11,8 @@ import java.net.Socket;
  */
 public class RemoteClient extends Client
 {
-    private Socket socket;
     private String host;
+    private RemoteServerConnection conn;
 
     public RemoteClient(String host)
     {
@@ -38,7 +38,7 @@ public class RemoteClient extends Client
      */
     public boolean isInitialised()
     {
-        return socket != null && socket.isConnected();
+        return conn != null && conn.isInitialised();
     }
 
     /**
@@ -48,8 +48,9 @@ public class RemoteClient extends Client
     {
         try
         {
-            socket = new Socket(host, PORT);
-            setUp(new RemoteServerConnection(socket));
+            Socket socket = new Socket(host, PORT);
+            conn = new RemoteServerConnection(socket);
+            setUp(conn);
         }
         catch (IOException e)
         {
@@ -61,13 +62,5 @@ public class RemoteClient extends Client
     public void shutDown()
     {
         super.shutDown();
-        try
-        {
-            socket.close();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
     }
 }

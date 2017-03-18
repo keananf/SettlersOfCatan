@@ -22,15 +22,26 @@ public class LocalClientConnection implements IClientConnection
     @Override
     public void sendMessageToClient(Messages.Message message)
     {
-        conn.fromServer.add(message);
+        if(conn != null)
+        {
+            conn.fromServer.add(message);
+        }
     }
 
     @Override
     public Messages.Message getMessageFromClient()
     {
+        if(fromClient == null) return null;
+
         // Block until message is received
         while(fromClient.isEmpty()) {}
-
         return fromClient.poll();
+    }
+
+    @Override
+    public void shutDown()
+    {
+        conn = null;
+        fromClient = null;
     }
 }

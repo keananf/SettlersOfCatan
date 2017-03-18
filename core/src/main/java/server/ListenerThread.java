@@ -1,14 +1,12 @@
 package server;
 
 import connection.IClientConnection;
-import connection.LocalClientConnection;
-import connection.RemoteClientConnection;
 import enums.Colour;
-import intergroup.Messages.*;
-import intergroup.Events.*;
+import intergroup.Events.ErrorCause;
+import intergroup.Events.Event;
+import intergroup.Messages.Message;
 
 import java.io.IOException;
-import java.net.Socket;
 
 /**
  * Class which simply listens to a socket. The successfully received message is
@@ -90,5 +88,21 @@ public class ListenerThread implements Runnable
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(Event.newBuilder().setError(getError()).build());
 		sendMessage(msg.build());
+	}
+
+	/**
+	 * Terminates the underlying connection and this thread
+	 */
+	public void shutDown()
+	{
+		conn.shutDown();
+		try
+		{
+			thread.join();
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

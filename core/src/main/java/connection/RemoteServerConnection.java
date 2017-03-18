@@ -21,13 +21,16 @@ public class RemoteServerConnection implements IServerConnection
     @Override
     public Messages.Message getMessageFromServer()
     {
-        try
+        if(conn != null)
         {
-            return Messages.Message.parseFrom(conn.getInputStream());
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
+            try
+            {
+                return Messages.Message.parseFrom(conn.getInputStream());
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
 
         return null;
@@ -36,13 +39,35 @@ public class RemoteServerConnection implements IServerConnection
     @Override
     public void sendMessageToServer(Messages.Message message)
     {
+        if(conn != null)
+        {
+            try
+            {
+                message.writeTo(conn.getOutputStream());
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void shutDown()
+    {
         try
         {
-            message.writeTo(conn.getOutputStream());
+            conn.close();
+            conn = null;
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
+    }
+
+    public boolean isInitialised()
+    {
+        return conn.isConnected();
     }
 }

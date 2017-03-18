@@ -63,7 +63,20 @@ public class Server implements Runnable
 		{
 			e.printStackTrace();
 			System.out.println("Error connecting players");
-			return;
+		}
+
+		shutDown();
+	}
+
+	/**
+	 * Shuts down all individual connections, and then shut down
+	 */
+	public void shutDown()
+	{
+		// Shut down all individual connections
+		for(ListenerThread conn : connections.values())
+		{
+			conn.shutDown();
 		}
 	}
 

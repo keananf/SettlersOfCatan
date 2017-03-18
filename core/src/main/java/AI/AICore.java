@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import grid.BoardElement;
 import grid.Node;
 import grid.Edge;
 import client.ClientGame;
@@ -20,19 +21,54 @@ public abstract class AICore implements IAI
 	Map<ResourceType, Integer> pips;
 	AIClient client;
 	
-	public AICore(Difficulty difficulty, AIClient client, AIPlayer player)
+	public AICore(Difficulty difficulty, AIClient client)
 	{
 		this.client = client;
 		this.difficulty = difficulty;
-		this.game = client.getState;
-		this.player = player;
+		this.game = client.getState();
+		this.player = (AIPlayer) game.getPlayer();
 	}
 	
 	public ArrayList<MoveEntry> getMoves()
 	{
 		ArrayList<MoveEntry> moves = new ArrayList<MoveEntry>();
 		
+		//TODO: add empty move
 		
+		if(client.getMoveProcessor.checkBuyDevCard())
+		{
+			//create MoveEntry for buying a dev card
+			//add MoveEntry to list
+		}
+		
+		//TODO: check if a player can play a development card
+		
+		ArrayList<BoardElement> elements = client.getMoveProcessor().getBuildingPossibilities();
+		
+		for(BoardElement e: elements)
+		{
+			if(e instanceof Node)
+			{
+				if(player.canBuildCity((Node) e))
+				{
+					//create MoveEntry for building city
+					//add MoveEntry to list
+				}
+				else if(player.canBuildSettlement((Node) e))
+				{
+					//create MoveEntry for buildiung a settlement
+					//add MoveEntry to list
+				}
+			}
+			else if(e instanceof Edge)
+			{
+				if(player.canBuildRoad((Edge) e))
+				{
+					//create MoveEntry for building a road
+					//add MoveEntry to list
+				}
+			}
+		}
 		
 		return moves;
 	}
@@ -94,6 +130,26 @@ public abstract class AICore implements IAI
 	public Node getSettlementNode()
 	{
 		Node buildNode = null;
+		
+		//get all BoardElements
+		ArrayList<BoardElement> elements = client.getMoveProcessor().getBuildingPossibilities();
+		
+		ArrayList<Node> nodes = new ArrayList<Node>();
+		//take out the nodes
+		for(BoardElement e: elements)
+		{
+			if(e instanceof Node)
+			{
+				nodes.add((Node) e);
+			}
+		}
+		
+		if(nodes.size() > 0)
+		{
+			Random ran = new Random();
+			
+			buildNode = nodes.get(ran.nextInt(nodes.size()));
+		}
 		
 		
 		

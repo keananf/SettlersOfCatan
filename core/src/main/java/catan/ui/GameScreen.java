@@ -29,9 +29,9 @@ public class GameScreen implements Screen
 	final private AssMan assets = new AssMan();
 	final private ModelBatch MODEL_BATCH = new ModelBatch();
 
-	final private Camera cam;
-	final private CatanCamController camController;
-	final private CameraInputController debugController;
+	private Camera cam;
+	private CatanCamController camController;
+	private CameraInputController debugController;
 
 	final private Array<ModelInstance> boardInstances = new Array<ModelInstance>();
 	final private Environment environment = new Environment();

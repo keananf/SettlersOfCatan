@@ -27,7 +27,7 @@ public abstract class AICore
 	{
 		ArrayList<MoveEntry> moves = new ArrayList<MoveEntry>();
 		
-		//TODO: wait for pull request
+		
 		
 		return moves;
 	}

@@ -1,29 +1,20 @@
 package AI;
 
-import board.BoardElement;
-import board.Edge;
-import board.Node;
+import grid.BoardElement;
 import enums.Move;
 
 public class MoveEntry 
 {
-	private Node node;
-	private Edge edge;
+	private BoardElement element;
 	private Move move;
 	private int rank;
 	
-	public MoveEntry(Node node, Move move)
+	public MoveEntry(BoardElement element, Move move)
 	{
-		this.node = node;
+		this.element = element;
 		this.move = move;
 	}
-	
-	public MoveEntry(Edge edge, Move move)
-	{
-		this.edge = edge;
-		this.move = move;
-	}
-	
+		
 	public MoveEntry(Move move)
 	{
 		this.move = move;
@@ -34,29 +25,9 @@ public class MoveEntry
 		return move;
 	}
 	
-	public Node getNode()
+	public BoardElement getElement()
 	{
-		Node retNode = null;
-		
-		if(move == Move.BUILD_SETTLEMENT || move == Move.UPGRADE_SETTLEMENT)
-		{
-			retNode = node;
-		}
-		
-		return retNode;
-	
-	}
-	
-	public Edge getEdge()
-	{
-		Edge retEdge = null;
-		
-		if(move == Move.BUILD_ROAD)
-		{
-			retEdge = edge;
-		}
-		
-		return retEdge;
+		return element;
 	}
 	
 	public int getRank()

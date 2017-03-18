@@ -23,6 +23,17 @@ public abstract class AICore
 		this.player = player;
 	}
 	
+	public ArrayList<MoveEntry> getMoves()
+	{
+		ArrayList<MoveEntry> moves = new ArrayList<MoveEntry>();
+		
+		//TODO: wait for pull request
+		
+		return moves;
+	}
+	
+
+	
 	public MoveEntry selectMove(ArrayList<MoveEntry> moves)
 	{
 		MoveEntry selectedMove = null;
@@ -53,4 +64,10 @@ public abstract class AICore
 		return selectedMove;
 		
 	}
+	
+	public void updateGameState(ClientGame game)
+	{
+		this.game = game;
+	}
+	
 }

@@ -32,7 +32,23 @@ public abstract class AICore
 		return moves;
 	}
 	
-
+	public ArrayList<MoveEntry> rankMoves(ArrayList<MoveEntry> moves)
+	{
+		ArrayList<MoveEntry> ranked = moves;
+		
+		Random ran = new Random();
+		
+		int rank;
+		
+		for(MoveEntry move: ranked)
+		{
+			rank = ran.nextInt(ranked.size());
+			
+			move.setRank(rank);
+		}
+		
+		return ranked;
+	}
 	
 	public MoveEntry selectMove(ArrayList<MoveEntry> moves)
 	{

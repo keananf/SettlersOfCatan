@@ -6,7 +6,7 @@ import enums.ResourceType;
 import exceptions.*;
 import game.build.Road;
 import game.build.Settlement;
-import game.players.NetworkPlayer;
+import game.players.ServerPlayer;
 import game.players.Player;
 import grid.Edge;
 import grid.Hex;
@@ -84,7 +84,7 @@ public class DevelopmentCardTests extends TestHelper
 	public void largestArmyTest() throws SettlementExistsException, CannotStealException,
 			InvalidCoordinatesException, DoesNotOwnException, CannotAffordException, IOException, BankLimitException
 	{
-		NetworkPlayer p2 = new NetworkPlayer(Colour.RED, "");
+		ServerPlayer p2 = new ServerPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		game.addPlayer(p2);
 
@@ -215,7 +215,7 @@ public class DevelopmentCardTests extends TestHelper
 		grant.put(r, 2);
 
 		// Set-up resources to be taken when playing the development card 
-		Player p2 = new NetworkPlayer(Colour.RED, ""), p3 = new NetworkPlayer(Colour.ORANGE, "");
+		Player p2 = new ServerPlayer(Colour.RED, ""), p3 = new ServerPlayer(Colour.ORANGE, "");
 		p2.grantResources(grant, game.getBank());
 		p2.setId(Board.Player.Id.PLAYER_2);
 		p3.grantResources(grant, game.getBank());
@@ -257,7 +257,7 @@ public class DevelopmentCardTests extends TestHelper
 		p.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
 
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.RED, "");
+		Player p2 = new ServerPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		game.addPlayer(p2);
 		p2.grantResources(Settlement.getSettlementCost(), game.getBank());
@@ -312,7 +312,7 @@ public class DevelopmentCardTests extends TestHelper
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.RED, "");
+		Player p2 = new ServerPlayer(Colour.RED, "");
 		p2.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		game.addPlayer(p2);
 
@@ -339,7 +339,7 @@ public class DevelopmentCardTests extends TestHelper
 		p.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
 
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.RED, "");
+		Player p2 = new ServerPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		p2.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		game.addPlayer(p2);
@@ -388,7 +388,7 @@ public class DevelopmentCardTests extends TestHelper
 		p.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
 
 		// Set up player 2, make settlement, grant resources so one can be taken
-		Player p2 = new NetworkPlayer(Colour.RED,"");
+		Player p2 = new ServerPlayer(Colour.RED,"");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		game.addPlayer(p2);
 		p2.grantResources(Settlement.getSettlementCost(), game.getBank());

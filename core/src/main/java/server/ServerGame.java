@@ -6,7 +6,7 @@ import enums.ResourceType;
 import exceptions.*;
 import game.Game;
 import game.build.Road;
-import game.players.NetworkPlayer;
+import game.players.ServerPlayer;
 import game.players.Player;
 import grid.Hex;
 import grid.Node;
@@ -212,7 +212,7 @@ public class ServerGame extends Game
 		Resource.Counts offer = trade.getOffering();
 		Resource.Counts request = trade.getWanting();
 		Colour recipientColour = getPlayer(trade.getOther().getId()).getColour();
-		NetworkPlayer recipient = (NetworkPlayer) players.get(recipientColour);
+		ServerPlayer recipient = (ServerPlayer) players.get(recipientColour);
 		Player offerer = players.get(currentPlayer);
 
 		// Both players need to be able to afford the trade
@@ -290,7 +290,7 @@ public class ServerGame extends Game
 		}
 
 		// Try to upgrade settlement
-		((NetworkPlayer) p).upgradeSettlement(node, bank);
+		((ServerPlayer) p).upgradeSettlement(node, bank);
 		bank.setAvailableSettlements(p.getColour(), bank.getAvailableSettlements(p.getColour()) + 1);
 		bank.setAvailableCities(p.getColour(),bank.getAvailableCities(p.getColour()) - 1);
     }
@@ -321,7 +321,7 @@ public class ServerGame extends Game
 		}
 
 		// Try to build settlement
-		((NetworkPlayer) p).buildSettlement(node, bank);
+		((ServerPlayer) p).buildSettlement(node, bank);
 		bank.setAvailableSettlements(p.getColour(), bank.getAvailableSettlements(p.getColour()) - 1);
 		
 		checkIfRoadBroken(node);
@@ -337,7 +337,7 @@ public class ServerGame extends Game
 
 		// Try to play card
 		DevelopmentCardType type = DevelopmentCardType.fromProto(card);
-		((NetworkPlayer)p).playDevelopmentCard(type);
+		((ServerPlayer)p).playDevelopmentCard(type);
 
 		// Perform any additional actions not accomplished through
 		// updating expected moves (i.e. road building, year of plenty)
@@ -370,7 +370,7 @@ public class ServerGame extends Game
 		}
 
 		// Try to buy card
-        DevelopmentCardType card = ((NetworkPlayer)p).buyDevelopmentCard(bank);
+        DevelopmentCardType card = ((ServerPlayer)p).buyDevelopmentCard(bank);
 		return DevelopmentCardType.toProto(card);
 	}
 
@@ -434,7 +434,7 @@ public class ServerGame extends Game
 			// If node has a settlement and it is of the specified colour
 			if(n.getSettlement() != null && n.getSettlement().getPlayerColour().equals(otherColour))
 			{
-				NetworkPlayer p = (NetworkPlayer) players.get(currentPlayer);
+				ServerPlayer p = (ServerPlayer) players.get(currentPlayer);
 				p.takeResource(players.get(otherColour), resource, bank);
 				valid = true;
 			}
@@ -510,7 +510,7 @@ public class ServerGame extends Game
 	public Events.Event buildRoad(Board.Edge edge) throws CannotAffordException, CannotBuildRoadException,
 			RoadExistsException, InvalidCoordinatesException, BankLimitException
 	{
-		NetworkPlayer p = (NetworkPlayer) players.get(currentPlayer);
+		ServerPlayer p = (ServerPlayer) players.get(currentPlayer);
 		Board.Point p1 = edge.getA(), p2 = edge.getB();
 		Node n = grid.getNode(p1.getX(), p1.getY());
 		Node n2 = grid.getNode(p2.getX(), p2.getY());
@@ -654,7 +654,7 @@ public class ServerGame extends Game
 		// Assign colour and id
 		Colour newCol = Colour.values()[numPlayers++];
 		Board.Player.Id id = Board.Player.Id.forNumber(numPlayers);
-		NetworkPlayer p = new NetworkPlayer(newCol, "");
+		ServerPlayer p = new ServerPlayer(newCol, "");
 		p.setId(id);
 
 		// Add player info and return assigned colour

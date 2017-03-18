@@ -20,11 +20,11 @@ import java.util.Map;
 /**
  * Class representing a player from across the network
  */
-public class NetworkPlayer extends Player
+public class ServerPlayer extends Player
 {
 	private InetAddress inetAddress;
 
-	public NetworkPlayer(Colour colour, String username)
+	public ServerPlayer(Colour colour, String username)
 	{
 		super(colour, username);
 	}

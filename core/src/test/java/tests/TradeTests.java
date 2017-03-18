@@ -6,7 +6,7 @@ import exceptions.*;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
-import game.players.NetworkPlayer;
+import game.players.ServerPlayer;
 import game.players.Player;
 import grid.Port;
 import intergroup.Messages;
@@ -40,7 +40,7 @@ public class TradeTests extends TestHelper
     public void illegalTradeTest() throws IllegalTradeException
     {
         // Set up player 2
-        Player p2 = new NetworkPlayer(Colour.RED, "");
+        Player p2 = new ServerPlayer(Colour.RED, "");
         p2.setId(Board.Player.Id.PLAYER_2);
         game.addPlayer(p2);
 
@@ -66,7 +66,7 @@ public class TradeTests extends TestHelper
     public void playerTradeTest() throws IllegalTradeException, BankLimitException
     {
         // Set up player 2
-        Player p2 = new NetworkPlayer(Colour.RED, "");
+        Player p2 = new ServerPlayer(Colour.RED, "");
         p2.setId(Board.Player.Id.PLAYER_2);
         game.addPlayer(p2);
 
@@ -260,7 +260,7 @@ public class TradeTests extends TestHelper
     public void emptyTradeTest() throws IllegalTradeException, BankLimitException
     {
         // Set up player 2
-        Player p2 = new NetworkPlayer(Colour.RED, "");
+        Player p2 = new ServerPlayer(Colour.RED, "");
         Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
         grant.put(ResourceType.Brick, 1);
         p2.grantResources(grant, game.getBank());
@@ -410,7 +410,7 @@ public class TradeTests extends TestHelper
     public void tradePhaseTest() throws SettlementExistsException, IOException, BankLimitException
     {
         // Set up player 2
-        Player p2 = new NetworkPlayer(Colour.RED, "");
+        Player p2 = new ServerPlayer(Colour.RED, "");
         p2.setId(Board.Player.Id.PLAYER_2);
         game.addPlayer(p2);
 

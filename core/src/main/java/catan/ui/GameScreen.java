@@ -67,14 +67,6 @@ public class GameScreen implements Screen
 
 	private void initBoard()
 	{
-		assets.load("models/hex.g3db", Model.class);
-		assets.load("models/grass.g3db", Model.class);
-		assets.load("models/grain.g3db", Model.class);
-		assets.load("models/claymine.g3db", Model.class);
-		assets.load("models/mountain.g3db", Model.class);
-		assets.load("models/desert.g3db", Model.class);
-		assets.finishLoading();
-
 		for(Entry<Point, Hex> coord : game.state.getGrid().grid.entrySet())
 		{
 			ModelInstance hex = new ModelInstance(assets.getModel("hex.g3db"), hexPointToCartVec(coord.getKey()));

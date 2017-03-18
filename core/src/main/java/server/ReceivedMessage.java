@@ -8,22 +8,22 @@ import intergroup.Messages;
  */
 public class ReceivedMessage
 {
-    private Colour col;
-    private Messages.Message msg;
+	private Colour col;
+	private Messages.Message msg;
 
-    public ReceivedMessage(Colour col, Messages.Message msg)
-    {
-        this.col = col;
-        this.msg = msg;
-    }
+	public ReceivedMessage(Colour col, Messages.Message msg)
+	{
+		this.col = col;
+		this.msg = msg;
+	}
 
-    public Messages.Message getMsg()
-    {
-        return msg;
-    }
+	public Messages.Message getMsg()
+	{
+		return msg;
+	}
 
-    public Colour getCol()
-    {
-        return col;
-    }
+	public Colour getCol()
+	{
+		return col;
+	}
 }

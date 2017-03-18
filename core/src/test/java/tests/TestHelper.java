@@ -22,13 +22,13 @@ public class TestHelper
 	protected NetworkPlayer p;
 	protected Node n;
 	protected Hex hex;
-	
+
 	protected Settlement makeSettlement(Player p, Node n) throws SettlementExistsException
 	{
 		assertTrue(hasResources(p));
 		int oldSize = p.getSettlements().size();
 		int oldResources = p.getNumResources();
-		
+
 		// Build settlement
 		try
 		{
@@ -80,7 +80,7 @@ public class TestHelper
 	protected Road buildRoad(Player p, Edge e) throws CannotBuildRoadException, RoadExistsException
 	{
 		int oldSize = p.getRoads().size();
-		
+
 		assertTrue(hasResources(p));
 		try
 		{
@@ -102,16 +102,16 @@ public class TestHelper
 
 		return p.getRoads().get(p.getRoads().size() - 1);
 	}
-	
+
 	protected DevelopmentCardType buyDevelopmentCard() throws CannotAffordException
 	{
 		int oldSize = p.getDevelopmentCards().size();
 		DevelopmentCardType c = DevelopmentCardType.Knight;
-		
+
 		assertTrue(hasResources(p));
 		try
 		{
-			c = ((NetworkPlayer)p).buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
+			c = ((NetworkPlayer) p).buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
 		}
 		catch (CannotAffordException ex)
 		{
@@ -127,10 +127,9 @@ public class TestHelper
 
 	protected boolean hasResources(Player p)
 	{
-		for(ResourceType r : p.getResources().keySet())
+		for (ResourceType r : p.getResources().keySet())
 		{
-			if(p.getResources().get(r) > 0)
-				return true;
+			if (p.getResources().get(r) > 0) return true;
 		}
 
 		return false;
@@ -143,30 +142,29 @@ public class TestHelper
 		p.setId(Board.Player.Id.PLAYER_1);
 		game.addPlayer(p);
 		game.setCurrentPlayer(p.getColour());
-		
+
 		// Find hex without 'Generic'
-		for(int i = 0; i < game.getGrid().nodes.values().size(); i++)
+		for (int i = 0; i < game.getGrid().nodes.values().size(); i++)
 		{
 			n = (Node) game.getGrid().nodes.values().toArray()[i];
 			hex = n.getHexes().get(0);
-			
+
 			// for each hex
 			boolean valid = true;
-			for(Hex h : n.getHexes())
-			{				
-				for(Hex h2 : n.getHexes())
-					if(h2.getChit() == h.getChit() && !h.equals(h2))
+			for (Hex h : n.getHexes())
+			{
+				for (Hex h2 : n.getHexes())
+					if (h2.getChit() == h.getChit() && !h.equals(h2))
 					{
 						valid = false;
 						break;
 					}
-				
+
 			}
-			
+
 			// Skip if this one isn't the desert
-			if(valid && hex.getResource() != ResourceType.Generic && !hex.hasRobber())
-				break;
-			
+			if (valid && hex.getResource() != ResourceType.Generic && !hex.hasRobber()) break;
+
 		}
 	}
 }

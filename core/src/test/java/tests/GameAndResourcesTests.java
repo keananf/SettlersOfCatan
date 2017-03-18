@@ -30,11 +30,13 @@ public class GameAndResourcesTests extends TestHelper
 	@Test
 	public void makeGameTest()
 	{
-		assertTrue(game.getGrid().grid.values().size() == 19); // number of hexes
-		assertTrue(game.getGrid().nodes.values().size() == 54); // number of nodes
+		assertTrue(game.getGrid().grid.values().size() == 19); // number of
+																// hexes
+		assertTrue(game.getGrid().nodes.values().size() == 54); // number of
+																// nodes
 		assertTrue(game.getGrid().ports.size() == 9); // number of ports
 	}
-	
+
 	@Test
 	public void collectResourcesTest() throws SettlementExistsException, BankLimitException
 	{
@@ -51,7 +53,7 @@ public class GameAndResourcesTests extends TestHelper
 
 	@Test
 	public void collectResourcesWithRobberTest() throws SettlementExistsException, BankLimitException
-	{		
+	{
 		// Make a settlement and toggle the robber on its hex
 		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n);
@@ -74,8 +76,8 @@ public class GameAndResourcesTests extends TestHelper
 	}
 
 	@Test
-	public void moveRobberTest() throws InvalidCoordinatesException, CannotStealException,
-			SettlementExistsException, BankLimitException
+	public void moveRobberTest()
+			throws InvalidCoordinatesException, CannotStealException, SettlementExistsException, BankLimitException
 	{
 		// Make a second player
 		Player p2 = new NetworkPlayer(Colour.RED, "");
@@ -85,7 +87,8 @@ public class GameAndResourcesTests extends TestHelper
 		// Give player 2 resources to take
 		p2.grantResources(Road.getRoadCost(), game.getBank());
 
-		// Grant player 2 a settlement so that player 1 will be allowed to take from them
+		// Grant player 2 a settlement so that player 1 will be allowed to take
+		// from them
 		p2.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p2, n);
 
@@ -151,7 +154,7 @@ public class GameAndResourcesTests extends TestHelper
 
 		game.processDiscard(discard.build(), p.getColour());
 	}
-	
+
 	@Test
 	public void collectResourcesCityTest() throws SettlementExistsException, BankLimitException
 	{
@@ -196,7 +199,8 @@ public class GameAndResourcesTests extends TestHelper
 	}
 
 	@Test
-	public void roadLimitTest() throws CannotBuildRoadException, RoadExistsException, SettlementExistsException, BankLimitException
+	public void roadLimitTest()
+			throws CannotBuildRoadException, RoadExistsException, SettlementExistsException, BankLimitException
 	{
 		int roadLimit = game.getBank().getAvailableRoads();
 		int settlementsLimit = game.getBank().getAvailableSettlements();
@@ -219,7 +223,7 @@ public class GameAndResourcesTests extends TestHelper
 
 		// Grant player all dev cards
 		int amount = game.getBank().getNumAvailableDevCards();
-		for(int i = 0; i < amount; i++)
+		for (int i = 0; i < amount; i++)
 		{
 			p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 			game.buyDevelopmentCard();
@@ -227,9 +231,9 @@ public class GameAndResourcesTests extends TestHelper
 
 		int num = 0;
 		// Check number of dev cards
-		for(DevelopmentCardType d : p.getDevelopmentCards().keySet())
+		for (DevelopmentCardType d : p.getDevelopmentCards().keySet())
 		{
-			num+= p.getDevelopmentCards().get(d);
+			num += p.getDevelopmentCards().get(d);
 		}
 
 		// Assert player has all dev cards
@@ -253,7 +257,7 @@ public class GameAndResourcesTests extends TestHelper
 		// Grants all of this resource.
 		int chit = n.getHexes().get(0).getChit();
 		ResourceType r = n.getHexes().get(0).getResource();
-		for(int i = 0; i < amount; i++)
+		for (int i = 0; i < amount; i++)
 		{
 			game.allocateResources(chit);
 		}

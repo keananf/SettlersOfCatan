@@ -5,16 +5,16 @@ package exceptions;
  */
 public class BankLimitException extends Exception
 {
-    private String msg = "";
+	private String msg = "";
 
-    public BankLimitException(String format)
-    {
-        msg= format;
-    }
+	public BankLimitException(String format)
+	{
+		msg = format;
+	}
 
-    @Override
-    public String getMessage()
-    {
-        return msg;
-    }
+	@Override
+	public String getMessage()
+	{
+		return msg;
+	}
 }

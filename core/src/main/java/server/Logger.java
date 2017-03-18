@@ -7,22 +7,22 @@ import intergroup.Messages.Message;
  */
 public class Logger
 {
-    public void logReceivedMessage(Message msg)
-    {
-        String str = String.format("RECEIVED: Message of type %s.\n", msg.getTypeCase().name());
+	public void logReceivedMessage(Message msg)
+	{
+		String str = String.format("RECEIVED: Message of type %s.\n", msg.getTypeCase().name());
 
-        switch(msg.getTypeCase())
-        {
-            case REQUEST:
-                str = String.format(str + "Type of Request: %s\n", msg.getRequest().getBodyCase().name());
-                break;
+		switch (msg.getTypeCase())
+		{
+		case REQUEST:
+			str = String.format(str + "Type of Request: %s\n", msg.getRequest().getBodyCase().name());
+			break;
 
-            case EVENT:
-                str = String.format(str + "Type of Event: %s. From player: %s\n", msg.getEvent().getTypeCase().name());
-                break;
-        }
+		case EVENT:
+			str = String.format(str + "Type of Event: %s. From player: %s\n", msg.getEvent().getTypeCase().name());
+			break;
+		}
 
-        // TODO uncomment.
-        //Gdx.app.debug("Server", str);
-    }
+		// TODO uncomment.
+		// Gdx.app.debug("Server", str);
+	}
 }

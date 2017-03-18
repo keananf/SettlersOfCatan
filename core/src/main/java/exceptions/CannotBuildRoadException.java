@@ -7,7 +7,7 @@ import game.build.Road;
 public class CannotBuildRoadException extends Exception
 {
 	private Road road;
-	
+
 	public CannotBuildRoadException(Road r)
 	{
 		road = r;
@@ -16,9 +16,10 @@ public class CannotBuildRoadException extends Exception
 	public String getMessage()
 	{
 		Node n1 = road.getEdge().getX(), n2 = road.getEdge().getY();
-		
-		return String.format("Cannot build road from node (%d,%d) to node (%d,%d)\n"
-				+ "due to it not being connected to another road of colour %s", 
+
+		return String.format(
+				"Cannot build road from node (%d,%d) to node (%d,%d)\n"
+						+ "due to it not being connected to another road of colour %s",
 				n1.getX(), n1.getY(), n2.getX(), n2.getY(), road.getPlayerColour().toString());
 	}
 }

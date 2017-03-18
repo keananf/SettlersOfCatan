@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * Class describing a city
+ * 
  * @author 140001596
  */
 public class City extends Building
@@ -18,7 +19,9 @@ public class City extends Building
 		super(node, colour);
 	}
 
-	private City(){}
+	private City()
+	{
+	}
 
 	/**
 	 * @return a map containing the total cost for all resources
@@ -26,13 +29,13 @@ public class City extends Building
 	public Map<ResourceType, Integer> getCost()
 	{
 		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
-		
+
 		resources.put(ResourceType.Grain, 2);
 		resources.put(ResourceType.Ore, 3);
-		
+
 		return resources;
 	}
-	
+
 	public static Map<ResourceType, Integer> getCityCost()
 	{
 		return new City().getCost();

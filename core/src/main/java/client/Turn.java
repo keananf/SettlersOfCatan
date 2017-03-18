@@ -161,10 +161,10 @@ public class Turn
 		this.bankTrade = bankTrade;
 	}
 
-    public Trade.Response getTradeResponse()
+	public Trade.Response getTradeResponse()
 	{
-        return tradeResponse;
-    }
+		return tradeResponse;
+	}
 
 	public void setTradeResponse(Trade.Response tradeResponse)
 	{

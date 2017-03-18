@@ -1,9 +1,12 @@
 package AI;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import grid.Node;
+import grid.Edge;
 import client.ClientGame;
 import enums.Difficulty;
 import enums.ResourceType;
@@ -16,10 +19,11 @@ public abstract class AICore implements IAI
 	AIPlayer player;
 	Map<ResourceType, Integer> pips;
 	
-	public AICore(Difficulty difficulty, ClientGame game, AIPlayer player)
+	public AICore(Difficulty difficulty, Client client, AIPlayer player)
 	{
+		this.client = client;
 		this.difficulty = difficulty;
-		this.game = game;
+		this.game = client.getState;
 		this.player = player;
 	}
 	
@@ -84,6 +88,40 @@ public abstract class AICore implements IAI
 	public void updateGameState(ClientGame game)
 	{
 		this.game = game;
+	}
+	
+	public Node getSettlementNode()
+	{
+		Node buildNode = null;
+		
+		
+		
+		return buildNode;
+	}
+	
+	public Edge getRoadEdge(Node node)
+	{
+		Edge roadEdge = null;
+		
+		ArrayList<Edge> edges = (ArrayList<Edge>) node.getEdges();
+		
+		ArrayList<Edge> validEdges = new ArrayList<Edge>();
+		
+		for(Edge e: edges)
+		{
+			if(e.getRoad() == null)
+			{
+				validEdges.add(e);
+			}
+		}
+		
+		if(validEdges.size() > 0)
+		{
+			Random ran = new Random();
+			roadEdge = validEdges.get(ran.nextInt(validEdges.size()));
+		}
+				
+		return roadEdge;
 	}
 	
 }

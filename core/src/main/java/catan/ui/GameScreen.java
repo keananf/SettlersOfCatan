@@ -22,7 +22,6 @@ import com.badlogic.gdx.utils.Array;
 import enums.ResourceType;
 
 import board.Hex;
-
 import catan.SettlersOfCatan;
 
 public class GameScreen implements Screen
@@ -43,24 +42,27 @@ public class GameScreen implements Screen
 	{
 		this.game = game;
 
-		// init camera
+		initCamera();
+		initCameraController();
+		initBoard();
+		initEnvironment();
+	}
+
+	private void initCamera()
+	{
 		cam = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(10f, 8f, 0f);
 		cam.lookAt(0, 0, 0); // look at centre of world
 		cam.near = 0.01f; // closest things to be rendered
 		cam.far = 300f; // furthest things to be rendered
 		cam.update();
+	}
 
-		// init camera controller
+	private void initCameraController()
+	{
 		camController = new CatanCamController(cam);
 		debugController = new CameraInputController(cam);
 		Gdx.input.setInputProcessor(debugController);
-
-		// init environment
-		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
-		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-
-		initBoard();
 	}
 
 	private void initBoard()
@@ -75,10 +77,7 @@ public class GameScreen implements Screen
 
 		for(Entry<Point, Hex> coord : game.state.getGrid().grid.entrySet())
 		{
-			ModelInstance hex = new ModelInstance(
-					assets.getModel("hex.g3db"),
-					hexPointToCartVec(coord.getKey()));
-
+			ModelInstance hex = new ModelInstance(assets.getModel("hex.g3db"), hexPointToCartVec(coord.getKey()));
 			boardInstances.add(hex);
 
 			Model resourceModel = null;
@@ -113,6 +112,12 @@ public class GameScreen implements Screen
 		}
 	}
 
+	private void initEnvironment()
+	{
+		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
+		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+	}
+
 	private static final Vector3 hexPointToCartVec(Point p)
 	{
 		final float x = (float)(p.getX());
@@ -127,11 +132,7 @@ public class GameScreen implements Screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		camController.update();
-		renderBoard();
-	}
 
-	private void renderBoard()
-	{
 		MODEL_BATCH.begin(cam);
 		MODEL_BATCH.render(boardInstances, environment);
 		MODEL_BATCH.end();

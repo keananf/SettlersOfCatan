@@ -9,7 +9,7 @@ import enums.Difficulty;
 import enums.ResourceType;
 import game.players.AIPlayer;
 
-public abstract class AICore 
+public abstract class AICore implements IAI
 {
 	Difficulty difficulty;
 	ClientGame game;

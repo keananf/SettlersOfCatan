@@ -65,7 +65,8 @@ public class MessageProcessor
         // If not valid
         if(!validateMsg(msg, col))
         {
-            return null;
+            return Events.Event.newBuilder().setError(Events.Event.
+                            Error.newBuilder().setDescription("Move unexpected or invalid.").build()).build();
         }
 
         // switch on message type
@@ -78,8 +79,9 @@ public class MessageProcessor
             default:
                 break;
         }
-
-        return null;
+        
+        return Events.Event.newBuilder().setError(Events.Event.
+                Error.newBuilder().setDescription("Move type unexpected or invalid.").build()).build();
     }
 
     /**
@@ -188,7 +190,7 @@ public class MessageProcessor
         }
         catch(Exception e)
         {
-            return null;
+            ev.setError(Events.Event.Error.newBuilder().setDescription(e.getMessage()).build());
         }
 
         // Add expected trade response for other player

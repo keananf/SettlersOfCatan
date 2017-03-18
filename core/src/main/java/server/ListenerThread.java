@@ -18,14 +18,14 @@ public class ListenerThread implements Runnable
 	private Colour colour;
 	private Server server;
 
-    public ListenerThread(Socket socket, Colour c, Server server)
-    {
-        this.socket = socket;
-        this.server = server;
-        colour = c;
-        this.thread = new Thread(this);
-        this.thread.start();
-    }
+	public ListenerThread(Socket socket, Colour c, Server server)
+	{
+		this.socket = socket;
+		this.server = server;
+		colour = c;
+		this.thread = new Thread(this);
+		this.thread.start();
+	}
 
 	@Override
 	public void run()
@@ -42,51 +42,54 @@ public class ListenerThread implements Runnable
 		}
 	}
 
-    /**
-     * Listens for moves from the current player
-     * @return the bytes received from the current player
-     * @throws IOException
-     */
-    private void receiveMoves() throws IOException
-    {
-        // Receive and process moves until the end one is received
-        while(true)
-        {
-            // Parse message and add to queue
-            Message msg = Message.parseFrom(socket.getInputStream());
-            server.addMessageToProcess(new ReceivedMessage(colour, msg));
+	/**
+	 * Listens for moves from the current player
+	 * 
+	 * @return the bytes received from the current player
+	 * @throws IOException
+	 */
+	private void receiveMoves() throws IOException
+	{
+		// Receive and process moves until the end one is received
+		while (true)
+		{
+			// Parse message and add to queue
+			Message msg = Message.parseFrom(socket.getInputStream());
+			server.addMessageToProcess(new ReceivedMessage(colour, msg));
 		}
 	}
 
-    /**
-     * If an unknown or invalid message is received, then this message sends an error back
-     */
-    protected Event.Error getError() throws IOException
-    {
-        // Set up result message
-        Event.Error.Builder err = Event.Error.newBuilder();
-        err.setDescription("Invalid message type");
-        err.setCause(ErrorCause.UNRECOGNIZED);
+	/**
+	 * If an unknown or invalid message is received, then this message sends an
+	 * error back
+	 */
+	protected Event.Error getError() throws IOException
+	{
+		// Set up result message
+		Event.Error.Builder err = Event.Error.newBuilder();
+		err.setDescription("Invalid message type");
+		err.setCause(ErrorCause.UNRECOGNIZED);
 
-        return err.build();
-    }
+		return err.build();
+	}
 
-    /**
-     * Sends the message out to the client
-     * @param msg the message
-     * @throws IOException
-     */
-    public void sendMessage(Message msg) throws IOException
-    {
-        // Serialise and Send
-        msg.writeTo(socket.getOutputStream());
-        socket.getOutputStream().flush();
-    }
+	/**
+	 * Sends the message out to the client
+	 * 
+	 * @param msg the message
+	 * @throws IOException
+	 */
+	public void sendMessage(Message msg) throws IOException
+	{
+		// Serialise and Send
+		msg.writeTo(socket.getOutputStream());
+		socket.getOutputStream().flush();
+	}
 
-    public void sendError() throws IOException
-    {
-        Message.Builder msg = Message.newBuilder();
-        msg.setEvent(Event.newBuilder().setError(getError()).build());
-        sendMessage(msg.build());
-    }
+	public void sendError() throws IOException
+	{
+		Message.Builder msg = Message.newBuilder();
+		msg.setEvent(Event.newBuilder().setError(getError()).build());
+		sendMessage(msg.build());
+	}
 }

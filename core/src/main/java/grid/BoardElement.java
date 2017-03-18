@@ -3,12 +3,13 @@ package grid;
 public abstract class BoardElement
 {
 	private int x, y; // coordinates
+
 	protected BoardElement(int x, int y)
 	{
 		setX(x);
 		setY(y);
 	}
-	
+
 	/**
 	 * @return the x
 	 */
@@ -40,6 +41,5 @@ public abstract class BoardElement
 	{
 		this.y = y;
 	}
-
 
 }

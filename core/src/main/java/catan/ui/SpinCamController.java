@@ -1,6 +1,5 @@
 package catan.ui;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.badlogic.gdx.Gdx;
@@ -24,27 +23,33 @@ public final class SpinCamController implements InputProcessor
 		this.camera = camera;
 	}
 
-	public void update() {
+	public void update()
+	{
 		boolean changed = false;
 
-		if (heldKeys.contains(Keys.LEFT)) {
+		if (heldKeys.contains(Keys.LEFT))
+		{
 			camera.rotateAround(ORIGIN, Y_AXIS, -SPIN_RATE);
 			changed = true;
 		}
-		if (heldKeys.contains(Keys.RIGHT)) {
+		if (heldKeys.contains(Keys.RIGHT))
+		{
 			camera.rotateAround(ORIGIN, Y_AXIS, SPIN_RATE);
 			changed = true;
 		}
-		if (heldKeys.contains(Keys.UP)) {
+		if (heldKeys.contains(Keys.UP))
+		{
 			camera.position.scl(ZOOM_RATE);
 			changed = true;
 		}
-		if (heldKeys.contains(Keys.DOWN)) {
-			camera.position.scl(1/ZOOM_RATE);
+		if (heldKeys.contains(Keys.DOWN))
+		{
+			camera.position.scl(1 / ZOOM_RATE);
 			changed = true;
 		}
 
-		if (changed) {
+		if (changed)
+		{
 			Gdx.graphics.requestRendering();
 			camera.update();
 		}
@@ -65,15 +70,38 @@ public final class SpinCamController implements InputProcessor
 	}
 
 	@Override
-	public boolean keyTyped(char character) { return false; }
+	public boolean keyTyped(char character)
+	{
+		return false;
+	}
+
 	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) { return false; }
+	public boolean touchDown(int screenX, int screenY, int pointer, int button)
+	{
+		return false;
+	}
+
 	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) { return false; }
+	public boolean touchUp(int screenX, int screenY, int pointer, int button)
+	{
+		return false;
+	}
+
 	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) { return false; }
+	public boolean touchDragged(int screenX, int screenY, int pointer)
+	{
+		return false;
+	}
+
 	@Override
-	public boolean mouseMoved(int screenX, int screenY) { return false; }
+	public boolean mouseMoved(int screenX, int screenY)
+	{
+		return false;
+	}
+
 	@Override
-	public boolean scrolled(int amount) { return false; }
+	public boolean scrolled(int amount)
+	{
+		return false;
+	}
 }

@@ -1,6 +1,5 @@
 package exceptions;
 
-
 import grid.Port;
 import enums.Colour;
 

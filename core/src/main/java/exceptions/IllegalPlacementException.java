@@ -7,7 +7,7 @@ import game.build.Settlement;
 public class IllegalPlacementException extends Exception
 {
 	private Settlement settlement;
-	
+
 	public IllegalPlacementException(Settlement s)
 	{
 		settlement = s;
@@ -16,8 +16,9 @@ public class IllegalPlacementException extends Exception
 	public String getMessage()
 	{
 		Node n = settlement.getNode();
-		
-		return String.format("%s player cannot build settlement on node (%d,%d) due to it being within two nodes of another settlement", 
+
+		return String.format(
+				"%s player cannot build settlement on node (%d,%d) due to it being within two nodes of another settlement",
 				settlement.getPlayerColour().toString(), n.getX(), n.getY());
 	}
 }

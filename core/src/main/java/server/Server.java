@@ -11,6 +11,7 @@ import intergroup.Messages.Message;
 import intergroup.Requests.Request;
 import intergroup.board.Board;
 import intergroup.lobby.Lobby;
+import intergroup.resource.Resource;
 import intergroup.trade.Trade;
 
 import java.io.IOException;
@@ -214,6 +215,19 @@ public class Server implements Runnable
 	{
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(ev);
+
+		// Modify event before sending to other players
+		if(ev.getTypeCase().equals(Event.TypeCase.RESOURCESTOLEN) || ev.getTypeCase().equals(Event.TypeCase.DEVCARDBOUGHT))
+		{
+			// Send original to player
+			connections.get(game.getPlayer(ev.getInstigator().getId()).getColour()).sendMessage(msg.build());
+
+			// Obscure important info from other players
+			if(ev.getTypeCase().equals(Event.TypeCase.RESOURCESTOLEN))
+				msg.setEvent(ev.toBuilder().setResourceStolen(ev.getResourceStolen().toBuilder().setResource(Resource.Kind.GENERIC).build()).build());
+			else
+				msg.setEvent(ev.toBuilder().setDevCardBought(Board.DevCard.newBuilder().setPlayableDevCard(Board.PlayableDevCard.UNRECOGNIZED).build()).build());
+		}
 
 		// For each player
 		for(Colour c : Colour.values())

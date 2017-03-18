@@ -1,4 +1,3 @@
-board
 catan
 catan.ui
 client
@@ -7,4 +6,5 @@ exceptions
 game
 game.build
 game.players
+grid
 server

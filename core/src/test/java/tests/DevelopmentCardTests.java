@@ -131,10 +131,21 @@ public class DevelopmentCardTests extends TestHelper
 			server.addMessageToProcess(new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 			server.processMessage();
 			assertEquals(1, server.getExpectedMoves(p.getColour()).size());
+			assertTrue(server.getExpectedMoves(p.getColour()).get(0).equals(Requests.Request.BodyCase.CHOOSERESOURCE));
 
-			// Set player to take colour from
+			// Set the resource to take
 			req.clearMoveRobber();
+			req.setChooseResource(Resource.Kind.BRICK);
+			assertFalse(hasResources(p));
+			server.addMessageToProcess(new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
+			server.processMessage();
+			assertEquals(1, server.getExpectedMoves(p.getColour()).size());
+			assertTrue(server.getExpectedMoves(p.getColour()).get(0).equals(Requests.Request.BodyCase.SUBMITTARGETPLAYER));
+
+			// Set player to take resource from
+			req.clearChooseResource();
 			req.setSubmitTargetPlayer(Board.Player.newBuilder().setId(game.getPlayer(p2.getColour()).getId()).build());
+			assertFalse(hasResources(p));
 			server.addMessageToProcess(new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 			server.processMessage();
 			assertEquals(0, server.getExpectedMoves(p.getColour()).size());
@@ -167,10 +178,21 @@ public class DevelopmentCardTests extends TestHelper
 			server.addMessageToProcess(new ReceivedMessage(p2.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 			server.processMessage();
 			assertEquals(1, server.getExpectedMoves(p2.getColour()).size());
+			assertTrue(server.getExpectedMoves(p2.getColour()).get(0).equals(Requests.Request.BodyCase.CHOOSERESOURCE));
 
-			// Set player to take colour from
+			// Set the resource to take
 			req.clearMoveRobber();
+			req.setChooseResource(Resource.Kind.BRICK);
+			assertFalse(hasResources(p));
+			server.addMessageToProcess(new ReceivedMessage(p2.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
+			server.processMessage();
+			assertEquals(1, server.getExpectedMoves(p2.getColour()).size());
+			assertTrue(server.getExpectedMoves(p2.getColour()).get(0).equals(Requests.Request.BodyCase.SUBMITTARGETPLAYER));
+
+			// Set player to take resource from
+			req.clearChooseResource();
 			req.setSubmitTargetPlayer(Board.Player.newBuilder().setId(game.getPlayer(p.getColour()).getId()).build());
+			assertFalse(hasResources(p));
 			server.addMessageToProcess(new ReceivedMessage(p2.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 			server.processMessage();
 			assertEquals(0, server.getExpectedMoves(p2.getColour()).size());
@@ -226,7 +248,7 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test
-	public void playKnightNoResourcesTest() throws Exception
+	public void playKnightInvalidResourceTest() throws Exception
 	{
 		Hex oldHex = game.getGrid().getHexWithRobber();
 
@@ -258,10 +280,21 @@ public class DevelopmentCardTests extends TestHelper
 		server.addMessageToProcess(new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 		server.processMessage();
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
+		assertTrue(server.getExpectedMoves(p.getColour()).get(0).equals(Requests.Request.BodyCase.CHOOSERESOURCE));
 
-		// Set player to take colour from
+		// Set the resource to take
 		req.clearMoveRobber();
+		req.setChooseResource(Resource.Kind.BRICK);
+		assertFalse(hasResources(p));
+		server.addMessageToProcess(new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
+		server.processMessage();
+		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
+		assertTrue(server.getExpectedMoves(p.getColour()).get(0).equals(Requests.Request.BodyCase.SUBMITTARGETPLAYER));
+
+		// Set player to take resource from
+		req.clearChooseResource();
 		req.setSubmitTargetPlayer(Board.Player.newBuilder().setId(game.getPlayer(p2.getColour()).getId()).build());
+		assertFalse(hasResources(p));
 		server.addMessageToProcess(new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 		server.processMessage();
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
@@ -377,9 +410,19 @@ public class DevelopmentCardTests extends TestHelper
 		server.addMessageToProcess(new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 		server.processMessage();
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
+		assertTrue(server.getExpectedMoves(p.getColour()).get(0).equals(Requests.Request.BodyCase.CHOOSERESOURCE));
 
-		// Set player to take colour from
+		// Set the resource to take
 		req.clearMoveRobber();
+		req.setChooseResource(Resource.Kind.BRICK);
+		assertFalse(hasResources(p));
+		server.addMessageToProcess(new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
+		server.processMessage();
+		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
+		assertTrue(server.getExpectedMoves(p.getColour()).get(0).equals(Requests.Request.BodyCase.SUBMITTARGETPLAYER));
+
+		// Set player to take resource from
+		req.clearChooseResource();
 		req.setSubmitTargetPlayer(Board.Player.newBuilder().setId(game.getPlayer(p2.getColour()).getId()).build());
 		assertFalse(hasResources(p));
 		server.addMessageToProcess(new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));

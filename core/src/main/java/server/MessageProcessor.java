@@ -1,6 +1,7 @@
 package server;
 
 import enums.Colour;
+import enums.ResourceType;
 import exceptions.BankLimitException;
 import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
@@ -32,8 +33,9 @@ public class MessageProcessor
     private HashMap<Colour, List<Requests.Request.BodyCase>> expectedMoves;
     private ConcurrentLinkedQueue<ReceivedMessage> movesToProcess;
     private Trade.WithPlayer currentTrade;
-    private boolean tradePhase;
+    private boolean tradePhase, robberMoved;
     private ReceivedMessage lastMessage;
+    private ResourceType chosenResource;
 
     public MessageProcessor(ServerGame game, Server server)
     {
@@ -118,6 +120,7 @@ public class MessageProcessor
                 case MOVEROBBER:
                     game.moveRobber(request.getMoveRobber());
                     ev.setRobberMoved(request.getMoveRobber());
+                    robberMoved = true;
                     break;
                 case DISCARDRESOURCES:
                     game.processDiscard(request.getDiscardResources(), colour);
@@ -138,6 +141,10 @@ public class MessageProcessor
                         ev.setMonopolyResolution(game.playMonopolyCard(request.getChooseResource()));
                         monopoly = false;
                     }
+                    else if(robberMoved)
+                    {
+                        chosenResource = ResourceType.fromProto(request.getChooseResource());
+                    }
                     else
                     {
                         game.chooseResources(request.getChooseResource());
@@ -152,8 +159,7 @@ public class MessageProcessor
                     ev.setDevCardPlayed(request.getPlayDevCard());
                     break;
                 case SUBMITTARGETPLAYER:
-                    //TODO fix with expected move. NOT random
-                    Board.Steal steal = game.takeResource(request.getSubmitTargetPlayer().getId());
+                    Board.Steal steal = game.takeResource(request.getSubmitTargetPlayer().getId(), chosenResource);
                     if(steal != null) ev.setResourceStolen(steal);
                     break;
                 case INITIATETRADE:
@@ -220,7 +226,16 @@ public class MessageProcessor
         {
             // Expect for the player to send a steal request next
             case MOVEROBBER:
-                moves.add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+                moves.add(Requests.Request.BodyCase.CHOOSERESOURCE);
+                break;
+
+            // Once the player chooses a resource steal, expect a message on who to steal from
+            case CHOOSERESOURCE:
+                if(robberMoved)
+                {
+                    moves.add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+                    robberMoved = false;
+                }
                 break;
 
             // Add that a response is expected from this player

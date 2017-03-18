@@ -21,6 +21,7 @@ public class EventProcessor implements Runnable
 	private final IServerConnection conn;
 	private Logger logger;
 	private ConcurrentLinkedQueue<Requests.Request.BodyCase> expectedMoves;
+	private boolean robberMoved;
 
 	public EventProcessor(IServerConnection conn, Client client)
 	{
@@ -182,7 +183,8 @@ public class EventProcessor implements Runnable
 
 			// Expect for the player to send a steal request next
 			case ROBBERMOVED:
-				expectedMoves.add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+				expectedMoves.add(Requests.Request.BodyCase.CHOOSERESOURCE);
+				robberMoved = true;
 				if(expectedMoves.contains(Requests.Request.BodyCase.MOVEROBBER))
 				{
 					expectedMoves.remove(Requests.Request.BodyCase.MOVEROBBER);
@@ -192,6 +194,11 @@ public class EventProcessor implements Runnable
 			// Remove expected moves if necessary
 			case MONOPOLYRESOLUTION:
 			case RESOURCECHOSEN:
+				if(robberMoved)
+				{
+					expectedMoves.add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+					robberMoved = false;
+				}
 				if(expectedMoves.contains(Requests.Request.BodyCase.CHOOSERESOURCE))
 				{
 					expectedMoves.remove(Requests.Request.BodyCase.CHOOSERESOURCE);

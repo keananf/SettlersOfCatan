@@ -7,4 +7,5 @@ package grid;
  */
 public interface BoardElement
 {
+
 }

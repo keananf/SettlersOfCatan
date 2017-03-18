@@ -32,30 +32,30 @@ public class EventProcessor implements Runnable
 		this.game = client.getState();
 	}
 
-    @Override
-    public void run()
-    {
-        // Continuously wait for new messages from the server
-        while(!game.isOver())
-        {
-            try
-            {
-                processMessage();
-            }
-            catch(IOException e)
-            {
-                // Fatal error
-                break;
-            }
-            catch (Exception e)
-            {
-                // Error. Invalid event.
-                // TODO request state from server? Or fail?
-                e.printStackTrace();
-            }
+	@Override
+	public void run()
+	{
+		// Continuously wait for new messages from the server
+		while (!game.isOver())
+		{
+			try
+			{
+				processMessage();
+			}
+			catch (IOException e)
+			{
+				// Fatal error
+				break;
+			}
+			catch (Exception e)
+			{
+				// Error. Invalid event.
+				// TODO request state from server? Or fail?
+				e.printStackTrace();
+			}
 
-        }
-    }
+		}
+	}
 
     /**
      * Processes the event received from the server and updates the game state
@@ -244,10 +244,10 @@ public class EventProcessor implements Runnable
 		switch (msg.getTypeCase())
 		{
 
-			// Extract and process event
-			case EVENT:
-				processEvent(msg.getEvent());
-				break;
+		// Extract and process event
+		case EVENT:
+			processEvent(msg.getEvent());
+			break;
 		}
 	}
 }

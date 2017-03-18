@@ -31,9 +31,9 @@ public class TurnProcessor
 	 */
 	protected void sendMove()
 	{
-        Requests.Request.Builder request = Requests.Request.newBuilder();
+		Requests.Request.Builder request = Requests.Request.newBuilder();
 
-        switch (turn.getChosenMove())
+		switch (turn.getChosenMove())
 		{
 			case BUILDROAD:
                 request.setBuildRoad(turn.getChosenEdge().toEdgeProto());
@@ -94,6 +94,7 @@ public class TurnProcessor
 
 	/**
 	 * Sends the given request to the server
+	 * 
 	 * @param request the request to send
 	 */
 	private void sendToServer(Requests.Request request)
@@ -111,7 +112,7 @@ public class TurnProcessor
 	}
 
 	/**
-	 *@return the trade event for this player
+	 * @return the trade event for this player
 	 */
 	private Trade.Kind getTrade()
 	{
@@ -120,11 +121,11 @@ public class TurnProcessor
 		Trade.Kind.Builder kind = Trade.Kind.newBuilder();
 
 		// If a player trade
-		if(turn.getPlayerTrade() != null)
+		if (turn.getPlayerTrade() != null)
 		{
 			kind.setPlayer(turn.getPlayerTrade()).build();
 		}
-		else if(turn.getBankTrade() != null)
+		else if (turn.getBankTrade() != null)
 		{
 			kind.setBank(turn.getBankTrade()).build();
 		}

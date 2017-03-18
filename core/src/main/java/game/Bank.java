@@ -10,6 +10,7 @@ import java.util.Map;
 
 /**
  * Class representing the bank limits
+ * 
  * @author 140001596
  */
 public class Bank

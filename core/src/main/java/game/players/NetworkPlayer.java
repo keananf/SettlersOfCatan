@@ -29,7 +29,6 @@ public class NetworkPlayer extends Player
 		super(colour, username);
 	}
 
-
 	/**
 	 * @return the inetAddress
 	 */
@@ -40,6 +39,7 @@ public class NetworkPlayer extends Player
 
 	/**
 	 * sets the inetaddress of this network player
+	 * 
 	 * @param inetAddress
 	 */
 	public void setInetAddress(InetAddress inetAddress)
@@ -49,27 +49,30 @@ public class NetworkPlayer extends Player
 
 	/**
 	 * Attempts to build a road for this player
+	 * 
 	 * @param edge the edge to build the road on
 	 * @return the length of the player's longest road
 	 * @throws CannotAffordException if the player cannot afford it
-	 * @throws CannotBuildRoadException if it is not a valid place to build a road
+	 * @throws CannotBuildRoadException if it is not a valid place to build a
+	 *             road
 	 * @throws RoadExistsException
 	 */
-	public int buildRoad(Edge edge, Bank bank) throws CannotAffordException, CannotBuildRoadException, RoadExistsException
+	public int buildRoad(Edge edge, Bank bank)
+			throws CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
 		boolean valid = false;
 		List<Integer> listsAddedTo = new ArrayList<Integer>();
 		Road r = new Road(edge, colour);
 
 		// Road already here. Cannot build
-		if(edge.getRoad() != null)
-			throw new RoadExistsException(r);
+		if (edge.getRoad() != null) throw new RoadExistsException(r);
 
 		// Find out where this road is connected
 		valid = checkRoadsAndAdd(r, listsAddedTo);
 
-		// Check the location is valid for building and that the player can afford it
-		if(r.getEdge().hasSettlement() || valid)
+		// Check the location is valid for building and that the player can
+		// afford it
+		if (r.getEdge().hasSettlement() || valid)
 		{
 			spendResources(r.getCost(), bank);
 			edge.setRoad(r);
@@ -83,52 +86,52 @@ public class NetworkPlayer extends Player
 			}
 
 			// merge lists if necessary
-			else if(listsAddedTo.size() > 1)
-				mergeRoads(r, listsAddedTo);
+			else if (listsAddedTo.size() > 1) mergeRoads(r, listsAddedTo);
 		}
-		else throw new CannotBuildRoadException(r);
+		else
+			throw new CannotBuildRoadException(r);
 
 		return calcRoadLength();
 	}
 
 	/**
 	 * Attempts to build a settlement for this player
+	 * 
 	 * @param node the node to build the settlement on
 	 * @param bank
 	 * @throws CannotAffordException
 	 * @throws SettlementExistsException
 	 */
-	public void buildSettlement(Node node, Bank bank) throws CannotAffordException, IllegalPlacementException, SettlementExistsException
+	public void buildSettlement(Node node, Bank bank)
+			throws CannotAffordException, IllegalPlacementException, SettlementExistsException
 	{
 		Settlement s = new Settlement(node, colour);
 
 		// If valid placement, attempt to spend the required resources
-		if(canBuildSettlement(node))
+		if (canBuildSettlement(node))
 		{
 			spendResources(s.getCost(), bank);
 			addSettlement(s);
 		}
 
-		else if(!canAfford(Settlement.getSettlementCost()))
+		else if (!canAfford(Settlement.getSettlementCost()))
 		{
 			throw new CannotAffordException(resources, Settlement.getSettlementCost());
 		}
 
 		// Check if empty
-		else if(node.getSettlement() != null)
+		else if (node.getSettlement() != null)
 		{
 			throw new SettlementExistsException(s);
 		}
 
 		// Check if within two nodes of any other settlement
-		else if(s.isNearSettlement())
-		{
-			throw new IllegalPlacementException(s);
-		}
+		else if (s.isNearSettlement()) { throw new IllegalPlacementException(s); }
 	}
 
 	/**
 	 * Attempts to purchase a development card for this player
+	 * 
 	 * @param bank the desired type. Testing only
 	 * @return the bought development card
 	 * @throws CannotAffordException
@@ -144,6 +147,7 @@ public class NetworkPlayer extends Player
 
 	/**
 	 * Attempts to purchase a development card for this player
+	 * 
 	 * @param bank the desired type. Testing only
 	 * @return the bought development card
 	 * @throws CannotAffordException
@@ -160,16 +164,14 @@ public class NetworkPlayer extends Player
 
 	/**
 	 * Attempts to play the development card for this player
+	 * 
 	 * @param card the development card to play
 	 * @throws DoesNotOwnException if the user does not own the given card
 	 */
 	public void playDevelopmentCard(DevelopmentCardType card) throws DoesNotOwnException
 	{
 		// Check if the player owns the given card
-		if(!cards.containsKey(card))
-		{
-			throw new DoesNotOwnException(card, getColour());
-		}
+		if (!cards.containsKey(card)) { throw new DoesNotOwnException(card, getColour()); }
 
 		// Remove from inventory
 		int existing = cards.containsKey(card) ? cards.get(card) : 0;
@@ -178,6 +180,7 @@ public class NetworkPlayer extends Player
 
 	/**
 	 * Attempts to upgrade a settlement for this player
+	 * 
 	 * @param node the node to build the settlement on
 	 * @param bank
 	 * @throws CannotAffordException
@@ -192,18 +195,17 @@ public class NetworkPlayer extends Player
 			spendResources(c.getCost(), bank);
 			addSettlement(c);
 		}
-		else if(node.getSettlement() == null)
+		else if (node.getSettlement() == null)
 		{
 			throw new CannotUpgradeException(node.getX(), node.getY());
 		}
-		else if (!canAfford(City.getCityCost()))
-		{
-			throw new CannotAffordException(getResources(), City.getCityCost());
-		}
+		else if (!canAfford(
+				City.getCityCost())) { throw new CannotAffordException(getResources(), City.getCityCost()); }
 	}
 
 	/**
 	 * Take one resource randomly from the other player
+	 * 
 	 * @param other the other player
 	 * @param resource the resource to take
 	 */
@@ -212,10 +214,8 @@ public class NetworkPlayer extends Player
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
 		// Check the specified resource can be taken
-		if(!other.getResources().containsKey(resource) || other.getResources().get(resource) == 0)
-		{
-			throw new CannotStealException(colour, other.getColour());
-		}
+		if (!other.getResources().containsKey(resource) || other.getResources()
+				.get(resource) == 0) { throw new CannotStealException(colour, other.getColour()); }
 
 		try
 		{
@@ -223,7 +223,9 @@ public class NetworkPlayer extends Player
 			other.spendResources(grant, bank);
 			grantResources(grant, bank);
 		}
-		catch (CannotAffordException | BankLimitException e){ /* Cannot happen*/ }
+		catch (CannotAffordException | BankLimitException e)
+		{
+			/* Cannot happen */ }
 	}
 
 }

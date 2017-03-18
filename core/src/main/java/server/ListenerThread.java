@@ -21,16 +21,7 @@ public class ListenerThread implements Runnable
 	private Colour colour;
 	private Server server;
 
-    public ListenerThread(Socket socket, Colour c, Server server)
-    {
-        this.conn = new RemoteClientConnection(socket);
-        this.server = server;
-        colour = c;
-        this.thread = new Thread(this);
-        this.thread.start();
-    }
-
-    public ListenerThread(LocalClientConnection conn, Colour c, Server server)
+    public ListenerThread(IClientConnection conn, Colour c, Server server)
     {
         this.conn = conn;
         this.server = server;
@@ -70,18 +61,19 @@ public class ListenerThread implements Runnable
 		}
 	}
 
-    /**
-     * If an unknown or invalid message is received, then this message sends an error back
-     */
-    protected Event.Error getError() throws IOException
-    {
-        // Set up result message
-        Event.Error.Builder err = Event.Error.newBuilder();
-        err.setDescription("Invalid message type");
-        err.setCause(ErrorCause.UNRECOGNIZED);
+	/**
+	 * If an unknown or invalid message is received, then this message sends an
+	 * error back
+	 */
+	protected Event.Error getError() throws IOException
+	{
+		// Set up result message
+		Event.Error.Builder err = Event.Error.newBuilder();
+		err.setDescription("Invalid message type");
+		err.setCause(ErrorCause.UNRECOGNIZED);
 
-        return err.build();
-    }
+		return err.build();
+	}
 
     /**
      * Sends the message out to the client
@@ -93,10 +85,10 @@ public class ListenerThread implements Runnable
         conn.sendMessageToClient(msg);
     }
 
-    public void sendError() throws IOException
-    {
-        Message.Builder msg = Message.newBuilder();
-        msg.setEvent(Event.newBuilder().setError(getError()).build());
-        sendMessage(msg.build());
-    }
+	public void sendError() throws IOException
+	{
+		Message.Builder msg = Message.newBuilder();
+		msg.setEvent(Event.newBuilder().setError(getError()).build());
+		sendMessage(msg.build());
+	}
 }

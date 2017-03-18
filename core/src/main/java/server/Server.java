@@ -1,5 +1,6 @@
 package server;
 
+import connection.RemoteClientConnection;
 import enums.Colour;
 import exceptions.GameFullException;
 import game.Game;
@@ -236,7 +237,7 @@ public class Server implements Runnable
 					c = game.joinGame();
 				}
 				catch (GameFullException e) {}
-				connections.put(c, new ListenerThread(connection, c,  this));
+				connections.put(c, new ListenerThread(new RemoteClientConnection(connection), c,  this));
 				System.out.println(String.format("Player %d connected", numConnections));
 				numConnections++;
 			}

@@ -35,7 +35,7 @@ public abstract class AICore implements IAI
 		
 		//TODO: add empty move
 		
-		if(client.getMoveProcessor.checkBuyDevCard())
+		if(client.getMoveProcessor().checkBuyDevCard())
 		{
 			//create MoveEntry for buying a dev card
 			//add MoveEntry to list

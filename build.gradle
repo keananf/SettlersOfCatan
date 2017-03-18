@@ -15,6 +15,7 @@ plugins {
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
+    apply plugin: 'findbugs'
 
     version = '1.0'
     ext {
@@ -26,6 +27,15 @@ allprojects {
     }
 
     repositories { jcenter() }
+
+    tasks.withType(FindBugs) {
+        reports {
+            xml.enabled false
+            html.enabled true
+        }
+        effort = "max"
+        reportLevel = "low"
+    }
 }
 
 /*

@@ -18,8 +18,9 @@ public abstract class AICore implements IAI
 	ClientGame game;
 	AIPlayer player;
 	Map<ResourceType, Integer> pips;
+	AIClient client;
 	
-	public AICore(Difficulty difficulty, Client client, AIPlayer player)
+	public AICore(Difficulty difficulty, AIClient client, AIPlayer player)
 	{
 		this.client = client;
 		this.difficulty = difficulty;

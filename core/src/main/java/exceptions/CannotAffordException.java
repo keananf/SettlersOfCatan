@@ -10,16 +10,15 @@ public class CannotAffordException extends Exception
 {
 	Map<ResourceType, Integer> resources, cost;
 
-
-    public CannotAffordException(Map<ResourceType, Integer> resources, Map<ResourceType, Integer> cost)
+	public CannotAffordException(Map<ResourceType, Integer> resources, Map<ResourceType, Integer> cost)
 	{
 		this.resources = resources;
 		this.cost = cost;
-    }
+	}
 
 	public CannotAffordException(Map<ResourceType, Integer> resources, Resource.Counts offer)
 	{
-		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer> ();
+		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer>();
 		cost.put(ResourceType.Brick, offer.getBrick());
 		cost.put(ResourceType.Wool, offer.getWool());
 		cost.put(ResourceType.Ore, offer.getOre());
@@ -37,12 +36,9 @@ public class CannotAffordException extends Exception
 
 	private ResourceType getInsufficientResource()
 	{
-		for(ResourceType r : ResourceType.values())
+		for (ResourceType r : ResourceType.values())
 		{
-			if(cost.containsKey(r) && cost.get(r) > resources.get(r))
-			{
-				return r;
-			}
+			if (cost.containsKey(r) && cost.get(r) > resources.get(r)) { return r; }
 		}
 
 		return ResourceType.Generic;

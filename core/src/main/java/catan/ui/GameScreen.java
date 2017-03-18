@@ -62,12 +62,10 @@ public class GameScreen implements Screen
 		assets.load("models/hex.g3db", Model.class);
 		assets.finishLoading();
 
-		for(Entry<Point, Hex> coord : game.state.getGrid().grid.entrySet())
+		for (Entry<Point, Hex> coord : game.state.getGrid().grid.entrySet())
 		{
 
-			ModelInstance hex = new ModelInstance(
-					assets.getModel("hex.g3db"),
-					hexPointToCartVec(coord.getKey()));
+			ModelInstance hex = new ModelInstance(assets.getModel("hex.g3db"), hexPointToCartVec(coord.getKey()));
 
 			boardInstances.add(hex);
 		}
@@ -75,15 +73,15 @@ public class GameScreen implements Screen
 
 	private static final Vector3 hexPointToCartVec(Point p)
 	{
-		final float x = (float)(p.getX());
-		final float y = (float)(p.getY());
-		return new Vector3(x, 0f, (float)((2*y-x)/Math.sqrt(3)));
+		final float x = (float) (p.getX());
+		final float y = (float) (p.getY());
+		return new Vector3(x, 0f, (float) ((2 * y - x) / Math.sqrt(3)));
 	}
 
 	@Override
 	public void render(final float delta)
 	{
-		Gdx.gl.glClearColor(0/255, 128/255, 255/255, 1);
+		Gdx.gl.glClearColor(0 / 255, 128 / 255, 255 / 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		camController.update();
@@ -106,9 +104,28 @@ public class GameScreen implements Screen
 	}
 
 	// Required but unused
-	@Override public void resize(final int width, final int height) {}
-	@Override public void pause() {}
-	@Override public void resume() {}
-	@Override public void hide() {}
-	@Override public void show() {}
+	@Override
+	public void resize(final int width, final int height)
+	{
+	}
+
+	@Override
+	public void pause()
+	{
+	}
+
+	@Override
+	public void resume()
+	{
+	}
+
+	@Override
+	public void hide()
+	{
+	}
+
+	@Override
+	public void show()
+	{
+	}
 }

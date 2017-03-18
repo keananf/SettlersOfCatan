@@ -22,13 +22,13 @@ public class TestHelper
 	protected NetworkPlayer p;
 	protected Node n;
 	protected Hex hex;
-	
+
 	protected Settlement makeSettlement(Player p, Node n) throws SettlementExistsException
 	{
 		assertTrue(hasResources(p));
 		int oldSize = p.getSettlements().size();
 		int oldResources = p.getNumResources();
-		
+
 		// Build settlement
 		try
 		{
@@ -39,7 +39,7 @@ public class TestHelper
 		{
 			e.printStackTrace();
 		}
-		catch (InvalidCoordinatesException e)
+		catch (InvalidCoordinatesException | BankLimitException e)
 		{
 			e.printStackTrace();
 		}
@@ -51,38 +51,49 @@ public class TestHelper
 		return (Settlement) p.getSettlements().values().toArray()[p.getSettlements().values().size() - 1];
 	}
 
-	protected City makeCity(Node n)
+	protected City makeCity(Player p, Node n)
 	{
 		assertTrue(hasResources(p));
+		int old = p.getSettlements().size();
 
 		// Build settlement
 		try
 		{
-			p.upgradeSettlement(n);
+			game.setCurrentPlayer(p.getColour());
+			game.upgradeSettlement(n.toProto());
 		}
 		catch (CannotAffordException | CannotUpgradeException e)
 		{
 			e.printStackTrace();
 		}
+		catch (BankLimitException | InvalidCoordinatesException e)
+		{
+			e.printStackTrace();
+		}
 
 		// Test it was built correctly and that resources were taken away
-		assertTrue(p.getSettlements().size() == 1);
+		assertTrue(p.getSettlements().size() == old);
 
 		return (City) p.getSettlements().values().toArray()[p.getSettlements().values().size() - 1];
 	}
 
-	protected Road buildRoad(Edge e) throws CannotBuildRoadException, RoadExistsException
+	protected Road buildRoad(Player p, Edge e) throws CannotBuildRoadException, RoadExistsException
 	{
 		int oldSize = p.getRoads().size();
-		
+
 		assertTrue(hasResources(p));
 		try
 		{
-			p.buildRoad(e);
+			game.setCurrentPlayer(p.getColour());
+			game.buildRoad(e.toEdgeProto());
 		}
 		catch (CannotAffordException ex)
 		{
 			ex.printStackTrace();
+		}
+		catch (InvalidCoordinatesException | BankLimitException e1)
+		{
+			e1.printStackTrace();
 		}
 
 		// Test it was built correctly and that resources were taken away
@@ -91,16 +102,16 @@ public class TestHelper
 
 		return p.getRoads().get(p.getRoads().size() - 1);
 	}
-	
+
 	protected DevelopmentCardType buyDevelopmentCard() throws CannotAffordException
 	{
 		int oldSize = p.getDevelopmentCards().size();
 		DevelopmentCardType c = DevelopmentCardType.Knight;
-		
+
 		assertTrue(hasResources(p));
 		try
 		{
-			c = ((NetworkPlayer)p).buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
+			c = ((NetworkPlayer) p).buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
 		}
 		catch (CannotAffordException ex)
 		{
@@ -116,10 +127,9 @@ public class TestHelper
 
 	protected boolean hasResources(Player p)
 	{
-		for(ResourceType r : p.getResources().keySet())
+		for (ResourceType r : p.getResources().keySet())
 		{
-			if(p.getResources().get(r) > 0)
-				return true;
+			if (p.getResources().get(r) > 0) return true;
 		}
 
 		return false;
@@ -132,30 +142,29 @@ public class TestHelper
 		p.setId(Board.Player.Id.PLAYER_1);
 		game.addPlayer(p);
 		game.setCurrentPlayer(p.getColour());
-		
+
 		// Find hex without 'Generic'
-		for(int i = 0; i < game.getGrid().nodes.values().size(); i++)
+		for (int i = 0; i < game.getGrid().nodes.values().size(); i++)
 		{
 			n = (Node) game.getGrid().nodes.values().toArray()[i];
 			hex = n.getHexes().get(0);
-			
+
 			// for each hex
 			boolean valid = true;
-			for(Hex h : n.getHexes())
-			{				
-				for(Hex h2 : n.getHexes())
-					if(h2.getChit() == h.getChit() && !h.equals(h2))
+			for (Hex h : n.getHexes())
+			{
+				for (Hex h2 : n.getHexes())
+					if (h2.getChit() == h.getChit() && !h.equals(h2))
 					{
 						valid = false;
 						break;
 					}
-				
+
 			}
-			
+
 			// Skip if this one isn't the desert
-			if(valid && hex.getResource() != ResourceType.Generic && !hex.hasRobber())
-				break;
-			
+			if (valid && hex.getResource() != ResourceType.Generic && !hex.hasRobber()) break;
+
 		}
 	}
 }

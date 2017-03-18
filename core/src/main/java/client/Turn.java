@@ -1,6 +1,5 @@
 package client;
 
-import enums.ClickObject;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
@@ -8,50 +7,47 @@ import grid.Edge;
 import grid.Hex;
 import grid.Node;
 import intergroup.Requests;
+import intergroup.trade.Trade;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public class InProgressTurn
+public class Turn
 {
-	private ClickObject initialClickObject;
-	private List<Requests.Request.BodyCase> possibilities;
 	private Requests.Request.BodyCase chosenMove;
-	
+
 	private Node chosenNode;
 	private Edge chosenEdge;
-	private Edge[] chosenEdges = new Edge[2];
 	private ResourceType chosenResource;
-	private List<ResourceType> chosenResources;
+	private Map<ResourceType, Integer> chosenResources;
 	private Hex chosenHex;
 	private Colour chosenColour;
 	private DevelopmentCardType chosenCard;
 	private String chatMessage;
+	private BankTrade bankTrade;
+	private PlayerTrade playerTrade;
+	private Trade.Response tradeResponse;
+	private Colour target;
 
-	public InProgressTurn()
+	public Turn()
 	{
-		possibilities = new ArrayList<Requests.Request.BodyCase>();
-		chosenResources = new ArrayList<ResourceType>();
+		reset();
 	}
 
-	public ClickObject getInitialClickObject()
+	public void reset()
 	{
-		return initialClickObject;
-	}
-
-	public void setInitialClickObject(ClickObject initialClickObject)
-	{
-		this.initialClickObject = initialClickObject;
-	}
-
-	public List<Requests.Request.BodyCase> getPossibilities()
-	{
-		return possibilities;
-	}
-
-	public void addPossibility(Requests.Request.BodyCase possibility)
-	{
-		possibilities.add(possibility);
+		chosenCard = null;
+		chosenColour = null;
+		chosenEdge = null;
+		chosenNode = null;
+		chosenResource = null;
+		chosenHex = null;
+		chatMessage = null;
+		bankTrade = null;
+		playerTrade = null;
+		tradeResponse = null;
+		target = null;
+		chosenResources = new HashMap<ResourceType, Integer>();
 	}
 
 	public Requests.Request.BodyCase getChosenMove()
@@ -84,16 +80,6 @@ public class InProgressTurn
 		this.chosenEdge = chosenEdge;
 	}
 
-	public Edge[] getChosenEdges()
-	{
-		return chosenEdges;
-	}
-
-	public void setChosenEdges(Edge[] chosenEdges)
-	{
-		this.chosenEdges = chosenEdges;
-	}
-
 	public ResourceType getChosenResource()
 	{
 		return chosenResource;
@@ -104,14 +90,15 @@ public class InProgressTurn
 		this.chosenResource = chosenResource;
 	}
 
-	public List<ResourceType> getChosenResources()
+	public Map<ResourceType, Integer> getChosenResources()
 	{
 		return chosenResources;
 	}
 
 	public void addChosenResource(ResourceType chosenResource)
 	{
-		chosenResources.add(chosenResource);
+		int existing = chosenResources.containsKey(chosenResource) ? chosenResources.get(chosenResource) : 0;
+		chosenResources.put(chosenResource, existing + 1);
 	}
 
 	public Hex getChosenHex()
@@ -152,5 +139,45 @@ public class InProgressTurn
 	public void setChatMessage(String chatMessage)
 	{
 		this.chatMessage = chatMessage;
+	}
+
+	public PlayerTrade getPlayerTrade()
+	{
+		return playerTrade;
+	}
+
+	public void setPlayerTrade(PlayerTrade playerTrade)
+	{
+		this.playerTrade = playerTrade;
+	}
+
+	public BankTrade getBankTrade()
+	{
+		return bankTrade;
+	}
+
+	public void setBankTrade(BankTrade bankTrade)
+	{
+		this.bankTrade = bankTrade;
+	}
+
+	public Trade.Response getTradeResponse()
+	{
+		return tradeResponse;
+	}
+
+	public void setTradeResponse(Trade.Response tradeResponse)
+	{
+		this.tradeResponse = tradeResponse;
+	}
+
+	public Colour getTarget()
+	{
+		return target;
+	}
+
+	public void setTarget(Colour target)
+	{
+		this.target = target;
 	}
 }

@@ -36,7 +36,8 @@ public abstract class Player
 	protected boolean hasLongestRoad;
 	protected boolean hasLargestArmy;
 	protected HashMap<DevelopmentCardType, Integer> cards;
-	protected HashMap<DevelopmentCardType, Boolean> boughtCards;
+	protected HashMap<DevelopmentCardType, Integer> boughtCards;
+	protected boolean playedDevCard;
 	protected int armySize;
 	protected Board.Player.Id id;
 	protected String userName;
@@ -59,6 +60,8 @@ public abstract class Player
 			if(r == ResourceType.Generic) continue;
 			resources.put(r, 0);
 		}
+		
+		playedDevCard = false;
 	}
 
 	/**
@@ -508,10 +511,10 @@ public abstract class Player
 			vp++;
 		}
 		
-		boughtCards.put(type, true);
+		boughtCards.put(type, boughtCards.get(type) + 1);
 	}
     
-    public boolean getBoughtCard(DevelopmentCardType type)
+    public int getBoughtCard(DevelopmentCardType type)
     {
     	return boughtCards.get(type);
     }

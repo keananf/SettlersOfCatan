@@ -212,16 +212,9 @@ public class MoveProcessor
             // If the player owns the provided card
             if(player.getDevelopmentCards().containsKey(type) && player.getDevelopmentCards().get(type) > 0)
             {
-                if(player.getDevelopmentCards().get(type) > 1)
+                if(player.getDevelopmentCards().get(type) > player.getBoughtCard(type))
                 {
                 	return true;
-                }
-                else
-                {
-                	if(!player.getBoughtCard(type))
-                	{
-                		return true;
-                	}
                 }
             }
         }

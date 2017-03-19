@@ -143,7 +143,7 @@ public class MoveProcessor
      * @param hex the chosen hex
      * @return whether or not the move is valid
      */
-    private boolean checkHex(Hex hex)
+    public boolean checkHex(Hex hex)
     {
         // Ensure this hex doesn't already have the robber, and that the move is expected OR no moves are expected
         return checkTurn() && !hex.equals(game.getGrid().getHexWithRobber()) &&

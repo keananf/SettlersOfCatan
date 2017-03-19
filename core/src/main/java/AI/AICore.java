@@ -7,6 +7,7 @@ import enums.ResourceType;
 import game.players.AIPlayer;
 import grid.BoardElement;
 import grid.Edge;
+import grid.Hex;
 import grid.Node;
 import intergroup.Requests.Request.BodyCase;
 
@@ -191,6 +192,27 @@ public abstract class AICore implements IAI
 		}
 				
 		return roadEdge;
+	}
+	
+	public Hex getRobberNode()
+	{
+		Hex hex = null;
+		
+		ArrayList<Hex> hexes = (ArrayList<Hex>) game.getGrid().getHexesAsList();
+		
+		for(Hex h: hexes)
+		{
+			if(!client.getMoveProcessor().checkHex(h))
+			{
+				hexes.remove(h);
+			}
+		}
+		
+		Random ran = new Random();
+		
+		hex = hexes.get(ran.nextInt(hexes.size()));
+		
+		return hex;
 	}
 	
 }

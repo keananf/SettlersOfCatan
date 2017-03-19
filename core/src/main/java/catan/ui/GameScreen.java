@@ -72,30 +72,8 @@ public class GameScreen implements Screen
 			ModelInstance hex = new ModelInstance(assets.getModel("hex.g3db"), hexPointToCartVec(coord.getKey()));
 			boardInstances.add(hex);
 
-			Model resourceModel = null;
-			switch(coord.getValue().getResource())
-			{
-				case Brick:
-					resourceModel = assets.getModel("claymine.g3db");
-					break;
-				case Lumber:
-					resourceModel = assets.getModel("grass.g3db");
-					break;
-				case Generic:
-					resourceModel = assets.getModel("desert.g3db");
-					break;
-				case Wool:
-					resourceModel = assets.getModel("grass.g3db");
-					break;
-				case Grain:
-					resourceModel = assets.getModel("grain.g3db");
-					break;
-				case Ore:
-					resourceModel = assets.getModel("mountain.g3db");
-					break;
-				default:
-					assert(false);
-			}
+			String resourceModelPath = coord.getValue().getResource().modelPath;
+			Model resourceModel = assets.getModel(resourceModelPath);
 
 			Vector3 resourcePos = hexPointToCartVec(coord.getKey());
 			resourcePos.y += 0.1f;

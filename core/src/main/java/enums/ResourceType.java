@@ -4,8 +4,18 @@ import protocol.EnumProtos.*;
 
 public enum ResourceType
 {
-	Generic, // Default
-	Wool, Ore, Grain, Brick, Lumber,;
+	Generic ("desert.g3db"), // Default
+	Wool    ("grass.g3db"),
+	Ore     ("mountain.g3db"),
+	Grain   ("grain.g3db"),
+	Brick   ("mine.g3db"),
+	Lumber  ("forest.g3db");
+
+	public final String modelPath;
+	ResourceType(final String modelPath)
+	{
+		this.modelPath = modelPath;
+	}
 
 	public static ResourceType fromProto(ResourceTypeProto r)
 	{

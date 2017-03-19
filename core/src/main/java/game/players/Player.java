@@ -558,7 +558,7 @@ public abstract class Player
     {
     	for(DevelopmentCardType t: DevelopmentCardType.values())
     	{
-    		boughtCards.put(t, false);
+    		boughtCards.put(t, 0);
     	}
     }
 }

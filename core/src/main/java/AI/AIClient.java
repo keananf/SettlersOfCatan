@@ -62,5 +62,10 @@ AIClient extends Client
 	        state = new ClientGame();
 		
 	}
+	
+	private void turn()
+	{
+		
+	}
 
 }

@@ -9,15 +9,23 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.attributes.IntAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.FloatAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.utils.Array;
 
 import enums.ResourceType;
@@ -68,18 +76,37 @@ public class GameScreen implements Screen
 
 	private void initBoard()
 	{
+		final ModelBuilder builder = new ModelBuilder();
+		final long attributes = Usage.Position | Usage.Normal | Usage.TextureCoordinates;
+
+		// skybox
+		final Material water = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));
+		final Model sea = builder.createCylinder(150f, 0.01f, 150f, 6, water, attributes);
+		boardInstances.add(new ModelInstance(sea, new Vector3(0, -1, 0)));
+
+		// hex tiles
+		final Material dirt = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
+		final Model hex = builder.createCylinder(2f, 0.2f, 2f, 6, dirt, attributes);
+
 		for(Entry<Point, Hex> coord : game.state.getGrid().grid.entrySet())
 		{
-			ModelInstance hex = new ModelInstance(assets.getModel("hex.g3db"), hexPointToCartVec(coord.getKey()));
-			boardInstances.add(hex);
+			final ModelInstance instance = new ModelInstance(hex, hexPointToCartVec(coord.getKey()));
+			instance.transform.rotate(0, 1, 0, 90f);
 
-			String resourceModelPath = coord.getValue().getResource().modelPath;
-			Model resourceModel = assets.getModel(resourceModelPath);
+			final Color colour;
+			switch (coord.getValue().getResource())
+			{
+				case Grain:   colour = Color.YELLOW;    break;
+				case Wool:    colour = Color.WHITE;     break;
+				case Ore:     colour = Color.GRAY;      break;
+				case Brick:   colour = Color.FIREBRICK; break;
+				case Lumber:  colour = Color.FOREST;    break;
+				case Generic: colour = Color.ORANGE;    break;
+				default:      colour = null;            break;
+			}
+			instance.materials.get(0).set(ColorAttribute.createDiffuse(colour));
 
-			Vector3 resourcePos = hexPointToCartVec(coord.getKey());
-			resourcePos.y += 0.1f;
-			ModelInstance resource = new ModelInstance(resourceModel, resourcePos);;
-			boardInstances.add(resource);
+			boardInstances.add(instance);
 		}
 	}
 

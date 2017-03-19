@@ -36,6 +36,7 @@ public abstract class Player
 	protected boolean hasLongestRoad;
 	protected boolean hasLargestArmy;
 	protected HashMap<DevelopmentCardType, Integer> cards;
+	protected HashMap<DevelopmentCardType, Boolean> boughtCards;
 	protected int armySize;
 	protected Board.Player.Id id;
 	protected String userName;
@@ -506,7 +507,14 @@ public abstract class Player
 		{
 			vp++;
 		}
+		
+		boughtCards.put(type, true);
 	}
+    
+    public boolean getBoughtCard(DevelopmentCardType type)
+    {
+    	return boughtCards.get(type);
+    }
 
 	/**
 	 * @return the player settings to be propogated out to the clients
@@ -541,6 +549,14 @@ public abstract class Player
     public void setUserName(String userName)
 	{
         this.userName = userName;
+    }
+    
+    public void cleanup()
+    {
+    	for(DevelopmentCardType t: DevelopmentCardType.values())
+    	{
+    		boughtCards.put(t, false);
+    	}
     }
 }
 

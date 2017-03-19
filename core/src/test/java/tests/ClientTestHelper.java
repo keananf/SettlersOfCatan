@@ -1,5 +1,6 @@
 package tests;
 
+import exceptions.BankLimitException;
 import intergroup.board.Board;
 import client.ClientGame;
 import enums.Colour;
@@ -47,8 +48,8 @@ public class ClientTestHelper extends TestHelper
 		player = Board.Player.newBuilder().setId(clientGame.getPlayer(col).getId()).build();
 		try
 		{
-			clientGame.getPlayer(col).grantResources(Road.getRoadCost(), clientGame.getBank());
-			if (clientGame.getPlayer(col).getRoads().size() < 2)
+			grantResources(col, Road.getRoadCost());
+			if (clientGame.getPlayer(col).getRoads().size() < 2 && clientGame.getPlayer().getColour().equals(col))
 			{
 				clientGame.getPlayer(col).spendResources(Road.getRoadCost(), clientGame.getBank());
 			}
@@ -70,8 +71,8 @@ public class ClientTestHelper extends TestHelper
 		player = Board.Player.newBuilder().setId(clientGame.getPlayer(col).getId()).build();
 		try
 		{
-			clientGame.getPlayer(col).grantResources(grant, clientGame.getBank());
-			if (clientGame.getPlayer(col).getSettlements().size() < 2)
+			grantResources(col, grant);
+			if (clientGame.getPlayer(col).getSettlements().size() < 2 && clientGame.getPlayer().getColour().equals(col))
 			{
 				clientGame.getPlayer(col).spendResources(grant, clientGame.getBank());
 			}
@@ -84,6 +85,23 @@ public class ClientTestHelper extends TestHelper
 		}
 	}
 
+	private void grantResources(Colour col, Map<ResourceType, Integer> grant) throws BankLimitException
+	{
+		if(col.equals(clientGame.getPlayer().getColour()))
+		{
+			clientGame.getPlayer(col).grantResources(grant, clientGame.getBank());
+		}
+		else
+		{
+			int sum = 0;
+			for(ResourceType r : grant.keySet())
+			{
+				sum += grant.get(r);
+			}
+			clientGame.giveResources(sum, col);
+		}
+	}
+
 	public void processCityEvent(Node node, Colour col)
 	{
 		// Set up request
@@ -93,7 +111,7 @@ public class ClientTestHelper extends TestHelper
 		player = Board.Player.newBuilder().setId(clientGame.getPlayer(col).getId()).build();
 		try
 		{
-			clientGame.getPlayer(col).grantResources(grant, clientGame.getBank());
+			grantResources(col, City.getCityCost());
 			clientGame.setCurrentPlayer(col);
 			clientGame.processNewCity(n, player);
 		}
@@ -111,7 +129,7 @@ public class ClientTestHelper extends TestHelper
 		player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();
 		try
 		{
-			clientGame.getPlayer(c).grantResources(DevelopmentCardType.getCardCost(), clientGame.getBank());
+			grantResources(c, DevelopmentCardType.getCardCost());
 			clientGame.setCurrentPlayer(c);
 			clientGame.recordDevCard(
 					Board.DevCard.newBuilder().setPlayableDevCard(Board.PlayableDevCard.KNIGHT).build(), player);
@@ -128,7 +146,7 @@ public class ClientTestHelper extends TestHelper
 	{
 		try
 		{
-			clientGame.getPlayer(c).grantResources(DevelopmentCardType.getCardCost(), clientGame.getBank());
+			grantResources(c, DevelopmentCardType.getCardCost());
 			clientGame.setCurrentPlayer(c);
 			player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();
 			clientGame.recordDevCard(type, player);
@@ -144,7 +162,7 @@ public class ClientTestHelper extends TestHelper
 
 		try
 		{
-			clientGame.getPlayer(c).grantResources(DevelopmentCardType.getCardCost(), clientGame.getBank());
+			grantResources(c, DevelopmentCardType.getCardCost());
 			clientGame.setCurrentPlayer(c);
 
 			player = Board.Player.newBuilder().setId(clientGame.getPlayer(c).getId()).build();

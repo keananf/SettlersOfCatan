@@ -8,6 +8,7 @@ import java.util.*;
 @SuppressWarnings("serial")
 public class CannotAffordException extends Exception
 {
+	private String msg;
 	Map<ResourceType, Integer> resources, cost;
 
 	public CannotAffordException(Map<ResourceType, Integer> resources, Map<ResourceType, Integer> cost)
@@ -29,8 +30,18 @@ public class CannotAffordException extends Exception
 		this.cost = cost;
 	}
 
-	public String getMessage()
+    public CannotAffordException(String msg) 
 	{
+		this.msg = msg;
+    }
+
+    public String getMessage()
+	{
+		if(msg != null)
+		{
+			return msg;
+		}
+
 		return String.format("Cannot afford due to resource: %s.", getInsufficientResource().toString());
 	}
 

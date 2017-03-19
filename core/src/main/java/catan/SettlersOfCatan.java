@@ -1,19 +1,22 @@
 package catan;
 
+import catan.ui.SplashScreen;
+import client.Client;
+import client.ClientGame;
+import client.LocalClient;
+import client.RemoteClient;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-
-import catan.ui.SplashScreen;
-import client.ClientGame;
 import server.Server;
 
 public class SettlersOfCatan extends Game
 {
 	public Skin skin;
 	private Server serv;
-	public ClientGame state = new ClientGame();
+	public ClientGame state;
+	private Client client;
 
 	@Override
 	public void create()
@@ -36,13 +39,28 @@ public class SettlersOfCatan extends Game
 	@Override
 	public void dispose()
 	{
-		// TODO: shutdown server
+		client.shutDown();
 		skin.dispose();
 	}
 
+	/**
+	 * Starts up a new remote client.
+	 * @param host the host server to connect to
+	 * @return the status of the connection
+	 */
+	public boolean startNewRemoteClient(String host)
+	{
+		client = new RemoteClient(host);
+		state = client.getState();
+		return ((RemoteClient) client).isInitialised();
+	}
+
+	/**
+	 * Starts up a new server and local client
+	 */
 	public void startNewServer()
 	{
-		serv = new Server();
-		(new Thread(serv)).start();
+		client = new LocalClient();
+		state = client.getState();
 	}
 }

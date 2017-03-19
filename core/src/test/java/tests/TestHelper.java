@@ -1,5 +1,6 @@
 package tests;
 
+import game.players.ServerPlayer;
 import intergroup.board.Board;
 import grid.*;
 import enums.Colour;
@@ -9,7 +10,6 @@ import exceptions.*;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
-import game.players.NetworkPlayer;
 import game.players.Player;
 import server.ServerGame;
 
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 public class TestHelper
 {
 	protected ServerGame game;
-	protected NetworkPlayer p;
+	protected ServerPlayer p;
 	protected Node n;
 	protected Hex hex;
 
@@ -111,7 +111,7 @@ public class TestHelper
 		assertTrue(hasResources(p));
 		try
 		{
-			c = ((NetworkPlayer) p).buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
+			c = ((ServerPlayer) p).buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
 		}
 		catch (CannotAffordException ex)
 		{
@@ -138,7 +138,7 @@ public class TestHelper
 	protected void reset()
 	{
 		game = new ServerGame();
-		p = new NetworkPlayer(Colour.BLUE, "");
+		p = new ServerPlayer(Colour.BLUE, "");
 		p.setId(Board.Player.Id.PLAYER_1);
 		game.addPlayer(p);
 		game.setCurrentPlayer(p.getColour());

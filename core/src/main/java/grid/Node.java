@@ -12,7 +12,7 @@ import java.util.List;
  * 
  * @author 140001596
  */
-public class Node extends BoardElement
+public class Node extends GridElement
 {
 	private List<Hex> hexes;
 	private List<Edge> edges;

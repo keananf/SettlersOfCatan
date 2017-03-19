@@ -1,11 +1,12 @@
 package server;
 
+import connection.IClientConnection;
 import enums.Colour;
-import intergroup.Messages.*;
-import intergroup.Events.*;
+import intergroup.Events.ErrorCause;
+import intergroup.Events.Event;
+import intergroup.Messages.Message;
 
 import java.io.IOException;
-import java.net.Socket;
 
 /**
  * Class which simply listens to a socket. The successfully received message is
@@ -14,18 +15,18 @@ import java.net.Socket;
 public class ListenerThread implements Runnable
 {
 	private Thread thread;
-	protected Socket socket;
+	protected IClientConnection conn;
 	private Colour colour;
 	private Server server;
 
-	public ListenerThread(Socket socket, Colour c, Server server)
-	{
-		this.socket = socket;
-		this.server = server;
-		colour = c;
-		this.thread = new Thread(this);
-		this.thread.start();
-	}
+    public ListenerThread(IClientConnection conn, Colour c, Server server)
+    {
+        this.conn = conn;
+        this.server = server;
+        colour = c;
+        this.thread = new Thread(this);
+        this.thread.start();
+    }
 
 	@Override
 	public void run()
@@ -42,20 +43,19 @@ public class ListenerThread implements Runnable
 		}
 	}
 
-	/**
-	 * Listens for moves from the current player
-	 * 
-	 * @return the bytes received from the current player
-	 * @throws IOException
-	 */
-	private void receiveMoves() throws IOException
-	{
-		// Receive and process moves until the end one is received
-		while (true)
-		{
-			// Parse message and add to queue
-			Message msg = Message.parseFrom(socket.getInputStream());
-			server.addMessageToProcess(new ReceivedMessage(colour, msg));
+    /**
+     * Listens for moves from the current player
+     * @return the bytes received from the current player
+     * @throws IOException
+     */
+    private void receiveMoves() throws IOException
+    {
+        // Receive and process moves until the end one is received
+        while(true)
+        {
+            // Parse message and add to queue
+            Message msg = conn.getMessageFromClient();
+            server.addMessageToProcess(new ReceivedMessage(colour, msg));
 		}
 	}
 
@@ -73,23 +73,36 @@ public class ListenerThread implements Runnable
 		return err.build();
 	}
 
-	/**
-	 * Sends the message out to the client
-	 * 
-	 * @param msg the message
-	 * @throws IOException
-	 */
-	public void sendMessage(Message msg) throws IOException
-	{
-		// Serialise and Send
-		msg.writeTo(socket.getOutputStream());
-		socket.getOutputStream().flush();
-	}
+    /**
+     * Sends the message out to the client
+     * @param msg the message
+     * @throws IOException
+     */
+    public void sendMessage(Message msg) throws IOException
+    {
+        conn.sendMessageToClient(msg);
+    }
 
 	public void sendError() throws IOException
 	{
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(Event.newBuilder().setError(getError()).build());
 		sendMessage(msg.build());
+	}
+
+	/**
+	 * Terminates the underlying connection and this thread
+	 */
+	public void shutDown()
+	{
+		conn.shutDown();
+		try
+		{
+			thread.join();
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

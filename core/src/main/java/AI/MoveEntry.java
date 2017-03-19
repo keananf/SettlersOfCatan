@@ -1,22 +1,30 @@
 package AI;
 
 import grid.BoardElement;
+import enums.DevelopmentCardType;
 import enums.Move;
 
 public class MoveEntry 
 {
 	private BoardElement element;
-	private Move move;
+	private DevelopmentCardType cardType;
+	private Requests.Request.BodyCase move;
 	private int rank;
 	
-	public MoveEntry(BoardElement element, Move move)
+	public MoveEntry(BoardElement element, Requests.Request.BodyCase move)
 	{
 		this.element = element;
 		this.move = move;
 	}
 		
-	public MoveEntry(Move move)
+	public MoveEntry(Requests.Request.BodyCase move)
 	{
+		this.move = move;
+	}
+	
+	public MoveEntry(DevelopmentCardType cardType, Requests.Request.BodyCase move)
+	{
+		this.cardType = cardType;
 		this.move = move;
 	}
 	
@@ -40,5 +48,14 @@ public class MoveEntry
 		this.rank = rank;
 	}
 	
+	public void setCardType(DevelopmentCardType cardType)
+	{
+		this.cardType = cardType;
+	}
+	
+	public DevelopmentCardType getCardType()
+	{
+		return cardType;
+	}
 	
 }

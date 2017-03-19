@@ -4,6 +4,7 @@ import client.ClientGame;
 import enums.DevelopmentCardType;
 import enums.Difficulty;
 import enums.ResourceType;
+import game.build.Settlement;
 import game.players.AIPlayer;
 import grid.BoardElement;
 import grid.Edge;
@@ -138,6 +139,25 @@ public abstract class AICore implements IAI
 	public void updateGameState(ClientGame game)
 	{
 		this.game = game;
+	}
+	
+	public Node getInitialSettlementNode()
+	{
+		Node node = null;
+		
+		ArrayList<Node> nodes = (ArrayList<Node>) game.getGrid().getNodesAsList();
+		
+		for(Node n: nodes)
+		{
+			Settlement s = new Settlement(n, player.getColour());
+			
+			if(s.isNearSettlement())
+			{
+				nodes.remove(n);
+			}
+		}
+		
+		return node;
 	}
 	
 	public Node getSettlementNode()

@@ -9,12 +9,10 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import server.Server;
 
 public class SettlersOfCatan extends Game
 {
 	public Skin skin;
-	private Server serv;
 	private Client client;
 
 	@Override
@@ -67,7 +65,27 @@ public class SettlersOfCatan extends Game
 	public ClientGame getState()
 	{
 		// Block until the game board is received.
-		while(client.getState() == null) {}
+		System.out.println("Waiting for State....");
+		while(true)
+		{
+			try
+			{
+				client.getStateLock().acquire();
+				try
+				{
+					if (client.getState() != null) break;
+				}
+				finally
+				{
+					client.getStateLock().release();
+				}
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		System.out.println("Received State....");
 		return client.getState();
 	}
 }

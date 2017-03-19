@@ -549,30 +549,23 @@ public class ServerGame extends Game
 	public Lobby.GameSetup getGameSettings(Colour request)
 	{
 		Lobby.GameSetup.Builder builder = Lobby.GameSetup.newBuilder();
-		int index = 0;
 
 		// Add hexes
-		index = 0;
 		for(Hex h : getGrid().getHexesAsList())
 		{
-			builder.addHexesBuilder();
-			builder.setHexes(index++, h.toHexProto());
+			builder.addHexes(h.toHexProto());
 		}
 
 		// Add ports
-		index = 0;
 		for(Port p : getGrid().getPortsAsList())
 		{
-			builder.addHarboursBuilder();
-			builder.setHarbours(index++, p.toPortProto());
+			builder.addHarbours(p.toPortProto());
 		}
 
 		// Add player settings
-		index = 0;
 		for(Player p : getPlayersAsList())
 		{
-			builder.addPlayerSettingsBuilder();
-			builder.setPlayerSettings(index++, p.getPlayerSettings());
+			builder.addPlayerSettings(p.getPlayerSettings());
 
 			// set own player
 			if(p.getColour().equals(request))

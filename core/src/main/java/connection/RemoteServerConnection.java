@@ -29,7 +29,7 @@ public class RemoteServerConnection implements IServerConnection
             {
                 CodedInputStream c = CodedInputStream.newInstance(conn.getInputStream());
                 System.out.println("Receiving");
-                Messages.Message m = Messages.Message.parseFrom(c);
+                Messages.Message m = Messages.Message.parseFrom(c.readByteArray());
                 System.out.println("Received");
                 return m;
             }

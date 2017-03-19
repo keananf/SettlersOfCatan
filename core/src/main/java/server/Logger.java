@@ -1,5 +1,6 @@
 package server;
 
+import intergroup.Events;
 import intergroup.Messages.Message;
 
 /**
@@ -9,17 +10,20 @@ public class Logger
 {
 	public void logReceivedMessage(Message msg)
 	{
+		if(msg == null) return;
+
 		String str = String.format("RECEIVED: Message of type %s.\n", msg.getTypeCase().name());
 
 		switch (msg.getTypeCase())
 		{
-		case REQUEST:
-			str = String.format(str + "Type of Request: %s\n", msg.getRequest().getBodyCase().name());
-			break;
+			case REQUEST:
+				str = String.format(str + "Type of Request: %s\n", msg.getRequest().getBodyCase().name());
+				break;
 
-		case EVENT:
-			str = String.format(str + "Type of Event: %s. From player: %s\n", msg.getEvent().getTypeCase().name());
-			break;
+			case EVENT:
+				Events.Event ev = msg.getEvent();
+				str = String.format(str + "Type of Event: %s. From player: %s\n", ev.getTypeCase().name(), ev.getInstigator().getId().name());
+				break;
 		}
 
 		// TODO uncomment.

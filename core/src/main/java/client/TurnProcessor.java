@@ -10,64 +10,98 @@ import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.trade.Trade;
 
+import java.util.concurrent.Semaphore;
+
 public class TurnProcessor
 {
 	private final Client client;
-	private final TurnInProgress turn;
 	private final IServerConnection conn;
 
 	public TurnProcessor(IServerConnection conn, Client client)
 	{
-		turn = client.getTurn();
 		this.client = client;
 		this.conn = conn;
 	}
-
 
 	/**
 	 * Switches on the move type to ascertain which proto message to form
 	 */
 	protected void sendMove()
 	{
+		try
+		{
+			getTurnLock().acquire();
+			try
+			{
+				getGameLock().acquire();
+				try
+				{
+					sendMoveInternal();
+				}
+				finally
+				{
+					getGameLock().release();
+				}
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+				getTurnLock().release();
+			}
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Switches on the move type to ascertain which proto message to form
+	 */
+	private void sendMoveInternal()
+	{
 		Requests.Request.Builder request = Requests.Request.newBuilder();
 
-		switch (turn.getChosenMove())
+		switch (getTurn().getChosenMove())
 		{
 			case BUILDROAD:
-                request.setBuildRoad(turn.getChosenEdge().toEdgeProto());
+                request.setBuildRoad(getTurn().getChosenEdge().toEdgeProto());
                 break;
             case BUILDSETTLEMENT:
-                request.setBuildSettlement(turn.getChosenNode().toProto());
+                request.setBuildSettlement(getTurn().getChosenNode().toProto());
                 break;
 			case BUILDCITY:
-                request.setBuildCity(turn.getChosenNode().toProto());
+                request.setBuildCity(getTurn().getChosenNode().toProto());
                 break;
 			case CHATMESSAGE:
-				request.setChatMessage(turn.getChatMessage());
+				request.setChatMessage(getTurn().getChatMessage());
 				break;
 			case JOINLOBBY:
 				request.setJoinLobby(getJoinLobby());
 				break;
 			case MOVEROBBER:
-				request.setMoveRobber(turn.getChosenHex().toHexProto().getLocation());
+				request.setMoveRobber(getTurn().getChosenHex().toHexProto().getLocation());
 				break;
 			case INITIATETRADE:
 				request.setInitiateTrade(getTrade());
 				break;
 			case CHOOSERESOURCE:
-				request.setChooseResource(ResourceType.toProto(turn.getChosenResource()));
+				request.setChooseResource(ResourceType.toProto(getTurn().getChosenResource()));
 				break;
 			case DISCARDRESOURCES:
-				request.setDiscardResources(getGame().processResources(turn.getChosenResources()));
+				request.setDiscardResources(getGame().processResources(getTurn().getChosenResources()));
 				break;
 			case SUBMITTRADERESPONSE:
-				request.setSubmitTradeResponse(turn.getTradeResponse());
+				request.setSubmitTradeResponse(getTurn().getTradeResponse());
 				break;
 			case PLAYDEVCARD:
-				request.setPlayDevCard(DevelopmentCardType.toProto(turn.getChosenCard()).getPlayableDevCard());
+				request.setPlayDevCard(DevelopmentCardType.toProto(getTurn().getChosenCard()).getPlayableDevCard());
 				break;
 			case SUBMITTARGETPLAYER:
-				request.setSubmitTargetPlayer(Board.Player.newBuilder().setId(getGame().getPlayer(turn.getTarget()).getId()).build());
+				request.setSubmitTargetPlayer(Board.Player.newBuilder().setId(getGame().getPlayer(getTurn().getTarget()).getId()).build());
 				break;
 
 			// Require empty request bodies
@@ -117,13 +151,13 @@ public class TurnProcessor
 		Trade.Kind.Builder kind = Trade.Kind.newBuilder();
 
 		// If a player trade
-		if (turn.getPlayerTrade() != null)
+		if (getTurn().getPlayerTrade() != null)
 		{
-			kind.setPlayer(turn.getPlayerTrade()).build();
+			kind.setPlayer(getTurn().getPlayerTrade()).build();
 		}
-		else if (turn.getBankTrade() != null)
+		else if (getTurn().getBankTrade() != null)
 		{
-			kind.setBank(turn.getBankTrade()).build();
+			kind.setBank(getTurn().getBankTrade()).build();
 		}
 
 		return kind.build();
@@ -132,5 +166,20 @@ public class TurnProcessor
 	private ClientGame getGame()
 	{
 		return client.getState();
+	}
+
+	private TurnInProgress getTurn()
+	{
+		return client.getTurn();
+	}
+
+	private Semaphore getTurnLock()
+	{
+		return client.getTurnLock();
+	}
+
+	private Semaphore getGameLock()
+	{
+		return client.getStateLock();
 	}
 }

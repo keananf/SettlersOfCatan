@@ -28,9 +28,10 @@ public class RemoteClientConnection implements IClientConnection
         {
             try
             {
+                Events.Event ev = message.getEvent();
                 CodedOutputStream c = CodedOutputStream.newInstance(conn.getOutputStream());
                 message.writeTo(c);
-                Events.Event ev = message.getEvent();
+
                 c.flush();
                 conn.getOutputStream().flush();
                 System.out.println(String.format("Sent. %s", ev.getTypeCase().name()));

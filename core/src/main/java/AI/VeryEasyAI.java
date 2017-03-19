@@ -1,14 +1,12 @@
 package AI;
 
-import client.ClientGame;
 import enums.Difficulty;
-import game.players.AIPlayer;
 
 public class VeryEasyAI extends AICore {
 
-	public VeryEasyAI(Difficulty difficulty, ClientGame game, AIPlayer player) 
+	public VeryEasyAI(Difficulty difficulty, AIClient aiClient)
 	{
-		super(difficulty, game, player);
+		super(difficulty,aiClient);
 	}
 
 }

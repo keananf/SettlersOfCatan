@@ -20,11 +20,11 @@ import java.util.Map;
 /**
  * Class representing a player from across the network
  */
-public class NetworkPlayer extends Player
+public class ServerPlayer extends Player
 {
 	private InetAddress inetAddress;
 
-	public NetworkPlayer(Colour colour, String username)
+	public ServerPlayer(Colour colour, String username)
 	{
 		super(colour, username);
 	}
@@ -214,8 +214,12 @@ public class NetworkPlayer extends Player
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
 		// Check the specified resource can be taken
-		if (!other.getResources().containsKey(resource) || other.getResources()
-				.get(resource) == 0) { throw new CannotStealException(colour, other.getColour()); }
+		if (other.getNumResources() > 0 && (!other.getResources().containsKey(resource) || other.getResources()
+				.get(resource) == 0)) { throw new CannotStealException(colour, other.getColour()); }
+
+		// Ignore if player simply has no resources to take
+		if(other.getNumResources() == 0)
+			return;
 
 		try
 		{
@@ -225,7 +229,8 @@ public class NetworkPlayer extends Player
 		}
 		catch (CannotAffordException | BankLimitException e)
 		{
-			/* Cannot happen */ }
+			/* Cannot happen */
+		}
 	}
 
 }

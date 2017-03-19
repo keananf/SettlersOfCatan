@@ -1,63 +1,76 @@
 package client;
 
-import java.io.IOException;
-import java.net.Socket;
+import connection.IServerConnection;
 
 /**
- * Main client class
- * 
+ * Abstract notion of a client
  * @author 140001596
  */
-public class Client
+public abstract class Client
 {
-	private ClientGame state;
-	private Socket socket;
-	private EventProcessor eventProcessor;
-	private TurnProcessor turnProcessor;
-	private static final int PORT = 12345;
+    protected ClientGame state;
+    protected EventProcessor eventProcessor;
+    protected Thread evProcessor;
+    protected TurnProcessor turnProcessor;
+    protected MoveProcessor moveProcessor;
+    protected static final int PORT = 12345;
+    private TurnInProgress turn;
+    private IServerConnection conn;
 
-	public Client()
-	{
-		// TODO: delete once front-end properly set up with server.
-		setUp();
-		// Right now, Socket is null
-	}
 
-	/**
-	 * Attempts to establish a connection with the given host
-	 * 
-	 * @param host the host
-	 */
-	public void setUpConnection(String host)
-	{
-		try
-		{
-			socket = new Socket(host, PORT);
-			setUp();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
+    /**
+     * Attempts to set up a connection with the server
+     */
+    protected abstract void setUpConnection();
 
-	/**
-	 * Sets up the different components for a Client
-	 */
-	private void setUp()
-	{
-		this.state = new ClientGame();
-		this.eventProcessor = new EventProcessor(socket, state);
-		this.turnProcessor = new TurnProcessor(socket, state);
-	}
+    /**
+     * Sets up the different components for a RemoteClient
+     */
+    protected void setUp(IServerConnection conn)
+    {
+        this.conn = conn;
+        this.turn = new TurnInProgress();
+        this.moveProcessor = new MoveProcessor(this);
+        this.eventProcessor = new EventProcessor(conn, this);
+        this.turnProcessor = new TurnProcessor(conn, this);
 
-	public ClientGame getState()
-	{
-		return state;
-	}
+        evProcessor = new Thread(eventProcessor);
+        evProcessor.start();
+    }
 
-	public Turn getTurn()
-	{
-		return turnProcessor.getTurn();
-	}
+    public void sendTurn()
+    {
+        turnProcessor.sendMove();
+    }
+
+    /**
+     * Shuts down a client by terminating the socket and the event processor thread.
+     */
+    public void shutDown()
+    {
+        conn.shutDown();
+        try
+        {
+            evProcessor.join();
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public ClientGame getState()
+    {
+        return state;
+    }
+
+    public TurnInProgress getTurn()
+    {
+        return turnProcessor.getTurn();
+    }
+
+    public MoveProcessor getMoveProcessor()
+    {
+        return moveProcessor;
+    }
 }

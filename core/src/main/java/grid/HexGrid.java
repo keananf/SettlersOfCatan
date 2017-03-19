@@ -82,9 +82,9 @@ public class HexGrid
 	 * @param node the node
 	 * @return a list of neighbouring elements
 	 */
-	private List<BoardElement> getNeighbours(Node node)
+	private List<GridElement> getNeighbours(Node node)
 	{
-		List<BoardElement> neighbours = new LinkedList<BoardElement>();
+		List<GridElement> neighbours = new LinkedList<GridElement>();
 
 		// Find all 6 neighbours
 		for (int i = -1; i <= 1; i++)
@@ -116,10 +116,10 @@ public class HexGrid
 		for (Node node : nodes.values())
 		{
 			List<Hex> adjacentHexes = new LinkedList<Hex>();
-			List<BoardElement> neighbours = getNeighbours(node);
-
+			List<GridElement> neighbours = getNeighbours(node);
+			
 			// Create both edges AND find the adjacent hexes
-			for (BoardElement neighbour : neighbours)
+			for(GridElement neighbour : neighbours)
 			{
 				// If neighbour is a node, create an edge
 				if (neighbour instanceof Node)

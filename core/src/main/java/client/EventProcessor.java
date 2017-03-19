@@ -17,7 +17,7 @@ public class EventProcessor implements Runnable
 {
 	private final TurnInProgress turn;
 	private final Client client;
-	private final ClientGame game;
+	private ClientGame game;
 	private final IServerConnection conn;
 	private Logger logger;
 	private ConcurrentLinkedQueue<Requests.Request.BodyCase> expectedMoves;
@@ -30,14 +30,15 @@ public class EventProcessor implements Runnable
 		this.conn = conn;
 		logger = new Logger();
 		this.client = client;
-		this.game = client.getState();
 	}
 
 	@Override
 	public void run()
 	{
+		System.out.println("Starting event processor");
+
 		// Continuously wait for new messages from the server
-		while (!game.isOver())
+		while (game == null || !game.isOver())
 		{
 			try
 			{
@@ -65,6 +66,7 @@ public class EventProcessor implements Runnable
     private void processEvent(Event ev) throws Exception
     {
 		updateExpectedMoves(ev);
+		System.out.println("Processing event");
 
         // Switch on type of event
         switch(ev.getTypeCase())
@@ -98,6 +100,7 @@ public class EventProcessor implements Runnable
 				game.processPlayedDevCard(ev.getDevCardPlayed(),ev.getInstigator());
 				break;
 			case BEGINGAME:
+				game = new ClientGame();
 				game.setBoard(ev.getBeginGame());
 				break;
 			case CHATMESSAGE:
@@ -250,17 +253,18 @@ public class EventProcessor implements Runnable
 	 */
 	private void processMessage() throws Exception
 	{
+		System.out.println("Waiting");
 		Message msg = conn.getMessageFromServer();
+		System.out.println("Processing");
 		logger.logReceivedMessage(msg);
 
 		// switch on message type
 		switch (msg.getTypeCase())
 		{
-
-		// Extract and process event
-		case EVENT:
-			processEvent(msg.getEvent());
-			break;
+			// Extract and process event
+			case EVENT:
+				processEvent(msg.getEvent());
+				break;
 		}
 	}
 }

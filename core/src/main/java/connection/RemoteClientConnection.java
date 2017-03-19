@@ -1,5 +1,8 @@
 package connection;
 
+import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.CodedOutputStream;
+import intergroup.Events;
 import intergroup.Messages;
 
 import java.io.IOException;
@@ -25,8 +28,12 @@ public class RemoteClientConnection implements IClientConnection
         {
             try
             {
-                message.writeTo(conn.getOutputStream());
+                CodedOutputStream c = CodedOutputStream.newInstance(conn.getOutputStream());
+                message.writeTo(c);
+                Events.Event ev = message.getEvent();
+                c.flush();
                 conn.getOutputStream().flush();
+                System.out.println(String.format("Sent. %s", ev.getTypeCase().name()));
             }
             catch (IOException e)
             {
@@ -42,7 +49,8 @@ public class RemoteClientConnection implements IClientConnection
         {
             try
             {
-                return Messages.Message.parseFrom(conn.getInputStream());
+                CodedInputStream c = CodedInputStream.newInstance(conn.getInputStream());
+                return Messages.Message.parseFrom(c);
             }
             catch (IOException e)
             {

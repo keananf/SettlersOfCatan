@@ -15,7 +15,6 @@ public class SettlersOfCatan extends Game
 {
 	public Skin skin;
 	private Server serv;
-	public ClientGame state;
 	private Client client;
 
 	@Override
@@ -51,7 +50,6 @@ public class SettlersOfCatan extends Game
 	public boolean startNewRemoteClient(String host)
 	{
 		client = new RemoteClient(host);
-		state = client.getState();
 		return ((RemoteClient) client).isInitialised();
 	}
 
@@ -61,6 +59,15 @@ public class SettlersOfCatan extends Game
 	public void startNewServer()
 	{
 		client = new LocalClient();
-		state = client.getState();
+	}
+
+	/**
+	 * @return the client's gamestate object
+	 */
+	public ClientGame getState()
+	{
+		// Block until the game board is received.
+		while(client.getState() == null) {}
+		return client.getState();
 	}
 }

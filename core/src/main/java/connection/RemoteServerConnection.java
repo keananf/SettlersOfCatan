@@ -1,5 +1,7 @@
 package connection;
 
+import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.CodedOutputStream;
 import intergroup.Messages;
 
 import java.io.IOException;
@@ -25,7 +27,11 @@ public class RemoteServerConnection implements IServerConnection
         {
             try
             {
-                return Messages.Message.parseFrom(conn.getInputStream());
+                CodedInputStream c = CodedInputStream.newInstance(conn.getInputStream());
+                System.out.println("Receiving");
+                Messages.Message m = Messages.Message.parseFrom(c);
+                System.out.println("Received");
+                return m;
             }
             catch (IOException e)
             {
@@ -43,7 +49,10 @@ public class RemoteServerConnection implements IServerConnection
         {
             try
             {
-                message.writeTo(conn.getOutputStream());
+                CodedOutputStream c = CodedOutputStream.newInstance(conn.getOutputStream());
+                message.writeTo(c);
+                c.flush();
+                conn.getOutputStream().flush();
             }
             catch (IOException e)
             {

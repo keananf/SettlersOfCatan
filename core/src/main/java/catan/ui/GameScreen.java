@@ -62,7 +62,7 @@ public class GameScreen implements Screen
 		assets.load("models/hex.g3db", Model.class);
 		assets.finishLoading();
 
-		for (Entry<Point, Hex> coord : game.state.getGrid().grid.entrySet())
+		for (Entry<Point, Hex> coord : game.getState().getGrid().grid.entrySet())
 		{
 
 			ModelInstance hex = new ModelInstance(assets.getModel("hex.g3db"), hexPointToCartVec(coord.getKey()));

@@ -23,6 +23,11 @@ public abstract class Client
      */
     protected abstract void setUpConnection();
 
+    public void sendTurn()
+    {
+        turnProcessor.sendMove();
+    }
+
     /**
      * Sets up the different components for a RemoteClient
      */
@@ -30,18 +35,14 @@ public abstract class Client
     {
         this.conn = conn;
         this.turn = new TurnInProgress();
+        this.turnProcessor = new TurnProcessor(conn, this);
         this.moveProcessor = new MoveProcessor(this);
         this.eventProcessor = new EventProcessor(conn, this);
-        this.turnProcessor = new TurnProcessor(conn, this);
 
         evProcessor = new Thread(eventProcessor);
         evProcessor.start();
     }
 
-    public void sendTurn()
-    {
-        turnProcessor.sendMove();
-    }
 
     /**
      * Shuts down a client by terminating the socket and the event processor thread.
@@ -66,7 +67,7 @@ public abstract class Client
 
     public TurnInProgress getTurn()
     {
-        return turnProcessor.getTurn();
+        return turn;
     }
 
     public MoveProcessor getMoveProcessor()

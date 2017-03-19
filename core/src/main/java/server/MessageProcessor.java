@@ -58,6 +58,11 @@ public class MessageProcessor
     {
         ReceivedMessage receivedMessage = movesToProcess.poll();
         lastMessage = receivedMessage;
+        if(receivedMessage == null || receivedMessage.getMsg() == null)
+        {
+            return null;
+        }
+
         Messages.Message msg = receivedMessage.getMsg();
         Colour col = receivedMessage.getCol();
         logger.logReceivedMessage(msg);

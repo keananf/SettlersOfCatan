@@ -26,7 +26,6 @@ public class MoveProcessor
 {
     private final Client client;
     private final TurnInProgress turn;
-    private final ClientGame game;
     private final ConcurrentLinkedQueue<Requests.Request.BodyCase> expectedMoves;
 
     public MoveProcessor(Client client)
@@ -34,7 +33,6 @@ public class MoveProcessor
         this.turn = client.getTurn();
         expectedMoves = turn.getExpectedMoves();
         this.client = client;
-        this.game = client.getState();
     }
 
     /**
@@ -46,10 +44,10 @@ public class MoveProcessor
         List<BoardElement> moves = new ArrayList<BoardElement>();
 
         // This player
-        Player p = game.getPlayer();
+        Player p = getGame().getPlayer();
 
         // For each node
-        for(Node n : game.getGrid().nodes.values())
+        for(Node n : getGame().getGrid().nodes.values())
         {
             if(p.canBuildSettlement(n))
             {
@@ -62,7 +60,7 @@ public class MoveProcessor
         }
 
         // For each edge
-        for(Edge e : game.getGrid().getEdgesAsList())
+        for(Edge e : getGame().getGrid().getEdgesAsList())
         {
             if(p.canBuildRoad(e))
             {
@@ -146,7 +144,7 @@ public class MoveProcessor
     private boolean checkHex(Hex hex)
     {
         // Ensure this hex doesn't already have the robber, and that the move is expected OR no moves are expected
-        return checkTurn() && !hex.equals(game.getGrid().getHexWithRobber()) &&
+        return checkTurn() && !hex.equals(getGame().getGrid().getHexWithRobber()) &&
                 (expectedMoves.isEmpty() || (expectedMoves.contains(Requests.Request.BodyCase.MOVEROBBER)));
     }
 
@@ -166,7 +164,7 @@ public class MoveProcessor
         // Ensure that a discard is expected, and that the discard can be afforded and that it brings the user
         // into a safe position having 7 or less resources.
         return (!expectedMoves.isEmpty() && expectedMoves.contains(Requests.Request.BodyCase.DISCARDRESOURCES))
-                && game.getPlayer().canAfford(resources) && sum <= 7;
+                && getGame().getPlayer().canAfford(resources) && sum <= 7;
     }
 
     /**
@@ -179,7 +177,7 @@ public class MoveProcessor
         // Ensure that a SUBMITTARGETPLAYER move is expected, and that the player
         // has resources
         return (checkTurn() && expectedMoves.contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
-                && game.getPlayer(target).getNumResources() > 0);
+                && getGame().getPlayer(target).getNumResources() > 0);
     }
 
     /**
@@ -192,7 +190,7 @@ public class MoveProcessor
         // Ensure that a CHOOSE RESOURCE move is expected, and that the bank
         // has the requested resource available
         return (expectedMoves.contains(Requests.Request.BodyCase.CHOOSERESOURCE)
-                && game.getBank().getAvailableResources().get(r) > 0);
+                && getGame().getBank().getAvailableResources().get(r) > 0);
     }
 
     /**
@@ -207,7 +205,7 @@ public class MoveProcessor
         // If player's turn and no other moves are expected
         if(checkTurn() && expectedMoves.isEmpty())
         {
-            Player player = game.getPlayer();
+            Player player = getGame().getPlayer();
 
             // If the player owns the provided card
             if(player.getDevelopmentCards().containsKey(type) && player.getDevelopmentCards().get(type) > 0)
@@ -225,7 +223,7 @@ public class MoveProcessor
     public boolean checkBuyDevCard()
     {
         // If its the user's turn, they have no expected moves, and
-        return checkTurn() && expectedMoves.isEmpty() && game.getPlayer().canAfford(DevelopmentCardType.getCardCost());
+        return checkTurn() && expectedMoves.isEmpty() && getGame().getPlayer().canAfford(DevelopmentCardType.getCardCost());
     }
 
     /**
@@ -234,7 +232,7 @@ public class MoveProcessor
      */
     public boolean checkBuild(Node node)
     {
-        Player p = game.getPlayer();
+        Player p = getGame().getPlayer();
         return checkTurn() && expectedMoves.isEmpty() && (p.canBuildSettlement(node) || p.canBuildCity(node));
     }
 
@@ -243,7 +241,7 @@ public class MoveProcessor
      */
     public boolean checkTurn()
     {
-        return game.getCurrentPlayer() == game.getPlayer().getColour();
+        return getGame().getCurrentPlayer() == getGame().getPlayer().getColour();
     }
 
     /**
@@ -252,7 +250,7 @@ public class MoveProcessor
      */
     public boolean checkBuildRoad(Edge edge)
     {
-        return checkTurn() && game.getPlayer().canBuildRoad(edge) &&
+        return checkTurn() && getGame().getPlayer().canBuildRoad(edge) &&
                 (expectedMoves.isEmpty() || expectedMoves.contains(Requests.Request.BodyCase.BUILDROAD));
     }
 
@@ -265,15 +263,15 @@ public class MoveProcessor
         Trade.WithPlayer trade = turn.getPlayerTrade();
         if(trade != null && turn.isTradePhase())
         {
-            Resource.Counts cost = trade.getOther().getId().equals(game.getPlayer().getId()) ? trade.getWanting() : trade.getOffering();
-            Resource.Counts wanting = trade.getOther().getId().equals(game.getPlayer().getId()) ? trade.getOffering() : trade.getWanting();
-            Map<ResourceType, Integer> costMap = game.processResources(cost);
-            Map<ResourceType, Integer> wantingMap = game.processResources(wanting);
+            Resource.Counts cost = trade.getOther().getId().equals(getGame().getPlayer().getId()) ? trade.getWanting() : trade.getOffering();
+            Resource.Counts wanting = trade.getOther().getId().equals(getGame().getPlayer().getId()) ? trade.getOffering() : trade.getWanting();
+            Map<ResourceType, Integer> costMap = getGame().processResources(cost);
+            Map<ResourceType, Integer> wantingMap = getGame().processResources(wanting);
 
             // If the move is expected, and the response is accept AND the player can afford it.
             // OR if it is reject.
             return expectedMoves.contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE) &&
-            ((response.equals(Trade.Response.ACCEPT) && game.getBank().canAfford(wantingMap) && game.getPlayer().canAfford(costMap))
+            ((response.equals(Trade.Response.ACCEPT) && getGame().getBank().canAfford(wantingMap) && getGame().getPlayer().canAfford(costMap))
                     || (response.equals(Trade.Response.REJECT)));
         }
 
@@ -292,17 +290,17 @@ public class MoveProcessor
         switch(initiateTrade.getTradeCase())
         {
             case BANK:
-                cost = game.processResources(initiateTrade.getBank().getOffering());
-                wanting = game.processResources(initiateTrade.getBank().getWanting());
+                cost = getGame().processResources(initiateTrade.getBank().getOffering());
+                wanting = getGame().processResources(initiateTrade.getBank().getWanting());
                 break;
             case PLAYER:
-                cost = game.processResources(initiateTrade.getPlayer().getOffering());
-                wanting = game.processResources(initiateTrade.getPlayer().getWanting());
+                cost = getGame().processResources(initiateTrade.getPlayer().getOffering());
+                wanting = getGame().processResources(initiateTrade.getPlayer().getWanting());
                 break;
         }
 
         // If both the player and the bank can afford the given trade
-        return game.getPlayer().canAfford(cost) && game.getBank().canAfford(wanting);
+        return getGame().getPlayer().canAfford(cost) && getGame().getBank().canAfford(wanting);
     }
 
 
@@ -354,21 +352,21 @@ public class MoveProcessor
         switch(req.getBodyCase())
         {
             case BUILDROAD:
-                return checkBuildRoad(game.getGrid().getEdge(req.getBuildRoad().getA(), req.getBuildRoad().getB()));
+                return checkBuildRoad(getGame().getGrid().getEdge(req.getBuildRoad().getA(), req.getBuildRoad().getB()));
             case BUILDSETTLEMENT:
-                return checkBuild(game.getGrid().getNode(req.getBuildSettlement().getX(), req.getBuildSettlement().getY()));
+                return checkBuild(getGame().getGrid().getNode(req.getBuildSettlement().getX(), req.getBuildSettlement().getY()));
             case BUILDCITY:
-                return checkBuild(game.getGrid().getNode(req.getBuildCity().getX(), req.getBuildCity().getY()));
+                return checkBuild(getGame().getGrid().getNode(req.getBuildCity().getX(), req.getBuildCity().getY()));
             case BUYDEVCARD:
                 return checkBuyDevCard();
             case PLAYDEVCARD:
                 return checkPlayDevCard(DevelopmentCardType.fromProto(req.getPlayDevCard()));
             case SUBMITTARGETPLAYER:
-                return checkTarget(game.getPlayer(req.getSubmitTargetPlayer().getId()).getColour());
+                return checkTarget(getGame().getPlayer(req.getSubmitTargetPlayer().getId()).getColour());
             case DISCARDRESOURCES:
-                return checkDiscard(game.processResources(req.getDiscardResources()));
+                return checkDiscard(getGame().processResources(req.getDiscardResources()));
             case MOVEROBBER:
-                return checkHex(game.getGrid().getHex(req.getMoveRobber().getX(), req.getMoveRobber().getY()));
+                return checkHex(getGame().getGrid().getHex(req.getMoveRobber().getX(), req.getMoveRobber().getY()));
             case CHOOSERESOURCE:
                 return checkChosenResource(ResourceType.fromProto(req.getChooseResource()));
             case SUBMITTRADERESPONSE:
@@ -387,5 +385,12 @@ public class MoveProcessor
         }
 
         return true;
+    }
+
+    private ClientGame getGame()
+    {
+        // Block until the game state has been received
+        while(client.getState() == null) {}
+        return client.getState();
     }
 }

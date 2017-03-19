@@ -30,7 +30,7 @@ public abstract class Game
 	protected Bank bank;
 	protected int numPlayers;
 	protected int current; // index of current player
-	public static final int NUM_PLAYERS = 4;
+	public static final int NUM_PLAYERS = 1;
 	public static final int MIN_ROAD_LENGTH = 5;
 	public static final int MIN_ARMY_SIZE = 3;
 

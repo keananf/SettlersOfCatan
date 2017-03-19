@@ -80,7 +80,10 @@ public class ListenerThread implements Runnable
      */
     public void sendMessage(Message msg) throws IOException
     {
+    	Event ev = msg.getEvent();
+		System.out.println(String.format("Sending. %s %s", ev.getTypeCase().name(), ev.toString()));
         conn.sendMessageToClient(msg);
+		System.out.println(String.format("Sent. %s", ev.getTypeCase().name()));
     }
 
 	public void sendError() throws IOException

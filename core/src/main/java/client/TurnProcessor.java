@@ -12,7 +12,6 @@ import intergroup.trade.Trade;
 
 public class TurnProcessor
 {
-	private final ClientGame game;
 	private final Client client;
 	private final TurnInProgress turn;
 	private final IServerConnection conn;
@@ -21,7 +20,6 @@ public class TurnProcessor
 	{
 		turn = client.getTurn();
 		this.client = client;
-		this.game = client.getState();
 		this.conn = conn;
 	}
 
@@ -60,7 +58,7 @@ public class TurnProcessor
 				request.setChooseResource(ResourceType.toProto(turn.getChosenResource()));
 				break;
 			case DISCARDRESOURCES:
-				request.setDiscardResources(game.processResources(turn.getChosenResources()));
+				request.setDiscardResources(getGame().processResources(turn.getChosenResources()));
 				break;
 			case SUBMITTRADERESPONSE:
 				request.setSubmitTradeResponse(turn.getTradeResponse());
@@ -69,7 +67,7 @@ public class TurnProcessor
 				request.setPlayDevCard(DevelopmentCardType.toProto(turn.getChosenCard()).getPlayableDevCard());
 				break;
 			case SUBMITTARGETPLAYER:
-				request.setSubmitTargetPlayer(Board.Player.newBuilder().setId(game.getPlayer(turn.getTarget()).getId()).build());
+				request.setSubmitTargetPlayer(Board.Player.newBuilder().setId(getGame().getPlayer(turn.getTarget()).getId()).build());
 				break;
 
 			// Require empty request bodies
@@ -108,7 +106,7 @@ public class TurnProcessor
 	private Lobby.Join getJoinLobby()
 	{
 		// TODO update gameID?
-		return Lobby.Join.newBuilder().setUsername(game.getPlayer().getUsername()).setGameId(0).build();
+		return Lobby.Join.newBuilder().setUsername(getGame().getPlayer().getUsername()).setGameId(0).build();
 	}
 
 	/**
@@ -116,8 +114,6 @@ public class TurnProcessor
 	 */
 	private Trade.Kind getTrade()
 	{
-		Trade.WithBank.Builder bank = Trade.WithBank.newBuilder();
-		Trade.WithPlayer.Builder player = Trade.WithPlayer.newBuilder();
 		Trade.Kind.Builder kind = Trade.Kind.newBuilder();
 
 		// If a player trade
@@ -133,8 +129,8 @@ public class TurnProcessor
 		return kind.build();
 	}
 
-	public TurnInProgress getTurn()
+	private ClientGame getGame()
 	{
-		return turn;
+		return client.getState();
 	}
 }

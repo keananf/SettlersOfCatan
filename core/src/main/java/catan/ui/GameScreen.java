@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -31,7 +32,7 @@ public class GameScreen implements Screen
 
 	private Camera cam;
 	private CatanCamController camController;
-	private CameraInputController debugController;
+	private GameController gameController;
 
 	final private Array<ModelInstance> boardInstances = new Array<ModelInstance>();
 	final private Environment environment = new Environment();
@@ -43,7 +44,14 @@ public class GameScreen implements Screen
 		this.game = game;
 
 		initCamera();
-		initCameraController();
+		camController = new CatanCamController(cam);
+		gameController = new GameController(cam, boardInstances);
+
+		final InputMultiplexer multiplexer = new InputMultiplexer();
+		multiplexer.addProcessor(camController);
+		multiplexer.addProcessor(gameController);
+		Gdx.input.setInputProcessor(multiplexer);
+
 		initBoard();
 		initEnvironment();
 	}
@@ -56,13 +64,6 @@ public class GameScreen implements Screen
 		cam.near = 0.01f; // closest things to be rendered
 		cam.far = 300f; // furthest things to be rendered
 		cam.update();
-	}
-
-	private void initCameraController()
-	{
-		camController = new CatanCamController(cam);
-		debugController = new CameraInputController(cam);
-		Gdx.input.setInputProcessor(debugController);
 	}
 
 	private void initBoard()

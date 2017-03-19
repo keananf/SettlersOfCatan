@@ -6,7 +6,7 @@ public class VeryEasyAI extends AICore {
 
 	public VeryEasyAI(Difficulty difficulty, AIClient aiClient)
 	{
-		super(difficulty,aiClient);
+		super(difficulty, aiClient);
 	}
 
 }

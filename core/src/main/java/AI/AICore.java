@@ -1,6 +1,7 @@
 package AI;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -9,9 +10,11 @@ import grid.BoardElement;
 import grid.Node;
 import grid.Edge;
 import client.ClientGame;
+import enums.DevelopmentCardType;
 import enums.Difficulty;
 import enums.ResourceType;
 import game.players.AIPlayer;
+import intergroup.Requests;
 
 public abstract class AICore implements IAI
 {
@@ -33,15 +36,25 @@ public abstract class AICore implements IAI
 	{
 		ArrayList<MoveEntry> moves = new ArrayList<MoveEntry>();
 		
-		//TODO: add empty move
+		MoveEntry entry = new MoveEntry(null, null);
+		moves.add(entry);
 		
 		if(client.getMoveProcessor().checkBuyDevCard())
 		{
-			//create MoveEntry for buying a dev card
-			//add MoveEntry to list
+			entry = new MoveEntry(null, Requests.Request.BUYDEVCARD);
+			moves.add(entry);
 		}
 		
-		//TODO: check if a player can play a development card
+		HashMap<DevelopmentCardType, Integer> devCards = player.getDevelopmentCards();
+		
+		for(DevelopmentCardType t: DevelopmentCardType.values())
+		{
+			if(client.getMoveProcessor().checkPlayDevCard(t))
+			{
+				entry = new MoveEntry(t, Requests.Request.PLAYDEVCARD);
+				moves.add(entry);
+			}
+		}
 		
 		ArrayList<BoardElement> elements = (ArrayList<BoardElement>) client.getMoveProcessor().getBuildingPossibilities();
 		
@@ -51,21 +64,21 @@ public abstract class AICore implements IAI
 			{
 				if(player.canBuildCity((Node) e))
 				{
-					//create MoveEntry for building city
-					//add MoveEntry to list
+					entry = new MoveEntry(null, Requests.Request.BUILDCITY);
+					moves.add(entry);
 				}
 				else if(player.canBuildSettlement((Node) e))
 				{
-					//create MoveEntry for buildiung a settlement
-					//add MoveEntry to list
+					entry = new MoveEntry(null, Requests.Request.BUILDSETTLEMENT);
+					moves.add(entry);
 				}
 			}
 			else if(e instanceof Edge)
 			{
 				if(player.canBuildRoad((Edge) e))
 				{
-					//create MoveEntry for building a road
-					//add MoveEntry to list
+					entry = new MoveEntry(null, Requests.Request.BUILDROAD);
+					moves.add(entry);
 				}
 			}
 		}

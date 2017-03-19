@@ -1,20 +1,19 @@
 package AI;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import grid.BoardElement;
-import grid.Node;
-import grid.Edge;
 import client.ClientGame;
 import enums.DevelopmentCardType;
 import enums.Difficulty;
 import enums.ResourceType;
 import game.players.AIPlayer;
-import intergroup.Requests;
+import grid.BoardElement;
+import grid.Edge;
+import grid.Node;
+import intergroup.Requests.Request.BodyCase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public abstract class AICore implements IAI
 {
@@ -36,12 +35,12 @@ public abstract class AICore implements IAI
 	{
 		ArrayList<MoveEntry> moves = new ArrayList<MoveEntry>();
 		
-		MoveEntry entry = new MoveEntry(null, null);
+		MoveEntry entry = new MoveEntry((Node) null, null);
 		moves.add(entry);
 		
 		if(client.getMoveProcessor().checkBuyDevCard())
 		{
-			entry = new MoveEntry(null, Requests.Request.BUYDEVCARD);
+			entry = new MoveEntry((Node)null, BodyCase.BUYDEVCARD);
 			moves.add(entry);
 		}
 		
@@ -51,7 +50,7 @@ public abstract class AICore implements IAI
 		{
 			if(client.getMoveProcessor().checkPlayDevCard(t))
 			{
-				entry = new MoveEntry(t, Requests.Request.PLAYDEVCARD);
+				entry = new MoveEntry(t, BodyCase.PLAYDEVCARD);
 				moves.add(entry);
 			}
 		}
@@ -64,12 +63,12 @@ public abstract class AICore implements IAI
 			{
 				if(player.canBuildCity((Node) e))
 				{
-					entry = new MoveEntry(null, Requests.Request.BUILDCITY);
+					entry = new MoveEntry((Node)null, BodyCase.BUILDCITY);
 					moves.add(entry);
 				}
 				else if(player.canBuildSettlement((Node) e))
 				{
-					entry = new MoveEntry(null, Requests.Request.BUILDSETTLEMENT);
+					entry = new MoveEntry((Node) null, BodyCase.BUILDSETTLEMENT);
 					moves.add(entry);
 				}
 			}
@@ -77,7 +76,7 @@ public abstract class AICore implements IAI
 			{
 				if(player.canBuildRoad((Edge) e))
 				{
-					entry = new MoveEntry(null, Requests.Request.BUILDROAD);
+					entry = new MoveEntry((Node)null, BodyCase.BUILDROAD);
 					moves.add(entry);
 				}
 			}

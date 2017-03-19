@@ -1,8 +1,8 @@
 package AI;
 
-import grid.BoardElement;
 import enums.DevelopmentCardType;
-import enums.Move;
+import grid.BoardElement;
+import intergroup.Requests;
 
 public class MoveEntry 
 {
@@ -28,7 +28,7 @@ public class MoveEntry
 		this.move = move;
 	}
 	
-	public Move getMove()
+	public Requests.Request.BodyCase getMove()
 	{
 		return move;
 	}

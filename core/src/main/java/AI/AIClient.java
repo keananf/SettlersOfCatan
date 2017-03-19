@@ -1,8 +1,5 @@
 package AI;
 
-import java.io.IOException;
-import java.net.Socket;
-
 import client.Client;
 import client.ClientGame;
 import connection.LocalClientConnection;
@@ -11,7 +8,11 @@ import connection.RemoteServerConnection;
 import server.LocalServer;
 import server.Server;
 
-public class AIClient extends Client 
+import java.io.IOException;
+import java.net.Socket;
+
+public class
+AIClient extends Client
 {
 	//remote client fields
 	private String host;

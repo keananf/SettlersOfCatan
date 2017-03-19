@@ -6,7 +6,7 @@ import enums.Colour;
 import exceptions.*;
 import game.build.Road;
 import game.build.Settlement;
-import game.players.NetworkPlayer;
+import game.players.ServerPlayer;
 import game.players.Player;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,7 +89,7 @@ public class RoadTests extends TestHelper
 			CannotBuildRoadException, RoadExistsException
 	{
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.RED, "");
+		Player p2 = new ServerPlayer(Colour.RED, "");
 		game.addPlayer(p2);
 
 		// Find edges where roads will be built
@@ -176,7 +176,7 @@ public class RoadTests extends TestHelper
 			IllegalPlacementException, InvalidCoordinatesException, BankLimitException
 	{
 		// Set up player 2
-		Player p2 = new NetworkPlayer(Colour.RED, "");
+		Player p2 = new ServerPlayer(Colour.RED, "");
 		game.addPlayer(p2);
 		game.setCurrentPlayer(p2.getColour());
 

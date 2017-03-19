@@ -408,7 +408,7 @@ public class ClientProcessTests extends ClientTestHelper
 		ResourceType r = ResourceType.Brick;
 		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
 		resources.put(r, 3);
-		p2.grantResources(resources, game.getBank());
+		clientGame.giveResources(resources.get(r), p2.getColour());
 
 		// Set up Steal
 		Board.Steal.Builder steal = Board.Steal.newBuilder();
@@ -418,11 +418,9 @@ public class ClientProcessTests extends ClientTestHelper
 		// Assert resources before and after steal
 		assertTrue(0 == p.getResources().get(r));
 		assertTrue(0 == p.getNumResources());
-		assertTrue(resources.get(r) == p2.getResources().get(r));
-		assertTrue(resources.get(r) == p2.getNumResources());
+		assertTrue(resources.get(r) == clientGame.getPlayerResources(p2.getColour()));
 		clientGame.processResourcesStolen(steal.build(), Board.Player.newBuilder().setId(p.getId()).build());
-		assertTrue(0 == p2.getResources().get(r));
-		assertTrue(0 == p2.getNumResources());
+		assertTrue(0 == clientGame.getPlayerResources(p2.getColour()));
 		assertTrue(resources.get(r) == p.getResources().get(r));
 		assertTrue(resources.get(r) == p.getNumResources());
 	}
@@ -468,8 +466,8 @@ public class ClientProcessTests extends ClientTestHelper
 		Map<ResourceType, Integer> wanting = new HashMap<ResourceType, Integer>();
 		offering.put(r, 1);
 		wanting.put(r2, 1);
-		p.grantResources(offering, game.getBank());
-		p2.grantResources(wanting, game.getBank());
+		p.grantResources(offering, clientGame.getBank());
+		clientGame.giveResources(wanting.size(), p2.getColour());
 
 		// Set up Trade
 		Trade.WithPlayer.Builder playerTrade = Trade.WithPlayer.newBuilder();
@@ -479,11 +477,9 @@ public class ClientProcessTests extends ClientTestHelper
 		// Assert offering before and after steal
 		assertTrue(offering.get(r) == p.getResources().get(r));
 		assertTrue(offering.get(r) == p.getNumResources());
-		assertTrue(wanting.get(r2) == p2.getResources().get(r2));
-		assertTrue(wanting.get(r2) == p2.getNumResources());
+		assertTrue(wanting.get(r2) == clientGame.getPlayerResources(p2.getColour()));
 		clientGame.processPlayerTrade(playerTrade.build(), Board.Player.newBuilder().setId(p.getId()).build());
-		assertTrue(offering.get(r) == p2.getResources().get(r));
-		assertTrue(offering.get(r) == p2.getNumResources());
+		assertTrue(offering.get(r) == clientGame.getPlayerResources(p2.getColour()));
 		assertTrue(wanting.get(r2) == p.getResources().get(r2));
 		assertTrue(wanting.get(r2) == p.getNumResources());
 	}

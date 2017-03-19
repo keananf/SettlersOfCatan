@@ -7,7 +7,7 @@ import exceptions.*;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
-import game.players.NetworkPlayer;
+import game.players.ServerPlayer;
 import game.players.Player;
 import grid.Hex;
 import intergroup.board.Board;
@@ -80,7 +80,7 @@ public class GameAndResourcesTests extends TestHelper
 			throws InvalidCoordinatesException, CannotStealException, SettlementExistsException, BankLimitException
 	{
 		// Make a second player
-		Player p2 = new NetworkPlayer(Colour.RED, "");
+		Player p2 = new ServerPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		game.addPlayer(p2);
 

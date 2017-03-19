@@ -43,7 +43,7 @@ public abstract class AICore implements IAI
 		
 		//TODO: check if a player can play a development card
 		
-		ArrayList<BoardElement> elements = client.getMoveProcessor().getBuildingPossibilities();
+		ArrayList<BoardElement> elements = (ArrayList<BoardElement>) client.getMoveProcessor().getBuildingPossibilities();
 		
 		for(BoardElement e: elements)
 		{
@@ -132,7 +132,7 @@ public abstract class AICore implements IAI
 		Node buildNode = null;
 		
 		//get all BoardElements
-		ArrayList<BoardElement> elements = client.getMoveProcessor().getBuildingPossibilities();
+		ArrayList<BoardElement> elements = (ArrayList<BoardElement>) client.getMoveProcessor().getBuildingPossibilities();
 		
 		ArrayList<Node> nodes = new ArrayList<Node>();
 		//take out the nodes

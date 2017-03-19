@@ -213,6 +213,7 @@ public class Server implements Runnable
 	 */
 	private void broadcastEvent(Event ev) throws IOException
 	{
+		boolean foo = false;
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(ev);
 
@@ -221,6 +222,7 @@ public class Server implements Runnable
 		{
 			// Send original to player
 			connections.get(game.getPlayer(ev.getInstigator().getId()).getColour()).sendMessage(msg.build());
+			foo = true;
 
 			// Obscure important info from other players
 			if(ev.getTypeCase().equals(Event.TypeCase.RESOURCESTOLEN))
@@ -232,6 +234,12 @@ public class Server implements Runnable
 		// For each player
 		for(Colour c : Colour.values())
 		{
+			// Skip sending message if already sent
+			if(foo && c.equals(game.getPlayer(ev.getInstigator().getId()).getColour()))
+			{
+				continue;
+			}
+
 			if(connections.containsKey(c))
 			{
 				connections.get(c).sendMessage(msg.build());

@@ -8,17 +8,19 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 
-public final class SpinCamController implements InputProcessor
+public final class CatanCamController implements InputProcessor
 {
 	private static final Vector3 ORIGIN = new Vector3(0f, 0f, 0f);
 	private static final Vector3 Y_AXIS = new Vector3(0f, 1f, 0f);
 	private static final float SPIN_RATE = 4f;
 	private static final float ZOOM_RATE = 0.9f;
+	private static final float MAX_DIST = 20f;
+	private static final float MIN_DIST = 5f;
 
 	private final Camera camera;
 	private final HashSet<Integer> heldKeys = new HashSet<Integer>();
 
-	public SpinCamController(final Camera camera)
+	public CatanCamController(final Camera camera)
 	{
 		this.camera = camera;
 	}
@@ -37,14 +39,14 @@ public final class SpinCamController implements InputProcessor
 			camera.rotateAround(ORIGIN, Y_AXIS, SPIN_RATE);
 			changed = true;
 		}
-		if (heldKeys.contains(Keys.UP))
+		if (heldKeys.contains(Keys.UP) && camera.position.dst(ORIGIN) > MIN_DIST)
 		{
 			camera.position.scl(ZOOM_RATE);
 			changed = true;
 		}
-		if (heldKeys.contains(Keys.DOWN))
+		if (heldKeys.contains(Keys.DOWN) && camera.position.dst(ORIGIN) < MAX_DIST)
 		{
-			camera.position.scl(1 / ZOOM_RATE);
+			camera.position.scl(1/ZOOM_RATE);
 			changed = true;
 		}
 

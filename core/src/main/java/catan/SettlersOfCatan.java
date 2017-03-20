@@ -6,11 +6,10 @@ import client.ClientGame;
 import client.LocalClient;
 import client.RemoteClient;
 import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-public class SettlersOfCatan extends Game
+public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	public Skin skin;
 	private Client client;

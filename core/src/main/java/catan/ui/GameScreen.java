@@ -25,11 +25,12 @@ import com.badlogic.gdx.graphics.g3d.attributes.FloatAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.utils.Array;
-import grid.Hex;
+
+import java.util.Map.Entry;
+import java.awt.Point;
 
 import enums.ResourceType;
-
-import board.Hex;
+import grid.Hex;
 import catan.SettlersOfCatan;
 
 public class GameScreen implements Screen

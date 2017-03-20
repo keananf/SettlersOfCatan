@@ -1,5 +1,6 @@
 package server;
 
+import com.badlogic.gdx.Gdx;
 import intergroup.Events;
 import intergroup.Messages.Message;
 
@@ -26,7 +27,7 @@ public class Logger
 				break;
 		}
 
-		// TODO uncomment.
-		// Gdx.app.debug("Server", str);
+		if(Gdx.app != null)
+			Gdx.app.log("Server", str);
 	}
 }

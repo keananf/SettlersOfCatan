@@ -1,5 +1,6 @@
 package connection;
 
+import com.badlogic.gdx.Gdx;
 import intergroup.Messages;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -30,7 +31,7 @@ public class LocalServerConnection implements IServerConnection
         while(fromServer.isEmpty()) {}
 
         Messages.Message m = fromServer.poll();
-        System.out.println(String.format("Received %s", m.getEvent().getTypeCase().name()));
+        Gdx.app.log("Event", String.format("Received %s", m.getEvent().getTypeCase().name()));
         return m;
     }
 

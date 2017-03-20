@@ -58,12 +58,12 @@ public class MainMenuScreen implements Screen
 		}
 
 		{
-			TextButton button = new TextButton("Host New Multi-Player Game", game.skin);
+			TextButton button = new TextButton("Host New Multiplayer Game", game.skin);
 			button.addListener(new ChangeListener()
 			{
 				public void changed(ChangeEvent event, Actor actor)
 				{
-					Gdx.app.debug("UI", "Button click: Host New Multi-Player Game");
+					Gdx.app.debug("UI", "Button click: Host New Multiplayer Game");
 
 					game.startNewServer();
 					game.setScreen(new GameScreen(game));

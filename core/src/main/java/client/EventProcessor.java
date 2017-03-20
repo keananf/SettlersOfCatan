@@ -1,5 +1,6 @@
 package client;
 
+import com.badlogic.gdx.Gdx;
 import connection.IServerConnection;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
@@ -62,7 +63,7 @@ public class EventProcessor implements Runnable
     private void processEvent(Event ev) throws Exception
     {
 		updateExpectedMoves(ev);
-		System.out.println("Processing event");
+		Gdx.app.log("Event Proc", String.format("Processing event %s", ev.getTypeCase().name()));
 
         // Switch on type of event
         switch(ev.getTypeCase())
@@ -98,7 +99,7 @@ public class EventProcessor implements Runnable
 			case BEGINGAME:
 				client.setGame(new ClientGame());
 				getGame().setBoard(ev.getBeginGame());
-				System.out.println("Game Information Received...");
+				Gdx.app.log("Event Proc", "Game information received");
 				break;
 			case CHATMESSAGE:
 				getGame().writeMessage(ev.getChatMessage(), ev.getInstigator());

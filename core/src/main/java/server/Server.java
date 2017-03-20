@@ -1,5 +1,6 @@
 package server;
 
+import com.badlogic.gdx.Gdx;
 import connection.RemoteClientConnection;
 import enums.Colour;
 import exceptions.GameFullException;
@@ -58,7 +59,7 @@ public class Server implements Runnable
 		catch (IOException e)
 		{
 			e.printStackTrace();
-			System.out.println("Error connecting players");
+			Gdx.app.log("Server Setup", "Error connecting players");
 		}
 
 		shutDown();
@@ -261,7 +262,7 @@ public class Server implements Runnable
 
 		serverSocket = new ServerSocket();
 		serverSocket.bind(new InetSocketAddress("localhost", PORT));
-		System.out.println(String.format("Server started. Waiting for client(s)...%s\n", serverSocket.getInetAddress()));
+		Gdx.app.log("Server Setup", String.format("Server started. Waiting for client(s)...%s\n", serverSocket.getInetAddress()));
 
 		// Loop until all players found
 		while(numConnections < Game.NUM_PLAYERS)
@@ -277,7 +278,7 @@ public class Server implements Runnable
 				}
 				catch (GameFullException e) {}
 				connections.put(c, new ListenerThread(new RemoteClientConnection(connection), c,  this));
-				System.out.println(String.format("Player %d connected", numConnections));
+				Gdx.app.log("Server Setup", String.format("Player %d connected", numConnections));
 				numConnections++;
 			}
 		}

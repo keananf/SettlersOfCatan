@@ -1,5 +1,6 @@
 package server;
 
+import com.badlogic.gdx.Gdx;
 import connection.LocalClientConnection;
 import enums.Colour;
 import exceptions.GameFullException;
@@ -33,7 +34,7 @@ public class LocalServer extends Server
         }
         catch (GameFullException e) {}
         connections.put(c, new ListenerThread(connection, c,  this));
-        System.out.println(String.format("Player %d connected", numConnections));
+        Gdx.app.log("Server Setup", String.format("Player %d connected", numConnections));
         numConnections++;
 
         return c;

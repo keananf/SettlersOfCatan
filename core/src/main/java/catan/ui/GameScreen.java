@@ -68,7 +68,7 @@ public class GameScreen implements Screen
 	private void initCamera()
 	{
 		cam = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(10f, 8f, 0f);
+		cam.position.set(0f, 8f, -10f);
 		cam.lookAt(0, 0, 0); // look at centre of world
 		cam.near = 0.01f; // closest things to be rendered
 		cam.far = 300f; // furthest things to be rendered

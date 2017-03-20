@@ -1,8 +1,7 @@
-package board;
+package grid;
 
+import intergroup.board.Board;
 import game.build.Road;
-import protocol.BoardProtos.EdgeProto;
-import protocol.BuildProtos.PointProto;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
  * 
  * @author 140001596
  */
-public class Edge
+public class Edge implements BoardElement
 {
 	private Node x, y; // way of uniquely describing an edge
 	private Road road;
@@ -235,20 +234,20 @@ public class Edge
 	/**
 	 * @return the version of this edge that can be sent across the network
 	 */
-	public EdgeProto toEdgeProto()
+	public Board.Edge toEdgeProto()
 	{
-		EdgeProto.Builder e = EdgeProto.newBuilder();
-		PointProto.Builder p = PointProto.newBuilder();
+		Board.Point.Builder p = Board.Point.newBuilder();
+		Board.Edge.Builder e = Board.Edge.newBuilder();
 
 		// Node 1
-		p.setX(x.getX());
-		p.setY(x.getY());
-		e.setP1(p.build());
+		p.setX(getX().getX());
+		p.setY(getX().getY());
+		e.setA(p.build());
 
 		// Node 2
-		p.setX(y.getX());
-		p.setY(y.getY());
-		e.setP2(p.build());
+		p.setX(getY().getX());
+		p.setY(getY().getY());
+		e.setB(p.build());
 
 		return e.build();
 	}

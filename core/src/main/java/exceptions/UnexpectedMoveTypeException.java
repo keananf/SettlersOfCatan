@@ -1,7 +1,8 @@
 package exceptions;
 
-import protocol.MessageProtos.*;
+import intergroup.Messages.*;
 
+@SuppressWarnings("serial")
 public class UnexpectedMoveTypeException extends Exception
 {
 	private Message msg;
@@ -21,10 +22,7 @@ public class UnexpectedMoveTypeException extends Exception
 			str = "Event";
 			break;
 		case REQUEST:
-			str = "Request: " + msg.getRequest().getTypeCase().name();
-			break;
-		case RESPONSE:
-			str = "Response";
+			str = "Request: " + msg.getRequest().getBodyCase().name();
 			break;
 		}
 

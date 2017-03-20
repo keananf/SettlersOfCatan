@@ -1,8 +1,8 @@
 package tests;
 
-import board.Edge;
-import board.Hex;
-import board.Node;
+import game.players.ServerPlayer;
+import intergroup.board.Board;
+import grid.*;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
@@ -10,7 +10,6 @@ import exceptions.*;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
-import game.players.NetworkPlayer;
 import game.players.Player;
 import server.ServerGame;
 
@@ -20,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 public class TestHelper
 {
 	protected ServerGame game;
-	protected NetworkPlayer p;
+	protected ServerPlayer p;
 	protected Node n;
 	protected Hex hex;
 
@@ -33,9 +32,14 @@ public class TestHelper
 		// Build settlement
 		try
 		{
-			((NetworkPlayer) p).buildSettlement(n);
+			game.setCurrentPlayer(p.getColour());
+			game.buildSettlement(n.toProto());
 		}
 		catch (IllegalPlacementException | CannotAffordException e)
+		{
+			e.printStackTrace();
+		}
+		catch (InvalidCoordinatesException | BankLimitException e)
 		{
 			e.printStackTrace();
 		}
@@ -47,38 +51,49 @@ public class TestHelper
 		return (Settlement) p.getSettlements().values().toArray()[p.getSettlements().values().size() - 1];
 	}
 
-	protected City makeCity(Node n)
+	protected City makeCity(Player p, Node n)
 	{
 		assertTrue(hasResources(p));
+		int old = p.getSettlements().size();
 
 		// Build settlement
 		try
 		{
-			p.upgradeSettlement(n);
+			game.setCurrentPlayer(p.getColour());
+			game.upgradeSettlement(n.toProto());
 		}
 		catch (CannotAffordException | CannotUpgradeException e)
 		{
 			e.printStackTrace();
 		}
+		catch (BankLimitException | InvalidCoordinatesException e)
+		{
+			e.printStackTrace();
+		}
 
 		// Test it was built correctly and that resources were taken away
-		assertTrue(p.getSettlements().size() == 1);
+		assertTrue(p.getSettlements().size() == old);
 
 		return (City) p.getSettlements().values().toArray()[p.getSettlements().values().size() - 1];
 	}
 
-	protected Road buildRoad(Edge e) throws CannotBuildRoadException, RoadExistsException
+	protected Road buildRoad(Player p, Edge e) throws CannotBuildRoadException, RoadExistsException
 	{
 		int oldSize = p.getRoads().size();
 
 		assertTrue(hasResources(p));
 		try
 		{
-			p.buildRoad(e);
+			game.setCurrentPlayer(p.getColour());
+			game.buildRoad(e.toEdgeProto());
 		}
 		catch (CannotAffordException ex)
 		{
 			ex.printStackTrace();
+		}
+		catch (InvalidCoordinatesException | BankLimitException e1)
+		{
+			e1.printStackTrace();
 		}
 
 		// Test it was built correctly and that resources were taken away
@@ -96,7 +111,7 @@ public class TestHelper
 		assertTrue(hasResources(p));
 		try
 		{
-			c = p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding);
+			c = ((ServerPlayer) p).buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
 		}
 		catch (CannotAffordException ex)
 		{
@@ -115,7 +130,6 @@ public class TestHelper
 		for (ResourceType r : p.getResources().keySet())
 		{
 			if (p.getResources().get(r) > 0) return true;
-
 		}
 
 		return false;
@@ -124,7 +138,8 @@ public class TestHelper
 	protected void reset()
 	{
 		game = new ServerGame();
-		p = new NetworkPlayer(Colour.BLUE);
+		p = new ServerPlayer(Colour.BLUE, "");
+		p.setId(Board.Player.Id.PLAYER_1);
 		game.addPlayer(p);
 		game.setCurrentPlayer(p.getColour());
 
@@ -149,6 +164,7 @@ public class TestHelper
 
 			// Skip if this one isn't the desert
 			if (valid && hex.getResource() != ResourceType.Generic && !hex.hasRobber()) break;
+
 		}
 	}
 }

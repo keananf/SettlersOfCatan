@@ -1,15 +1,14 @@
-package board;
+package grid;
 
-public abstract class BoardElement
+public abstract class GridElement implements BoardElement
 {
 	private int x, y; // coordinates
-
-	protected BoardElement(int x, int y)
+	protected GridElement(int x, int y)
 	{
 		setX(x);
 		setY(y);
 	}
-
+	
 	/**
 	 * @return the x
 	 */
@@ -41,5 +40,6 @@ public abstract class BoardElement
 	{
 		this.y = y;
 	}
+
 
 }

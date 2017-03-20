@@ -1,9 +1,7 @@
-package board;
+package grid;
 
+import intergroup.board.Board;
 import enums.ResourceType;
-import protocol.BoardProtos.EdgeProto;
-import protocol.BoardProtos.PortProto;
-import protocol.BuildProtos;
 
 import java.awt.*;
 import java.util.*;
@@ -84,9 +82,9 @@ public class HexGrid
 	 * @param node the node
 	 * @return a list of neighbouring elements
 	 */
-	private List<BoardElement> getNeighbours(Node node)
+	private List<GridElement> getNeighbours(Node node)
 	{
-		List<BoardElement> neighbours = new LinkedList<BoardElement>();
+		List<GridElement> neighbours = new LinkedList<GridElement>();
 
 		// Find all 6 neighbours
 		for (int i = -1; i <= 1; i++)
@@ -118,10 +116,10 @@ public class HexGrid
 		for (Node node : nodes.values())
 		{
 			List<Hex> adjacentHexes = new LinkedList<Hex>();
-			List<BoardElement> neighbours = getNeighbours(node);
-
+			List<GridElement> neighbours = getNeighbours(node);
+			
 			// Create both edges AND find the adjacent hexes
-			for (BoardElement neighbour : neighbours)
+			for(GridElement neighbour : neighbours)
 			{
 				// If neighbour is a node, create an edge
 				if (neighbour instanceof Node)
@@ -282,6 +280,20 @@ public class HexGrid
 		return hexWithRobber;
 	}
 
+	public Hex getDesert()
+	{
+		Hex desert = null;
+		for (Hex h : grid.values())
+		{
+			if (h.getResource().equals(ResourceType.Generic))
+			{
+				desert = h;
+				break;
+			}
+		}
+		return desert;
+	}
+
 	/**
 	 * Retrieve the hex at the given coordinates
 	 * 
@@ -354,45 +366,32 @@ public class HexGrid
 	}
 
 	/**
-	 * @param road the protobuf version of the road to find
+	 * Finds the edge associated with the two points
+	 * 
+	 * @param p1 the first point
+	 * @param p2 the second point
 	 * @return the internal version of the road
 	 */
-	public Edge getEdge(BuildProtos.RoadProto road)
+	public Edge getEdge(Board.Point p1, Board.Point p2)
 	{
 		// Find nodes and edges
-		Node n1 = getNode(road.getP1().getX(), road.getP1().getY());
-		Node n2 = getNode(road.getP2().getX(), road.getP2().getY());
+		Node n1 = getNode(p1.getX(), p1.getY());
+		Node n2 = getNode(p2.getX(), p2.getY());
 		Edge e = n1.findEdge(n2);
 
 		return e;
 	}
 
 	/**
-	 * @param edge the protobuf version of the edge to find
-	 * @return the internal version of the edge
-	 */
-	public Edge getEdge(EdgeProto edge)
-	{
-		// Find nodes and edges
-		Node n1 = getNode(edge.getP1().getX(), edge.getP1().getY());
-		Node n2 = getNode(edge.getP2().getX(), edge.getP2().getY());
-		Edge e = n1.findEdge(n2);
-
-		return e;
-	}
-
-	/**
-	 * @param port the protobuf version of the port to find
+	 * Finds the port associated with the two points
+	 * 
+	 * @param p1 the first point
+	 * @param p2 the second point
 	 * @return the internal version of the port
 	 */
-	public Port getPort(PortProto port)
+	public Port getPort(Board.Point p1, Board.Point p2)
 	{
-		// Find nodes and edges
-		Node n1 = getNode(port.getP1().getX(), port.getP1().getY());
-		Node n2 = getNode(port.getP2().getX(), port.getP2().getY());
-		Edge e = n1.findEdge(n2);
-
-		return (Port) e;
+		return (Port) getEdge(p1, p2);
 	}
 
 	/**
@@ -426,6 +425,14 @@ public class HexGrid
 		for (Hex h : hexes)
 		{
 			this.grid.put(new Point(h.getX(), h.getY()), h);
+
+			// Set default robber
+			if (h.getResource().equals(ResourceType.Generic)
+					&& hexWithRobber.getResource().equals(ResourceType.Generic))
+			{
+				h.toggleHasRobber();
+				hexWithRobber = h;
+			}
 		}
 
 		// for each column

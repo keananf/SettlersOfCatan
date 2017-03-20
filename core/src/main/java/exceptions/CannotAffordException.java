@@ -1,13 +1,14 @@
 package exceptions;
 
 import enums.ResourceType;
-import protocol.ResourceProtos;
+import intergroup.resource.Resource;
 
 import java.util.*;
 
 @SuppressWarnings("serial")
 public class CannotAffordException extends Exception
 {
+	private String msg;
 	Map<ResourceType, Integer> resources, cost;
 
 	public CannotAffordException(Map<ResourceType, Integer> resources, Map<ResourceType, Integer> cost)
@@ -16,7 +17,7 @@ public class CannotAffordException extends Exception
 		this.cost = cost;
 	}
 
-	public CannotAffordException(Map<ResourceType, Integer> resources, ResourceProtos.ResourceCount offer)
+	public CannotAffordException(Map<ResourceType, Integer> resources, Resource.Counts offer)
 	{
 		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer>();
 		cost.put(ResourceType.Brick, offer.getBrick());
@@ -29,8 +30,18 @@ public class CannotAffordException extends Exception
 		this.cost = cost;
 	}
 
-	public String getMessage()
+    public CannotAffordException(String msg) 
 	{
+		this.msg = msg;
+    }
+
+    public String getMessage()
+	{
+		if(msg != null)
+		{
+			return msg;
+		}
+
 		return String.format("Cannot afford due to resource: %s.", getInsufficientResource().toString());
 	}
 

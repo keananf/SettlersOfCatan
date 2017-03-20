@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package intergroup.terrain;
+
+enum Kind {
+    HILLS = 0;
+    PASTURE = 1;
+    MOUNTAINS = 2;
+    FIELDS = 3;
+    FOREST = 4;
+    DESERT = 5;
+}

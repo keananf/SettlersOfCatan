@@ -1,11 +1,8 @@
-package board;
+package grid;
 
+import intergroup.board.Board;
 import enums.Colour;
 import game.build.Building;
-import game.build.City;
-import protocol.BoardProtos.NodeProto;
-import protocol.BuildProtos;
-import protocol.EnumProtos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +12,7 @@ import java.util.List;
  * 
  * @author 140001596
  */
-public class Node extends BoardElement
+public class Node extends GridElement
 {
 	private List<Hex> hexes;
 	private List<Edge> edges;
@@ -154,25 +151,15 @@ public class Node extends BoardElement
 	 * @return converts this Node into a similar representation that is also
 	 *         compatible with protobufs
 	 */
-	public NodeProto toProto()
+	public Board.Point toProto()
 	{
 		int index = 0;
-		NodeProto.Builder nodeBuilder = NodeProto.newBuilder();
-		BuildProtos.PointProto.Builder coords = BuildProtos.PointProto.newBuilder();
+		Board.Point.Builder coords = Board.Point.newBuilder();
 
 		coords.setX(getX());
 		coords.setY(getY());
-		nodeBuilder.setP(coords.build());
 
-		// Add Building
-		if (getSettlement() != null)
-		{
-			nodeBuilder.setBuilding(getSettlement().toProto().build());
-			nodeBuilder.setBuildingType(settlement instanceof City ? EnumProtos.BuildingTypeProto.CITY
-					: EnumProtos.BuildingTypeProto.SETTLEMENT);
-		}
-
-		return nodeBuilder.build();
+		return coords.build();
 	}
 
 	/**

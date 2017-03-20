@@ -10,11 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
 import catan.SettlersOfCatan;
 
 public class MainMenuScreen implements Screen
@@ -82,6 +80,8 @@ public class MainMenuScreen implements Screen
 				{
 					Gdx.app.debug("UI", "Button click: Join existing multiplayer game");
 
+					// TODO retrieve host name from text user entered in
+					// TODO game.startRemoteClient(hostname);
 					game.setScreen(new GameScreen(game));
 				}
 			});

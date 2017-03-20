@@ -1,8 +1,6 @@
 package catan.ui;
 
-import java.awt.Point;
-import java.util.Map.Entry;
-
+import catan.SettlersOfCatan;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
@@ -27,6 +25,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.FloatAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.utils.Array;
+import grid.Hex;
 
 import enums.ResourceType;
 
@@ -120,15 +119,15 @@ public class GameScreen implements Screen
 
 	private static final Vector3 hexPointToCartVec(Point p)
 	{
-		final float x = (float)(p.getX());
-		final float y = (float)(p.getY());
-		return new Vector3(x, 0f, (float)((2*y-x)/Math.sqrt(3)));
+		final float x = (float) (p.getX());
+		final float y = (float) (p.getY());
+		return new Vector3(x, 0f, (float) ((2 * y - x) / Math.sqrt(3)));
 	}
 
 	@Override
 	public void render(final float delta)
 	{
-		Gdx.gl.glClearColor(0/255, 128/255, 255/255, 1);
+		Gdx.gl.glClearColor(0 / 255, 128 / 255, 255 / 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		camController.update();
@@ -147,9 +146,28 @@ public class GameScreen implements Screen
 	}
 
 	// Required but unused
-	@Override public void resize(final int width, final int height) {}
-	@Override public void pause() {}
-	@Override public void resume() {}
-	@Override public void hide() {}
-	@Override public void show() {}
+	@Override
+	public void resize(final int width, final int height)
+	{
+	}
+
+	@Override
+	public void pause()
+	{
+	}
+
+	@Override
+	public void resume()
+	{
+	}
+
+	@Override
+	public void hide()
+	{
+	}
+
+	@Override
+	public void show()
+	{
+	}
 }

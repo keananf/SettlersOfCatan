@@ -1,16 +1,17 @@
 package game;
 
-import board.Edge;
-import board.Hex;
-import board.HexGrid;
-import board.Node;
 import enums.Colour;
 import enums.ResourceType;
 import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.players.Player;
-import protocol.ResourceProtos.ResourceCount;
+import grid.Edge;
+import grid.Hex;
+import grid.HexGrid;
+import grid.Node;
+import intergroup.board.Board;
+import intergroup.resource.Resource;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,48 +21,56 @@ public abstract class Game
 {
 	protected HexGrid grid;
 	protected Map<Colour, Player> players;
+	protected Map<Board.Player.Id, Colour> idsToColours;
 	protected Colour currentPlayer;
 	protected Colour playerWithLongestRoad;
 	protected Colour playerWithLargestArmy;
 	protected int longestRoad;
 	protected int largestArmy;
+	protected Bank bank;
+	protected int numPlayers;
+	protected int current; // index of current player
 	public static final int NUM_PLAYERS = 4;
 	public static final int MIN_ROAD_LENGTH = 5;
 	public static final int MIN_ARMY_SIZE = 3;
 
 	public Game()
 	{
+		bank = new Bank();
 		grid = new HexGrid();
 		players = new HashMap<Colour, Player>();
+		idsToColours = new HashMap<Board.Player.Id, Colour>();
 	}
 
 	/**
 	 * Retrieves the resources granted to this specific player based on the dice
-	 * 
 	 * @param dice the dice roll
 	 * @param c the colour to get the new resources for
 	 * @return the map of new resources to grant
 	 */
-	protected Map<ResourceType, Integer> getNewResources(int dice, Colour c)
+	public Map<ResourceType, Integer> getNewResources(int dice, Colour c)
 	{
 		int resourceLimit = 7;
 		Player player = players.get(c);
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
 		// If 7, check that no one is above the resource limit
-		if (dice == resourceLimit) { return grant; }
+		if(dice == resourceLimit)
+		{
+			return grant;
+		}
 
 		// for each of this player's settlements
-		for (Building building : player.getSettlements().values())
+		for(Building building : player.getSettlements().values())
 		{
 			int amount = building instanceof City ? 2 : 1;
 			List<Hex> hexes = building.getNode().getHexes();
 
 			// for each hex on this settlement
-			for (Hex hex : hexes)
+			for(Hex hex : hexes)
 			{
 				// If the hex's chit is equal to the dice roll
-				if (hex.getChit() == dice && !hex.hasRobber())
+				if(hex.getChit() == dice && !hex.hasRobber())
 				{
 					grant.put(hex.getResource(), amount);
 				}
@@ -71,28 +80,48 @@ public abstract class Game
 	}
 
 	/**
-	 * Translates the protobuf representation of a resources allocation into a
-	 * map.
-	 * 
+	 * Translates the protobuf representation of a resources allocation into a map.
 	 * @param resources the resources received from the network
 	 * @return a map of resources to number
 	 */
-	protected Map<ResourceType, Integer> processResources(ResourceCount resources)
+	public Map<ResourceType,Integer> processResources(Resource.Counts resources)
 	{
-		Map<ResourceType, Integer> ret = new HashMap<ResourceType, Integer>();
+		Map<ResourceType,Integer> ret = new HashMap<ResourceType,Integer>();
 
-		ret.put(ResourceType.Brick, resources.hasBrick() ? resources.getBrick() : 0);
-		ret.put(ResourceType.Lumber, resources.hasLumber() ? resources.getLumber() : 0);
-		ret.put(ResourceType.Grain, resources.hasGrain() ? resources.getGrain() : 0);
-		ret.put(ResourceType.Ore, resources.hasOre() ? resources.getOre() : 0);
-		ret.put(ResourceType.Wool, resources.hasWool() ? resources.getWool() : 0);
+		// Add all resources with amounts
+		if(resources.getBrick() > 0)
+			ret.put(ResourceType.Brick, resources.getBrick());
+		if(resources.getLumber() > 0)
+			ret.put(ResourceType.Lumber, resources.getLumber());
+		if(resources.getGrain() > 0)
+			ret.put(ResourceType.Grain, resources.getGrain());
+		if(resources.getOre() > 0)
+			ret.put(ResourceType.Ore, resources.getOre());
+		if(resources.getWool() > 0)
+			ret.put(ResourceType.Wool, resources.getWool());
 
 		return ret;
 	}
 
 	/**
+	 * Converts a map of resources into an object combatible with protobufs
+	 * @param map the map to convert
+	 * @return the protobuf representation of the map
+	 */
+	public Resource.Counts processResources(Map<ResourceType, Integer> map)
+	{
+		Resource.Counts.Builder resources = Resource.Counts.newBuilder();
+		resources.setGrain(map.containsKey(ResourceType.Grain) ? map.get(ResourceType.Grain) : 0);
+		resources.setBrick(map.containsKey(ResourceType.Brick) ? map.get(ResourceType.Brick) : 0);
+		resources.setOre(map.containsKey(ResourceType.Ore) ? map.get(ResourceType.Ore) : 0);
+		resources.setWool(map.containsKey(ResourceType.Wool) ? map.get(ResourceType.Wool) : 0);
+		resources.setLumber(map.containsKey(ResourceType.Lumber) ? map.get(ResourceType.Lumber) : 0);
+
+		return resources.build();
+	}
+
+	/**
 	 * Checks and updates who has the longest road
-	 * 
 	 * @param broken if this method is being called after a road was broken
 	 */
 	protected void checkLongestRoad(boolean broken)
@@ -100,21 +129,22 @@ public abstract class Game
 		Player playerWithLongestRoad = players.get(this.playerWithLongestRoad);
 
 		// Calculate who has longest road
-		for (Colour c : Colour.values())
+		for(Colour c : Colour.values())
 		{
-			if (!players.containsKey(c)) continue;
+			if(!players.containsKey(c))
+				continue;
 
 			Player player = players.get(c);
 			int length = player.calcRoadLength();
-			if (length > longestRoad || (broken && c.equals(currentPlayer)))
+			if(length > longestRoad || (broken && c.equals(currentPlayer)))
 			{
 				// Update victory points
-				if (longestRoad >= MIN_ROAD_LENGTH)
+				if(longestRoad >= MIN_ROAD_LENGTH)
 				{
 					playerWithLongestRoad.addVp(-2);
 				}
 				if (length >= MIN_ROAD_LENGTH) player.addVp(2);
-				if (playerWithLongestRoad != null) playerWithLongestRoad.setHasLongestRoad(false);
+				if(playerWithLongestRoad != null) playerWithLongestRoad.setHasLongestRoad(false);
 
 				longestRoad = length;
 				this.playerWithLongestRoad = c;
@@ -124,26 +154,25 @@ public abstract class Game
 	}
 
 	/**
-	 * This API is used for both the client and server when determining if a new
-	 * settlement has broken a road chain.
-	 * 
+	 * This API is used for both the client and server when determining
+	 * if a new settlement has broken a road chain.
 	 * @param node
 	 */
 	protected void checkIfRoadBroken(Node node)
 	{
 		// Check all combinations of edges to check if a road chain was broken
-		for (int i = 0; i < node.getEdges().size(); i++)
+		for(int i = 0; i < node.getEdges().size(); i++)
 		{
 			boolean broken = false;
-			for (int j = 0; j < node.getEdges().size(); j++)
+			for(int j = 0; j < node.getEdges().size(); j++)
 			{
 				Edge e = node.getEdges().get(i), other = node.getEdges().get(j);
 				Road r = e.getRoad(), otherR = other.getRoad();
 
-				if (e.equals(other)) continue;
+				if(e.equals(other)) continue;
 
 				// If this settlement is between two roads of the same colour
-				if (r != null && otherR != null && r.getPlayerColour().equals(otherR.getPlayerColour()))
+				if(r != null && otherR != null && r.getPlayerColour().equals(otherR.getPlayerColour()))
 				{
 					// retrieve owner of roads and break the road chain
 					players.get(e.getRoad().getPlayerColour()).breakRoad(e, other);
@@ -151,7 +180,7 @@ public abstract class Game
 					break;
 				}
 			}
-			if (broken)
+			if(broken)
 			{
 				checkLongestRoad(broken);
 				break;
@@ -167,27 +196,37 @@ public abstract class Game
 		Player playerWithLargestArmy = players.get(this.playerWithLargestArmy);
 
 		// Calculate who has longest road
-		for (Colour c : Colour.values())
+		for(Colour c : Colour.values())
 		{
-			if (!players.containsKey(c)) continue;
+			if(!players.containsKey(c))
+				continue;
 
 			Player player = players.get(c);
 			int armySize = player.getArmySize();
-			if (armySize > largestArmy)
+			if(armySize > largestArmy)
 			{
 				// Update victory points
-				if (largestArmy >= MIN_ARMY_SIZE)
+				if(largestArmy >= MIN_ARMY_SIZE)
 				{
 					playerWithLargestArmy.addVp(-2);
 				}
 				if (armySize >= MIN_ARMY_SIZE) player.addVp(2);
-				if (playerWithLargestArmy != null) playerWithLargestArmy.setHasLargestArmy(false);
+				if(playerWithLargestArmy != null) playerWithLargestArmy.setHasLargestArmy(false);
 
 				largestArmy = armySize;
 				this.playerWithLargestArmy = c;
 				player.setHasLargestArmy(true);
 			}
 		}
+	}
+
+
+	/**
+	 * Chooses first player.
+	 */
+	public void chooseFirstPlayer()
+	{
+		setCurrentPlayer(getPlayer(Board.Player.Id.PLAYER_1).getColour());
 	}
 
 	/**
@@ -215,13 +254,16 @@ public abstract class Game
 	}
 
 	/**
-	 * Sets the turn to the given colour
-	 * 
-	 * @param colour the new turn
+	 * @return the next player
 	 */
-	public void setTurn(Colour colour)
+	public Colour getNextPlayer()
 	{
-		setCurrentPlayer(colour);
+		return getPlayer(Board.Player.Id.values()[++current % NUM_PLAYERS]).getColour();
+	}
+
+	public Player[] getPlayersAsList()
+	{
+		return players.values().toArray(new Player[]{});
 	}
 
 	/**
@@ -230,5 +272,37 @@ public abstract class Game
 	public Map<Colour, Player> getPlayers()
 	{
 		return players;
+	}
+
+	/**
+	 * Retrieves the corresponding player
+	 * @param col the player's colour
+	 * @return
+	 */
+	public Player getPlayer(Colour col)
+	{
+		return players.get(col);
+	}
+
+	/**
+	 * Retrieves the corresponding player
+	 * @param id the player's id
+	 * @return
+	 */
+	public Player getPlayer(Board.Player.Id id)
+	{
+		enums.Colour col = idsToColours.get(id);
+		return players.get(col);
+	}
+
+	public void addPlayer(Player clientPlayer)
+	{
+		idsToColours.put(clientPlayer.getId(), clientPlayer.getColour());
+		players.put(clientPlayer.getColour(), clientPlayer);
+	}
+
+	public Bank getBank()
+	{
+		return bank;
 	}
 }

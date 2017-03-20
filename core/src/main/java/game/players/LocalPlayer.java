@@ -1,6 +1,6 @@
 package game.players;
 
-import board.Edge;
+import grid.Edge;
 import enums.Colour;
 import exceptions.CannotBuildRoadException;
 import exceptions.RoadExistsException;
@@ -11,9 +11,9 @@ import java.util.List;
 
 public class LocalPlayer extends Player
 {
-	public LocalPlayer(Colour colour)
+	public LocalPlayer(Colour colour, String username)
 	{
-		super(colour);
+		super(colour, username);
 	}
 
 	/**

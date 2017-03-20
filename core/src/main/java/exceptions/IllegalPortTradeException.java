@@ -1,8 +1,9 @@
 package exceptions;
 
-import board.Port;
+import grid.Port;
 import enums.Colour;
 
+@SuppressWarnings("serial")
 public class IllegalPortTradeException extends Exception
 {
 	private Colour offerer;

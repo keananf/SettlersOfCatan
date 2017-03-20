@@ -1,12 +1,11 @@
-package board;
+package grid;
 
 import enums.ResourceType;
+import exceptions.BankLimitException;
 import exceptions.CannotAffordException;
-import exceptions.IllegalPortTradeException;
+import game.Bank;
 import game.players.Player;
-import protocol.BoardProtos.*;
-import protocol.BuildProtos.*;
-import protocol.ResourceProtos.*;
+import intergroup.board.Board;
 
 import java.util.*;
 
@@ -17,8 +16,8 @@ import java.util.*;
  */
 public class Port extends Edge
 {
-	private ResourceType exchangeType, receiveType;
-	private int exchangeAmount, receiveAmount;
+	private ResourceType exchangeType;
+	public static final int EXCHANGE_AMOUNT = 3, RETURN_AMOUNT = 1;
 
 	public Port(Node x, Node y)
 	{
@@ -141,10 +140,7 @@ public class Port extends Edge
 		{
 			Port p = new Port(new Node(0, 0), new Node(-1, -1)); // default
 																	// nodes
-			p.exchangeAmount = 3;
 			p.exchangeType = ResourceType.Generic; // signifies 'Any'
-			p.receiveAmount = 1;
-			p.receiveType = ResourceType.Generic; // signifies 'Any'
 
 			ports.add(p);
 		}
@@ -156,10 +152,7 @@ public class Port extends Edge
 
 			Port p = new Port(new Node(0, 0), new Node(-1, -1)); // default
 																	// nodes
-			p.exchangeAmount = 2;
 			p.exchangeType = r;
-			p.receiveAmount = 1;
-			p.receiveType = ResourceType.Generic;
 
 			ports.add(p);
 		}
@@ -170,25 +163,12 @@ public class Port extends Edge
 	/**
 	 * @return the version of this edge that can be sent across the network
 	 */
-	public PortProto toPortProto()
+	public Board.Harbour toPortProto()
 	{
-		PortProto.Builder port = PortProto.newBuilder();
-		PointProto.Builder p = PointProto.newBuilder();
+		Board.Harbour.Builder port = Board.Harbour.newBuilder();
 
-		// Node 1
-		p.setX(getX().getX());
-		p.setY(getX().getY());
-		port.setP1(p.build());
-
-		// Node 2
-		p.setX(getY().getX());
-		p.setY(getY().getY());
-		port.setP2(p.build());
-
-		port.setExchangeAmount(exchangeAmount);
-		port.setReturnAmount(receiveAmount);
-		port.setExchangeResource(ResourceType.toProto(exchangeType));
-		port.setReturnResource(ResourceType.toProto(receiveType));
+		port.setLocation(toEdgeProto());
+		port.setResource(ResourceType.toProto(exchangeType));
 
 		return port.build();
 	}
@@ -210,78 +190,16 @@ public class Port extends Edge
 	}
 
 	/**
-	 * @return the receiveType
-	 */
-	public ResourceType getReturnType()
-	{
-		return receiveType;
-	}
-
-	/**
-	 * @param receiveType the receiveType to set
-	 */
-	public void setReturnType(ResourceType receiveType)
-	{
-		this.receiveType = receiveType;
-	}
-
-	/**
-	 * @return the exchangeAmount
-	 */
-	public int getExchangeAmount()
-	{
-		return exchangeAmount;
-	}
-
-	/**
-	 * @param exchangeAmount the exchangeAmount to set
-	 */
-	public void setExchangeAmount(int exchangeAmount)
-	{
-		this.exchangeAmount = exchangeAmount;
-	}
-
-	/**
-	 * @return the receiveAmount
-	 */
-	public int getReturnAmount()
-	{
-		return receiveAmount;
-	}
-
-	/**
-	 * @param receiveAmount the receiveAmount to set
-	 */
-	public void setReturnAmount(int receiveAmount)
-	{
-		this.receiveAmount = receiveAmount;
-	}
-
-	/**
 	 * Performs the port trade
 	 * 
 	 * @param offerer the offerer
 	 * @param offer the offer
 	 * @param request the request
 	 */
-	public void exchange(Player offerer, Map<ResourceType, Integer> offer, Map<ResourceType, Integer> request)
-			throws IllegalPortTradeException, CannotAffordException
+	public void exchange(Player offerer, Map<ResourceType, Integer> offer, Map<ResourceType, Integer> request,
+			Bank bank) throws CannotAffordException, BankLimitException
 	{
-		// Can only get one resource from a port, and it must be the same
-		// resource as what is offered
-		if ((request.get(ResourceType.Brick) == 1
-				&& (request.get(ResourceType.Grain) == 1 || request.get(ResourceType.Ore) == 1
-						|| request.get(ResourceType.Wool) == 1 || request.get(ResourceType.Lumber) == 1))
-				|| (!receiveType.equals(ResourceType.Generic)
-						&& ((request.get(ResourceType.Brick) == 1 && !receiveType.equals(ResourceType.Brick))
-								|| (request.get(ResourceType.Lumber) == 1 && !receiveType.equals(ResourceType.Lumber))
-								|| (request.get(ResourceType.Wool) == 1 && !receiveType.equals(ResourceType.Wool))
-								|| (request.get(ResourceType.Grain) == 1 && !receiveType.equals(ResourceType.Grain))
-								|| (request.get(ResourceType.Ore) == 1 && !receiveType
-										.equals(ResourceType.Ore))))) { throw new IllegalPortTradeException(
-												offerer.getColour(), this); }
-
-		offerer.spendResources(offer);
-		offerer.grantResources(request);
+		offerer.spendResources(offer, bank);
+		offerer.grantResources(request, bank);
 	}
 }

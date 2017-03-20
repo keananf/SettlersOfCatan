@@ -1,13 +1,12 @@
 package server;
 
+import connection.IClientConnection;
 import enums.Colour;
-import protocol.EnumProtos;
-import protocol.MessageProtos.Message;
-import protocol.ResponseProtos.Response;
-import protocol.ResponseProtos.SuccessFailResponse;
+import intergroup.Events.ErrorCause;
+import intergroup.Events.Event;
+import intergroup.Messages.Message;
 
 import java.io.IOException;
-import java.net.Socket;
 
 /**
  * Class which simply listens to a socket. The successfully received message is
@@ -16,18 +15,18 @@ import java.net.Socket;
 public class ListenerThread implements Runnable
 {
 	private Thread thread;
-	protected Socket socket;
+	protected IClientConnection conn;
 	private Colour colour;
 	private Server server;
 
-	public ListenerThread(Socket socket, Colour colour, Server server)
-	{
-		this.socket = socket;
-		this.colour = colour;
-		this.server = server;
-		this.thread = new Thread(this);
-		this.thread.start();
-	}
+    public ListenerThread(IClientConnection conn, Colour c, Server server)
+    {
+        this.conn = conn;
+        this.server = server;
+        colour = c;
+        this.thread = new Thread(this);
+        this.thread.start();
+    }
 
 	@Override
 	public void run()
@@ -44,66 +43,66 @@ public class ListenerThread implements Runnable
 		}
 	}
 
-	/**
-	 * Listens for moves from the current player
-	 * 
-	 * @return the bytes received from the current player
-	 * @throws IOException
-	 */
-	private void receiveMoves() throws IOException
-	{
-		// Receive and process moves until the end one is received
-		while (true)
-		{
-			// Parse message and add to queue
-			Message msg = Message.parseFrom(socket.getInputStream());
-			server.addMessageToProcess(msg);
-
+    /**
+     * Listens for moves from the current player
+     * @return the bytes received from the current player
+     * @throws IOException
+     */
+    private void receiveMoves() throws IOException
+    {
+        // Receive and process moves until the end one is received
+        while(true)
+        {
+            // Parse message and add to queue
+            Message msg = conn.getMessageFromClient();
+            server.addMessageToProcess(new ReceivedMessage(colour, msg));
 		}
 	}
 
 	/**
 	 * If an unknown or invalid message is received, then this message sends an
 	 * error back
-	 * 
-	 * @param originalMsg the original message
 	 */
-	protected void sendError(Message originalMsg) throws IOException
+	protected Event.Error getError() throws IOException
 	{
 		// Set up result message
-		Response.Builder response = Response.newBuilder();
-		SuccessFailResponse.Builder result = SuccessFailResponse.newBuilder();
-		result.setResult(EnumProtos.ResultProto.FAILURE);
-		result.setReason("Invalid message type");
+		Event.Error.Builder err = Event.Error.newBuilder();
+		err.setDescription("Invalid message type");
+		err.setCause(ErrorCause.UNRECOGNIZED);
 
-		// Set up wrapper response object
-		response.setSuccessFailResponse(result);
-		response.build().writeTo(socket.getOutputStream());
+		return err.build();
+	}
 
+    /**
+     * Sends the message out to the client
+     * @param msg the message
+     * @throws IOException
+     */
+    public void sendMessage(Message msg) throws IOException
+    {
+        conn.sendMessageToClient(msg);
+    }
+
+	public void sendError() throws IOException
+	{
+		Message.Builder msg = Message.newBuilder();
+		msg.setEvent(Event.newBuilder().setError(getError()).build());
+		sendMessage(msg.build());
 	}
 
 	/**
-	 * Sends response out to the client
-	 * 
-	 * @param response the response message from the last action
-	 * @throws IOException
+	 * Terminates the underlying connection and this thread
 	 */
-	protected void sendResponse(Response response) throws IOException
+	public void shutDown()
 	{
-		response.writeTo(socket.getOutputStream());
-		socket.getOutputStream().flush();
-	}
-
-	/**
-	 * Sends the message out to the client
-	 * 
-	 * @param msg the message
-	 * @throws IOException
-	 */
-	public void sendMessage(Message msg) throws IOException
-	{
-		// Serialise and Send
-		msg.writeTo(socket.getOutputStream());
-		socket.getOutputStream().flush();
+		conn.shutDown();
+		try
+		{
+			thread.join();
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

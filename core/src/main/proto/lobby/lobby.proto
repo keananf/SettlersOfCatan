@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package intergroup.lobby;
+
+import "board/board.proto";
+
+// To join a game, a client must open a TCP connection using
+// the IP of the Game Server. Upon connecting, the client
+// should send the server a Join message.
+message Join {
+    string username = 1;
+
+    // Only clients/AIs which wish to connect to catan
+    // servers that host multiple games will need to specify
+    // the gameId.
+    int32 gameId = 2;
+}
+
+//The list of players that are in the lobby
+message Usernames {
+    repeated string username = 1;
+}
+
+// When the game server is ready to begin the game, it sends a
+// GameSetup event to all players
+message GameSetup {
+    repeated board.Hex hexes = 1;
+    repeated board.Harbour harbours = 2;
+    repeated PlayerSetting playerSettings = 3;
+    // to let a client identify themselves in the playerSettings
+    board.Player ownPlayer = 4;
+
+    message PlayerSetting {
+        string username = 1;
+        board.Player player = 2;
+        Colour colour = 3;
+
+        enum Colour { 
+            RED = 0; 
+            BLUE = 1;
+            ORANGE = 2;
+            WHITE = 3;
+            GREEN = 4;
+            BROWN = 5;
+        }
+    }
+}
+

@@ -1,12 +1,12 @@
 package game.build;
 
-import java.util.*;
+import enums.Colour;
+import enums.ResourceType;
+import grid.Hex;
+import grid.Node;
 
-import enums.*;
-import board.*;
-import protocol.BuildProtos;
-import protocol.BuildProtos.*;
-import protocol.EnumProtos;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Abstract class describing a building (either a settlement or city)
@@ -80,21 +80,23 @@ public abstract class Building implements IBuildable
 		this.playerColour = playerColour;
 	}
 
-	/**
-	 * @return a serialisable form of this building compatible with protobufs
-	 */
-	public BuildingProto.Builder toProto()
-	{
-		BuildProtos.PointProto.Builder coords = BuildProtos.PointProto.newBuilder();
-		BuildProtos.BuildingProto.Builder building = BuildProtos.BuildingProto.newBuilder();
-
-		coords.setX(node.getX());
-		coords.setY(node.getY());
-		building.setP(coords.build());
-		building.setPlayerId(Colour.toProto(getPlayerColour()));
-		building.setType(
-				this instanceof City ? EnumProtos.BuildingTypeProto.CITY : EnumProtos.BuildingTypeProto.SETTLEMENT);
-
-		return building;
-	}
+	/*	*//**
+			 * @return a serialisable form of this building compatible with
+			 *         protobufs
+			 *//*
+			 * public BuildingProto.Builder toProto() {
+			 * BuildProtos.PointProto.Builder coords =
+			 * BuildProtos.PointProto.newBuilder();
+			 * BuildProtos.BuildingProto.Builder building =
+			 * BuildProtos.BuildingProto.newBuilder();
+			 * 
+			 * coords.setX(node.getX()); coords.setY(node.getY());
+			 * building.setP(coords.build());
+			 * building.setPlayerId(Colour.toProto(getPlayerColour()));
+			 * building.setType(this instanceof City ?
+			 * EnumProtos.BuildingTypeProto.CITY :
+			 * EnumProtos.BuildingTypeProto.SETTLEMENT);
+			 * 
+			 * return building; }
+			 */
 }

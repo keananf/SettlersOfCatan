@@ -4,9 +4,9 @@ import enums.Difficulty;
 
 public class VeryEasyAI extends AICore {
 
-	public VeryEasyAI(Difficulty difficulty, AIClient aiClient)
+	public VeryEasyAI(AIClient aiClient)
 	{
-		super(difficulty,aiClient);
+		super(aiClient);
 	}
 
 }

@@ -19,16 +19,14 @@ import java.util.Random;
 
 public abstract class AICore implements IAI
 {
-	Difficulty difficulty;
 	ClientGame game;
 	AIPlayer player;
 	Map<ResourceType, Integer> pips;
 	AIClient client;
 	
-	public AICore(Difficulty difficulty, AIClient client)
+	public AICore(AIClient client)
 	{
 		this.client = client;
-		this.difficulty = difficulty;
 		this.game = client.getState();
 		this.player = (AIPlayer) game.getPlayer();
 	}
@@ -233,6 +231,11 @@ public abstract class AICore implements IAI
 		hex = hexes.get(ran.nextInt(hexes.size()));
 		
 		return hex;
+	}
+	
+	public AIPlayer getPlayer()
+	{
+		return player;
 	}
 	
 }

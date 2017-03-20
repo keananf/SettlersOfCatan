@@ -66,7 +66,7 @@ public abstract class Client
 
     public TurnInProgress getTurn()
     {
-        return turnProcessor.getTurn();
+        return turn;
     }
 
     public MoveProcessor getMoveProcessor()

@@ -5,6 +5,7 @@ import enums.Colour;
 /**
  * Created by 1400001596 on 1/10/17.
  */
+@SuppressWarnings("serial")
 public class IllegalBankTradeException extends Exception
 {
 	private Colour offerer;

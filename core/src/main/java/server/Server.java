@@ -218,7 +218,7 @@ public class Server implements Runnable
 		boolean foo = false;
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(ev);
-		System.out.println(String.format("%s %s", ev.getTypeCase().name(), ev.toString()));
+		//System.out.println(String.format("%s %s", ev.getTypeCase().name(), ev.toString()));
 
 		// Modify event before sending to other players
 		if(ev.getTypeCase().equals(Event.TypeCase.RESOURCESTOLEN) || ev.getTypeCase().equals(Event.TypeCase.DEVCARDBOUGHT))

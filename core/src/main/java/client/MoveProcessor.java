@@ -191,7 +191,7 @@ public class MoveProcessor
      * @param hex the chosen hex
      * @return whether or not the move is valid
      */
-    private boolean checkHex(Hex hex)
+    public boolean checkHex(Hex hex)
     {
         // Ensure this hex doesn't already have the robber, and that the move is expected OR no moves are expected
         return checkTurn() && !hex.equals(getGame().getGrid().getHexWithRobber()) &&
@@ -260,7 +260,10 @@ public class MoveProcessor
             // If the player owns the provided card
             if(player.getDevelopmentCards().containsKey(type) && player.getDevelopmentCards().get(type) > 0)
             {
-                return true;
+                if(player.getDevelopmentCards().get(type) > player.getBoughtCard(type))
+                {
+                	return true;
+                }
             }
         }
 

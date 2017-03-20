@@ -36,6 +36,8 @@ public abstract class Player
 	protected boolean hasLongestRoad;
 	protected boolean hasLargestArmy;
 	protected HashMap<DevelopmentCardType, Integer> cards;
+	protected HashMap<DevelopmentCardType, Integer> boughtCards;
+	protected boolean playedDevCard;
 	protected int armySize;
 	protected Board.Player.Id id;
 	protected String userName;
@@ -58,6 +60,8 @@ public abstract class Player
 			if(r == ResourceType.Generic) continue;
 			resources.put(r, 0);
 		}
+		
+		playedDevCard = false;
 	}
 
 	/**
@@ -506,7 +510,14 @@ public abstract class Player
 		{
 			vp++;
 		}
+		
+		boughtCards.put(type, boughtCards.get(type) + 1);
 	}
+    
+    public int getBoughtCard(DevelopmentCardType type)
+    {
+    	return boughtCards.get(type);
+    }
 
 	/**
 	 * @return the player settings to be propogated out to the clients
@@ -541,6 +552,14 @@ public abstract class Player
     public void setUserName(String userName)
 	{
         this.userName = userName;
+    }
+    
+    public void cleanup()
+    {
+    	for(DevelopmentCardType t: DevelopmentCardType.values())
+    	{
+    		boughtCards.put(t, 0);
+    	}
     }
 }
 

@@ -1,5 +1,6 @@
 package exceptions;
 
+@SuppressWarnings("serial")
 public class InvalidDiscardRequest extends Exception
 {
 	int before, after;

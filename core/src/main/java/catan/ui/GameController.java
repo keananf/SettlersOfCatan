@@ -44,7 +44,6 @@ class GameController implements InputProcessor
 	}
 
 	public GameObject getObject(float planeX, float planeY) {
-		Gdx.app.debug("Plane", String.format("(%f, %f)", planeX, planeY));
 
 		for(GameObject hex : screen.hexes){
 			final float WIDTH = 2f;

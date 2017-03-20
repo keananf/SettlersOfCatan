@@ -29,7 +29,9 @@ public class LocalServerConnection implements IServerConnection
         // Block until message is in
         while(fromServer.isEmpty()) {}
 
-        return fromServer.poll();
+        Messages.Message m = fromServer.poll();
+        System.out.println(String.format("Received %s", m.getEvent().getTypeCase().name()));
+        return m;
     }
 
     @Override

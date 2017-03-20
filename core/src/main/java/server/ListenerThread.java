@@ -36,9 +36,9 @@ public class ListenerThread implements Runnable
 		{
 			receiveMoves();
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
-			// TODO replace with AI
+			// TODO replace 'conn' with a LocalClientConnection to a LocalAIClient
 			e.printStackTrace();
 		}
 	}
@@ -68,7 +68,7 @@ public class ListenerThread implements Runnable
 		// Set up result message
 		Event.Error.Builder err = Event.Error.newBuilder();
 		err.setDescription("Invalid message type");
-		err.setCause(ErrorCause.UNRECOGNIZED);
+		err.setCause(ErrorCause.UNKNOWN);
 
 		return err.build();
 	}
@@ -81,9 +81,18 @@ public class ListenerThread implements Runnable
     public void sendMessage(Message msg) throws IOException
     {
     	Event ev = msg.getEvent();
-		System.out.println(String.format("Sending. %s %s", ev.getTypeCase().name(), ev.toString()));
-        conn.sendMessageToClient(msg);
-		System.out.println(String.format("Sent. %s", ev.getTypeCase().name()));
+
+    	try
+		{
+			System.out.println(String.format("Sending. %s %s", ev.getTypeCase().name(), ev.toString()));
+			conn.sendMessageToClient(msg);
+			System.out.println(String.format("Sent. %s", ev.getTypeCase().name()));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			// TODO replace 'conn' with a LocalClientConnection to a LocalAIClient
+		}
     }
 
 	public void sendError() throws IOException

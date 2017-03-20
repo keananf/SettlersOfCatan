@@ -65,7 +65,7 @@ public class SettlersOfCatan extends Game
 	public ClientGame getState()
 	{
 		// Block until the game board is received.
-		System.out.println("Waiting for State....");
+		System.out.println("Waiting for Game Information....");
 		while(true)
 		{
 			try
@@ -85,7 +85,7 @@ public class SettlersOfCatan extends Game
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Received State....");
+		System.out.println("Received Game Information");
 		return client.getState();
 	}
 }

@@ -97,7 +97,6 @@ public class Server implements Runnable
 			if(conn != null)
 				conn.sendError();
 		}
-		return;
 	}
 
 	/**

@@ -253,11 +253,9 @@ public class EventProcessor implements Runnable
 	 */
 	private void processMessage() throws Exception
 	{
-		System.out.println("Waiting");
 		Message msg = conn.getMessageFromServer();
 
 		if(msg == null) return;
-		System.out.println("Processing");
 		logger.logReceivedMessage(msg);
 
 		// switch on message type
@@ -267,7 +265,7 @@ public class EventProcessor implements Runnable
 			case EVENT:
 				try
 				{
-					getGameLock().acquire();
+		 			getGameLock().acquire();
 					try
 					{
 						getTurnLock().acquire();

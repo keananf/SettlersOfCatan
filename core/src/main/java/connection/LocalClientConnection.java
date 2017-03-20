@@ -25,6 +25,7 @@ public class LocalClientConnection implements IClientConnection
         if(conn != null)
         {
             conn.fromServer.add(message);
+            System.out.println(String.format("Sent. %s", message.getEvent().getTypeCase().name()));
         }
     }
 

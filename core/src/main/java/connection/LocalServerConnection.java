@@ -31,7 +31,7 @@ public class LocalServerConnection implements IServerConnection
         while(fromServer.isEmpty()) {}
 
         Messages.Message m = fromServer.poll();
-        Gdx.app.log("Conn", String.format("Received %s", m.getEvent().getTypeCase().name()));
+        Gdx.app.log("Client Conn", String.format("Received %s", m.getEvent().getTypeCase().name()));
         return m;
     }
 

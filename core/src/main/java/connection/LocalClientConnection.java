@@ -26,7 +26,7 @@ public class LocalClientConnection implements IClientConnection
         if(conn != null)
         {
             conn.fromServer.add(message);
-            Gdx.app.log("Conn", String.format("Sent. %s", message.getEvent().getTypeCase().name()));
+            Gdx.app.log("Server Conn", String.format("Sent. %s", message.getEvent().getTypeCase().name()));
         }
     }
 

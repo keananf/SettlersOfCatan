@@ -84,9 +84,7 @@ public class ListenerThread implements Runnable
 
     	try
 		{
-			//System.out.println(String.format("Sending. %s %s", ev.getTypeCase().name(), ev.toString()));
 			conn.sendMessageToClient(msg);
-			//System.out.println(String.format("Sent. %s", ev.getTypeCase().name()));
 		}
 		catch(Exception e)
 		{

@@ -5,7 +5,6 @@ import connection.IServerConnection;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import intergroup.Requests;
-import server.Logger;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -19,20 +18,18 @@ public class EventProcessor implements Runnable
 {
 	private final Client client;
 	private final IServerConnection conn;
-	private Logger logger;
 	private boolean robberMoved;
 
 	public EventProcessor(IServerConnection conn, Client client)
 	{
 		this.conn = conn;
-		logger = new Logger();
 		this.client = client;
 	}
 
 	@Override
 	public void run()
 	{
-		System.out.println("Starting event processor");
+		client.log("Event Proc","Starting event processor");
 
 		// Continuously wait for new messages from the server
 		while (getGame() == null || !getGame().isOver())
@@ -63,7 +60,7 @@ public class EventProcessor implements Runnable
     private void processEvent(Event ev) throws Exception
     {
 		updateExpectedMoves(ev);
-		Gdx.app.log("Event Proc", String.format("Processing event %s", ev.getTypeCase().name()));
+		client.log("Event Proc", String.format("Processing event %s", ev.getTypeCase().name()));
 
         // Switch on type of event
         switch(ev.getTypeCase())
@@ -99,7 +96,7 @@ public class EventProcessor implements Runnable
 			case BEGINGAME:
 				client.setGame(new ClientGame());
 				getGame().setBoard(ev.getBeginGame());
-				Gdx.app.log("Event Proc", "Game information received");
+				client.log("Event Proc", "Game information received");
 				break;
 			case CHATMESSAGE:
 				getGame().writeMessage(ev.getChatMessage(), ev.getInstigator());
@@ -257,7 +254,6 @@ public class EventProcessor implements Runnable
 		Message msg = conn.getMessageFromServer();
 
 		if(msg == null) return;
-		logger.logReceivedMessage(msg);
 
 		// switch on message type
 		switch (msg.getTypeCase())

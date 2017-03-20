@@ -1,6 +1,5 @@
 package connection;
 
-import com.badlogic.gdx.Gdx;
 import intergroup.Events;
 import intergroup.Messages;
 
@@ -29,7 +28,7 @@ public class RemoteClientConnection implements IClientConnection
             {
                 Events.Event ev = message.getEvent();
                 message.writeDelimitedTo(conn.getOutputStream());
-                Gdx.app.log("Event", String.format("Sent. %s", ev.getTypeCase().name()));
+                String.format("Sent. %s", ev.getTypeCase().name());
             }
             catch (IOException e)
             {

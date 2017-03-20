@@ -1,5 +1,6 @@
 package client;
 
+import com.badlogic.gdx.Gdx;
 import connection.IServerConnection;
 
 import java.util.concurrent.Semaphore;
@@ -63,6 +64,20 @@ public abstract class Client
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Logs the given message
+     * @param tag the tag (for Gdx)
+     * @param msg the message to log
+     */
+    public void log(String tag, String msg)
+    {
+        if(Gdx.app != null)
+        {
+            Gdx.app.log(tag, msg);
+        }
+        else System.out.println(msg);
     }
 
     public ClientGame getState()

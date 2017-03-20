@@ -59,7 +59,7 @@ public class Server implements Runnable
 		catch (IOException e)
 		{
 			e.printStackTrace();
-			Gdx.app.log("Server Setup", "Error connecting players");
+			log("Server Setup", "Error connecting players");
 		}
 
 		shutDown();
@@ -193,7 +193,6 @@ public class Server implements Runnable
 		Message.Builder msg = Message.newBuilder();
 		Event.Builder ev = Event.newBuilder();
 
-
 		// For each player
 		for(Colour c : Colour.values())
 		{
@@ -219,7 +218,6 @@ public class Server implements Runnable
 		boolean foo = false;
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(ev);
-		//System.out.println(String.format("%s %s", ev.getTypeCase().name(), ev.toString()));
 
 		// Modify event before sending to other players
 		if(ev.getTypeCase().equals(Event.TypeCase.RESOURCESTOLEN) || ev.getTypeCase().equals(Event.TypeCase.DEVCARDBOUGHT))
@@ -262,7 +260,7 @@ public class Server implements Runnable
 
 		serverSocket = new ServerSocket();
 		serverSocket.bind(new InetSocketAddress("localhost", PORT));
-		Gdx.app.log("Server Setup", String.format("Server started. Waiting for client(s)...%s\n", serverSocket.getInetAddress()));
+		log("Server Setup", String.format("Server started. Waiting for client(s)...%s\n", serverSocket.getInetAddress()));
 
 		// Loop until all players found
 		while(numConnections < Game.NUM_PLAYERS)
@@ -278,12 +276,26 @@ public class Server implements Runnable
 				}
 				catch (GameFullException e) {}
 				connections.put(c, new ListenerThread(new RemoteClientConnection(connection), c,  this));
-				Gdx.app.log("Server Setup", String.format("Player %d connected", numConnections));
+				log("Server Setup", String.format("Player %d connected", numConnections));
 				numConnections++;
 			}
 		}
 		
-		System.out.println("All Players connected. Starting game...\n");
+		log("Server Setup", "All Players connected. Starting game...\n");
+	}
+
+	/**
+	 * Logs the message depending on whether or not this is a local or remote server
+	 * @param tag the tag (for Gdx)
+	 * @param msg the msg to log
+	 */
+	private void log(String tag, String msg)
+	{
+		if(Gdx.app == null)
+		{
+			System.out.println(msg);
+		}
+		else Gdx.app.log(tag, msg);
 	}
 
 	/**

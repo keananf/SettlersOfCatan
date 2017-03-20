@@ -27,7 +27,7 @@ public class RemoteServerConnection implements IServerConnection
             try
             {
                 Messages.Message m = Messages.Message.parseDelimitedFrom(conn.getInputStream());
-                Gdx.app.log("Event", String.format("Received %s", m.getEvent().getTypeCase().name()));
+                Gdx.app.log("Conn", String.format("Received %s", m.getEvent().getTypeCase().name()));
                 return m;
             }
             catch (IOException e)

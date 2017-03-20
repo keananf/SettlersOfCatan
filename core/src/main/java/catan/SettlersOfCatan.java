@@ -64,7 +64,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	public ClientGame getState()
 	{
 		// Block until the game board is received.
-		Gdx.app.log("Setup", "Waiting for Game Information....");
+		client.log("Client Setup", "Waiting for Game Information....");
 		while(true)
 		{
 			try
@@ -84,7 +84,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 				e.printStackTrace();
 			}
 		}
-		Gdx.app.log("Setup", "Received Game Information");
+		client.log("Client Setup", "Received Game Information");
 		return client.getState();
 	}
 }

@@ -43,6 +43,7 @@ public class GameScreen implements Screen
 	private GameController gameController;
 
 	final protected Array<GameObject> objs = new Array<>();
+	final protected Array<GameObject> hexes = new Array<>();
 	final private Environment environment = new Environment();
 
 	final private SettlersOfCatan game;
@@ -107,6 +108,7 @@ public class GameScreen implements Screen
 			instance.materials.get(0).set(ColorAttribute.createDiffuse(colour));
 
 			objs.add(instance);
+			hexes.add(instance);
 		}
 	}
 

@@ -31,20 +31,38 @@ class GameController implements InputProcessor
 		if (!Intersector.intersectRayPlane(ray, PLANE, intersectionPoint))
 			return false;
 
-		ModelInstance inst = getObject(intersectionPoint.x, intersectionPoint.y);
-		inst.materials.get(0).set(ColorAttribute.createDiffuse(Color.GOLD));
-		return true;
+		GameObject inst = getObject(intersectionPoint.x, intersectionPoint.z);
+		if (inst == null)
+		{
+			return false;
+		}
+		else
+		{
+			inst.materials.get(0).set(ColorAttribute.createDiffuse(Color.BLACK));
+			return true;
+		}
 	}
 
-	public  getObject (float planeX, float planeY)
-	{
-		// TODO @Beth
-		// Given planeX, planeY and a list of instances (each with a centre point)
-		// find if any are at that point and return which
-		
-		return screen.objs.get(0);
-	}
+	public GameObject getObject(float planeX, float planeY) {
+		Gdx.app.debug("Plane", String.format("(%f, %f)", planeX, planeY));
 
+		for(GameObject hex : screen.hexes){
+			final float WIDTH = 2f;
+			double furthestLeft = hex.centre.x - WIDTH/2;
+			double furtherstRight = hex.centre.x + WIDTH/2;
+			double heighestHeight = hex.centre.z + ((Math.sqrt(3)*WIDTH)/4);
+			double lowestHeight = hex.centre.z - ((Math.sqrt(3)*WIDTH)/4);
+
+			if (planeX <= furtherstRight && planeX >= furthestLeft)
+			{
+				if (planeY <= heighestHeight && planeY >= lowestHeight)
+				{
+					return hex;
+				}
+			}
+		}
+		return null;
+	}
 
 	@Override public boolean keyUp(int keycode) { return false; }
 	@Override public boolean keyDown(int keycode) { return false; }

@@ -25,13 +25,10 @@ public class LocalClient extends Client
     {
         conn = new LocalServerConnection();
         conn.setConn(new LocalClientConnection(conn));
+        setUp(conn);
         server = new LocalServer(conn.getConn());
         serverThread = new Thread(server);
         serverThread.start();
-
-
-        // TODO eliminate:
-        state = new ClientGame();
     }
 
     @Override

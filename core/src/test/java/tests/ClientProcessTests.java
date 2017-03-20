@@ -20,9 +20,7 @@ import intergroup.trade.Trade;
 import org.junit.Test;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -383,7 +381,7 @@ public class ClientProcessTests extends ClientTestHelper
 		assertEquals(2, p.getVp());
 	}
 
-	@Test
+	/*@Test
 	public void moveRobberTest() throws InvalidCoordinatesException
 	{
 		Hex h = game.getGrid().getHexWithRobber();
@@ -394,7 +392,7 @@ public class ClientProcessTests extends ClientTestHelper
 		// Move and check
 		clientGame.moveRobber(point);
 		assertNotEquals(h, clientGame.getGrid().getHexWithRobber());
-	}
+	}*/
 
 	@Test
 	public void stealTest() throws CannotAffordException, BankLimitException
@@ -503,7 +501,7 @@ public class ClientProcessTests extends ClientTestHelper
 		assertTrue(clientGame.getBoughtDevCards().get(clientPlayer.getColour()) == 1);
 	}
 
-	@Test
+/*	@Test
 	public void diceAndResourceTest()
 	{
 		Player p = clientPlayer;
@@ -522,7 +520,7 @@ public class ClientProcessTests extends ClientTestHelper
 		clientGame.processDice(dice, list);
 		assertEquals(clientGame.getDice(), dice);
 		assertEquals(1, clientGame.getPlayer().getNumResources());
-	}
+	}*/
 
 	private Resource.Counts processResources(Map<ResourceType, Integer> newResources)
 	{

@@ -6,8 +6,8 @@ import enums.ResourceType;
 import exceptions.*;
 import game.Game;
 import game.build.Road;
-import game.players.ServerPlayer;
 import game.players.Player;
+import game.players.ServerPlayer;
 import grid.Hex;
 import grid.Node;
 import grid.Port;
@@ -549,30 +549,23 @@ public class ServerGame extends Game
 	public Lobby.GameSetup getGameSettings(Colour request)
 	{
 		Lobby.GameSetup.Builder builder = Lobby.GameSetup.newBuilder();
-		int index = 0;
 
 		// Add hexes
-		index = 0;
 		for(Hex h : getGrid().getHexesAsList())
 		{
-			builder.addHexesBuilder();
-			builder.setHexes(index++, h.toHexProto());
+			builder.addHexes(h.toHexProto());
 		}
 
 		// Add ports
-		index = 0;
 		for(Port p : getGrid().getPortsAsList())
 		{
-			builder.addHarboursBuilder();
-			builder.setHarbours(index++, p.toPortProto());
+			builder.addHarbours(p.toPortProto());
 		}
 
 		// Add player settings
-		index = 0;
 		for(Player p : getPlayersAsList())
 		{
-			builder.addPlayerSettingsBuilder();
-			builder.setPlayerSettings(index++, p.getPlayerSettings());
+			builder.addPlayerSettings(p.getPlayerSettings());
 
 			// set own player
 			if(p.getColour().equals(request))
@@ -602,6 +595,16 @@ public class ServerGame extends Game
 	{
 		Board.Roll.Builder roll = Board.Roll.newBuilder();
 		roll.setA(dice.nextInt(6) + 1).setB(dice.nextInt(6) + 1);
+
+		// Add resource generation
+		for(Player p : players.values())
+		{
+			Board.ResourceAllocation.Builder alloc = Board.ResourceAllocation.newBuilder();
+			alloc.setPlayer(Board.Player.newBuilder().setId(p.getId()).build());
+			alloc.setResources(processResources(getNewResources(roll.getA() + roll.getB(), p.getColour())));
+			roll.addResourceAllocation(alloc.build());
+		}
+
 		return roll.build();
 	}
 
@@ -652,8 +655,8 @@ public class ServerGame extends Game
 		if(numPlayers == NUM_PLAYERS) throw new GameFullException();
 
 		// Assign colour and id
-		Colour newCol = Colour.values()[numPlayers++];
-		Board.Player.Id id = Board.Player.Id.forNumber(numPlayers);
+		Colour newCol = Colour.values()[numPlayers];
+		Board.Player.Id id = Board.Player.Id.forNumber(numPlayers++);
 		ServerPlayer p = new ServerPlayer(newCol, "");
 		p.setId(id);
 

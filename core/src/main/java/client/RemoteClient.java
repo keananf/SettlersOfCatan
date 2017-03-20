@@ -3,7 +3,6 @@ package client;
 import connection.RemoteServerConnection;
 
 import java.io.IOException;
-import java.net.Socket;
 
 /**
  * Main client class
@@ -48,9 +47,9 @@ public class RemoteClient extends Client
     {
         try
         {
-            Socket socket = new Socket(host, PORT);
-            conn = new RemoteServerConnection(socket);
+            conn = new RemoteServerConnection();
             setUp(conn);
+            conn.connect(host, PORT);
         }
         catch (IOException e)
         {

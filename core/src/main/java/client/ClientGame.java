@@ -91,6 +91,12 @@ public class ClientGame extends Game
 			LocalPlayer newPlayer = new LocalPlayer(col, player.getUsername());
 			newPlayer.setId(player.getPlayer().getId());
 
+			// Update current turn
+			if(newPlayer.getId().equals(Board.Player.Id.PLAYER_1))
+			{
+				setCurrentPlayer(newPlayer.getColour());
+			}
+
 			// Check if it is this player
 			if (player.getPlayer().getId().equals(ownPlayer.getId()))
 			{

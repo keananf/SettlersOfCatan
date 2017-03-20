@@ -1,5 +1,6 @@
 package server;
 
+import com.badlogic.gdx.Gdx;
 import connection.RemoteClientConnection;
 import enums.Colour;
 import exceptions.GameFullException;
@@ -15,6 +16,7 @@ import intergroup.resource.Resource;
 import intergroup.trade.Trade;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -50,12 +52,6 @@ public class Server implements Runnable
 
 			while (!game.isOver())
 			{
-				Board.Roll dice = game.generateDiceRoll();
-
-				// TODO Adjust so turn message has resources
-				game.allocateResources(dice.getA() + dice.getB());
-				sendTurns(dice);
-
 				// Read moves from queue and log
 				processMessage();
 			}
@@ -63,10 +59,17 @@ public class Server implements Runnable
 		catch (IOException e)
 		{
 			e.printStackTrace();
-			System.out.println("Error connecting players");
+			Gdx.app.log("Server Setup", "Error connecting players");
 		}
 
 		shutDown();
+	}
+
+	public static void main(String[] args)
+	{
+		Server s = new Server();
+		Thread t = new Thread(s);
+		t.start();
 	}
 
 	/**
@@ -89,13 +92,12 @@ public class Server implements Runnable
 	{
 		Event ev = msgProc.processMessage();
 
-		if((ev == null) || !ev.isInitialized())
+		if((ev == null || !ev.isInitialized()) && msgProc.getLastMessage() != null)
 		{
 			ListenerThread conn = connections.get(msgProc.getLastMessage().getCol());
 			if(conn != null)
 				conn.sendError();
 		}
-		return;
 	}
 
 	/**
@@ -157,7 +159,6 @@ public class Server implements Runnable
 			if(game.getPlayers().containsKey(c))
 			{
 				Player p = game.getPlayers().get(c);
-				sendDice(dice);
 
 				if(sum == 7 && p.getNumResources() > 7)
 				{
@@ -165,6 +166,7 @@ public class Server implements Runnable
 				}
 			}
 		}
+		sendDice(dice);
 	}
 
 	/**
@@ -191,6 +193,7 @@ public class Server implements Runnable
 		Message.Builder msg = Message.newBuilder();
 		Event.Builder ev = Event.newBuilder();
 
+
 		// For each player
 		for(Colour c : Colour.values())
 		{
@@ -216,6 +219,7 @@ public class Server implements Runnable
 		boolean foo = false;
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(ev);
+		//System.out.println(String.format("%s %s", ev.getTypeCase().name(), ev.toString()));
 
 		// Modify event before sending to other players
 		if(ev.getTypeCase().equals(Event.TypeCase.RESOURCESTOLEN) || ev.getTypeCase().equals(Event.TypeCase.DEVCARDBOUGHT))
@@ -256,8 +260,9 @@ public class Server implements Runnable
 		// If no remote players
 		if(numConnections == Game.NUM_PLAYERS) return;
 
-		serverSocket = new ServerSocket(PORT);
-		System.out.println("Server started. Waiting for client(s)...\n");
+		serverSocket = new ServerSocket();
+		serverSocket.bind(new InetSocketAddress("localhost", PORT));
+		Gdx.app.log("Server Setup", String.format("Server started. Waiting for client(s)...%s\n", serverSocket.getInetAddress()));
 
 		// Loop until all players found
 		while(numConnections < Game.NUM_PLAYERS)
@@ -273,7 +278,7 @@ public class Server implements Runnable
 				}
 				catch (GameFullException e) {}
 				connections.put(c, new ListenerThread(new RemoteClientConnection(connection), c,  this));
-				System.out.println(String.format("Player %d connected", numConnections));
+				Gdx.app.log("Server Setup", String.format("Player %d connected", numConnections));
 				numConnections++;
 			}
 		}

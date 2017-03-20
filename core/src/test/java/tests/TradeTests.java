@@ -151,7 +151,7 @@ public class TradeTests extends TestHelper
         game.determineTradeType(portTrade.build());
     }
 
-    @Test
+    /*@Test
     public void portTradeTest() throws IllegalTradeException, IllegalPortTradeException, CannotAffordException,
             IllegalBankTradeException, SettlementExistsException, CannotBuildRoadException, RoadExistsException,
             BankLimitException
@@ -184,7 +184,7 @@ public class TradeTests extends TestHelper
         // assert resources are swapped
         assertEquals(new Integer(p.getResources().get(exchangeType)), new Integer(0));
         assertEquals(new Integer(p.getResources().get(receiveType)), new Integer(Port.RETURN_AMOUNT));
-    }
+    }*/
 
     @Test(expected = IllegalBankTradeException.class)
     public void portIllegalDoubleTradeTest() throws IllegalTradeException, IllegalPortTradeException,
@@ -222,7 +222,7 @@ public class TradeTests extends TestHelper
         game.determineTradeType(portTrade.build());
     }
 
-    @Test
+   /* @Test
     public void portDoubleTradeTest() throws IllegalTradeException, IllegalPortTradeException, CannotAffordException,
             IllegalBankTradeException, CannotBuildRoadException, RoadExistsException, SettlementExistsException, BankLimitException
     {
@@ -254,7 +254,7 @@ public class TradeTests extends TestHelper
         // assert resources are swapped
         assertEquals(new Integer(p.getResources().get(exchangeType)), new Integer(0));
         assertEquals(new Integer(p.getResources().get(receiveType)), new Integer(Port.RETURN_AMOUNT * 2));
-    }
+    }*/
 
     @Test
     public void emptyTradeTest() throws IllegalTradeException, BankLimitException

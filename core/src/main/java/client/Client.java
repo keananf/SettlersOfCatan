@@ -2,6 +2,8 @@ package client;
 
 import connection.IServerConnection;
 
+import java.util.concurrent.Semaphore;
+
 /**
  * Abstract notion of a client
  * @author 140001596
@@ -16,6 +18,7 @@ public abstract class Client
     protected static final int PORT = 12345;
     private TurnInProgress turn;
     private IServerConnection conn;
+    private Semaphore stateLock, turnLock;
 
 
     /**
@@ -23,25 +26,28 @@ public abstract class Client
      */
     protected abstract void setUpConnection();
 
+    public void sendTurn()
+    {
+        turnProcessor.sendMove();
+    }
+
     /**
      * Sets up the different components for a RemoteClient
      */
     protected void setUp(IServerConnection conn)
     {
         this.conn = conn;
+        this.stateLock = new Semaphore(1);
+        this.turnLock = new Semaphore(1);
         this.turn = new TurnInProgress();
+        this.turnProcessor = new TurnProcessor(conn, this);
         this.moveProcessor = new MoveProcessor(this);
         this.eventProcessor = new EventProcessor(conn, this);
-        this.turnProcessor = new TurnProcessor(conn, this);
 
         evProcessor = new Thread(eventProcessor);
         evProcessor.start();
     }
 
-    public void sendTurn()
-    {
-        turnProcessor.sendMove();
-    }
 
     /**
      * Shuts down a client by terminating the socket and the event processor thread.
@@ -66,11 +72,26 @@ public abstract class Client
 
     public TurnInProgress getTurn()
     {
-        return turnProcessor.getTurn();
+        return turn;
     }
 
     public MoveProcessor getMoveProcessor()
     {
         return moveProcessor;
+    }
+
+    public void setGame(ClientGame game)
+    {
+        this.state = game;
+    }
+
+    public Semaphore getStateLock()
+    {
+        return stateLock;
+    }
+
+    public Semaphore getTurnLock()
+    {
+        return turnLock;
     }
 }

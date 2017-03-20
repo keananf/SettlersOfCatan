@@ -2,6 +2,7 @@ package exceptions;
 
 import intergroup.Messages.*;
 
+@SuppressWarnings("serial")
 public class UnexpectedMoveTypeException extends Exception
 {
 	private Message msg;

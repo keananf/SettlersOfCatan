@@ -38,11 +38,11 @@ public class GameScreen implements Screen
 	final private AssMan assets = new AssMan();
 	final private ModelBatch MODEL_BATCH = new ModelBatch();
 
-	private Camera cam;
+	protected Camera cam;
 	private CatanCamController camController;
 	private GameController gameController;
 
-	final private Array<ModelInstance> boardInstances = new Array<ModelInstance>();
+	final protected Array<GameObject> objs = new Array<>();
 	final private Environment environment = new Environment();
 
 	final private SettlersOfCatan game;
@@ -53,7 +53,7 @@ public class GameScreen implements Screen
 
 		initCamera();
 		camController = new CatanCamController(cam);
-		gameController = new GameController(cam, boardInstances);
+		gameController = new GameController(this);
 
 		final InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(camController);
@@ -79,18 +79,18 @@ public class GameScreen implements Screen
 		final ModelBuilder builder = new ModelBuilder();
 		final long attributes = Usage.Position | Usage.Normal | Usage.TextureCoordinates;
 
-		// skybox
+		// sea
 		final Material water = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));
 		final Model sea = builder.createCylinder(150f, 0.01f, 150f, 6, water, attributes);
-		boardInstances.add(new ModelInstance(sea, new Vector3(0, -1, 0)));
+		objs.add(new GameObject(sea, new Vector3(0, -1, 0)));
 
 		// hex tiles
 		final Material dirt = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
 		final Model hex = builder.createCylinder(2f, 0.2f, 2f, 6, dirt, attributes);
 
-		for(Entry<Point, Hex> coord : game.state.getGrid().grid.entrySet())
+		for (Entry<Point, Hex> coord : game.state.getGrid().grid.entrySet())
 		{
-			final ModelInstance instance = new ModelInstance(hex, hexPointToCartVec(coord.getKey()));
+			final GameObject instance = new GameObject(hex, hexPointToCartVec(coord.getKey()));
 			instance.transform.rotate(0, 1, 0, 90f);
 
 			final Color colour;
@@ -106,7 +106,7 @@ public class GameScreen implements Screen
 			}
 			instance.materials.get(0).set(ColorAttribute.createDiffuse(colour));
 
-			boardInstances.add(instance);
+			objs.add(instance);
 		}
 	}
 
@@ -132,7 +132,7 @@ public class GameScreen implements Screen
 		camController.update();
 
 		MODEL_BATCH.begin(cam);
-		MODEL_BATCH.render(boardInstances, environment);
+		MODEL_BATCH.render(objs, environment);
 		MODEL_BATCH.end();
 	}
 
@@ -141,7 +141,7 @@ public class GameScreen implements Screen
 	{
 		assets.dispose();
 		MODEL_BATCH.dispose();
-		boardInstances.clear();
+		objs.clear();
 	}
 
 	// Required but unused

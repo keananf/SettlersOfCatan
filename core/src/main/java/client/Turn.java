@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class TurnInProgress
+public class Turn
 {
 	private Requests.Request.BodyCase chosenMove;
 
@@ -30,16 +30,23 @@ public class TurnInProgress
 	private Trade.Response tradeResponse;
 	private Colour target;
 	private ConcurrentLinkedQueue<Requests.Request.BodyCase> expectedMoves;
-	private boolean tradePhase;
+	private boolean tradePhase, turnStarted;
 
-	public TurnInProgress()
+	public Turn()
 	{
+		reset();
+	}
+
+	public Turn(Requests.Request.BodyCase move)
+	{
+		this.chosenMove = move;
 		reset();
 	}
 
 	public void reset()
 	{
 		tradePhase = false;
+		turnStarted = false;
 		chosenCard = null;
 		chosenColour = null;
 		chosenEdge = null;
@@ -55,7 +62,7 @@ public class TurnInProgress
 		expectedMoves = new ConcurrentLinkedQueue<Requests.Request.BodyCase>();
 	}
 
-	protected ConcurrentLinkedQueue<Requests.Request.BodyCase> getExpectedMoves()
+	public ConcurrentLinkedQueue<Requests.Request.BodyCase> getExpectedMoves()
 	{
 		return expectedMoves;
 	}
@@ -200,4 +207,19 @@ public class TurnInProgress
 	{
 		this.tradePhase = tradePhase;
 	}
+
+    public void setChosenResources(Map<ResourceType,Integer> chosenResources)
+	{
+        this.chosenResources = chosenResources;
+    }
+
+	public boolean hasTurnStarted()
+	{
+		return turnStarted;
+	}
+
+    public void setTurnStarted(boolean turnStarted)
+	{
+        this.turnStarted = turnStarted;
+    }
 }

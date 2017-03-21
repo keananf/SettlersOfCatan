@@ -2,36 +2,25 @@ package catan.ui;
 
 import catan.SettlersOfCatan;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.model.Node;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.attributes.IntAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.FloatAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-
-import java.util.Map.Entry;
-import java.awt.Point;
-
-import enums.ResourceType;
 import grid.Hex;
-import catan.SettlersOfCatan;
+
+import java.awt.*;
+import java.util.Map.Entry;
 
 public class GameScreen implements Screen
 {
@@ -89,7 +78,7 @@ public class GameScreen implements Screen
 		final Material dirt = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
 		final Model hex = builder.createCylinder(2f, 0.2f, 2f, 6, dirt, attributes);
 
-		for (Entry<Point, Hex> coord : game.state.getGrid().grid.entrySet())
+		for (Entry<Point, Hex> coord : game.getState().getGrid().grid.entrySet())
 		{
 			final GameObject instance = new GameObject(hex, hexPointToCartVec(coord.getKey()));
 			instance.transform.rotate(0, 1, 0, 90f);

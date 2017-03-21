@@ -3,6 +3,7 @@ syntax = "proto3";
 package intergroup.lobby;
 
 import "board/board.proto";
+import "resource/resource.proto";
 
 // To join a game, a client must open a TCP connection using
 // the IP of the Game Server. Upon connecting, the client
@@ -19,6 +20,42 @@ message Join {
 //The list of players that are in the lobby
 message Usernames {
     repeated string username = 1;
+}
+
+message GameInfo {
+    GameSetup gameInfo = 1;
+    resource.Counts resources = 2;
+    repeated Settlement settlements = 3;
+    repeated Settlement cities = 4;
+    repeated Road roads = 5;
+    PlayerDevCardInfo cards = 6;
+    repeated PlayerInfo players = 7;
+
+    message Settlement {
+        board.Point point = 1;
+        board.Player owner = 2;
+    }
+
+    message Road {
+        board.Edge edge = 1;
+        board.Player owner = 2;
+    }
+
+    message PlayerInfo {
+        int32 resources = 1;
+        board.Player player = 2;
+        int32 unusedCards = 3;
+        PlayerDevCardInfo playedCards = 4;
+    }
+
+    message PlayerDevCardInfo {
+        int32 university = 1;
+        int32 library = 2;
+        int32 knight = 3;
+        int32 yearOfPlenty = 4;
+        int32 monopoly = 5;
+        int32 roadBuilding = 6;
+    }
 }
 
 // When the game server is ready to begin the game, it sends a

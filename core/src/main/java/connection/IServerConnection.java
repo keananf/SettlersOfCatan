@@ -8,8 +8,8 @@ import intergroup.Messages;
  */
 public interface IServerConnection
 {
-    Messages.Message getMessageFromServer();
-    void sendMessageToServer(Messages.Message message);
+    Messages.Message getMessageFromServer() throws Exception;
+    void sendMessageToServer(Messages.Message message) throws Exception;
 
     void shutDown();
 }

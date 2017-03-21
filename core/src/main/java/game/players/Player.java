@@ -35,7 +35,8 @@ public abstract class Player
 	protected HashMap<Point, Building> settlements;
 	protected boolean hasLongestRoad;
 	protected boolean hasLargestArmy;
-	protected HashMap<DevelopmentCardType, Integer> cards;
+	protected Map<DevelopmentCardType, Integer> cards, playedDevCards;
+	protected boolean playedDevCard;
 	protected int armySize;
 	protected Board.Player.Id id;
 	protected String userName;
@@ -50,6 +51,7 @@ public abstract class Player
 		settlements = new HashMap<Point, Building>();
 		resources = new HashMap<ResourceType, Integer>();
 		cards = new HashMap<DevelopmentCardType, Integer>();
+		playedDevCards = new HashMap<DevelopmentCardType, Integer>();
 		this.userName = userName;
 
 		// Initialise resources
@@ -58,6 +60,8 @@ public abstract class Player
 			if(r == ResourceType.Generic) continue;
 			resources.put(r, 0);
 		}
+		
+		playedDevCard = false;
 	}
 
 	/**
@@ -199,7 +203,28 @@ public abstract class Player
 		}
 		return numResources;
 	}
-	
+
+	/**
+	 * @return the total number of dev cards the player has
+	 */
+	public int getNumDevCards()
+	{
+		int numResources = 0;
+		for(Integer i : getDevelopmentCards().values())
+		{
+			numResources += i;
+		}
+		return numResources;
+	}
+
+	/**
+	 * @return the total number of dev cards the player has
+	 */
+	public Map<DevelopmentCardType, Integer> getPlayedDevCards()
+	{
+		return playedDevCards;
+	}
+
 	/**
 	 * Checks to see if the user canAfford something
 	 * @param cost
@@ -404,7 +429,7 @@ public abstract class Player
 	/**
 	 * @return the development cards in this player's hand
 	 */
-	public HashMap<DevelopmentCardType, Integer> getDevelopmentCards()
+	public Map<DevelopmentCardType, Integer> getDevelopmentCards()
 	{
 		return cards;
 	}
@@ -504,8 +529,26 @@ public abstract class Player
 		// Grant VP point if necessary
 		if(type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University))
 		{
+			existing = playedDevCards.containsKey(DevelopmentCardType.Library) ?playedDevCards.get(DevelopmentCardType.Library) : 0;
+			playedDevCards.put(DevelopmentCardType.Library, existing + 1);
 			vp++;
 		}
+		else if(type.equals(DevelopmentCardType.University))
+		{
+			existing = playedDevCards.containsKey(DevelopmentCardType.University) ?playedDevCards.get(DevelopmentCardType.University) : 0;
+			playedDevCards.put(DevelopmentCardType.University, existing + 1);
+			vp++;
+		}
+	}
+
+	/**
+	 * Plays the given development card
+	 * @param card the development card to add
+	 */
+	protected void playCard(DevelopmentCardType card)
+	{
+		int existing = cards.containsKey(card) ? cards.get(card) : 0;
+		cards.put(card, existing);
 	}
 
 	/**
@@ -541,6 +584,16 @@ public abstract class Player
     public void setUserName(String userName)
 	{
         this.userName = userName;
+    }
+
+	public void setResources(Map<ResourceType,Integer> resources)
+	{
+		this.resources = resources;
+	}
+
+    public void setDevelopmentCards(Map<DevelopmentCardType,Integer> developmentCards)
+	{
+        this.cards = developmentCards;
     }
 }
 

@@ -43,12 +43,12 @@ public class MainMenuScreen implements Screen
 
 		// Buttons
 		{
-			TextButton button = new TextButton("New single player game", game.skin);
+			TextButton button = new TextButton("New Single Player Game", game.skin);
 			button.addListener(new ChangeListener()
 			{
 				public void changed(ChangeEvent event, Actor actor)
 				{
-					Gdx.app.debug("UI", "Button click: New single player game");
+					Gdx.app.debug("UI", "Button click: New Single Player Game");
 
 					game.startNewServer();
 					game.setScreen(new GameScreen(game));
@@ -58,12 +58,12 @@ public class MainMenuScreen implements Screen
 		}
 
 		{
-			TextButton button = new TextButton("Host new multiplayer game", game.skin);
+			TextButton button = new TextButton("Host New Multiplayer Game", game.skin);
 			button.addListener(new ChangeListener()
 			{
 				public void changed(ChangeEvent event, Actor actor)
 				{
-					Gdx.app.debug("UI", "Button click: Host new multiplayer game");
+					Gdx.app.debug("UI", "Button click: Host New Multiplayer Game");
 
 					game.startNewServer();
 					game.setScreen(new GameScreen(game));
@@ -73,15 +73,15 @@ public class MainMenuScreen implements Screen
 		}
 
 		{
-			TextButton button = new TextButton("Join existing multiplayer game", game.skin);
+			TextButton button = new TextButton("Join Remote Game", game.skin);
 			button.addListener(new ChangeListener()
 			{
 				public void changed(ChangeEvent event, Actor actor)
 				{
-					Gdx.app.debug("UI", "Button click: Join existing multiplayer game");
+					Gdx.app.debug("UI", "Button click: Join Remote Game");
 
 					// TODO retrieve host name from text user entered in
-					// TODO game.startRemoteClient(hostname);
+					game.startNewRemoteClient("localhost");
 					game.setScreen(new GameScreen(game));
 				}
 			});

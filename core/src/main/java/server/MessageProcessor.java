@@ -58,6 +58,11 @@ public class MessageProcessor
     {
         ReceivedMessage receivedMessage = movesToProcess.poll();
         lastMessage = receivedMessage;
+        if(receivedMessage == null || receivedMessage.getMsg() == null)
+        {
+            return null;
+        }
+
         Messages.Message msg = receivedMessage.getMsg();
         Colour col = receivedMessage.getCol();
         logger.logReceivedMessage(msg);
@@ -209,6 +214,17 @@ public class MessageProcessor
                 expectedMoves.get(colour).remove(request.getBodyCase());
             }
             updateExpectedMoves(request, colour);
+        }
+
+        // Add discard move if necessary
+        if(request.getBodyCase().equals(Requests.Request.BodyCase.ROLLDICE)
+                && ev.getRolled().getA() + ev.getRolled().getB() == 7)
+        {
+            for(Player p : game.getPlayers().values())
+            {
+                if(p.getNumResources() > 7)
+                    expectedMoves.get(p.getColour()).add(Requests.Request.BodyCase.DISCARDRESOURCES);
+            }
         }
 
         return ev.build();

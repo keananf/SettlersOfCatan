@@ -8,13 +8,10 @@ import client.RemoteClient;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import server.Server;
 
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	public Skin skin;
-	private Server serv;
-	public ClientGame state;
 	private Client client;
 
 	@Override
@@ -50,7 +47,6 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	public boolean startNewRemoteClient(String host)
 	{
 		client = new RemoteClient(host);
-		state = client.getState();
 		return ((RemoteClient) client).isInitialised();
 	}
 
@@ -60,6 +56,35 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	public void startNewServer()
 	{
 		client = new LocalClient();
-		state = client.getState();
+	}
+
+	/**
+	 * @return the client's gamestate object
+	 */
+	public ClientGame getState()
+	{
+		// Block until the game board is received.
+		client.log("Client Setup", "Waiting for Game Information....");
+		while(true)
+		{
+			try
+			{
+				client.getStateLock().acquire();
+				try
+				{
+					if (client.getState() != null) break;
+				}
+				finally
+				{
+					client.getStateLock().release();
+				}
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		client.log("Client Setup", "Received Game Information");
+		return client.getState();
 	}
 }

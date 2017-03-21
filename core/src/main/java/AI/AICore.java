@@ -93,10 +93,19 @@ public abstract class AICore implements IAI, Runnable
 	 */
 	private Turn selectAndPrepareMove()
 	{
+		List<Turn> optimalMoves = rankMoves(getMoves());
+
+		// Prepare turn object
+		return optimalMoves != null && optimalMoves.size() > 0 ? selectMove(optimalMoves) : null;
+	}
+
+	@Override
+	public List<Turn> rankMoves(List<Turn> moves)
+	{
 		List<Turn> optimalMoves = new ArrayList<Turn>();
 		int maxRank = -1;
 
-		// Filter out poor moves, based upon rank
+		// Filter out the best moves, based upon assigned rank
 		for(Turn entry : getMoves())
 		{
 			// Implementation-defined
@@ -114,15 +123,63 @@ public abstract class AICore implements IAI, Runnable
 			}
 		}
 
-		// Prepare turn object
-		return optimalMoves != null && optimalMoves.size() > 0 ? selectMove(optimalMoves) : null;
+		return optimalMoves;
 	}
 
-	/**
-	 * Chooses the turn with the highest rank
-	 * @param optimalMoves the list of turns that share the highest rank.
-	 * @return the turn with the highest rank
-	 */
+	@Override
+	public int rankMove(Turn turn)
+	{
+		// Switch on turn type and rank move
+		switch(turn.getChosenMove())
+		{
+			case BUYDEVCARD:
+				return rankBuyDevCard();
+			case BUILDROAD:
+				return rankNewRoad(turn.getChosenEdge());
+			case BUILDSETTLEMENT:
+				return rankNewSettlement(turn.getChosenNode());
+			case BUILDCITY:
+				return rankNewCity(turn.getChosenNode());
+			case MOVEROBBER:
+				return rankNewRobberLocation(turn.getChosenHex());
+			case PLAYDEVCARD:
+				return rankPlayDevCard(turn.getChosenCard());
+			case INITIATETRADE:
+				// Set the player or bank trade in 'turn' as well
+				return rankInitiateTrade(turn);
+			case SUBMITTRADERESPONSE:
+				return rankTradeResponse(turn.getTradeResponse(), turn.getPlayerTrade());
+			case DISCARDRESOURCES:
+				// If a discard move has gotten this for, then we know it is
+				// an expected move.
+				// Set the chosenResources in 'turn' to be a valid discard as well as rank.
+				return rankDiscard(turn);
+			case SUBMITTARGETPLAYER:
+				return rankTargetPlayer(turn.getTarget());
+			case CHOOSERESOURCE:
+				return rankChosenResource(turn.getChosenResource());
+
+			// Should rank apply for ENDTURN / ROLLDICE? Maybe sometimes..
+			case ENDTURN:
+			case ROLLDICE:
+				break;
+
+			// AI will never chat
+			case CHATMESSAGE:
+				break;
+
+			// If Join Lobby, then the AI has to join a lobby and the rest of the list will be empty
+			// So, it's rank doesn't matter
+			case JOINLOBBY:
+				break;
+			case BODY_NOT_SET:
+			default:
+				break;
+		}
+
+		return 0;
+	}
+
 	@Override
 	public Turn selectMove(List<Turn> optimalMoves)
 	{

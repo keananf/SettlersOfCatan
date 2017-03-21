@@ -202,6 +202,7 @@ public class MoveProcessor
                 Turn turn = new Turn();
                 turn.setChosenMove(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
                 turn.setTradeResponse(resp);
+                turn.setPlayerTrade(getTurn().getPlayerTrade());
                 possibilities.add(turn);
             }
         }

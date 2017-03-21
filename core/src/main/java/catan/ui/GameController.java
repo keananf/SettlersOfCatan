@@ -152,6 +152,15 @@ class GameController implements InputProcessor
 			
 			} 
 		
+		 
+		 if(planeX==inRight && planeY==heighestHeight){
+			 return true;
+		 }
+		 if(planeX==inRight && planeY==lowestHeight){
+			 return true;
+		 }
+		 
+		 
 		}
 		
 		return false;

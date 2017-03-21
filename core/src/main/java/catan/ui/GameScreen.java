@@ -35,7 +35,7 @@ public class GameScreen implements Screen
 	final protected Array<GameObject> hexes = new Array<>();
 	final private Environment environment = new Environment();
 
-	final private SettlersOfCatan game;
+	final protected SettlersOfCatan game;
 
 	public GameScreen(final SettlersOfCatan game)
 	{
@@ -72,7 +72,7 @@ public class GameScreen implements Screen
 		// sea
 		final Material water = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));
 		final Model sea = builder.createCylinder(150f, 0.01f, 150f, 6, water, attributes);
-		objs.add(new GameObject(sea, new Vector3(0, -1, 0)));
+		objs.add(new GameObject(sea, new Point(0,0)));
 
 		// hex tiles
 		final Material dirt = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
@@ -80,7 +80,7 @@ public class GameScreen implements Screen
 
 		for (Entry<Point, Hex> coord : game.getState().getGrid().grid.entrySet())
 		{
-			final GameObject instance = new GameObject(hex, hexPointToCartVec(coord.getKey()));
+			final GameObject instance = new GameObject(hex,coord.getKey());
 			instance.transform.rotate(0, 1, 0, 90f);
 
 			final Color colour;
@@ -107,13 +107,7 @@ public class GameScreen implements Screen
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 	}
 
-	private static final Vector3 hexPointToCartVec(Point p)
-	{
-		final float x = (float) (p.getX());
-		final float y = (float) (p.getY());
-		return new Vector3(x, 0f, (float) ((2 * y - x) / Math.sqrt(3)));
-	}
-
+	
 	@Override
 	public void render(final float delta)
 	{

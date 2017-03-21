@@ -1,7 +1,13 @@
 package catan.ui;
 
+import java.util.concurrent.Semaphore;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
+
+import intergroup.Requests;
+import grid.Hex;
+
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Intersector;
@@ -38,6 +44,19 @@ class GameController implements InputProcessor
 		}
 		else
 		{
+			Hex selected = screen.game.client.getState().getGrid().grid.get(inst.catanCoord);
+			try {
+				Semaphore lock = screen.game.client.getTurnLock();
+				lock.acquire();
+				screen.game.client.getTurn().setChosenHex(selected);
+				screen.game.client.getTurn().setChosenMove(Requests.Request.BodyCase.BODY_NOT_SET);
+				lock.release();
+				screen.game.client.sendTurn();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			inst.materials.get(0).set(ColorAttribute.createDiffuse(Color.BLACK));
 			return true;
 		}

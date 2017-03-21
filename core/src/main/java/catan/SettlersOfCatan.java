@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	public Skin skin;
-	private Client client;
+	public Client client;
 
 	@Override
 	public void create()

@@ -548,7 +548,7 @@ public abstract class Player
 	protected void playCard(DevelopmentCardType card)
 	{
 		int existing = cards.containsKey(card) ? cards.get(card) : 0;
-		cards.put(card, existing);
+		cards.put(card, existing - 1);
 	}
 
 	/**

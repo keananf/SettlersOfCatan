@@ -1,7 +1,7 @@
 package AI;
 
 import connection.RemoteServerConnection;
-import enums.AIDifficulty;
+import enums.Difficulty;
 
 import java.io.IOException;
 
@@ -13,7 +13,7 @@ public class RemoteAIClient extends AIClient
     private String host;
     private RemoteServerConnection conn;
 
-    public RemoteAIClient(AIDifficulty difficulty)
+    public RemoteAIClient(Difficulty difficulty)
     {
         super(difficulty);
     }

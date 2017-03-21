@@ -1,16 +1,14 @@
 package AI;
 
 import client.Client;
-import enums.AIDifficulty;
+import enums.Difficulty;
 
 public abstract class AIClient extends Client
 {
 	protected AICore AI;
 
-	public AIClient(AIDifficulty difficulty)
+	public AIClient(Difficulty difficulty)
 	{
-		setUpConnection();
-		
 		switch(difficulty)
 		{
 			case EASY:
@@ -26,7 +24,12 @@ public abstract class AIClient extends Client
 
 	public AIClient()
 	{
-		setUpConnection();
 		AI = new RandomAI(this);
+	}
+
+	@Override
+	public void shutDown()
+	{
+		super.shutDown();
 	}
 }

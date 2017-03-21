@@ -20,6 +20,7 @@ public abstract class Client
     private Turn turn;
     private IServerConnection conn;
     private Semaphore stateLock, turnLock;
+    private Thread thread;
 
 
     /**

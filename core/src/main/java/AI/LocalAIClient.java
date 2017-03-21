@@ -2,6 +2,7 @@ package AI;
 
 import connection.LocalClientConnection;
 import connection.LocalServerConnection;
+import enums.Difficulty;
 import server.LocalServer;
 import server.Server;
 
@@ -14,8 +15,14 @@ public class LocalAIClient extends AIClient
     private Server server;
     private Thread serverThread;
 
+    public LocalAIClient(Difficulty difficulty)
+    {
+        super(difficulty);
+        setUpConnection();
+    }
     public LocalAIClient()
     {
+        super();
         setUpConnection();
     }
 

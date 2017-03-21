@@ -78,5 +78,6 @@ public class LocalServer extends Server
             LocalClientConnection conn = ai.getConn().getConn();
             joinGame(conn);
         }
+        log("Server SetUp", String.format("Number of AIs: %d. Connections: %d", num, numConnections));
     }
 }

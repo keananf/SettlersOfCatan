@@ -174,8 +174,7 @@ public class ServerPlayer extends Player
 		if (!cards.containsKey(card)) { throw new DoesNotOwnException(card, getColour()); }
 
 		// Remove from inventory
-		int existing = cards.containsKey(card) ? cards.get(card) : 0;
-		cards.put(card, existing - 1);
+		super.playCard(card);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package connection;
 
 import client.Client;
+import com.badlogic.gdx.Gdx;
 import intergroup.Messages;
 
 import java.io.IOException;
@@ -22,33 +23,36 @@ public class RemoteServerConnection implements IServerConnection
     }
 
     @Override
-    public Messages.Message getMessageFromServer()
+    public Messages.Message getMessageFromServer() throws Exception
     {
         if(conn != null)
         {
-            try
-            {
-                Messages.Message m = Messages.Message.parseDelimitedFrom(conn.getInputStream());
-                client.log("Client Conn", String.format("Received %s", m.getEvent().getTypeCase().name()));
-                return m;
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
+            Messages.Message m = Messages.Message.parseDelimitedFrom(conn.getInputStream());
+            log("Client Conn", String.format("Received %s", m.getEvent().getTypeCase().name()));
+            return m;
         }
 
         return null;
     }
 
     @Override
-    public void sendMessageToServer(Messages.Message message)
+    public void sendMessageToServer(Messages.Message message) throws Exception
+    {
+        if(conn != null)
+        {
+            message.writeDelimitedTo(conn.getOutputStream());
+        }
+    }
+
+    @Override
+    public void shutDown()
     {
         if(conn != null)
         {
             try
             {
-                message.writeDelimitedTo(conn.getOutputStream());
+                conn.close();
+                conn = null;
             }
             catch (IOException e)
             {
@@ -57,18 +61,18 @@ public class RemoteServerConnection implements IServerConnection
         }
     }
 
-    @Override
-    public void shutDown()
+    /**
+     * Logs the message depending on whether or not this is a local or remote server
+     * @param tag the tag (for Gdx)
+     * @param msg the msg to log
+     */
+    public void log(String tag, String msg)
     {
-        try
+        if(Gdx.app == null)
         {
-            conn.close();
-            conn = null;
+            System.out.println(msg);
         }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        else Gdx.app.log(tag, msg);
     }
 
     public boolean isInitialised()

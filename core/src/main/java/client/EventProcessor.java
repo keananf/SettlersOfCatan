@@ -16,7 +16,7 @@ import java.util.concurrent.Semaphore;
 public class EventProcessor implements Runnable
 {
 	private final Client client;
-	private final IServerConnection conn;
+	private IServerConnection conn;
 	private boolean robberMoved;
 
 	public EventProcessor(IServerConnection conn, Client client)
@@ -33,6 +33,9 @@ public class EventProcessor implements Runnable
 		// Continuously wait for new messages from the server
 		while (getGame() == null || !getGame().isOver())
 		{
+			// Break
+			if(conn == null) break;
+
 			try
 			{
 				processMessage();
@@ -46,9 +49,9 @@ public class EventProcessor implements Runnable
 			{
 				// Error. Invalid event.
 				// TODO request state from server? Or fail?
+				conn = null;
 				e.printStackTrace();
 			}
-
 		}
 	}
 
@@ -99,6 +102,10 @@ public class EventProcessor implements Runnable
 				getGame().setBoard(ev.getBeginGame());
 				client.log("Event Proc", "Game information received");
 				break;
+			case GAMEINFO:
+				client.setGame(new ClientGame());
+				getGame().processGameInfo(ev.getGameInfo());
+				client.log("Event Proc", "Game information received");
 			case CHATMESSAGE:
 				getGame().writeMessage(ev.getChatMessage(), ev.getInstigator());
 				break;

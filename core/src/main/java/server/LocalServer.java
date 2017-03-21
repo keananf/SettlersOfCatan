@@ -39,27 +39,6 @@ public class LocalServer extends Server
     }
 
     /**
-     * Adds the given local connection to the game
-     * @param connection
-     */
-    private Colour joinGame(LocalClientConnection connection)
-    {
-        Colour c = null;
-        try
-        {
-            c = game.joinGame();
-        }
-        catch (GameFullException e) {}
-
-        connection.setServer(this);
-        connections.put(c, new ListenerThread(connection, c,  this));
-        log("Server Setup", String.format("Player %d connected", numConnections));
-        numConnections++;
-
-        return c;
-    }
-
-    /**
      * Adds the given number of local AI players
      * @param num the number of AIs to add
      */
@@ -79,5 +58,24 @@ public class LocalServer extends Server
             joinGame(conn);
         }
         log("Server SetUp", String.format("Number of AIs: %d. Connections: %d", num, numConnections));
+    }
+
+    /**
+     * Adds the given local connection to the game
+     * @param connection
+     */
+    private Colour joinGame(LocalClientConnection connection)
+    {
+        Colour c = null;
+        try
+        {
+            c = game.joinGame();
+        }
+        catch (GameFullException e) {}
+        connections.put(c, new ListenerThread(connection, c,  this));
+        log("Server Setup", String.format("Player %d connected", numConnections));
+        numConnections++;
+
+        return c;
     }
 }

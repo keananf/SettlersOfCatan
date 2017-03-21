@@ -5,9 +5,13 @@ import enums.DevelopmentCardType;
 import enums.ResourceType;
 import exceptions.*;
 import game.Game;
+import game.build.Building;
+import game.build.City;
 import game.build.Road;
+import game.build.Settlement;
 import game.players.Player;
 import game.players.ServerPlayer;
+import grid.Edge;
 import grid.Hex;
 import grid.Node;
 import grid.Port;
@@ -575,6 +579,59 @@ public class ServerGame extends Game
 		}
 
 		return builder.build();
+	}
+
+	public Lobby.GameInfo getGameInfo(Colour c)
+	{
+		Lobby.GameInfo.Builder gameInfo = Lobby.GameInfo.newBuilder();
+		gameInfo.setResources(processResources(players.get(c).getResources()));
+		gameInfo.setCards(processCards(players.get(c).getDevelopmentCards()));
+		gameInfo.setGameInfo(getGameSettings(c));
+
+		// Set roads
+		for(Edge e : grid.edges)
+		{
+			if(e.getRoad() != null)
+			{
+				Lobby.GameInfo.Road.Builder road = Lobby.GameInfo.Road.newBuilder();
+				road.setOwner(Board.Player.newBuilder().setId(getPlayer(c).getId()).build());
+				road.setEdge(e.toEdgeProto());
+				gameInfo.addRoads(road.build());
+			}
+		}
+
+		// Set settlements and cities
+		for(Node n : grid.nodes.values())
+		{
+			Building building = n.getSettlement();
+			if(building != null && building instanceof Settlement)
+			{
+				Lobby.GameInfo.Settlement.Builder s = Lobby.GameInfo.Settlement.newBuilder();
+				s.setOwner(Board.Player.newBuilder().setId(getPlayer(c).getId()).build());
+				s.setPoint(n.toProto());
+				gameInfo.addSettlements(s.build());
+			}
+			else if(building != null && building instanceof City)
+			{
+				Lobby.GameInfo.Settlement.Builder city = Lobby.GameInfo.Settlement.newBuilder();
+				city.setOwner(Board.Player.newBuilder().setId(getPlayer(c).getId()).build());
+				city.setPoint(n.toProto());
+				gameInfo.addCities(city.build());
+			}
+		}
+
+		// Set players
+		for(Player p : players.values())
+		{
+			int unusedCards = p.getNumDevCards();
+			int resources = p.getNumResources();
+
+			gameInfo.addPlayers(Lobby.GameInfo.PlayerInfo.newBuilder().setPlayer(
+					Board.Player.newBuilder().setId(p.getId()).build()).setPlayedCards(processCards(p.getPlayedDevCards())).
+					setResources(resources).setUnusedCards(unusedCards).build());
+		}
+
+		return gameInfo.build();
 	}
 
 	/**

@@ -15,7 +15,7 @@ import java.util.concurrent.Semaphore;
 public class TurnProcessor
 {
 	private final Client client;
-	private final IServerConnection conn;
+	private IServerConnection conn;
 
 	public TurnProcessor(IServerConnection conn, Client client)
 	{
@@ -135,7 +135,16 @@ public class TurnProcessor
 	 */
 	private void sendToServer(Requests.Request request)
 	{
-		conn.sendMessageToServer(Messages.Message.newBuilder().setRequest(request).build());
+		try
+		{
+			conn.sendMessageToServer(Messages.Message.newBuilder().setRequest(request).build());
+		}
+		catch (Exception e)
+		{
+			conn = null;
+			client.log("Client Error", String.format("Error sending request %s to server", request.getBodyCase().name()));
+			e.printStackTrace();
+		}
 	}
 
 	/**

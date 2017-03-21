@@ -5,7 +5,6 @@ import enums.DevelopmentCardType;
 import enums.ResourceType;
 import exceptions.*;
 import game.Game;
-import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
@@ -31,7 +30,7 @@ public class ClientGame extends Game
 	private boolean gameOver;
 	private int dice;
 	private Map<Colour, Integer> boughtDevCards, resources;
-	private Map<Colour, HashMap<DevelopmentCardType, Integer>> playedDevCards;
+	private Map<Colour, Map<DevelopmentCardType, Integer>> playedDevCards;
 	private Player thisPlayer;
 	private ChatBoard chatBoard;
 	private List<String> usersInLobby;
@@ -41,7 +40,7 @@ public class ClientGame extends Game
 		super();
 		boughtDevCards = new HashMap<Colour, Integer>();
 		resources = new HashMap<Colour, Integer>();
-		playedDevCards = new HashMap<Colour, HashMap<DevelopmentCardType, Integer>>();
+		playedDevCards = new HashMap<Colour, Map<DevelopmentCardType, Integer>>();
 		chatBoard = new ChatBoard();
 		usersInLobby = new ArrayList<String>(NUM_PLAYERS);
 
@@ -73,6 +72,55 @@ public class ClientGame extends Game
 		// Overwrite current grid
 		grid.setNodesAndHexes(hexes);
 		grid.setPorts(ports);
+
+		return grid;
+	}
+
+	/**
+	 * @return a representation of the game that is compatible with protofbufs
+	 * @param gameInfo
+	 */
+	public HexGrid processGameInfo(Lobby.GameInfo gameInfo) throws InvalidCoordinatesException,
+			CannotAffordException, RoadExistsException, CannotBuildRoadException
+	{
+		HexGrid grid = setBoard(gameInfo.getGameInfo());
+		thisPlayer.setResources(processResources(gameInfo.getResources()));
+		thisPlayer.setDevelopmentCards(processCards(gameInfo.getCards()));
+
+		// Add each player
+		for(Lobby.GameInfo.PlayerInfo p : gameInfo.getPlayersList())
+		{
+			Colour c = getPlayer(p.getPlayer().getId()).getColour();
+			boughtDevCards.put(c, p.getUnusedCards());
+			playedDevCards.put(c, processCards(p.getPlayedCards()));
+			resources.put(c, p.getResources());
+		}
+
+		// Add each settlement
+		for(Lobby.GameInfo.Settlement s : gameInfo.getSettlementsList())
+		{
+			Colour c = getPlayer(s.getOwner().getId()).getColour();
+			Node n = getGrid().getNode(s.getPoint().getX(), s.getPoint().getY());
+			getPlayer(s.getOwner().getId()).addSettlement(new Settlement(n, c));
+		}
+
+		// Add each city
+		for(Lobby.GameInfo.Settlement city : gameInfo.getCitiesList())
+		{
+			Colour c = getPlayer(city.getOwner().getId()).getColour();
+			Node n = getGrid().getNode(city.getPoint().getX(), city.getPoint().getY());
+			getPlayer(city.getOwner().getId()).addSettlement(new City(n, c));
+		}
+
+		// Add each road
+		for(Lobby.GameInfo.Road road : gameInfo.getRoadsList())
+		{
+			Colour c = getPlayer(road.getOwner().getId()).getColour();
+			Node n = getGrid().getNode(road.getEdge().getA().getX(), road.getEdge().getA().getY());
+			Node n2 = getGrid().getNode(road.getEdge().getB().getX(), road.getEdge().getB().getY());
+			Edge e = n.findEdge(n2);
+			((LocalPlayer) players.get(c)).addRoad(e);
+		}
 
 		return grid;
 	}
@@ -644,7 +692,7 @@ public class ClientGame extends Game
 	/**
 	 * @return the map of played dev cards
 	 */
-	public Map<Colour, HashMap<DevelopmentCardType, Integer>> getPlayedDevCards()
+	public Map<Colour, Map<DevelopmentCardType, Integer>> getPlayedDevCards()
 	{
 		return playedDevCards;
 	}

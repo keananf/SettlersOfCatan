@@ -1,11 +1,14 @@
 package server;
 
+import AI.LocalAIClientOnServer;
 import com.badlogic.gdx.Gdx;
+import connection.LocalClientConnection;
 import connection.RemoteClientConnection;
 import enums.Colour;
 import exceptions.GameFullException;
 import game.Game;
 import game.players.Player;
+import intergroup.Events;
 import intergroup.Events.Event;
 import intergroup.Messages;
 import intergroup.Messages.Message;
@@ -95,9 +98,7 @@ public class Server implements Runnable
 
 		if((ev == null || !ev.isInitialized()) && msgProc.getLastMessage() != null)
 		{
-			ListenerThread conn = connections.get(msgProc.getLastMessage().getCol());
-			if(conn != null)
-				conn.sendError();
+			sendError(msgProc.getLastMessage().getCol());
 		}
 	}
 
@@ -204,8 +205,7 @@ public class Server implements Runnable
 
 			if(connections.containsKey(c))
 			{
-				connections.get(c).sendMessage(msg.build());
-
+				sendMessage(msg.build(), c);
 			}
 		}
 	}
@@ -224,7 +224,7 @@ public class Server implements Runnable
 		if(ev.getTypeCase().equals(Event.TypeCase.RESOURCESTOLEN) || ev.getTypeCase().equals(Event.TypeCase.DEVCARDBOUGHT))
 		{
 			// Send original to player
-			connections.get(game.getPlayer(ev.getInstigator().getId()).getColour()).sendMessage(msg.build());
+			sendMessage(msg.build(), game.getPlayer(ev.getInstigator().getId()).getColour());
 			foo = true;
 
 			// Obscure important info from other players
@@ -245,7 +245,7 @@ public class Server implements Runnable
 
 			if(connections.containsKey(c))
 			{
-				connections.get(c).sendMessage(msg.build());
+				sendMessage(msg.build(), c);
 			}
 		}
 	}
@@ -280,13 +280,48 @@ public class Server implements Runnable
 					c = game.joinGame();
 				}
 				catch (GameFullException e) {}
-				connections.put(c, new ListenerThread(new RemoteClientConnection(connection, this), c,  this));
+				connections.put(c, new ListenerThread(new RemoteClientConnection(connection), c,  this));
 				log("Server Setup", String.format("Player %d connected", numConnections));
 				numConnections++;
 			}
 		}
 
 		log("Server Setup", "All Players connected. Starting game...\n");
+	}
+
+	/**
+	 * Adds the given local connection to the game
+	 * @param c the colour of the player
+	 */
+	protected void replacePlayer(Colour c)
+	{
+		// Replace connection with a new AI
+		LocalAIClientOnServer ai = new LocalAIClientOnServer();
+		LocalClientConnection conn = ai.getConn().getConn();
+		connections.put(c, new ListenerThread(conn, c,  this));
+		sendGameInfo(c);
+
+		log("Server Error", String.format("Replaced Player %s with an AI due to error", game.getPlayer(c).getId().name()));
+	}
+
+	/**
+	 * Sends the entire game state to the given colour
+	 * @param c the colour to send the info to
+	 */
+	private void sendGameInfo(Colour c)
+	{
+		Message.Builder msg = Message.newBuilder().setEvent(Event.newBuilder().setGameInfo(game.getGameInfo(c)));
+		sendMessage(msg.build(), c);
+	}
+
+	/**
+	 * Adds the given number of local AI players
+	 * @param col the colour of the connection to overwrite
+	 */
+	protected void replacePlayerWithAI(Colour col)
+	{;
+		connections.get(col).shutDown();
+		replacePlayer(col);
 	}
 
 	/**
@@ -308,12 +343,51 @@ public class Server implements Runnable
 	 * @param msg the original message
 	 * @param playerTrade the internal trade request inside the message
 	 */
-	protected void forwardTradeOffer(Messages.Message msg, Trade.WithPlayer playerTrade) throws IOException
+	protected void forwardTradeOffer(Messages.Message msg, Trade.WithPlayer playerTrade)
 	{
 		Colour col = game.getPlayer(playerTrade.getOther().getId()).getColour();
 
 		if(connections.containsKey(col))
-			connections.get(col).sendMessage(msg);
+			sendMessage(msg, col);
+	}
+
+	/**
+	 * Sends the message out to the client
+	 * @param msg the message
+	 * @param col
+	 * @throws IOException
+	 */
+	public void sendMessage(Message msg, Colour col)
+	{
+		if(col != null)
+		{
+			try
+			{
+				connections.get(col).sendMessage(msg);
+			}
+			catch (Exception e)
+			{
+				replacePlayerWithAI(col);
+			}
+		}
+	}
+
+	/**
+	 * If an unknown or invalid message is received, then this message sends an
+	 * error back
+	 * @param c the colour of the player to send the error to
+	 */
+	public void sendError(Colour c)
+	{
+		Message.Builder msg = Message.newBuilder();
+		Event.Error.Builder err = Event.Error.newBuilder();
+
+		// Set up err message
+		err.setDescription("Invalid message type");
+		err.setCause(Events.ErrorCause.UNKNOWN);
+
+		msg.setEvent(Event.newBuilder().setError(err.build()).build());
+		sendMessage(msg.build(), c);
 	}
 
 	public void addMessageToProcess(ReceivedMessage msg) throws IOException

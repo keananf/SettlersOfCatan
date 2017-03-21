@@ -29,6 +29,10 @@ public abstract class AICore implements IAI, Runnable
 			try
 			{
 				getGameLock().acquire();
+				if(getGame() == null)
+				{
+					continue;
+				}
 				if(getGame().isOver())
 				{
 					break;

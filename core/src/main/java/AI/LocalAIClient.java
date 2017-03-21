@@ -18,12 +18,10 @@ public class LocalAIClient extends AIClient
     public LocalAIClient(Difficulty difficulty)
     {
         super(difficulty);
-        setUpConnection();
     }
     public LocalAIClient()
     {
         super();
-        setUpConnection();
     }
 
     @Override

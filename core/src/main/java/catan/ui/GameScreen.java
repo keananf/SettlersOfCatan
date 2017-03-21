@@ -7,6 +7,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -16,6 +18,10 @@ import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.Array;
 import grid.Hex;
 
@@ -36,6 +42,41 @@ public class GameScreen implements Screen
 	final private Environment environment = new Environment();
 
 	final protected SettlersOfCatan game;
+	
+	Stage stage;
+	TextButton button;
+	TextButtonStyle textButtonStyle;
+	Skin skin;
+	TextureAtlas buttonAtlas;
+	BitmapFont font;
+	
+	//button creation
+	public void create(){
+		stage = new Stage();
+		Gdx.input.setInputProcessor(stage);
+		font = new BitmapFont();
+		skin=new Skin();
+		buttonAtlas = new TextureAtlas(Gdx.files.internal("buttons/buttons,pack"));
+		skin.addRegions(buttonAtlas);
+		textButtonStyle = new TextButtonStyle();
+		textButtonStyle.font = font;
+		textButtonStyle.up = skin.getDrawable("up-button");
+		textButtonStyle.down = skin.getDrawable("down-button");
+		textButtonStyle.checked = skin.getDrawable("checked-button");
+		button = new TextButton("Button1", textButtonStyle);
+		stage.addActor(button);
+		
+		
+	}
+	
+	//@Override
+	public void render(){
+		stage.draw();
+	}
+	
+	
+	
+	
 
 	public GameScreen(final SettlersOfCatan game)
 	{
@@ -130,6 +171,12 @@ public class GameScreen implements Screen
 	}
 
 	// Required but unused
+	
+	
+	
+	
+	
+	
 	@Override
 	public void resize(final int width, final int height)
 	{

@@ -7,7 +7,6 @@ import connection.RemoteClientConnection;
 import enums.Colour;
 import exceptions.GameFullException;
 import game.Game;
-import game.players.Player;
 import intergroup.Events;
 import intergroup.Events.Event;
 import intergroup.Messages;
@@ -143,46 +142,6 @@ public class Server implements Runnable
 				connections.get(game.getPlayer(event.getInstigator().getId()));
 				break;
 		}
-	}
-
-
-	/**
-	 * Sends the dice and each player's respective resource count to the player's socket
-	 * @param dice the dice roll to send
-	 * @throws IOException
-	 */
-	private void sendTurns(Board.Roll dice) throws IOException
-	{
-		int sum = dice.getA() + dice.getB();
-
-		// For each player
-		for(Colour c : Colour.values())
-		{
-			if(game.getPlayers().containsKey(c))
-			{
-				Player p = game.getPlayers().get(c);
-
-				if(sum == 7 && p.getNumResources() > 7)
-				{
-					msgProc.addExpectedMove(c, Request.BodyCase.DISCARDRESOURCES);
-				}
-			}
-		}
-		sendDice(dice);
-	}
-
-	/**
-	 * Sends the dice to the player's socket
-	 * @param roll the dice roll to send
-	 * @throws IOException
-	 */
-	private void sendDice(Board.Roll roll) throws IOException
-	{
-		// Set up event
-		Event.Builder ev = Event.newBuilder();
-		ev.setRolled(roll);
-
-		sendEvents(ev.build());
 	}
 
 	/**

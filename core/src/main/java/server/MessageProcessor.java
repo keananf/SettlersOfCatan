@@ -216,6 +216,17 @@ public class MessageProcessor
             updateExpectedMoves(request, colour);
         }
 
+        // Add discard move if necessary
+        if(request.getBodyCase().equals(Requests.Request.BodyCase.ROLLDICE)
+                && ev.getRolled().getA() + ev.getRolled().getB() == 7)
+        {
+            for(Player p : game.getPlayers().values())
+            {
+                if(p.getNumResources() > 7)
+                    expectedMoves.get(p.getColour()).add(Requests.Request.BodyCase.DISCARDRESOURCES);
+            }
+        }
+
         return ev.build();
     }
 

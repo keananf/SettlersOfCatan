@@ -82,7 +82,7 @@ public class RandomAI extends AICore
 	}
 
 	@Override
-	public int rankTradeResponse(Trade.Response tradeResponse, Turn turn)
+	public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)
 	{
 		return 0;
 	}

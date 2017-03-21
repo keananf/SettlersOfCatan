@@ -1,6 +1,6 @@
 package connection;
 
-import com.badlogic.gdx.Gdx;
+import client.Client;
 import intergroup.Messages;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -11,11 +11,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class LocalServerConnection implements IServerConnection
 {
+    private final Client client;
     private LocalClientConnection conn;
     protected ConcurrentLinkedQueue<Messages.Message> fromServer;
 
-    public LocalServerConnection()
+    public LocalServerConnection(Client client)
     {
+        this.client = client;
         fromServer = new ConcurrentLinkedQueue<Messages.Message>();
     }
 
@@ -31,7 +33,7 @@ public class LocalServerConnection implements IServerConnection
         while(fromServer.isEmpty()) {}
 
         Messages.Message m = fromServer.poll();
-        Gdx.app.log("Client Conn", String.format("Received %s", m.getEvent().getTypeCase().name()));
+        client.log("Client Conn", String.format("Received %s", m.getEvent().getTypeCase().name()));
         return m;
     }
 

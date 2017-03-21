@@ -114,6 +114,10 @@ public class TurnProcessor
 			case BUYDEVCARD:
 				request.setBuyDevCard(EmptyOuterClass.Empty.getDefaultInstance());
 				break;
+
+			case BODY_NOT_SET:
+			default:
+				return;
         }
 
         // Send to server if it is a valid move
@@ -168,7 +172,7 @@ public class TurnProcessor
 		return client.getState();
 	}
 
-	private TurnInProgress getTurn()
+	private Turn getTurn()
 	{
 		return client.getTurn();
 	}

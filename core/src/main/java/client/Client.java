@@ -17,7 +17,7 @@ public abstract class Client
     protected TurnProcessor turnProcessor;
     protected MoveProcessor moveProcessor;
     protected static final int PORT = 12345;
-    private TurnInProgress turn;
+    private Turn turn;
     private IServerConnection conn;
     private Semaphore stateLock, turnLock;
 
@@ -40,7 +40,7 @@ public abstract class Client
         this.conn = conn;
         this.stateLock = new Semaphore(1);
         this.turnLock = new Semaphore(1);
-        this.turn = new TurnInProgress();
+        this.turn = new Turn();
         this.turnProcessor = new TurnProcessor(conn, this);
         this.moveProcessor = new MoveProcessor(this);
         this.eventProcessor = new EventProcessor(conn, this);
@@ -85,7 +85,7 @@ public abstract class Client
         return state;
     }
 
-    public TurnInProgress getTurn()
+    public Turn getTurn()
     {
         return turn;
     }

@@ -1,35 +1,58 @@
 package AI;
 
-import enums.Difficulty;
-import grid.Node;
-
-import java.util.ArrayList;
+import client.Turn;
 
 /**
  * Created by 140002949 on 19/03/17.
  */
-public class EasyAI extends AICore {
+public class EasyAI extends AICore
+{
 
-    public EasyAI(Difficulty difficulty, AIClient client) {
-        super(difficulty, client);
+    public EasyAI(AIClient client)
+    {
+        super(client);
     }
 
-    public Node getInitialSettlementNode(){
-        Node node = null;
+    @Override
+    public int rankMove(Turn turn)
+    {
+        // Switch on turn type and rank move
+        switch(turn.getChosenMove())
+        {
+            case BUYDEVCARD:
+                // return rankBuyDevCard();
+            case BUILDROAD:
+                // return rankNewRoad(turn.getChosenRoad());
+            case BUILDSETTLEMENT:
+                // return rankNewSettlement(turn.getChosenNode());
+            case BUILDCITY:
+                // return rankNewCity(turn.getChosenNode());
+            case MOVEROBBER:
+                // return rankNewRobberLocation(turn.getChosenHex());
+            case PLAYDEVCARD:
+                // return rankPlayDevCard(turn.getChosenCard());
+            case INITIATETRADE:
+                // return rankInitiateTrade(); TODO ensure this field set
+            case SUBMITTRADERESPONSE:
+                // return rankNewSettlement(turn.getTradeResponse, turn.getCurrentTrade());
+            case DISCARDRESOURCES:
+                // return rankDiscard(turn.getChosenResources()); TODO ensure this field set
+            case SUBMITTARGETPLAYER:
+                // return rankTargetPlayer(turn.getTarget());
+            case CHOOSERESOURCE:
+                // return rankChosenResource(turn.getChosenResource);
 
-        ArrayList<Node> nodes = (ArrayList<Node>) game.getGrid().getNodesAsList();
-        ArrayList<RankObject> rankedNodes = new ArrayList<>();
-
-        for(Node n : nodes){
-
-            RankObject rankObject = new RankObject(n);
-            rankObject.rank();
-
-            rankedNodes.add(rankObject.getRanking(), rankObject);
+            // Rank does not apply here
+            case CHATMESSAGE:
+            case ROLLDICE:
+            case ENDTURN:
+            case JOINLOBBY:
+            case BODY_NOT_SET:
+            default:
+                break;
         }
-        //gets the rankobject with the highest ranking and returns the node it has been given
-        return rankedNodes.get(rankedNodes.size()-1).getNodeOnBoard(nodes);
+
+        return 0;
     }
-    //TODO: work on heuristic ranking of moves and heuristic placement of robber
 
 }

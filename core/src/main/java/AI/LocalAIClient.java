@@ -1,4 +1,4 @@
-package client;
+package AI;
 
 import connection.LocalClientConnection;
 import connection.LocalServerConnection;
@@ -6,16 +6,15 @@ import server.LocalServer;
 import server.Server;
 
 /**
- * Class representing a client being run on the same machine as the server
- * @author 140001596
+ * Class representing an AI client being run on the same machine as the server
  */
-public class LocalClient extends Client
+public class LocalAIClient extends AIClient
 {
     private LocalServerConnection conn;
     private Server server;
     private Thread serverThread;
 
-    public LocalClient()
+    public LocalAIClient()
     {
         setUpConnection();
     }

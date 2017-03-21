@@ -35,6 +35,7 @@ public class Server implements Runnable
 	public Server()
 	{
 		game = new ServerGame();
+		Game.NUM_PLAYERS = 1;
 
 		// Set up
 		msgProc = new MessageProcessor(game, this);
@@ -256,7 +257,11 @@ public class Server implements Runnable
 	private void getPlayers() throws IOException
 	{
 		// If no remote players
-		if(numConnections == Game.NUM_PLAYERS) return;
+		if(numConnections == Game.NUM_PLAYERS)
+		{
+			log("Server Setup", "All Players connected. Starting game...\n");
+			return;
+		}
 
 		serverSocket = new ServerSocket();
 		serverSocket.bind(new InetSocketAddress("localhost", PORT));
@@ -275,12 +280,12 @@ public class Server implements Runnable
 					c = game.joinGame();
 				}
 				catch (GameFullException e) {}
-				connections.put(c, new ListenerThread(new RemoteClientConnection(connection), c,  this));
+				connections.put(c, new ListenerThread(new RemoteClientConnection(connection, this), c,  this));
 				log("Server Setup", String.format("Player %d connected", numConnections));
 				numConnections++;
 			}
 		}
-		
+
 		log("Server Setup", "All Players connected. Starting game...\n");
 	}
 
@@ -289,7 +294,7 @@ public class Server implements Runnable
 	 * @param tag the tag (for Gdx)
 	 * @param msg the msg to log
 	 */
-	private void log(String tag, String msg)
+	public void log(String tag, String msg)
 	{
 		if(Gdx.app == null)
 		{

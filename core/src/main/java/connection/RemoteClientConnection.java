@@ -2,6 +2,7 @@ package connection;
 
 import intergroup.Events;
 import intergroup.Messages;
+import server.Server;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -12,10 +13,12 @@ import java.net.Socket;
  */
 public class RemoteClientConnection implements IClientConnection
 {
+    private final Server client;
     private Socket conn;
 
-    public RemoteClientConnection(Socket conn)
+    public RemoteClientConnection(Socket conn, Server server)
     {
+        this.client = server;
         this.conn = conn;
     }
 
@@ -28,7 +31,7 @@ public class RemoteClientConnection implements IClientConnection
             {
                 Events.Event ev = message.getEvent();
                 message.writeDelimitedTo(conn.getOutputStream());
-                String.format("Sent. %s", ev.getTypeCase().name());
+                client.log("Server conn", String.format("Sent. %s", ev.getTypeCase().name()));
             }
             catch (IOException e)
             {

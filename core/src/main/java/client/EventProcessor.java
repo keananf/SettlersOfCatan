@@ -1,6 +1,5 @@
 package client;
 
-import com.badlogic.gdx.Gdx;
 import connection.IServerConnection;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
@@ -69,6 +68,7 @@ public class EventProcessor implements Runnable
 				getGame().setGameOver();
 				break;
 			case TURNENDED:
+				getTurn().setTurnStarted(false);
 				getTurn().setTradePhase(false);
 				getGame().setCurrentPlayer(getGame().getNextPlayer());
 				break;
@@ -82,6 +82,7 @@ public class EventProcessor implements Runnable
 				getGame().processRoad(ev.getRoadBuilt(),ev.getInstigator());
 				break;
 			case ROLLED:
+				getTurn().setTurnStarted(true);
 				getGame().processDice(ev.getRolled().getA()+ev.getRolled().getB(), ev.getRolled().getResourceAllocationList());
 				break;
 			case ROBBERMOVED:
@@ -309,7 +310,7 @@ public class EventProcessor implements Runnable
 		return client.getTurnLock();
 	}
 
-	private TurnInProgress getTurn()
+	private Turn getTurn()
 	{
 		return client.getTurn();
 	}

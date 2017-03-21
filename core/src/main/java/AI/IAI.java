@@ -1,10 +1,12 @@
 package AI;
 
-import java.util.ArrayList;
+import client.Turn;
+
+import java.util.List;
 
 public interface IAI 
 {
-	public ArrayList<MoveEntry> getMoves();
-	public ArrayList<MoveEntry>rankMoves(ArrayList<MoveEntry> moves);
-	public MoveEntry selectMove(ArrayList<MoveEntry> moves);
+	int rankMove(Turn turn);
+	Turn selectMove(List<Turn> optimalMoves);
+	void performMove();
 }

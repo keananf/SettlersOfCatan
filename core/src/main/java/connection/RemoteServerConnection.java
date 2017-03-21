@@ -1,6 +1,6 @@
 package connection;
 
-import com.badlogic.gdx.Gdx;
+import client.Client;
 import intergroup.Messages;
 
 import java.io.IOException;
@@ -13,9 +13,11 @@ import java.net.Socket;
 public class RemoteServerConnection implements IServerConnection
 {
     private Socket conn;
+    private Client client;
 
-    public void connect(String host, int port) throws IOException
+    public void connect(String host, int port, Client client) throws IOException
     {
+        this.client = client;
         conn = new Socket(host, port);
     }
 
@@ -27,7 +29,7 @@ public class RemoteServerConnection implements IServerConnection
             try
             {
                 Messages.Message m = Messages.Message.parseDelimitedFrom(conn.getInputStream());
-                Gdx.app.log("Client Conn", String.format("Received %s", m.getEvent().getTypeCase().name()));
+                client.log("Client Conn", String.format("Received %s", m.getEvent().getTypeCase().name()));
                 return m;
             }
             catch (IOException e)

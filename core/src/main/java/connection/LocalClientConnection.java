@@ -1,7 +1,7 @@
 package connection;
 
-import com.badlogic.gdx.Gdx;
 import intergroup.Messages;
+import server.Server;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class LocalClientConnection implements IClientConnection
 {
+    private Server server;
     private LocalServerConnection conn;
     protected ConcurrentLinkedQueue<Messages.Message> fromClient;
 
@@ -20,13 +21,18 @@ public class LocalClientConnection implements IClientConnection
         fromClient = new ConcurrentLinkedQueue<Messages.Message>();
     }
 
+    public void setServer(Server server)
+    {
+        this.server = server;
+    }
+
     @Override
     public void sendMessageToClient(Messages.Message message)
     {
-        if(conn != null)
+        if(conn != null || this.server == null)
         {
             conn.fromServer.add(message);
-            Gdx.app.log("Server Conn", String.format("Sent. %s", message.getEvent().getTypeCase().name()));
+            server.log("Server Conn", String.format("Sent. %s", message.getEvent().getTypeCase().name()));
         }
     }
 

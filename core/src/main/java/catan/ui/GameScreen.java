@@ -2,16 +2,19 @@ package catan.ui;
 
 import catan.SettlersOfCatan;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import grid.Hex;
@@ -24,11 +27,13 @@ public class GameScreen implements Screen
 	final private AssMan assets = new AssMan();
 	final private ModelBatch MODEL_BATCH = new ModelBatch();
 
-	final private Camera cam;
-	final private SpinCamController camController;
+	protected Camera cam;
+	private CatanCamController camController;
+	private GameController gameController;
 
-	final private Array<ModelInstance> boardInstances = new Array<ModelInstance>();
-	final private Environment environment;
+	final protected Array<GameObject> objs = new Array<>();
+	final protected Array<GameObject> hexes = new Array<>();
+	final private Environment environment = new Environment();
 
 	final private SettlersOfCatan game;
 
@@ -36,39 +41,70 @@ public class GameScreen implements Screen
 	{
 		this.game = game;
 
-		// init camera
-		cam = new PerspectiveCamera(75f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(0f, 7f, 10f);
-		cam.lookAt(0, 0, 0);
-		cam.near = 0.1f;
-		cam.far = 200f;
-		cam.update();
+		initCamera();
+		camController = new CatanCamController(cam);
+		gameController = new GameController(this);
 
-		// init camera controller
-		camController = new SpinCamController(cam);
-		Gdx.input.setInputProcessor(camController);
+		final InputMultiplexer multiplexer = new InputMultiplexer();
+		multiplexer.addProcessor(camController);
+		multiplexer.addProcessor(gameController);
+		Gdx.input.setInputProcessor(multiplexer);
 
-		// init external assets
 		initBoard();
+		initEnvironment();
+	}
 
-		// init environment
-		environment = new Environment();
-		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
-		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+	private void initCamera()
+	{
+		cam = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam.position.set(0f, 8f, -10f);
+		cam.lookAt(0, 0, 0); // look at centre of world
+		cam.near = 0.01f; // closest things to be rendered
+		cam.far = 300f; // furthest things to be rendered
+		cam.update();
 	}
 
 	private void initBoard()
 	{
-		assets.load("models/hex.g3db", Model.class);
-		assets.finishLoading();
+		final ModelBuilder builder = new ModelBuilder();
+		final long attributes = Usage.Position | Usage.Normal | Usage.TextureCoordinates;
 
-		for (Entry<Point, Hex> coord : game.state.getGrid().grid.entrySet())
+		// sea
+		final Material water = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));
+		final Model sea = builder.createCylinder(150f, 0.01f, 150f, 6, water, attributes);
+		objs.add(new GameObject(sea, new Vector3(0, -1, 0)));
+
+		// hex tiles
+		final Material dirt = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
+		final Model hex = builder.createCylinder(2f, 0.2f, 2f, 6, dirt, attributes);
+
+		for (Entry<Point, Hex> coord : game.getState().getGrid().grid.entrySet())
 		{
+			final GameObject instance = new GameObject(hex, hexPointToCartVec(coord.getKey()));
+			instance.transform.rotate(0, 1, 0, 90f);
 
-			ModelInstance hex = new ModelInstance(assets.getModel("hex.g3db"), hexPointToCartVec(coord.getKey()));
+			final Color colour;
+			switch (coord.getValue().getResource())
+			{
+				case Grain:   colour = Color.YELLOW;    break;
+				case Wool:    colour = Color.WHITE;     break;
+				case Ore:     colour = Color.GRAY;      break;
+				case Brick:   colour = Color.FIREBRICK; break;
+				case Lumber:  colour = Color.FOREST;    break;
+				case Generic: colour = Color.ORANGE;    break;
+				default:      colour = null;            break;
+			}
+			instance.materials.get(0).set(ColorAttribute.createDiffuse(colour));
 
-			boardInstances.add(hex);
+			objs.add(instance);
+			hexes.add(instance);
 		}
+	}
+
+	private void initEnvironment()
+	{
+		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
+		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 	}
 
 	private static final Vector3 hexPointToCartVec(Point p)
@@ -85,13 +121,9 @@ public class GameScreen implements Screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		camController.update();
-		renderBoard();
-	}
 
-	private void renderBoard()
-	{
 		MODEL_BATCH.begin(cam);
-		MODEL_BATCH.render(boardInstances, environment);
+		MODEL_BATCH.render(objs, environment);
 		MODEL_BATCH.end();
 	}
 
@@ -100,7 +132,7 @@ public class GameScreen implements Screen
 	{
 		assets.dispose();
 		MODEL_BATCH.dispose();
-		boardInstances.clear();
+		objs.clear();
 	}
 
 	// Required but unused

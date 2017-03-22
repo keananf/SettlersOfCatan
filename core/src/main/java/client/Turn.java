@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class TurnInProgress
+public class Turn
 {
 	private Requests.Request.BodyCase chosenMove;
 
@@ -30,16 +30,32 @@ public class TurnInProgress
 	private Trade.Response tradeResponse;
 	private Colour target;
 	private ConcurrentLinkedQueue<Requests.Request.BodyCase> expectedMoves;
-	private boolean tradePhase;
+	private boolean tradePhase, turnStarted, initialPhase;
+	private int roll;
 
-	public TurnInProgress()
+	public Turn()
 	{
+		setUp();
+	}
+
+	public Turn(Requests.Request.BodyCase move)
+	{
+		this.chosenMove = move;
+		setUp();
+	}
+
+	private void setUp()
+	{
+		expectedMoves = new ConcurrentLinkedQueue<Requests.Request.BodyCase>();
+		chosenResources = new HashMap<ResourceType, Integer>();
 		reset();
 	}
 
 	public void reset()
 	{
+		roll = 0;
 		tradePhase = false;
+		turnStarted = false;
 		chosenCard = null;
 		chosenColour = null;
 		chosenEdge = null;
@@ -51,11 +67,11 @@ public class TurnInProgress
 		playerTrade = null;
 		tradeResponse = null;
 		target = null;
-		chosenResources = new HashMap<ResourceType, Integer>();
-		expectedMoves = new ConcurrentLinkedQueue<Requests.Request.BodyCase>();
+		chosenResources.clear();
+		expectedMoves.clear();
 	}
 
-	protected ConcurrentLinkedQueue<Requests.Request.BodyCase> getExpectedMoves()
+	public ConcurrentLinkedQueue<Requests.Request.BodyCase> getExpectedMoves()
 	{
 		return expectedMoves;
 	}
@@ -199,5 +215,37 @@ public class TurnInProgress
 	public void setTradePhase(boolean tradePhase)
 	{
 		this.tradePhase = tradePhase;
+	}
+
+    public void setChosenResources(Map<ResourceType,Integer> chosenResources)
+	{
+        this.chosenResources = chosenResources;
+    }
+
+	public boolean hasTurnStarted()
+	{
+		return turnStarted;
+	}
+
+    public void setTurnStarted(boolean turnStarted)
+	{
+        this.turnStarted = turnStarted;
+    }
+
+    public boolean isInitialPhase()
+	{
+        return initialPhase;
+    }
+
+    public void setInitialPhase(boolean initialPhase) {this.initialPhase = initialPhase;}
+
+	public int getRoll()
+	{
+		return roll;
+	}
+
+	public void setRoll(int roll)
+	{
+		this.roll = roll;
 	}
 }

@@ -8,8 +8,8 @@ import intergroup.Messages;
  */
 public interface IClientConnection
 {
-    void sendMessageToClient(Messages.Message message);
-    Messages.Message getMessageFromClient();
+    void sendMessageToClient(Messages.Message message) throws Exception;
+    Messages.Message getMessageFromClient() throws Exception;
 
     void shutDown();
 }

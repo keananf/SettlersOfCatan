@@ -21,15 +21,7 @@ public class HexGrid
 	private Hex hexWithRobber;
 	public static final int SIZE_OF_GRID = 5;
 
-	public HexGrid()
-	{
-		initGrid();
-	}
-
-	/**
-	 * Instantiates a new hexgrid object
-	 */
-	private void initGrid()
+	public HexGrid(boolean b)
 	{
 		grid = new Hashtable<Point, Hex>();
 		nodes = new Hashtable<Point, Node>();
@@ -37,6 +29,14 @@ public class HexGrid
 		edges = new ArrayList<Edge>();
 		ports = new ArrayList<Port>();
 
+		if(b) initGrid();
+	}
+
+	/**
+	 * Instantiates a new hexgrid object
+	 */
+	private void initGrid()
+	{
 		Map<Integer, Integer> chitsAvailable = getChitsAvailable();
 		Map<ResourceType, Integer> resourcesAvailable = getResourcesAvailable();
 
@@ -140,12 +140,14 @@ public class HexGrid
 					adjacentHexes.add((Hex) neighbour);
 				}
 			}
+
 			node.setAdjacentHexes(adjacentHexes);
 			for (Hex hex : adjacentHexes)
 			{
 				hex.addNode(node);
 			}
 		}
+
 	}
 
 	/**
@@ -427,8 +429,8 @@ public class HexGrid
 			this.grid.put(new Point(h.getX(), h.getY()), h);
 
 			// Set default robber
-			if (h.getResource().equals(ResourceType.Generic)
-					&& hexWithRobber.getResource().equals(ResourceType.Generic))
+			if (h.getResource().equals(ResourceType.Generic) && (hexWithRobber == null
+					|| hexWithRobber.getResource().equals(ResourceType.Generic)))
 			{
 				h.toggleHasRobber();
 				hexWithRobber = h;
@@ -444,7 +446,6 @@ public class HexGrid
 				// If in boundaries
 				if (y - 2 * x <= 8 && 2 * y - x <= 8 && x + y <= 8 && y - 2 * x >= -8 && 2 * y - x >= -8 && x + y >= -8)
 				{
-
 					// Condition for whether or not the coordinate is a node.
 					if (Math.abs(x + y) % 3 != 0 && x + y != 0)
 					{
@@ -464,16 +465,25 @@ public class HexGrid
 	 */
 	public void setPorts(List<Port> ports)
 	{
+		List<Edge> es = new ArrayList<Edge>();
+		es.addAll(edges);
 		this.ports = ports;
 
 		// If edge is a port, overwrite
-		for (Edge e : edges)
+		for (Edge e : es)
 		{
 			for (Port p : ports)
 			{
 				if (e.equals(p))
 				{
-					e = p;
+					e.getX().removeEdge(e);
+					e.getY().removeEdge(e);
+					edges.remove(e);
+
+					e.getX().addEdge(p);
+					e.getY().addEdge(p);
+					edges.add(p);
+					break;
 				}
 			}
 		}

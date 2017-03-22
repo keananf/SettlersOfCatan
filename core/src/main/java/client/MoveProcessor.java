@@ -4,7 +4,6 @@ import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
 import game.players.Player;
-import grid.BoardElement;
 import grid.Edge;
 import grid.Hex;
 import grid.Node;
@@ -25,48 +24,52 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class MoveProcessor
 {
     private final Client client;
-    private final TurnInProgress turn;
-    private final ClientGame game;
-    private final ConcurrentLinkedQueue<Requests.Request.BodyCase> expectedMoves;
 
     public MoveProcessor(Client client)
     {
-        this.turn = client.getTurn();
-        expectedMoves = turn.getExpectedMoves();
         this.client = client;
-        this.game = client.getState();
     }
 
     /**
-     * Retrieve a list of all building possibilities
-     * @return
+     * Retrieve a list of all building possibilities, regardless of game context
+     * @return a list of all possible building turns
      */
-    public List<BoardElement> getBuildingPossibilities()
+    private List<Turn> getBuildingPossibilities()
     {
-        List<BoardElement> moves = new ArrayList<BoardElement>();
+        List<Turn> moves = new ArrayList<Turn>();
 
         // This player
-        Player p = game.getPlayer();
+        Player p = getGame().getPlayer();
 
         // For each node
-        for(Node n : game.getGrid().nodes.values())
+        for(Node n : getGame().getGrid().nodes.values())
         {
-            if(p.canBuildSettlement(n))
+            Turn turn = new Turn();
+            if(checkBuild(n) && n.getSettlement() == null)
             {
-                moves.add(n);
+                turn.setChosenNode(n);
+                turn.setChosenMove(Requests.Request.BodyCase.BUILDSETTLEMENT);
+
             }
-            else if(p.canBuildCity(n))
+            else if(checkBuild(n) && n.getSettlement() != null)
             {
-                moves.add(n);
+                turn.setChosenNode(n);
+                turn.setChosenMove(Requests.Request.BodyCase.BUILDCITY);
             }
+            else continue;
+
+            moves.add(turn);
         }
 
         // For each edge
-        for(Edge e : game.getGrid().getEdgesAsList())
+        for(Edge e : getGame().getGrid().getEdgesAsList())
         {
-            if(p.canBuildRoad(e))
+            Turn turn = new Turn();
+            if(checkBuildRoad(e))
             {
-                moves.add(e);
+                turn.setChosenEdge(e);
+                turn.setChosenMove(Requests.Request.BodyCase.BUILDROAD);
+                moves.add(turn);
             }
         }
 
@@ -75,65 +78,100 @@ public class MoveProcessor
 
     /**
      * Processes a turn and ascertains all possible moves
-     * @param turn the turn
      * @return list of possible choices from this proposed turn
      */
-    public List<Requests.Request.BodyCase> getPossibleMoves(TurnInProgress turn)
+    public List<Turn> getPossibleMoves()
     {
-        List<Requests.Request.BodyCase> possibilities = new ArrayList<Requests.Request.BodyCase>();
+        List<Turn> possibilities = new ArrayList<Turn>();
 
+        // Add initial possibilities
+        possibilities.add(new Turn(Requests.Request.BodyCase.CHATMESSAGE));
+        possibilities.addAll(getBuildingPossibilities());
+
+        if(getTurn().isInitialPhase())
+        {
+            return possibilities;
+        }
+
+        // Check other possibilities
         if(checkBuyDevCard())
         {
-            possibilities.add(Requests.Request.BodyCase.BUYDEVCARD);
+            possibilities.add(new Turn(Requests.Request.BodyCase.BUYDEVCARD));
         }
-        if(checkPlayDevCard(turn.getChosenCard()))
+        if(getExpectedMoves().isEmpty())
         {
-            possibilities.add(Requests.Request.BodyCase.PLAYDEVCARD);
+            possibilities.add(new Turn(Requests.Request.BodyCase.ENDTURN));
+            possibilities.add(new Turn(Requests.Request.BodyCase.INITIATETRADE));
+
+            // If the turn hasn't started, then the player can roll the dice
+            if(!getTurn().hasTurnStarted())
+                possibilities.add(new Turn(Requests.Request.BodyCase.ROLLDICE));
         }
-        if(checkBuildRoad(turn.getChosenEdge()))
+        else if(getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
         {
-            possibilities.add(Requests.Request.BodyCase.BUILDROAD);
+            possibilities.add(new Turn(Requests.Request.BodyCase.DISCARDRESOURCES));
         }
-        if(checkBuild(turn.getChosenNode()))
+
+        // Check owned dev cards
+        for(DevelopmentCardType type : getGame().getPlayer().getDevelopmentCards().keySet())
         {
-            if(turn.getChosenNode().getSettlement() != null)
+            if(checkPlayDevCard(type))
             {
-                possibilities.add(Requests.Request.BodyCase.BUILDCITY);
+                Turn turn = new Turn();
+                turn.setChosenMove(Requests.Request.BodyCase.PLAYDEVCARD);
+                turn.setChosenCard(type);
+                possibilities.add(turn);
             }
-            else possibilities.add(Requests.Request.BodyCase.BUILDSETTLEMENT);
         }
-        if(checkChosenResource(turn.getChosenResource()))
+
+        // For every owned resource type
+        for(ResourceType r : ResourceType.values())
         {
-            possibilities.add(Requests.Request.BodyCase.CHOOSERESOURCE);
+            if(checkChosenResource(r))
+            {
+                Turn turn = new Turn();
+                turn.setChosenMove(Requests.Request.BodyCase.CHOOSERESOURCE);
+                turn.setChosenResource(r);
+                possibilities.add(turn);
+            }
         }
-        if(checkTarget(turn.getTarget()))
+
+        // For every hex
+        for(Hex h : getGame().getGrid().grid.values())
         {
-            possibilities.add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+            if(checkHex(h))
+            {
+                Turn turn = new Turn();
+                turn.setChosenHex(h);
+                turn.setChosenMove(Requests.Request.BodyCase.MOVEROBBER);
+                possibilities.add(turn);
+            }
         }
-        if(checkHex(turn.getChosenHex()))
+
+        // For every colour
+        for(Colour c : Colour.values())
         {
-            possibilities.add((Requests.Request.BodyCase.MOVEROBBER));
+            if (checkTarget(c))
+            {
+                Turn turn = new Turn();
+                turn.setTarget(c);
+                turn.setChosenMove(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+                possibilities.add(turn);
+            }
         }
-        if(checkDiscard(turn.getChosenResources()))
+
+        // For each response type
+        for(Trade.Response resp : Trade.Response.values())
         {
-            possibilities.add(Requests.Request.BodyCase.DISCARDRESOURCES);
+            if(checkSendResponse(resp))
+            {
+                Turn turn = new Turn();
+                turn.setChosenMove(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
+                turn.setTradeResponse(resp);
+                turn.setPlayerTrade(getTurn().getPlayerTrade());
+                possibilities.add(turn);
+            }
         }
-        if(checkSendResponse(turn.getTradeResponse()))
-        {
-            possibilities.add(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
-        }
-        if(checkInitiateTrade(Trade.Kind.newBuilder().setBank(turn.getBankTrade()).build()) ||
-                checkInitiateTrade(Trade.Kind.newBuilder().setPlayer(turn.getPlayerTrade()).build()))
-        {
-            possibilities.add(Requests.Request.BodyCase.INITIATETRADE);
-        }
-        if(expectedMoves.isEmpty())
-        {
-            possibilities.add(Requests.Request.BodyCase.ENDTURN);
-            possibilities.add(Requests.Request.BodyCase.JOINLOBBY);
-            possibilities.add(Requests.Request.BodyCase.ROLLDICE);
-        }
-        possibilities.add(Requests.Request.BodyCase.CHATMESSAGE);
 
         return possibilities;
     }
@@ -143,11 +181,11 @@ public class MoveProcessor
      * @param hex the chosen hex
      * @return whether or not the move is valid
      */
-    public boolean checkHex(Hex hex)
+    private boolean checkHex(Hex hex)
     {
         // Ensure this hex doesn't already have the robber, and that the move is expected OR no moves are expected
-        return checkTurn() && !hex.equals(game.getGrid().getHexWithRobber()) &&
-                (expectedMoves.isEmpty() || (expectedMoves.contains(Requests.Request.BodyCase.MOVEROBBER)));
+        return checkTurn() && !hex.equals(getGame().getGrid().getHexWithRobber()) &&
+                (!getExpectedMoves().isEmpty() && getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER));
     }
 
     /**
@@ -165,8 +203,8 @@ public class MoveProcessor
 
         // Ensure that a discard is expected, and that the discard can be afforded and that it brings the user
         // into a safe position having 7 or less resources.
-        return (!expectedMoves.isEmpty() && expectedMoves.contains(Requests.Request.BodyCase.DISCARDRESOURCES))
-                && game.getPlayer().canAfford(resources) && sum <= 7;
+        return (!getExpectedMoves().isEmpty() && getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
+                && getGame().getPlayer().canAfford(resources) && sum <= 7;
     }
 
     /**
@@ -178,8 +216,8 @@ public class MoveProcessor
     {
         // Ensure that a SUBMITTARGETPLAYER move is expected, and that the player
         // has resources
-        return (checkTurn() && expectedMoves.contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
-                && game.getPlayer(target).getNumResources() > 0);
+        return (checkTurn() && getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
+                && getGame().getPlayer(target).getNumResources() > 0);
     }
 
     /**
@@ -187,35 +225,32 @@ public class MoveProcessor
      * @param r the resource in question
      * @return whether or not the move is valid
      */
-    public boolean checkChosenResource(ResourceType r)
+    private boolean checkChosenResource(ResourceType r)
     {
         // Ensure that a CHOOSE RESOURCE move is expected, and that the bank
         // has the requested resource available
-        return (expectedMoves.contains(Requests.Request.BodyCase.CHOOSERESOURCE)
-                && game.getBank().getAvailableResources().get(r) > 0);
+        return (getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE)
+                && getGame().getBank().getAvailableResources().get(r) > 0);
     }
 
     /**
      * Checks the player can play the given card
      * @param type the type of card wanting to be played
      */
-    public boolean checkPlayDevCard(DevelopmentCardType type)
+    private boolean checkPlayDevCard(DevelopmentCardType type)
     {
         if(type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University))
             return false;
 
         // If player's turn and no other moves are expected
-        if(checkTurn() && expectedMoves.isEmpty())
+        if(checkTurn() && getExpectedMoves().isEmpty())
         {
-            Player player = game.getPlayer();
+            Player player = getGame().getPlayer();
 
             // If the player owns the provided card
             if(player.getDevelopmentCards().containsKey(type) && player.getDevelopmentCards().get(type) > 0)
             {
-                if(player.getDevelopmentCards().get(type) > player.getBoughtCard(type))
-                {
-                	return true;
-                }
+                return true;
             }
         }
 
@@ -225,62 +260,67 @@ public class MoveProcessor
     /**
      * Checks to see if the player can buy a dev card
      */
-    public boolean checkBuyDevCard()
+    private boolean checkBuyDevCard()
     {
         // If its the user's turn, they have no expected moves, and
-        return checkTurn() && expectedMoves.isEmpty() && game.getPlayer().canAfford(DevelopmentCardType.getCardCost());
+        return checkTurn() && getExpectedMoves().isEmpty() && getGame().getPlayer().canAfford(DevelopmentCardType.getCardCost());
     }
 
     /**
      * Checks if a city or settlement can be built on the given nodeS
      * @param node the desired settlement / city location
      */
-    public boolean checkBuild(Node node)
+    private boolean checkBuild(Node node)
     {
-        Player p = game.getPlayer();
-        return checkTurn() && expectedMoves.isEmpty() && (p.canBuildSettlement(node) || p.canBuildCity(node));
+        Player p = getGame().getPlayer();
+        return checkTurn() && ((getExpectedMoves().isEmpty() && (p.canBuildSettlement(node) || p.canBuildSettlement(node)))
+                ||(getExpectedMoves().contains(Requests.Request.BodyCase.BUILDSETTLEMENT) && p.canBuildSettlement(node))
+                        || (getExpectedMoves().contains(Requests.Request.BodyCase.BUILDCITY) && p.canBuildCity(node)));
     }
 
     /**
      * @return whether or not it is the player's turn
      */
-    public boolean checkTurn()
+    private boolean checkTurn()
     {
-        return game.getCurrentPlayer() == game.getPlayer().getColour();
+        return getGame().getCurrentPlayer() == getGame().getPlayer().getColour();
     }
 
     /**
      * Checks to see if the player can build a road
      * @param edge the desired road location
      */
-    public boolean checkBuildRoad(Edge edge)
+    private boolean checkBuildRoad(Edge edge)
     {
-        return checkTurn() && game.getPlayer().canBuildRoad(edge) &&
-                (expectedMoves.isEmpty() || expectedMoves.contains(Requests.Request.BodyCase.BUILDROAD));
+        return checkTurn() && getGame().getPlayer().canBuildRoad(edge) &&
+                (getExpectedMoves().isEmpty() || getExpectedMoves().contains(Requests.Request.BodyCase.BUILDROAD));
     }
 
     /**
      * Checks to see if the player can submit a trade response
      * @return whether or not this is a valid move
+     * @param response the response
      */
-    public boolean checkSendResponse(Trade.Response response)
+    private boolean checkSendResponse(Trade.Response response)
     {
-        Trade.WithPlayer trade = turn.getPlayerTrade();
-        if(trade != null && turn.isTradePhase())
+        boolean val = false;
+
+        Trade.WithPlayer trade = getTurn().getPlayerTrade();
+        if(trade != null && getTurn().isTradePhase())
         {
-            Resource.Counts cost = trade.getOther().getId().equals(game.getPlayer().getId()) ? trade.getWanting() : trade.getOffering();
-            Resource.Counts wanting = trade.getOther().getId().equals(game.getPlayer().getId()) ? trade.getOffering() : trade.getWanting();
-            Map<ResourceType, Integer> costMap = game.processResources(cost);
-            Map<ResourceType, Integer> wantingMap = game.processResources(wanting);
+            Resource.Counts cost = trade.getOther().getId().equals(getGame().getPlayer().getId()) ? trade.getWanting() : trade.getOffering();
+            Resource.Counts wanting = trade.getOther().getId().equals(getGame().getPlayer().getId()) ? trade.getOffering() : trade.getWanting();
+            Map<ResourceType, Integer> costMap = getGame().processResources(cost);
+            Map<ResourceType, Integer> wantingMap = getGame().processResources(wanting);
 
             // If the move is expected, and the response is accept AND the player can afford it.
             // OR if it is reject.
-            return expectedMoves.contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE) &&
-            ((response.equals(Trade.Response.ACCEPT) && game.getBank().canAfford(wantingMap) && game.getPlayer().canAfford(costMap))
-                    || (response.equals(Trade.Response.REJECT)));
+            val = getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE) &&
+                    ((response.equals(Trade.Response.ACCEPT) && getGame().getBank().canAfford(wantingMap) && getGame().getPlayer().canAfford(costMap))
+                            || (response.equals(Trade.Response.REJECT)));
         }
 
-        return false;
+        return val;
     }
 
     /**
@@ -295,19 +335,18 @@ public class MoveProcessor
         switch(initiateTrade.getTradeCase())
         {
             case BANK:
-                cost = game.processResources(initiateTrade.getBank().getOffering());
-                wanting = game.processResources(initiateTrade.getBank().getWanting());
+                cost = getGame().processResources(initiateTrade.getBank().getOffering());
+                wanting = getGame().processResources(initiateTrade.getBank().getWanting());
                 break;
             case PLAYER:
-                cost = game.processResources(initiateTrade.getPlayer().getOffering());
-                wanting = game.processResources(initiateTrade.getPlayer().getWanting());
+                cost = getGame().processResources(initiateTrade.getPlayer().getOffering());
+                wanting = getGame().processResources(initiateTrade.getPlayer().getWanting());
                 break;
         }
 
         // If both the player and the bank can afford the given trade
-        return game.getPlayer().canAfford(cost) && game.getBank().canAfford(wanting);
+       return getGame().getPlayer().canAfford(cost) && getGame().getBank().canAfford(wanting);
     }
-
 
     /**
      * Checks that the given player is currently able to make a move of the given type
@@ -319,20 +358,20 @@ public class MoveProcessor
         Requests.Request.BodyCase type = req.getBodyCase();
 
         // If in trade phase and the given message isn't a trade
-        if(turn.isTradePhase() && (!req.getBodyCase().equals(Requests.Request.BodyCase.INITIATETRADE) && checkTurn())
+        if(getTurn().isTradePhase() && (!req.getBodyCase().equals(Requests.Request.BodyCase.INITIATETRADE) && checkTurn())
                 || (!req.getBodyCase().equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !checkTurn()) )
         {
             return false;
         }
 
         // If it's not your turn and there are no expected moves from you
-        if(expectedMoves.isEmpty() && !checkTurn())
+        if(getExpectedMoves().isEmpty() && !checkTurn())
         {
             return false;
         }
 
         // If not a request or the move is not expected
-        if(type == null || (!expectedMoves.contains(type) && !expectedMoves.isEmpty()))
+        if(type == null || (!getExpectedMoves().contains(type) && !getExpectedMoves().isEmpty()))
         {
             return false;
         }
@@ -347,6 +386,8 @@ public class MoveProcessor
      */
     public boolean validateMsg(Requests.Request req)
     {
+        boolean val = false;
+
         // If it is not the player's turn, the message type is unknown OR the given request is NOT expected
         // send error and return false
         if(!isExpected(req))
@@ -357,38 +398,69 @@ public class MoveProcessor
         switch(req.getBodyCase())
         {
             case BUILDROAD:
-                return checkBuildRoad(game.getGrid().getEdge(req.getBuildRoad().getA(), req.getBuildRoad().getB()));
+                val = checkBuildRoad(getGame().getGrid().getEdge(req.getBuildRoad().getA(), req.getBuildRoad().getB()));
+                break;
             case BUILDSETTLEMENT:
-                return checkBuild(game.getGrid().getNode(req.getBuildSettlement().getX(), req.getBuildSettlement().getY()));
+                val = checkBuild(getGame().getGrid().getNode(req.getBuildSettlement().getX(), req.getBuildSettlement().getY()));
+                break;
             case BUILDCITY:
-                return checkBuild(game.getGrid().getNode(req.getBuildCity().getX(), req.getBuildCity().getY()));
+                val = checkBuild(getGame().getGrid().getNode(req.getBuildCity().getX(), req.getBuildCity().getY()));
+                break;
             case BUYDEVCARD:
-                return checkBuyDevCard();
+                val = checkBuyDevCard();
+                break;
             case PLAYDEVCARD:
-                return checkPlayDevCard(DevelopmentCardType.fromProto(req.getPlayDevCard()));
+                val = checkPlayDevCard(DevelopmentCardType.fromProto(req.getPlayDevCard()));
+                break;
             case SUBMITTARGETPLAYER:
-                return checkTarget(game.getPlayer(req.getSubmitTargetPlayer().getId()).getColour());
+                val = checkTarget(getGame().getPlayer(req.getSubmitTargetPlayer().getId()).getColour());
+                break;
             case DISCARDRESOURCES:
-                return checkDiscard(game.processResources(req.getDiscardResources()));
+                val = checkDiscard(getGame().processResources(req.getDiscardResources()));
+                break;
             case MOVEROBBER:
-                return checkHex(game.getGrid().getHex(req.getMoveRobber().getX(), req.getMoveRobber().getY()));
+                val = checkHex(getGame().getGrid().getHex(req.getMoveRobber().getX(), req.getMoveRobber().getY()));
+                break;
             case CHOOSERESOURCE:
-                return checkChosenResource(ResourceType.fromProto(req.getChooseResource()));
+                val = checkChosenResource(ResourceType.fromProto(req.getChooseResource()));
+                break;
             case SUBMITTRADERESPONSE:
-                return checkSendResponse(req.getSubmitTradeResponse());
+                val = checkSendResponse(req.getSubmitTradeResponse());
+                break;
             case INITIATETRADE:
-                return checkInitiateTrade(req.getInitiateTrade());
+                val = checkInitiateTrade(req.getInitiateTrade());
+                break;
 
             case ENDTURN:
             case ROLLDICE:
             case JOINLOBBY:
-                return expectedMoves.isEmpty();
+                val = getExpectedMoves().isEmpty();
+                break;
 
 
             case CHATMESSAGE:
+                val = true;
                 break;
         }
 
-        return true;
+
+        return val;
+    }
+
+    private ClientGame getGame()
+    {
+        // Block until the game state has been received
+        while(client.getState() == null) {}
+        return client.getState();
+    }
+
+    private Turn getTurn()
+    {
+        return client.getTurn();
+    }
+
+    private ConcurrentLinkedQueue<Requests.Request.BodyCase> getExpectedMoves()
+    {
+        return client.getTurn().getExpectedMoves();
     }
 }

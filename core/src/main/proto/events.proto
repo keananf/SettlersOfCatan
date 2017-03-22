@@ -33,6 +33,7 @@ message Event {
     lobby.Usernames lobbyUpdate = 18;
     board.MultiSteal monopolyResolution = 19;
     string chatMessage = 20;
+    lobby.GameInfo gameInfo = 21;
   }
 
   message Error {

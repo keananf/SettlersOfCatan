@@ -38,6 +38,9 @@ public class ClientTestHelper extends TestHelper
 		player = Board.Player.newBuilder().setId(clientPlayer.getId()).build();
 		clientGame.setBoard(game.getGameSettings(clientPlayer.getColour()));
 		clientPlayer = clientGame.getPlayer(clientPlayer.getId());
+
+		n = clientGame.getGrid().getNode(n.getX(), n.getY());
+		hex = clientGame.getGrid().getHex(hex.getX(), hex.getY());
 	}
 
 	public void processRoadEvent(Edge edge, Colour col)

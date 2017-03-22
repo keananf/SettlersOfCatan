@@ -2,8 +2,6 @@ package server;
 
 import connection.IClientConnection;
 import enums.Colour;
-import intergroup.Events.ErrorCause;
-import intergroup.Events.Event;
 import intergroup.Messages.Message;
 
 import java.io.IOException;
@@ -35,11 +33,13 @@ public class ListenerThread implements Runnable
 		try
 		{
 			receiveMoves();
+			Thread.sleep(1000);
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
-			// TODO replace with AI
-			e.printStackTrace();
+			// TODO replace 'conn' with a LocalClientConnection to a LocalAIClient
+			conn = null;
+			//e.printStackTrace();
 		}
 	}
 
@@ -48,29 +48,20 @@ public class ListenerThread implements Runnable
      * @return the bytes received from the current player
      * @throws IOException
      */
-    private void receiveMoves() throws IOException
+    private void receiveMoves() throws Exception
     {
         // Receive and process moves until the end one is received
         while(true)
         {
+        	if(conn == null)
+			{
+				break;
+			}
+
             // Parse message and add to queue
             Message msg = conn.getMessageFromClient();
             server.addMessageToProcess(new ReceivedMessage(colour, msg));
 		}
-	}
-
-	/**
-	 * If an unknown or invalid message is received, then this message sends an
-	 * error back
-	 */
-	protected Event.Error getError() throws IOException
-	{
-		// Set up result message
-		Event.Error.Builder err = Event.Error.newBuilder();
-		err.setDescription("Invalid message type");
-		err.setCause(ErrorCause.UNRECOGNIZED);
-
-		return err.build();
 	}
 
     /**
@@ -78,17 +69,13 @@ public class ListenerThread implements Runnable
      * @param msg the message
      * @throws IOException
      */
-    public void sendMessage(Message msg) throws IOException
+    public void sendMessage(Message msg) throws Exception
     {
-        conn.sendMessageToClient(msg);
+    	if(conn != null)
+		{
+    		conn.sendMessageToClient(msg);
+		}
     }
-
-	public void sendError() throws IOException
-	{
-		Message.Builder msg = Message.newBuilder();
-		msg.setEvent(Event.newBuilder().setError(getError()).build());
-		sendMessage(msg.build());
-	}
 
 	/**
 	 * Terminates the underlying connection and this thread
@@ -105,4 +92,9 @@ public class ListenerThread implements Runnable
 			e.printStackTrace();
 		}
 	}
+
+    public Colour getColour()
+	{
+        return colour;
+    }
 }

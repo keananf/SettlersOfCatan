@@ -1,241 +1,252 @@
 package AI;
 
 import client.ClientGame;
-import enums.DevelopmentCardType;
-import enums.Difficulty;
-import enums.ResourceType;
-import game.build.Settlement;
-import game.players.AIPlayer;
-import grid.BoardElement;
-import grid.Edge;
-import grid.Hex;
-import grid.Node;
-import intergroup.Requests.Request.BodyCase;
+import client.Turn;
+import game.players.Player;
+import intergroup.Requests;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 
-public abstract class AICore implements IAI
+public abstract class AICore implements IAI, Runnable
 {
-	ClientGame game;
-	AIPlayer player;
-	Map<ResourceType, Integer> pips;
-	AIClient client;
-	
+	private AIClient client;
+	private Random rand;
+
 	public AICore(AIClient client)
 	{
 		this.client = client;
-		this.game = client.getState();
-		this.player = (AIPlayer) game.getPlayer();
+		this.rand = new Random();
 	}
-	
-	public ArrayList<MoveEntry> getMoves()
+
+	@Override
+	public void run()
 	{
-		ArrayList<MoveEntry> moves = new ArrayList<MoveEntry>();
-		
-		MoveEntry entry = new MoveEntry((Node) null, null);
-		moves.add(entry);
-		
-		if(client.getMoveProcessor().checkBuyDevCard())
+		client.log("Client Play", String.format("Starting AI loop"));
+
+		// Loop performing turns when needed
+		while(getGame() == null || !getGame().isOver())
 		{
-			entry = new MoveEntry((Node)null, BodyCase.BUYDEVCARD);
-			moves.add(entry);
-		}
-		
-		HashMap<DevelopmentCardType, Integer> devCards = player.getDevelopmentCards();
-		
-		for(DevelopmentCardType t: DevelopmentCardType.values())
-		{
-			if(client.getMoveProcessor().checkPlayDevCard(t))
+			acquireLocksAndMove();
+
+			// Sleep for at least 1 second
+			try
 			{
-				entry = new MoveEntry(t, BodyCase.PLAYDEVCARD);
-				moves.add(entry);
+				do
+				{
+					Thread.sleep(1000);
+				}
+				// Sleep while it is NOT your turn and while you do not have expected moves
+				while(getGame() == null || (!getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()) &&
+						getTurn().getExpectedMoves().isEmpty()));
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
 			}
 		}
-		
-		ArrayList<BoardElement> elements = (ArrayList<BoardElement>) client.getMoveProcessor().getBuildingPossibilities();
-		
-		for(BoardElement e: elements)
+	}
+
+	/**
+	 * Acquires locks and attempts to move
+	 */
+	private void acquireLocksAndMove()
+	{
+		try
 		{
-			if(e instanceof Node)
+			getTurnLock().acquire();
+			try
 			{
-				if(player.canBuildCity((Node) e))
+				getGameLock().acquire();
+				try
 				{
-					entry = new MoveEntry((Node)null, BodyCase.BUILDCITY);
-					moves.add(entry);
+					// If it is the player's turn, OR they have an expected move
+					if(getGame() != null && !getGame().isOver())
+					{
+						//client.log("Client Play", String.format("Acquired locks for move for player %s", getGame().getPlayer().getId().name()));
+						performMove();
+					}
 				}
-				else if(player.canBuildSettlement((Node) e))
+				finally
 				{
-					entry = new MoveEntry((Node) null, BodyCase.BUILDSETTLEMENT);
-					moves.add(entry);
+					getGameLock().release();
 				}
 			}
-			else if(e instanceof Edge)
+			catch(InterruptedException e)
 			{
-				if(player.canBuildRoad((Edge) e))
-				{
-					entry = new MoveEntry((Node)null, BodyCase.BUILDROAD);
-					moves.add(entry);
-				}
+				e.printStackTrace();
+			}
+			finally
+			{
+				getTurnLock().release();
 			}
 		}
-		
-		return moves;
-	}
-	
-	public ArrayList<MoveEntry> rankMoves(ArrayList<MoveEntry> moves)
-	{
-		ArrayList<MoveEntry> ranked = moves;
-		
-		Random ran = new Random();
-		
-		int rank;
-		
-		for(MoveEntry move: ranked)
+		catch(InterruptedException e)
 		{
-			rank = ran.nextInt(ranked.size());
-			
-			move.setRank(rank);
+			e.printStackTrace();
 		}
-		
-		return ranked;
 	}
-	
-	public MoveEntry selectMove(ArrayList<MoveEntry> moves)
+
+	@Override
+	public void performMove()
 	{
-		MoveEntry selectedMove = null;
+		Turn turn = selectAndPrepareMove();
+		if(turn != null)
+		{
+			client.log("Client Play", String.format("Chose move %s", turn.getChosenMove().name()));
+			client.updateTurn(turn);
+			client.sendTurn();
+		}
+		else
+		{
+			//client.log("Client Play", String.format("No move"));
+		}
+	}
+
+	/**
+	 * Top-level method for choosing move out of available choices.
+	 */
+	private Turn selectAndPrepareMove()
+	{
+		List<Turn> optimalMoves = rankMoves(getMoves());
+
+		// Prepare turn object
+		return optimalMoves != null && optimalMoves.size() > 0 ? selectMove(optimalMoves) : null;
+	}
+
+	@Override
+	public List<Turn> rankMoves(List<Turn> moves)
+	{
+		List<Turn> optimalMoves = new ArrayList<Turn>();
 		int maxRank = -1;
-		ArrayList<MoveEntry> optimalMoves = new ArrayList<MoveEntry>();
-		
-		for(MoveEntry entry : moves)
+
+		// Filter out the best moves, based upon assigned rank
+		for(Turn entry : getMoves())
 		{
-			if(entry.getRank() > maxRank)
+			// Implementation-defined
+			int rank = rankMove(entry);
+
+			if(rank > maxRank)
 			{
-				maxRank = entry.getRank();
+				maxRank = rank;
 				optimalMoves.clear();
 				optimalMoves.add(entry);
 			}
-			else if(entry.getRank() == maxRank)
+			else if(rank == maxRank)
 			{
 				optimalMoves.add(entry);
 			}
 		}
-		
-		if(optimalMoves.size() > 1)
-		{
-			Random r = new Random();
-			selectedMove = optimalMoves.get(r.nextInt(optimalMoves.size() - 1));		
-		}
-	
-		
-		return selectedMove;
-		
+
+		return optimalMoves;
 	}
-	
-	public void updateGameState(ClientGame game)
+
+	@Override
+	public int rankMove(Turn turn)
 	{
-		this.game = game;
+		// Switch on turn type and rank move
+		switch(turn.getChosenMove())
+		{
+			case BUYDEVCARD:
+				return rankBuyDevCard();
+			case BUILDROAD:
+				return rankNewRoad(turn.getChosenEdge());
+			case BUILDSETTLEMENT:
+				return rankNewSettlement(turn.getChosenNode());
+			case BUILDCITY:
+				return rankNewCity(turn.getChosenNode());
+			case MOVEROBBER:
+				return rankNewRobberLocation(turn.getChosenHex());
+			case PLAYDEVCARD:
+				return rankPlayDevCard(turn.getChosenCard());
+			case INITIATETRADE:
+				// Set the player or bank trade in 'turn' as well
+				return rankInitiateTrade(turn);
+			case SUBMITTRADERESPONSE:
+				return rankTradeResponse(turn.getTradeResponse(), turn.getPlayerTrade());
+			case DISCARDRESOURCES:
+				// If a discard move has gotten this for, then we know it is
+				// an expected move.
+				// Set the chosenResources in 'turn' to be a valid discard as well as rank.
+				return rankDiscard(turn);
+			case SUBMITTARGETPLAYER:
+				return rankTargetPlayer(turn.getTarget());
+			case CHOOSERESOURCE:
+				return rankChosenResource(turn.getChosenResource());
+
+			// Should rank apply for ENDTURN / ROLLDICE? Maybe sometimes..
+			case ENDTURN:
+			case ROLLDICE:
+				break;
+
+			// AI will never chat
+			case CHATMESSAGE:
+				break;
+
+			// If Join Lobby, then the AI has to join a lobby and the rest of the list will be empty
+			// So, it's rank doesn't matter
+			case JOINLOBBY:
+				break;
+			case BODY_NOT_SET:
+			default:
+				break;
+		}
+
+		return 0;
 	}
-	
-	public Node getInitialSettlementNode()
+
+	@Override
+	public Turn selectMove(List<Turn> optimalMoves)
 	{
-		Node node = null;
-		
-		ArrayList<Node> nodes = (ArrayList<Node>) game.getGrid().getNodesAsList();
-		
-		for(Node n: nodes)
-		{
-			Settlement s = new Settlement(n, player.getColour());
-			
-			if(s.isNearSettlement())
-			{
-				nodes.remove(n);
-			}
-		}
-		
-		return node;
+		// Randomly choose one of the highest rank
+		return optimalMoves != null && optimalMoves.size() > 0
+				? optimalMoves.get(rand.nextInt(optimalMoves.size())) : null;
 	}
-	
-	public Node getSettlementNode()
+
+	/**
+	 * @return a list of Turn objects, entailing move type and additional info.
+	 */
+	protected List<Turn> getMoves()
 	{
-		Node buildNode = null;
-		
-		//get all BoardElements
-		ArrayList<BoardElement> elements = (ArrayList<BoardElement>) client.getMoveProcessor().getBuildingPossibilities();
-		
-		ArrayList<Node> nodes = new ArrayList<Node>();
-		//take out the nodes
-		for(BoardElement e: elements)
+		List<Turn> options = client.getMoveProcessor().getPossibleMoves();
+		List<Turn> ret = new ArrayList<Turn>();
+		ret.addAll(options);
+
+		// Eliminate trades and chats
+		for(Turn t : options)
 		{
-			if(e instanceof Node)
-			{
-				nodes.add((Node) e);
-			}
+			if(t.getChosenMove().equals(Requests.Request.BodyCase.CHATMESSAGE) ||
+					t.getChosenMove().equals(Requests.Request.BodyCase.INITIATETRADE))
+				ret.remove(t);
 		}
-		
-		if(nodes.size() > 0)
-		{
-			Random ran = new Random();
-			
-			buildNode = nodes.get(ran.nextInt(nodes.size()));
-		}
-		
-		
-		
-		return buildNode;
+
+		return ret;
 	}
 	
-	public Edge getRoadEdge(Node node)
+	protected Player getPlayer()
 	{
-		Edge roadEdge = null;
-		
-		ArrayList<Edge> edges = (ArrayList<Edge>) node.getEdges();
-		
-		ArrayList<Edge> validEdges = new ArrayList<Edge>();
-		
-		for(Edge e: edges)
-		{
-			if(e.getRoad() == null)
-			{
-				validEdges.add(e);
-			}
-		}
-		
-		if(validEdges.size() > 0)
-		{
-			Random ran = new Random();
-			roadEdge = validEdges.get(ran.nextInt(validEdges.size()));
-		}
-				
-		return roadEdge;
+		return getGame().getPlayer();
 	}
-	
-	public Hex getRobberNode()
+
+	protected ClientGame getGame()
 	{
-		Hex hex = null;
-		
-		ArrayList<Hex> hexes = (ArrayList<Hex>) game.getGrid().getHexesAsList();
-		
-		for(Hex h: hexes)
-		{
-			if(!client.getMoveProcessor().checkHex(h))
-			{
-				hexes.remove(h);
-			}
-		}
-		
-		Random ran = new Random();
-		
-		hex = hexes.get(ran.nextInt(hexes.size()));
-		
-		return hex;
+		return client.getState();
 	}
-	
-	public AIPlayer getPlayer()
+
+	public Turn getTurn()
 	{
-		return player;
+		return client.getTurn();
 	}
-	
+
+	protected Semaphore getGameLock()
+	{
+		return client.getStateLock();
+	}
+
+	protected Semaphore getTurnLock()
+	{
+		return client.getTurnLock();
+	}
 }

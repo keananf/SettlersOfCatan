@@ -1,25 +1,25 @@
 {
-	com.badlogic.gdx.graphics.Color: {
-		white: { r: 1, g: 1, b: 1, a: 1 },
-		orangey: { r:1, g:0.576, b:0, a: 1 }
+	"com.badlogic.gdx.graphics.Color": {
+		"white": { "r": 1, "g": 1, "b": 1, "a": 1 },
+		"orangey": { "r":1, "g":0.576, "b":0, "a": 1 }
 	},
-	com.badlogic.gdx.graphics.g2d.BitmapFont: {
-		display: { file: fonts/luminari.fnt },
-		body: { file: fonts/opensans.fnt }
+	"com.badlogic.gdx.graphics.g2d.BitmapFont": {
+		"display": { "file": "fonts/luminari.fnt" },
+		"body": { "file": "fonts/opensans.fnt" }
 	},
-	com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
-		default: {
-			font: body,
-			fontColor: white
+	"com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
+		"default": {
+			"font": "body",
+			"fontColor": "white"
 		},
-		title: {
-			font: display,
-			fontColor: orangey
+		"title": {
+			"font": "display",
+			"fontColor": "orangey"
 		}
 	},
-	com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-		default: {
-			font: body
+	"com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+		"default": {
+			"font": "body"
 		}
 	}
 }

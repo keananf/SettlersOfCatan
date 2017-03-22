@@ -86,4 +86,10 @@ public class RandomAI extends AICore
 	{
 		return 0;
 	}
+	
+	@Override
+	public int rankEndTurn()
+	{
+		return 0;
+	}
 }

@@ -137,4 +137,12 @@ public interface IAI
      * @return a rank ranking this trade response
      */
     int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade);
+    
+    /**
+     * This method will determine whether ending the turn is more valuable than making a move.
+     * 
+     * Rank based on value of other options.
+     * @return a rank ranking ending the turn
+     */
+    int rankEndTurn();
 }

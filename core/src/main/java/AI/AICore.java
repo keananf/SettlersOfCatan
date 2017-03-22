@@ -178,6 +178,7 @@ public abstract class AICore implements IAI, Runnable
 
 			// Should rank apply for ENDTURN / ROLLDICE? Maybe sometimes..
 			case ENDTURN:
+				return rankEndTurn();
 			case ROLLDICE:
 				break;
 

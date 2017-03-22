@@ -35,12 +35,19 @@ public class Turn
 
 	public Turn()
 	{
-		reset();
+		setUp();
 	}
 
 	public Turn(Requests.Request.BodyCase move)
 	{
 		this.chosenMove = move;
+		setUp();
+	}
+
+	private void setUp()
+	{
+		expectedMoves = new ConcurrentLinkedQueue<Requests.Request.BodyCase>();
+		chosenResources = new HashMap<ResourceType, Integer>();
 		reset();
 	}
 
@@ -60,8 +67,8 @@ public class Turn
 		playerTrade = null;
 		tradeResponse = null;
 		target = null;
-		chosenResources = new HashMap<ResourceType, Integer>();
-		expectedMoves = new ConcurrentLinkedQueue<Requests.Request.BodyCase>();
+		chosenResources.clear();
+		expectedMoves.clear();
 	}
 
 	public ConcurrentLinkedQueue<Requests.Request.BodyCase> getExpectedMoves()

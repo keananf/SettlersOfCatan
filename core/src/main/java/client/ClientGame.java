@@ -39,6 +39,7 @@ public class ClientGame extends Game
 	public ClientGame()
 	{
 		super();
+		grid = null;
 		boughtDevCards = new HashMap<Colour, Integer>();
 		resources = new HashMap<Colour, Integer>();
 		playedDevCards = new HashMap<Colour, Map<DevelopmentCardType, Integer>>();
@@ -65,13 +66,14 @@ public class ClientGame extends Game
 	 */
 	public HexGrid setBoard(Lobby.GameSetup beginGame) throws InvalidCoordinatesException, CannotAffordException
 	{
-		HexGrid grid = new HexGrid();
+		HexGrid grid = new HexGrid(false);
+		this.grid = grid;
 		List<Hex> hexes = processHexes(beginGame.getHexesList());
-		List<Port> ports = processPorts(beginGame.getHarboursList());
 		processPlayerSettings(beginGame.getOwnPlayer(), beginGame.getPlayerSettingsList());
 
 		// Overwrite current grid
 		grid.setNodesAndHexes(hexes);
+		List<Port> ports = processPorts(beginGame.getHarboursList());
 		grid.setPorts(ports);
 
 		return grid;

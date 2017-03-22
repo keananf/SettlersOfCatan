@@ -112,7 +112,7 @@ public abstract class Player
 					if((building ==  null) || (building != null && building.getPlayerColour().equals(r.getPlayerColour())))
 					{
 						isConnected = true;
-						listsAddedTo.add(index++);
+						listsAddedTo.add(index);
 					}
 					break;	
 				}
@@ -121,10 +121,9 @@ public abstract class Player
 			// Update list
 			if(isConnected)
 			{
-				list.add(r);
 				valid = true;
 			}
-			else index++;
+			index++;
 		}
 		
 		return valid;
@@ -178,15 +177,20 @@ public abstract class Player
 	 */
 	protected void mergeRoads(Road r, List<Integer> listsAddedTo)
 	{
-		for(int i = 1; i < listsAddedTo.size(); i++)
+		if(listsAddedTo.size() > 0)
+		{
+			// Add road to first added road chain.
+			roads.get(listsAddedTo.get(0)).add(r);
+		}
+
+		// Cascade all road chains back to the first road chain (since it has the new road added)
+		for(int i = listsAddedTo.size() - 1; i >= 1; i--)
 		{
 			List<Road> last = roads.get(listsAddedTo.get(i - 1));
 			List<Road> current = roads.get(listsAddedTo.get(i));
-			
-			// Remove the duplicate road in one of the lists and add it to the other one.
-			last.remove(r);
-			current.addAll(last);
-			
+
+			// Add all elements
+			last.addAll(current);
 			roads.remove(last);
 		}
 	}
@@ -249,22 +253,23 @@ public abstract class Player
 	 */
 	public boolean canBuildRoad(Edge edge)
 	{
-		boolean valid = false;
+		List<Integer> listsAddedTo = new ArrayList<Integer>();
+		Road r = new Road(edge, colour);
 
-		// See if the proposed node is connected to any of the current roads
-		for(List<Road> list : roads)
+		// Road already here. Cannot build
+		if (edge.getRoad() != null) return false;
+
+		// Find out where this road is connected
+		boolean valid = checkRoadsAndAdd(r, listsAddedTo);
+
+		// Check the location is valid for building and that the player can
+		// afford it
+		if (r.getEdge().hasSettlement() || valid || (getRoads().size() < 2 && r.getEdge().hasSettlement()))
 		{
-			for(Road r : list)
-			{
-				if(r.getEdge().isConnected(edge))
-				{
-					valid = true;
-					break;
-				}
-			}
+			return getRoads().size() < 2 || canAfford(Road.getRoadCost());
 		}
 
-		return edge.getRoad() == null && ((canAfford(Road.getRoadCost()) && valid) || (getRoads().size() < 2));
+		return false;
 	}
 
 	/**

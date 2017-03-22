@@ -48,6 +48,12 @@ public class ClientProcessTests extends ClientTestHelper
 		{
 			assertTrue(processedBoard.getHexesAsList().contains(h1));
 		}
+
+		for(Edge e : actualBoard.getEdgesAsList())
+		{
+			assertTrue(processedBoard.getEdgesAsList().contains(e));
+		}
+		assertTrue(processedBoard.getEdgesAsList().size() == actualBoard.getEdgesAsList().size());
 	}
 
 	@Test

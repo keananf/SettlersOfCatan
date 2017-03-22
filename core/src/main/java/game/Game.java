@@ -39,7 +39,7 @@ public abstract class Game
 	public Game()
 	{
 		bank = new Bank();
-		grid = new HexGrid();
+		grid = new HexGrid(true);
 		players = new HashMap<Colour, Player>();
 		idsToColours = new HashMap<Board.Player.Id, Colour>();
 	}

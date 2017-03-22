@@ -66,9 +66,8 @@ public class EventProcessor implements Runnable
 				getGame().setGameOver();
 				break;
 			case TURNENDED:
-				getTurn().setTurnStarted(false);
-				getTurn().setTradePhase(false);
 				getGame().setCurrentPlayer(getTurn().isInitialPhase());
+				getTurn().reset();
 				break;
 			case CITYBUILT:
 				getGame().processNewCity(ev.getCityBuilt(),ev.getInstigator());
@@ -80,8 +79,10 @@ public class EventProcessor implements Runnable
 				getGame().processRoad(ev.getRoadBuilt(),ev.getInstigator());
 				break;
 			case ROLLED:
+				int roll = ev.getRolled().getA()+ev.getRolled().getB();
 				getTurn().setTurnStarted(true);
-				getGame().processDice(ev.getRolled().getA()+ev.getRolled().getB(), ev.getRolled().getResourceAllocationList());
+				getTurn().setRoll(roll);
+				getGame().processDice(roll, ev.getRolled().getResourceAllocationList());
 				break;
 			case ROBBERMOVED:
 				getGame().moveRobber(ev.getRobberMoved());
@@ -131,6 +132,7 @@ public class EventProcessor implements Runnable
 				getGame().processResourcesStolen(ev.getResourceStolen(), ev.getInstigator());
 				break;
 			case ERROR:
+				client.log("Client Error", String.format("Error Message: %s", ev.getError().getDescription()));
 				// TODO display error?
 				break;
 		}
@@ -221,7 +223,8 @@ public class EventProcessor implements Runnable
 				}
 				break;
 			case ROADBUILT:
-				if(getTurn().isInitialPhase() && getGame().getPlayer().getSettlements().size() < 2)
+				if(getTurn().isInitialPhase() && getGame().getPlayer().getSettlements().size() < 2 &&
+						ev.getInstigator().getId().equals(Board.Player.Id.forNumber(getGame().getPlayers().size() - 1)))
 				{
 					getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
 				}

@@ -13,9 +13,16 @@ public class RemoteAIClient extends AIClient
     private String host;
     private RemoteServerConnection conn;
 
-    public RemoteAIClient(Difficulty difficulty)
+    public RemoteAIClient(String host, Difficulty difficulty)
     {
         super(difficulty);
+        this.host = host;
+    }
+
+    public RemoteAIClient(String host)
+    {
+        super();
+        this.host = host;
     }
 
     /**

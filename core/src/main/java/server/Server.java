@@ -7,10 +7,13 @@ import connection.RemoteClientConnection;
 import enums.Colour;
 import exceptions.GameFullException;
 import game.Game;
+import game.players.Player;
+import intergroup.EmptyOuterClass;
 import intergroup.Events;
 import intergroup.Events.Event;
 import intergroup.Messages;
 import intergroup.Messages.Message;
+import intergroup.Requests;
 import intergroup.Requests.Request;
 import intergroup.board.Board;
 import intergroup.lobby.Lobby;
@@ -37,7 +40,7 @@ public class Server implements Runnable
 	public Server()
 	{
 		game = new ServerGame();
-		Game.NUM_PLAYERS = 1;
+		Game.NUM_PLAYERS = 2;
 
 		// Set up
 		msgProc = new MessageProcessor(game, this);
@@ -51,7 +54,7 @@ public class Server implements Runnable
 			getPlayers();
 			broadcastBoard();
 			game.chooseFirstPlayer();
-			msgProc.getInitialSettlementsAndRoads();
+			getInitialSettlementsAndRoads();
 
 			while (!game.isOver())
 			{
@@ -98,7 +101,7 @@ public class Server implements Runnable
 
 		if((ev == null || !ev.isInitialized()) && msgProc.getLastMessage() != null)
 		{
-			sendError(msgProc.getLastMessage().getCol());
+			replacePlayerWithAI(msgProc.getLastMessage().getCol());
 		}
 		else
         {
@@ -163,13 +166,13 @@ public class Server implements Runnable
 		for(Colour c : Colour.values())
 		{
 			// Set up the board and the info indicating which player
-			Lobby.GameSetup board = game.getGameSettings(c);
-			ev.setBeginGame(board);
-			ev.setInstigator(Board.Player.newBuilder().setId(game.getPlayer(c).getId()));
-			msg.setEvent(ev.build());
-
 			if(connections.containsKey(c))
 			{
+				Lobby.GameSetup board = game.getGameSettings(c);
+				ev.setBeginGame(board);
+				ev.setInstigator(Board.Player.newBuilder().setId(game.getPlayer(c).getId()));
+				msg.setEvent(ev.build());
+
 				sendMessage(msg.build(), c);
 			}
 		}
@@ -252,6 +255,71 @@ public class Server implements Runnable
 		}
 
 		log("Server Setup", "All Players connected. Starting game...\n");
+	}
+
+
+	/**
+	 * Get initial placements from each of the connections
+	 * and send them to the game.
+	 */
+	private void getInitialSettlementsAndRoads() throws IOException
+	{
+		Board.Player.Id current = game.getPlayer(game.getCurrentPlayer()).getId();
+
+		// Get settlements and roads forwards from the first player
+		for(int i = 0; i < Game.NUM_PLAYERS; i++)
+		{
+			log("Server Initial Phase", String.format("Player %s receive initial moves", current.name()));
+			receiveInitialMoves(game.getPlayer(current).getColour());
+			sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
+
+			if(i + 1 < Game.NUM_PLAYERS)
+				current = Board.Player.Id.values()[i + 1];
+		}
+
+		// Get second set of settlements and roads in reverse order
+		for(int i = Game.NUM_PLAYERS - 1; i >= 0; i--)
+		{
+			receiveInitialMoves(game.getPlayer(current).getColour());
+			sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
+
+			if(i > 0)
+				current = Board.Player.Id.values()[i - 1];
+		}
+
+		// Add roll dice to start the game off
+		getExpectedMoves(game.getPlayer(current).getColour()).add(Requests.Request.BodyCase.ROLLDICE);
+	}
+
+	/**
+	 * Receives the initial moves for each player in the appropriate order
+	 * @param c the player to receive the initial moves from
+	 * @throws IOException
+	 */
+	private void receiveInitialMoves(Colour c) throws IOException
+	{
+		Player p = game.getPlayers().get(c);
+		int oldRoadAmount = p.getRoads().size(), oldSettlementsAmount = p.getSettlements().size();
+
+		// Loop until player sends valid new settlement
+		getExpectedMoves(c).add(Requests.Request.BodyCase.BUILDSETTLEMENT);
+		while(p.getSettlements().size() == oldSettlementsAmount)
+		{
+			game.setCurrentPlayer(c);
+
+			processMessage();
+			sleep();
+		}
+
+		// Loop until player sends valid new road
+		getExpectedMoves(c).add(Requests.Request.BodyCase.BUILDROAD);
+		while(p.getRoads().size() == oldRoadAmount)
+		{
+			game.setCurrentPlayer(c);
+
+			processMessage();
+			sleep();
+		}
 	}
 
 	/**

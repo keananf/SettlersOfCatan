@@ -6,9 +6,7 @@ import exceptions.BankLimitException;
 import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
-import game.Game;
 import game.players.Player;
-import intergroup.EmptyOuterClass;
 import intergroup.Events;
 import intergroup.Messages;
 import intergroup.Requests;
@@ -102,6 +100,8 @@ public class MessageProcessor
         Events.Event.Builder ev = Events.Event.newBuilder();
         ev.setInstigator(Board.Player.newBuilder().setId(game.getPlayer(colour).getId()));
 
+        server.log("Server Proc", String.format("Processing request %s from %s",
+                msg.getRequest().getBodyCase().name(), ev.getInstigator().getId().name()));
         try
         {
             // Switch on message type to interpret the move, then process the move
@@ -327,68 +327,6 @@ public class MessageProcessor
     }
 
     /**
-     * Get initial placements from each of the connections
-     * and send them to the game.
-     */
-    public void getInitialSettlementsAndRoads() throws IOException
-    {
-        Board.Player.Id current = game.getPlayer(game.getCurrentPlayer()).getId();
-
-        // Get settlements and roads forwards from the first player
-        for(int i = 0; i < Game.NUM_PLAYERS; i++)
-        {
-            server.log("Server Initial Phase", String.format("Player %s receive initial moves", current.name()));
-            receiveInitialMoves(game.getPlayer(current).getColour());
-            current = Board.Player.Id.values()[i + 1];
-            server.sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
-        }
-
-        // Get second set of settlements and roads in reverse order
-        for(int i = Game.NUM_PLAYERS - 1; i >= 0; i--)
-        {
-            receiveInitialMoves(game.getPlayer(current).getColour());
-            current = Board.Player.Id.values()[i - 1];
-            server.sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
-        }
-
-        // Add roll dice to start the game off
-        expectedMoves.get(game.getPlayer(current).getColour()).add(Requests.Request.BodyCase.ROLLDICE);
-    }
-
-    /**
-     * Receives the initial moves for each player in the appropriate order
-     * @param c the player to receive the initial moves from
-     * @throws IOException
-     */
-    private void receiveInitialMoves(Colour c) throws IOException
-    {
-        Player p = game.getPlayers().get(c);
-        int oldRoadAmount = p.getRoads().size(), oldSettlementsAmount = p.getSettlements().size();
-
-        // Loop until player sends valid new settlement
-        expectedMoves.get(c).add(Requests.Request.BodyCase.BUILDSETTLEMENT);
-        while(p.getSettlements().size() <= oldSettlementsAmount)
-        {
-            game.setCurrentPlayer(c);
-
-            Events.Event ev = processMessage();
-            server.sendEvents(ev);
-            server.sleep();
-        }
-
-        // Loop until player sends valid new road
-        expectedMoves.get(c).add(Requests.Request.BodyCase.BUILDROAD);
-        while(p.getRoads().size() <= oldRoadAmount)
-        {
-            game.setCurrentPlayer(c);
-
-            Events.Event ev = processMessage();
-            server.sendEvents(ev);
-            server.sleep();
-        }
-    }
-
-    /**
      * Checks that the given player is currently able to make a move of the given type
      * @param msg the received message
      * @param col the current turn
@@ -429,8 +367,6 @@ public class MessageProcessor
      */
     private boolean validateMsg(Messages.Message msg, Colour col) throws IOException
     {
-        Colour playerColour = col;
-
         // If it is not the player's turn, the message type is unknown OR the given request is NOT expected
         // send error and return false
         if(!isExpected(msg, col))

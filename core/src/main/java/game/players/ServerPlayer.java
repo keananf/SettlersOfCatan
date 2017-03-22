@@ -60,22 +60,21 @@ public class ServerPlayer extends Player
 	public int buildRoad(Edge edge, Bank bank)
 			throws CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
-		boolean valid = false;
 		List<Integer> listsAddedTo = new ArrayList<Integer>();
 		Road r = new Road(edge, colour);
 
 		// Road already here. Cannot build
 		if (edge.getRoad() != null) throw new RoadExistsException(r);
 
-		// Find out where this road is connected
-		valid = checkRoadsAndAdd(r, listsAddedTo);
-
 		// Check the location is valid for building and that the player can
 		// afford it
-		if (r.getEdge().hasSettlement() || valid || (getRoads().size() < 2 && r.getEdge().hasSettlement()))
+		if (canBuildRoad(edge))
 		{
 			if(getRoads().size() >= 2) spendResources(r.getCost(), bank);
 			edge.setRoad(r);
+
+			// Find out where this road is connected
+			checkRoadsAndAdd(r, listsAddedTo);
 
 			// If not connected to any other roads
 			if (listsAddedTo.size() == 0)
@@ -86,10 +85,13 @@ public class ServerPlayer extends Player
 			}
 
 			// merge lists if necessary
-			else if (listsAddedTo.size() > 1) mergeRoads(r, listsAddedTo);
+			else if (listsAddedTo.size() >= 1) mergeRoads(r, listsAddedTo);
 		}
-		else
-			throw new CannotBuildRoadException(r);
+		else if(!canAfford(Road.getRoadCost()))
+		{
+			throw new CannotAffordException(resources, Road.getRoadCost());
+		}
+		else throw new CannotBuildRoadException(r);
 
 		return calcRoadLength();
 	}

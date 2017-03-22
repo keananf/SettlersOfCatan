@@ -37,7 +37,10 @@ public class LocalClientConnection implements IClientConnection
 
         // Block until message is received
         while(fromClient.isEmpty()) {}
-        return fromClient.poll();
+
+        Messages.Message m = fromClient.poll();
+        log("Server Conn", String.format("Received. %s", m.getRequest().getBodyCase().name()));
+        return m;
     }
 
     @Override

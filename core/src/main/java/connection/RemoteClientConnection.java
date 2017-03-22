@@ -36,7 +36,9 @@ public class RemoteClientConnection implements IClientConnection
     {
         if(conn != null || conn.isClosed() || !conn.isConnected())
         {
-            return Messages.Message.parseDelimitedFrom(conn.getInputStream());
+            Messages.Message m = Messages.Message.parseDelimitedFrom(conn.getInputStream());
+            log("Server Conn", String.format("Received. %s", m.getRequest().getBodyCase().name()));
+            return m;
         }
 
         return null;

@@ -3,6 +3,7 @@ package AI;
 import client.ClientGame;
 import client.Turn;
 import game.players.Player;
+import intergroup.Requests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,36 +24,35 @@ public abstract class AICore implements IAI, Runnable
 	@Override
 	public void run()
 	{
+		boolean val = false;
 		// Loop performing turns when needed
 		while(true)
 		{
+			if(val) break;
 			try
 			{
-				getGameLock().acquire();
-				if(getGame() == null)
-				{
-					continue;
-				}
-				if(getGame().isOver())
-				{
-					break;
-				}
+				getTurnLock().acquire();
 				try
 				{
-					getTurnLock().acquire();
-
-					// If it is the player's turn, OR they have an expected move
-					if(getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()) ||
-							!getTurn().getExpectedMoves().isEmpty())
+					getGameLock().acquire();
+					try
 					{
-						try
+						// If it is the player's turn, OR they have an expected move
+						if(getGame() != null && !getGame().isOver() &&
+								(getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()) ||
+								!getTurn().getExpectedMoves().isEmpty()))
 						{
+							client.log("Client Play", String.format("Acquired locks for move for player %s", getGame().getPlayer().getId().name()));
 							performMove();
 						}
-						finally
+						else if(getGame() != null && getGame().isOver())
 						{
-							getTurnLock().release();
+							val = true;
 						}
+					}
+					finally
+					{
+						getGameLock().release();
 					}
 				}
 				catch(InterruptedException e)
@@ -61,7 +61,7 @@ public abstract class AICore implements IAI, Runnable
 				}
 				finally
 				{
-					getGameLock().release();
+					getTurnLock().release();
 				}
 			}
 			catch(InterruptedException e)
@@ -81,11 +81,20 @@ public abstract class AICore implements IAI, Runnable
 		}
 	}
 
+	@Override
 	public void performMove()
 	{
 		Turn turn = selectAndPrepareMove();
-		updateTurn(turn);
-		client.sendTurn();
+		if(turn != null)
+		{
+			client.log("Client Play", String.format("Chose move %s", turn.getChosenMove().name()));
+			client.updateTurn(turn);
+			client.sendTurn();
+		}
+		else
+		{
+			client.log("Client Play", String.format("No move"));
+		}
 	}
 
 	/**
@@ -193,61 +202,19 @@ public abstract class AICore implements IAI, Runnable
 	 */
 	protected List<Turn> getMoves()
 	{
-		return client.getMoveProcessor().getPossibleMoves();
-	}
+		List<Turn> options = client.getMoveProcessor().getPossibleMoves();
+		List<Turn> ret = new ArrayList<Turn>();
+		ret.addAll(options);
 
-	/**
-	 * Updates the client's turn object
-	 * @param selectedMove this move and corresponding information
-	 */
-	private void updateTurn(Turn selectedMove)
-	{
-		// Reset and set chosen field
-		getTurn().reset();
-		getTurn().setChosenMove(selectedMove.getChosenMove());
-
-		// Set additional fields
-		switch (selectedMove.getChosenMove())
+		// Eliminate trades and chats
+		for(Turn t : options)
 		{
-			case SUBMITTRADERESPONSE:
-				getTurn().setTradeResponse(selectedMove.getTradeResponse());
-				break;
-			case CHOOSERESOURCE:
-				getTurn().setChosenResource(selectedMove.getChosenResource());
-				break;
-			case MOVEROBBER:
-				getTurn().setChosenHex(selectedMove.getChosenHex());
-				break;
-			case PLAYDEVCARD:
-				getTurn().setChosenCard(selectedMove.getChosenCard());
-				break;
-			case BUILDROAD:
-				getTurn().setChosenEdge(selectedMove.getChosenEdge());
-				break;
-			case CHATMESSAGE:
-				getTurn().setChatMessage(selectedMove.getChatMessage());
-				break;
-			case DISCARDRESOURCES:
-				getTurn().setChosenResources(selectedMove.getChosenResources());
-				break;
-			case INITIATETRADE:
-				getTurn().setPlayerTrade(selectedMove.getPlayerTrade());
-				break;
-			case SUBMITTARGETPLAYER:
-				getTurn().setTarget(selectedMove.getTarget());
-			case BUILDSETTLEMENT:
-			case BUILDCITY:
-				getTurn().setChosenNode(selectedMove.getChosenNode());
-				break;
-
-			// Empty request bodies
-			case JOINLOBBY:
-			case ROLLDICE:
-			case ENDTURN:
-			case BUYDEVCARD:
-			default:
-				break;
+			if(t.getChosenMove().equals(Requests.Request.BodyCase.CHATMESSAGE) ||
+					t.getChosenMove().equals(Requests.Request.BodyCase.INITIATETRADE))
+				ret.remove(t);
 		}
+
+		return ret;
 	}
 	
 	protected Player getPlayer()

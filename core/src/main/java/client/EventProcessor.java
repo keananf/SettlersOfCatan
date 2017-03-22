@@ -4,6 +4,7 @@ import connection.IServerConnection;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import intergroup.Requests;
+import intergroup.board.Board;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -40,11 +41,6 @@ public class EventProcessor implements Runnable
 			{
 				processMessage();
 			}
-			catch (IOException e)
-			{
-				// Fatal error
-				break;
-			}
 			catch (Exception e)
 			{
 				// Error. Invalid event.
@@ -61,7 +57,6 @@ public class EventProcessor implements Runnable
      */
     private void processEvent(Event ev) throws Exception
     {
-		updateExpectedMoves(ev);
 		client.log("Event Proc", String.format("Processing event %s", ev.getTypeCase().name()));
 
         // Switch on type of event
@@ -73,7 +68,7 @@ public class EventProcessor implements Runnable
 			case TURNENDED:
 				getTurn().setTurnStarted(false);
 				getTurn().setTradePhase(false);
-				getGame().setCurrentPlayer(getGame().getNextPlayer());
+				getGame().setCurrentPlayer(getTurn().isInitialPhase());
 				break;
 			case CITYBUILT:
 				getGame().processNewCity(ev.getCityBuilt(),ev.getInstigator());
@@ -100,12 +95,12 @@ public class EventProcessor implements Runnable
 			case BEGINGAME:
 				client.setGame(new ClientGame());
 				getGame().setBoard(ev.getBeginGame());
-				client.log("Event Proc", "Game information received");
+				client.log("Event Proc", String.format("Game information received. \tPlayer Id: %s", getGame().getPlayer().getId().name()));
 				break;
 			case GAMEINFO:
 				client.setGame(new ClientGame());
 				getGame().processGameInfo(ev.getGameInfo());
-				client.log("Event Proc", "Game information received");
+				client.log("Event Proc", String.format("Game information received. \tPlayer Id: %s", getGame().getPlayer().getId().name()));
 			case CHATMESSAGE:
 				getGame().writeMessage(ev.getChatMessage(), ev.getInstigator());
 				break;
@@ -139,7 +134,9 @@ public class EventProcessor implements Runnable
 				// TODO display error?
 				break;
 		}
-    }
+
+		updateExpectedMoves(ev);
+	}
 
 	private void updateExpectedMoves(Event ev)
 	{
@@ -153,7 +150,8 @@ public class EventProcessor implements Runnable
 		}
 
 		// If not this player's turn,
-		if(!ev.hasInstigator() || (ev.getInstigator().getId() != getGame().getPlayer().getId() && !ev.getTypeCase().equals(Event.TypeCase.ROLLED)))
+		if((!ev.hasInstigator() && !ev.getTypeCase().equals(Event.TypeCase.BEGINGAME)) || (ev.getInstigator().getId() != getGame().getPlayer().getId() &&
+				!(ev.getTypeCase().equals(Event.TypeCase.ROLLED) || ev.getTypeCase().equals(Event.TypeCase.PLAYERTRADE))))
 		{
 			return;
 		}
@@ -188,7 +186,10 @@ public class EventProcessor implements Runnable
 				int dice = ev.getRolled().getA() + ev.getRolled().getB();
 				if(dice == 7)
 				{
-					getExpectedMoves().add(Requests.Request.BodyCase.DISCARDRESOURCES);
+					if(getGame().getPlayer().getNumResources() > 7)
+					{
+						getExpectedMoves().add(Requests.Request.BodyCase.DISCARDRESOURCES);
+					}
 					if(ev.getInstigator().getId() == getGame().getPlayer().getId())
 					{
 						getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
@@ -220,9 +221,29 @@ public class EventProcessor implements Runnable
 				}
 				break;
 			case ROADBUILT:
+				if(getTurn().isInitialPhase() && getGame().getPlayer().getSettlements().size() < 2)
+				{
+					getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
+				}
+				else if(ev.getInstigator().getId().equals(Board.Player.Id.forNumber(getGame().getPlayers().size() - 1)))
+				{
+					getTurn().setInitialPhase(false);
+				}
 				if(getExpectedMoves().contains(Requests.Request.BodyCase.BUILDROAD))
 				{
 					getExpectedMoves().remove(Requests.Request.BodyCase.BUILDROAD);
+				}
+				break;
+			case SETTLEMENTBUILT:
+				if(getGame().getPlayer().getRoads().size() < 2)
+				{
+					client.log("", String.format("Adding BUILDROAD to expected moves for player %s", ev.getInstigator().getId().name()));
+					getTurn().setInitialPhase(true);
+					getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
+				}
+				if(getExpectedMoves().contains(Requests.Request.BodyCase.BUILDSETTLEMENT))
+				{
+					getExpectedMoves().remove(Requests.Request.BodyCase.BUILDSETTLEMENT);
 				}
 				break;
 			case RESOURCESTOLEN:
@@ -243,6 +264,14 @@ public class EventProcessor implements Runnable
 				if(getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
 				{
 					getExpectedMoves().remove(Requests.Request.BodyCase.DISCARDRESOURCES);
+				}
+				break;
+			case BEGINGAME:
+				getTurn().setInitialPhase(true);
+				if(getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()))
+				{
+					client.log("Client Play", String.format("Added BUILDSETTLEMENT move to player %s", ev.getInstigator().getId().name()));
+					getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
 				}
 				break;
 

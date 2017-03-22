@@ -30,7 +30,8 @@ public class Turn
 	private Trade.Response tradeResponse;
 	private Colour target;
 	private ConcurrentLinkedQueue<Requests.Request.BodyCase> expectedMoves;
-	private boolean tradePhase, turnStarted;
+	private boolean tradePhase, turnStarted, initialPhase;
+	private int roll;
 
 	public Turn()
 	{
@@ -45,6 +46,7 @@ public class Turn
 
 	public void reset()
 	{
+		roll = 0;
 		tradePhase = false;
 		turnStarted = false;
 		chosenCard = null;
@@ -222,4 +224,21 @@ public class Turn
 	{
         this.turnStarted = turnStarted;
     }
+
+    public boolean isInitialPhase()
+	{
+        return initialPhase;
+    }
+
+    public void setInitialPhase(boolean initialPhase) {this.initialPhase = initialPhase;}
+
+	public int getRoll()
+	{
+		return roll;
+	}
+
+	public void setRoll(int roll)
+	{
+		this.roll = roll;
+	}
 }

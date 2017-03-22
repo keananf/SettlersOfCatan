@@ -28,41 +28,6 @@ public class TurnProcessor
 	 */
 	protected void sendMove()
 	{
-		try
-		{
-			getTurnLock().acquire();
-			try
-			{
-				getGameLock().acquire();
-				try
-				{
-					sendMoveInternal();
-				}
-				finally
-				{
-					getGameLock().release();
-				}
-			}
-			catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-			finally
-			{
-				getTurnLock().release();
-			}
-		}
-		catch(InterruptedException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Switches on the move type to ascertain which proto message to form
-	 */
-	private void sendMoveInternal()
-	{
 		Requests.Request.Builder request = Requests.Request.newBuilder();
 
 		switch (getTurn().getChosenMove())
@@ -125,7 +90,13 @@ public class TurnProcessor
 		{
 			sendToServer(request.build());
 		}
-		// TODO else display error?
+		else
+		{
+			// TODO else display error?
+			client.log("Client Play", String.format("Invalid Request %s for Player id: %s",
+					request.getBodyCase().name(), getGame().getPlayer().getId().name()));
+
+		}
     }
 
 	/**

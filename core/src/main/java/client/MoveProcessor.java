@@ -83,49 +83,16 @@ public class MoveProcessor
      */
     public List<Turn> getPossibleMoves()
     {
-        try
-        {
-            getGameLock().acquire();
-            try
-            {
-                getTurnLock().acquire();
-                try
-                {
-                    return getPossibleMovesInternal();
-                }
-                finally
-                {
-                    getTurnLock().release();
-                }
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-            finally
-            {
-                getGameLock().release();
-            }
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    /**
-     * Processes a turn and ascertains all possible moves
-     * @return list of possible choices from this proposed turn
-     */
-    private List<Turn> getPossibleMovesInternal()
-    {
         List<Turn> possibilities = new ArrayList<Turn>();
 
         // Add initial possibilities
         possibilities.add(new Turn(Requests.Request.BodyCase.CHATMESSAGE));
         possibilities.addAll(getBuildingPossibilities());
+
+        if(getTurn().isInitialPhase())
+        {
+            return possibilities;
+        }
 
         // Check other possibilities
         if(checkBuyDevCard())
@@ -219,7 +186,7 @@ public class MoveProcessor
     {
         // Ensure this hex doesn't already have the robber, and that the move is expected OR no moves are expected
         return checkTurn() && !hex.equals(getGame().getGrid().getHexWithRobber()) &&
-                (getExpectedMoves().isEmpty() || (getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER)));
+                (!getExpectedMoves().isEmpty() && getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER));
     }
 
     /**
@@ -307,7 +274,9 @@ public class MoveProcessor
     private boolean checkBuild(Node node)
     {
         Player p = getGame().getPlayer();
-        return checkTurn() && getExpectedMoves().isEmpty() && (p.canBuildSettlement(node) || p.canBuildCity(node));
+        return checkTurn() && ((getExpectedMoves().isEmpty() && (p.canBuildSettlement(node) || p.canBuildSettlement(node)))
+                ||(getExpectedMoves().contains(Requests.Request.BodyCase.BUILDSETTLEMENT) && p.canBuildSettlement(node))
+                        || (getExpectedMoves().contains(Requests.Request.BodyCase.BUILDCITY) && p.canBuildCity(node)));
     }
 
     /**
@@ -363,40 +332,21 @@ public class MoveProcessor
     public boolean checkInitiateTrade(Trade.Kind initiateTrade)
     {
         Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer>(), wanting = new HashMap<ResourceType, Integer>();
-        boolean val = false;
 
-        try
+        switch(initiateTrade.getTradeCase())
         {
-            getGameLock().acquire();
-            try
-            {
-                switch(initiateTrade.getTradeCase())
-                {
-                    case BANK:
-                        cost = getGame().processResources(initiateTrade.getBank().getOffering());
-                        wanting = getGame().processResources(initiateTrade.getBank().getWanting());
-                        break;
-                    case PLAYER:
-                        cost = getGame().processResources(initiateTrade.getPlayer().getOffering());
-                        wanting = getGame().processResources(initiateTrade.getPlayer().getWanting());
-                        break;
-                }
-
-                // If both the player and the bank can afford the given trade
-                val = getGame().getPlayer().canAfford(cost) && getGame().getBank().canAfford(wanting);
-            }
-            finally
-            {
-                getGameLock().release();
-            }
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
+            case BANK:
+                cost = getGame().processResources(initiateTrade.getBank().getOffering());
+                wanting = getGame().processResources(initiateTrade.getBank().getWanting());
+                break;
+            case PLAYER:
+                cost = getGame().processResources(initiateTrade.getPlayer().getOffering());
+                wanting = getGame().processResources(initiateTrade.getPlayer().getWanting());
+                break;
         }
 
-
-        return val;
+        // If both the player and the bank can afford the given trade
+       return getGame().getPlayer().canAfford(cost) && getGame().getBank().canAfford(wanting);
     }
 
     /**
@@ -438,87 +388,62 @@ public class MoveProcessor
     public boolean validateMsg(Requests.Request req)
     {
         boolean val = false;
-        try
+
+        // If it is not the player's turn, the message type is unknown OR the given request is NOT expected
+        // send error and return false
+        if(!isExpected(req))
         {
-            getGameLock().acquire();
-            try
-            {
-                getTurnLock().acquire();
-                try
-                {
-                    // If it is not the player's turn, the message type is unknown OR the given request is NOT expected
-                    // send error and return false
-                    if(!isExpected(req))
-                    {
-                        return false;
-                    }
-
-                    switch(req.getBodyCase())
-                    {
-                        case BUILDROAD:
-                            val = checkBuildRoad(getGame().getGrid().getEdge(req.getBuildRoad().getA(), req.getBuildRoad().getB()));
-                            break;
-                        case BUILDSETTLEMENT:
-                            val = checkBuild(getGame().getGrid().getNode(req.getBuildSettlement().getX(), req.getBuildSettlement().getY()));
-                            break;
-                        case BUILDCITY:
-                            val = checkBuild(getGame().getGrid().getNode(req.getBuildCity().getX(), req.getBuildCity().getY()));
-                            break;
-                        case BUYDEVCARD:
-                            val = checkBuyDevCard();
-                            break;
-                        case PLAYDEVCARD:
-                            val = checkPlayDevCard(DevelopmentCardType.fromProto(req.getPlayDevCard()));
-                            break;
-                        case SUBMITTARGETPLAYER:
-                            val = checkTarget(getGame().getPlayer(req.getSubmitTargetPlayer().getId()).getColour());
-                            break;
-                        case DISCARDRESOURCES:
-                            val = checkDiscard(getGame().processResources(req.getDiscardResources()));
-                            break;
-                        case MOVEROBBER:
-                            val = checkHex(getGame().getGrid().getHex(req.getMoveRobber().getX(), req.getMoveRobber().getY()));
-                            break;
-                        case CHOOSERESOURCE:
-                            val = checkChosenResource(ResourceType.fromProto(req.getChooseResource()));
-                            break;
-                        case SUBMITTRADERESPONSE:
-                            val = checkSendResponse(req.getSubmitTradeResponse());
-                            break;
-                        case INITIATETRADE:
-                            val = checkInitiateTrade(req.getInitiateTrade());
-                            break;
-
-                        case ENDTURN:
-                        case ROLLDICE:
-                        case JOINLOBBY:
-                            val = getExpectedMoves().isEmpty();
-                            break;
-
-
-                        case CHATMESSAGE:
-                            val = true;
-                            break;
-                    }
-                }
-                finally
-                {
-                    getTurnLock().release();
-                }
-            }
-            catch(InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-            finally
-            {
-                getGameLock().release();
-            }
+            return false;
         }
-        catch(InterruptedException e)
+
+        switch(req.getBodyCase())
         {
-            e.printStackTrace();
+            case BUILDROAD:
+                val = checkBuildRoad(getGame().getGrid().getEdge(req.getBuildRoad().getA(), req.getBuildRoad().getB()));
+                break;
+            case BUILDSETTLEMENT:
+                val = checkBuild(getGame().getGrid().getNode(req.getBuildSettlement().getX(), req.getBuildSettlement().getY()));
+                break;
+            case BUILDCITY:
+                val = checkBuild(getGame().getGrid().getNode(req.getBuildCity().getX(), req.getBuildCity().getY()));
+                break;
+            case BUYDEVCARD:
+                val = checkBuyDevCard();
+                break;
+            case PLAYDEVCARD:
+                val = checkPlayDevCard(DevelopmentCardType.fromProto(req.getPlayDevCard()));
+                break;
+            case SUBMITTARGETPLAYER:
+                val = checkTarget(getGame().getPlayer(req.getSubmitTargetPlayer().getId()).getColour());
+                break;
+            case DISCARDRESOURCES:
+                val = checkDiscard(getGame().processResources(req.getDiscardResources()));
+                break;
+            case MOVEROBBER:
+                val = checkHex(getGame().getGrid().getHex(req.getMoveRobber().getX(), req.getMoveRobber().getY()));
+                break;
+            case CHOOSERESOURCE:
+                val = checkChosenResource(ResourceType.fromProto(req.getChooseResource()));
+                break;
+            case SUBMITTRADERESPONSE:
+                val = checkSendResponse(req.getSubmitTradeResponse());
+                break;
+            case INITIATETRADE:
+                val = checkInitiateTrade(req.getInitiateTrade());
+                break;
+
+            case ENDTURN:
+            case ROLLDICE:
+            case JOINLOBBY:
+                val = getExpectedMoves().isEmpty();
+                break;
+
+
+            case CHATMESSAGE:
+                val = true;
+                break;
         }
+
 
         return val;
     }

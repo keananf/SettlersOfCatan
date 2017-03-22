@@ -57,6 +57,7 @@ public class Server implements Runnable
 			{
 				// Read moves from queue and log
 				processMessage();
+				sleep();
 			}
 		}
 		catch (IOException e)
@@ -99,13 +100,17 @@ public class Server implements Runnable
 		{
 			sendError(msgProc.getLastMessage().getCol());
 		}
+		else
+        {
+            sendEvents(ev);
+        }
 	}
 
 	/**
 	 * Broadcast the necessary events to all players based upon the type of event.
 	 * @param event the event from the last processed move
 	 */
-	private void sendEvents(Event event) throws IOException
+    protected void sendEvents(Event event) throws IOException
 	{
 		if(event == null) return;
 
@@ -139,7 +144,7 @@ public class Server implements Runnable
 
 			// Send back to original player only
 			case ERROR:
-				connections.get(game.getPlayer(event.getInstigator().getId()));
+			    sendError(game.getPlayer(event.getInstigator().getId()).getColour());
 				break;
 		}
 	}
@@ -160,6 +165,7 @@ public class Server implements Runnable
 			// Set up the board and the info indicating which player
 			Lobby.GameSetup board = game.getGameSettings(c);
 			ev.setBeginGame(board);
+			ev.setInstigator(Board.Player.newBuilder().setId(game.getPlayer(c).getId()));
 			msg.setEvent(ev.build());
 
 			if(connections.containsKey(c))
@@ -278,9 +284,12 @@ public class Server implements Runnable
 	 * @param col the colour of the connection to overwrite
 	 */
 	protected void replacePlayerWithAI(Colour col)
-	{;
-		connections.get(col).shutDown();
-		replacePlayer(col);
+	{
+	    if(connections.containsKey(col))
+	    {
+            connections.get(col).shutDown();
+            replacePlayer(col);
+        }
 	}
 
 	/**
@@ -368,4 +377,16 @@ public class Server implements Runnable
 	public boolean isTradePhase() {
 		return msgProc.isTradePhase();
 	}
+
+	public void sleep()
+	{
+		try
+		{
+			Thread.sleep(1000);
+		}
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+    }
 }

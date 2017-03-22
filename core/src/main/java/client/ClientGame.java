@@ -34,6 +34,7 @@ public class ClientGame extends Game
 	private Player thisPlayer;
 	private ChatBoard chatBoard;
 	private List<String> usersInLobby;
+	private int changes = 0;
 
 	public ClientGame()
 	{
@@ -265,10 +266,20 @@ public class ClientGame extends Game
 			{
 				Map<ResourceType, Integer> grant = processResources(alloc.getResources());
 				Player p = getPlayer(alloc.getPlayer().getId());
+				int num = 0;
 
 				try
 				{
-					p.grantResources(grant, bank);
+					if(p.getColour().equals(getPlayer().getColour()))
+					{
+						p.grantResources(grant, bank);
+					}
+					else
+					{
+						for(ResourceType r : grant.keySet())
+							num += grant.get(r);
+						resources.put(p.getColour(), num);
+					}
 				}
 				catch (BankLimitException e)
 				{
@@ -714,5 +725,17 @@ public class ClientGame extends Game
 	{
 		int existing = resources.get(colour);
 		resources.put(colour, existing + size);
+	}
+
+	public void setCurrentPlayer(boolean initialPhase)
+	{
+		if(!initialPhase || !(++changes < NUM_PLAYERS))
+		{
+			super.setCurrentPlayer(getNextPlayer());
+		}
+		else if(changes > NUM_PLAYERS && changes < NUM_PLAYERS * 2)
+		{
+			super.setCurrentPlayer(getLastPlayer());
+		}
 	}
 }

@@ -48,6 +48,59 @@ public abstract class Client
         evProcessor.start();
     }
 
+    /**
+     * Updates the client's turn object
+     * @param selectedMove this move and corresponding information
+     */
+    public void updateTurn(Turn selectedMove)
+    {
+        // Reset and set chosen field
+        getTurn().reset();
+        getTurn().setChosenMove(selectedMove.getChosenMove());
+
+        // Set additional fields
+        switch (selectedMove.getChosenMove())
+        {
+            case SUBMITTRADERESPONSE:
+                getTurn().setTradeResponse(selectedMove.getTradeResponse());
+                break;
+            case CHOOSERESOURCE:
+                getTurn().setChosenResource(selectedMove.getChosenResource());
+                break;
+            case MOVEROBBER:
+                getTurn().setChosenHex(selectedMove.getChosenHex());
+                break;
+            case PLAYDEVCARD:
+                getTurn().setChosenCard(selectedMove.getChosenCard());
+                break;
+            case BUILDROAD:
+                getTurn().setChosenEdge(selectedMove.getChosenEdge());
+                break;
+            case CHATMESSAGE:
+                getTurn().setChatMessage(selectedMove.getChatMessage());
+                break;
+            case DISCARDRESOURCES:
+                getTurn().setChosenResources(selectedMove.getChosenResources());
+                break;
+            case INITIATETRADE:
+                getTurn().setPlayerTrade(selectedMove.getPlayerTrade());
+                break;
+            case SUBMITTARGETPLAYER:
+                getTurn().setTarget(selectedMove.getTarget());
+            case BUILDSETTLEMENT:
+            case BUILDCITY:
+                getTurn().setChosenNode(selectedMove.getChosenNode());
+                break;
+
+            // Empty request bodies
+            case JOINLOBBY:
+            case ROLLDICE:
+            case ENDTURN:
+            case BUYDEVCARD:
+            default:
+                break;
+        }
+    }
 
     /**
      * Shuts down a client by terminating the socket and the event processor thread.

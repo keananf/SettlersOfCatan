@@ -42,6 +42,7 @@ public class LocalServerConnection implements IServerConnection
     public void sendMessageToServer(Messages.Message message)
     {
         conn.fromClient.add(message);
+        log("Client Conn", String.format("Sent %s", message.getRequest().getBodyCase().name()));
     }
 
     @Override

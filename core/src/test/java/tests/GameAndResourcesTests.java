@@ -38,12 +38,12 @@ public class GameAndResourcesTests extends TestHelper
 	}
 
 	@Test
-	public void collectResourcesTest() throws SettlementExistsException, BankLimitException
+	public void collectResourcesTest() throws SettlementExistsException, BankLimitException, CannotAffordException
 	{
 		// Grant resources and make settlement
 		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n);
-		assertFalse(hasResources(p));
+		p.spendResources(Settlement.getSettlementCost(), game.getBank());
 
 		// collect resources
 		game.allocateResources(hex.getChit());
@@ -52,11 +52,12 @@ public class GameAndResourcesTests extends TestHelper
 	}
 
 	@Test
-	public void collectResourcesWithRobberTest() throws SettlementExistsException, BankLimitException
+	public void collectResourcesWithRobberTest() throws SettlementExistsException, BankLimitException, CannotAffordException
 	{
 		// Make a settlement and toggle the robber on its hex
 		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n);
+		p.spendResources(Settlement.getSettlementCost(), game.getBank());
 		hex.toggleRobber();
 
 		// try to collect resources
@@ -77,7 +78,7 @@ public class GameAndResourcesTests extends TestHelper
 
 	@Test
 	public void moveRobberTest()
-			throws InvalidCoordinatesException, CannotStealException, SettlementExistsException, BankLimitException
+			throws InvalidCoordinatesException, CannotStealException, SettlementExistsException, BankLimitException, CannotAffordException
 	{
 		// Make a second player
 		Player p2 = new ServerPlayer(Colour.RED, "");
@@ -91,6 +92,7 @@ public class GameAndResourcesTests extends TestHelper
 		// from them
 		p2.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p2, n);
+		p2.spendResources(Settlement.getSettlementCost(), game.getBank());
 
 		// Make a move robber request
 		Board.Point.Builder point = Board.Point.newBuilder().setX(hex.getX()).setY(hex.getY());
@@ -156,11 +158,12 @@ public class GameAndResourcesTests extends TestHelper
 	}
 
 	@Test
-	public void collectResourcesCityTest() throws SettlementExistsException, BankLimitException
+	public void collectResourcesCityTest() throws SettlementExistsException, BankLimitException, CannotAffordException
 	{
 		// Grant resources for and make settlement
 		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		Settlement s = makeSettlement(p, n);
+		p.spendResources(Settlement.getSettlementCost(), game.getBank());
 
 		// Grant resources for and upgrade settlement
 		p.grantResources(City.getCityCost(), game.getBank());
@@ -185,6 +188,7 @@ public class GameAndResourcesTests extends TestHelper
 		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		assertTrue(game.getBank().getNumAvailableResources() == resourceLimit - 4);
 		Settlement s = makeSettlement(p, n);
+		p.spendResources(Settlement.getSettlementCost(), game.getBank());
 		assertTrue(game.getBank().getNumAvailableResources() == resourceLimit);
 		assertTrue(game.getBank().getAvailableSettlements() == settlementsLimit - 1);
 		assertTrue(game.getBank().getAvailableCities() == cityLimit);

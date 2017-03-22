@@ -304,7 +304,15 @@ public abstract class Game
 	 */
 	public Colour getNextPlayer()
 	{
-		return getPlayer(Board.Player.Id.values()[++current % NUM_PLAYERS]).getColour();
+		return getPlayer(Board.Player.Id.forNumber(++current % NUM_PLAYERS)).getColour();
+	}
+
+	/**
+	 * @return the next player
+	 */
+	public Colour getLastPlayer()
+	{
+		return getPlayer(Board.Player.Id.forNumber(--current % NUM_PLAYERS)).getColour();
 	}
 
 	public Player[] getPlayersAsList()

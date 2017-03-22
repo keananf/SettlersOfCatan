@@ -72,15 +72,15 @@ public class ServerPlayer extends Player
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		if (r.getEdge().hasSettlement() || valid)
+		if (r.getEdge().hasSettlement() || valid || (getRoads().size() < 2 && r.getEdge().hasSettlement()))
 		{
-			spendResources(r.getCost(), bank);
+			if(getRoads().size() >= 2) spendResources(r.getCost(), bank);
 			edge.setRoad(r);
 
 			// If not connected to any other roads
 			if (listsAddedTo.size() == 0)
 			{
-				java.util.List<Road> newList = new ArrayList<Road>();
+				List<Road> newList = new ArrayList<Road>();
 				newList.add(r);
 				roads.add(newList);
 			}
@@ -110,7 +110,7 @@ public class ServerPlayer extends Player
 		// If valid placement, attempt to spend the required resources
 		if (canBuildSettlement(node))
 		{
-			spendResources(s.getCost(), bank);
+			if(settlements.size() >= 2) spendResources(s.getCost(), bank);
 			addSettlement(s);
 		}
 

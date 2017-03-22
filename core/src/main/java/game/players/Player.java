@@ -264,7 +264,7 @@ public abstract class Player
 			}
 		}
 
-		return canAfford(Road.getRoadCost()) && edge.getRoad() == null && valid;
+		return edge.getRoad() == null && ((canAfford(Road.getRoadCost()) && valid) || (getRoads().size() < 2));
 	}
 
 	/**
@@ -277,7 +277,7 @@ public abstract class Player
 		Point p = new Point(node.getX(), node.getY());
 		Settlement s = new Settlement(node, colour);
 
-		return canAfford(Settlement.getSettlementCost()) && !settlements.containsKey(p)
+		return (canAfford(Settlement.getSettlementCost()) || getSettlements().size() < MIN_SETTLEMENTS) && !settlements.containsKey(p)
 				&& !s.isNearSettlement() && (node.isNearRoad(colour) || getSettlements().size() < MIN_SETTLEMENTS);
 	}
 
@@ -446,6 +446,7 @@ public abstract class Player
 		
 		return total;
 	}
+
 	/**
 	 * @return the hasLargestArmy
 	 */

@@ -8,6 +8,7 @@ import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
 import game.Game;
 import game.players.Player;
+import intergroup.EmptyOuterClass;
 import intergroup.Events;
 import intergroup.Messages;
 import intergroup.Requests;
@@ -99,6 +100,7 @@ public class MessageProcessor
     {
         Requests.Request request = msg.getRequest();
         Events.Event.Builder ev = Events.Event.newBuilder();
+        ev.setInstigator(Board.Player.newBuilder().setId(game.getPlayer(colour).getId()));
 
         try
         {
@@ -331,21 +333,26 @@ public class MessageProcessor
     public void getInitialSettlementsAndRoads() throws IOException
     {
         Board.Player.Id current = game.getPlayer(game.getCurrentPlayer()).getId();
-        Board.Player.Id next = null;
 
         // Get settlements and roads forwards from the first player
         for(int i = 0; i < Game.NUM_PLAYERS; i++)
         {
-            next = Board.Player.Id.values()[(current.ordinal() + i) % Game.NUM_PLAYERS];
-            receiveInitialMoves(game.getPlayer(next).getColour());
+            server.log("Server Initial Phase", String.format("Player %s receive initial moves", current.name()));
+            receiveInitialMoves(game.getPlayer(current).getColour());
+            current = Board.Player.Id.values()[i + 1];
+            server.sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
         }
 
         // Get second set of settlements and roads in reverse order
         for(int i = Game.NUM_PLAYERS - 1; i >= 0; i--)
         {
-            receiveInitialMoves(game.getPlayer(next).getColour());
-            next = Board.Player.Id.values()[(current.ordinal() + i) % Game.NUM_PLAYERS];
+            receiveInitialMoves(game.getPlayer(current).getColour());
+            current = Board.Player.Id.values()[i - 1];
+            server.sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
         }
+
+        // Add roll dice to start the game off
+        expectedMoves.get(game.getPlayer(current).getColour()).add(Requests.Request.BodyCase.ROLLDICE);
     }
 
     /**
@@ -359,21 +366,25 @@ public class MessageProcessor
         int oldRoadAmount = p.getRoads().size(), oldSettlementsAmount = p.getSettlements().size();
 
         // Loop until player sends valid new settlement
-        while(p.getSettlements().size() < oldSettlementsAmount)
+        expectedMoves.get(c).add(Requests.Request.BodyCase.BUILDSETTLEMENT);
+        while(p.getSettlements().size() <= oldSettlementsAmount)
         {
-            expectedMoves.get(c).add(Requests.Request.BodyCase.BUILDSETTLEMENT);
             game.setCurrentPlayer(c);
 
-            processMessage();
+            Events.Event ev = processMessage();
+            server.sendEvents(ev);
+            server.sleep();
         }
 
         // Loop until player sends valid new road
-        while(p.getRoads().size() < oldRoadAmount)
+        expectedMoves.get(c).add(Requests.Request.BodyCase.BUILDROAD);
+        while(p.getRoads().size() <= oldRoadAmount)
         {
-            expectedMoves.get(c).add(Requests.Request.BodyCase.BUILDROAD);
             game.setCurrentPlayer(c);
 
-            processMessage();
+            Events.Event ev = processMessage();
+            server.sendEvents(ev);
+            server.sleep();
         }
     }
 

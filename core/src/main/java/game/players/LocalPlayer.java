@@ -34,7 +34,7 @@ public class LocalPlayer extends Player
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		if (r.getEdge().hasSettlement() || valid)
+		if (r.getEdge().hasSettlement() || valid || getRoads().size() < 2)
 		{
 			edge.setRoad(r);
 

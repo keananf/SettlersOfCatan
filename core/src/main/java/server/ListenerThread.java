@@ -33,6 +33,7 @@ public class ListenerThread implements Runnable
 		try
 		{
 			receiveMoves();
+			Thread.sleep(1000);
 		}
 		catch (Exception e)
 		{

@@ -31,12 +31,12 @@ public abstract class AICore implements IAI, Runnable
 		{
 			acquireLocksAndMove();
 
-			// Sleep for at least 1.5 seconds
+			// Sleep for at least 1 second
 			try
 			{
 				do
 				{
-					Thread.sleep(1500);
+					Thread.sleep(1000);
 				}
 				// Sleep while it is NOT your turn and while you do not have expected moves
 				while(getGame() == null || (!getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()) &&
@@ -65,7 +65,7 @@ public abstract class AICore implements IAI, Runnable
 					// If it is the player's turn, OR they have an expected move
 					if(getGame() != null && !getGame().isOver())
 					{
-						client.log("Client Play", String.format("Acquired locks for move for player %s", getGame().getPlayer().getId().name()));
+						//client.log("Client Play", String.format("Acquired locks for move for player %s", getGame().getPlayer().getId().name()));
 						performMove();
 					}
 				}
@@ -101,7 +101,7 @@ public abstract class AICore implements IAI, Runnable
 		}
 		else
 		{
-			client.log("Client Play", String.format("No move"));
+			//client.log("Client Play", String.format("No move"));
 		}
 	}
 

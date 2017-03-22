@@ -40,6 +40,7 @@ public class EventProcessor implements Runnable
 			try
 			{
 				processMessage();
+				Thread.sleep(1000);
 			}
 			catch (Exception e)
 			{

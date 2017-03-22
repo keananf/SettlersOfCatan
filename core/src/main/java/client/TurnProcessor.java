@@ -10,8 +10,6 @@ import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.trade.Trade;
 
-import java.util.concurrent.Semaphore;
-
 public class TurnProcessor
 {
 	private final Client client;
@@ -155,15 +153,5 @@ public class TurnProcessor
 	private Turn getTurn()
 	{
 		return client.getTurn();
-	}
-
-	private Semaphore getTurnLock()
-	{
-		return client.getTurnLock();
-	}
-
-	private Semaphore getGameLock()
-	{
-		return client.getStateLock();
 	}
 }

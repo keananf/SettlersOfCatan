@@ -302,13 +302,12 @@ public class EventProcessor implements Runnable
 			case EVENT:
 				try
 				{
-		 			getGameLock().acquire();
+					getGameLock().acquire();
 					try
 					{
 						getTurnLock().acquire();
 						try
 						{
-
 							processEvent(msg.getEvent());
 						}
 						finally

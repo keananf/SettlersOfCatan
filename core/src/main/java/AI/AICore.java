@@ -24,55 +24,19 @@ public abstract class AICore implements IAI, Runnable
 	@Override
 	public void run()
 	{
-		boolean val = false;
-		// Loop performing turns when needed
-		while(true)
-		{
-			if(val) break;
-			try
-			{
-				getTurnLock().acquire();
-				try
-				{
-					getGameLock().acquire();
-					try
-					{
-						// If it is the player's turn, OR they have an expected move
-						if(getGame() != null && !getGame().isOver())
-						{
-							client.log("Client Play", String.format("Acquired locks for move for player %s", getGame().getPlayer().getId().name()));
-							performMove();
-						}
-						else if(getGame() != null && getGame().isOver())
-						{
-							val = true;
-						}
-					}
-					finally
-					{
-						getGameLock().release();
-					}
-				}
-				catch(InterruptedException e)
-				{
-					e.printStackTrace();
-				}
-				finally
-				{
-					getTurnLock().release();
-				}
-			}
-			catch(InterruptedException e)
-			{
-				e.printStackTrace();
-			}
+		client.log("Client Play", String.format("Starting AI loop"));
 
-			// Sleep for at least 2 seconds
+		// Loop performing turns when needed
+		while(getGame() == null || !getGame().isOver())
+		{
+			acquireLocksAndMove();
+
+			// Sleep for at least 1.5 seconds
 			try
 			{
 				do
 				{
-					Thread.sleep(2000);
+					Thread.sleep(1500);
 				}
 				// Sleep while it is NOT your turn and while you do not have expected moves
 				while(getGame() == null || (!getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()) &&
@@ -82,6 +46,46 @@ public abstract class AICore implements IAI, Runnable
 			{
 				e.printStackTrace();
 			}
+		}
+	}
+
+	/**
+	 * Acquires locks and attempts to move
+	 */
+	private void acquireLocksAndMove()
+	{
+		try
+		{
+			getTurnLock().acquire();
+			try
+			{
+				getGameLock().acquire();
+				try
+				{
+					// If it is the player's turn, OR they have an expected move
+					if(getGame() != null && !getGame().isOver())
+					{
+						client.log("Client Play", String.format("Acquired locks for move for player %s", getGame().getPlayer().getId().name()));
+						performMove();
+					}
+				}
+				finally
+				{
+					getGameLock().release();
+				}
+			}
+			catch(InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+				getTurnLock().release();
+			}
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
 		}
 	}
 

@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Semaphore;
 
 /**
  * Class which determines move possibilities based upon a game state
@@ -453,16 +452,6 @@ public class MoveProcessor
         // Block until the game state has been received
         while(client.getState() == null) {}
         return client.getState();
-    }
-
-    private Semaphore getGameLock()
-    {
-        return client.getStateLock();
-    }
-
-    private Semaphore getTurnLock()
-    {
-        return client.getTurnLock();
     }
 
     private Turn getTurn()

@@ -42,8 +42,6 @@ public interface IAI
      * is the root of.
      */
     void performMove();
-
-
     /**
      * Given this being a valid move, analyse if this is good based on the game state.
      *
@@ -65,6 +63,13 @@ public interface IAI
      * @return a rank for this settlement placement
      */
     int rankNewSettlement(Node chosenNode);
+
+    /**
+     * Given this valid node , analyse if this is a good settlement placement prior to the game start.
+     * @param chosenNode the given node
+     * @return a rank for this settlement placement
+     */
+    int rankInitialSettlement(Node chosenNode);
 
     /**
      * Given this valid node placement, analyse if this is a good city placement based on the game state.

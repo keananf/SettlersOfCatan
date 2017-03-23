@@ -32,20 +32,33 @@ public class EasyAI extends AICore
     }
 
     @Override
-    public int rankNewSettlement(Node chosenNode)
-    {
-        return 0;
+    public int rankNewSettlement(Node chosenNode) {
+        RankNode rankNode = new RankNode(chosenNode, super.getPlayer());
+        rankNode.rank(false);
+        return rankNode.getRanking();
+
     }
 
     @Override
-    public int rankNewCity(Node chosenNode)
-    {
-        return 0;
+    public int rankInitialSettlement(Node chosenNode) {
+        RankNode rankNode = new RankNode(chosenNode, super.getPlayer());
+        rankNode.rank(true);
+        return rankNode.getRanking();
+    }
+
+    @Override
+    public int rankNewCity(Node chosenNode) {
+        RankNode rankNode = new RankNode(chosenNode, super.getPlayer());
+        rankNode.rank(false);
+        return rankNode.getRanking();
     }
 
     @Override
     public int rankNewRobberLocation(Hex chosenHex)
     {
+      /*  Will it give higher ranks to hexes which will penalise wealthy players?
+          Higher rank based on chit?
+          */
         return 0;
     }
 
@@ -74,10 +87,7 @@ public class EasyAI extends AICore
     }
 
     @Override
-    public int rankChosenResource(ResourceType chosenResource)
-    {
-        return 0;
-    }
+    public int rankChosenResource(ResourceType chosenResource) { return 0; }
 
     @Override
     public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)

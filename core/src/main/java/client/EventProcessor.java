@@ -5,6 +5,7 @@ import game.Game;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import intergroup.Requests;
+import intergroup.board.Board;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -128,22 +129,23 @@ public class EventProcessor
 				{
 					if(getGame().getTurns() < Game.NUM_PLAYERS)
 					{
-						client.log("blah", String.format("Adding BUILDSETTLEMENT to expected moves for %s", ev.getInstigator().getId().name()));
+						client.log("Server initial phase", String.format("Adding BUILDSETTLEMENT to expected moves for %s", ev.getInstigator().getId().name()));
 						getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
 					}
-					if(getGame().getTurns() >= Game.NUM_PLAYERS && getGame().getTurns() < Game.NUM_PLAYERS * 2)
+					if(getGame().getTurns() >= Game.NUM_PLAYERS && getGame().getTurns() < Game.NUM_PLAYERS * 2 - 1)
 					{
-						client.log("BLAH", String.format("Adding BUILDSETTLEMENT to expected moves for %s", ev.getInstigator().getId().name()));
+						client.log("Server initial phase", String.format("Adding BUILDSETTLEMENT to expected moves for %s", ev.getInstigator().getId().name()));
 						getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
 					}
 
 				}
-				else if(getTurn().isInitialPhase())
+				else if(getTurn().isInitialPhase() && getGame().getPlayer(getGame().getCurrentPlayer()).getSettlements().size() >= 2
+						&& getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()))
 				{
 					getTurn().setInitialPhase(false);
 				}
 
-				if(getGame().getPlayer().getSettlements().size() > 2 && getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()))
+				if(getGame().getPlayer().getSettlements().size() >= 2 && getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()))
 				{
 					getExpectedMoves().add(Requests.Request.BodyCase.ROLLDICE);
 				}
@@ -211,6 +213,12 @@ public class EventProcessor
 				}
 				break;
 			case ROADBUILT:
+				if(getGame().getPlayer(getGame().getCurrentPlayer()).getRoads().size() == 1 &&
+						getGame().getPlayer(getGame().getCurrentPlayer()).getId().equals(Board.Player.Id.forNumber(Game.NUM_PLAYERS - 1))
+						&& getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()))
+				{
+					getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
+				}
 				if(getExpectedMoves().contains(Requests.Request.BodyCase.BUILDROAD))
 				{
 					getExpectedMoves().remove(Requests.Request.BodyCase.BUILDROAD);
@@ -219,7 +227,7 @@ public class EventProcessor
 			case SETTLEMENTBUILT:
 				if(getGame().getPlayer().getRoads().size() < 2 && getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
 				{
-					client.log("", String.format("Adding BUILDROAD to expected moves for %s", ev.getInstigator().getId().name()));
+					client.log("Server initial phase", String.format("Adding BUILDROAD to expected moves for %s", ev.getInstigator().getId().name()));
 					getTurn().setInitialPhase(true);
 					getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
 				}

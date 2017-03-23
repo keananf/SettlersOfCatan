@@ -731,12 +731,12 @@ public class ClientGame extends Game
 
 	public void updateCurrentPlayer()
 	{
-		if(++turns >= NUM_PLAYERS && turns < NUM_PLAYERS * 2)
+		if(++turns >= NUM_PLAYERS && turns < NUM_PLAYERS * 2 && current > 0)
 		{
 			setCurrentPlayer(getLastPlayer());
 			current--;
 		}
-		else
+		else if(turns != NUM_PLAYERS * 2 - 1)
 		{
 			setCurrentPlayer(getNextPlayer());
 			current++;

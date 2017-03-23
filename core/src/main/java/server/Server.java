@@ -271,15 +271,18 @@ public class Server implements Runnable
 		{
 			log("Server Initial Phase", String.format("Player %s receive initial moves", current.name()));
 			receiveInitialMoves(game.getPlayer(current).getColour());
-			sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 
 			if(i + 1 < Game.NUM_PLAYERS)
+			{
+				sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 				current = Board.Player.Id.values()[i + 1];
+			}
 		}
 
 		// Get second set of settlements and roads in reverse order
 		for(int i = Game.NUM_PLAYERS - 1; i >= 0; i--)
 		{
+			log("Server Initial Phase", String.format("Player %s receive initial moves", current.name()));
 			receiveInitialMoves(game.getPlayer(current).getColour());
 			sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 
@@ -316,8 +319,6 @@ public class Server implements Runnable
 		getExpectedMoves(c).add(Requests.Request.BodyCase.BUILDROAD);
 		while(p.getRoads().size() == oldRoadAmount)
 		{
-			game.setCurrentPlayer(c);
-
 			processMessage();
 			sleep();
 		}

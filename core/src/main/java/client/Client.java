@@ -17,10 +17,9 @@ public abstract class Client
     protected TurnProcessor turnProcessor;
     protected MoveProcessor moveProcessor;
     protected static final int PORT = 12345;
-    private TurnInProgress turn;
+    private Turn turn;
     private IServerConnection conn;
     private Semaphore stateLock, turnLock;
-
 
     /**
      * Attempts to set up a connection with the server
@@ -40,7 +39,7 @@ public abstract class Client
         this.conn = conn;
         this.stateLock = new Semaphore(1);
         this.turnLock = new Semaphore(1);
-        this.turn = new TurnInProgress();
+        this.turn = new Turn();
         this.turnProcessor = new TurnProcessor(conn, this);
         this.moveProcessor = new MoveProcessor(this);
         this.eventProcessor = new EventProcessor(conn, this);
@@ -49,6 +48,59 @@ public abstract class Client
         evProcessor.start();
     }
 
+    /**
+     * Updates the client's turn object
+     * @param selectedMove this move and corresponding information
+     */
+    public void updateTurn(Turn selectedMove)
+    {
+        // Reset and set chosen field
+        getTurn().reset();
+        getTurn().setChosenMove(selectedMove.getChosenMove());
+
+        // Set additional fields
+        switch (selectedMove.getChosenMove())
+        {
+            case SUBMITTRADERESPONSE:
+                getTurn().setTradeResponse(selectedMove.getTradeResponse());
+                break;
+            case CHOOSERESOURCE:
+                getTurn().setChosenResource(selectedMove.getChosenResource());
+                break;
+            case MOVEROBBER:
+                getTurn().setChosenHex(selectedMove.getChosenHex());
+                break;
+            case PLAYDEVCARD:
+                getTurn().setChosenCard(selectedMove.getChosenCard());
+                break;
+            case BUILDROAD:
+                getTurn().setChosenEdge(selectedMove.getChosenEdge());
+                break;
+            case CHATMESSAGE:
+                getTurn().setChatMessage(selectedMove.getChatMessage());
+                break;
+            case DISCARDRESOURCES:
+                getTurn().setChosenResources(selectedMove.getChosenResources());
+                break;
+            case INITIATETRADE:
+                getTurn().setPlayerTrade(selectedMove.getPlayerTrade());
+                break;
+            case SUBMITTARGETPLAYER:
+                getTurn().setTarget(selectedMove.getTarget());
+            case BUILDSETTLEMENT:
+            case BUILDCITY:
+                getTurn().setChosenNode(selectedMove.getChosenNode());
+                break;
+
+            // Empty request bodies
+            case JOINLOBBY:
+            case ROLLDICE:
+            case ENDTURN:
+            case BUYDEVCARD:
+            default:
+                break;
+        }
+    }
 
     /**
      * Shuts down a client by terminating the socket and the event processor thread.
@@ -85,7 +137,7 @@ public abstract class Client
         return state;
     }
 
-    public TurnInProgress getTurn()
+    public Turn getTurn()
     {
         return turn;
     }

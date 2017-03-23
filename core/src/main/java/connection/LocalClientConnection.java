@@ -26,7 +26,7 @@ public class LocalClientConnection implements IClientConnection
         if(conn != null)
         {
             conn.fromServer.add(message);
-            Gdx.app.log("Server Conn", String.format("Sent. %s", message.getEvent().getTypeCase().name()));
+            log("Server Conn", String.format("Sent. %s", message.getEvent().getTypeCase().name()));
         }
     }
 
@@ -37,7 +37,10 @@ public class LocalClientConnection implements IClientConnection
 
         // Block until message is received
         while(fromClient.isEmpty()) {}
-        return fromClient.poll();
+
+        Messages.Message m = fromClient.poll();
+        log("Server Conn", String.format("Received. %s", m.getRequest().getBodyCase().name()));
+        return m;
     }
 
     @Override
@@ -45,5 +48,19 @@ public class LocalClientConnection implements IClientConnection
     {
         conn = null;
         fromClient = null;
+    }
+    
+    /**
+     * Logs the message depending on whether or not this is a local or remote server
+     * @param tag the tag (for Gdx)
+     * @param msg the msg to log
+     */
+    public void log(String tag, String msg)
+    {
+        if(Gdx.app == null)
+        {
+            System.out.println(msg);
+        }
+        else Gdx.app.log(tag, msg);
     }
 }

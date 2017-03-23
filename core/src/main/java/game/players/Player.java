@@ -35,7 +35,8 @@ public abstract class Player
 	protected HashMap<Point, Building> settlements;
 	protected boolean hasLongestRoad;
 	protected boolean hasLargestArmy;
-	protected HashMap<DevelopmentCardType, Integer> cards;
+	protected Map<DevelopmentCardType, Integer> cards, playedDevCards;
+	protected boolean playedDevCard;
 	protected int armySize;
 	protected Board.Player.Id id;
 	protected String userName;
@@ -50,6 +51,7 @@ public abstract class Player
 		settlements = new HashMap<Point, Building>();
 		resources = new HashMap<ResourceType, Integer>();
 		cards = new HashMap<DevelopmentCardType, Integer>();
+		playedDevCards = new HashMap<DevelopmentCardType, Integer>();
 		this.userName = userName;
 
 		// Initialise resources
@@ -58,6 +60,8 @@ public abstract class Player
 			if(r == ResourceType.Generic) continue;
 			resources.put(r, 0);
 		}
+		
+		playedDevCard = false;
 	}
 
 	/**
@@ -108,7 +112,7 @@ public abstract class Player
 					if((building ==  null) || (building != null && building.getPlayerColour().equals(r.getPlayerColour())))
 					{
 						isConnected = true;
-						listsAddedTo.add(index++);
+						listsAddedTo.add(index);
 					}
 					break;	
 				}
@@ -117,10 +121,9 @@ public abstract class Player
 			// Update list
 			if(isConnected)
 			{
-				list.add(r);
 				valid = true;
 			}
-			else index++;
+			index++;
 		}
 		
 		return valid;
@@ -174,15 +177,20 @@ public abstract class Player
 	 */
 	protected void mergeRoads(Road r, List<Integer> listsAddedTo)
 	{
-		for(int i = 1; i < listsAddedTo.size(); i++)
+		if(listsAddedTo.size() > 0)
+		{
+			// Add road to first added road chain.
+			roads.get(listsAddedTo.get(0)).add(r);
+		}
+
+		// Cascade all road chains back to the first road chain (since it has the new road added)
+		for(int i = listsAddedTo.size() - 1; i >= 1; i--)
 		{
 			List<Road> last = roads.get(listsAddedTo.get(i - 1));
 			List<Road> current = roads.get(listsAddedTo.get(i));
-			
-			// Remove the duplicate road in one of the lists and add it to the other one.
-			last.remove(r);
-			current.addAll(last);
-			
+
+			// Add all elements
+			last.addAll(current);
 			roads.remove(last);
 		}
 	}
@@ -199,7 +207,28 @@ public abstract class Player
 		}
 		return numResources;
 	}
-	
+
+	/**
+	 * @return the total number of dev cards the player has
+	 */
+	public int getNumDevCards()
+	{
+		int numResources = 0;
+		for(Integer i : getDevelopmentCards().values())
+		{
+			numResources += i;
+		}
+		return numResources;
+	}
+
+	/**
+	 * @return the total number of dev cards the player has
+	 */
+	public Map<DevelopmentCardType, Integer> getPlayedDevCards()
+	{
+		return playedDevCards;
+	}
+
 	/**
 	 * Checks to see if the user canAfford something
 	 * @param cost
@@ -224,22 +253,23 @@ public abstract class Player
 	 */
 	public boolean canBuildRoad(Edge edge)
 	{
-		boolean valid = false;
+		List<Integer> listsAddedTo = new ArrayList<Integer>();
+		Road r = new Road(edge, colour);
 
-		// See if the proposed node is connected to any of the current roads
-		for(List<Road> list : roads)
+		// Road already here. Cannot build
+		if (edge.getRoad() != null) return false;
+
+		// Find out where this road is connected
+		boolean valid = checkRoadsAndAdd(r, listsAddedTo);
+
+		// Check the location is valid for building and that the player can
+		// afford it
+		if (r.getEdge().hasSettlement() || valid || (getRoads().size() < 2 && r.getEdge().hasSettlement()))
 		{
-			for(Road r : list)
-			{
-				if(r.getEdge().isConnected(edge))
-				{
-					valid = true;
-					break;
-				}
-			}
+			return getRoads().size() < 2 || canAfford(Road.getRoadCost());
 		}
 
-		return canAfford(Road.getRoadCost()) && edge.getRoad() == null && valid;
+		return false;
 	}
 
 	/**
@@ -252,7 +282,7 @@ public abstract class Player
 		Point p = new Point(node.getX(), node.getY());
 		Settlement s = new Settlement(node, colour);
 
-		return canAfford(Settlement.getSettlementCost()) && !settlements.containsKey(p)
+		return (canAfford(Settlement.getSettlementCost()) || getSettlements().size() < MIN_SETTLEMENTS) && !settlements.containsKey(p)
 				&& !s.isNearSettlement() && (node.isNearRoad(colour) || getSettlements().size() < MIN_SETTLEMENTS);
 	}
 
@@ -404,7 +434,7 @@ public abstract class Player
 	/**
 	 * @return the development cards in this player's hand
 	 */
-	public HashMap<DevelopmentCardType, Integer> getDevelopmentCards()
+	public Map<DevelopmentCardType, Integer> getDevelopmentCards()
 	{
 		return cards;
 	}
@@ -421,6 +451,7 @@ public abstract class Player
 		
 		return total;
 	}
+
 	/**
 	 * @return the hasLargestArmy
 	 */
@@ -504,8 +535,26 @@ public abstract class Player
 		// Grant VP point if necessary
 		if(type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University))
 		{
+			existing = playedDevCards.containsKey(DevelopmentCardType.Library) ?playedDevCards.get(DevelopmentCardType.Library) : 0;
+			playedDevCards.put(DevelopmentCardType.Library, existing + 1);
 			vp++;
 		}
+		else if(type.equals(DevelopmentCardType.University))
+		{
+			existing = playedDevCards.containsKey(DevelopmentCardType.University) ?playedDevCards.get(DevelopmentCardType.University) : 0;
+			playedDevCards.put(DevelopmentCardType.University, existing + 1);
+			vp++;
+		}
+	}
+
+	/**
+	 * Plays the given development card
+	 * @param card the development card to add
+	 */
+	protected void playCard(DevelopmentCardType card)
+	{
+		int existing = cards.containsKey(card) ? cards.get(card) : 0;
+		cards.put(card, existing - 1);
 	}
 
 	/**
@@ -541,6 +590,16 @@ public abstract class Player
     public void setUserName(String userName)
 	{
         this.userName = userName;
+    }
+
+	public void setResources(Map<ResourceType,Integer> resources)
+	{
+		this.resources = resources;
+	}
+
+    public void setDevelopmentCards(Map<DevelopmentCardType,Integer> developmentCards)
+	{
+        this.cards = developmentCards;
     }
 }
 

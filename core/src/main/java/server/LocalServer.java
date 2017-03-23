@@ -1,6 +1,6 @@
 package server;
 
-import com.badlogic.gdx.Gdx;
+import AI.LocalAIClientOnServer;
 import connection.LocalClientConnection;
 import enums.Colour;
 import exceptions.GameFullException;
@@ -17,8 +17,47 @@ public class LocalServer extends Server
     public LocalServer(LocalClientConnection connection)
     {
         super();
+        ServerGame.NUM_PLAYERS = 4;
         Colour c = joinGame(connection);
         localPlayer = game.getPlayer(c);
+        addAIs(3);
+    }
+
+    public LocalServer()
+    {
+        super();
+        ServerGame.NUM_PLAYERS = 4;
+        addAIs(4);
+        localPlayer = game.getPlayers().get(0);
+    }
+
+    public static void main(String[] args)
+    {
+        LocalServer s = new LocalServer();
+        Thread t = new Thread(s);
+        t.start();
+    }
+
+    /**
+     * Adds the given number of local AI players
+     * @param num the number of AIs to add
+     */
+    private void addAIs(int num)
+    {
+        // Don't add more if game is full
+        if(ServerGame.NUM_PLAYERS == numConnections)
+        {
+            return;
+        }
+
+        // Add 'num' AIs
+        for(int i = 0; i < num; i++)
+        {
+            LocalAIClientOnServer ai = new LocalAIClientOnServer();
+            LocalClientConnection conn = ai.getConn().getConn();
+            joinGame(conn);
+        }
+        log("Server SetUp", String.format("Number of AIs: %d. Connections: %d", num, numConnections));
     }
 
     /**
@@ -34,27 +73,9 @@ public class LocalServer extends Server
         }
         catch (GameFullException e) {}
         connections.put(c, new ListenerThread(connection, c,  this));
-        Gdx.app.log("Server Setup", String.format("Player %d connected", numConnections));
+        log("Server Setup", String.format("Player %d connected", numConnections));
         numConnections++;
 
         return c;
-    }
-
-    /**
-     * Adds the given number of local AI players
-     * @param num the number of AIs to add
-     */
-    private void addAIs(int num) throws GameFullException
-    {
-        if(ServerGame.NUM_PLAYERS == numConnections)
-        {
-            throw new GameFullException();
-        }
-
-        //TODO
-        /*
-        LocalAiClient ai = new LocalAiClient();
-
-         */
     }
 }

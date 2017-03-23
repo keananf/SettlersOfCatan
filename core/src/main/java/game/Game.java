@@ -1,6 +1,7 @@
 package game;
 
 import enums.Colour;
+import enums.DevelopmentCardType;
 import enums.ResourceType;
 import game.build.Building;
 import game.build.City;
@@ -11,6 +12,7 @@ import grid.Hex;
 import grid.HexGrid;
 import grid.Node;
 import intergroup.board.Board;
+import intergroup.lobby.Lobby;
 import intergroup.resource.Resource;
 
 import java.util.HashMap;
@@ -30,14 +32,14 @@ public abstract class Game
 	protected Bank bank;
 	protected int numPlayers;
 	protected int current; // index of current player
-	public static final int NUM_PLAYERS = 1;
+	public static int NUM_PLAYERS = 4;
 	public static final int MIN_ROAD_LENGTH = 5;
 	public static final int MIN_ARMY_SIZE = 3;
 
 	public Game()
 	{
 		bank = new Bank();
-		grid = new HexGrid();
+		grid = new HexGrid(true);
 		players = new HashMap<Colour, Player>();
 		idsToColours = new HashMap<Board.Player.Id, Colour>();
 	}
@@ -77,6 +79,50 @@ public abstract class Game
 			}
 		}
 		return grant;
+	}
+
+	/**
+	 * Converts a map of dev cards into an object combatible with protobufs
+	 * @param map the map to convert
+	 * @return the protobuf representation of the map
+	 */
+	public Lobby.GameInfo.PlayerDevCardInfo processCards(Map<DevelopmentCardType, Integer> map)
+	{
+		Lobby.GameInfo.PlayerDevCardInfo.Builder info = Lobby.GameInfo.PlayerDevCardInfo.newBuilder();
+		info.setUniversity(map.containsKey(DevelopmentCardType.University) ? map.get(DevelopmentCardType.University) : 0);
+		info.setLibrary(map.containsKey(DevelopmentCardType.Library) ? map.get(DevelopmentCardType.Library) : 0);
+		info.setYearOfPlenty(map.containsKey(DevelopmentCardType.YearOfPlenty) ? map.get(DevelopmentCardType.YearOfPlenty) : 0);
+		info.setMonopoly(map.containsKey(DevelopmentCardType.Monopoly) ? map.get(DevelopmentCardType.Monopoly) : 0);
+		info.setRoadBuilding(map.containsKey(DevelopmentCardType.RoadBuilding) ? map.get(DevelopmentCardType.RoadBuilding) : 0);
+		info.setKnight(map.containsKey(DevelopmentCardType.Knight) ? map.get(DevelopmentCardType.Knight) : 0);
+
+		return info.build();
+	}
+
+	/**
+	 * Translates the protobuf representation of dev cards into a map.
+	 * @param info the dev cards received from the network
+	 * @return a map of dev cards to number
+	 */
+	public Map<DevelopmentCardType, Integer> processCards(Lobby.GameInfo.PlayerDevCardInfo info)
+	{
+		Map<DevelopmentCardType,Integer> ret = new HashMap<DevelopmentCardType,Integer>();
+
+		// Add all info with amounts
+		if(info.getKnight() > 0)
+			ret.put(DevelopmentCardType.Knight, info.getKnight());
+		if(info.getYearOfPlenty() > 0)
+			ret.put(DevelopmentCardType.YearOfPlenty, info.getYearOfPlenty());
+		if(info.getLibrary() > 0)
+			ret.put(DevelopmentCardType.Library, info.getLibrary());
+		if(info.getMonopoly() > 0)
+			ret.put(DevelopmentCardType.Monopoly, info.getMonopoly());
+		if(info.getUniversity() > 0)
+			ret.put(DevelopmentCardType.University, info.getUniversity());
+		if(info.getRoadBuilding() > 0)
+			ret.put(DevelopmentCardType.RoadBuilding, info.getRoadBuilding());
+
+		return ret;
 	}
 
 	/**
@@ -258,7 +304,15 @@ public abstract class Game
 	 */
 	public Colour getNextPlayer()
 	{
-		return getPlayer(Board.Player.Id.values()[++current % NUM_PLAYERS]).getColour();
+		return getPlayer(Board.Player.Id.forNumber(++current % NUM_PLAYERS)).getColour();
+	}
+
+	/**
+	 * @return the next player
+	 */
+	public Colour getLastPlayer()
+	{
+		return getPlayer(Board.Player.Id.forNumber(--current % NUM_PLAYERS)).getColour();
 	}
 
 	public Player[] getPlayersAsList()

@@ -1,20 +1,20 @@
 package tests;
 
-import intergroup.board.Board;
-import grid.*;
 import enums.Colour;
 import exceptions.*;
 import game.build.Road;
 import game.build.Settlement;
-import game.players.ServerPlayer;
 import game.players.Player;
+import game.players.ServerPlayer;
+import grid.Edge;
+import grid.Node;
+import intergroup.board.Board;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 public class RoadTests extends TestHelper
 {
@@ -75,11 +75,14 @@ public class RoadTests extends TestHelper
 		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		p.grantResources(Road.getRoadCost(), game.getBank());
 		makeSettlement(p, n);
+		p.spendResources(Settlement.getSettlementCost(), game.getBank());
+
 
 		// Dont worry about granting resources or anything.
 		// The checks for invalid coordinates happens first.
 		game.setCurrentPlayer(p.getColour());
 		buildRoad(p, n.getEdges().get(0));
+		p.spendResources(Road.getRoadCost(), game.getBank());
 		assertEquals(p.getNumResources(), 0);
 		assertEquals(p.getRoads().size(), 1);
 	}
@@ -223,13 +226,30 @@ public class RoadTests extends TestHelper
 	public void cannotAffordRoadTest() throws SettlementExistsException, CannotAffordException,
 			CannotBuildRoadException, RoadExistsException, BankLimitException
 	{
-		// Need a settlement before you can build a road.
-		p.grantResources(Settlement.getSettlementCost(), game.getBank());
-		makeSettlement(p, n);
+		// Find edges
+		Edge e1 = n.getEdges().get(0);
+		Node n1 = e1.getX().equals(n) ? e1.getY() : e1.getX(); // Opposite end of first edge
+		Edge e2 = n1.getEdges().get(0).equals(e1) ? n1.getEdges().get(1) : n1.getEdges().get(0);
+		Node n2 = e2.getX().equals(n1) ? e2.getY() : e2.getX(); // Opposite end of second edge
+		Edge e3 = n2.getEdges().get(0).equals(e2) ? n2.getEdges().get(1) : n2.getEdges().get(0);
+		Node n3 = e3.getX().equals(n2) ? e3.getY() : e3.getX(); // Opposite end of third edge
+		Edge e4 = n3.getEdges().get(0).equals(e3) ? n3.getEdges().get(1) : n3.getEdges().get(0);
+		Node n4 = e4.getX().equals(n3) ? e4.getY() : e4.getX(); // Opposite end of fourth edge
+		Edge e5 = n4.getEdges().get(0).equals(e4) ? n4.getEdges().get(1) : n4.getEdges().get(0);
+		Node n5 = e5.getX().equals(n4) ? e5.getY() : e5.getX(); // Opposite end of fifth edge
+		Edge e6 = n5.getEdges().get(0).equals(e5) ? n5.getEdges().get(1) : n5.getEdges().get(0);
+		Node n6 = e6.getX().equals(n5) ? e6.getY() : e6.getX(); // Opposite end of sixth edge
 
-		// Try to build a road with no resources
-		assertFalse(hasResources(p));
-		p.buildRoad(n.getEdges().get(0), game.getBank());
+		// Make two settlements
+		makeSettlement(p, n);
+		makeSettlement(p, n6);
+
+		// Make two roads
+		buildRoad(p, e1);
+		buildRoad(p, e6);
+
+		// Try to make third
+		p.buildRoad(e5, game.getBank());
 	}
 
 	/**

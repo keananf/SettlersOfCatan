@@ -10,12 +10,10 @@ import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.trade.Trade;
 
-import java.util.concurrent.Semaphore;
-
 public class TurnProcessor
 {
 	private final Client client;
-	private final IServerConnection conn;
+	private IServerConnection conn;
 
 	public TurnProcessor(IServerConnection conn, Client client)
 	{
@@ -27,41 +25,6 @@ public class TurnProcessor
 	 * Switches on the move type to ascertain which proto message to form
 	 */
 	protected void sendMove()
-	{
-		try
-		{
-			getTurnLock().acquire();
-			try
-			{
-				getGameLock().acquire();
-				try
-				{
-					sendMoveInternal();
-				}
-				finally
-				{
-					getGameLock().release();
-				}
-			}
-			catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-			finally
-			{
-				getTurnLock().release();
-			}
-		}
-		catch(InterruptedException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Switches on the move type to ascertain which proto message to form
-	 */
-	private void sendMoveInternal()
 	{
 		Requests.Request.Builder request = Requests.Request.newBuilder();
 
@@ -114,6 +77,10 @@ public class TurnProcessor
 			case BUYDEVCARD:
 				request.setBuyDevCard(EmptyOuterClass.Empty.getDefaultInstance());
 				break;
+
+			case BODY_NOT_SET:
+			default:
+				return;
         }
 
         // Send to server if it is a valid move
@@ -121,7 +88,13 @@ public class TurnProcessor
 		{
 			sendToServer(request.build());
 		}
-		// TODO else display error?
+		else
+		{
+			// TODO else display error?
+			client.log("Client Play", String.format("Invalid Request %s for Player id: %s",
+					request.getBodyCase().name(), getGame().getPlayer().getId().name()));
+
+		}
     }
 
 	/**
@@ -131,7 +104,16 @@ public class TurnProcessor
 	 */
 	private void sendToServer(Requests.Request request)
 	{
-		conn.sendMessageToServer(Messages.Message.newBuilder().setRequest(request).build());
+		try
+		{
+			conn.sendMessageToServer(Messages.Message.newBuilder().setRequest(request).build());
+		}
+		catch (Exception e)
+		{
+			conn = null;
+			client.log("Client Error", String.format("Error sending request %s to server", request.getBodyCase().name()));
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -168,18 +150,8 @@ public class TurnProcessor
 		return client.getState();
 	}
 
-	private TurnInProgress getTurn()
+	private Turn getTurn()
 	{
 		return client.getTurn();
-	}
-
-	private Semaphore getTurnLock()
-	{
-		return client.getTurnLock();
-	}
-
-	private Semaphore getGameLock()
-	{
-		return client.getStateLock();
 	}
 }

@@ -1,22 +1,28 @@
-package client;
+package AI;
 
 import connection.RemoteServerConnection;
+import enums.Difficulty;
 
 import java.io.IOException;
 
 /**
- * Main client class
- * @author 140001596
+ * Client for an AI connection up to a remote server
  */
-public class RemoteClient extends Client
+public class RemoteAIClient extends AIClient
 {
     private String host;
     private RemoteServerConnection conn;
 
-    public RemoteClient(String host)
+    public RemoteAIClient(String host, Difficulty difficulty)
     {
+        super(difficulty);
         this.host = host;
-        setUpConnection();
+    }
+
+    public RemoteAIClient(String host)
+    {
+        super();
+        this.host = host;
     }
 
     /**

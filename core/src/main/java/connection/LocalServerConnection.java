@@ -1,5 +1,6 @@
 package connection;
 
+import client.Client;
 import com.badlogic.gdx.Gdx;
 import intergroup.Messages;
 
@@ -11,11 +12,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class LocalServerConnection implements IServerConnection
 {
+    private final Client client;
     private LocalClientConnection conn;
     protected ConcurrentLinkedQueue<Messages.Message> fromServer;
 
-    public LocalServerConnection()
+    public LocalServerConnection(Client client)
     {
+        this.client = client;
         fromServer = new ConcurrentLinkedQueue<Messages.Message>();
     }
 
@@ -31,7 +34,7 @@ public class LocalServerConnection implements IServerConnection
         while(fromServer.isEmpty()) {}
 
         Messages.Message m = fromServer.poll();
-        Gdx.app.log("Client Conn", String.format("Received %s", m.getEvent().getTypeCase().name()));
+        log("Client Conn", String.format("Received %s", m.getEvent().getTypeCase().name()));
         return m;
     }
 
@@ -39,6 +42,7 @@ public class LocalServerConnection implements IServerConnection
     public void sendMessageToServer(Messages.Message message)
     {
         conn.fromClient.add(message);
+        log("Client Conn", String.format("Sent %s", message.getRequest().getBodyCase().name()));
     }
 
     @Override
@@ -51,5 +55,19 @@ public class LocalServerConnection implements IServerConnection
     public LocalClientConnection getConn()
     {
         return conn;
+    }
+
+    /**
+     * Logs the message depending on whether or not this is a local or remote server
+     * @param tag the tag (for Gdx)
+     * @param msg the msg to log
+     */
+    public void log(String tag, String msg)
+    {
+        if(Gdx.app == null)
+        {
+            System.out.println(msg);
+        }
+        else Gdx.app.log(tag, msg);
     }
 }

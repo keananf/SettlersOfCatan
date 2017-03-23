@@ -1,5 +1,6 @@
 package connection;
 
+import com.badlogic.gdx.Gdx;
 import intergroup.Events;
 import intergroup.Messages;
 
@@ -7,7 +8,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
- * Class representing a remote connection with a client
+ * Class representing a remote connection with a server
  * @author 140001596
  */
 public class RemoteClientConnection implements IClientConnection
@@ -20,36 +21,24 @@ public class RemoteClientConnection implements IClientConnection
     }
 
     @Override
-    public void sendMessageToClient(Messages.Message message)
+    public void sendMessageToClient(Messages.Message message) throws Exception
     {
         if(conn != null)
         {
-            try
-            {
-                Events.Event ev = message.getEvent();
-                message.writeDelimitedTo(conn.getOutputStream());
-                String.format("Sent. %s", ev.getTypeCase().name());
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
+            Events.Event ev = message.getEvent();
+            message.writeDelimitedTo(conn.getOutputStream());
+            log("Server conn", String.format("Sent. %s", ev.getTypeCase().name()));
         }
     }
 
     @Override
-    public Messages.Message getMessageFromClient()
+    public Messages.Message getMessageFromClient() throws Exception
     {
-        if(conn != null)
+        if(conn != null || conn.isClosed() || !conn.isConnected())
         {
-            try
-            {
-                return Messages.Message.parseDelimitedFrom(conn.getInputStream());
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
+            Messages.Message m = Messages.Message.parseDelimitedFrom(conn.getInputStream());
+            log("Server Conn", String.format("Received. %s", m.getRequest().getBodyCase().name()));
+            return m;
         }
 
         return null;
@@ -67,5 +56,19 @@ public class RemoteClientConnection implements IClientConnection
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Logs the message depending on whether or not this is a local or remote server
+     * @param tag the tag (for Gdx)
+     * @param msg the msg to log
+     */
+    public void log(String tag, String msg)
+    {
+        if(Gdx.app == null)
+        {
+            System.out.println(msg);
+        }
+        else Gdx.app.log(tag, msg);
     }
 }

@@ -72,13 +72,6 @@ class GameController implements InputProcessor
 			double lowestHeight = hex.centre.z - ((Math.sqrt(3)*WIDTH)/4);
 
 			
-			
-			
-			
-			
-			
-			
-			
 			if (planeX <= furtherstRight && planeX >= furthestLeft)
 			{
 				if (planeY <= heighestHeight && planeY >= lowestHeight)
@@ -169,7 +162,40 @@ class GameController implements InputProcessor
 	
 	
 	
-	
+	public boolean isNode(float planeX, float planeY){
+		for(GameObject hex : screen.hexes){
+			final float WIDTH = 2f;
+			double furthestLeft = hex.centre.x - WIDTH/2;
+			double furthestRight = hex.centre.x + WIDTH/2;
+			double heighestHeight = hex.centre.z + ((Math.sqrt(3)*WIDTH)/4);
+			double lowestHeight = hex.centre.z - ((Math.sqrt(3)*WIDTH)/4);
+			double inRight = hex.centre.x + WIDTH/4;
+			double inLeft = hex.centre.x - WIDTH/4;
+			
+			
+			if(planeX==inLeft && planeY==heighestHeight){
+				return true;
+			}
+			if(planeX== inRight && planeY == heighestHeight){
+				return true;
+			}
+			if(planeX ==furthesRight && planeY = hex.centre.y){
+				return true;
+			}
+			if(planeY == furthestLeft && planeY = hex.centre.y){
+				return true;
+			}
+			if(planeX == inLeft && planeY==lowestHeight ){
+				return true;
+			}
+			if(planeX == inRight && planeY==lowestHeight){
+				return true;
+			}
+		
+		return false;
+		
+		}
+	}
 	
 	
 	

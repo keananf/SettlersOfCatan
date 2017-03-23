@@ -167,8 +167,19 @@ public abstract class Client implements Runnable
      */
     public void sendTurn(Turn turn)
     {
-        updateTurn(turn);
-        turnProcessor.sendMove();
+
+        // Send to server if it is a valid move
+        if(getMoveProcessor().validateMsg(turn))
+        {
+            updateTurn(turn);
+            turnProcessor.sendMove();
+        }
+        else
+        {
+            // TODO else display error?
+            log("Client Play", String.format("Invalid Request %s for %s",
+                    turn.getChosenMove().name(), getState().getPlayer().getId().name()));
+        }
     }
 
     /**

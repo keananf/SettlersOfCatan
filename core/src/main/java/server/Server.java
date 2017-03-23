@@ -147,7 +147,7 @@ public class Server implements Runnable
 
 			// Send back to original player only
 			case ERROR:
-			    sendError(game.getPlayer(event.getInstigator().getId()).getColour());
+			    sendError(event, game.getPlayer(event.getInstigator().getId()).getColour());
 				break;
 		}
 	}
@@ -413,19 +413,13 @@ public class Server implements Runnable
 	/**
 	 * If an unknown or invalid message is received, then this message sends an
 	 * error back
+	 * @param event
 	 * @param c the colour of the player to send the error to
 	 */
-	public void sendError(Colour c)
+	public void sendError(Event event, Colour c)
 	{
-		Message.Builder msg = Message.newBuilder();
-		Event.Error.Builder err = Event.Error.newBuilder();
-
-		// Set up err message
-		err.setDescription("Invalid message type");
-		err.setCause(Events.ErrorCause.UNKNOWN);
-
-		msg.setEvent(Event.newBuilder().setError(err.build()).build());
-		sendMessage(msg.build(), c);
+		Message msg = Message.newBuilder().setEvent(event).build();
+		sendMessage(msg, c);
 	}
 
 	public void addMessageToProcess(ReceivedMessage msg) throws IOException

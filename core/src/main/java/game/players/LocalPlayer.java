@@ -32,7 +32,7 @@ public class LocalPlayer extends Player
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		if (canBuildRoad(edge))
+		if (canBuildRoad(edge) || !canAfford(Road.getRoadCost()))
 		{
 			edge.setRoad(r);
 

@@ -98,7 +98,7 @@ public class MessageProcessor
     {
         Requests.Request request = msg.getRequest();
         Events.Event.Builder ev = Events.Event.newBuilder();
-        ev.setInstigator(Board.Player.newBuilder().setId(game.getPlayer(colour).getId()));
+        ev.setInstigator(Board.Player.newBuilder().setId(game.getPlayer(colour).getId()).build());
 
         server.log("Server Proc", String.format("Processing request %s from %s",
                 msg.getRequest().getBodyCase().name(), ev.getInstigator().getId().name()));
@@ -222,11 +222,15 @@ public class MessageProcessor
         if(request.getBodyCase().equals(Requests.Request.BodyCase.ROLLDICE)
                 && ev.getRolled().getA() + ev.getRolled().getB() == 7)
         {
-            expectedMoves.get(game.getPlayer(ev.getInstigator().getId()).getColour()).add(Requests.Request.BodyCase.MOVEROBBER);
+            server.log("Server Proc", String.format("Adding MOVEROBBER to %s",ev.getInstigator().getId().name()));
+            expectedMoves.get(colour).add(Requests.Request.BodyCase.MOVEROBBER);
             for(Player p : game.getPlayers().values())
             {
                 if(p.getNumResources() > 7)
+                {
+                    server.log("Server Proc", String.format("Adding DISCARDRESOURCES to %s",p.getId().name()));
                     expectedMoves.get(p.getColour()).add(Requests.Request.BodyCase.DISCARDRESOURCES);
+                }
             }
         }
 

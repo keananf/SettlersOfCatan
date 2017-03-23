@@ -83,18 +83,7 @@ public class TurnProcessor
 				return;
         }
 
-        // Send to server if it is a valid move
-		if(client.getMoveProcessor().validateMsg(request.build()))
-		{
-			sendToServer(request.build());
-		}
-		else
-		{
-			// TODO else display error?
-			client.log("Client Play", String.format("Invalid Request %s for Player id: %s",
-					request.getBodyCase().name(), getGame().getPlayer().getId().name()));
-
-		}
+        sendToServer(request.build());
     }
 
 	/**

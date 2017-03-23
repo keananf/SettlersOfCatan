@@ -278,9 +278,10 @@ public class ClientGame extends Game
 					}
 					else
 					{
+						int existing = resources.containsKey(p.getColour()) ? resources.get(p.getColour()) : 0;
 						for(ResourceType r : grant.keySet())
 							num += grant.get(r);
-						resources.put(p.getColour(), num);
+						resources.put(p.getColour(), existing + num);
 					}
 				}
 				catch (BankLimitException e)
@@ -320,7 +321,7 @@ public class ClientGame extends Game
 		Player player = getPlayer(instigator.getId());
 
 		// Spend resources if it is not a preliminary move
-		if (player.getRoads().size() > 2)
+		if (player.getRoads().size() >= 2)
 		{
 			if(player.equals(thisPlayer))
 			{
@@ -405,7 +406,7 @@ public class ClientGame extends Game
 						settlement.getX(), settlement.getY()); }
 
 		// Spend resources if this is not an initial move
-		if (player.getSettlements().size() > 2)
+		if (player.getSettlements().size() >= 2)
 		{
 			if(player.equals(thisPlayer))
 			{

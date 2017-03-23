@@ -48,20 +48,20 @@ public class MoveProcessor
         // For each node
         for(Node n : getGame().getGrid().nodes.values())
         {
+            if(!checkBuild(n)) continue;
+
             Turn turn = new Turn();
-            if(checkBuild(n) && n.getSettlement() == null)
+            if(n.getSettlement() == null)
             {
                 turn.setChosenNode(n);
                 turn.setChosenMove(Requests.Request.BodyCase.BUILDSETTLEMENT);
 
             }
-            else if(checkBuild(n) && n.getSettlement() != null)
+            else if(n.getSettlement() != null)
             {
                 turn.setChosenNode(n);
                 turn.setChosenMove(Requests.Request.BodyCase.BUILDCITY);
             }
-            else continue;
-
             moves.add(turn);
         }
 
@@ -278,8 +278,8 @@ public class MoveProcessor
     private boolean checkBuild(Node node)
     {
         Player p = getGame().getPlayer();
-        return checkTurn() && ((getExpectedMoves().isEmpty() && (p.canBuildSettlement(node) || p.canBuildSettlement(node)))
-                ||(getExpectedMoves().contains(Requests.Request.BodyCase.BUILDSETTLEMENT) && p.canBuildSettlement(node))
+        return checkTurn() && ((getExpectedMoves().isEmpty() && (p.canBuildSettlement(node) || p.canBuildCity(node)))
+                || (getExpectedMoves().contains(Requests.Request.BodyCase.BUILDSETTLEMENT) && p.canBuildSettlement(node))
                         || (getExpectedMoves().contains(Requests.Request.BodyCase.BUILDCITY) && p.canBuildCity(node)));
     }
 
@@ -355,16 +355,16 @@ public class MoveProcessor
 
     /**
      * Checks that the given player is currently able to make a move of the given type
-     * @param req the received message
+     * @param turn the message
      * @return true / false depending on legality of move
      */
-    private boolean isExpected(Requests.Request req)
+    private boolean isExpected(Turn turn)
     {
-        Requests.Request.BodyCase type = req.getBodyCase();
+        Requests.Request.BodyCase type = turn.getChosenMove();
 
         // If in trade phase and the given message isn't a trade
-        if(getTurn().isTradePhase() && (!req.getBodyCase().equals(Requests.Request.BodyCase.INITIATETRADE) && checkTurn())
-                || (!req.getBodyCase().equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !checkTurn()) )
+        if(getTurn().isTradePhase() && (!type.equals(Requests.Request.BodyCase.INITIATETRADE) && checkTurn())
+                || (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !checkTurn()) )
         {
             return false;
         }
@@ -386,62 +386,65 @@ public class MoveProcessor
 
     /**
      * Ensures the request is valid at this current stage of the game
-     * @param req the request polled from the queue
+     * @param turn the request polled from the queue
      * @return a boolean indicating success or not
      */
-    public boolean validateMsg(Requests.Request req)
+    public boolean validateMsg(Turn turn)
     {
         boolean val = false;
 
         // If it is not the player's turn, the message type is unknown OR the given request is NOT expected
         // send error and return false
-        if(!isExpected(req))
+        if(!isExpected(turn))
         {
             return false;
         }
 
-        switch(req.getBodyCase())
+        switch(turn.getChosenMove())
         {
-            case BUILDROAD:
-                val = checkBuildRoad(getGame().getGrid().getEdge(req.getBuildRoad().getA(), req.getBuildRoad().getB()));
-                break;
-            case BUILDSETTLEMENT:
-                val = checkBuild(getGame().getGrid().getNode(req.getBuildSettlement().getX(), req.getBuildSettlement().getY()));
-                break;
             case BUILDCITY:
-                val = checkBuild(getGame().getGrid().getNode(req.getBuildCity().getX(), req.getBuildCity().getY()));
+            case BUILDSETTLEMENT:
+                val = checkBuild(turn.getChosenNode());
+                break;
+            case BUILDROAD:
+                val = checkBuildRoad(turn.getChosenEdge());
                 break;
             case BUYDEVCARD:
                 val = checkBuyDevCard();
                 break;
             case PLAYDEVCARD:
-                val = checkPlayDevCard(DevelopmentCardType.fromProto(req.getPlayDevCard()));
+                val = checkPlayDevCard(turn.getChosenCard());
                 break;
             case SUBMITTARGETPLAYER:
-                val = checkTarget(getGame().getPlayer(req.getSubmitTargetPlayer().getId()).getColour());
+                val = checkTarget(turn.getTarget());
                 break;
             case DISCARDRESOURCES:
-                val = checkDiscard(getGame().processResources(req.getDiscardResources()));
+                val = checkDiscard(turn.getChosenResources());
                 break;
             case MOVEROBBER:
-                val = checkHex(getGame().getGrid().getHex(req.getMoveRobber().getX(), req.getMoveRobber().getY()));
+                client.log("Client Play", String.format("checking move robber for %s", getGame().getPlayer().getId().name()));
+                val = checkHex(turn.getChosenHex());
                 break;
             case CHOOSERESOURCE:
-                val = checkChosenResource(ResourceType.fromProto(req.getChooseResource()));
+                val = checkChosenResource(turn.getChosenResource());
                 break;
             case SUBMITTRADERESPONSE:
-                val = checkSendResponse(req.getSubmitTradeResponse());
+                val = checkSendResponse(turn.getTradeResponse());
                 break;
             case INITIATETRADE:
-                val = checkInitiateTrade(req.getInitiateTrade());
+                val = turn.getBankTrade() == null ?
+                        checkInitiateTrade(Trade.Kind.newBuilder().setPlayer(turn.getPlayerTrade()).build())
+                        : checkInitiateTrade(Trade.Kind.newBuilder().setBank(turn.getBankTrade()).build());
                 break;
 
             case ENDTURN:
-            case ROLLDICE:
             case JOINLOBBY:
                 val = getExpectedMoves().isEmpty();
                 break;
 
+            case ROLLDICE:
+                val = getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE);
+                break;
 
             case CHATMESSAGE:
                 val = true;

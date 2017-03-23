@@ -191,8 +191,11 @@ public class EventProcessor
 
 			// Expect for the player to send a steal request next
 			case ROBBERMOVED:
-				getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
-				robberMoved = true;
+				if(getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
+				{
+					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
+					robberMoved = true;
+				}
 				if(getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER))
 				{
 					getExpectedMoves().remove(Requests.Request.BodyCase.MOVEROBBER);

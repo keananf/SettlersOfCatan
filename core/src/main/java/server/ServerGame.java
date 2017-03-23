@@ -654,12 +654,15 @@ public class ServerGame extends Game
 		Board.Roll.Builder roll = Board.Roll.newBuilder();
 		roll.setA(dice.nextInt(6) + 1).setB(dice.nextInt(6) + 1);
 
+		Map<Colour, Map<ResourceType, Integer>> playerResources = allocateResources(roll.getA() + roll.getB());
+
 		// Add resource generation
-		for(Player p : players.values())
+		for(Colour c : playerResources.keySet())
 		{
+			Player p = getPlayer(c);
 			Board.ResourceAllocation.Builder alloc = Board.ResourceAllocation.newBuilder();
 			alloc.setPlayer(Board.Player.newBuilder().setId(p.getId()).build());
-			alloc.setResources(processResources(getNewResources(roll.getA() + roll.getB(), p.getColour())));
+			alloc.setResources(processResources(playerResources.get(c)));
 			roll.addResourceAllocation(alloc.build());
 		}
 

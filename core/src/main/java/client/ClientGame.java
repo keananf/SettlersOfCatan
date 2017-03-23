@@ -34,7 +34,7 @@ public class ClientGame extends Game
 	private Player thisPlayer;
 	private ChatBoard chatBoard;
 	private List<String> usersInLobby;
-	private int changes = 0;
+	private int turns = 0;
 
 	public ClientGame()
 	{
@@ -729,15 +729,22 @@ public class ClientGame extends Game
 		resources.put(colour, existing + size);
 	}
 
-	public void setCurrentPlayer(boolean initialPhase)
+	public void updateCurrentPlayer()
 	{
-		if(!initialPhase || !(++changes < NUM_PLAYERS))
+		if(++turns >= NUM_PLAYERS && turns < NUM_PLAYERS * 2 && current > 0)
 		{
-			super.setCurrentPlayer(getNextPlayer());
+			setCurrentPlayer(getLastPlayer());
+			current--;
 		}
-		else if(changes > NUM_PLAYERS && changes < NUM_PLAYERS * 2)
+		else if(turns != NUM_PLAYERS * 2 - 1)
 		{
-			super.setCurrentPlayer(getLastPlayer());
+			setCurrentPlayer(getNextPlayer());
+			current++;
 		}
+	}
+
+	public int getTurns()
+	{
+		return turns;
 	}
 }

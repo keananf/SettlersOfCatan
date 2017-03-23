@@ -271,15 +271,18 @@ public class Server implements Runnable
 		{
 			log("Server Initial Phase", String.format("Player %s receive initial moves", current.name()));
 			receiveInitialMoves(game.getPlayer(current).getColour());
-			sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 
 			if(i + 1 < Game.NUM_PLAYERS)
+			{
+				sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 				current = Board.Player.Id.values()[i + 1];
+			}
 		}
 
 		// Get second set of settlements and roads in reverse order
 		for(int i = Game.NUM_PLAYERS - 1; i >= 0; i--)
 		{
+			log("Server Initial Phase", String.format("Player %s receive initial moves", current.name()));
 			receiveInitialMoves(game.getPlayer(current).getColour());
 			sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 
@@ -288,7 +291,8 @@ public class Server implements Runnable
 		}
 
 		// Add roll dice to start the game off
-		getExpectedMoves(game.getPlayer(current).getColour()).add(Requests.Request.BodyCase.ROLLDICE);
+		game.setCurrentPlayer(game.getPlayer(Board.Player.Id.PLAYER_1).getColour());
+		getExpectedMoves(game.getCurrentPlayer()).add(Requests.Request.BodyCase.ROLLDICE);
 	}
 
 	/**
@@ -315,8 +319,6 @@ public class Server implements Runnable
 		getExpectedMoves(c).add(Requests.Request.BodyCase.BUILDROAD);
 		while(p.getRoads().size() == oldRoadAmount)
 		{
-			game.setCurrentPlayer(c);
-
 			processMessage();
 			sleep();
 		}
@@ -328,13 +330,13 @@ public class Server implements Runnable
 	 */
 	protected void replacePlayer(Colour c)
 	{
-		// Replace connection with a new AI
+		// Replace connection with a new ai
 		LocalAIClientOnServer ai = new LocalAIClientOnServer();
 		LocalClientConnection conn = ai.getConn().getConn();
 		connections.put(c, new ListenerThread(conn, c,  this));
 		sendGameInfo(c);
 
-		log("Server Error", String.format("Replaced Player %s with an AI due to error", game.getPlayer(c).getId().name()));
+		log("Server Error", String.format("Replaced Player %s with an ai due to error", game.getPlayer(c).getId().name()));
 	}
 
 	/**
@@ -348,7 +350,7 @@ public class Server implements Runnable
 	}
 
 	/**
-	 * Adds the given number of local AI players
+	 * Adds the given number of local ai players
 	 * @param col the colour of the connection to overwrite
 	 */
 	protected void replacePlayerWithAI(Colour col)
@@ -369,7 +371,7 @@ public class Server implements Runnable
 	{
 		if(Gdx.app == null)
 		{
-			System.out.println(msg);
+			System.out.println(tag + ": "+msg);
 		}
 		else Gdx.app.log(tag, msg);
 	}

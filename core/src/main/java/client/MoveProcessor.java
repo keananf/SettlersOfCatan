@@ -40,6 +40,10 @@ public class MoveProcessor
 
         // This player
         Player p = getGame().getPlayer();
+        if(p.getSettlements().size() == 1 && p.getRoads().size() == 1 && !getGame().getCurrentPlayer().equals(p.getColour()))
+        {
+            return moves;
+        }
 
         // For each node
         for(Node n : getGame().getGrid().nodes.values())
@@ -98,14 +102,15 @@ public class MoveProcessor
         {
             possibilities.add(new Turn(Requests.Request.BodyCase.BUYDEVCARD));
         }
-        if(getExpectedMoves().isEmpty())
+        // If the turn hasn't started, then the player can roll the dice
+        if(!getTurn().hasTurnStarted() && getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE))
+        {
+            possibilities.add(new Turn(Requests.Request.BodyCase.ROLLDICE));
+        }
+        if(getExpectedMoves().isEmpty() && getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
         {
             possibilities.add(new Turn(Requests.Request.BodyCase.ENDTURN));
             possibilities.add(new Turn(Requests.Request.BodyCase.INITIATETRADE));
-
-            // If the turn hasn't started, then the player can roll the dice
-            if(!getTurn().hasTurnStarted())
-                possibilities.add(new Turn(Requests.Request.BodyCase.ROLLDICE));
         }
         else if(getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
         {

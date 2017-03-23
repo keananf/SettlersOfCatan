@@ -26,7 +26,6 @@ public class LocalClientConnection implements IClientConnection
         if(conn != null)
         {
             conn.fromServer.add(message);
-            log("Server Conn", String.format("Sent. %s", message.getEvent().getTypeCase().name()));
         }
     }
 
@@ -39,7 +38,6 @@ public class LocalClientConnection implements IClientConnection
         while(fromClient.isEmpty()) {}
 
         Messages.Message m = fromClient.poll();
-        log("Server Conn", String.format("Received. %s", m.getRequest().getBodyCase().name()));
         return m;
     }
 

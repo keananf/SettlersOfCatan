@@ -35,10 +35,10 @@ public interface IAI
     Turn selectMove(List<Turn> optimalMoves);
 
     /**
-     * Top level AI function for getting moves, ranking them, choosing one,
+     * Top level ai function for getting moves, ranking them, choosing one,
      * updating the client's Turn object, and sending it to the client's
      * TurnProcessor to send to the server.
-     * Every AI function must be called from within the call hierarchy that his function
+     * Every ai function must be called from within the call hierarchy that his function
      * is the root of.
      */
     void performMove();
@@ -112,7 +112,7 @@ public interface IAI
     /**
      * If a submit target player request has gotten here, it is necessary.
      *
-     * Rank based on which player the AI wants to harass.
+     * Rank based on which player the ai wants to harass.
      * @param target the given player to target
      * @return a rank based on if stealing from this player is a good move.
      */

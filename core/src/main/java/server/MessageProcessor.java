@@ -222,6 +222,7 @@ public class MessageProcessor
         if(request.getBodyCase().equals(Requests.Request.BodyCase.ROLLDICE)
                 && ev.getRolled().getA() + ev.getRolled().getB() == 7)
         {
+            expectedMoves.get(game.getPlayer(ev.getInstigator().getId()).getColour()).add(Requests.Request.BodyCase.MOVEROBBER);
             for(Player p : game.getPlayers().values())
             {
                 if(p.getNumResources() > 7)

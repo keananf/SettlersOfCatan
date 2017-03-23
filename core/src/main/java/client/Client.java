@@ -9,26 +9,86 @@ import java.util.concurrent.Semaphore;
  * Abstract notion of a client
  * @author 140001596
  */
-public abstract class Client
+public abstract class Client implements Runnable
 {
     protected ClientGame state;
     protected EventProcessor eventProcessor;
-    protected Thread evProcessor;
     protected TurnProcessor turnProcessor;
     protected MoveProcessor moveProcessor;
     protected static final int PORT = 12345;
     private Turn turn;
     private IServerConnection conn;
     private Semaphore stateLock, turnLock;
+    private final Thread thread;
+
+    public Client()
+    {
+        setUpConnection();
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    @Override
+    public void run()
+    {
+        // Loop processing events when needed
+        while(getState() == null || !getState().isOver())
+        {
+            try
+            {
+                acquireLocksAndGetEvents();
+
+                // Sleep while it is NOT your turn and while you do not have expected moves
+                //do
+                {
+                    Thread.sleep(100);
+                }
+                //while(getState() == null || (!getState().getCurrentPlayer().equals(getState().getPlayer().getColour()) &&
+                  //      getTurn().getExpectedMoves().isEmpty()));
+
+                // Attempt to
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                shutDown();
+            }
+        }
+    }
 
     /**
-     * Attempts to set up a connection with the server
+     * Acquires locks and attempts to process an event
      */
-    protected abstract void setUpConnection();
-
-    public void sendTurn()
+    protected void acquireLocksAndGetEvents() throws Exception
     {
-        turnProcessor.sendMove();
+        try
+        {
+            getStateLock().acquire();
+            try
+            {
+                getTurnLock().acquire();
+                try
+                {
+                    eventProcessor.processMessage();
+                }
+                finally
+                {
+                    getTurnLock().release();
+                }
+            }
+            catch(InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+            finally
+            {
+                getStateLock().release();
+            }
+        }
+        catch(InterruptedException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -43,9 +103,6 @@ public abstract class Client
         this.turnProcessor = new TurnProcessor(conn, this);
         this.moveProcessor = new MoveProcessor(this);
         this.eventProcessor = new EventProcessor(conn, this);
-
-        evProcessor = new Thread(eventProcessor);
-        evProcessor.start();
     }
 
     /**
@@ -103,6 +160,18 @@ public abstract class Client
     }
 
     /**
+     * Sends the given turn object.
+     *
+     * Method assumed to be called in thread safe manner
+     * @param turn the turn to send
+     */
+    public void sendTurn(Turn turn)
+    {
+        updateTurn(turn);
+        turnProcessor.sendMove();
+    }
+
+    /**
      * Shuts down a client by terminating the socket and the event processor thread.
      */
     public void shutDown()
@@ -110,7 +179,7 @@ public abstract class Client
         conn.shutDown();
         try
         {
-            evProcessor.join();
+            thread.join();
         }
         catch (InterruptedException e)
         {
@@ -125,11 +194,11 @@ public abstract class Client
      */
     public void log(String tag, String msg)
     {
-        if(Gdx.app != null)
+        if(Gdx.app == null)
         {
-            Gdx.app.log(tag, msg);
+            System.out.println(tag + ": "+msg);
         }
-        else System.out.println(msg);
+        else Gdx.app.log(tag, msg);
     }
 
     public ClientGame getState()
@@ -161,4 +230,9 @@ public abstract class Client
     {
         return turnLock;
     }
+
+    /**
+     * Attempts to set up a connection with the server
+     */
+    protected abstract void setUpConnection();
 }

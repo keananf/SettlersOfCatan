@@ -642,6 +642,7 @@ public class ServerGame extends Game
 	{
 		// Update turn and set event.
 		setCurrentPlayer(getNextPlayer());
+		current++;
 		return EmptyOuterClass.Empty.getDefaultInstance();
 	}
 

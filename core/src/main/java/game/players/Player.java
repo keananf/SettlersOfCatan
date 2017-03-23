@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Abstract class describing a player (AI, or network)
+ * Abstract class describing a player (ai, or network)
  * @author 140001596
  */
 public abstract class Player 

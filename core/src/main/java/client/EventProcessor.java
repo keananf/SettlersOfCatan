@@ -1,20 +1,19 @@
 package client;
 
 import connection.IServerConnection;
+import game.Game;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import intergroup.Requests;
-import intergroup.board.Board;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Semaphore;
 
 /**
  * Class which continuously listens for updates from the server Created by
  * 140001596
  */
-public class EventProcessor implements Runnable
+public class EventProcessor
 {
 	private final Client client;
 	private IServerConnection conn;
@@ -24,32 +23,6 @@ public class EventProcessor implements Runnable
 	{
 		this.conn = conn;
 		this.client = client;
-	}
-
-	@Override
-	public void run()
-	{
-		client.log("Event Proc","Starting event processor");
-
-		// Continuously wait for new messages from the server
-		while (getGame() == null || !getGame().isOver())
-		{
-			// Break
-			if(conn == null) break;
-
-			try
-			{
-				processMessage();
-				Thread.sleep(1000);
-			}
-			catch (Exception e)
-			{
-				// Error. Invalid event.
-				// TODO request state from server? Or fail?
-				conn = null;
-				e.printStackTrace();
-			}
-		}
 	}
 
     /**
@@ -67,7 +40,7 @@ public class EventProcessor implements Runnable
 				getGame().setGameOver();
 				break;
 			case TURNENDED:
-				getGame().setCurrentPlayer(getTurn().isInitialPhase());
+				getGame().updateCurrentPlayer();
 				getTurn().reset();
 				break;
 			case CITYBUILT:
@@ -143,25 +116,39 @@ public class EventProcessor implements Runnable
 
 	private void updateExpectedMoves(Event ev)
 	{
-		if(getGame() == null || ev == null || ev.getTypeCase().equals(Event.TypeCase.TYPE_NOT_SET)) return;
-
-		// Add roll dice if necessary
-		if(getGame().getPlayer() != null && getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()) &&
-				ev.getTypeCase().equals(Event.TypeCase.TURNENDED))
-		{
-			getExpectedMoves().add(Requests.Request.BodyCase.ROLLDICE);
-		}
-
-		// If not this player's turn,
-		if((!ev.hasInstigator() && !ev.getTypeCase().equals(Event.TypeCase.BEGINGAME)) || (ev.getInstigator().getId() != getGame().getPlayer().getId() &&
-				!(ev.getTypeCase().equals(Event.TypeCase.ROLLED) || ev.getTypeCase().equals(Event.TypeCase.PLAYERTRADE))))
-		{
-			return;
-		}
+		if(ev == null || (getGame() == null && !(ev.getTypeCase().equals(Event.TypeCase.BEGINGAME) || ev.getTypeCase().equals(Event.TypeCase.GAMEINFO)))
+				|| ev.getTypeCase().equals(Event.TypeCase.TYPE_NOT_SET)) return;
 
 		// Switch on request type
 		switch(ev.getTypeCase())
 		{
+			case TURNENDED:
+				if(getTurn().isInitialPhase() && getGame().getPlayer().getSettlements().size() < 2
+						&& getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()))
+				{
+					if(getGame().getTurns() < Game.NUM_PLAYERS)
+					{
+						client.log("blah", String.format("Adding BUILDSETTLEMENT to expected moves for %s", ev.getInstigator().getId().name()));
+						getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
+					}
+					if(getGame().getTurns() >= Game.NUM_PLAYERS && getGame().getTurns() < Game.NUM_PLAYERS * 2)
+					{
+						client.log("BLAH", String.format("Adding BUILDSETTLEMENT to expected moves for %s", ev.getInstigator().getId().name()));
+						getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
+					}
+
+				}
+				else if(getTurn().isInitialPhase())
+				{
+					getTurn().setInitialPhase(false);
+				}
+
+				if(getGame().getPlayer().getSettlements().size() > 2 && getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()))
+				{
+					getExpectedMoves().add(Requests.Request.BodyCase.ROLLDICE);
+				}
+				break;
+
 			// Add expected moves based on recently played dev card
 			case DEVCARDPLAYED:
 			{
@@ -224,24 +211,15 @@ public class EventProcessor implements Runnable
 				}
 				break;
 			case ROADBUILT:
-				if(getTurn().isInitialPhase() && getGame().getPlayer().getSettlements().size() < 2 &&
-						ev.getInstigator().getId().equals(Board.Player.Id.forNumber(getGame().getPlayers().size() - 1)))
-				{
-					getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
-				}
-				else if(ev.getInstigator().getId().equals(Board.Player.Id.forNumber(getGame().getPlayers().size() - 1)))
-				{
-					getTurn().setInitialPhase(false);
-				}
 				if(getExpectedMoves().contains(Requests.Request.BodyCase.BUILDROAD))
 				{
 					getExpectedMoves().remove(Requests.Request.BodyCase.BUILDROAD);
 				}
 				break;
 			case SETTLEMENTBUILT:
-				if(getGame().getPlayer().getRoads().size() < 2)
+				if(getGame().getPlayer().getRoads().size() < 2 && getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
 				{
-					client.log("", String.format("Adding BUILDROAD to expected moves for player %s", ev.getInstigator().getId().name()));
+					client.log("", String.format("Adding BUILDROAD to expected moves for %s", ev.getInstigator().getId().name()));
 					getTurn().setInitialPhase(true);
 					getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
 				}
@@ -290,7 +268,7 @@ public class EventProcessor implements Runnable
 	 * 
 	 * @throws IOException
 	 */
-	private void processMessage() throws Exception
+	public void processMessage() throws Exception
 	{
 		Message msg = conn.getMessageFromServer();
 
@@ -301,35 +279,7 @@ public class EventProcessor implements Runnable
 		{
 			// Extract and process event
 			case EVENT:
-				try
-				{
-					getGameLock().acquire();
-					try
-					{
-						getTurnLock().acquire();
-						try
-						{
-							processEvent(msg.getEvent());
-						}
-						finally
-						{
-							getTurnLock().release();
-						}
-					}
-					catch (IOException e)
-					{
-						e.printStackTrace();
-					}
-					finally
-					{
-						getGameLock().release();
-					}
-
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-				}
+				processEvent(msg.getEvent());
 				break;
 		}
 	}
@@ -337,16 +287,6 @@ public class EventProcessor implements Runnable
 	private ClientGame getGame()
 	{
 		return client.getState();
-	}
-
-	private Semaphore getGameLock()
-	{
-		return client.getStateLock();
-	}
-
-	private Semaphore getTurnLock()
-	{
-		return client.getTurnLock();
 	}
 
 	private Turn getTurn()

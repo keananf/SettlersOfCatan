@@ -6,6 +6,9 @@ import enums.Colour;
 import exceptions.GameFullException;
 import game.players.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class representing a locally hosted server
  * @author 140001596
@@ -13,10 +16,12 @@ import game.players.Player;
 public class LocalServer extends Server
 {
     private Player localPlayer;
+    private List<LocalAIClientOnServer> ais;
 
     public LocalServer(LocalClientConnection connection)
     {
         super();
+        ais = new ArrayList<LocalAIClientOnServer>();
         ServerGame.NUM_PLAYERS = 4;
         Colour c = joinGame(connection);
         localPlayer = game.getPlayer(c);
@@ -26,6 +31,7 @@ public class LocalServer extends Server
     public LocalServer()
     {
         super();
+        ais = new ArrayList<LocalAIClientOnServer>();
         ServerGame.NUM_PLAYERS = 4;
         addAIs(4);
         localPlayer = game.getPlayers().get(0);
@@ -39,23 +45,24 @@ public class LocalServer extends Server
     }
 
     /**
-     * Adds the given number of local AI players
+     * Adds the given number of local ai players
      * @param num the number of AIs to add
      */
     private void addAIs(int num)
     {
-        // Don't add more if game is full
-        if(ServerGame.NUM_PLAYERS == numConnections)
-        {
-            return;
-        }
-
         // Add 'num' AIs
         for(int i = 0; i < num; i++)
         {
+            // Don't add more if game is full
+            if(ServerGame.NUM_PLAYERS == numConnections)
+            {
+                break;
+            }
+
             LocalAIClientOnServer ai = new LocalAIClientOnServer();
             LocalClientConnection conn = ai.getConn().getConn();
             joinGame(conn);
+            ais.add(ai);
         }
         log("Server SetUp", String.format("Number of AIs: %d. Connections: %d", num, numConnections));
     }

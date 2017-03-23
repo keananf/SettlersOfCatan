@@ -6,7 +6,7 @@ import enums.Difficulty;
 import java.io.IOException;
 
 /**
- * Client for an AI connection up to a remote server
+ * Client for an ai connection up to a remote server
  */
 public class RemoteAIClient extends AIClient
 {

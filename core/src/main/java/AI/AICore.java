@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Semaphore;
 
-public abstract class AICore implements IAI, Runnable
+public abstract class AICore implements IAI
 {
 	private AIClient client;
 	private Random rand;
@@ -22,86 +22,13 @@ public abstract class AICore implements IAI, Runnable
 	}
 
 	@Override
-	public void run()
-	{
-		client.log("Client Play", String.format("Starting AI loop"));
-
-		// Loop performing turns when needed
-		while(getGame() == null || !getGame().isOver())
-		{
-			acquireLocksAndMove();
-
-			// Sleep for at least 1 second
-			try
-			{
-				do
-				{
-					Thread.sleep(1000);
-				}
-				// Sleep while it is NOT your turn and while you do not have expected moves
-				while(getGame() == null || (!getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()) &&
-						getTurn().getExpectedMoves().isEmpty()));
-			}
-			catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Acquires locks and attempts to move
-	 */
-	private void acquireLocksAndMove()
-	{
-		try
-		{
-			getTurnLock().acquire();
-			try
-			{
-				getGameLock().acquire();
-				try
-				{
-					// If it is the player's turn, OR they have an expected move
-					if(getGame() != null && !getGame().isOver())
-					{
-						//client.log("Client Play", String.format("Acquired locks for move for player %s", getGame().getPlayer().getId().name()));
-						performMove();
-					}
-				}
-				finally
-				{
-					getGameLock().release();
-				}
-			}
-			catch(InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-			finally
-			{
-				getTurnLock().release();
-			}
-		}
-		catch(InterruptedException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	@Override
 	public void performMove()
 	{
 		Turn turn = selectAndPrepareMove();
 		if(turn != null)
 		{
 			client.log("Client Play", String.format("Chose move %s", turn.getChosenMove().name()));
-			client.updateTurn(turn);
-			client.sendTurn();
-		}
-		else
-		{
-			//client.log("Client Play", String.format("No move"));
+			client.sendTurn(turn);
 		}
 	}
 
@@ -181,11 +108,11 @@ public abstract class AICore implements IAI, Runnable
 			case ROLLDICE:
 				break;
 
-			// AI will never chat
+			// ai will never chat
 			case CHATMESSAGE:
 				break;
 
-			// If Join Lobby, then the AI has to join a lobby and the rest of the list will be empty
+			// If Join Lobby, then the ai has to join a lobby and the rest of the list will be empty
 			// So, it's rank doesn't matter
 			case JOINLOBBY:
 				break;

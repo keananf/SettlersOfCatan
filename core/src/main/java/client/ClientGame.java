@@ -456,8 +456,13 @@ public class ClientGame extends Game
 		{
 			boughtDevCards.put(player.getColour(), existing - 1);
 		}
-		else
-			throw new DoesNotOwnException(card, player.getColour());
+		else throw new DoesNotOwnException(card, player.getColour());
+
+		if(player.equals(thisPlayer))
+		{
+			existing = player.getDevelopmentCards().get(card);
+			player.getDevelopmentCards().put(card, existing - 1);
+		}
 
 		// Update largest army
 		if (card.equals(DevelopmentCardType.Knight))
@@ -481,6 +486,7 @@ public class ClientGame extends Game
 		if(player.equals(thisPlayer))
 		{
 			player.spendResources(DevelopmentCardType.getCardCost(), bank);
+			thisPlayer.addDevelopmentCard(boughtDevCard);
 		}
 		else
 		{
@@ -490,12 +496,6 @@ public class ClientGame extends Game
 				throw new CannotAffordException(String.format("Player %s cannot afford this development card.", player.getColour().name()));
 			}
 			resources.put(player.getColour(), existing - DevelopmentCardType.getCardCost().size());
-		}
-
-		// Spend resources if it is this player
-		if (player.getColour().equals(thisPlayer.getColour()))
-		{
-			thisPlayer.addDevelopmentCard(boughtDevCard);
 		}
 
 		// Update number of dev cards each player is known to have

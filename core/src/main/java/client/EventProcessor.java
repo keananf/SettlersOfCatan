@@ -108,8 +108,6 @@ public class EventProcessor
 			{
 				getGame().processResourceChosen(ev.getResourceChosen(), ev.getInstigator());
 			}
-			else
-				client.log("Client Play", "Check");
 			break;
 		case RESOURCESTOLEN:
 			getGame().processResourcesStolen(ev.getResourceStolen(), ev.getInstigator());

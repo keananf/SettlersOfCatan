@@ -1,6 +1,7 @@
 package catan.ui;
 
 import catan.SettlersOfCatan;
+import client.ClientGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
@@ -83,13 +84,15 @@ public class GameScreen implements Screen
 		initCamera();
 		camController = new CatanCamController(cam);
 		gameController = new GameController(this);
+		ClientGame gameState = game.getState();
+		gameController.setUp(gameState);
 
 		final InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(camController);
 		multiplexer.addProcessor(gameController);
 		Gdx.input.setInputProcessor(multiplexer);
 
-		initBoard();
+		initBoard(gameState);
 		initEnvironment();
 	}
 
@@ -103,8 +106,9 @@ public class GameScreen implements Screen
 		cam.update();
 	}
 
-	private void initBoard()
+	private void initBoard(ClientGame gameState)
 	{
+
 		final ModelBuilder builder = new ModelBuilder();
 		final long attributes = Usage.Position | Usage.Normal | Usage.TextureCoordinates;
 
@@ -125,7 +129,8 @@ public class GameScreen implements Screen
 		// hex tiles
 		final Model hex = builder.createCylinder(2.2f, 0.2f, 2.2f, 6, dirt, attributes);
 
-		for (Entry<Point, Hex> coord : game.getState().getGrid().grid.entrySet())
+		System.out.println("****Entering init board.****");
+		for (Entry<Point, Hex> coord : gameState.getGrid().grid.entrySet())
 		{
 			final ModelInstance instance = new ModelInstance(hex, coord.getValue().get3DPos());
 			instance.transform.rotate(0, 1, 0, 90f);

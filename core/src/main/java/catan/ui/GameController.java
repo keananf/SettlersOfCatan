@@ -1,5 +1,6 @@
 package catan.ui;
 
+import client.ClientGame;
 import grid.BoardElement;
 import grid.Hex;
 import grid.Node;
@@ -22,9 +23,9 @@ class GameController implements InputProcessor
 	private final Camera camera;
 	private final MoveBuilder moveBuilder;
 
-	private final List<Hex> hexes;
-	private final List<Node> nodes;
-	private final List<Edge> edges;
+	private List<Hex> hexes;
+	private List<Node> nodes;
+	private List<Edge> edges;
 
 	/** A plane parallel to the game board used to detect clicks. */
 	private final static float DETECTION_Y = 0.1f;
@@ -34,10 +35,13 @@ class GameController implements InputProcessor
 	{
 		this.camera = screen.cam;
 		this.moveBuilder = new MoveBuilder(screen.game.client);
+	}
 
-		this.hexes = screen.game.getState().getGrid().getHexesAsList();
-		this.nodes = screen.game.getState().getGrid().getNodesAsList();
-		this.edges = screen.game.getState().getGrid().getEdgesAsList();
+	public void setUp(ClientGame state)
+	{
+		this.hexes = state.getGrid().getHexesAsList();
+		this.nodes = state.getGrid().getNodesAsList();
+		this.edges = state.getGrid().getEdgesAsList();
 	}
 
 	@Override

@@ -9,34 +9,34 @@ import enums.Difficulty;
  */
 public class LocalAIClientOnServer extends AIClient
 {
-    private LocalServerConnection conn;
+	private LocalServerConnection conn;
 
-    public LocalAIClientOnServer(Difficulty difficulty)
-    {
-        super(difficulty);
-    }
+	public LocalAIClientOnServer(Difficulty difficulty)
+	{
+		super(difficulty);
+	}
 
-    public LocalAIClientOnServer()
-    {
-        super();
-    }
+	public LocalAIClientOnServer()
+	{
+		super();
+	}
 
-    @Override
-    protected void setUpConnection()
-    {
-        conn = new LocalServerConnection(this);
-        conn.setConn(new LocalClientConnection(conn));
-        setUp(conn);
-    }
+	@Override
+	protected void setUpConnection()
+	{
+		conn = new LocalServerConnection(this);
+		conn.setConn(new LocalClientConnection(conn));
+		setUp(conn);
+	}
 
-    @Override
-    public void shutDown()
-    {
-        super.shutDown();
-    }
+	@Override
+	public void shutDown()
+	{
+		super.shutDown();
+	}
 
-    public LocalServerConnection getConn()
-    {
-        return conn;
-    }
+	public LocalServerConnection getConn()
+	{
+		return conn;
+	}
 }

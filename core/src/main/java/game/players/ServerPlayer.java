@@ -70,7 +70,7 @@ public class ServerPlayer extends Player
 		// afford it
 		if (canBuildRoad(edge) && (getRoads().size() < 2 || canAfford(Road.getRoadCost())))
 		{
-			if(getRoads().size() >= 2) spendResources(r.getCost(), bank);
+			if (getRoads().size() >= 2) spendResources(r.getCost(), bank);
 			edge.setRoad(r);
 
 			// Find out where this road is connected
@@ -87,11 +87,12 @@ public class ServerPlayer extends Player
 			// merge lists if necessary
 			else if (listsAddedTo.size() >= 1) mergeRoads(r, listsAddedTo);
 		}
-		else if(!canAfford(Road.getRoadCost()))
+		else if (!canAfford(Road.getRoadCost()))
 		{
 			throw new CannotAffordException(resources, Road.getRoadCost());
 		}
-		else throw new CannotBuildRoadException(r);
+		else
+			throw new CannotBuildRoadException(r);
 
 		return calcRoadLength();
 	}
@@ -112,7 +113,7 @@ public class ServerPlayer extends Player
 		// If valid placement, attempt to spend the required resources
 		if (canBuildSettlement(node))
 		{
-			if(settlements.size() >= 2) spendResources(s.getCost(), bank);
+			if (settlements.size() >= 2) spendResources(s.getCost(), bank);
 			addSettlement(s);
 		}
 
@@ -206,7 +207,8 @@ public class ServerPlayer extends Player
 
 	/**
 	 * Take one resource randomly from the other player
-	 *  @param other the other player
+	 * 
+	 * @param other the other player
 	 * @param resource the resource to take
 	 */
 	public ResourceType takeResource(Player other, ResourceType resource, Bank bank)
@@ -214,12 +216,13 @@ public class ServerPlayer extends Player
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
 		// Ignore if player simply has no resources to take
-		if(other.getNumResources() == 0)
-			return null;
+		if (other.getNumResources() == 0) return null;
 
 		// Check the specified resource can be taken
-		if (resource.equals(ResourceType.Generic) || !other.getResources().containsKey(resource) || other.getResources()
-				.get(resource) == 0) return null; //throw new CannotStealException(colour, other.getColour());
+		if (resource.equals(ResourceType.Generic) || !other.getResources().containsKey(resource)
+				|| other.getResources().get(resource) == 0)
+			return null; // throw new CannotStealException(colour,
+							// other.getColour());
 
 		try
 		{

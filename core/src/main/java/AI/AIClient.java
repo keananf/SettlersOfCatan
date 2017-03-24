@@ -10,16 +10,16 @@ public abstract class AIClient extends Client
 	public AIClient(Difficulty difficulty)
 	{
 		super();
-		switch(difficulty)
+		switch (difficulty)
 		{
-			case EASY:
-				ai = new EasyAI(this);
-				break;
+		case EASY:
+			ai = new EasyAI(this);
+			break;
 
-			case VERYEASY:
-			default:
-				ai = new VeryEasyAI(this);
-				break;
+		case VERYEASY:
+		default:
+			ai = new VeryEasyAI(this);
+			break;
 		}
 	}
 
@@ -33,7 +33,7 @@ public abstract class AIClient extends Client
 	public void run()
 	{
 		// Loop processing events when needed and sending turns
-		while(getState() == null || !getState().isOver())
+		while (getState() == null || !getState().isOver())
 		{
 			try
 			{
@@ -72,7 +72,7 @@ public abstract class AIClient extends Client
 					getTurnLock().release();
 				}
 			}
-			catch(InterruptedException e)
+			catch (InterruptedException e)
 			{
 				e.printStackTrace();
 			}
@@ -81,7 +81,7 @@ public abstract class AIClient extends Client
 				getStateLock().release();
 			}
 		}
-		catch(InterruptedException e)
+		catch (InterruptedException e)
 		{
 			e.printStackTrace();
 		}

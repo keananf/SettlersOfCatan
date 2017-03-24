@@ -43,20 +43,21 @@ public class GameScreen implements Screen
 	final private Environment environment = new Environment();
 
 	final protected SettlersOfCatan game;
-	
+
 	Stage stage;
 	TextButton button;
 	TextButtonStyle textButtonStyle;
 	Skin skin;
 	TextureAtlas buttonAtlas;
 	BitmapFont font;
-	
-	//button creation
-	public void create(){
+
+	// button creation
+	public void create()
+	{
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 		font = new BitmapFont();
-		skin=new Skin();
+		skin = new Skin();
 		buttonAtlas = new TextureAtlas(Gdx.files.internal("buttons/buttons,pack"));
 		skin.addRegions(buttonAtlas);
 		textButtonStyle = new TextButtonStyle();
@@ -66,18 +67,14 @@ public class GameScreen implements Screen
 		textButtonStyle.checked = skin.getDrawable("checked-button");
 		button = new TextButton("Button1", textButtonStyle);
 		stage.addActor(button);
-		
-		
+
 	}
-	
-	//@Override
-	public void render(){
+
+	// @Override
+	public void render()
+	{
 		stage.draw();
 	}
-	
-	
-	
-	
 
 	public GameScreen(final SettlersOfCatan game)
 	{
@@ -110,14 +107,16 @@ public class GameScreen implements Screen
 	{
 		final ModelBuilder builder = new ModelBuilder();
 		final long attributes = Usage.Position | Usage.Normal | Usage.TextureCoordinates;
-		
+
 		// sea
-		final Material water = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));
+		final Material water = new Material(
+				TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));
 		final Model sea = builder.createCylinder(150f, 0.01f, 150f, 6, water, attributes);
 		instances.add(new ModelInstance(sea, ORIGIN));
-		
+
 		// land
-		final Material dirt = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
+		final Material dirt = new Material(
+				TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
 		final Model land = builder.createCylinder(11f, 0.1f, 11f, 6, dirt, attributes);
 		final ModelInstance landInstance = new ModelInstance(land, ORIGIN);
 		landInstance.materials.get(0).set(ColorAttribute.createDiffuse(Color.BLACK));
@@ -130,17 +129,31 @@ public class GameScreen implements Screen
 		{
 			final ModelInstance instance = new ModelInstance(hex, coord.getValue().get3DPos());
 			instance.transform.rotate(0, 1, 0, 90f);
-			
+
 			final Color colour;
 			switch (coord.getValue().getResource())
 			{
-				case Grain:   colour = Color.YELLOW;    break;
-				case Wool:    colour = Color.WHITE;     break;
-				case Ore:     colour = Color.GRAY;      break;
-				case Brick:   colour = Color.FIREBRICK; break;
-				case Lumber:  colour = Color.FOREST;    break;
-				case Generic: colour = Color.ORANGE;    break;
-				default:      colour = null;            break;
+			case Grain:
+				colour = Color.YELLOW;
+				break;
+			case Wool:
+				colour = Color.WHITE;
+				break;
+			case Ore:
+				colour = Color.GRAY;
+				break;
+			case Brick:
+				colour = Color.FIREBRICK;
+				break;
+			case Lumber:
+				colour = Color.FOREST;
+				break;
+			case Generic:
+				colour = Color.ORANGE;
+				break;
+			default:
+				colour = null;
+				break;
 			}
 			instance.materials.get(0).set(ColorAttribute.createDiffuse(colour));
 
@@ -154,7 +167,6 @@ public class GameScreen implements Screen
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 	}
 
-	
 	@Override
 	public void render(final float delta)
 	{
@@ -177,12 +189,7 @@ public class GameScreen implements Screen
 	}
 
 	// Required but unused
-	
-	
-	
-	
-	
-	
+
 	@Override
 	public void resize(final int width, final int height)
 	{

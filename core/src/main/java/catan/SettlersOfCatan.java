@@ -41,6 +41,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 
 	/**
 	 * Starts up a new remote client.
+	 * 
 	 * @param host the host server to connect to
 	 * @return the status of the connection
 	 */
@@ -65,7 +66,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	{
 		// Block until the game board is received.
 		client.log("Client Setup", "Waiting for Game Information....");
-		while(true)
+		while (true)
 		{
 			try
 			{
@@ -78,6 +79,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 				{
 					client.getStateLock().release();
 				}
+				Thread.sleep(100);
 			}
 			catch (InterruptedException e)
 			{

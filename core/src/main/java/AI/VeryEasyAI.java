@@ -13,9 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class assigns every move a rank of 0, so that the AICore treats
- * all moves as being equally valid. When it comes to 'selectMove,'
- * a random element of the list will be chosen.
+ * This class assigns every move a rank of 0, so that the AICore treats all
+ * moves as being equally valid. When it comes to 'selectMove,' a random element
+ * of the list will be chosen.
  */
 public class VeryEasyAI extends AICore
 {
@@ -75,10 +75,10 @@ public class VeryEasyAI extends AICore
 		resources.putAll(getPlayer().getResources());
 
 		// Randomly assign resources to discard
-		while(diff > 0)
+		while (diff > 0)
 		{
 			ResourceType r = ResourceType.random();
-			if(resources.containsKey(r) && resources.get(r) > 0)
+			if (resources.containsKey(r) && resources.get(r) > 0)
 			{
 				resources.put(r, resources.get(r) - 1);
 				discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));

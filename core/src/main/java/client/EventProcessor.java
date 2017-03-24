@@ -30,7 +30,7 @@ public class EventProcessor
      * Processes the event received from the server and updates the game state
      * @param ev the event
      */
-    private void processEvent(Event ev) throws Exception
+    private Event processEvent(Event ev) throws Exception
     {
 		client.log("Event Proc", String.format("Processing event %s", ev.getTypeCase().name()));
 
@@ -116,6 +116,7 @@ public class EventProcessor
 		}
 
 		updateExpectedMoves(ev);
+        return ev;
 	}
 
 	private void updateExpectedMoves(Event ev)
@@ -297,20 +298,20 @@ public class EventProcessor
 	 * 
 	 * @throws IOException
 	 */
-	public void processMessage() throws Exception
+	public Event processMessage() throws Exception
 	{
 		Message msg = conn.getMessageFromServer();
 
-		if(msg == null) return;
+		if(msg == null) return null;
 
 		// switch on message type
 		switch (msg.getTypeCase())
 		{
 			// Extract and process event
 			case EVENT:
-				processEvent(msg.getEvent());
-				break;
+				return processEvent(msg.getEvent());
 		}
+		return null;
 	}
 
 	private ClientGame getGame()

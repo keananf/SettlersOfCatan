@@ -18,14 +18,20 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import grid.Hex;
+import grid.Node;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.Map.Entry;
 
 public class GameScreen implements Screen
 {
 	final private AssMan assets = new AssMan();
 	final private ModelBatch MODEL_BATCH = new ModelBatch();
+	private final Updater updater;
+	private final Thread thread;
 
 	protected Camera cam;
 	private CatanCamController camController;
@@ -33,6 +39,7 @@ public class GameScreen implements Screen
 
 	final protected Array<GameObject> objs = new Array<>();
 	final protected Array<GameObject> hexes = new Array<>();
+	final protected Map<Point, GameObject> nodes = new HashMap<Point, GameObject>();
 	final private Environment environment = new Environment();
 
 	final private SettlersOfCatan game;
@@ -52,6 +59,9 @@ public class GameScreen implements Screen
 
 		initBoard();
 		initEnvironment();
+		this.updater = new Updater(game, this);
+		thread= new Thread(updater);
+		thread.start();
 	}
 
 	private void initCamera()
@@ -78,9 +88,10 @@ public class GameScreen implements Screen
 		final Material dirt = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
 		final Model hex = builder.createCylinder(2f, 0.2f, 2f, 6, dirt, attributes);
 
+		// Set up GameObjects for hexes
 		for (Entry<Point, Hex> coord : game.getState().getGrid().grid.entrySet())
 		{
-			final GameObject instance = new GameObject(hex, hexPointToCartVec(coord.getKey()));
+			final GameObject instance = new GameObject(hex, pointToCartVec(coord.getKey()));
 			instance.transform.rotate(0, 1, 0, 90f);
 
 			final Color colour;
@@ -99,6 +110,22 @@ public class GameScreen implements Screen
 			objs.add(instance);
 			hexes.add(instance);
 		}
+
+		// Set up GameObjects for nodes
+		for (Entry<Point, Node> coord : game.getState().getGrid().nodes.entrySet())
+		{
+			Node n = coord.getValue();
+			final GameObject instance = new GameObject(
+					builder.createCylinder(.25f, .25f, .25f, 6, dirt, attributes),
+					pointToCartVec(coord.getKey()));
+			instance.transform.rotate(0, 1, 0, 90f);
+			Color colour = Color.CHARTREUSE;
+			instance.materials.get(0).set(ColorAttribute.createDiffuse(colour));
+
+
+			objs.add(instance);
+			nodes.put(new Point(n.getX(), n.getY()), instance);
+		}
 	}
 
 	private void initEnvironment()
@@ -107,7 +134,7 @@ public class GameScreen implements Screen
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 	}
 
-	private static final Vector3 hexPointToCartVec(Point p)
+	private static final Vector3 pointToCartVec(Point p)
 	{
 		final float x = (float) (p.getX());
 		final float y = (float) (p.getY());
@@ -159,5 +186,24 @@ public class GameScreen implements Screen
 	@Override
 	public void show()
 	{
+	}
+
+	public void updateNodes(Hashtable<Point, Node> nodes)
+	{
+		for(Node node : nodes.values())
+		{
+			Color colour = Color.WHITE;
+			if(node.getSettlement() != null )
+			{
+				switch (node.getSettlement().getPlayerColour())
+				{
+					case BLUE: colour = Color.BLUE; break;
+					case RED: colour = Color.RED; break;
+					case ORANGE: colour = Color.ORANGE; break;
+					case WHITE: colour = Color.WHITE; break;
+				}
+			}
+			this.nodes.get(new Point(node.getX(), node.getY())).materials.get(0).set(ColorAttribute.createDiffuse(colour));
+		}
 	}
 }

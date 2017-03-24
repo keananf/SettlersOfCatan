@@ -1,17 +1,12 @@
 package catan.ui;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.math.collision.Ray;
-import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 
 class GameController implements InputProcessor
 {
@@ -45,6 +40,22 @@ class GameController implements InputProcessor
 
 	public GameObject getObject(float planeX, float planeY) {
 
+		for(GameObject node : screen.nodes.values()){
+			final float WIDTH = .25f;
+			double furthestLeft = node.centre.x - WIDTH/2;
+			double furtherstRight = node.centre.x + WIDTH/2;
+			double heighestHeight = node.centre.z + ((Math.sqrt(3)*WIDTH)/4);
+			double lowestHeight = node.centre.z - ((Math.sqrt(3)*WIDTH)/4);
+
+			if (planeX <= furtherstRight && planeX >= furthestLeft)
+			{
+				if (planeY <= heighestHeight && planeY >= lowestHeight)
+				{
+					return node;
+				}
+			}
+		}
+
 		for(GameObject hex : screen.hexes){
 			final float WIDTH = 2f;
 			double furthestLeft = hex.centre.x - WIDTH/2;
@@ -60,6 +71,7 @@ class GameController implements InputProcessor
 				}
 			}
 		}
+
 		return null;
 	}
 

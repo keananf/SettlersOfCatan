@@ -87,4 +87,9 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		client.log("Client Setup", "Received Game Information");
 		return client.getState();
 	}
+
+	public Client getClient()
+	{
+		return client;
+	}
 }

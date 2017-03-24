@@ -44,7 +44,8 @@ class GameController implements InputProcessor
 	private final List<Edge> edges;
 
     /** A plane parallel to the game board used to detect clicks. */
-	private final static Plane DETECTION_PLANE = new Plane(new Vector3(0, 1, 0), 0.1f);
+	private final static float DETECTION_Y = 0.1f;
+	private final static Plane DETECTION_PLANE = new Plane(new Vector3(0, 1, 0), new Vector3(0, DETECTION_Y, 0));
 
     GameController(GameScreen screen)
 	{
@@ -95,15 +96,11 @@ class GameController implements InputProcessor
     private Node findNode(float planeX, float planeY)
     {
     	for(Node node : nodes){
-    		Vector3 coord = node.getCartesian();
+    		Vector2 coord = node.get2DPos();
     		
-    		if(coord.dst(planeX, 0.1f, planeY)<=0.5){
+    		if(coord.dst(planeX, planeY) <= 0.3){
     			return node;
     		}
-    		
-    
-    
-    
     	}
     
     	return null;
@@ -118,12 +115,13 @@ class GameController implements InputProcessor
     private Edge findEdge(float planeX, float planeY)
     {
     	for(Edge edge : edges){
-    		Vector3 nodeX = edge.getX().getCartesian();
-    		Vector3 nodeY = edge.getY().getCartesian();
+    		Vector2 nodeX = edge.getX().get2DPos();
+    		Vector2 nodeY = edge.getY().get2DPos();
+    		
     		float x =(nodeX.x+nodeY.x)/2;
     		float y = (nodeX.y + nodeY.y)/2;
-    		Vector3 check = new Vector3(x,0.1f,y);
-    		if(check.dst(planeX,0.1f,planeY)<=0.5){
+    		Vector2 check = new Vector2(x, y);
+    		if(check.dst(planeX, planeY) <= 0.2){
     			return edge;
     		}
     	}
@@ -143,12 +141,12 @@ class GameController implements InputProcessor
         final float HEX_WIDTH = 2f;
 
         for(Hex hex : hexes){
-            final Vector3 pos = hex.getCartesian();
+            final Vector2 pos = hex.get2DPos();
 
             final double furthestLeft = pos.x - HEX_WIDTH/2;
             final double furthestRight = pos.x + HEX_WIDTH/2;
-            final double highestHeight = pos.z + ((Math.sqrt(3)*HEX_WIDTH)/4);
-            final double lowestHeight = pos.z - ((Math.sqrt(3)*HEX_WIDTH)/4);
+            final double highestHeight = pos.y + ((Math.sqrt(3)*HEX_WIDTH)/4);
+            final double lowestHeight = pos.y - ((Math.sqrt(3)*HEX_WIDTH)/4);
 
             if (planeX <= furthestRight && planeX >= furthestLeft)
             {

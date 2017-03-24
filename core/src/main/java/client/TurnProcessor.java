@@ -10,8 +10,6 @@ import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.trade.Trade;
 
-import java.util.concurrent.Semaphore;
-
 public class TurnProcessor
 {
 	private final Client client;
@@ -27,41 +25,6 @@ public class TurnProcessor
 	 * Switches on the move type to ascertain which proto message to form
 	 */
 	protected void sendMove()
-	{
-		try
-		{
-			getTurnLock().acquire();
-			try
-			{
-				getGameLock().acquire();
-				try
-				{
-					sendMoveInternal();
-				}
-				finally
-				{
-					getGameLock().release();
-				}
-			}
-			catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-			finally
-			{
-				getTurnLock().release();
-			}
-		}
-		catch(InterruptedException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Switches on the move type to ascertain which proto message to form
-	 */
-	private void sendMoveInternal()
 	{
 		Requests.Request.Builder request = Requests.Request.newBuilder();
 
@@ -120,12 +83,7 @@ public class TurnProcessor
 				return;
         }
 
-        // Send to server if it is a valid move
-		if(client.getMoveProcessor().validateMsg(request.build()))
-		{
-			sendToServer(request.build());
-		}
-		// TODO else display error?
+        sendToServer(request.build());
     }
 
 	/**
@@ -184,15 +142,5 @@ public class TurnProcessor
 	private Turn getTurn()
 	{
 		return client.getTurn();
-	}
-
-	private Semaphore getTurnLock()
-	{
-		return client.getTurnLock();
-	}
-
-	private Semaphore getGameLock()
-	{
-		return client.getStateLock();
 	}
 }

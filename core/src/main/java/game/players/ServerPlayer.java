@@ -60,36 +60,38 @@ public class ServerPlayer extends Player
 	public int buildRoad(Edge edge, Bank bank)
 			throws CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
-		boolean valid = false;
 		List<Integer> listsAddedTo = new ArrayList<Integer>();
 		Road r = new Road(edge, colour);
 
 		// Road already here. Cannot build
 		if (edge.getRoad() != null) throw new RoadExistsException(r);
 
-		// Find out where this road is connected
-		valid = checkRoadsAndAdd(r, listsAddedTo);
-
 		// Check the location is valid for building and that the player can
 		// afford it
-		if (r.getEdge().hasSettlement() || valid)
+		if (canBuildRoad(edge) && (getRoads().size() < 2 || canAfford(Road.getRoadCost())))
 		{
-			spendResources(r.getCost(), bank);
+			if(getRoads().size() >= 2) spendResources(r.getCost(), bank);
 			edge.setRoad(r);
+
+			// Find out where this road is connected
+			checkRoadsAndAdd(r, listsAddedTo);
 
 			// If not connected to any other roads
 			if (listsAddedTo.size() == 0)
 			{
-				java.util.List<Road> newList = new ArrayList<Road>();
+				List<Road> newList = new ArrayList<Road>();
 				newList.add(r);
 				roads.add(newList);
 			}
 
 			// merge lists if necessary
-			else if (listsAddedTo.size() > 1) mergeRoads(r, listsAddedTo);
+			else if (listsAddedTo.size() >= 1) mergeRoads(r, listsAddedTo);
 		}
-		else
-			throw new CannotBuildRoadException(r);
+		else if(!canAfford(Road.getRoadCost()))
+		{
+			throw new CannotAffordException(resources, Road.getRoadCost());
+		}
+		else throw new CannotBuildRoadException(r);
 
 		return calcRoadLength();
 	}
@@ -110,7 +112,7 @@ public class ServerPlayer extends Player
 		// If valid placement, attempt to spend the required resources
 		if (canBuildSettlement(node))
 		{
-			spendResources(s.getCost(), bank);
+			if(settlements.size() >= 2) spendResources(s.getCost(), bank);
 			addSettlement(s);
 		}
 
@@ -204,21 +206,20 @@ public class ServerPlayer extends Player
 
 	/**
 	 * Take one resource randomly from the other player
-	 * 
-	 * @param other the other player
+	 *  @param other the other player
 	 * @param resource the resource to take
 	 */
-	public void takeResource(Player other, ResourceType resource, Bank bank) throws CannotStealException
+	public ResourceType takeResource(Player other, ResourceType resource, Bank bank)
 	{
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
-		// Check the specified resource can be taken
-		if (other.getNumResources() > 0 && (!other.getResources().containsKey(resource) || other.getResources()
-				.get(resource) == 0)) { throw new CannotStealException(colour, other.getColour()); }
-
 		// Ignore if player simply has no resources to take
 		if(other.getNumResources() == 0)
-			return;
+			return null;
+
+		// Check the specified resource can be taken
+		if (resource.equals(ResourceType.Generic) || !other.getResources().containsKey(resource) || other.getResources()
+				.get(resource) == 0) return null; //throw new CannotStealException(colour, other.getColour());
 
 		try
 		{
@@ -230,6 +231,8 @@ public class ServerPlayer extends Player
 		{
 			/* Cannot happen */
 		}
+
+		return resource;
 	}
 
 }

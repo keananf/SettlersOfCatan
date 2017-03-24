@@ -30,21 +30,30 @@ public class Turn
 	private Trade.Response tradeResponse;
 	private Colour target;
 	private ConcurrentLinkedQueue<Requests.Request.BodyCase> expectedMoves;
-	private boolean tradePhase, turnStarted;
+	private boolean tradePhase, turnStarted, initialPhase;
+	private int roll;
 
 	public Turn()
 	{
-		reset();
+		setUp();
 	}
 
 	public Turn(Requests.Request.BodyCase move)
 	{
 		this.chosenMove = move;
+		setUp();
+	}
+
+	private void setUp()
+	{
+		expectedMoves = new ConcurrentLinkedQueue<Requests.Request.BodyCase>();
+		chosenResources = new HashMap<ResourceType, Integer>();
 		reset();
 	}
 
 	public void reset()
 	{
+		roll = 0;
 		tradePhase = false;
 		turnStarted = false;
 		chosenCard = null;
@@ -58,8 +67,30 @@ public class Turn
 		playerTrade = null;
 		tradeResponse = null;
 		target = null;
-		chosenResources = new HashMap<ResourceType, Integer>();
-		expectedMoves = new ConcurrentLinkedQueue<Requests.Request.BodyCase>();
+		chosenResources.clear();
+		expectedMoves.clear();
+	}
+
+	/**
+	 * Same as above but leaves expected moves in tact
+	 */
+	public void resetInfo()
+	{
+		roll = 0;
+		tradePhase = false;
+		turnStarted = false;
+		chosenCard = null;
+		chosenColour = null;
+		chosenEdge = null;
+		chosenNode = null;
+		chosenResource = null;
+		chosenHex = null;
+		chatMessage = null;
+		bankTrade = null;
+		playerTrade = null;
+		tradeResponse = null;
+		target = null;
+
 	}
 
 	public ConcurrentLinkedQueue<Requests.Request.BodyCase> getExpectedMoves()
@@ -222,4 +253,21 @@ public class Turn
 	{
         this.turnStarted = turnStarted;
     }
+
+    public boolean isInitialPhase()
+	{
+        return initialPhase;
+    }
+
+    public void setInitialPhase(boolean initialPhase) {this.initialPhase = initialPhase;}
+
+	public int getRoll()
+	{
+		return roll;
+	}
+
+	public void setRoll(int roll)
+	{
+		this.roll = roll;
+	}
 }

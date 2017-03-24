@@ -34,7 +34,6 @@ public class LocalServerConnection implements IServerConnection
         while(fromServer.isEmpty()) {}
 
         Messages.Message m = fromServer.poll();
-        log("Client Conn", String.format("Received %s", m.getEvent().getTypeCase().name()));
         return m;
     }
 

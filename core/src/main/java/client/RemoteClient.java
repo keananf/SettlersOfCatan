@@ -15,8 +15,8 @@ public class RemoteClient extends Client
 
     public RemoteClient(String host)
     {
+        super();
         this.host = host;
-        setUpConnection();
     }
 
     /**

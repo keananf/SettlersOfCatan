@@ -7,7 +7,7 @@ import server.LocalServer;
 import server.Server;
 
 /**
- * Class representing an AI client being run on the same machine as the server
+ * Class representing an ai client being run on the same machine as the server
  */
 public class LocalAIClient extends AIClient
 {

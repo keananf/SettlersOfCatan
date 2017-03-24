@@ -6,7 +6,6 @@ import exceptions.BankLimitException;
 import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
-import game.Game;
 import game.players.Player;
 import intergroup.Events;
 import intergroup.Messages;
@@ -99,7 +98,10 @@ public class MessageProcessor
     {
         Requests.Request request = msg.getRequest();
         Events.Event.Builder ev = Events.Event.newBuilder();
+        ev.setInstigator(Board.Player.newBuilder().setId(game.getPlayer(colour).getId()).build());
 
+        server.log("Server Proc", String.format("Processing request %s from %s",
+                msg.getRequest().getBodyCase().name(), ev.getInstigator().getId().name()));
         try
         {
             // Switch on message type to interpret the move, then process the move
@@ -147,16 +149,22 @@ public class MessageProcessor
                     {
                         ev.setMonopolyResolution(game.playMonopolyCard(request.getChooseResource()));
                         monopoly = false;
+                        break;
                     }
                     else if(robberMoved)
                     {
                         chosenResource = ResourceType.fromProto(request.getChooseResource());
+                        if(chosenResource.equals(ResourceType.Generic))
+                        {
+                            ev.setError(Events.Event.Error.newBuilder().setDescription("Cannot choose resource type 'Generic'").build());
+                            break;
+                        }
                     }
                     else
                     {
                         game.chooseResources(request.getChooseResource());
-                        ev.setResourceChosen(request.getChooseResource());
                     }
+                    ev.setResourceChosen(request.getChooseResource());
                     break;
                 case ROLLDICE:
                     ev.setRolled(game.generateDiceRoll());
@@ -168,6 +176,7 @@ public class MessageProcessor
                 case SUBMITTARGETPLAYER:
                     Board.Steal steal = game.takeResource(request.getSubmitTargetPlayer().getId(), chosenResource);
                     if(steal != null) ev.setResourceStolen(steal);
+                    else ev.setError(Events.Event.Error.newBuilder().setDescription("Cannot steal 'Generic'").build());
                     break;
                 case INITIATETRADE:
                     Trade.WithBank trade = processTradeType(request.getInitiateTrade(), msg);
@@ -220,10 +229,15 @@ public class MessageProcessor
         if(request.getBodyCase().equals(Requests.Request.BodyCase.ROLLDICE)
                 && ev.getRolled().getA() + ev.getRolled().getB() == 7)
         {
+            server.log("Server Proc", String.format("Adding MOVEROBBER to %s",ev.getInstigator().getId().name()));
+            expectedMoves.get(colour).add(Requests.Request.BodyCase.MOVEROBBER);
             for(Player p : game.getPlayers().values())
             {
                 if(p.getNumResources() > 7)
+                {
+                    server.log("Server Proc", String.format("Adding DISCARDRESOURCES to %s",p.getId().name()));
                     expectedMoves.get(p.getColour()).add(Requests.Request.BodyCase.DISCARDRESOURCES);
+                }
             }
         }
 
@@ -325,59 +339,6 @@ public class MessageProcessor
     }
 
     /**
-     * Get initial placements from each of the connections
-     * and send them to the game.
-     */
-    public void getInitialSettlementsAndRoads() throws IOException
-    {
-        Board.Player.Id current = game.getPlayer(game.getCurrentPlayer()).getId();
-        Board.Player.Id next = null;
-
-        // Get settlements and roads forwards from the first player
-        for(int i = 0; i < Game.NUM_PLAYERS; i++)
-        {
-            next = Board.Player.Id.values()[(current.ordinal() + i) % Game.NUM_PLAYERS];
-            receiveInitialMoves(game.getPlayer(next).getColour());
-        }
-
-        // Get second set of settlements and roads in reverse order
-        for(int i = Game.NUM_PLAYERS - 1; i >= 0; i--)
-        {
-            receiveInitialMoves(game.getPlayer(next).getColour());
-            next = Board.Player.Id.values()[(current.ordinal() + i) % Game.NUM_PLAYERS];
-        }
-    }
-
-    /**
-     * Receives the initial moves for each player in the appropriate order
-     * @param c the player to receive the initial moves from
-     * @throws IOException
-     */
-    private void receiveInitialMoves(Colour c) throws IOException
-    {
-        Player p = game.getPlayers().get(c);
-        int oldRoadAmount = p.getRoads().size(), oldSettlementsAmount = p.getSettlements().size();
-
-        // Loop until player sends valid new settlement
-        while(p.getSettlements().size() < oldSettlementsAmount)
-        {
-            expectedMoves.get(c).add(Requests.Request.BodyCase.BUILDSETTLEMENT);
-            game.setCurrentPlayer(c);
-
-            processMessage();
-        }
-
-        // Loop until player sends valid new road
-        while(p.getRoads().size() < oldRoadAmount)
-        {
-            expectedMoves.get(c).add(Requests.Request.BodyCase.BUILDROAD);
-            game.setCurrentPlayer(c);
-
-            processMessage();
-        }
-    }
-
-    /**
      * Checks that the given player is currently able to make a move of the given type
      * @param msg the received message
      * @param col the current turn
@@ -385,27 +346,27 @@ public class MessageProcessor
      */
     private boolean isExpected(Messages.Message msg, Colour col)
     {
-        Requests.Request.BodyCase type = msg.getTypeCase().equals(Messages.Message.TypeCase.REQUEST) ? msg.getRequest().getBodyCase() : null;
+        Requests.Request.BodyCase type = msg.getRequest().getBodyCase();
         List<Requests.Request.BodyCase> expected = expectedMoves.get(col);
-        
+        if(type == null) return false;
+
+        if(!expected.isEmpty() && expected.contains(type))
+        {
+            return true;
+        }
+
+        // If the move is not expected
+        else if(!expected.isEmpty()) return false;
+
         // If in trade phase and the given message isn't a trade
-        if(tradePhase && (!msg.getRequest().getBodyCase().equals(Requests.Request.BodyCase.INITIATETRADE) && game.getCurrentPlayer().equals(col))
-                || (!msg.getRequest().getBodyCase().equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !game.getCurrentPlayer().equals(col)) )
+        if(tradePhase && ((!type.equals(Requests.Request.BodyCase.INITIATETRADE) && game.getCurrentPlayer().equals(col))
+                || (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && game.getCurrentPlayer().equals(col))) )
         {
             return false;
         }
 
         // If it's not your turn and there are no expected moves from you
-        if(expected.size() == 0 && !game.getCurrentPlayer().equals(col))
-        {
-            return false;
-        }
-
-        // If not a request or the move is not expected
-        if(type == null || (!expected.contains(type) && expected.size() > 0))
-        {
-            return false;
-        }
+        if(!game.getCurrentPlayer().equals(col) || (!game.getCurrentPlayer().equals(col) && expected.isEmpty())) return false;
 
         return true;
     }
@@ -418,8 +379,6 @@ public class MessageProcessor
      */
     private boolean validateMsg(Messages.Message msg, Colour col) throws IOException
     {
-        Colour playerColour = col;
-
         // If it is not the player's turn, the message type is unknown OR the given request is NOT expected
         // send error and return false
         if(!isExpected(msg, col))

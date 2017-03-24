@@ -17,7 +17,7 @@ public class LocalClient extends Client
 
     public LocalClient()
     {
-        setUpConnection();
+        super();
     }
 
     @Override

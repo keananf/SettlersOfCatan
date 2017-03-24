@@ -28,7 +28,6 @@ public class RemoteServerConnection implements IServerConnection
         if(conn != null)
         {
             Messages.Message m = Messages.Message.parseDelimitedFrom(conn.getInputStream());
-            log("Client Conn", String.format("Received %s", m.getEvent().getTypeCase().name()));
             return m;
         }
 

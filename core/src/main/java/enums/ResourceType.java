@@ -161,6 +161,6 @@ public enum ResourceType
 	 */
 	public static ResourceType random()
 	{
-		return ResourceType.values()[rand.nextInt(5) + 1];
+		return ResourceType.values()[rand.nextInt(ResourceType.values().length)];
 	}
 }

@@ -39,7 +39,7 @@ public abstract class Game
 	public Game()
 	{
 		bank = new Bank();
-		grid = new HexGrid();
+		grid = new HexGrid(true);
 		players = new HashMap<Colour, Player>();
 		idsToColours = new HashMap<Board.Player.Id, Colour>();
 	}
@@ -304,7 +304,15 @@ public abstract class Game
 	 */
 	public Colour getNextPlayer()
 	{
-		return getPlayer(Board.Player.Id.values()[++current % NUM_PLAYERS]).getColour();
+		return getPlayer(Board.Player.Id.forNumber((1 + current) % NUM_PLAYERS)).getColour();
+	}
+
+	/**
+	 * @return the next player
+	 */
+	public Colour getLastPlayer()
+	{
+		return getPlayer(Board.Player.Id.forNumber((current - 1) % NUM_PLAYERS)).getColour();
 	}
 
 	public Player[] getPlayersAsList()

@@ -1,58 +1,87 @@
 package AI;
 
 import client.Turn;
+import enums.Colour;
+import enums.DevelopmentCardType;
+import enums.ResourceType;
+import grid.Edge;
+import grid.Hex;
+import grid.Node;
+import intergroup.trade.Trade;
 
 /**
  * Created by 140002949 on 19/03/17.
  */
 public class EasyAI extends AICore
 {
-
     public EasyAI(AIClient client)
     {
         super(client);
     }
 
     @Override
-    public int rankMove(Turn turn)
+    public int rankBuyDevCard()
     {
-        // Switch on turn type and rank move
-        switch(turn.getChosenMove())
-        {
-            case BUYDEVCARD:
-                // return rankBuyDevCard();
-            case BUILDROAD:
-                // return rankNewRoad(turn.getChosenRoad());
-            case BUILDSETTLEMENT:
-                // return rankNewSettlement(turn.getChosenNode());
-            case BUILDCITY:
-                // return rankNewCity(turn.getChosenNode());
-            case MOVEROBBER:
-                // return rankNewRobberLocation(turn.getChosenHex());
-            case PLAYDEVCARD:
-                // return rankPlayDevCard(turn.getChosenCard());
-            case INITIATETRADE:
-                // return rankInitiateTrade(); TODO ensure this field set
-            case SUBMITTRADERESPONSE:
-                // return rankNewSettlement(turn.getTradeResponse, turn.getCurrentTrade());
-            case DISCARDRESOURCES:
-                // return rankDiscard(turn.getChosenResources()); TODO ensure this field set
-            case SUBMITTARGETPLAYER:
-                // return rankTargetPlayer(turn.getTarget());
-            case CHOOSERESOURCE:
-                // return rankChosenResource(turn.getChosenResource);
-
-            // Rank does not apply here
-            case CHATMESSAGE:
-            case ROLLDICE:
-            case ENDTURN:
-            case JOINLOBBY:
-            case BODY_NOT_SET:
-            default:
-                break;
-        }
-
         return 0;
     }
 
+    @Override
+    public int rankNewRoad(Edge chosenEdge)
+    {
+        return 0;
+    }
+
+    @Override
+    public int rankNewSettlement(Node chosenNode)
+    {
+        return 0;
+    }
+
+    @Override
+    public int rankNewCity(Node chosenNode)
+    {
+        return 0;
+    }
+
+    @Override
+    public int rankNewRobberLocation(Hex chosenHex)
+    {
+        return 0;
+    }
+
+    @Override
+    public int rankPlayDevCard(DevelopmentCardType chosenCard)
+    {
+        return 0;
+    }
+
+    @Override
+    public int rankInitiateTrade(Turn turn)
+    {
+        return 0;
+    }
+
+    @Override
+    public int rankDiscard(Turn turn)
+    {
+        return 0;
+    }
+
+    @Override
+    public int rankTargetPlayer(Colour target)
+    {
+        return 0;
+    }
+
+    @Override
+    public int rankChosenResource(ResourceType chosenResource)
+    {
+        return 0;
+    }
+
+    @Override
+    public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)
+    {
+        return 0;
+    }
 }

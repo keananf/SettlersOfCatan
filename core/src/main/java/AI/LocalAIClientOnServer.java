@@ -5,7 +5,7 @@ import connection.LocalServerConnection;
 import enums.Difficulty;
 
 /**
- * Class representing an AI client being run on the same machine as the server
+ * Class representing an ai client being run on the same machine as the server
  */
 public class LocalAIClientOnServer extends AIClient
 {

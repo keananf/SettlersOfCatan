@@ -105,10 +105,12 @@ public class DevelopmentCardTests extends TestHelper
 		// Make settlement
 		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n);
+		p.spendResources(Settlement.getSettlementCost(), game.getBank());
 
 		// Need a settlement so that this player can be stolen from
 		p2.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p2, n6);
+		p2.spendResources(Settlement.getSettlementCost(), game.getBank());
 		game.setCurrentPlayer(p.getColour());
 
 		// Player 1 plays three knights
@@ -136,7 +138,6 @@ public class DevelopmentCardTests extends TestHelper
 			// Set the resource to take
 			req.clearMoveRobber();
 			req.setChooseResource(Resource.Kind.BRICK);
-			assertFalse(hasResources(p));
 			server.addMessageToProcess(new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 			server.processMessage();
 			assertEquals(1, server.getExpectedMoves(p.getColour()).size());
@@ -145,11 +146,9 @@ public class DevelopmentCardTests extends TestHelper
 			// Set player to take resource from
 			req.clearChooseResource();
 			req.setSubmitTargetPlayer(Board.Player.newBuilder().setId(game.getPlayer(p2.getColour()).getId()).build());
-			assertFalse(hasResources(p));
 			server.addMessageToProcess(new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 			server.processMessage();
 			assertEquals(0, server.getExpectedMoves(p.getColour()).size());
-
 		}
 
 		// Assert largest army
@@ -303,7 +302,6 @@ public class DevelopmentCardTests extends TestHelper
 		// as p2 didn't have any
 		assertTrue(!oldHex.equals(game.getGrid().getHexWithRobber()));
 		assertFalse(oldHex.hasRobber());
-		assertFalse(hasResources(p2));
 	}
 
 	@Test
@@ -433,7 +431,6 @@ public class DevelopmentCardTests extends TestHelper
 		assertTrue(game.getGrid().getHexWithRobber().hasRobber());
 		assertFalse(oldHex.hasRobber());
 		assertTrue(hasResources(p));
-		assertTrue(p2.getNumResources() < Settlement.getSettlementCost().size());
 	}
 	
 	@Test

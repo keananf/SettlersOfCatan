@@ -11,33 +11,46 @@ import grid.Hex;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.math.Plane;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
+import grid.BoardElement;
+import grid.Edge;
+import grid.Hex;
+import grid.Node;
+
+import java.util.List;
 
 class GameController implements InputProcessor
 {
-	private final GameScreen screen;
-	private final static Plane PLANE = new Plane(new Vector3(0, 1, 0), 0.1f);
+	private final Camera camera;
 
-	public GameController(GameScreen screen)
+	private final List<Hex> hexes;
+	private final List<Node> nodes;
+	private final List<Edge> edges;
+
+	private final static Plane DETECTION_PLANE = new Plane(new Vector3(0, 1, 0), 0.1f);
+
+
+
+    GameController(GameScreen screen)
 	{
-		this.screen = screen;
+		this.camera = screen.cam;
+		this.hexes = screen.game.getState().getGrid().getHexesAsList();
+		this.nodes = screen.game.getState().getGrid().getNodesAsList();
+		this.edges = screen.game.getState().getGrid().getEdgesAsList();
 	}
 
-	@Override public boolean touchUp(int screenX, int screenY, int pointer, int button)
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button)
 	{
-		Ray ray = screen.cam.getPickRay(screenX, screenY);
+		Ray ray = camera.getPickRay(screenX, screenY);
 
 		Vector3 intersectionPoint = new Vector3();
-		if (!Intersector.intersectRayPlane(ray, PLANE, intersectionPoint))
+		if (!Intersector.intersectRayPlane(ray, DETECTION_PLANE, intersectionPoint))
 			return false;
 
-		GameObject inst = getObject(intersectionPoint.x, intersectionPoint.z);
+		BoardElement inst = findElement(intersectionPoint.x, intersectionPoint.z);
 		if (inst == null)
 		{
 			return false;
@@ -62,146 +75,50 @@ class GameController implements InputProcessor
 		}
 	}
 
-	public GameObject getObject(float planeX, float planeY) {
+	private BoardElement findElement(float planeX, float planeY) {
+        BoardElement found = null;
 
-		for(GameObject hex : screen.hexes){
-			final float WIDTH = 2f;
-			double furthestLeft = hex.centre.x - WIDTH/2;
-			double furtherstRight = hex.centre.x + WIDTH/2;
-			double heighestHeight = hex.centre.z + ((Math.sqrt(3)*WIDTH)/4);
-			double lowestHeight = hex.centre.z - ((Math.sqrt(3)*WIDTH)/4);
+        found = findNode(planeX, planeY);
+        if (found != null) return found;
 
-			
-			if (planeX <= furtherstRight && planeX >= furthestLeft)
-			{
-				if (planeY <= heighestHeight && planeY >= lowestHeight)
-				{ 
-					return hex;
-				}
-			}
-		}
-		return null;
-	}
-	
-	
-	
-	public boolean isEdge(float planeX, float planeY){
-		for(GameObject hex : screen.hexes){
-		final float WIDTH = 2f;
-		double furthestLeft = hex.centre.x - WIDTH/2;
-		double furthestRight = hex.centre.x + WIDTH/2;
-		double heighestHeight = hex.centre.z + ((Math.sqrt(3)*WIDTH)/4);
-		double lowestHeight = hex.centre.z - ((Math.sqrt(3)*WIDTH)/4);
-		double inRight = hex.centre.x + WIDTH/4;
-		double inLeft = hex.centre.x - WIDTH/4;
-		double cons1;
-		double cons2;
-		
-		
-		
-		
-		double gradient1 = (inRight-furthestRight)/(heighestHeight-hex.centre.y);
-		double gradient2 = (-1)/gradient1;
-		if(heighestHeight>0){
-		cons1 = (gradient1*(inRight*=-1))+(heighestHeight*=-1);
-		
-		} else{
-			cons1 = (gradient1*(inRight*=-1))-(heighestHeight*=-1);
+        found = findEdge(planeX, planeY);
+        if (found != null) return found;
 
-		} 
-		if(lowestHeight>0){
-			cons2 = (gradient1*(inLeft*=-1))+(lowestHeight*=-1);
-		} else{
-			cons2 = (gradient1*(inLeft*=-1))-(lowestHeight*=-1);
+        found = findHex(planeX, planeY);
+        if (found != null) return found;
 
-		}
-		
-		if((gradient1*planeX)+cons1 == planeY ||(gradient1*planeX)+cons2 == (planeY) ){
-			return true;
-			
-			
-			
-		
-		} 
-		 if(heighestHeight>0){
-			 cons1 = (gradient2*(inLeft*=-1))+(heighestHeight*=-1);
-		 } else{
-			 cons1 = (gradient2*(inLeft*=-1))-(heighestHeight*=-1);
+        return null;
+    }
 
-		 } if(lowestHeight>0){
-				cons2 = (gradient2*(inLeft*=-1))+(lowestHeight*=-1);
-				
-		 } else{
-				cons2 = (gradient2*(inLeft*=-1))-(lowestHeight*=-1);
+    private Node findNode(float planeX, float planeY)
+    {
+        return null;
+    }
 
-		 }
-		
-		
-		 if((gradient2*planeX)+cons1 == planeY ||(gradient2*planeX)+cons2 == (planeY) ){
-				return true;
-				
-				
-				
-			
-			} 
-		
-		 
-		 if(planeX==inRight && planeY==heighestHeight){
-			 return true;
-		 }
-		 if(planeX==inRight && planeY==lowestHeight){
-			 return true;
-		 }
-		 
-		 
-		}
-		
-		return false;
-		
-	}
-	
-	
-	
-	public boolean isNode(float planeX, float planeY){
-		for(GameObject hex : screen.hexes){
-			final float WIDTH = 2f;
-			double furthestLeft = hex.centre.x - WIDTH/2;
-			double furthestRight = hex.centre.x + WIDTH/2;
-			double heighestHeight = hex.centre.z + ((Math.sqrt(3)*WIDTH)/4);
-			double lowestHeight = hex.centre.z - ((Math.sqrt(3)*WIDTH)/4);
-			double inRight = hex.centre.x + WIDTH/4;
-			double inLeft = hex.centre.x - WIDTH/4;
-			
-			
-			if(planeX==inLeft && planeY==heighestHeight){
-				return true;
-			}
-			if(planeX== inRight && planeY == heighestHeight){
-				return true;
-			}
-			if(planeX ==furthesRight && planeY = hex.centre.y){
-				return true;
-			}
-			if(planeY == furthestLeft && planeY = hex.centre.y){
-				return true;
-			}
-			if(planeX == inLeft && planeY==lowestHeight ){
-				return true;
-			}
-			if(planeX == inRight && planeY==lowestHeight){
-				return true;
-			}
-		
-		return false;
-		
-		}
-	}
-	
-	
-	
-	
-	
-	
+    private Edge findEdge(float planeX, float planeY)
+    {
+        return null;
+    }
+
+	private Hex findHex(float planeX, float planeY)
+    {
+        for(Hex hex : hexes){
+            final float WIDTH = 2f;
+            double furthestLeft = hex.centre.x - WIDTH/2;
+            double furtherstRight = hex.centre.x + WIDTH/2;
+            double heighestHeight = hex.centre.z + ((Math.sqrt(3)*WIDTH)/4);
+            double lowestHeight = hex.centre.z - ((Math.sqrt(3)*WIDTH)/4);
+
+            if (planeX <= furtherstRight && planeX >= furthestLeft)
+            {
+                if (planeY <= heighestHeight && planeY >= lowestHeight)
+                {
+                    return hex;
+                }
+            }
+        }
+        return null;
+    }
 
 	@Override public boolean keyUp(int keycode) { return false; }
 	@Override public boolean keyDown(int keycode) { return false; }

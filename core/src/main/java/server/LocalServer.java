@@ -33,7 +33,7 @@ public class LocalServer extends Server
         super();
         ais = new ArrayList<LocalAIClientOnServer>();
         ServerGame.NUM_PLAYERS = 4;
-        addAIs(3);
+        addAIs(4);
         localPlayer = game.getPlayers().get(0);
     }
 

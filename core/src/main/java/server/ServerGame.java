@@ -433,6 +433,8 @@ public class ServerGame extends Game
 		Colour otherColour = getPlayer(id).getColour();
 		int options = 0;
 
+		if(resource == ResourceType.Generic) return null;
+
 		// Verify this player can take from the specified one
 		for(Node n : getGrid().getHexWithRobber().getNodes())
 		{

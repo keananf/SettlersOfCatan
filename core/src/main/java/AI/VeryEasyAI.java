@@ -71,13 +71,16 @@ public class VeryEasyAI extends AICore
 	{
 		int diff = Math.abs(7 - getPlayer().getNumResources());
 		Map<ResourceType, Integer> discard = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+		resources.putAll(getPlayer().getResources());
 
 		// Randomly assign resources to discard
 		while(diff > 0)
 		{
 			ResourceType r = ResourceType.random();
-			if(getPlayer().getResources().containsKey(r) && getPlayer().getResources().get(r) > 0)
+			if(resources.containsKey(r) && resources.get(r) > 0)
 			{
+				resources.put(r, resources.get(r) - 1);
 				discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
 				diff--;
 			}

@@ -176,6 +176,7 @@ public class MessageProcessor
                 case SUBMITTARGETPLAYER:
                     Board.Steal steal = game.takeResource(request.getSubmitTargetPlayer().getId(), chosenResource);
                     if(steal != null) ev.setResourceStolen(steal);
+                    else ev.setError(Events.Event.Error.newBuilder().setDescription("Cannot steal 'Generic'").build());
                     break;
                 case INITIATETRADE:
                     Trade.WithBank trade = processTradeType(request.getInitiateTrade(), msg);

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -186,20 +187,25 @@ public class Server implements Runnable
 	 */
 	private void broadcastEvent(Event ev) throws IOException
 	{
-		boolean foo = false;
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(ev);
+		List<Colour> sent = new ArrayList<Colour>(2);
 
 		// Modify event before sending to other players
 		if(ev.getTypeCase().equals(Event.TypeCase.RESOURCESTOLEN) || ev.getTypeCase().equals(Event.TypeCase.DEVCARDBOUGHT))
 		{
 			// Send original to player
-			sendMessage(msg.build(), game.getPlayer(ev.getInstigator().getId()).getColour());
-			foo = true;
+			sent.add(game.getPlayer(ev.getInstigator().getId()).getColour());
+			sendMessage(msg.build(), sent.get(0));
 
 			// Obscure important info from other players
 			if(ev.getTypeCase().equals(Event.TypeCase.RESOURCESTOLEN))
+			{
+				// Send to victim player and then obscure
+				sent.add(game.getPlayer(ev.getResourceStolen().getVictim().getId()).getColour());
+				sendMessage(msg.build(), sent.get(1));
 				msg.setEvent(ev.toBuilder().setResourceStolen(ev.getResourceStolen().toBuilder().setResource(Resource.Kind.GENERIC).build()).build());
+			}
 			else
 				msg.setEvent(ev.toBuilder().setDevCardBought(Board.DevCard.newBuilder().setUnknown(Board.Empty.getDefaultInstance()).build()).build());
 		}
@@ -208,7 +214,7 @@ public class Server implements Runnable
 		for(Colour c : Colour.values())
 		{
 			// Skip sending message if already sent
-			if(foo && c.equals(game.getPlayer(ev.getInstigator().getId()).getColour()))
+			if(sent.contains(c))
 			{
 				continue;
 			}

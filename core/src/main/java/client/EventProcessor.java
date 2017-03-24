@@ -9,7 +9,6 @@ import intergroup.board.Board;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Semaphore;
 
 /**
  * Class which continuously listens for updates from the server Created by
@@ -189,7 +188,7 @@ public class EventProcessor
 					{
 						getExpectedMoves().add(Requests.Request.BodyCase.DISCARDRESOURCES);
 					}
-					if(ev.getInstigator().getId() == getGame().getPlayer().getId())
+					if(ev.getInstigator().getId().getNumber() == getGame().getPlayer().getId().getNumber())
 					{
 						getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
 					}
@@ -312,16 +311,6 @@ public class EventProcessor
 				processEvent(msg.getEvent());
 				break;
 		}
-	}
-
-	private Semaphore getStateLock()
-	{
-		return client.getStateLock();
-	}
-
-	private Semaphore getTurnLock()
-	{
-		return client.getTurnLock();
 	}
 
 	private ClientGame getGame()

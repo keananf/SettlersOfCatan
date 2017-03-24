@@ -28,7 +28,6 @@ import java.util.Map;
 public class ClientGame extends Game
 {
 	private boolean gameOver;
-	private int dice;
 	private Map<Colour, Integer> boughtDevCards, resources;
 	private Map<Colour, Map<DevelopmentCardType, Integer>> playedDevCards;
 	private Player thisPlayer;
@@ -259,8 +258,6 @@ public class ClientGame extends Game
 	 */
 	public void processDice(int dice, List<Board.ResourceAllocation> resourceAllocationList)
 	{
-		this.dice = dice;
-
 		if (dice != 7)
 		{
 			// For each player's new resources
@@ -280,7 +277,9 @@ public class ClientGame extends Game
 					{
 						int existing = resources.containsKey(p.getColour()) ? resources.get(p.getColour()) : 0;
 						for(ResourceType r : grant.keySet())
+						{
 							num += grant.get(r);
+						}
 						resources.put(p.getColour(), existing + num);
 					}
 				}
@@ -643,7 +642,6 @@ public class ClientGame extends Game
 		Map<ResourceType, Integer> stolen = new HashMap<ResourceType, Integer>();
 		stolen.put(r, quantity);
 
-
 		// Handle resources for this player
 		if(instigator.equals(thisPlayer))
 		{
@@ -708,16 +706,6 @@ public class ClientGame extends Game
 			int existing = resources.get(p.getColour());
 			resources.put(p.getColour(), existing + 1);
 		}
-	}
-
-	/**
-	 * Return the current dice roll
-	 * 
-	 * @return
-	 */
-	public int getDice()
-	{
-		return dice;
 	}
 
 	/**

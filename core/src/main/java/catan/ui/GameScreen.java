@@ -80,11 +80,11 @@ public class GameScreen implements Screen
 	public GameScreen(final SettlersOfCatan game)
 	{
 		this.game = game;
+		ClientGame gameState = game.getState();
 
 		initCamera();
 		camController = new CatanCamController(cam);
 		gameController = new GameController(this);
-		ClientGame gameState = game.getState();
 		gameController.setUp(gameState);
 
 		final InputMultiplexer multiplexer = new InputMultiplexer();

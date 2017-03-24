@@ -64,16 +64,19 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	 */
 	public ClientGame getState()
 	{
+		boolean val = false;
+
 		// Block until the game board is received.
 		client.log("Client Setup", "Waiting for Game Information....");
 		while (true)
 		{
+			if(val) break;
 			try
 			{
 				client.getStateLock().acquire();
 				try
 				{
-					if (client.getState() != null) break;
+					if (client.getState() != null) val = true;
 				}
 				finally
 				{

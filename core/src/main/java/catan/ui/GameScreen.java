@@ -31,6 +31,7 @@ import java.util.Map.Entry;
 
 public class GameScreen implements Screen
 {
+	final private static Vector3 ORIGIN = new Vector3(0, 0, 0);
 	final private AssMan assets = new AssMan();
 	final private ModelBatch MODEL_BATCH = new ModelBatch();
 
@@ -113,10 +114,16 @@ public class GameScreen implements Screen
 		// sea
 		final Material water = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));
 		final Model sea = builder.createCylinder(150f, 0.01f, 150f, 6, water, attributes);
-		instances.add(new ModelInstance(sea, new Vector3()));
+		instances.add(new ModelInstance(sea, ORIGIN));
+		
+		// land
+		final Material dirt = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
+		final Model land = builder.createCylinder(11f, 0.1f, 11f, 6, dirt, attributes);
+		final ModelInstance landInstance = new ModelInstance(land, ORIGIN);
+		landInstance.materials.get(0).set(ColorAttribute.createDiffuse(Color.BLACK));
+		instances.add(landInstance);
 
 		// hex tiles
-		final Material dirt = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
 		final Model hex = builder.createCylinder(2.2f, 0.2f, 2.2f, 6, dirt, attributes);
 
 		for (Entry<Point, Hex> coord : game.getState().getGrid().grid.entrySet())

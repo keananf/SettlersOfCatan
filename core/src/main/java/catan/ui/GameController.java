@@ -1,35 +1,19 @@
 package catan.ui;
 
-import java.util.concurrent.Semaphore;
+import grid.BoardElement;
+import grid.Hex;
+import grid.Node;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Array;
-
-import intergroup.Requests;
-import grid.BoardElement;
-import grid.GridElement;
-import grid.Hex;
-import grid.Node;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.model.Node;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
-import com.sun.org.apache.regexp.internal.RE;
-import grid.BoardElement;
 import grid.Edge;
-import grid.Hex;
-import grid.Node;
-import intergroup.Requests;
-import intergroup.board.Board;
-
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 
 /**
@@ -38,6 +22,7 @@ import java.util.concurrent.Semaphore;
 class GameController implements InputProcessor
 {
 	private final Camera camera;
+	private final MoveBuilder moveBuilder;
 
 	private final List<Hex> hexes;
 	private final List<Node> nodes;
@@ -50,6 +35,8 @@ class GameController implements InputProcessor
     GameController(GameScreen screen)
 	{
 		this.camera = screen.cam;
+		this.moveBuilder = new MoveBuilder(screen.game.client);
+		
 		this.hexes = screen.game.getState().getGrid().getHexesAsList();
 		this.nodes = screen.game.getState().getGrid().getNodesAsList();
 		this.edges = screen.game.getState().getGrid().getEdgesAsList();
@@ -67,7 +54,7 @@ class GameController implements InputProcessor
 		BoardElement element = findElement(intersectionPoint.x, intersectionPoint.z);
 		if (element == null) return false;
 
-        dealWithClick(element);
+        //moveBuilder.onSelect(element);
 
         return true;
 	}
@@ -159,39 +146,8 @@ class GameController implements InputProcessor
         return null;
     }
 
-    private void dealWithClick(BoardElement element)
-    {
-        try {
-            Semaphore lock = client.getTurnLock();
-            lock.acquire();
-
-            modTurn(element);
-
-            client.sendTurn();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        element.materials.get(0).set(ColorAttribute.createDiffuse(Color.BLACK));
-    }
-
-    private void modTurn(Node node)
-    {
-        client.getTurn().setChosenNode(node);
-        client.getTurn().setChosenMove(Requests.Request.BodyCase.BUILDSETTLEMENT);
-    }
-
-    private void modTurn(Edge edge)
-    {
-        client.getTurn().setChosenEdge(edge);
-        client.getTurn().setChosenMove(Requests.Request.BodyCase.BUILDROAD);
-    }
-
-    private void modTurn(Hex hex)
-    {
-        client.getTurn().setChosenNode(hex);
-        client.getTurn().setChosenMove(Requests.Request.BodyCase.MOVEROBBER);
-    }
+   
+   
 
     // The InputProcessor interface requires these methods be implemented. However, we have no
     // use for them so they all return false (indicating that the input event was not dealt with by us).

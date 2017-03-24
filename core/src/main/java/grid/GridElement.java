@@ -1,5 +1,7 @@
 package grid;
 
+import com.badlogic.gdx.math.Vector3;
+
 public abstract class GridElement implements BoardElement
 {
 	private int x, y; // coordinates
@@ -41,5 +43,15 @@ public abstract class GridElement implements BoardElement
 		this.y = y;
 	}
 
-
+	public Vector3 getCartesian(){
+		return new Vector3((float)x, 0f, (float) ((2 * (float)y - (float)x) / Math.sqrt(3)));
+		
+		
+		
+	}
+	
+	
+	
+	
+	
 }

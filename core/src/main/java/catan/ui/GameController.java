@@ -6,13 +6,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 
 import intergroup.Requests;
+import grid.BoardElement;
+import grid.GridElement;
 import grid.Hex;
-
+import grid.Node;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.math.Plane;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.math.Vector3;
 import grid.BoardElement;
 import grid.Edge;
@@ -92,12 +97,38 @@ class GameController implements InputProcessor
 
     private Node findNode(float planeX, float planeY)
     {
-        return null;
+    	for(Node node : nodes){
+    		Vector3 coord = node.getCartesian();
+    		
+    		if(coord.dst(planeX, 0.1f, planeY)<=0.5){
+    			return node;
+    		}
+    		
+    
+    
+    
+    	}
+    
+    	return null;
+    
     }
 
     private Edge findEdge(float planeX, float planeY)
     {
-        return null;
+    	for(Edge edge : edges){
+    		Vector3 nodeX = edge.getX().getCartesian();
+    		Vector3 nodeY = edge.getY().getCartesian();
+    		float x =(nodeX.x+nodeY.x)/2;
+    		float y = (nodeX.y + nodeY.y)/2;
+    		Vector3 check = new Vector3(x,0.1f,y);
+    		if(check.dst(planeX,0.1f,planeY)<=0.5){
+    			return edge;
+    		}
+    	}
+    
+    return null;
+    
+    
     }
 
 	private Hex findHex(float planeX, float planeY)
@@ -120,6 +151,8 @@ class GameController implements InputProcessor
         return null;
     }
 
+	
+	
 	@Override public boolean keyUp(int keycode) { return false; }
 	@Override public boolean keyDown(int keycode) { return false; }
 	@Override public boolean keyTyped(char character) { return false; }

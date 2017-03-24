@@ -1,25 +1,22 @@
 package catan.ui;
 
-import java.util.concurrent.Semaphore;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Array;
-
-import intergroup.Requests;
-import grid.Hex;
-
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
+import com.sun.org.apache.regexp.internal.RE;
 import grid.BoardElement;
 import grid.Edge;
 import grid.Hex;
 import grid.Node;
+import intergroup.Requests;
+import intergroup.board.Board;
 
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 class GameController implements InputProcessor
 {
@@ -30,8 +27,6 @@ class GameController implements InputProcessor
 	private final List<Edge> edges;
 
 	private final static Plane DETECTION_PLANE = new Plane(new Vector3(0, 1, 0), 0.1f);
-
-
 
     GameController(GameScreen screen)
 	{
@@ -102,16 +97,19 @@ class GameController implements InputProcessor
 
 	private Hex findHex(float planeX, float planeY)
     {
-        for(Hex hex : hexes){
-            final float WIDTH = 2f;
-            double furthestLeft = hex.centre.x - WIDTH/2;
-            double furtherstRight = hex.centre.x + WIDTH/2;
-            double heighestHeight = hex.centre.z + ((Math.sqrt(3)*WIDTH)/4);
-            double lowestHeight = hex.centre.z - ((Math.sqrt(3)*WIDTH)/4);
+        final float HEX_WIDTH = 2f;
 
-            if (planeX <= furtherstRight && planeX >= furthestLeft)
+        for(Hex hex : hexes){
+            final Vector3 pos = hex.getCartesian();
+
+            final double furthestLeft = pos.x - HEX_WIDTH/2;
+            final double furthestRight = pos.x + HEX_WIDTH/2;
+            final double highestHeight = pos.z + ((Math.sqrt(3)*HEX_WIDTH)/4);
+            final double lowestHeight = pos.z - ((Math.sqrt(3)*HEX_WIDTH)/4);
+
+            if (planeX <= furthestRight && planeX >= furthestLeft)
             {
-                if (planeY <= heighestHeight && planeY >= lowestHeight)
+                if (planeY <= highestHeight && planeY >= lowestHeight)
                 {
                     return hex;
                 }

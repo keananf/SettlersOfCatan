@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
@@ -37,8 +38,7 @@ public class GameScreen implements Screen
 	private CatanCamController camController;
 	private GameController gameController;
 
-	final protected Array<GameObject> objs = new Array<>();
-	final protected Array<GameObject> hexes = new Array<>();
+	final protected Array<ModelInstance> instances = new Array<>();
 	final private Environment environment = new Environment();
 
 	final protected SettlersOfCatan game;
@@ -101,7 +101,7 @@ public class GameScreen implements Screen
 		cam.position.set(0f, 8f, -10f);
 		cam.lookAt(0, 0, 0); // look at centre of world
 		cam.near = 0.01f; // closest things to be rendered
-		cam.far = 300f; // furthest things to be rendered
+		cam.far = 300f; // farthest things to be rendered
 		cam.update();
 	}
 
@@ -109,11 +109,11 @@ public class GameScreen implements Screen
 	{
 		final ModelBuilder builder = new ModelBuilder();
 		final long attributes = Usage.Position | Usage.Normal | Usage.TextureCoordinates;
-
+		
 		// sea
 		final Material water = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));
 		final Model sea = builder.createCylinder(150f, 0.01f, 150f, 6, water, attributes);
-		objs.add(new GameObject(sea, new Point(0,0)));
+		instances.add(new ModelInstance(sea, new Vector3()));
 
 		// hex tiles
 		final Material dirt = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
@@ -121,9 +121,8 @@ public class GameScreen implements Screen
 
 		for (Entry<Point, Hex> coord : game.getState().getGrid().grid.entrySet())
 		{
-			final GameObject instance = new GameObject(hex,coord.getKey());
+			final ModelInstance instance = new ModelInstance(hex, coord.getValue().get3DPos());
 			instance.transform.rotate(0, 1, 0, 90f);
-
 			final Color colour;
 			switch (coord.getValue().getResource())
 			{
@@ -137,8 +136,7 @@ public class GameScreen implements Screen
 			}
 			instance.materials.get(0).set(ColorAttribute.createDiffuse(colour));
 
-			objs.add(instance);
-			hexes.add(instance);
+			instances.add(instance);
 		}
 	}
 
@@ -158,7 +156,7 @@ public class GameScreen implements Screen
 		camController.update();
 
 		MODEL_BATCH.begin(cam);
-		MODEL_BATCH.render(objs, environment);
+		MODEL_BATCH.render(instances, environment);
 		MODEL_BATCH.end();
 	}
 
@@ -167,7 +165,7 @@ public class GameScreen implements Screen
 	{
 		assets.dispose();
 		MODEL_BATCH.dispose();
-		objs.clear();
+		instances.clear();
 	}
 
 	// Required but unused

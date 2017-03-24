@@ -149,16 +149,22 @@ public class MessageProcessor
                     {
                         ev.setMonopolyResolution(game.playMonopolyCard(request.getChooseResource()));
                         monopoly = false;
+                        break;
                     }
                     else if(robberMoved)
                     {
                         chosenResource = ResourceType.fromProto(request.getChooseResource());
+                        if(chosenResource.equals(ResourceType.Generic))
+                        {
+                            ev.setError(Events.Event.Error.newBuilder().setDescription("Cannot choose resource type 'Generic'").build());
+                            break;
+                        }
                     }
                     else
                     {
                         game.chooseResources(request.getChooseResource());
-                        ev.setResourceChosen(request.getChooseResource());
                     }
+                    ev.setResourceChosen(request.getChooseResource());
                     break;
                 case ROLLDICE:
                     ev.setRolled(game.generateDiceRoll());
@@ -339,27 +345,27 @@ public class MessageProcessor
      */
     private boolean isExpected(Messages.Message msg, Colour col)
     {
-        Requests.Request.BodyCase type = msg.getTypeCase().equals(Messages.Message.TypeCase.REQUEST) ? msg.getRequest().getBodyCase() : null;
+        Requests.Request.BodyCase type = msg.getRequest().getBodyCase();
         List<Requests.Request.BodyCase> expected = expectedMoves.get(col);
-        
+        if(type == null) return false;
+
+        if(!expected.isEmpty() && expected.contains(type))
+        {
+            return true;
+        }
+
+        // If the move is not expected
+        else if(!expected.isEmpty()) return false;
+
         // If in trade phase and the given message isn't a trade
-        if(tradePhase && (!msg.getRequest().getBodyCase().equals(Requests.Request.BodyCase.INITIATETRADE) && game.getCurrentPlayer().equals(col))
-                || (!msg.getRequest().getBodyCase().equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !game.getCurrentPlayer().equals(col)) )
+        if(tradePhase && ((!type.equals(Requests.Request.BodyCase.INITIATETRADE) && game.getCurrentPlayer().equals(col))
+                || (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && game.getCurrentPlayer().equals(col))) )
         {
             return false;
         }
 
         // If it's not your turn and there are no expected moves from you
-        if(expected.size() == 0 && !game.getCurrentPlayer().equals(col))
-        {
-            return false;
-        }
-
-        // If not a request or the move is not expected
-        if(type == null || (!expected.contains(type) && expected.size() > 0))
-        {
-            return false;
-        }
+        if(!game.getCurrentPlayer().equals(col) || (!game.getCurrentPlayer().equals(col) && expected.isEmpty())) return false;
 
         return true;
     }

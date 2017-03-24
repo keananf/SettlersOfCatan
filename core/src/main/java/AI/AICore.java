@@ -27,7 +27,8 @@ public abstract class AICore implements IAI
 		Turn turn = selectAndPrepareMove();
 		if(turn != null)
 		{
-			client.log("Client Play", String.format("Chose move %s", turn.getChosenMove().name()));
+			client.log("Client Play", String.format("%s expected moves %s", getPlayer().getId().name(), getTurn().getExpectedMoves().toString()));
+			client.log("Client Play", String.format("%s Chose move %s", getPlayer().getId().name(), turn.getChosenMove().name()));
 			client.sendTurn(turn);
 		}
 	}
@@ -154,26 +155,26 @@ public abstract class AICore implements IAI
 	
 	protected Player getPlayer()
 	{
-		return getGame().getPlayer();
+		return getState().getPlayer();
 	}
 
-	protected ClientGame getGame()
+	protected ClientGame getState()
 	{
 		return client.getState();
+	}
+
+	private Semaphore getStateLock()
+	{
+		return client.getStateLock();
+	}
+
+	private Semaphore getTurnLock()
+	{
+		return client.getTurnLock();
 	}
 
 	public Turn getTurn()
 	{
 		return client.getTurn();
-	}
-
-	protected Semaphore getGameLock()
-	{
-		return client.getStateLock();
-	}
-
-	protected Semaphore getTurnLock()
-	{
-		return client.getTurnLock();
 	}
 }

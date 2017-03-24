@@ -56,6 +56,8 @@ public class Server implements Runnable
 			game.chooseFirstPlayer();
 			getInitialSettlementsAndRoads();
 
+			Thread.sleep(500);
+			log("Server Start", "\n\nAll players Connected. Beginning play.\n");
 			while (!game.isOver())
 			{
 				// Read moves from queue and log
@@ -63,7 +65,7 @@ public class Server implements Runnable
 				sleep();
 			}
 		}
-		catch (IOException e)
+		catch (IOException | InterruptedException e)
 		{
 			e.printStackTrace();
 			log("Server Setup", "Error connecting players");
@@ -199,7 +201,7 @@ public class Server implements Runnable
 			if(ev.getTypeCase().equals(Event.TypeCase.RESOURCESTOLEN))
 				msg.setEvent(ev.toBuilder().setResourceStolen(ev.getResourceStolen().toBuilder().setResource(Resource.Kind.GENERIC).build()).build());
 			else
-				msg.setEvent(ev.toBuilder().setDevCardBought(Board.DevCard.newBuilder().setPlayableDevCard(Board.PlayableDevCard.UNRECOGNIZED).build()).build());
+				msg.setEvent(ev.toBuilder().setDevCardBought(Board.DevCard.newBuilder().setUnknown(Board.Empty.getDefaultInstance()).build()).build());
 		}
 
 		// For each player

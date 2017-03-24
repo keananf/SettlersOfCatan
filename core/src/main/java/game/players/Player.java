@@ -239,7 +239,8 @@ public abstract class Player
 		// Check if the player can afford this before initiating the purchase
 		for(ResourceType r : cost.keySet())
 		{
-			if(resources.get(r) < cost.get(r))
+			if(cost.get(r) == 0) continue;
+			if(!resources.containsKey(r) || resources.get(r) < cost.get(r))
 				return false;
 		}
 		
@@ -266,7 +267,7 @@ public abstract class Player
 		// afford it
 		if (r.getEdge().hasSettlement() || valid || (getRoads().size() < 2 && r.getEdge().hasSettlement()))
 		{
-			return getRoads().size() < 2 || canAfford(Road.getRoadCost());
+			return true;
 		}
 
 		return false;
@@ -368,7 +369,7 @@ public abstract class Player
 		for(ResourceType r : cost.keySet())
 		{
 			int value = cost.get(r);
-			int existing = resources.get(r);
+			int existing = resources.containsKey(r) ? resources.get(r) : 0;
 
 			// Add to overall resource bank
 			resources.put(r, existing - value);

@@ -9,6 +9,7 @@ import intergroup.board.Board;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Semaphore;
 
 /**
  * Class which continuously listens for updates from the server Created by
@@ -101,7 +102,10 @@ public class EventProcessor
 				getGame().processMonopoly(ev.getMonopolyResolution(), ev.getInstigator());
 				break;
 			case RESOURCECHOSEN:
-				getGame().processResourceChosen(ev.getResourceChosen(), ev.getInstigator());
+				if(!robberMoved)
+				{
+					getGame().processResourceChosen(ev.getResourceChosen(), ev.getInstigator());
+				} else client.log("Client Play", "Check");
 				break;
 			case RESOURCESTOLEN:
 				getGame().processResourcesStolen(ev.getResourceStolen(), ev.getInstigator());
@@ -154,22 +158,25 @@ public class EventProcessor
 			// Add expected moves based on recently played dev card
 			case DEVCARDPLAYED:
 			{
-				switch(ev.getDevCardPlayed())
+				if(ev.getInstigator().getId() == getGame().getPlayer().getId())
 				{
-					case KNIGHT:
-						getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
-						break;
-					case YEAR_OF_PLENTY:
-						getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
-						getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
-						break;
-					case ROAD_BUILDING:
-						getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
-						getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
-						break;
-					case MONOPOLY:
-						getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
-						break;
+					switch(ev.getDevCardPlayed())
+					{
+						case KNIGHT:
+							getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
+							break;
+						case YEAR_OF_PLENTY:
+							getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
+							getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
+							break;
+						case ROAD_BUILDING:
+							getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
+							getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
+							break;
+						case MONOPOLY:
+							getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
+							break;
+					}
 				}
 				break;
 			}
@@ -187,16 +194,22 @@ public class EventProcessor
 						getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
 					}
 				}
+				if(ev.getInstigator().getId() == getGame().getPlayer().getId() &&
+						getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE))
+				{
+					getExpectedMoves().remove(Requests.Request.BodyCase.ROLLDICE);
+				}
 				break;
 
 			// Expect for the player to send a steal request next
 			case ROBBERMOVED:
+				robberMoved = true;
 				if(getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
 				{
 					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
-					robberMoved = true;
 				}
-				if(getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER))
+				if(ev.getInstigator().getId() == getGame().getPlayer().getId() &&
+						getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER))
 				{
 					getExpectedMoves().remove(Requests.Request.BodyCase.MOVEROBBER);
 				}
@@ -205,12 +218,14 @@ public class EventProcessor
 			// Remove expected moves if necessary
 			case MONOPOLYRESOLUTION:
 			case RESOURCECHOSEN:
-				if(robberMoved)
+				if(robberMoved && getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
 				{
+					client.log("Server play", String.format("Adding SUBMITTARGETPLAYER to expected moves for %s", ev.getInstigator().getId().name()));
 					getExpectedMoves().add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
 					robberMoved = false;
 				}
-				if(getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE))
+				if(ev.getInstigator().getId() == getGame().getPlayer().getId() &&
+						getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE))
 				{
 					getExpectedMoves().remove(Requests.Request.BodyCase.CHOOSERESOURCE);
 				}
@@ -222,7 +237,8 @@ public class EventProcessor
 				{
 					getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
 				}
-				if(getExpectedMoves().contains(Requests.Request.BodyCase.BUILDROAD))
+				if(ev.getInstigator().getId() == getGame().getPlayer().getId() &&
+						getExpectedMoves().contains(Requests.Request.BodyCase.BUILDROAD))
 				{
 					getExpectedMoves().remove(Requests.Request.BodyCase.BUILDROAD);
 				}
@@ -234,13 +250,15 @@ public class EventProcessor
 					getTurn().setInitialPhase(true);
 					getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
 				}
-				if(getExpectedMoves().contains(Requests.Request.BodyCase.BUILDSETTLEMENT))
+				if(ev.getInstigator().getId() == getGame().getPlayer().getId() &&
+						getExpectedMoves().contains(Requests.Request.BodyCase.BUILDSETTLEMENT))
 				{
 					getExpectedMoves().remove(Requests.Request.BodyCase.BUILDSETTLEMENT);
 				}
 				break;
 			case RESOURCESTOLEN:
-				if(getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER))
+				if(ev.getInstigator().getId() == getGame().getPlayer().getId() &&
+						getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER))
 				{
 					getExpectedMoves().remove(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
 				}
@@ -254,7 +272,8 @@ public class EventProcessor
 				else getTurn().setPlayerTrade(ev.getPlayerTrade());
 				break;
 			case CARDSDISCARDED:
-				if(getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
+				if(ev.getInstigator().getId() == getGame().getPlayer().getId() &&
+						getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
 				{
 					getExpectedMoves().remove(Requests.Request.BodyCase.DISCARDRESOURCES);
 				}
@@ -293,6 +312,16 @@ public class EventProcessor
 				processEvent(msg.getEvent());
 				break;
 		}
+	}
+
+	private Semaphore getStateLock()
+	{
+		return client.getStateLock();
+	}
+
+	private Semaphore getTurnLock()
+	{
+		return client.getTurnLock();
 	}
 
 	private ClientGame getGame()

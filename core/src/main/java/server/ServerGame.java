@@ -427,10 +427,11 @@ public class ServerGame extends Game
 	 * @param resource the resource to take
 	 * @throws CannotStealException
 	 */
-	public Board.Steal takeResource(Board.Player.Id id, ResourceType resource) throws CannotStealException
+	public Board.Steal takeResource(Board.Player.Id id, ResourceType resource)
 	{
-		boolean valid = false;
+		boolean valid = false, taken = false;
 		Colour otherColour = getPlayer(id).getColour();
+		int options = 0;
 
 		// Verify this player can take from the specified one
 		for(Node n : getGrid().getHexWithRobber().getNodes())
@@ -439,16 +440,21 @@ public class ServerGame extends Game
 			if(n.getSettlement() != null && n.getSettlement().getPlayerColour().equals(otherColour))
 			{
 				ServerPlayer p = (ServerPlayer) players.get(currentPlayer);
-				p.takeResource(players.get(otherColour), resource, bank);
+				ResourceType r2 = p.takeResource(players.get(otherColour), resource, bank);
 				valid = true;
+				taken = r2 != null;
+			}
+			if(n.getSettlement() != null && getPlayer(n.getSettlement().getPlayerColour()).getNumResources() > 0)
+			{
+				options++;
 			}
 		}
 
 		// Cannot take from this player
-		if(!valid) throw new CannotStealException(currentPlayer, otherColour);
+		//if(!valid || (valid && !taken && options > 1)) throw new CannotStealException(currentPlayer, otherColour);
 
 		return Board.Steal.newBuilder().setVictim(Board.Player.newBuilder().setId(id).build())
-				.setResource(ResourceType.toProto(resource)).setQuantity(1).build();
+				.setResource(ResourceType.toProto(resource)).setQuantity(taken ? 1 : 0).build();
 	}
 	
 	/**

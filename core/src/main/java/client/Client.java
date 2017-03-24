@@ -19,7 +19,7 @@ public abstract class Client implements Runnable
     private Turn turn;
     private IServerConnection conn;
     private Semaphore stateLock, turnLock;
-    private final Thread thread;
+    private Thread thread;
 
     public Client()
     {
@@ -31,29 +31,20 @@ public abstract class Client implements Runnable
     @Override
     public void run()
     {
-        // Loop processing events when needed
+        // Loop processing events when needed and sending turns
         while(getState() == null || !getState().isOver())
         {
             try
             {
                 acquireLocksAndGetEvents();
-
-                // Sleep while it is NOT your turn and while you do not have expected moves
-                //do
-                {
-                    Thread.sleep(100);
-                }
-                //while(getState() == null || (!getState().getCurrentPlayer().equals(getState().getPlayer().getColour()) &&
-                  //      getTurn().getExpectedMoves().isEmpty()));
-
-                // Attempt to
+                Thread.sleep(100);
             }
             catch (Exception e)
             {
                 e.printStackTrace();
-                shutDown();
             }
         }
+        log("Client Play", "Ending AI client loop");
     }
 
     /**
@@ -84,6 +75,7 @@ public abstract class Client implements Runnable
             {
                 getStateLock().release();
             }
+            Thread.sleep(100);
         }
         catch(InterruptedException e)
         {
@@ -112,7 +104,7 @@ public abstract class Client implements Runnable
     public void updateTurn(Turn selectedMove)
     {
         // Reset and set chosen field
-        getTurn().reset();
+        getTurn().resetInfo();
         getTurn().setChosenMove(selectedMove.getChosenMove());
 
         // Set additional fields
@@ -167,7 +159,6 @@ public abstract class Client implements Runnable
      */
     public void sendTurn(Turn turn)
     {
-
         // Send to server if it is a valid move
         if(getMoveProcessor().validateMsg(turn))
         {
@@ -179,6 +170,44 @@ public abstract class Client implements Runnable
             // TODO else display error?
             log("Client Play", String.format("Invalid Request %s for %s",
                     turn.getChosenMove().name(), getState().getPlayer().getId().name()));
+        }
+    }
+
+    /**
+     * Sends the given turn object.
+     *
+     * Method assumed to be called in thread safe manner
+     * @param turn the turn to send
+     */
+    public void acquireLocksAndSendTurn(Turn turn)
+    {
+        try
+        {
+            getStateLock().acquire();
+            try
+            {
+                getTurnLock().acquire();
+                try
+                {
+                    sendTurn(turn);
+                }
+                finally
+                {
+                    getTurnLock().release();
+                }
+            }
+            catch(InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+            finally
+            {
+                getStateLock().release();
+            }
+        }
+        catch(InterruptedException e)
+        {
+            e.printStackTrace();
         }
     }
 

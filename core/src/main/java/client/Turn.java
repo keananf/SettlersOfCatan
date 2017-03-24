@@ -71,6 +71,28 @@ public class Turn
 		expectedMoves.clear();
 	}
 
+	/**
+	 * Same as above but leaves expected moves in tact
+	 */
+	public void resetInfo()
+	{
+		roll = 0;
+		tradePhase = false;
+		turnStarted = false;
+		chosenCard = null;
+		chosenColour = null;
+		chosenEdge = null;
+		chosenNode = null;
+		chosenResource = null;
+		chosenHex = null;
+		chatMessage = null;
+		bankTrade = null;
+		playerTrade = null;
+		tradeResponse = null;
+		target = null;
+
+	}
+
 	public ConcurrentLinkedQueue<Requests.Request.BodyCase> getExpectedMoves()
 	{
 		return expectedMoves;

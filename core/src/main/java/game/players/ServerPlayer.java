@@ -68,7 +68,7 @@ public class ServerPlayer extends Player
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		if (canBuildRoad(edge))
+		if (canBuildRoad(edge) && (getRoads().size() < 2 || canAfford(Road.getRoadCost())))
 		{
 			if(getRoads().size() >= 2) spendResources(r.getCost(), bank);
 			edge.setRoad(r);
@@ -206,21 +206,20 @@ public class ServerPlayer extends Player
 
 	/**
 	 * Take one resource randomly from the other player
-	 * 
-	 * @param other the other player
+	 *  @param other the other player
 	 * @param resource the resource to take
 	 */
-	public void takeResource(Player other, ResourceType resource, Bank bank) throws CannotStealException
+	public ResourceType takeResource(Player other, ResourceType resource, Bank bank)
 	{
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
-		// Check the specified resource can be taken
-		if (other.getNumResources() > 0 && (!other.getResources().containsKey(resource) || other.getResources()
-				.get(resource) == 0)) { throw new CannotStealException(colour, other.getColour()); }
-
 		// Ignore if player simply has no resources to take
 		if(other.getNumResources() == 0)
-			return;
+			return null;
+
+		// Check the specified resource can be taken
+		if (resource.equals(ResourceType.Generic) || !other.getResources().containsKey(resource) || other.getResources()
+				.get(resource) == 0) return null; //throw new CannotStealException(colour, other.getColour());
 
 		try
 		{
@@ -232,6 +231,8 @@ public class ServerPlayer extends Player
 		{
 			/* Cannot happen */
 		}
+
+		return resource;
 	}
 
 }

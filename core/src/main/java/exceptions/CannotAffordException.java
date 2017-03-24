@@ -49,7 +49,7 @@ public class CannotAffordException extends Exception
 	{
 		for (ResourceType r : ResourceType.values())
 		{
-			if (cost.containsKey(r) && cost.get(r) > resources.get(r)) { return r; }
+			if (cost.containsKey(r) && resources.containsKey(r) && cost.get(r) > resources.get(r)) { return r; }
 		}
 
 		return ResourceType.Generic;

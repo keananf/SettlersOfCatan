@@ -3,6 +3,7 @@ package client;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
+import game.build.Road;
 import game.players.Player;
 import grid.Edge;
 import grid.Hex;
@@ -107,7 +108,7 @@ public class MoveProcessor
         {
             possibilities.add(new Turn(Requests.Request.BodyCase.ROLLDICE));
         }
-        if(getExpectedMoves().isEmpty() && getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
+        if(getExpectedMoves().isEmpty() && checkTurn())
         {
             possibilities.add(new Turn(Requests.Request.BodyCase.ENDTURN));
             possibilities.add(new Turn(Requests.Request.BodyCase.INITIATETRADE));
@@ -153,16 +154,32 @@ public class MoveProcessor
             }
         }
 
-        // For every colour
-        for(Colour c : Colour.values())
+        // For every node of the robber hex
+        boolean valid = false;
+        for(Node n : getGame().getGrid().getHexWithRobber().getNodes())
         {
+            if(n.getSettlement() == null) continue;
+
+            Colour c = n.getSettlement().getPlayerColour();
             if (checkTarget(c))
             {
                 Turn turn = new Turn();
                 turn.setTarget(c);
                 turn.setChosenMove(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
                 possibilities.add(turn);
+                valid = true;
             }
+        }
+
+        // The chosen hex and resource from earlier doesn't yield any valid target.
+        // Randomly choose a move which the server will handle and toss away, noticing the player
+        // has no valid options anyway
+        if(!valid && getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER))
+        {
+            Turn turn = new Turn();
+            turn.setTarget(Colour.BLUE.equals(getGame().getPlayer().getColour()) ? Colour.ORANGE : Colour.BLUE);
+            turn.setChosenMove(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+            possibilities.add(turn);
         }
 
         // For each response type
@@ -188,8 +205,20 @@ public class MoveProcessor
      */
     private boolean checkHex(Hex hex)
     {
-        // Ensure this hex doesn't already have the robber, and that the move is expected OR no moves are expected
-        return checkTurn() && !hex.equals(getGame().getGrid().getHexWithRobber()) &&
+        boolean val = false;
+
+        // Check there is indeed a foreign settlement on one of the hexes nodes
+        for(Node n : hex.getNodes())
+        {
+            if(n.getSettlement() != null && !n.getSettlement().getPlayerColour().equals(getGame().getPlayer().getColour())
+                    && getGame().getPlayerResources(n.getSettlement().getPlayerColour()) > 0)
+            {
+                val = true;
+            }
+        }
+
+        // Ensure this hex doesn't already have the robber, and that the move is expected
+        return checkTurn() && !hex.equals(getGame().getGrid().getHexWithRobber()) && val &&
                 (!getExpectedMoves().isEmpty() && getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER));
     }
 
@@ -205,7 +234,8 @@ public class MoveProcessor
         {
             sum += resources.get(r);
         }
-
+        client.log("Client Play", String.format("%d - %d for %s", getGame().getPlayer().getNumResources(), sum, getGame().getPlayer().getId().name()));
+        sum = getGame().getPlayer().getNumResources() - sum;
         // Ensure that a discard is expected, and that the discard can be afforded and that it brings the user
         // into a safe position having 7 or less resources.
         return (!getExpectedMoves().isEmpty() && getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
@@ -222,7 +252,7 @@ public class MoveProcessor
         // Ensure that a SUBMITTARGETPLAYER move is expected, and that the player
         // has resources
         return (checkTurn() && getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
-                && getGame().getPlayer(target).getNumResources() > 0);
+                && !target.equals(getGame().getPlayer().getColour()));
     }
 
     /**
@@ -234,7 +264,7 @@ public class MoveProcessor
     {
         // Ensure that a CHOOSE RESOURCE move is expected, and that the bank
         // has the requested resource available
-        return (getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE)
+        return !r.equals(ResourceType.Generic) && (getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE)
                 && getGame().getBank().getAvailableResources().get(r) > 0);
     }
 
@@ -298,6 +328,7 @@ public class MoveProcessor
     private boolean checkBuildRoad(Edge edge)
     {
         return checkTurn() && getGame().getPlayer().canBuildRoad(edge) &&
+                (getGame().getPlayer().getRoads().size() < 2 || getGame().getPlayer().canAfford(Road.getRoadCost())) &&
                 (getExpectedMoves().isEmpty() || getExpectedMoves().contains(Requests.Request.BodyCase.BUILDROAD));
     }
 
@@ -361,25 +392,25 @@ public class MoveProcessor
     private boolean isExpected(Turn turn)
     {
         Requests.Request.BodyCase type = turn.getChosenMove();
+        if(type == null) return false;
+
+        if(!getExpectedMoves().isEmpty() && getExpectedMoves().contains(type))
+        {
+            return true;
+        }
+
+        // If the move is not expected
+        else if(!getExpectedMoves().isEmpty()) return false;
 
         // If in trade phase and the given message isn't a trade
-        if(getTurn().isTradePhase() && (!type.equals(Requests.Request.BodyCase.INITIATETRADE) && checkTurn())
-                || (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !checkTurn()) )
+        if(getTurn().isTradePhase() && ((!type.equals(Requests.Request.BodyCase.INITIATETRADE) && checkTurn())
+                || (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !checkTurn())) )
         {
             return false;
         }
 
         // If it's not your turn and there are no expected moves from you
-        if(getExpectedMoves().isEmpty() && !checkTurn())
-        {
-            return false;
-        }
-
-        // If not a request or the move is not expected
-        if(type == null || (!getExpectedMoves().contains(type) && !getExpectedMoves().isEmpty()))
-        {
-            return false;
-        }
+        if(!checkTurn() || (!checkTurn() && getExpectedMoves().isEmpty())) return false;
 
         return true;
     }

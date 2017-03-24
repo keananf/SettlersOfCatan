@@ -18,7 +18,7 @@ public abstract class AIClient extends Client
 
 			case VERYEASY:
 			default:
-				ai = new RandomAI(this);
+				ai = new VeryEasyAI(this);
 				break;
 		}
 	}
@@ -26,7 +26,7 @@ public abstract class AIClient extends Client
 	public AIClient()
 	{
 		super();
-		ai = new RandomAI(this);
+		ai = new VeryEasyAI(this);
 	}
 
 	@Override
@@ -38,20 +38,15 @@ public abstract class AIClient extends Client
 			try
 			{
 				acquireLocksAndGetEvents();
-
-				if(getState() != null)
-				log("Client Play", String.format("Client expected moves %s %s", getState().getPlayer().getId().name(), getTurn().getExpectedMoves().toString()));
-
-				// Sleep while it is NOT your turn and while you do not have expected moves
 				Thread.sleep(100);
 
 				// Attempt to make a move and send a turn
 				acquireLocksAndPerformMove();
+				Thread.sleep(100);
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
-				shutDown();
 			}
 		}
 		log("Client Play", "Ending AI client loop");

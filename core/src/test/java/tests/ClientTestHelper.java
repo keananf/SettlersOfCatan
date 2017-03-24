@@ -90,14 +90,14 @@ public class ClientTestHelper extends TestHelper
 
 	private void grantResources(Colour col, Map<ResourceType, Integer> grant) throws BankLimitException
 	{
-		if(col.equals(clientGame.getPlayer().getColour()))
+		if (col.equals(clientGame.getPlayer().getColour()))
 		{
 			clientGame.getPlayer(col).grantResources(grant, clientGame.getBank());
 		}
 		else
 		{
 			int sum = 0;
-			for(ResourceType r : grant.keySet())
+			for (ResourceType r : grant.keySet())
 			{
 				sum += grant.get(r);
 			}

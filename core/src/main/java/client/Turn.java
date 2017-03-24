@@ -239,27 +239,30 @@ public class Turn
 		this.tradePhase = tradePhase;
 	}
 
-    public void setChosenResources(Map<ResourceType,Integer> chosenResources)
+	public void setChosenResources(Map<ResourceType, Integer> chosenResources)
 	{
-        this.chosenResources = chosenResources;
-    }
+		this.chosenResources = chosenResources;
+	}
 
 	public boolean hasTurnStarted()
 	{
 		return turnStarted;
 	}
 
-    public void setTurnStarted(boolean turnStarted)
+	public void setTurnStarted(boolean turnStarted)
 	{
-        this.turnStarted = turnStarted;
-    }
+		this.turnStarted = turnStarted;
+	}
 
-    public boolean isInitialPhase()
+	public boolean isInitialPhase()
 	{
-        return initialPhase;
-    }
+		return initialPhase;
+	}
 
-    public void setInitialPhase(boolean initialPhase) {this.initialPhase = initialPhase;}
+	public void setInitialPhase(boolean initialPhase)
+	{
+		this.initialPhase = initialPhase;
+	}
 
 	public int getRoll()
 	{

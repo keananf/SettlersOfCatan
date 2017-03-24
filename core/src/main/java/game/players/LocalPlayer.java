@@ -51,6 +51,7 @@ public class LocalPlayer extends Player
 
 			return r;
 		}
-		else throw new CannotBuildRoadException(r);
+		else
+			throw new CannotBuildRoadException(r);
 	}
 }

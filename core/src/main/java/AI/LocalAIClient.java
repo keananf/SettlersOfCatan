@@ -11,47 +11,48 @@ import server.Server;
  */
 public class LocalAIClient extends AIClient
 {
-    private LocalServerConnection conn;
-    private Server server;
-    private Thread serverThread;
+	private LocalServerConnection conn;
+	private Server server;
+	private Thread serverThread;
 
-    public LocalAIClient(Difficulty difficulty)
-    {
-        super(difficulty);
-    }
-    public LocalAIClient()
-    {
-        super();
-    }
+	public LocalAIClient(Difficulty difficulty)
+	{
+		super(difficulty);
+	}
 
-    @Override
-    protected void setUpConnection()
-    {
-        conn = new LocalServerConnection(this);
-        conn.setConn(new LocalClientConnection(conn));
-        setUp(conn);
-        server = new LocalServer(conn.getConn());
-        serverThread = new Thread(server);
-        serverThread.start();
-    }
+	public LocalAIClient()
+	{
+		super();
+	}
 
-    @Override
-    public void shutDown()
-    {
-        super.shutDown();
-        server.shutDown();
-        try
-        {
-            serverThread.join();
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
-    }
+	@Override
+	protected void setUpConnection()
+	{
+		conn = new LocalServerConnection(this);
+		conn.setConn(new LocalClientConnection(conn));
+		setUp(conn);
+		server = new LocalServer(conn.getConn());
+		serverThread = new Thread(server);
+		serverThread.start();
+	}
 
-    public Server getServer()
-    {
-        return server;
-    }
+	@Override
+	public void shutDown()
+	{
+		super.shutDown();
+		server.shutDown();
+		try
+		{
+			serverThread.join();
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public Server getServer()
+	{
+		return server;
+	}
 }

@@ -30,61 +30,62 @@ public class TurnProcessor
 
 		switch (getTurn().getChosenMove())
 		{
-			case BUILDROAD:
-                request.setBuildRoad(getTurn().getChosenEdge().toEdgeProto());
-                break;
-            case BUILDSETTLEMENT:
-                request.setBuildSettlement(getTurn().getChosenNode().toProto());
-                break;
-			case BUILDCITY:
-                request.setBuildCity(getTurn().getChosenNode().toProto());
-                break;
-			case CHATMESSAGE:
-				request.setChatMessage(getTurn().getChatMessage());
-				break;
-			case JOINLOBBY:
-				request.setJoinLobby(getJoinLobby());
-				break;
-			case MOVEROBBER:
-				request.setMoveRobber(getTurn().getChosenHex().toHexProto().getLocation());
-				break;
-			case INITIATETRADE:
-				request.setInitiateTrade(getTrade());
-				break;
-			case CHOOSERESOURCE:
-				request.setChooseResource(ResourceType.toProto(getTurn().getChosenResource()));
-				break;
-			case DISCARDRESOURCES:
-				request.setDiscardResources(getGame().processResources(getTurn().getChosenResources()));
-				break;
-			case SUBMITTRADERESPONSE:
-				request.setSubmitTradeResponse(getTurn().getTradeResponse());
-				break;
-			case PLAYDEVCARD:
-				request.setPlayDevCard(DevelopmentCardType.toProto(getTurn().getChosenCard()).getPlayableDevCard());
-				break;
-			case SUBMITTARGETPLAYER:
-				request.setSubmitTargetPlayer(Board.Player.newBuilder().setId(getGame().getPlayer(getTurn().getTarget()).getId()).build());
-				break;
+		case BUILDROAD:
+			request.setBuildRoad(getTurn().getChosenEdge().toEdgeProto());
+			break;
+		case BUILDSETTLEMENT:
+			request.setBuildSettlement(getTurn().getChosenNode().toProto());
+			break;
+		case BUILDCITY:
+			request.setBuildCity(getTurn().getChosenNode().toProto());
+			break;
+		case CHATMESSAGE:
+			request.setChatMessage(getTurn().getChatMessage());
+			break;
+		case JOINLOBBY:
+			request.setJoinLobby(getJoinLobby());
+			break;
+		case MOVEROBBER:
+			request.setMoveRobber(getTurn().getChosenHex().toHexProto().getLocation());
+			break;
+		case INITIATETRADE:
+			request.setInitiateTrade(getTrade());
+			break;
+		case CHOOSERESOURCE:
+			request.setChooseResource(ResourceType.toProto(getTurn().getChosenResource()));
+			break;
+		case DISCARDRESOURCES:
+			request.setDiscardResources(getGame().processResources(getTurn().getChosenResources()));
+			break;
+		case SUBMITTRADERESPONSE:
+			request.setSubmitTradeResponse(getTurn().getTradeResponse());
+			break;
+		case PLAYDEVCARD:
+			request.setPlayDevCard(DevelopmentCardType.toProto(getTurn().getChosenCard()).getPlayableDevCard());
+			break;
+		case SUBMITTARGETPLAYER:
+			request.setSubmitTargetPlayer(
+					Board.Player.newBuilder().setId(getGame().getPlayer(getTurn().getTarget()).getId()).build());
+			break;
 
-			// Require empty request bodies
-			case ROLLDICE:
-				request.setRollDice(EmptyOuterClass.Empty.getDefaultInstance());
-				break;
-			case ENDTURN:
-				request.setEndTurn(EmptyOuterClass.Empty.getDefaultInstance());
-				break;
-			case BUYDEVCARD:
-				request.setBuyDevCard(EmptyOuterClass.Empty.getDefaultInstance());
-				break;
+		// Require empty request bodies
+		case ROLLDICE:
+			request.setRollDice(EmptyOuterClass.Empty.getDefaultInstance());
+			break;
+		case ENDTURN:
+			request.setEndTurn(EmptyOuterClass.Empty.getDefaultInstance());
+			break;
+		case BUYDEVCARD:
+			request.setBuyDevCard(EmptyOuterClass.Empty.getDefaultInstance());
+			break;
 
-			case BODY_NOT_SET:
-			default:
-				return;
-        }
+		case BODY_NOT_SET:
+		default:
+			return;
+		}
 
-        sendToServer(request.build());
-    }
+		sendToServer(request.build());
+	}
 
 	/**
 	 * Sends the given request to the server
@@ -100,7 +101,8 @@ public class TurnProcessor
 		catch (Exception e)
 		{
 			conn = null;
-			client.log("Client Error", String.format("Error sending request %s to server", request.getBodyCase().name()));
+			client.log("Client Error",
+					String.format("Error sending request %s to server", request.getBodyCase().name()));
 			e.printStackTrace();
 		}
 	}

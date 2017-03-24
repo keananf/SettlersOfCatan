@@ -30,17 +30,14 @@ public class CannotAffordException extends Exception
 		this.cost = cost;
 	}
 
-    public CannotAffordException(String msg) 
+	public CannotAffordException(String msg)
 	{
 		this.msg = msg;
-    }
+	}
 
-    public String getMessage()
+	public String getMessage()
 	{
-		if(msg != null)
-		{
-			return msg;
-		}
+		if (msg != null) { return msg; }
 
 		return String.format("Cannot afford due to resource: %s.", getInsufficientResource().toString());
 	}

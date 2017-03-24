@@ -46,7 +46,7 @@ public final class CatanCamController implements InputProcessor
 		}
 		if (heldKeys.contains(Keys.DOWN) && camera.position.dst(ORIGIN) < MAX_DIST)
 		{
-			camera.position.scl(1/ZOOM_RATE);
+			camera.position.scl(1 / ZOOM_RATE);
 			changed = true;
 		}
 

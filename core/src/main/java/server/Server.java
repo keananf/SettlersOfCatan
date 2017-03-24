@@ -336,7 +336,15 @@ public class Server implements Runnable
 		LocalAIClientOnServer ai = new LocalAIClientOnServer();
 		LocalClientConnection conn = ai.getConn().getConn();
 		connections.put(c, new ListenerThread(conn, c,  this));
-		sendGameInfo(c);
+		try
+		{
+			Thread.sleep(300);
+			sendGameInfo(c);
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 
 		log("Server Error", String.format("Replaced Player %s with an ai due to error", game.getPlayer(c).getId().name()));
 	}

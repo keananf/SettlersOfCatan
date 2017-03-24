@@ -133,6 +133,7 @@ public class MoveProcessor
         // For every owned resource type
         for(ResourceType r : ResourceType.values())
         {
+            if(r.equals(ResourceType.Generic) || r == ResourceType.Generic) continue;
             if(checkChosenResource(r))
             {
                 Turn turn = new Turn();
@@ -264,7 +265,7 @@ public class MoveProcessor
     {
         // Ensure that a CHOOSE RESOURCE move is expected, and that the bank
         // has the requested resource available
-        return !r.equals(ResourceType.Generic) && (getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE)
+        return r != ResourceType.Generic && !r.equals(ResourceType.Generic) && (getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE)
                 && getGame().getBank().getAvailableResources().get(r) > 0);
     }
 

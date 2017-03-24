@@ -1,5 +1,6 @@
 package grid;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public abstract class GridElement implements BoardElement
@@ -42,16 +43,14 @@ public abstract class GridElement implements BoardElement
 	{
 		this.y = y;
 	}
-
-	public Vector3 getCartesian(){
-		return new Vector3((float)x, 0f, (float) ((2 * (float)y - (float)x) / Math.sqrt(3)));
-		
-		
-		
+	
+	public Vector2 get2DPos()
+	{
+		return new Vector2((float)x, (float) ((2 * (float)y - (float)x) / Math.sqrt(3)));
 	}
-	
-	
-	
-	
-	
+
+	public Vector3 get3DPos()
+	{
+		return new Vector3(get2DPos().x, 0, get2DPos().y);
+	}
 }

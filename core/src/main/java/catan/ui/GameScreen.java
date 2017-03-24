@@ -117,12 +117,13 @@ public class GameScreen implements Screen
 
 		// hex tiles
 		final Material dirt = new Material(TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
-		final Model hex = builder.createCylinder(2f, 0.2f, 2f, 6, dirt, attributes);
+		final Model hex = builder.createCylinder(2.2f, 0.2f, 2.2f, 6, dirt, attributes);
 
 		for (Entry<Point, Hex> coord : game.getState().getGrid().grid.entrySet())
 		{
 			final ModelInstance instance = new ModelInstance(hex, coord.getValue().get3DPos());
 			instance.transform.rotate(0, 1, 0, 90f);
+			
 			final Color colour;
 			switch (coord.getValue().getResource())
 			{

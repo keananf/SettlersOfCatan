@@ -34,7 +34,7 @@ public class RemoteClientConnection implements IClientConnection
 	@Override
 	public Messages.Message getMessageFromClient() throws Exception
 	{
-		if (conn != null || conn.isClosed() || !conn.isConnected())
+		if (conn != null && (conn.isClosed() || !conn.isConnected()))
 		{
 			Messages.Message m = Messages.Message.parseDelimitedFrom(conn.getInputStream());
 			return m;

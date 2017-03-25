@@ -21,5 +21,11 @@
 		"default": {
 			"font": "body"
 		}
+	},
+	"com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
+		"default": {
+			"font": "body",
+			"fontColor": "white"
+		}
 	}
 }

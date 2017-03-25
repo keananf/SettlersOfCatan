@@ -35,7 +35,7 @@ public class LocalServer extends Server
 		ais = new ArrayList<LocalAIClientOnServer>();
 		ServerGame.NUM_PLAYERS = 4;
 		addAIs(4);
-		localPlayer = game.getPlayers().get(0);
+		localPlayer = game.getPlayers().get(Colour.BLUE);
 	}
 
 	public static void main(String[] args)

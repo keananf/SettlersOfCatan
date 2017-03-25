@@ -138,7 +138,17 @@ public class Hex extends GridElement
 		return true;
 	}
 
-	public void toggleHasRobber()
+    @Override
+    public int hashCode() {
+        int result = terrain.hashCode();
+        result = 31 * result + resource.hashCode();
+        result = 31 * result + diceRoll;
+        result = 31 * result + (hasRobber ? 1 : 0);
+        result = 31 * result + nodes.hashCode();
+        return result;
+    }
+
+    public void toggleHasRobber()
 	{
 		hasRobber = !hasRobber;
 	}

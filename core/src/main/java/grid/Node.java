@@ -80,7 +80,15 @@ public class Node extends GridElement
 		return false;
 	}
 
-	/**
+    @Override
+    public int hashCode() {
+        int result = hexes.hashCode();
+        result = 31 * result + edges.hashCode();
+        result = 31 * result + (settlement != null ? settlement.hashCode() : 0);
+        return result;
+    }
+
+    /**
 	 * Gets the raw difference in coordinate values.
 	 * 
 	 * This is used as a metric when navigating along edges

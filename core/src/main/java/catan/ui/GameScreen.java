@@ -45,8 +45,7 @@ public class GameScreen implements Screen
 
 		initCamera();
 		camController = new CatanCamController(cam);
-        GameController gameController = new GameController(this);
-		gameController.setUp(gameState);
+        GameController gameController = new GameController(this, gameState);
 
 		final InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(camController);

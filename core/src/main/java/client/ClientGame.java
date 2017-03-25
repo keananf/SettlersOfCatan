@@ -603,7 +603,7 @@ public class ClientGame extends Game
 			for (ResourceType r : processResources(cardsDiscarded).keySet())
 				sum += processResources(cardsDiscarded).get(r);
 			if (existing - sum < 0 || existing - sum > 7) { throw new CannotAffordException(
-					String.format("Invalid discard for Player %s. Before %s. After $s", player.getColour().name(),
+					String.format("Invalid discard for Player %s. Before %s. After %s", player.getColour().name(),
 							existing, existing - processResources(cardsDiscarded).size())); }
 			resources.put(player.getColour(), existing - sum);
 		}

@@ -69,7 +69,7 @@ public class VeryEasyAI extends AICore
 	@Override
 	public int rankDiscard(Turn turn)
 	{
-		int diff = Math.abs(7 - getPlayer().getNumResources());
+		int amount = getPlayer().getNumResources(), diff = amount / 2;
 		Map<ResourceType, Integer> discard = new HashMap<ResourceType, Integer>();
 		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
 		resources.putAll(getPlayer().getResources());

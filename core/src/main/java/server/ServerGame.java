@@ -254,14 +254,15 @@ public class ServerGame extends Game
 		Player current = players.get(col);
 		int oldAmount = current.getNumResources();
 		int discardAmount = 0;
+		Map<ResourceType, Integer> resources = processResources(discardRequest);
 
-		for (ResourceType r : processResources(discardRequest).keySet())
+		for (ResourceType r : resources.keySet())
 		{
-			discardAmount += processResources(discardRequest).get(r);
+			discardAmount += resources.get(r);
 		}
 
 		// Invalid request
-		if (oldAmount - discardAmount > 7) { throw new InvalidDiscardRequest(oldAmount, current.getNumResources()); }
+		if (oldAmount - discardAmount > ((oldAmount / 2) + 1)) { throw new InvalidDiscardRequest(oldAmount, current.getNumResources()); }
 
 		// If the player can afford the request, then spend the resources
 		current.spendResources(processResources(discardRequest), bank);

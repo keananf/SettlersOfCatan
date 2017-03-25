@@ -138,7 +138,7 @@ public class GameAndResourcesTests extends TestHelper
 
 		// Construct discard request. Don't have enough
 		Resource.Counts.Builder discard = Resource.Counts.newBuilder();
-		discard.setLumber(3);
+		discard.setLumber(5);
 
 		game.processDiscard(discard.build(), p.getColour());
 	}
@@ -153,7 +153,8 @@ public class GameAndResourcesTests extends TestHelper
 
 		// Construct discard request
 		Resource.Counts.Builder discard = Resource.Counts.newBuilder();
-		discard.setLumber(1);
+		discard.setLumber(2);
+		discard.setBrick(2);
 
 		game.processDiscard(discard.build(), p.getColour());
 	}

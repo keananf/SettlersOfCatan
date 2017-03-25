@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -27,13 +28,16 @@ import java.util.Map.Entry;
 public class GameScreen implements Screen
 {
 	final private static Vector3 ORIGIN = new Vector3(0, 0, 0);
+
 	final private AssMan assets = new AssMan();
-	final private ModelBatch MODEL_BATCH = new ModelBatch();
+	final private ModelBatch worldBatch = new ModelBatch();
+    final private SpriteBatch hudBatch = new SpriteBatch();
 
     Camera cam;
 	private CameraController camController;
 
-    private final Array<ModelInstance> instances = new Array<>();
+    final private Hud hud;
+    final private Array<ModelInstance> instances = new Array<>();
 	final private Environment environment = new Environment();
 
 	final protected SettlersOfCatan game;
@@ -42,6 +46,8 @@ public class GameScreen implements Screen
 	{
 		this.game = game;
 		ClientGame gameState = game.getState();
+
+        hud = new Hud(hudBatch, gameState, game.skin);
 
 		initCamera();
 		camController = new CameraController(cam);
@@ -134,21 +140,24 @@ public class GameScreen implements Screen
 	@Override
 	public void render(final float delta)
 	{
-		Gdx.gl.glClearColor(0 / 255, 128 / 255, 255 / 255, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); // clear screen
 
-		camController.update();
+		worldBatch.begin(cam);
+		worldBatch.render(instances, environment);
+		worldBatch.end();
 
-		MODEL_BATCH.begin(cam);
-		MODEL_BATCH.render(instances, environment);
-		MODEL_BATCH.end();
+        hud.update();
+
+        camController.update();
 	}
 
 	@Override
 	public void dispose()
 	{
 		assets.dispose();
-		MODEL_BATCH.dispose();
+		worldBatch.dispose();
+        hud.dispose();
+        hudBatch.dispose();
 		instances.clear();
 	}
 

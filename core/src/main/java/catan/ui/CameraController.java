@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import java.util.HashSet;
 
-public final class CatanCamController implements InputProcessor
+public final class CameraController implements InputProcessor
 {
 	private static final Vector3 ORIGIN = new Vector3(0f, 0f, 0f);
 	private static final Vector3 Y_AXIS = new Vector3(0f, 1f, 0f);
@@ -25,7 +25,7 @@ public final class CatanCamController implements InputProcessor
 	private final HashSet<Integer> heldKeys = new HashSet<>();
     private int scrollDirection = SCROLL_NONE;
 
-    CatanCamController(final Camera camera)
+    CameraController(final Camera camera)
 	{
 		this.camera = camera;
 	}

@@ -31,7 +31,7 @@ public class GameScreen implements Screen
 	final private ModelBatch MODEL_BATCH = new ModelBatch();
 
     Camera cam;
-	private CatanCamController camController;
+	private CameraController camController;
 
     private final Array<ModelInstance> instances = new Array<>();
 	final private Environment environment = new Environment();
@@ -44,7 +44,7 @@ public class GameScreen implements Screen
 		ClientGame gameState = game.getState();
 
 		initCamera();
-		camController = new CatanCamController(cam);
+		camController = new CameraController(cam);
         GameController gameController = new GameController(this, gameState);
 
 		final InputMultiplexer multiplexer = new InputMultiplexer();

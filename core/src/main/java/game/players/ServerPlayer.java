@@ -215,14 +215,10 @@ public class ServerPlayer extends Player
 	{
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
-		// Ignore if player simply has no resources to take
-		if (other.getNumResources() == 0) return null;
-
 		// Check the specified resource can be taken
 		if (resource.equals(ResourceType.Generic) || !other.getResources().containsKey(resource)
 				|| other.getResources().get(resource) == 0)
-			return null; // throw new CannotStealException(colour,
-							// other.getColour());
+			return null;
 
 		try
 		{

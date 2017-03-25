@@ -131,7 +131,7 @@ public class MoveProcessor
 		// For every owned resource type
 		for (ResourceType r : ResourceType.values())
 		{
-			if (r.equals(ResourceType.Generic) || r == ResourceType.Generic) continue;
+			if (r.equals(ResourceType.Generic)) continue;
 			if (checkChosenResource(r))
 			{
 				Turn turn = new Turn();
@@ -242,6 +242,7 @@ public class MoveProcessor
 		client.log("Client Play", String.format("%d - %d for %s", getGame().getPlayer().getNumResources(), sum,
 				getGame().getPlayer().getId().name()));
 		sum = getGame().getPlayer().getNumResources() - sum;
+
 		// Ensure that a discard is expected, and that the discard can be
 		// afforded and that it brings the user
 		// into a safe position having 7 or less resources.

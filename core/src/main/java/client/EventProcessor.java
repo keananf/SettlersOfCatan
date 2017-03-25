@@ -18,7 +18,6 @@ public class EventProcessor
 {
 	private final Client client;
 	private IServerConnection conn;
-	private boolean robberMoved;
 
 	public EventProcessor(IServerConnection conn, Client client)
 	{
@@ -104,10 +103,7 @@ public class EventProcessor
 			getGame().processMonopoly(ev.getMonopolyResolution(), ev.getInstigator());
 			break;
 		case RESOURCECHOSEN:
-			if (!robberMoved)
-			{
-				getGame().processResourceChosen(ev.getResourceChosen(), ev.getInstigator());
-			}
+			getGame().processResourceChosen(ev.getResourceChosen(), ev.getInstigator());
 			break;
 		case RESOURCESTOLEN:
 			getGame().processResourcesStolen(ev.getResourceStolen(), ev.getInstigator());
@@ -212,10 +208,9 @@ public class EventProcessor
 
 		// Expect for the player to send a steal request next
 		case ROBBERMOVED:
-			robberMoved = true;
 			if (getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
 			{
-				getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
+				getExpectedMoves().add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
 			}
 			if (ev.getInstigator().getId() == getGame().getPlayer().getId()
 					&& getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER))
@@ -227,13 +222,6 @@ public class EventProcessor
 		// Remove expected moves if necessary
 		case MONOPOLYRESOLUTION:
 		case RESOURCECHOSEN:
-			if (robberMoved && getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
-			{
-				client.log("Server play", String.format("Adding SUBMITTARGETPLAYER to expected moves for %s",
-						ev.getInstigator().getId().name()));
-				getExpectedMoves().add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
-				robberMoved = false;
-			}
 			if (ev.getInstigator().getId() == getGame().getPlayer().getId()
 					&& getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE))
 			{

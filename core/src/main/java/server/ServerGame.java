@@ -401,7 +401,8 @@ public class ServerGame extends Game
 		Player other = getPlayer(id);
 		ResourceType r = ResourceType.Generic;
 
-		if (other.getNumResources() == 0) return null;
+		if (other.getNumResources() == 0) return Board.Steal.newBuilder().setVictim(Board.Player.newBuilder().setId(id).build())
+				.setResource(ResourceType.toProto(ResourceType.Generic)).setQuantity(0).build();
 
 		// Randomly choose resource that the player has
 		while (r == ResourceType.Generic || other.getResources().get(r) == 0)
@@ -419,13 +420,9 @@ public class ServerGame extends Game
 	 * @param resource the resource to take
 	 * @throws CannotStealException
 	 */
-	public Board.Steal takeResource(Board.Player.Id id, ResourceType resource)
+	private Board.Steal takeResource(Board.Player.Id id, ResourceType resource)
 	{
-		boolean valid = false, taken = false;
 		Colour otherColour = getPlayer(id).getColour();
-		int options = 0;
-
-		if (resource == ResourceType.Generic) return null;
 
 		// Verify this player can take from the specified one
 		for (Node n : getGrid().getHexWithRobber().getNodes())
@@ -434,22 +431,12 @@ public class ServerGame extends Game
 			if (n.getSettlement() != null && n.getSettlement().getPlayerColour().equals(otherColour))
 			{
 				ServerPlayer p = (ServerPlayer) players.get(currentPlayer);
-				ResourceType r2 = p.takeResource(players.get(otherColour), resource, bank);
-				valid = true;
-				taken = r2 != null;
-			}
-			if (n.getSettlement() != null && getPlayer(n.getSettlement().getPlayerColour()).getNumResources() > 0)
-			{
-				options++;
+				p.takeResource(players.get(otherColour), resource, bank);
 			}
 		}
 
-		// Cannot take from this player
-		// if(!valid || (valid && !taken && options > 1)) throw new
-		// CannotStealException(currentPlayer, otherColour);
-
 		return Board.Steal.newBuilder().setVictim(Board.Player.newBuilder().setId(id).build())
-				.setResource(ResourceType.toProto(resource)).setQuantity(taken ? 1 : 0).build();
+				.setResource(ResourceType.toProto(resource)).setQuantity(1).build();
 	}
 
 	/**

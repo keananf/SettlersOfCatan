@@ -1,7 +1,6 @@
 package server;
 
 import enums.Colour;
-import enums.ResourceType;
 import exceptions.BankLimitException;
 import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
@@ -33,9 +32,8 @@ public class MessageProcessor
 	private HashMap<Colour, List<Requests.Request.BodyCase>> expectedMoves;
 	private ConcurrentLinkedQueue<ReceivedMessage> movesToProcess;
 	private Trade.WithPlayer currentTrade;
-	private boolean tradePhase, robberMoved;
+	private boolean tradePhase;
 	private ReceivedMessage lastMessage;
-	private ResourceType chosenResource;
 
 	public MessageProcessor(ServerGame game, Server server)
 	{
@@ -130,7 +128,6 @@ public class MessageProcessor
 			case MOVEROBBER:
 				game.moveRobber(request.getMoveRobber());
 				ev.setRobberMoved(request.getMoveRobber());
-				robberMoved = true;
 				break;
 			case DISCARDRESOURCES:
 				game.processDiscard(request.getDiscardResources(), colour);
@@ -153,16 +150,6 @@ public class MessageProcessor
 					monopoly = false;
 					break;
 				}
-				else if (robberMoved)
-				{
-					chosenResource = ResourceType.fromProto(request.getChooseResource());
-					if (chosenResource.equals(ResourceType.Generic))
-					{
-						ev.setError(Events.Event.Error.newBuilder()
-								.setDescription("Cannot choose resource type 'Generic'").build());
-						break;
-					}
-				}
 				else
 				{
 					game.chooseResources(request.getChooseResource());
@@ -177,11 +164,9 @@ public class MessageProcessor
 				ev.setDevCardPlayed(request.getPlayDevCard());
 				break;
 			case SUBMITTARGETPLAYER:
-				Board.Steal steal = game.takeResource(request.getSubmitTargetPlayer().getId(), chosenResource);
+				Board.Steal steal = game.takeResource(request.getSubmitTargetPlayer().getId());
 				if (steal != null)
 					ev.setResourceStolen(steal);
-				else
-					ev.setError(Events.Event.Error.newBuilder().setDescription("Cannot steal 'Generic'").build());
 				break;
 			case INITIATETRADE:
 				Trade.WithBank trade = processTradeType(request.getInitiateTrade(), msg);
@@ -265,17 +250,7 @@ public class MessageProcessor
 		{
 		// Expect for the player to send a steal request next
 		case MOVEROBBER:
-			moves.add(Requests.Request.BodyCase.CHOOSERESOURCE);
-			break;
-
-		// Once the player chooses a resource steal, expect a message on who to
-		// steal from
-		case CHOOSERESOURCE:
-			if (robberMoved)
-			{
-				moves.add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
-				robberMoved = false;
-			}
+			moves.add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
 			break;
 
 		// Add that a dice roll is expected as the first move for the new player

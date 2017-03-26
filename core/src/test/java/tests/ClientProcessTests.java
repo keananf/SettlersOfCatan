@@ -63,9 +63,9 @@ public class ClientProcessTests extends ClientTestHelper
 
 		// Process request
 		processSettlementEvent(n, p.getColour());
-		assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getSettlement() != null);
-		assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getSettlement() instanceof Settlement);
-		assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getSettlement().getPlayerColour()
+		assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getBuilding() != null);
+		assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getBuilding() instanceof Settlement);
+		assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getBuilding().getPlayerColour()
 				.equals(clientPlayer.getColour()));
 	}
 
@@ -76,9 +76,9 @@ public class ClientProcessTests extends ClientTestHelper
 
 		// Process request
 		processCityEvent(n, clientPlayer.getColour());
-		Building settlement = clientGame.getGrid().getNode(p1.getX(), p1.getY()).getSettlement();
+		Building settlement = clientGame.getGrid().getNode(p1.getX(), p1.getY()).getBuilding();
 
-		assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getSettlement() != null);
+		assertTrue(clientGame.getGrid().getNode(p1.getX(), p1.getY()).getBuilding() != null);
 		assertTrue(settlement instanceof City);
 		assertTrue(settlement.getPlayerColour().equals(clientPlayer.getColour()));
 	}

@@ -107,7 +107,7 @@ public abstract class Player
 				{
 					// Find if the joined node has a settlement on it
 					Node joinedNode = e.getX().equals(e2.getX()) || e.getX().equals(e2.getY()) ? e.getX() : e.getY();
-					Building building = joinedNode.getSettlement();
+					Building building = joinedNode.getBuilding();
 
 					// If there is a settlement and it is not foreign, then the
 					// join is not broken
@@ -291,7 +291,7 @@ public abstract class Player
 		Settlement s = new Settlement(node, colour);
 
 		return (canAfford(Settlement.getSettlementCost()) || getSettlements().size() < MIN_SETTLEMENTS)
-				&& !settlements.containsKey(p) && node.getSettlement() == null && !s.isNearSettlement()
+				&& !settlements.containsKey(p) && node.getBuilding() == null && !s.isNearSettlement()
 				&& (node.isNearRoad(colour) || getSettlements().size() < MIN_SETTLEMENTS);
 	}
 
@@ -531,7 +531,7 @@ public abstract class Player
 		Node node = b.getNode();
 		Point point = new Point(node.getX(), node.getY());
 
-		node.setSettlement(b);
+		node.setBuilding(b);
 		addVp(1);
 		settlements.put(point, b);
 	}

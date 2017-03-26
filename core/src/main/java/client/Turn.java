@@ -71,6 +71,28 @@ public class Turn
 		expectedMoves.clear();
 	}
 
+	/**
+	 * Same as above but leaves expected moves in tact
+	 */
+	public void resetInfo()
+	{
+		roll = 0;
+		tradePhase = false;
+		turnStarted = false;
+		chosenCard = null;
+		chosenColour = null;
+		chosenEdge = null;
+		chosenNode = null;
+		chosenResource = null;
+		chosenHex = null;
+		chatMessage = null;
+		bankTrade = null;
+		playerTrade = null;
+		tradeResponse = null;
+		target = null;
+
+	}
+
 	public ConcurrentLinkedQueue<Requests.Request.BodyCase> getExpectedMoves()
 	{
 		return expectedMoves;
@@ -217,27 +239,30 @@ public class Turn
 		this.tradePhase = tradePhase;
 	}
 
-    public void setChosenResources(Map<ResourceType,Integer> chosenResources)
+	public void setChosenResources(Map<ResourceType, Integer> chosenResources)
 	{
-        this.chosenResources = chosenResources;
-    }
+		this.chosenResources = chosenResources;
+	}
 
 	public boolean hasTurnStarted()
 	{
 		return turnStarted;
 	}
 
-    public void setTurnStarted(boolean turnStarted)
+	public void setTurnStarted(boolean turnStarted)
 	{
-        this.turnStarted = turnStarted;
-    }
+		this.turnStarted = turnStarted;
+	}
 
-    public boolean isInitialPhase()
+	public boolean isInitialPhase()
 	{
-        return initialPhase;
-    }
+		return initialPhase;
+	}
 
-    public void setInitialPhase(boolean initialPhase) {this.initialPhase = initialPhase;}
+	public void setInitialPhase(boolean initialPhase)
+	{
+		this.initialPhase = initialPhase;
+	}
 
 	public int getRoll()
 	{

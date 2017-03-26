@@ -17,14 +17,14 @@ public class ListenerThread implements Runnable
 	private Colour colour;
 	private Server server;
 
-    public ListenerThread(IClientConnection conn, Colour c, Server server)
-    {
-        this.conn = conn;
-        this.server = server;
-        colour = c;
-        this.thread = new Thread(this);
-        this.thread.start();
-    }
+	public ListenerThread(IClientConnection conn, Colour c, Server server)
+	{
+		this.conn = conn;
+		this.server = server;
+		colour = c;
+		this.thread = new Thread(this);
+		this.thread.start();
+	}
 
 	@Override
 	public void run()
@@ -37,45 +37,48 @@ public class ListenerThread implements Runnable
 		}
 		catch (Exception e)
 		{
-			// TODO replace 'conn' with a LocalClientConnection to a LocalAIClient
+			// TODO replace 'conn' with a LocalClientConnection to a
+			// LocalAIClient
 			conn = null;
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 
-    /**
-     * Listens for moves from the current player
-     * @return the bytes received from the current player
-     * @throws IOException
-     */
-    private void receiveMoves() throws Exception
-    {
-        // Receive and process moves until the end one is received
-        while(true)
-        {
-        	if(conn == null)
+	/**
+	 * Listens for moves from the current player
+	 * 
+	 * @return the bytes received from the current player
+	 * @throws IOException
+	 */
+	private void receiveMoves() throws Exception
+	{
+		// Receive and process moves until the end one is received
+		while (true)
+		{
+			if (conn == null)
 			{
 				break;
 			}
 
-            // Parse message and add to queue
-            Message msg = conn.getMessageFromClient();
-            server.addMessageToProcess(new ReceivedMessage(colour, msg));
+			// Parse message and add to queue
+			Message msg = conn.getMessageFromClient();
+			server.addMessageToProcess(new ReceivedMessage(colour, msg));
 		}
 	}
 
-    /**
-     * Sends the message out to the client
-     * @param msg the message
-     * @throws IOException
-     */
-    public void sendMessage(Message msg) throws Exception
-    {
-    	if(conn != null)
+	/**
+	 * Sends the message out to the client
+	 * 
+	 * @param msg the message
+	 * @throws IOException
+	 */
+	public void sendMessage(Message msg) throws Exception
+	{
+		if (conn != null)
 		{
-    		conn.sendMessageToClient(msg);
+			conn.sendMessageToClient(msg);
 		}
-    }
+	}
 
 	/**
 	 * Terminates the underlying connection and this thread
@@ -93,8 +96,8 @@ public class ListenerThread implements Runnable
 		}
 	}
 
-    public Colour getColour()
+	public Colour getColour()
 	{
-        return colour;
-    }
+		return colour;
+	}
 }

@@ -52,7 +52,8 @@ public class GameAndResourcesTests extends TestHelper
 	}
 
 	@Test
-	public void collectResourcesWithRobberTest() throws SettlementExistsException, BankLimitException, CannotAffordException
+	public void collectResourcesWithRobberTest()
+			throws SettlementExistsException, BankLimitException, CannotAffordException
 	{
 		// Make a settlement and toggle the robber on its hex
 		p.grantResources(Settlement.getSettlementCost(), game.getBank());
@@ -77,8 +78,8 @@ public class GameAndResourcesTests extends TestHelper
 	}
 
 	@Test
-	public void moveRobberTest()
-			throws InvalidCoordinatesException, CannotStealException, SettlementExistsException, BankLimitException, CannotAffordException
+	public void moveRobberTest() throws InvalidCoordinatesException, CannotStealException, SettlementExistsException,
+			BankLimitException, CannotAffordException
 	{
 		// Make a second player
 		Player p2 = new ServerPlayer(Colour.RED, "");
@@ -137,7 +138,7 @@ public class GameAndResourcesTests extends TestHelper
 
 		// Construct discard request. Don't have enough
 		Resource.Counts.Builder discard = Resource.Counts.newBuilder();
-		discard.setLumber(3);
+		discard.setLumber(5);
 
 		game.processDiscard(discard.build(), p.getColour());
 	}
@@ -152,7 +153,8 @@ public class GameAndResourcesTests extends TestHelper
 
 		// Construct discard request
 		Resource.Counts.Builder discard = Resource.Counts.newBuilder();
-		discard.setLumber(1);
+		discard.setLumber(2);
+		discard.setBrick(2);
 
 		game.processDiscard(discard.build(), p.getColour());
 	}

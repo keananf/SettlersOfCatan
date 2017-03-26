@@ -1,3 +1,5 @@
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
+
 /*
  * Declare Gradle plugins
  */
@@ -5,13 +7,14 @@ buildscript { repositories { jcenter() } }
 
 plugins {
     id "java"
-    id "com.google.protobuf" version "0.8.0"
+    id "com.google.protobuf" version "0.8.1"
     id "com.diffplug.gradle.spotless" version "3.0.0"
 }
 
-/*
- * Config. common to all projects
- */
+// ========================================================================= //
+// ==== PROJECT: ALL ======================================================= //
+// ========================================================================= //
+
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
@@ -22,7 +25,7 @@ allprojects {
         appName = "Settlers of Catan"
         gdxVersion = '1.9.5'
         aiVersion = '1.8.0'
-        protobufVersion = "3.1.0"
+        protobufVersion = "3.2.0"
         junitVersion = "4.12"
     }
 
@@ -39,9 +42,10 @@ allprojects {
     }
 }
 
-/*
- * Config. specific to desktop project
- */
+// ========================================================================= //
+// ==== PROJECT: DESKTOP =================================================== //
+// ========================================================================= //
+
 project(":desktop") {
     apply plugin: "java"
 
@@ -53,20 +57,19 @@ project(":desktop") {
     }
 }
 
-/*
- * Config. specific to core project
- */
+// ========================================================================= //
+// ==== PROJECT: CORE ====================================================== //
+// ========================================================================= //
+
 project(":core") {
     apply plugin: "java"
     apply plugin: "com.google.protobuf"
     apply plugin: "com.diffplug.gradle.spotless"
 
-    // turn on all warnings
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:all"
     }
 
-    // declare dependencies
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
@@ -74,7 +77,10 @@ project(":core") {
         testCompile "junit:junit:$junitVersion"
     }
 
-    // format source code
+    // ======================================= //
+    // ==== CODE FORMATTING ================== //
+    // ======================================= //
+
     spotless {
         java {
             eclipseFormatFile("../config/format.xml")
@@ -83,12 +89,20 @@ project(":core") {
         }
     }
 
+    // ======================================= //
+    // ==== JAVADOC ========================== //
+    // ======================================= //
+
     javadoc.destinationDir = file("${project.rootDir}/doc")
+
+    // ======================================= //
+    // ==== PROTOCOL BUFFERS ================= //
+    // ======================================= //
 
     protobuf {
         generatedFilesBaseDir = "$projectDir/gen"
         protoc {
-            artifact = 'com.google.protobuf:protoc:3.2.0'
+            artifact = "com.google.protobuf:protoc:$protobufVersion"
         }
     }
 
@@ -99,18 +113,20 @@ project(":core") {
     idea {
         module {
             sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java");
-            sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/grpc");
         }
     }
 
     eclipse {
         classpath {
             file.beforeMerged {
-                cp -> cp.entries.add(new org.gradle.plugins.ide.eclipse.model.SourceFolder("${protobuf.generatedFilesBaseDir}/main/java", null))
-                      cp.entries.add(new org.gradle.plugins.ide.eclipse.model.SourceFolder("${protobuf.generatedFilesBaseDir}/main/grpc", null))
+                cp -> cp.entries.add(new SourceFolder("${protobuf.generatedFilesBaseDir}/main/java", null))
             }
         }
     }
+
+    // ========================================//
+    // ==== FBX (3D models) ================== //
+    // ======================================= //
 
     task fbx << {
         FileTree inputFiles = sourceSets.getByName("main").resources

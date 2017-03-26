@@ -68,9 +68,9 @@ public class ServerPlayer extends Player
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		if (canBuildRoad(edge))
+		if (canBuildRoad(edge) && (getRoads().size() < 2 || canAfford(Road.getRoadCost())))
 		{
-			if(getRoads().size() >= 2) spendResources(r.getCost(), bank);
+			if (getRoads().size() >= 2) spendResources(r.getCost(), bank);
 			edge.setRoad(r);
 
 			// Find out where this road is connected
@@ -87,11 +87,12 @@ public class ServerPlayer extends Player
 			// merge lists if necessary
 			else if (listsAddedTo.size() >= 1) mergeRoads(r, listsAddedTo);
 		}
-		else if(!canAfford(Road.getRoadCost()))
+		else if (!canAfford(Road.getRoadCost()))
 		{
 			throw new CannotAffordException(resources, Road.getRoadCost());
 		}
-		else throw new CannotBuildRoadException(r);
+		else
+			throw new CannotBuildRoadException(r);
 
 		return calcRoadLength();
 	}
@@ -112,7 +113,7 @@ public class ServerPlayer extends Player
 		// If valid placement, attempt to spend the required resources
 		if (canBuildSettlement(node))
 		{
-			if(settlements.size() >= 2) spendResources(s.getCost(), bank);
+			if (settlements.size() >= 2) spendResources(s.getCost(), bank);
 			addSettlement(s);
 		}
 
@@ -210,17 +211,14 @@ public class ServerPlayer extends Player
 	 * @param other the other player
 	 * @param resource the resource to take
 	 */
-	public void takeResource(Player other, ResourceType resource, Bank bank) throws CannotStealException
+	public ResourceType takeResource(Player other, ResourceType resource, Bank bank)
 	{
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
 
 		// Check the specified resource can be taken
-		if (other.getNumResources() > 0 && (!other.getResources().containsKey(resource) || other.getResources()
-				.get(resource) == 0)) { throw new CannotStealException(colour, other.getColour()); }
-
-		// Ignore if player simply has no resources to take
-		if(other.getNumResources() == 0)
-			return;
+		if (resource.equals(ResourceType.Generic) || !other.getResources().containsKey(resource)
+				|| other.getResources().get(resource) == 0)
+			return null;
 
 		try
 		{
@@ -232,6 +230,8 @@ public class ServerPlayer extends Player
 		{
 			/* Cannot happen */
 		}
+
+		return resource;
 	}
 
 }

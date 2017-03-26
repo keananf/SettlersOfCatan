@@ -23,7 +23,6 @@ public class LocalPlayer extends Player
 	 */
 	public Road addRoad(Edge edge) throws RoadExistsException, CannotBuildRoadException
 	{
-		boolean valid = false;
 		List<Integer> listsAddedTo = new ArrayList<Integer>();
 		Road r = new Road(edge, colour);
 
@@ -52,6 +51,7 @@ public class LocalPlayer extends Player
 
 			return r;
 		}
-		else throw new CannotBuildRoadException(r);
+		else
+			throw new CannotBuildRoadException(r);
 	}
 }

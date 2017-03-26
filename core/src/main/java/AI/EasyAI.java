@@ -4,10 +4,14 @@ import client.Turn;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
+import game.players.Player;
 import grid.Edge;
 import grid.Hex;
 import grid.Node;
+import grid.Port;
 import intergroup.trade.Trade;
+
+import java.util.Map;
 
 /**
  * Created by 140002949 on 19/03/17.
@@ -19,17 +23,6 @@ public class EasyAI extends AICore
         super(client);
     }
 
-    @Override
-    public int rankBuyDevCard()
-    {
-        return 0;
-    }
-
-    @Override
-    public int rankNewRoad(Edge chosenEdge)
-    {
-        return 0;
-    }
 
     @Override
     public int rankNewSettlement(Node chosenNode) {
@@ -54,26 +47,173 @@ public class EasyAI extends AICore
     }
 
     @Override
-    public int rankNewRobberLocation(Hex chosenHex)
-    {
-      /*  Will it give higher ranks to hexes which will penalise wealthy players?
-          Higher rank based on chit?
-          */
-        return 0;
+    public int rankNewRobberLocation(Hex chosenHex) {
+        RankHex rh = new RankHex(chosenHex, getGame());
+        rh.rank();
+        return rh.getRanking();
     }
 
     @Override
-    public int rankPlayDevCard(DevelopmentCardType chosenCard)
-    {
-        return 0;
+    public int rankPlayDevCard(DevelopmentCardType chosenCard) {
+        int ranking = 0;
+        switch (chosenCard) {
+            case Knight:
+                ranking++; // point for the opportunities available when moving rubber
+                break;
+
+            case RoadBuilding:
+
+                Player p = null;
+
+                playerLoop:
+                for (Colour c : getGame().getPlayers().keySet()) {
+                    if ((p = getGame().getPlayer(c)).hasLongestRoad()) {
+
+                        //if building 2 roads gains you the longest road
+                        if (p.getNumOfRoadChains() - 1 == getPlayer().calcRoadLength()) {
+                            ranking += 2;
+                            //1 for extending road and gaining longest road & 1 for the potential access to resources
+                            break playerLoop;
+                        }
+
+                    }
+                }
+                break;
+
+            case YearOfPlenty:
+                int differentResources = 0;
+                int diffResForCities = 0;
+                Map<ResourceType, Integer> map = getPlayer().getResources();
+
+                for (ResourceType rt : map.keySet()) {
+                    if (map.get(rt) != 0 && rt != ResourceType.Ore) { // checking to see if I am lacking 2 or less resources to build a road or a settlement
+                        differentResources++;
+                    } else if (map.get(rt) != 0 && (rt == ResourceType.Ore || rt == ResourceType.Grain)) {
+                        diffResForCities++;
+                    }
+                }
+
+                if (differentResources >= 2 || diffResForCities >= 1) {
+                    ranking++;
+                }
+                break;
+
+            case Monopoly:
+
+                for (Port port : getGame().getGrid().getPortsAsList()) {
+                    if (port.hasSettlement()) {
+
+                        Colour col = port.getRoad().getPlayerColour();
+                        if (col == getPlayer().getColour()) {
+                            ranking++;//more efficient trading available when taking block of resource cards
+                            break;
+                        }
+                    }
+                }
+                ranking++; // for general trading ability with resource bank
+                break;
+        }
+
+        return ++ranking;
     }
 
     @Override
-    public int rankInitiateTrade(Turn turn)
+    public int rankChosenResource(ResourceType chosenResource) {
+        Map<ResourceType,Integer> map = getPlayer().getResources();
+
+        int rank = 5;
+        int least = map.get(chosenResource);
+
+        for (ResourceType rt: map.keySet()){
+            if(map.get(rt) < least){
+                least = map.get(rt);
+                rank--;
+            }
+        }
+        return rank; // if many resources are more scarce than chosenResource --> low rank
+        // else--> high rank
+    }
+
+//TODO:ASAP
+    @Override
+    public int rankBuyDevCard() {
+        //TODO: adjust to buying instead of playing and uncomment
+       /* for (DevelopmentCardType dct: DevelopmentCardType.values()) {
+            if(getPlayer().)
+        }
+        int ranking = 0;
+        switch (chosenCard) {
+            case Knight:
+                ranking++; // point for the opportunities available when moving rubber
+                break;
+
+            case RoadBuilding:
+
+                Player p = null;
+
+                playerLoop:
+                for (Colour c : getGame().getPlayers().keySet()) {
+                    if ((p = getGame().getPlayer(c)).hasLongestRoad()) {
+
+                        //if building 2 roads gains you the longest road
+                        if (p.getNumOfRoadChains() - 1 == getPlayer().calcRoadLength()) {
+                            ranking += 2;
+                            //1 for extending road and gaining longest road & 1 for the potential access to resources
+                            break playerLoop;
+                        }
+
+                    }
+                }
+                break;
+
+            case YearOfPlenty:
+                int differentResources = 0;
+                int diffResForCities = 0;
+                Map<ResourceType, Integer> map = getPlayer().getResources();
+
+                for (ResourceType rt : map.keySet()) {
+                    if (map.get(rt) != 0 && rt != ResourceType.Ore) { // checking to see if I am lacking 2 or less resources to build a road or a settlement
+                        differentResources++;
+                    } else if (map.get(rt) != 0 && (rt == ResourceType.Ore || rt == ResourceType.Grain)) {
+                        diffResForCities++;
+                    }
+                }
+
+                if (differentResources >= 2 || diffResForCities >= 1) {
+                    ranking++;
+                }
+                break;
+
+            case Monopoly:
+
+                for (Port port : getGame().getGrid().getPortsAsList()) {
+                    if (port.hasSettlement()) {
+
+                        Colour col = port.getRoad().getPlayerColour();
+                        if (col == getPlayer().getColour()) {
+                            ranking++;//more efficient trading available when taking block of resource cards
+                            break;
+                        }
+                    }
+                }
+                ranking++; // for general trading ability with resource bank
+                break;
+        }
+
+        return ++ranking;*/
+       return 0;
+    }
+
+//TODO:ASAP
+    @Override
+    public int rankNewRoad(Edge chosenEdge)
     {
         return 0;
     }
 
+
+
+//LOWER PRIORITY, TRADE ETC
     @Override
     public int rankDiscard(Turn turn)
     {
@@ -87,7 +227,10 @@ public class EasyAI extends AICore
     }
 
     @Override
-    public int rankChosenResource(ResourceType chosenResource) { return 0; }
+    public int rankInitiateTrade(Turn turn)
+    {
+        return 0;
+    }
 
     @Override
     public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)
@@ -95,9 +238,11 @@ public class EasyAI extends AICore
         return 0;
     }
 
-	@Override
-	public int rankEndTurn() 
-	{
-		return 0;
-	}
+    @Override
+    public int rankEndTurn()
+    {
+        return 0;
+    }
+
+
 }

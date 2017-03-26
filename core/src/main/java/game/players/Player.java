@@ -298,6 +298,11 @@ public abstract class Player
 		return canAfford(City.getCityCost()) && settlements.containsKey(p) && settlements.get(p) instanceof Settlement;
 	}
 
+//TODO: canAffordDevCard
+	public boolean canAffordDevCard (DevelopmentCardType developmentCardType){
+		return false;
+	}
+
 	/**
 	 * Grants resources to the player
 	 * @param newResources a map of resources to give to the player

@@ -4,6 +4,10 @@ import client.Turn;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
+import game.build.Building;
+import game.build.City;
+import game.build.Road;
+import game.build.Settlement;
 import game.players.Player;
 import grid.Edge;
 import grid.Hex;
@@ -134,17 +138,48 @@ public class EasyAI extends AICore
         // else--> high rank
     }
 
-//TODO:ASAP
     @Override
     public int rankBuyDevCard() {
         int rank = 4;
+
+        //check if player can build or set a road if so-> decrease rank by 2
+        if(getPlayer().canAfford(Settlement.getSettlementCost()
+        || getPlayer().canAfford(Road.getRoadCost())
+        || getPlayer().canAfford(City.getCityCost())){
+           rank =-2;
+        }
         return rank - getPlayer().getNumDevCards();
+        // the less cards you have the higher the priority
     }
 
 //TODO:ASAP
     @Override
-    public int rankNewRoad(Edge chosenEdge)
-    {
+    public int rankNewRoad(Edge chosenEdge) {
+        Node n1 = chosenEdge.getX();
+        Node n2 = chosenEdge.getY();
+
+        int rank = 3 ;
+
+        if(chosenEdge.hasSettlement()) {// if next settlement has to be 2 roads away
+            Node toAnalyse = (n1.getSettlement()!=null && n1.getSettlement().getPlayerColour() == getPlayer().getColour()) ? n2 : n1;
+
+            for (Edge e: toAnalyse.getEdges()) {
+                if(!e.hasSettlement()){
+                    rank++;
+                    Node nxtToAnalyse = (e.getX().getSettlement() == null && !e.getX().equals(toAnalyse) ) ? e.getX() : e.getY;
+                    if(nxtToAnalyse.getSettlement() != null){
+                        return rank;
+                    }
+                    else {
+
+                    }
+                }
+            }
+
+        }else{// if settlement can be build at the end of this road
+
+        }
+
         return 0;
     }
 
@@ -154,20 +189,13 @@ public class EasyAI extends AICore
     @Override
     public int rankDiscard(Turn turn)
     {
+        // check to keep cards that roads
         return 0;
     }
 
-    @Override
-    public int rankTargetPlayer(Colour target)
-    {
-        return 0;
-    }
 
-    @Override
-    public int rankInitiateTrade(Turn turn)
-    {
-        return 0;
-    }
+
+
 
     @Override
     public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)
@@ -175,8 +203,20 @@ public class EasyAI extends AICore
         return 0;
     }
 
-    @Override
+    @Override// remains 0 as this is the EasyAI
     public int rankEndTurn()
+    {
+        return 0;
+    }
+
+    @Override   //done by jack
+    public int rankTargetPlayer(Colour target)
+    {
+        return 0;
+    }
+
+    @Override  //done by jack
+    public int rankInitiateTrade(Turn turn)
     {
         return 0;
     }

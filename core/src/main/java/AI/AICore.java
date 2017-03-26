@@ -12,14 +12,15 @@ import java.util.concurrent.Semaphore;
 
 public abstract class AICore implements IAI
 {
-	private AIClient client;
+	protected AIClient client;
 	private Random rand;
-	private boolean hasTraded;
+	protected boolean hasTraded;
 
 	public AICore(AIClient client)
 	{
 		this.client = client;
 		this.rand = new Random();
+		hasTraded = false;
 	}
 
 	@Override

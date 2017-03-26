@@ -162,8 +162,7 @@ public class GameScreen implements Screen {
 			instances.add(instance);
 		}
 
-		drawRoad();
-		drawBuilding();
+		
 	}
 
 	private void initEnvironment() {

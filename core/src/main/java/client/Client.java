@@ -17,7 +17,7 @@ public abstract class Client implements Runnable
 	protected TurnProcessor turnProcessor;
 	protected MoveProcessor moveProcessor;
 	protected static final int PORT = 12345;
-	private Turn turn;
+	private TurnState turn;
 	private IServerConnection conn;
 	private Semaphore stateLock, turnLock;
 	private Thread thread;
@@ -92,7 +92,7 @@ public abstract class Client implements Runnable
 		this.conn = conn;
 		this.stateLock = new Semaphore(1);
 		this.turnLock = new Semaphore(1);
-		this.turn = new Turn();
+		this.turn = new TurnState();
 		this.turnProcessor = new TurnProcessor(conn, this);
 		this.moveProcessor = new MoveProcessor(this);
 		this.eventProcessor = new EventProcessor(conn, this);
@@ -253,7 +253,7 @@ public abstract class Client implements Runnable
 		return state;
 	}
 
-	public Turn getTurn()
+	public TurnState getTurn()
 	{
 		return turn;
 	}

@@ -2,13 +2,13 @@ package AI;
 
 import client.ClientGame;
 import client.Turn;
+import client.TurnState;
 import game.players.Player;
 import intergroup.Requests;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Semaphore;
 
 public abstract class AICore implements IAI
 {
@@ -167,17 +167,7 @@ public abstract class AICore implements IAI
 		return client.getState();
 	}
 
-	private Semaphore getStateLock()
-	{
-		return client.getStateLock();
-	}
-
-	private Semaphore getTurnLock()
-	{
-		return client.getTurnLock();
-	}
-
-	public Turn getTurn()
+	public TurnState getTurn()
 	{
 		return client.getTurn();
 	}

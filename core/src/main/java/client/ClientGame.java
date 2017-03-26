@@ -8,7 +8,7 @@ import game.Game;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
-import game.players.LocalPlayer;
+import game.players.ClientPlayer;
 import game.players.Player;
 import grid.*;
 import intergroup.board.Board;
@@ -121,7 +121,7 @@ public class ClientGame extends Game
 			Node n = getGrid().getNode(road.getEdge().getA().getX(), road.getEdge().getA().getY());
 			Node n2 = getGrid().getNode(road.getEdge().getB().getX(), road.getEdge().getB().getY());
 			Edge e = n.findEdge(n2);
-			((LocalPlayer) players.get(c)).addRoad(e);
+			((ClientPlayer) players.get(c)).addRoad(e);
 		}
 
 		return grid;
@@ -139,7 +139,7 @@ public class ClientGame extends Game
 		for (Lobby.GameSetup.PlayerSetting player : playerSettingsList)
 		{
 			enums.Colour col = enums.Colour.fromProto(player.getColour());
-			LocalPlayer newPlayer = new LocalPlayer(col, player.getUsername());
+			ClientPlayer newPlayer = new ClientPlayer(col, player.getUsername());
 			newPlayer.setId(player.getPlayer().getId());
 
 			// Update current turn
@@ -336,7 +336,7 @@ public class ClientGame extends Game
 		}
 
 		// Make new road object
-		Road r = ((LocalPlayer) players.get(player.getColour())).addRoad(newEdge);
+		Road r = ((ClientPlayer) players.get(player.getColour())).addRoad(newEdge);
 		checkLongestRoad(false);
 
 		return r;

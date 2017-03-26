@@ -513,7 +513,7 @@ public class MoveProcessor
 		return client.getState();
 	}
 
-	private Turn getTurn()
+	private TurnState getTurn()
 	{
 		return client.getTurn();
 	}

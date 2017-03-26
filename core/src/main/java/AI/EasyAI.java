@@ -137,71 +137,8 @@ public class EasyAI extends AICore
 //TODO:ASAP
     @Override
     public int rankBuyDevCard() {
-        //TODO: adjust to buying instead of playing and uncomment
-       /* for (DevelopmentCardType dct: DevelopmentCardType.values()) {
-            if(getPlayer().)
-        }
-        int ranking = 0;
-        switch (chosenCard) {
-            case Knight:
-                ranking++; // point for the opportunities available when moving rubber
-                break;
-
-            case RoadBuilding:
-
-                Player p = null;
-
-                playerLoop:
-                for (Colour c : getGame().getPlayers().keySet()) {
-                    if ((p = getGame().getPlayer(c)).hasLongestRoad()) {
-
-                        //if building 2 roads gains you the longest road
-                        if (p.getNumOfRoadChains() - 1 == getPlayer().calcRoadLength()) {
-                            ranking += 2;
-                            //1 for extending road and gaining longest road & 1 for the potential access to resources
-                            break playerLoop;
-                        }
-
-                    }
-                }
-                break;
-
-            case YearOfPlenty:
-                int differentResources = 0;
-                int diffResForCities = 0;
-                Map<ResourceType, Integer> map = getPlayer().getResources();
-
-                for (ResourceType rt : map.keySet()) {
-                    if (map.get(rt) != 0 && rt != ResourceType.Ore) { // checking to see if I am lacking 2 or less resources to build a road or a settlement
-                        differentResources++;
-                    } else if (map.get(rt) != 0 && (rt == ResourceType.Ore || rt == ResourceType.Grain)) {
-                        diffResForCities++;
-                    }
-                }
-
-                if (differentResources >= 2 || diffResForCities >= 1) {
-                    ranking++;
-                }
-                break;
-
-            case Monopoly:
-
-                for (Port port : getGame().getGrid().getPortsAsList()) {
-                    if (port.hasSettlement()) {
-
-                        Colour col = port.getRoad().getPlayerColour();
-                        if (col == getPlayer().getColour()) {
-                            ranking++;//more efficient trading available when taking block of resource cards
-                            break;
-                        }
-                    }
-                }
-                ranking++; // for general trading ability with resource bank
-                break;
-        }
-
-        return ++ranking;*/
-       return 0;
+        int rank = 4;
+        return rank - getPlayer().getNumDevCards();
     }
 
 //TODO:ASAP

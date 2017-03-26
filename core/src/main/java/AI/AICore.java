@@ -14,6 +14,7 @@ public abstract class AICore implements IAI
 {
 	private AIClient client;
 	private Random rand;
+	private boolean hasTraded;
 
 	public AICore(AIClient client)
 	{
@@ -31,6 +32,15 @@ public abstract class AICore implements IAI
 					getTurn().getExpectedMoves().toString()));
 			client.log("Client Play",
 					String.format("%s Chose move %s", getPlayer().getId().name(), turn.getChosenMove().name()));
+			if(turn.getChosenMove() == INITIATETRADE)
+			{
+				hasTraded = true;
+			}
+			
+			if(turn.getChosenMove() == ENDTURN)
+			{
+				cleanup();
+			}
 			client.sendTurn(turn);
 		}
 	}
@@ -180,5 +190,10 @@ public abstract class AICore implements IAI
 	public Turn getTurn()
 	{
 		return client.getTurn();
+	}
+	
+	private void cleanup()
+	{
+		hasTraded = false;
 	}
 }

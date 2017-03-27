@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+	import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Disposable;
@@ -49,7 +49,6 @@ class Hud implements Disposable {
         stage.addActor(table);
 
         // Add resource counts to table
-        me.setResources();
         for (int i = 0; i < 5; i++)
         {
             resourceSprites[i] = new TextureRegion(resourcesSheet, i * SPRITE_DIM, 0, SPRITE_DIM, SPRITE_DIM);

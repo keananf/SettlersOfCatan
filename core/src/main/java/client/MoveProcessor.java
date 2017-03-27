@@ -52,13 +52,13 @@ public class MoveProcessor
 			if (!checkBuild(n)) continue;
 
 			Turn turn = new Turn();
-			if (n.getSettlement() == null)
+			if (n.getBuilding() == null)
 			{
 				turn.setChosenNode(n);
 				turn.setChosenMove(Requests.Request.BodyCase.BUILDSETTLEMENT);
 
 			}
-			else if (n.getSettlement() != null)
+			else if (n.getBuilding() != null)
 			{
 				turn.setChosenNode(n);
 				turn.setChosenMove(Requests.Request.BodyCase.BUILDCITY);
@@ -157,9 +157,9 @@ public class MoveProcessor
 		boolean valid = false;
 		for (Node n : getGame().getGrid().getHexWithRobber().getNodes())
 		{
-			if (n.getSettlement() == null) continue;
+			if (n.getBuilding() == null) continue;
 
-			Colour c = n.getSettlement().getPlayerColour();
+			Colour c = n.getBuilding().getPlayerColour();
 			if (checkTarget(c))
 			{
 				Turn turn = new Turn();
@@ -212,9 +212,9 @@ public class MoveProcessor
 		// Check there is indeed a foreign settlement on one of the hexes nodes
 		for (Node n : hex.getNodes())
 		{
-			if (n.getSettlement() != null
-					&& !n.getSettlement().getPlayerColour().equals(getGame().getPlayer().getColour())
-					&& getGame().getPlayerResources(n.getSettlement().getPlayerColour()) > 0)
+			if (n.getBuilding() != null
+					&& !n.getBuilding().getPlayerColour().equals(getGame().getPlayer().getColour())
+					&& getGame().getPlayerResources(n.getBuilding().getPlayerColour()) > 0)
 			{
 				val = true;
 			}

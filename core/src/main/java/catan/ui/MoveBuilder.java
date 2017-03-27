@@ -26,7 +26,7 @@ public class MoveBuilder
 		if (element instanceof Node)
 		{
 			turn.setChosenNode((Node) element);
-			Building building = ((Node) element).getSettlement();
+			Building building = ((Node) element).getBuilding();
 			if (building == null)
 			{
 				turn.setChosenMove(Requests.Request.BodyCase.BUILDSETTLEMENT);

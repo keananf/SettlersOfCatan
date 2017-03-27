@@ -357,7 +357,7 @@ public class ClientGame extends Game
 		Player player = getPlayer(instigator.getId());
 
 		// If invalid coordinates
-		if (node == null || (node.getSettlement() != null && node.getSettlement() instanceof City))
+		if (node == null || (node.getBuilding() != null && node.getBuilding() instanceof City))
 			throw new InvalidCoordinatesException(city.getX(), city.getY());
 
 		// Handle resources
@@ -399,8 +399,8 @@ public class ClientGame extends Game
 		Player player = getPlayer(instigator.getId());
 
 		// If invalid coordinates
-		if (node == null || (node.getSettlement() != null
-				&& node.getSettlement() instanceof Settlement)) { throw new InvalidCoordinatesException(
+		if (node == null || (node.getBuilding() != null
+				&& node.getBuilding() instanceof Settlement)) { throw new InvalidCoordinatesException(
 						settlement.getX(), settlement.getY()); }
 
 		// Spend resources if this is not an initial move

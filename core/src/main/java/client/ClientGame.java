@@ -30,10 +30,9 @@ public class ClientGame extends Game
 	private boolean gameOver;
 	private Map<Colour, Integer> boughtDevCards, resources;
 	private Map<Colour, Map<DevelopmentCardType, Integer>> playedDevCards;
-	private Player thisPlayer;
 	private ChatBoard chatBoard;
-	private List<String> usersInLobby;
 	private int turns = 0;
+	private Client client;
 
 	public ClientGame()
 	{
@@ -43,7 +42,6 @@ public class ClientGame extends Game
 		resources = new HashMap<Colour, Integer>();
 		playedDevCards = new HashMap<Colour, Map<DevelopmentCardType, Integer>>();
 		chatBoard = new ChatBoard();
-		usersInLobby = new ArrayList<String>(NUM_PLAYERS);
 
 		// Instantiate the playedDevCards maps
 		for (Colour c : Colour.values())
@@ -57,6 +55,12 @@ public class ClientGame extends Game
 				playedDevCards.get(c).put(d, 0);
 			}
 		}
+	}
+
+	public ClientGame(Client client)
+	{
+		this();
+		this.client = client;
 	}
 
 	/**
@@ -86,8 +90,8 @@ public class ClientGame extends Game
 			throws InvalidCoordinatesException, CannotAffordException, RoadExistsException, CannotBuildRoadException
 	{
 		HexGrid grid = setBoard(gameInfo.getGameInfo());
-		thisPlayer.setResources(processResources(gameInfo.getResources()));
-		thisPlayer.setDevelopmentCards(processCards(gameInfo.getCards()));
+		getPlayer().setResources(processResources(gameInfo.getResources()));
+		getPlayer().setDevelopmentCards(processCards(gameInfo.getCards()));
 
 		// Add each player
 		for (Lobby.GameInfo.PlayerInfo p : gameInfo.getPlayersList())
@@ -151,8 +155,8 @@ public class ClientGame extends Game
 			// Check if it is this player
 			if (player.getPlayer().getId().equals(ownPlayer.getId()))
 			{
-				thisPlayer = newPlayer;
-				players.put(col, thisPlayer);
+				setPlayer(newPlayer);
+				players.put(col, getPlayer());
 			}
 			else
 			{
@@ -203,23 +207,6 @@ public class ClientGame extends Game
 		}
 
 		return ports;
-	}
-
-	/**
-	 * Processes the user who just joined the lobby
-	 * 
-	 * @param lobbyUpdate the list of players in the lobby
-	 * @param instigator
-	 */
-	public void processPlayers(Lobby.Usernames lobbyUpdate, Board.Player instigator)
-	{
-		for (String username : lobbyUpdate.getUsernameList())
-		{
-			if (!usersInLobby.contains(username))
-			{
-				usersInLobby.add(username);
-			}
-		}
 	}
 
 	/**
@@ -322,7 +309,7 @@ public class ClientGame extends Game
 		// Spend resources if it is not a preliminary move
 		if (player.getRoads().size() >= 2)
 		{
-			if (player.equals(thisPlayer))
+			if (player.equals(getPlayer()))
 			{
 				player.spendResources(Road.getRoadCost(), bank);
 			}
@@ -361,7 +348,7 @@ public class ClientGame extends Game
 			throw new InvalidCoordinatesException(city.getX(), city.getY());
 
 		// Handle resources
-		if (player.equals(thisPlayer))
+		if (player.equals(getPlayer()))
 		{
 			player.spendResources(City.getCityCost(), bank);
 		}
@@ -406,7 +393,7 @@ public class ClientGame extends Game
 		// Spend resources if this is not an initial move
 		if (player.getSettlements().size() >= 2)
 		{
-			if (player.equals(thisPlayer))
+			if (player.equals(getPlayer()))
 			{
 				player.spendResources(Settlement.getSettlementCost(), bank);
 			}
@@ -453,7 +440,7 @@ public class ClientGame extends Game
 		else
 			throw new DoesNotOwnException(card, player.getColour());
 
-		if (player.equals(thisPlayer))
+		if (player.equals(getPlayer()))
 		{
 			existing = player.getDevelopmentCards().get(card);
 			player.getDevelopmentCards().put(card, existing - 1);
@@ -478,10 +465,10 @@ public class ClientGame extends Game
 		Player player = getPlayer(instigator.getId());
 
 		// Handle resources
-		if (player.equals(thisPlayer))
+		if (player.equals(getPlayer()))
 		{
 			player.spendResources(DevelopmentCardType.getCardCost(), bank);
-			thisPlayer.addDevelopmentCard(boughtDevCard);
+			getPlayer().addDevelopmentCard(boughtDevCard);
 		}
 		else
 		{
@@ -516,7 +503,7 @@ public class ClientGame extends Game
 			wantingSize += wanting.get(r);
 
 		// Handle resources
-		if (player.equals(thisPlayer))
+		if (player.equals(getPlayer()))
 		{
 			// Update resources
 			player.spendResources(offering, bank);
@@ -551,7 +538,7 @@ public class ClientGame extends Game
 			wantingSize += wanting.get(r);
 
 		// Handle resources for this player
-		if (instigator.equals(thisPlayer))
+		if (instigator.equals(getPlayer()))
 		{
 			instigator.spendResources(offering, bank);
 			instigator.grantResources(wanting, bank);
@@ -559,7 +546,7 @@ public class ClientGame extends Game
 			int existing = resources.get(recipient.getColour());
 			resources.put(recipient.getColour(), existing - wantingSize + offeringSize);
 		}
-		else if (recipient.equals(thisPlayer))
+		else if (recipient.equals(getPlayer()))
 		{
 			recipient.spendResources(wanting, bank);
 			recipient.grantResources(offering, bank);
@@ -591,7 +578,7 @@ public class ClientGame extends Game
 		Player player = getPlayer(instigator.getId());
 
 		// Handle resources
-		if (player.equals(thisPlayer))
+		if (player.equals(getPlayer()))
 		{
 			// Update resources
 			player.spendResources(processResources(cardsDiscarded), bank);
@@ -628,14 +615,14 @@ public class ClientGame extends Game
 		stolen.put(r, quantity);
 
 		// Handle resources for this player
-		if (instigator.equals(thisPlayer))
+		if (instigator.equals(getPlayer()))
 		{
 			instigator.grantResources(stolen, bank);
 
 			int existing = resources.get(victim.getColour());
 			resources.put(victim.getColour(), existing - quantity);
 		}
-		else if (victim.equals(thisPlayer))
+		else if (victim.equals(getPlayer()))
 		{
 			victim.spendResources(stolen, bank);
 
@@ -678,7 +665,7 @@ public class ClientGame extends Game
 	{
 		Player p = getPlayer(instigator.getId());
 
-		if (p.equals(thisPlayer))
+		if (p.equals(getPlayer()))
 		{
 			Map<ResourceType, Integer> map = new HashMap<ResourceType, Integer>();
 			map.put(ResourceType.fromProto(resource), 1);
@@ -714,8 +701,10 @@ public class ClientGame extends Game
 	 */
 	public Player getPlayer()
 	{
-		return thisPlayer;
+		return client.getPlayer();
 	}
+
+	public void setPlayer(ClientPlayer p) {client.setPlayer(p);}
 
 	public int getPlayerResources(Colour colour)
 	{
@@ -746,4 +735,5 @@ public class ClientGame extends Game
 	{
 		return turns;
 	}
+
 }

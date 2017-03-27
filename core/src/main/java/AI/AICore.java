@@ -27,11 +27,18 @@ public abstract class AICore implements IAI
 		Turn turn = selectAndPrepareMove();
 		if (turn != null)
 		{
-			client.log("Client Play", String.format("%s expected moves %s", getPlayer().getId().name(),
-					getTurn().getExpectedMoves().toString()));
-			client.log("Client Play",
-					String.format("%s Chose move %s", getPlayer().getId().name(), turn.getChosenMove().name()));
+			if(getPlayer() != null)
+			{
+				client.log("Client Play", String.format("%s expected moves %s", getPlayer().getId().name(),
+						getTurn().getExpectedMoves().toString()));
+				client.log("Client Play",
+						String.format("%s Chose move %s", getPlayer().getId().name(), turn.getChosenMove().name()));
+			}
 			client.sendTurn(turn);
+		}
+		else
+		{
+			client.log("Client Play", "No move");
 		}
 	}
 
@@ -52,8 +59,10 @@ public abstract class AICore implements IAI
 		List<Turn> optimalMoves = new ArrayList<Turn>();
 		int maxRank = -1;
 
+		if(moves == null) return null;
+
 		// Filter out the best moves, based upon assigned rank
-		for (Turn entry : getMoves())
+		for (Turn entry : moves)
 		{
 			// Implementation-defined
 			int rank = rankMove(entry);
@@ -159,7 +168,7 @@ public abstract class AICore implements IAI
 
 	protected Player getPlayer()
 	{
-		return getState().getPlayer();
+		return getState() != null ? getState().getPlayer() : null;
 	}
 
 	protected ClientGame getState()

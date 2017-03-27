@@ -32,21 +32,28 @@ public abstract class AIClient extends Client
 	@Override
 	public void run()
 	{
+		//log("Client Play", "Starting AI client loop");
+
 		// Loop processing events when needed and sending turns
 		while (getState() == null || !getState().isOver())
 		{
 			try
 			{
-				acquireLocksAndGetEvents();
+				// Attempt to make a move and send a turn
+				log("Client Play", "Making move");
+				acquireLocksAndPerformMove();
+				log("Client Play", "Move made");
 				Thread.sleep(100);
 
-				// Attempt to make a move and send a turn
-				acquireLocksAndPerformMove();
+				log("Client Play", "Getting events");
+				acquireLocksAndGetEvents();
 				Thread.sleep(100);
+				//log("Client Play", String.format("Updated events"));
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
+				shutDown();
 			}
 		}
 		log("Client Play", "Ending AI client loop");
@@ -65,7 +72,8 @@ public abstract class AIClient extends Client
 				getTurnLock().acquire();
 				try
 				{
-					ai.performMove();
+					if(ai != null)
+						ai.performMove();
 				}
 				finally
 				{

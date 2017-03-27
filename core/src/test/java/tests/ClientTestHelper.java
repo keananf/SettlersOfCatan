@@ -1,5 +1,6 @@
 package tests;
 
+import client.LocalClient;
 import exceptions.BankLimitException;
 import intergroup.board.Board;
 import client.ClientGame;
@@ -30,7 +31,7 @@ public class ClientTestHelper extends TestHelper
 	public void start() throws CannotAffordException, InvalidCoordinatesException
 	{
 		reset();
-		clientGame = new ClientGame();
+		clientGame = new ClientGame(new LocalClient());
 		clientPlayer = new ClientPlayer(Colour.BLUE, "");
 		clientPlayer.setId(Board.Player.Id.PLAYER_1);
 		clientGame.addPlayer(clientPlayer);

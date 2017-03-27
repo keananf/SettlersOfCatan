@@ -1,11 +1,18 @@
 package catan.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Model;
+
+import java.util.HashMap;
 
 public final class AssMan extends AssetManager
 {
 	private static final String MODELS = "models/";
+    private static final String TEXTURES = "textures/";
+
+    private final HashMap<String, Texture> textures = new HashMap<>();
 
 	public AssMan()
 	{
@@ -24,4 +31,19 @@ public final class AssMan extends AssetManager
 
 		return get(path, Model.class);
 	}
+
+	public Texture getTexture(String name)
+    {
+
+        if (textures.containsKey(name))
+        {
+            return textures.get(name);
+        }
+        else {
+            final String path = TEXTURES + name;
+            final Texture texture = new Texture(Gdx.files.internal(path));
+            textures.put(name, texture);
+            return texture;
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package catan;
 
 import AI.RemoteAIClient;
+import catan.ui.AssMan;
 import catan.ui.SplashScreen;
 import client.Client;
 import client.ClientGame;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	public Skin skin;
+    public AssMan assets = new AssMan();
 	public Client client;
 
 	@Override
@@ -35,6 +37,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	@Override
 	public void dispose()
 	{
+	    assets.dispose();
 		client.shutDown();
 		skin.dispose();
 	}

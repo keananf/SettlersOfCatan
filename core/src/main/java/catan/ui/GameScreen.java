@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import grid.Hex;
@@ -29,7 +30,6 @@ public class GameScreen implements Screen
 {
 	final private static Vector3 ORIGIN = new Vector3(0, 0, 0);
 
-	final private AssMan assets = new AssMan();
 	final private ModelBatch worldBatch = new ModelBatch();
     final private SpriteBatch hudBatch = new SpriteBatch();
 
@@ -47,7 +47,7 @@ public class GameScreen implements Screen
 		this.game = game;
 		ClientGame gameState = game.getState();
 
-        hud = new Hud(hudBatch, gameState, game.skin);
+        hud = new Hud(hudBatch, game);
 
 		initCamera();
 		camController = new CameraController(cam);
@@ -138,23 +138,20 @@ public class GameScreen implements Screen
 	}
 
 	@Override
-	public void render(final float delta)
-	{
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); // clear screen
+	public void render(final float delta) {
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); // clear screen
 
-		worldBatch.begin(cam);
-		worldBatch.render(instances, environment);
-		worldBatch.end();
+        worldBatch.begin(cam);
+        worldBatch.render(instances, environment);
+        worldBatch.end();
 
         hud.update();
-
         camController.update();
-	}
+    }
 
 	@Override
 	public void dispose()
 	{
-		assets.dispose();
 		worldBatch.dispose();
         hud.dispose();
         hudBatch.dispose();

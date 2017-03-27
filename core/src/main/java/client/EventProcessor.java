@@ -302,6 +302,13 @@ public class EventProcessor
 				getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
 			}
 			break;
+			case GAMEINFO:
+				if (getExpectedMoves().contains(Requests.Request.BodyCase.JOINLOBBY))
+				{
+					client.log("Client Play", "Removing JOINLOBBY for " + ev.getInstigator().getId().name());
+					getExpectedMoves().remove(Requests.Request.BodyCase.JOINLOBBY);
+				}
+				break;
 
 		// No new expected moves
 		default:

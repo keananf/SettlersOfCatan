@@ -1,5 +1,6 @@
 package AI;
 
+import catan.SettlersOfCatan;
 import connection.RemoteServerConnection;
 import enums.Difficulty;
 

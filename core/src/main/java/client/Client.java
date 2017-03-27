@@ -1,5 +1,6 @@
 package client;
 
+import catan.SettlersOfCatan;
 import com.badlogic.gdx.Gdx;
 import connection.IServerConnection;
 import enums.Colour;
@@ -20,6 +21,7 @@ import java.util.concurrent.Semaphore;
  */
 public abstract class Client implements Runnable
 {
+	protected SettlersOfCatan catan;
 	protected ClientGame state;
 	protected EventProcessor eventProcessor;
 	protected TurnProcessor turnProcessor;
@@ -30,6 +32,12 @@ public abstract class Client implements Runnable
 	private IServerConnection conn;
 	private Semaphore stateLock, turnLock;
 	private List<String> usersInLobby;
+
+	public Client(SettlersOfCatan game)
+	{
+		this();
+		this.catan = game;
+	}
 
 	public Client()
 	{
@@ -52,6 +60,7 @@ public abstract class Client implements Runnable
 			catch (Exception e)
 			{
 				e.printStackTrace();
+				shutDown();
 			}
 		}
 		log("Client Play", "Ending AI client loop");

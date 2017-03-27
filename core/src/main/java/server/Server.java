@@ -479,14 +479,15 @@ public class Server implements Runnable
 	 */
 	protected void replacePlayerWithAI(Colour col)
 	{
-		if (connections.containsKey(col))
+		if (connections.containsKey(col) && connections.get(col).getConnection() instanceof RemoteClientConnection)
 		{
 			try
 			{
 				connections.get(col).shutDown();
 				threads.get(col).join();
 				replacePlayer(col);
-			} catch (InterruptedException e)
+			}
+			catch (InterruptedException e)
 			{
 				e.printStackTrace();
 			}

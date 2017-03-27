@@ -1,5 +1,6 @@
 package AI;
 
+import catan.SettlersOfCatan;
 import client.Client;
 import enums.Difficulty;
 
@@ -7,26 +8,43 @@ public abstract class AIClient extends Client
 {
 	protected AICore ai;
 
-	public AIClient(Difficulty difficulty)
+	public AIClient(Difficulty difficulty, SettlersOfCatan game)
 	{
-		super();
-		switch (difficulty)
-		{
-		case EASY:
-			ai = new EasyAI(this);
-			break;
-
-		case VERYEASY:
-		default:
-			ai = new VeryEasyAI(this);
-			break;
-		}
+		super(game);
+		assignAI(difficulty);
 	}
 
 	public AIClient()
 	{
 		super();
 		ai = new VeryEasyAI(this);
+	}
+
+	public AIClient(Difficulty difficulty)
+	{
+		super();
+		assignAI(difficulty);
+	}
+
+	public AIClient(SettlersOfCatan game)
+	{
+		super(game);
+		ai = new VeryEasyAI(this);
+	}
+
+	private void assignAI(Difficulty difficulty)
+	{
+		switch (difficulty)
+		{
+			case EASY:
+				ai = new EasyAI(this);
+				break;
+
+			case VERYEASY:
+			default:
+				ai = new VeryEasyAI(this);
+				break;
+		}
 	}
 
 	@Override

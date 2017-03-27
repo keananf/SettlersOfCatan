@@ -103,6 +103,7 @@ public class TurnProcessor
 			conn = null;
 			client.log("Client Error",
 					String.format("Error sending request %s to server", request.getBodyCase().name()));
+			client.shutDown();
 			e.printStackTrace();
 		}
 	}

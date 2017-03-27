@@ -89,4 +89,9 @@ public class ListenerThread implements Runnable
 	{
 		return colour;
 	}
+
+	public IClientConnection getConnection()
+	{
+		return conn;
+	}
 }

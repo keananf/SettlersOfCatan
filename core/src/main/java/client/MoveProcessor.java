@@ -90,12 +90,12 @@ public class MoveProcessor
 
 		List<Turn> possibilities = new ArrayList<Turn>();
 
-		if(getExpectedMoves().contains(Requests.Request.BodyCase.JOINLOBBY))
+		if (getExpectedMoves().contains(Requests.Request.BodyCase.JOINLOBBY))
 		{
 			possibilities.add(new Turn(Requests.Request.BodyCase.JOINLOBBY));
 			return possibilities;
 		}
-		if(getGame() == null) return possibilities;
+		if (getGame() == null) return possibilities;
 
 		// Add initial possibilities
 		possibilities.add(new Turn(Requests.Request.BodyCase.CHATMESSAGE));

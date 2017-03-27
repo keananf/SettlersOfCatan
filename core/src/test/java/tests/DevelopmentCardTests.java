@@ -142,7 +142,8 @@ public class DevelopmentCardTests extends TestHelper
 					new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 			server.processMessage();
 			assertEquals(1, server.getExpectedMoves(p.getColour()).size());
-			assertTrue(server.getExpectedMoves(p.getColour()).get(0).equals(Requests.Request.BodyCase.SUBMITTARGETPLAYER));
+			assertTrue(
+					server.getExpectedMoves(p.getColour()).get(0).equals(Requests.Request.BodyCase.SUBMITTARGETPLAYER));
 
 			// Set player to take resource from
 			req.clearMoveRobber();
@@ -181,7 +182,8 @@ public class DevelopmentCardTests extends TestHelper
 					new ReceivedMessage(p2.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 			server.processMessage();
 			assertEquals(1, server.getExpectedMoves(p2.getColour()).size());
-			assertTrue(server.getExpectedMoves(p2.getColour()).get(0).equals(Requests.Request.BodyCase.SUBMITTARGETPLAYER));
+			assertTrue(server.getExpectedMoves(p2.getColour()).get(0)
+					.equals(Requests.Request.BodyCase.SUBMITTARGETPLAYER));
 
 			// Set player to take resource from
 			req.clearMoveRobber();

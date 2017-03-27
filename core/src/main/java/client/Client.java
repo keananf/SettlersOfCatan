@@ -29,7 +29,6 @@ public abstract class Client implements Runnable
 	private TurnState turn;
 	private IServerConnection conn;
 	private Semaphore stateLock, turnLock;
-	private Thread thread;
 	private List<String> usersInLobby;
 
 	public Client()
@@ -37,8 +36,6 @@ public abstract class Client implements Runnable
 		thisPlayer = new ClientPlayer(Colour.BLUE, "Default");
 		usersInLobby = new ArrayList<String>(Game.NUM_PLAYERS);
 		setUpConnection();
-		thread = new Thread(this);
-		thread.start();
 	}
 
 	@Override
@@ -236,14 +233,6 @@ public abstract class Client implements Runnable
 	public void shutDown()
 	{
 		conn.shutDown();
-		try
-		{
-			thread.join();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 	/**

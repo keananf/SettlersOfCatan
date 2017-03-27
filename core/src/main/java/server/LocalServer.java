@@ -6,9 +6,6 @@ import enums.Colour;
 import exceptions.GameFullException;
 import game.players.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Class representing a locally hosted server
  * 
@@ -17,12 +14,10 @@ import java.util.List;
 public class LocalServer extends Server
 {
 	private Player localPlayer;
-	private List<LocalAIClientOnServer> ais;
 
 	public LocalServer(LocalClientConnection connection)
 	{
 		super();
-		ais = new ArrayList<LocalAIClientOnServer>();
 		ServerGame.NUM_PLAYERS = 4;
 		Colour c = joinGame(connection);
 		localPlayer = game.getPlayer(c);
@@ -32,9 +27,8 @@ public class LocalServer extends Server
 	public LocalServer()
 	{
 		super();
-		ais = new ArrayList<LocalAIClientOnServer>();
 		ServerGame.NUM_PLAYERS = 4;
-		addAIs(4);
+		addAIs(3);
 		localPlayer = game.getPlayers().get(0);
 	}
 
@@ -47,7 +41,7 @@ public class LocalServer extends Server
 
 	/**
 	 * Adds the given number of local ai players
-	 * 
+	 *
 	 * @param num the number of AIs to add
 	 */
 	private void addAIs(int num)
@@ -63,15 +57,17 @@ public class LocalServer extends Server
 
 			LocalAIClientOnServer ai = new LocalAIClientOnServer();
 			LocalClientConnection conn = ai.getConn().getConn();
-			joinGame(conn);
-			ais.add(ai);
+			Thread t = new Thread(ai);
+			t.start();
+			Colour c = joinGame(conn);
+			ais.put(c, t);
 		}
 		log("Server SetUp", String.format("Number of AIs: %d. Connections: %d", num, numConnections));
 	}
 
 	/**
 	 * Adds the given local connection to the game
-	 * 
+	 *
 	 * @param connection
 	 */
 	private Colour joinGame(LocalClientConnection connection)
@@ -84,7 +80,12 @@ public class LocalServer extends Server
 		catch (GameFullException e)
 		{
 		}
-		connections.put(c, new ListenerThread(connection, c, this));
+
+		ListenerThread l = new ListenerThread(connection, c, this);
+		connections.put(c, l);
+		Thread t = new Thread(l);
+		t.start();
+		threads.put(c, t);
 		log("Server Setup", String.format("Player %d connected", numConnections));
 		numConnections++;
 

@@ -36,10 +36,13 @@ public class Server implements Runnable
 	protected int numConnections;
 	protected Map<Colour, ListenerThread> connections;
 	protected ServerSocket serverSocket;
+	protected Map<Colour, Thread> ais, threads;
 	protected static final int PORT = 12345;
 
 	public Server()
 	{
+		ais = new HashMap<Colour, Thread>();
+		threads = new HashMap<Colour, Thread>();
 		game = new ServerGame();
 		Game.NUM_PLAYERS = 2;
 
@@ -89,9 +92,18 @@ public class Server implements Runnable
 	public void shutDown()
 	{
 		// Shut down all individual connections
-		for (ListenerThread conn : connections.values())
+		for(Colour c : connections.keySet())
 		{
-			conn.shutDown();
+			try
+			{
+				ais.get(c).join();
+				connections.get(c).shutDown();
+				threads.get(c).join();
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -275,7 +287,11 @@ public class Server implements Runnable
 				catch (GameFullException e)
 				{
 				}
-				connections.put(c, new ListenerThread(new RemoteClientConnection(connection), c, this));
+				ListenerThread l = new ListenerThread(new RemoteClientConnection(connection), c, this);
+				connections.put(c, l);
+				Thread t = new Thread(l);
+				t.start();
+				threads.put(c, t);
 				log("Server Setup", String.format("Player %d connected", numConnections));
 				numConnections++;
 			}
@@ -289,12 +305,12 @@ public class Server implements Runnable
 	 */
 	private void waitForJoinLobby()
 	{
-		for(Colour c : connections.keySet())
+		for (Colour c : connections.keySet())
 		{
 			getExpectedMoves(c).add(Request.BodyCase.JOINLOBBY);
 		}
 
-		while(!checkJoinedLobby())
+		while (!checkJoinedLobby())
 		{
 			try
 			{
@@ -305,13 +321,13 @@ public class Server implements Runnable
 					continue;
 				}
 
-				for(Colour c: connections.keySet())
+				for (Colour c : connections.keySet())
 				{
-					if(getExpectedMoves(c).contains(Request.BodyCase.JOINLOBBY))
+					if (getExpectedMoves(c).contains(Request.BodyCase.JOINLOBBY))
 					{
 						continue;
 					}
-					else if(ev != null) sendMessage(Message.newBuilder().setEvent(ev).build(), c);
+					else if (ev != null) sendMessage(Message.newBuilder().setEvent(ev).build(), c);
 				}
 			}
 			catch (IOException e)
@@ -336,10 +352,11 @@ public class Server implements Runnable
 	 */
 	private boolean checkJoinedLobby()
 	{
-		for(Colour c : connections.keySet())
+		for (Colour c : connections.keySet())
 		{
-			// If the player still has an expected move, then this phase is NOT done yet.
-			if(!getExpectedMoves(c).isEmpty()) return false;
+			// If the player still has an expected move, then this phase is NOT
+			// done yet.
+			if (!getExpectedMoves(c).isEmpty()) return false;
 		}
 		return true;
 	}
@@ -420,7 +437,16 @@ public class Server implements Runnable
 		// Replace connection with a new ai
 		LocalAIClientOnServer ai = new LocalAIClientOnServer();
 		LocalClientConnection conn = ai.getConn().getConn();
-		connections.put(c, new ListenerThread(conn, c, this));
+
+		ListenerThread l = new ListenerThread(conn, c, this);
+		connections.put(c, l);
+		Thread t = new Thread(l);
+		t.start();
+		threads.put(c, t);
+
+		t = new Thread(ai);
+		t.start();
+		ais.put(c, t);
 		try
 		{
 			Thread.sleep(300);
@@ -455,8 +481,15 @@ public class Server implements Runnable
 	{
 		if (connections.containsKey(col))
 		{
-			connections.get(col).shutDown();
-			replacePlayer(col);
+			try
+			{
+				connections.get(col).shutDown();
+				threads.get(col).join();
+				replacePlayer(col);
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 

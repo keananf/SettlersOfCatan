@@ -704,7 +704,10 @@ public class ClientGame extends Game
 		return client.getPlayer();
 	}
 
-	public void setPlayer(ClientPlayer p) {client.setPlayer(p);}
+	public void setPlayer(ClientPlayer p)
+	{
+		client.setPlayer(p);
+	}
 
 	public int getPlayerResources(Colour colour)
 	{

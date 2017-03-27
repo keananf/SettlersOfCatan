@@ -8,11 +8,13 @@ import client.ClientGame;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import server.ListenerThread;
 
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	public Skin skin;
 	public Client client;
+	private Thread t;
 
 	@Override
 	public void create()
@@ -48,6 +50,8 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	public boolean startNewRemoteClient(String host)
 	{
 		client = new RemoteAIClient(host);
+		t = new Thread(client);
+		t.start();
 		return ((RemoteAIClient) client).isInitialised();
 	}
 
@@ -57,6 +61,8 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	public void startNewServer()
 	{
 		client = new LocalAIClient();
+		t = new Thread(client);
+		t.start();
 	}
 
 	/**
@@ -70,7 +76,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		client.log("Client Setup", "Waiting for Game Information....");
 		while (true)
 		{
-			if(val) break;
+			if (val) break;
 			try
 			{
 				client.getStateLock().acquire();
@@ -82,7 +88,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 				{
 					client.getStateLock().release();
 				}
-				Thread.sleep(250);
+				Thread.sleep(100);
 			}
 			catch (InterruptedException e)
 			{

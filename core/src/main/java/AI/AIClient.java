@@ -68,10 +68,7 @@ public abstract class AIClient extends Client
 				getTurnLock().acquire();
 				try
 				{
-					if(ai != null)
-					{
- 						ai.performMove();
-					}
+					ai.performMove();
 				}
 				finally
 				{

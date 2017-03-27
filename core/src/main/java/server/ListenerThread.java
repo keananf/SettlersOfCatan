@@ -12,7 +12,6 @@ import java.io.IOException;
  */
 public class ListenerThread implements Runnable
 {
-	private Thread thread;
 	protected IClientConnection conn;
 	private Colour colour;
 	private Server server;
@@ -22,8 +21,6 @@ public class ListenerThread implements Runnable
 		this.conn = conn;
 		this.server = server;
 		colour = c;
-		this.thread = new Thread(this);
-		this.thread.start();
 	}
 
 	@Override
@@ -86,14 +83,6 @@ public class ListenerThread implements Runnable
 	public void shutDown()
 	{
 		conn.shutDown();
-		try
-		{
-			thread.join();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 	public Colour getColour()

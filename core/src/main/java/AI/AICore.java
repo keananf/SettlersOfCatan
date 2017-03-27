@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.System.exit;
+
 public abstract class AICore implements IAI
 {
 	private AIClient client;
@@ -24,11 +26,11 @@ public abstract class AICore implements IAI
 	@Override
 	public void performMove()
 	{
-		//client.log("Client Play", "Making move");
+		client.log("Client Play", "Making move");
 		Turn turn = selectAndPrepareMove();
 		if (turn != null)
 		{
-			if(getPlayer() != null)
+			if (getPlayer() != null && getPlayer().getId() != null)
 			{
 				client.log("Client Play", String.format("%s expected moves %s", getPlayer().getId().name(),
 						getTurn().getExpectedMoves().toString()));
@@ -38,10 +40,8 @@ public abstract class AICore implements IAI
 
 			client.sendTurn(turn);
 		}
-		/*else
-		{
-			client.log("Client Play", "No move");
-		}*/
+		else { client.log("Client Play", "No move"); }
+
 	}
 
 	/**
@@ -61,7 +61,7 @@ public abstract class AICore implements IAI
 		List<Turn> optimalMoves = new ArrayList<Turn>();
 		int maxRank = -1;
 
-		if(moves == null) return null;
+		if (moves == null) return null;
 
 		// Filter out the best moves, based upon assigned rank
 		for (Turn entry : moves)
@@ -171,7 +171,7 @@ public abstract class AICore implements IAI
 
 	protected Player getPlayer()
 	{
-		return getState() != null ? getState().getPlayer() : null;
+		return client.getPlayer() == null ? null : client.getPlayer();
 	}
 
 	protected ClientGame getState()

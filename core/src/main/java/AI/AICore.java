@@ -24,6 +24,7 @@ public abstract class AICore implements IAI
 	@Override
 	public void performMove()
 	{
+		//client.log("Client Play", "Making move");
 		Turn turn = selectAndPrepareMove();
 		if (turn != null)
 		{
@@ -34,12 +35,13 @@ public abstract class AICore implements IAI
 				client.log("Client Play",
 						String.format("%s Chose move %s", getPlayer().getId().name(), turn.getChosenMove().name()));
 			}
+
 			client.sendTurn(turn);
 		}
-		else
+		/*else
 		{
 			client.log("Client Play", "No move");
-		}
+		}*/
 	}
 
 	/**
@@ -152,6 +154,7 @@ public abstract class AICore implements IAI
 	protected List<Turn> getMoves()
 	{
 		List<Turn> options = client.getMoveProcessor().getPossibleMoves();
+
 		List<Turn> ret = new ArrayList<Turn>();
 		ret.addAll(options);
 

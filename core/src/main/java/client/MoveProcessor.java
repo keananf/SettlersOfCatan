@@ -87,6 +87,7 @@ public class MoveProcessor
 	 */
 	public List<Turn> getPossibleMoves()
 	{
+
 		List<Turn> possibilities = new ArrayList<Turn>();
 
 		if(getExpectedMoves().contains(Requests.Request.BodyCase.JOINLOBBY))
@@ -94,6 +95,7 @@ public class MoveProcessor
 			possibilities.add(new Turn(Requests.Request.BodyCase.JOINLOBBY));
 			return possibilities;
 		}
+		if(getGame() == null) return possibilities;
 
 		// Add initial possibilities
 		possibilities.add(new Turn(Requests.Request.BodyCase.CHATMESSAGE));
@@ -513,10 +515,6 @@ public class MoveProcessor
 
 	private ClientGame getGame()
 	{
-		// Block until the game state has been received
-		while (client.getState() == null)
-		{
-		}
 		return client.getState();
 	}
 

@@ -1,10 +1,10 @@
 package catan;
 
+import AI.LocalAIClient;
 import AI.RemoteAIClient;
 import catan.ui.SplashScreen;
 import client.Client;
 import client.ClientGame;
-import client.LocalClient;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -56,7 +56,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	 */
 	public void startNewServer()
 	{
-		client = new LocalClient();
+		client = new LocalAIClient();
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 				{
 					client.getStateLock().release();
 				}
-				Thread.sleep(100);
+				Thread.sleep(250);
 			}
 			catch (InterruptedException e)
 			{

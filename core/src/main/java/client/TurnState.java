@@ -3,12 +3,13 @@ package client;
 import enums.ResourceType;
 import intergroup.Requests;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.List;
 
 public class TurnState extends Turn
 {
-    private ConcurrentLinkedQueue<Requests.Request.BodyCase> expectedMoves;
+    private List<Requests.Request.BodyCase> expectedMoves;
     private boolean tradePhase, turnStarted, initialPhase;
     private int roll;
 
@@ -20,7 +21,7 @@ public class TurnState extends Turn
     @Override
     protected void setUp()
     {
-        expectedMoves = new ConcurrentLinkedQueue<Requests.Request.BodyCase>();
+        expectedMoves = new ArrayList<Requests.Request.BodyCase>();
         chosenResources = new HashMap<ResourceType, Integer>();
         reset();
     }
@@ -46,7 +47,7 @@ public class TurnState extends Turn
         turnStarted = false;
     }
 
-    public ConcurrentLinkedQueue<Requests.Request.BodyCase> getExpectedMoves()
+    public List<Requests.Request.BodyCase> getExpectedMoves()
     {
         return expectedMoves;
     }

@@ -32,6 +32,7 @@ public abstract class Client implements Runnable
 	private IServerConnection conn;
 	private Semaphore stateLock, turnLock;
 	private List<String> usersInLobby;
+	protected boolean active;
 
 	public Client(SettlersOfCatan game)
 	{
@@ -49,8 +50,10 @@ public abstract class Client implements Runnable
 	@Override
 	public void run()
 	{
+		active = true;
+
 		// Loop processing events when needed and sending turns
-		while (getState() == null || !getState().isOver())
+		while (active && (getState() == null || !getState().isOver()))
 		{
 			try
 			{
@@ -241,6 +244,7 @@ public abstract class Client implements Runnable
 	 */
 	public void shutDown()
 	{
+		active = false;
 		conn.shutDown();
 	}
 

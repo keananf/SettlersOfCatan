@@ -1,5 +1,6 @@
 package server;
 
+import AI.AIClient;
 import AI.LocalAIClientOnServer;
 import com.badlogic.gdx.Gdx;
 import connection.LocalClientConnection;
@@ -36,12 +37,14 @@ public class Server implements Runnable
 	protected int numConnections;
 	protected Map<Colour, ListenerThread> connections;
 	protected ServerSocket serverSocket;
-	protected Map<Colour, Thread> ais, threads;
+	protected Map<Colour, Thread> aiThreads, threads;
+	protected Map<Colour, AIClient> ais;
 	protected static final int PORT = 12345;
 
 	public Server()
 	{
-		ais = new HashMap<Colour, Thread>();
+		ais = new HashMap<Colour, AIClient>();
+		aiThreads = new HashMap<Colour, Thread>();
 		threads = new HashMap<Colour, Thread>();
 		game = new ServerGame();
 		Game.NUM_PLAYERS = 2;
@@ -96,7 +99,14 @@ public class Server implements Runnable
 		{
 			try
 			{
-				ais.get(c).join();
+				// Instruct AI thread to terminate, then wait
+				if(ais.containsKey(c) && aiThreads.containsKey(c))
+				{
+					ais.get(c).shutDown();
+					aiThreads.get(c).join();
+				}
+
+				// Instruct ListenerThread to terminate, then wait
 				connections.get(c).shutDown();
 				threads.get(c).join();
 			}
@@ -437,6 +447,7 @@ public class Server implements Runnable
 		// Replace connection with a new ai
 		LocalAIClientOnServer ai = new LocalAIClientOnServer();
 		LocalClientConnection conn = ai.getConn().getConn();
+		ais.put(c, ai);
 
 		ListenerThread l = new ListenerThread(conn, c, this);
 		connections.put(c, l);
@@ -446,7 +457,7 @@ public class Server implements Runnable
 
 		t = new Thread(ai);
 		t.start();
-		ais.put(c, t);
+		aiThreads.put(c, t);
 		try
 		{
 			Thread.sleep(300);
@@ -483,8 +494,10 @@ public class Server implements Runnable
 		{
 			try
 			{
+				// Instruct ListenerThread to shutdown and wait until it joins
 				connections.get(col).shutDown();
 				threads.get(col).join();
+
 				replacePlayer(col);
 			}
 			catch (InterruptedException e)

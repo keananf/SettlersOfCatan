@@ -60,7 +60,8 @@ public class LocalServer extends Server
 			Thread t = new Thread(ai);
 			t.start();
 			Colour c = joinGame(conn);
-			ais.put(c, t);
+			aiThreads.put(c, t);
+			ais.put(c, ai);
 		}
 		log("Server SetUp", String.format("Number of AIs: %d. Connections: %d", num, numConnections));
 	}

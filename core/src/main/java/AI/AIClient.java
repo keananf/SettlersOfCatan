@@ -51,9 +51,10 @@ public abstract class AIClient extends Client
 	public void run()
 	{
 		log("Client Play", "Starting AI client loop");
+		active = true;
 
 		// Loop processing events when needed and sending turns
-		while (getState() == null || !getState().isOver())
+		while (active && (getState() == null || !getState().isOver()))
 		{
 			try
 			{

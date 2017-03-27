@@ -15,6 +15,7 @@ public class ListenerThread implements Runnable
 	protected IClientConnection conn;
 	private Colour colour;
 	private Server server;
+	private boolean active;
 
 	public ListenerThread(IClientConnection conn, Colour c, Server server)
 	{
@@ -26,6 +27,8 @@ public class ListenerThread implements Runnable
 	@Override
 	public void run()
 	{
+		active = true;
+
 		// Continually poll for new messages
 		try
 		{
@@ -50,7 +53,7 @@ public class ListenerThread implements Runnable
 	private void receiveMoves() throws Exception
 	{
 		// Receive and process moves until the end one is received
-		while (true)
+		while (active)
 		{
 			if (conn == null)
 			{
@@ -82,6 +85,7 @@ public class ListenerThread implements Runnable
 	 */
 	public void shutDown()
 	{
+		active = false;
 		conn.shutDown();
 	}
 

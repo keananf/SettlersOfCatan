@@ -8,13 +8,13 @@ import client.ClientGame;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import server.ListenerThread;
 
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	public Skin skin;
 	public Client client;
 	private Thread t;
+	private boolean active;
 
 	@Override
 	public void create()
@@ -37,16 +37,19 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	@Override
 	public void dispose()
 	{
-		if(client != null) client.shutDown();
-		client = null;
-		skin.dispose();
-		try
+		if(active)
 		{
-			if(t != null) t.join();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
+			if(client != null && client.isActive()) client.shutDown();
+			client = null;
+			skin.dispose();
+			try
+			{
+				if(t != null) t.join();
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -106,5 +109,10 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		}
 		client.log("Client Setup", "Received Game Information");
 		return client.getState();
+	}
+
+	public boolean isActive()
+	{
+		return active;
 	}
 }

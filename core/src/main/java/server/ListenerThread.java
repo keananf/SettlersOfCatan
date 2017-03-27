@@ -37,10 +37,9 @@ public class ListenerThread implements Runnable
 		}
 		catch (Exception e)
 		{
-			// TODO replace 'conn' with a LocalClientConnection to a
-			// LocalAIClient
 			conn = null;
-			// e.printStackTrace();
+			e.printStackTrace();
+			active = false;
 		}
 	}
 

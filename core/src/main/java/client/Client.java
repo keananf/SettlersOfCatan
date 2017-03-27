@@ -244,8 +244,12 @@ public abstract class Client implements Runnable
 	 */
 	public void shutDown()
 	{
-		active = false;
-		conn.shutDown();
+		if(active)
+		{
+			active = false;
+			conn.shutDown();
+			if(catan != null && catan.isActive()) catan.dispose();
+		}
 	}
 
 	/**
@@ -324,5 +328,10 @@ public abstract class Client implements Runnable
 	public void setPlayer(ClientPlayer p)
 	{
 		this.thisPlayer = p;
+	}
+
+	public boolean isActive()
+	{
+		return active;
 	}
 }

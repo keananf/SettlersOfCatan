@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Class which determines move possibilities based upon a game state
@@ -88,7 +87,15 @@ public class MoveProcessor
 	 */
 	public List<Turn> getPossibleMoves()
 	{
+
 		List<Turn> possibilities = new ArrayList<Turn>();
+
+		if(getExpectedMoves().contains(Requests.Request.BodyCase.JOINLOBBY))
+		{
+			possibilities.add(new Turn(Requests.Request.BodyCase.JOINLOBBY));
+			return possibilities;
+		}
+		if(getGame() == null) return possibilities;
 
 		// Add initial possibilities
 		possibilities.add(new Turn(Requests.Request.BodyCase.CHATMESSAGE));
@@ -487,8 +494,10 @@ public class MoveProcessor
 					: checkInitiateTrade(Trade.Kind.newBuilder().setBank(turn.getBankTrade()).build());
 			break;
 
-		case ENDTURN:
 		case JOINLOBBY:
+			val = getExpectedMoves().contains(Requests.Request.BodyCase.JOINLOBBY);
+			break;
+		case ENDTURN:
 			val = getExpectedMoves().isEmpty();
 			break;
 
@@ -506,20 +515,16 @@ public class MoveProcessor
 
 	private ClientGame getGame()
 	{
-		// Block until the game state has been received
-		while (client.getState() == null)
-		{
-		}
 		return client.getState();
 	}
 
-	private Turn getTurn()
+	private TurnState getTurn()
 	{
 		return client.getTurn();
 	}
 
-	private ConcurrentLinkedQueue<Requests.Request.BodyCase> getExpectedMoves()
+	private List<Requests.Request.BodyCase> getExpectedMoves()
 	{
-		return client.getTurn().getExpectedMoves();
+		return getTurn().getExpectedMoves();
 	}
 }

@@ -53,8 +53,9 @@ public class Server implements Runnable
 		try
 		{
 			getPlayers();
-			broadcastBoard();
 			game.chooseFirstPlayer();
+			waitForJoinLobby();
+			broadcastBoard();
 			getInitialSettlementsAndRoads();
 
 			Thread.sleep(500);
@@ -281,6 +282,66 @@ public class Server implements Runnable
 		}
 
 		log("Server Setup", "All Players connected. Starting game...\n");
+	}
+
+	/**
+	 * Blocks until all players have sent a join lobby request
+	 */
+	private void waitForJoinLobby()
+	{
+		for(Colour c : connections.keySet())
+		{
+			getExpectedMoves(c).add(Request.BodyCase.JOINLOBBY);
+		}
+
+		while(!checkJoinedLobby())
+		{
+			try
+			{
+				Event ev = msgProc.processMessage();
+				if ((ev == null || !ev.isInitialized()) && msgProc.getLastMessage() != null)
+				{
+					replacePlayerWithAI(msgProc.getLastMessage().getCol());
+					continue;
+				}
+
+				for(Colour c: connections.keySet())
+				{
+					if(getExpectedMoves(c).contains(Request.BodyCase.JOINLOBBY))
+					{
+						continue;
+					}
+					else if(ev != null) sendMessage(Message.newBuilder().setEvent(ev).build(), c);
+				}
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		log("Server play", "All players connected\n\n");
+		try
+		{
+			Thread.sleep(1000);
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @return if everyone has joined the lobby
+	 */
+	private boolean checkJoinedLobby()
+	{
+		for(Colour c : connections.keySet())
+		{
+			// If the player still has an expected move, then this phase is NOT done yet.
+			if(!getExpectedMoves(c).isEmpty()) return false;
+		}
+		return true;
 	}
 
 	/**

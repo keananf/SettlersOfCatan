@@ -2,13 +2,13 @@ package AI;
 
 import client.ClientGame;
 import client.Turn;
+import client.TurnState;
 import game.players.Player;
 import intergroup.Requests;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Semaphore;
 
 public abstract class AICore implements IAI
 {
@@ -24,15 +24,24 @@ public abstract class AICore implements IAI
 	@Override
 	public void performMove()
 	{
+		//client.log("Client Play", "Making move");
 		Turn turn = selectAndPrepareMove();
 		if (turn != null)
 		{
-			client.log("Client Play", String.format("%s expected moves %s", getPlayer().getId().name(),
-					getTurn().getExpectedMoves().toString()));
-			client.log("Client Play",
-					String.format("%s Chose move %s", getPlayer().getId().name(), turn.getChosenMove().name()));
+			if(getPlayer() != null)
+			{
+				client.log("Client Play", String.format("%s expected moves %s", getPlayer().getId().name(),
+						getTurn().getExpectedMoves().toString()));
+				client.log("Client Play",
+						String.format("%s Chose move %s", getPlayer().getId().name(), turn.getChosenMove().name()));
+			}
+
 			client.sendTurn(turn);
 		}
+		/*else
+		{
+			client.log("Client Play", "No move");
+		}*/
 	}
 
 	/**
@@ -52,8 +61,10 @@ public abstract class AICore implements IAI
 		List<Turn> optimalMoves = new ArrayList<Turn>();
 		int maxRank = -1;
 
+		if(moves == null) return null;
+
 		// Filter out the best moves, based upon assigned rank
-		for (Turn entry : getMoves())
+		for (Turn entry : moves)
 		{
 			// Implementation-defined
 			int rank = rankMove(entry);
@@ -143,6 +154,7 @@ public abstract class AICore implements IAI
 	protected List<Turn> getMoves()
 	{
 		List<Turn> options = client.getMoveProcessor().getPossibleMoves();
+
 		List<Turn> ret = new ArrayList<Turn>();
 		ret.addAll(options);
 
@@ -159,7 +171,7 @@ public abstract class AICore implements IAI
 
 	protected Player getPlayer()
 	{
-		return getState().getPlayer();
+		return getState() != null ? getState().getPlayer() : null;
 	}
 
 	protected ClientGame getState()
@@ -167,17 +179,7 @@ public abstract class AICore implements IAI
 		return client.getState();
 	}
 
-	private Semaphore getStateLock()
-	{
-		return client.getStateLock();
-	}
-
-	private Semaphore getTurnLock()
-	{
-		return client.getTurnLock();
-	}
-
-	public Turn getTurn()
+	public TurnState getTurn()
 	{
 		return client.getTurn();
 	}

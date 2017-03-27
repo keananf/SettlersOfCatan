@@ -7,7 +7,7 @@ import exceptions.*;
 import game.build.Building;
 import game.build.City;
 import game.build.Settlement;
-import game.players.LocalPlayer;
+import game.players.ClientPlayer;
 import game.players.Player;
 import grid.Edge;
 import grid.Hex;
@@ -102,7 +102,7 @@ public class ClientProcessTests extends ClientTestHelper
 	public void settlementBreaksRoadTest()
 	{
 		Player p = clientPlayer;
-		Player p2 = new LocalPlayer(Colour.RED, "");
+		Player p2 = new ClientPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		clientGame.addPlayer(p2);
 
@@ -179,7 +179,7 @@ public class ClientProcessTests extends ClientTestHelper
 	public void settlementBreaksRoadTest2()
 	{
 		Player p = clientPlayer;
-		Player p2 = new LocalPlayer(Colour.RED, "");
+		Player p2 = new ClientPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		clientGame.addPlayer(p2);
 
@@ -256,7 +256,7 @@ public class ClientProcessTests extends ClientTestHelper
 	public void largestArmyTest() throws BankLimitException
 	{
 		Player p = clientPlayer;
-		Player p2 = new LocalPlayer(Colour.RED, "");
+		Player p2 = new ClientPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		clientGame.addPlayer(p2);
 
@@ -314,7 +314,7 @@ public class ClientProcessTests extends ClientTestHelper
 	public void longestRoadTest()
 	{
 		Player p = clientPlayer;
-		Player p2 = new LocalPlayer(Colour.RED, "");
+		Player p2 = new ClientPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		clientGame.addPlayer(p2);
 
@@ -401,7 +401,7 @@ public class ClientProcessTests extends ClientTestHelper
 	public void stealTest() throws CannotAffordException, BankLimitException
 	{
 		Player p = clientPlayer;
-		Player p2 = new LocalPlayer(Colour.RED, "");
+		Player p2 = new ClientPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		clientGame.addPlayer(p2);
 
@@ -457,7 +457,7 @@ public class ClientProcessTests extends ClientTestHelper
 	public void playerTradeTest() throws CannotAffordException, BankLimitException
 	{
 		Player p = clientPlayer;
-		Player p2 = new LocalPlayer(Colour.RED, "");
+		Player p2 = new ClientPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		clientGame.addPlayer(p2);
 

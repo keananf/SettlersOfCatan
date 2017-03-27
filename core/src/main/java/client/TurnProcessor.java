@@ -113,7 +113,7 @@ public class TurnProcessor
 	private Lobby.Join getJoinLobby()
 	{
 		// TODO update gameID?
-		return Lobby.Join.newBuilder().setUsername(getGame().getPlayer().getUsername()).setGameId(0).build();
+		return Lobby.Join.newBuilder().setUsername(client.getPlayer().getUsername()).setGameId(0).build();
 	}
 
 	/**

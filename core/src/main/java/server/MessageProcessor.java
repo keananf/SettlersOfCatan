@@ -334,7 +334,7 @@ public class MessageProcessor
 	{
 		Requests.Request.BodyCase type = msg.getRequest().getBodyCase();
 		List<Requests.Request.BodyCase> expected = expectedMoves.get(col);
-		if (type == null) return false;
+		if (type == null || game == null) return false;
 
 		if (!expected.isEmpty() && expected.contains(type))
 		{

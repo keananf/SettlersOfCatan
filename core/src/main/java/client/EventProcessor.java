@@ -284,7 +284,10 @@ public class EventProcessor
 				getTurn().setPlayerTrade(null);
 			}
 			else
+			{
 				getTurn().setPlayerTrade(ev.getPlayerTrade());
+				getExpectedMoves().add(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
+			}
 			break;
 		case CARDSDISCARDED:
 			if (ev.getInstigator().getId() == getGame().getPlayer().getId()

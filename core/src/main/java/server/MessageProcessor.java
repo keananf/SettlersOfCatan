@@ -31,7 +31,7 @@ public class MessageProcessor
 	private Logger logger;
 	private HashMap<Colour, List<Requests.Request.BodyCase>> expectedMoves;
 	private ConcurrentLinkedQueue<ReceivedMessage> movesToProcess;
-	private Trade.WithPlayer currentTrade;
+	private CurrentTrade currentTrade;
 	private boolean tradePhase;
 	private ReceivedMessage lastMessage;
 
@@ -172,11 +172,10 @@ public class MessageProcessor
 				if (trade != null) ev.setBankTrade(trade);
 				break;
 			case SUBMITTRADERESPONSE:
-				// TODO timeouts?
-				if (currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT))
+				if (currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT) && !currentTrade.isExpired())
 				{
-					ev.setPlayerTrade(currentTrade);
-					game.processPlayerTrade(currentTrade);
+					ev.setPlayerTrade(currentTrade.getTrade());
+					game.processPlayerTrade(currentTrade.getTrade());
 					currentTrade = null;
 					break;
 				}
@@ -309,7 +308,7 @@ public class MessageProcessor
 		{
 			// Simply forward the message
 			case PLAYER:
-				currentTrade = request.getPlayer();
+				currentTrade = new CurrentTrade(request.getPlayer());
 				server.forwardTradeOffer(msg, request.getPlayer());
 				return null;
 
@@ -429,5 +428,10 @@ public class MessageProcessor
 	public ReceivedMessage getLastMessage()
 	{
 		return lastMessage;
+	}
+
+	public CurrentTrade getCurrentTrade()
+	{
+		return currentTrade;
 	}
 }

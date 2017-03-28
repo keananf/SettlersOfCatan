@@ -40,7 +40,7 @@ public class RemoteClientConnection implements IClientConnection
 	@Override
 	public Messages.Message getMessageFromClient() throws Exception
 	{
-		if (conn != null || conn.isClosed() || !conn.isConnected())
+		if (conn != null && (conn.isClosed() || !conn.isConnected()))
 		{
 			CodedInputStream c = CodedInputStream.newInstance(conn.getInputStream());
 			ByteString b = c.readBytes();

@@ -17,7 +17,7 @@ public class RoadExistsException extends Exception
 	{
 		Node n1 = road.getEdge().getX(), n2 = road.getEdge().getY();
 
-		return String.format("Road from node (%d,%d) to node (%d,%d) already exists\n", n1.getX(), n1.getY(), n2.getX(),
+		return String.format("Road from node (%d,%d) to node (%d,%d) already exists%n", n1.getX(), n1.getY(), n2.getX(),
 				n2.getY());
 	}
 }

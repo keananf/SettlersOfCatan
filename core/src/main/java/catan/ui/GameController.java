@@ -55,7 +55,7 @@ class GameController implements InputProcessor
 		BoardElement element = findElement(intersectionPoint.x, intersectionPoint.z);
 		if (element == null) return false;
 
-		// moveBuilder.onSelect(element);
+		moveBuilder.onSelect(element);
 
 		return true;
 	}

@@ -100,101 +100,95 @@ public class MessageProcessor
 
 		server.log("Server Proc", String.format("Processing request %s from %s", msg.getRequest().getBodyCase().name(),
 				ev.getInstigator().getId().name()));
-		try
-		{
-			// Switch on message type to interpret the move, then process the
-			// move
-			// and receive the response
-			switch (request.getBodyCase())
-			{
-			case BUILDROAD:
-				game.buildRoad(request.getBuildRoad());
-				ev.setRoadBuilt(request.getBuildRoad());
-				break;
-			case BUILDSETTLEMENT:
-				game.buildSettlement(request.getBuildSettlement());
-				ev.setSettlementBuilt(request.getBuildSettlement());
-				break;
-			case BUILDCITY:
-				game.upgradeSettlement(request.getBuildCity());
-				ev.setCityBuilt(request.getBuildCity());
-				break;
-			case BUYDEVCARD:
-				ev.setDevCardBought(game.buyDevelopmentCard());
-				break;
-			case JOINLOBBY:
-				ev.setLobbyUpdate(game.joinGame(request.getJoinLobby(), colour));
-				break;
-			case MOVEROBBER:
-				game.moveRobber(request.getMoveRobber());
-				ev.setRobberMoved(request.getMoveRobber());
-				break;
-			case DISCARDRESOURCES:
-				game.processDiscard(request.getDiscardResources(), colour);
-				ev.setCardsDiscarded(request.getDiscardResources());
-				break;
-			case ENDTURN:
-				if (canEndTurn())
-				{
-					ev.setTurnEnded(game.changeTurn());
-					tradePhase = false;
-					currentTrade = null;
-				}
-				else
-					ev.setError(Events.Event.Error.newBuilder().setDescription("Cannot end turn yet."));
-				break;
-			case CHOOSERESOURCE:
-				if (monopoly)
-				{
-					ev.setMonopolyResolution(game.playMonopolyCard(request.getChooseResource()));
-					monopoly = false;
-					break;
-				}
-				else
-				{
-					game.chooseResources(request.getChooseResource());
-				}
-				ev.setResourceChosen(request.getChooseResource());
-				break;
-			case ROLLDICE:
-				ev.setRolled(game.generateDiceRoll());
-				break;
-			case PLAYDEVCARD:
-				game.playDevelopmentCard(request.getPlayDevCard());
-				ev.setDevCardPlayed(request.getPlayDevCard());
-				break;
-			case SUBMITTARGETPLAYER:
-				Board.Steal steal = game.takeResource(request.getSubmitTargetPlayer().getId());
-				if (steal != null) ev.setResourceStolen(steal);
-				break;
-			case INITIATETRADE:
-				Trade.WithBank trade = processTradeType(request.getInitiateTrade(), msg);
-				if (trade != null) ev.setBankTrade(trade);
-				break;
-			case SUBMITTRADERESPONSE:
-				// TODO timeouts?
-				if (currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT))
-				{
-					ev.setPlayerTrade(currentTrade);
-					game.processPlayerTrade(currentTrade);
-					currentTrade = null;
-					break;
-				}
-				else
-				{
-					currentTrade = null; // TODO send rejection?
-					return null;
-				}
-			case CHATMESSAGE:
-				ev.setChatMessage(request.getChatMessage());
-				break;
 
-			}
-		}
-		catch (Exception e)
-		{
-			ev.setError(Events.Event.Error.newBuilder().setDescription(e.getMessage()).build());
-		}
+        // Switch on message type to interpret the move, then process the
+        // move
+        // and receive the response
+        switch (request.getBodyCase())
+        {
+        case BUILDROAD:
+            game.buildRoad(request.getBuildRoad());
+            ev.setRoadBuilt(request.getBuildRoad());
+            break;
+        case BUILDSETTLEMENT:
+            game.buildSettlement(request.getBuildSettlement());
+            ev.setSettlementBuilt(request.getBuildSettlement());
+            break;
+        case BUILDCITY:
+            game.upgradeSettlement(request.getBuildCity());
+            ev.setCityBuilt(request.getBuildCity());
+            break;
+        case BUYDEVCARD:
+            ev.setDevCardBought(game.buyDevelopmentCard());
+            break;
+        case JOINLOBBY:
+            ev.setLobbyUpdate(game.joinGame(request.getJoinLobby(), colour));
+            break;
+        case MOVEROBBER:
+            game.moveRobber(request.getMoveRobber());
+            ev.setRobberMoved(request.getMoveRobber());
+            break;
+        case DISCARDRESOURCES:
+            game.processDiscard(request.getDiscardResources(), colour);
+            ev.setCardsDiscarded(request.getDiscardResources());
+            break;
+        case ENDTURN:
+            if (canEndTurn())
+            {
+                ev.setTurnEnded(game.changeTurn());
+                tradePhase = false;
+                currentTrade = null;
+            }
+            else
+                ev.setError(Events.Event.Error.newBuilder().setDescription("Cannot end turn yet."));
+            break;
+        case CHOOSERESOURCE:
+            if (monopoly)
+            {
+                ev.setMonopolyResolution(game.playMonopolyCard(request.getChooseResource()));
+                monopoly = false;
+                break;
+            }
+            else
+            {
+                game.chooseResources(request.getChooseResource());
+            }
+            ev.setResourceChosen(request.getChooseResource());
+            break;
+        case ROLLDICE:
+            ev.setRolled(game.generateDiceRoll());
+            break;
+        case PLAYDEVCARD:
+            game.playDevelopmentCard(request.getPlayDevCard());
+            ev.setDevCardPlayed(request.getPlayDevCard());
+            break;
+        case SUBMITTARGETPLAYER:
+            Board.Steal steal = game.takeResource(request.getSubmitTargetPlayer().getId());
+            if (steal != null) ev.setResourceStolen(steal);
+            break;
+        case INITIATETRADE:
+            Trade.WithBank trade = processTradeType(request.getInitiateTrade(), msg);
+            if (trade != null) ev.setBankTrade(trade);
+            break;
+        case SUBMITTRADERESPONSE:
+            // TODO timeouts?
+            if (currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT))
+            {
+                ev.setPlayerTrade(currentTrade);
+                game.processPlayerTrade(currentTrade);
+                currentTrade = null;
+                break;
+            }
+            else
+            {
+                currentTrade = null; // TODO send rejection?
+                return null;
+            }
+        case CHATMESSAGE:
+            ev.setChatMessage(request.getChatMessage());
+            break;
+
+        }
 
 		// Add expected trade response for other player
 		if (request.getBodyCase().equals(Requests.Request.BodyCase.INITIATETRADE)

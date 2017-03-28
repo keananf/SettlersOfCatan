@@ -15,6 +15,8 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	public Skin skin;
     public AssMan assets = new AssMan();
 	public Client client;
+	private Thread t;
+	private boolean active;
 
 	@Override
 	public void create()
@@ -37,20 +39,33 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	@Override
 	public void dispose()
 	{
-	    assets.dispose();
-		client.shutDown();
-		skin.dispose();
+		if (active)
+		{
+			if (client != null && client.isActive()) client.shutDown();
+			client = null;
+			skin.dispose();
+			try
+			{
+				if (t != null) t.join();
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
 	 * Starts up a new remote client.
-	 * 
+	 *
 	 * @param host the host server to connect to
 	 * @return the status of the connection
 	 */
 	public boolean startNewRemoteClient(String host)
 	{
 		client = new RemoteAIClient(host);
+		t = new Thread(client);
+		t.start();
 		return ((RemoteAIClient) client).isInitialised();
 	}
 
@@ -59,7 +74,9 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	 */
 	public void startNewServer()
 	{
-		client = new LocalAIClient();
+		client = new LocalAIClient(this);
+		t = new Thread(client);
+		t.start();
 	}
 
 	/**
@@ -73,7 +90,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		client.log("Client Setup", "Waiting for Game Information....");
 		while (true)
 		{
-			if(val) break;
+			if (val) break;
 			try
 			{
 				client.getStateLock().acquire();
@@ -85,7 +102,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 				{
 					client.getStateLock().release();
 				}
-				Thread.sleep(250);
+				Thread.sleep(100);
 			}
 			catch (InterruptedException e)
 			{
@@ -94,5 +111,10 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		}
 		client.log("Client Setup", "Received Game Information");
 		return client.getState();
+	}
+
+	public boolean isActive()
+	{
+		return active;
 	}
 }

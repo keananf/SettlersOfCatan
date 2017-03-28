@@ -12,7 +12,7 @@ import java.util.Random;
 
 public abstract class AICore implements IAI
 {
-	private AIClient client;
+	protected AIClient client;
 	private Random rand;
 
 	public AICore(AIClient client)
@@ -24,11 +24,12 @@ public abstract class AICore implements IAI
 	@Override
 	public void performMove()
 	{
-		//client.log("Client Play", "Making move");
+		/*if (getPlayer() != null && getPlayer().getId() != null)
+			client.log("Client Play", String.format("Making move for %s", getPlayer().getId().name()));*/
 		Turn turn = selectAndPrepareMove();
 		if (turn != null)
 		{
-			if(getPlayer() != null)
+			if (getPlayer() != null && getPlayer().getId() != null)
 			{
 				client.log("Client Play", String.format("%s expected moves %s", getPlayer().getId().name(),
 						getTurn().getExpectedMoves().toString()));
@@ -42,6 +43,7 @@ public abstract class AICore implements IAI
 		{
 			client.log("Client Play", "No move");
 		}*/
+
 	}
 
 	/**
@@ -61,7 +63,7 @@ public abstract class AICore implements IAI
 		List<Turn> optimalMoves = new ArrayList<Turn>();
 		int maxRank = -1;
 
-		if(moves == null) return null;
+		if (moves == null) return null;
 
 		// Filter out the best moves, based upon assigned rank
 		for (Turn entry : moves)
@@ -161,8 +163,7 @@ public abstract class AICore implements IAI
 		// Eliminate trades and chats
 		for (Turn t : options)
 		{
-			if (t.getChosenMove().equals(Requests.Request.BodyCase.CHATMESSAGE)
-					|| t.getChosenMove().equals(Requests.Request.BodyCase.INITIATETRADE))
+			if (t.getChosenMove().equals(Requests.Request.BodyCase.CHATMESSAGE))
 				ret.remove(t);
 		}
 
@@ -171,7 +172,7 @@ public abstract class AICore implements IAI
 
 	protected Player getPlayer()
 	{
-		return getState() != null ? getState().getPlayer() : null;
+		return client.getPlayer() == null ? null : client.getPlayer();
 	}
 
 	protected ClientGame getState()

@@ -1,17 +1,18 @@
 package server;
 
+import AI.AIClient;
 import AI.LocalAIClientOnServer;
 import com.badlogic.gdx.Gdx;
 import connection.LocalClientConnection;
 import connection.RemoteClientConnection;
 import enums.Colour;
 import exceptions.GameFullException;
+import game.CurrentTrade;
 import game.Game;
 import game.players.Player;
 import intergroup.EmptyOuterClass;
 import intergroup.Events;
 import intergroup.Events.Event;
-import intergroup.Messages;
 import intergroup.Messages.Message;
 import intergroup.Requests;
 import intergroup.Requests.Request;
@@ -36,10 +37,16 @@ public class Server implements Runnable
 	protected int numConnections;
 	protected Map<Colour, ListenerThread> connections;
 	protected ServerSocket serverSocket;
+	protected Map<Colour, Thread> aiThreads, threads;
+	protected Map<Colour, AIClient> ais;
 	protected static final int PORT = 12345;
+	private boolean active;
 
 	public Server()
 	{
+		ais = new HashMap<Colour, AIClient>();
+		aiThreads = new HashMap<Colour, Thread>();
+		threads = new HashMap<Colour, Thread>();
 		game = new ServerGame();
 		Game.NUM_PLAYERS = 2;
 
@@ -52,6 +59,7 @@ public class Server implements Runnable
 	{
 		try
 		{
+			active = true;
 			getPlayers();
 			game.chooseFirstPlayer();
 			waitForJoinLobby();
@@ -59,13 +67,15 @@ public class Server implements Runnable
 			getInitialSettlementsAndRoads();
 
 			Thread.sleep(500);
-			log("Server Start", "\n\nAll players Connected. Beginning play.\n");
-			while (!game.isOver())
+			log("Server Start", "%n%nAll players Connected. Beginning play.%n");
+			while (active && !game.isOver())
 			{
 				// Read moves from queue and log
 				processMessage();
 				sleep();
 			}
+
+			sendEvents(Event.newBuilder().setGameWon(EmptyOuterClass.Empty.getDefaultInstance()).build());
 		}
 		catch (IOException | InterruptedException e)
 		{
@@ -83,15 +93,36 @@ public class Server implements Runnable
 		t.start();
 	}
 
+	public void terminate()
+	{
+		active = false;
+	}
+
 	/**
 	 * Shuts down all individual connections, and then shut down
 	 */
-	public void shutDown()
+	private void shutDown()
 	{
 		// Shut down all individual connections
-		for (ListenerThread conn : connections.values())
+		for (Colour c : connections.keySet())
 		{
-			conn.shutDown();
+			try
+			{
+				// Instruct AI thread to terminate, then wait
+				if (ais.containsKey(c) && aiThreads.containsKey(c))
+				{
+					ais.get(c).shutDown();
+					aiThreads.get(c).join();
+				}
+
+				// Instruct ListenerThread to terminate, then wait
+				connections.get(c).shutDown();
+				threads.get(c).join();
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -139,7 +170,7 @@ public class Server implements Runnable
 		case CITYBUILT:
 		case ROADBUILT:
 		case BANKTRADE:
-		case PLAYERTRADE:
+		case PLAYERTRADEACCEPTED:
 		case LOBBYUPDATE:
 		case CHATMESSAGE:
 		case RESOURCESTOLEN:
@@ -149,7 +180,10 @@ public class Server implements Runnable
 			broadcastEvent(event);
 			break;
 
+
 		// Sent individually, so ignore
+		case PLAYERTRADEREJECTED:
+		case PLAYERTRADEINITIATED:
 		case BEGINGAME:
 			break;
 
@@ -251,37 +285,38 @@ public class Server implements Runnable
 		// If no remote players
 		if (numConnections == Game.NUM_PLAYERS)
 		{
-			log("Server Setup", "All Players connected. Starting game...\n");
+			log("Server Setup", "All Players connected. Starting game...%n");
 			return;
 		}
 
 		serverSocket = new ServerSocket();
 		serverSocket.bind(new InetSocketAddress("localhost", PORT));
 		log("Server Setup",
-				String.format("Server started. Waiting for client(s)...%s\n", serverSocket.getInetAddress()));
+				String.format("Server started. Waiting for client(s)...%s%n", serverSocket.getInetAddress()));
 
 		// Loop until all players found
 		while (numConnections < Game.NUM_PLAYERS)
 		{
 			Socket connection = serverSocket.accept();
 
-			if (connection != null)
+			Colour c = null;
+			try
 			{
-				Colour c = null;
-				try
-				{
-					c = game.joinGame();
-				}
-				catch (GameFullException e)
-				{
-				}
-				connections.put(c, new ListenerThread(new RemoteClientConnection(connection), c, this));
-				log("Server Setup", String.format("Player %d connected", numConnections));
-				numConnections++;
+				c = game.joinGame();
 			}
+			catch (GameFullException e)
+			{
+			}
+			ListenerThread l = new ListenerThread(new RemoteClientConnection(connection), c, this);
+			connections.put(c, l);
+			Thread t = new Thread(l);
+			t.start();
+			threads.put(c, t);
+			log("Server Setup", String.format("Player %d connected", numConnections));
+			numConnections++;
 		}
 
-		log("Server Setup", "All Players connected. Starting game...\n");
+		log("Server Setup", "All Players connected. Starting game...%n");
 	}
 
 	/**
@@ -289,12 +324,12 @@ public class Server implements Runnable
 	 */
 	private void waitForJoinLobby()
 	{
-		for(Colour c : connections.keySet())
+		for (Colour c : connections.keySet())
 		{
 			getExpectedMoves(c).add(Request.BodyCase.JOINLOBBY);
 		}
 
-		while(!checkJoinedLobby())
+		while (!checkJoinedLobby())
 		{
 			try
 			{
@@ -305,13 +340,13 @@ public class Server implements Runnable
 					continue;
 				}
 
-				for(Colour c: connections.keySet())
+				for (Colour c : connections.keySet())
 				{
-					if(getExpectedMoves(c).contains(Request.BodyCase.JOINLOBBY))
+					if (getExpectedMoves(c).contains(Request.BodyCase.JOINLOBBY))
 					{
 						continue;
 					}
-					else if(ev != null) sendMessage(Message.newBuilder().setEvent(ev).build(), c);
+					else if (ev != null) sendMessage(Message.newBuilder().setEvent(ev).build(), c);
 				}
 			}
 			catch (IOException e)
@@ -320,7 +355,7 @@ public class Server implements Runnable
 			}
 		}
 
-		log("Server play", "All players connected\n\n");
+		log("Server play", "All players connected%n%n");
 		try
 		{
 			Thread.sleep(1000);
@@ -336,10 +371,11 @@ public class Server implements Runnable
 	 */
 	private boolean checkJoinedLobby()
 	{
-		for(Colour c : connections.keySet())
+		for (Colour c : connections.keySet())
 		{
-			// If the player still has an expected move, then this phase is NOT done yet.
-			if(!getExpectedMoves(c).isEmpty()) return false;
+			// If the player still has an expected move, then this phase is NOT
+			// done yet.
+			if (!getExpectedMoves(c).isEmpty()) return false;
 		}
 		return true;
 	}
@@ -420,7 +456,17 @@ public class Server implements Runnable
 		// Replace connection with a new ai
 		LocalAIClientOnServer ai = new LocalAIClientOnServer();
 		LocalClientConnection conn = ai.getConn().getConn();
-		connections.put(c, new ListenerThread(conn, c, this));
+		ais.put(c, ai);
+
+		ListenerThread l = new ListenerThread(conn, c, this);
+		connections.put(c, l);
+		Thread t = new Thread(l);
+		t.start();
+		threads.put(c, t);
+
+		t = new Thread(ai);
+		t.start();
+		aiThreads.put(c, t);
 		try
 		{
 			Thread.sleep(300);
@@ -453,10 +499,20 @@ public class Server implements Runnable
 	 */
 	protected void replacePlayerWithAI(Colour col)
 	{
-		if (connections.containsKey(col))
+		if (connections.containsKey(col) && connections.get(col).getConnection() instanceof RemoteClientConnection)
 		{
-			connections.get(col).shutDown();
-			replacePlayer(col);
+			try
+			{
+				// Instruct ListenerThread to shutdown and wait until it joins
+				connections.get(col).shutDown();
+				threads.get(col).join();
+
+				replacePlayer(col);
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -478,16 +534,53 @@ public class Server implements Runnable
 	}
 
 	/**
-	 * Simply forwards the trade offer to the intended recipients
-	 * 
-	 * @param msg the original message
+	 * Simply forwards the trade offer to the intended recipient
+	 *
 	 * @param playerTrade the internal trade request inside the message
+	 * @param instigator the player who requested the trade that was rejected
 	 */
-	protected void forwardTradeOffer(Messages.Message msg, Trade.WithPlayer playerTrade)
+	protected void forwardTradeOffer(Trade.WithPlayer playerTrade, Board.Player instigator)
 	{
-		Colour col = game.getPlayer(playerTrade.getOther().getId()).getColour();
+		Colour player = game.getPlayer(instigator.getId()).getColour();
+		Colour recipient = game.getPlayer(playerTrade.getOther().getId()).getColour();
+		Event ev = Event.newBuilder().setPlayerTradeInitiated(playerTrade).setInstigator(instigator).build();
+		Message msg = Message.newBuilder().setEvent(ev).build();
 
-		if (connections.containsKey(col)) sendMessage(msg, col);
+		// Send messages
+		if (connections.containsKey(recipient))
+		{
+			sendMessage(msg, recipient);
+		}
+		if(connections.containsKey(player))
+		{
+			sendMessage(msg, player);
+		}
+	}
+
+	/**
+	 * Simply forwards the reject to the participants
+	 *
+	 * @param playerTrade the internal trade request inside the message
+	 * @param instigator the player who requested the trade that was rejected
+	 */
+	protected void forwardTradeReject(Trade.WithPlayer playerTrade, Board.Player instigator)
+	{
+		// Extract player info, and set up the reject event
+		Colour recipient = game.getPlayer(playerTrade.getOther().getId()).getColour();
+		Colour player = game.getPlayer(instigator.getId()).getColour();
+		Event ev = Event.newBuilder().setInstigator(instigator)
+				.setPlayerTradeRejected(EmptyOuterClass.Empty.getDefaultInstance()).build();
+		Message msg = Message.newBuilder().setEvent(ev).build();
+
+		// Send messages
+		if (connections.containsKey(recipient))
+		{
+			sendMessage(msg, recipient);
+		}
+		if(connections.containsKey(player))
+		{
+			sendMessage(msg, player);
+		}
 	}
 
 	/**
@@ -556,5 +649,10 @@ public class Server implements Runnable
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public CurrentTrade getCurrentTrade()
+	{
+		return msgProc.getCurrentTrade();
 	}
 }

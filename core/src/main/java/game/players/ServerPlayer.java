@@ -171,10 +171,14 @@ public class ServerPlayer extends Player
 	 * @param card the development card to play
 	 * @throws DoesNotOwnException if the user does not own the given card
 	 */
-	public void playDevelopmentCard(DevelopmentCardType card) throws DoesNotOwnException
+	public void playDevelopmentCard(DevelopmentCardType card) throws DoesNotOwnException, CannotPlayException
 	{
 		// Check if the player owns the given card
 		if (!cards.containsKey(card)) { throw new DoesNotOwnException(card, getColour()); }
+
+		// If you just bought this card and cannot play it this turn
+		if (recentBoughtCards.containsKey(card)
+				&& cards.get(card).equals(recentBoughtCards.get(card))) { throw new CannotPlayException(); }
 
 		// Remove from inventory
 		super.playCard(card);

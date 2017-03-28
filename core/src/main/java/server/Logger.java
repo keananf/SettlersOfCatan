@@ -13,17 +13,17 @@ public class Logger
 	{
 		if (msg == null) return;
 
-		String str = String.format("RECEIVED: Message of type %s.\n", msg.getTypeCase().name());
+		String str = String.format("RECEIVED: Message of type %s.%n", msg.getTypeCase().name());
 
 		switch (msg.getTypeCase())
 		{
 		case REQUEST:
-			str = String.format(str + "Type of Request: %s\n", msg.getRequest().getBodyCase().name());
+			str = String.format(str + "Type of Request: %s%n", msg.getRequest().getBodyCase().name());
 			break;
 
 		case EVENT:
 			Events.Event ev = msg.getEvent();
-			str = String.format(str + "Type of Event: %s. From player: %s\n", ev.getTypeCase().name(),
+			str = String.format(str + "Type of Event: %s. From player: %s%n", ev.getTypeCase().name(),
 					ev.getInstigator().getId().name());
 			break;
 		}

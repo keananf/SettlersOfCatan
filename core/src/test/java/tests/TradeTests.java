@@ -6,8 +6,8 @@ import exceptions.*;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
-import game.players.ServerPlayer;
 import game.players.Player;
+import game.players.ServerPlayer;
 import grid.Port;
 import intergroup.Messages;
 import intergroup.Requests;
@@ -98,8 +98,6 @@ public class TradeTests extends TestHelper
 		assertTrue(1 == p2.getResources().get(ResourceType.Brick) && 1 == p2.getNumResources());
 		assertTrue(0 == p2.getResources().get(ResourceType.Grain));
 
-		// Neither player has resources, so this will fail.
-		// Exception thrown and caught in processMove
 		game.processPlayerTrade(playerTrade.build());
 
 		// assert resources are swapped
@@ -108,6 +106,62 @@ public class TradeTests extends TestHelper
 		assertTrue(1 == p2.getResources().get(ResourceType.Grain) && 1 == p2.getNumResources());
 		assertTrue(0 == p2.getResources().get(ResourceType.Brick));
 
+	}
+
+	@Test
+	public void tradeExpired() throws Exception
+	{
+		// Set up player 2
+		Player p2 = new ServerPlayer(Colour.RED, "");
+		p2.setId(Board.Player.Id.PLAYER_2);
+		game.addPlayer(p2);
+
+		// set up resources
+		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+		grant.put(ResourceType.Brick, 1);
+		p2.grantResources(grant, game.getBank());
+		grant.put(ResourceType.Brick, 0);
+		grant.put(ResourceType.Grain, 1);
+		p.grantResources(grant, game.getBank());
+
+		// Set up playerTrade move and offer and request
+		Resource.Counts.Builder resource = Resource.Counts.newBuilder();
+		Trade.WithPlayer.Builder playerTrade = Trade.WithPlayer.newBuilder();
+
+		// Set offer and request
+		resource.setGrain(1);
+		playerTrade.setOffering(resource.build());
+		resource.clearGrain().setBrick(1);
+		playerTrade.setWanting(resource);
+		playerTrade
+				.setOther(Board.Player.newBuilder().setIdValue(p2.getId().getNumber()).build());
+
+		// assert resources are set up
+		assertTrue(1 == p.getResources().get(ResourceType.Grain) && 1 == p.getNumResources());
+		assertTrue(0 == p.getResources().get(ResourceType.Brick));
+		assertTrue(1 == p2.getResources().get(ResourceType.Brick) && 1 == p2.getNumResources());
+		assertTrue(0 == p2.getResources().get(ResourceType.Grain));
+
+		// Send trade request
+		Messages.Message msg = Messages.Message.newBuilder().setRequest(Requests.Request.newBuilder()
+				.setInitiateTrade(Trade.Kind.newBuilder().setPlayer(playerTrade).build()).build()).build();
+		server.addMessageToProcess(new ReceivedMessage(p.getColour(), msg));
+		server.processMessage();
+		assertTrue(server.getCurrentTrade() != null);
+
+		// Player 2 sends response after 30 sec
+		server.getCurrentTrade().setTime(server.getCurrentTrade().getTime() - 30001);
+		assertTrue(server.getCurrentTrade().isExpired());
+		msg = Messages.Message.newBuilder().
+				setRequest(Requests.Request.newBuilder().setSubmitTradeResponse(Trade.Response.ACCEPT).build()).build();
+		server.addMessageToProcess(new ReceivedMessage(p2.getColour(), msg));
+		server.processMessage();
+
+		// assert resources AREN'T swapped
+		assertTrue(1 == p.getResources().get(ResourceType.Grain) && 1 == p.getNumResources());
+		assertTrue(0 == p.getResources().get(ResourceType.Brick));
+		assertTrue(1 == p2.getResources().get(ResourceType.Brick) && 1 == p2.getNumResources());
+		assertTrue(0 == p2.getResources().get(ResourceType.Grain));
 	}
 
 	@Test(expected = CannotAffordException.class)
@@ -471,13 +525,11 @@ public class TradeTests extends TestHelper
 						.build()));
 		server.processMessage();
 
-		// Assert it is the trade phase, and that player red has an expected
-		// move
+		// Assert it is the trade phase, and that player red has an expected move
 		assertTrue(server.isTradePhase());
 		assertTrue(server.getExpectedMoves(Colour.RED).get(0).equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE));
 
-		// Player red accepts. Assert trade occurred and that it is still trade
-		// phase
+		// Player red accepts. Assert trade occurred and that it is still trade phase
 		server.addMessageToProcess(
 				new ReceivedMessage(p2.getColour(),
 						Messages.Message.newBuilder()

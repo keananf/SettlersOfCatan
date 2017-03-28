@@ -262,7 +262,8 @@ public class ServerGame extends Game
 		}
 
 		// Invalid request
-		if (oldAmount - discardAmount > ((oldAmount / 2) + 1)) { throw new InvalidDiscardRequest(oldAmount, current.getNumResources()); }
+		if (oldAmount - discardAmount > ((oldAmount / 2) + 1)) { throw new InvalidDiscardRequest(oldAmount,
+				current.getNumResources()); }
 
 		// If the player can afford the request, then spend the resources
 		current.spendResources(processResources(discardRequest), bank);
@@ -328,7 +329,7 @@ public class ServerGame extends Game
 	 * 
 	 * @param card the card of development card to play
 	 */
-	public void playDevelopmentCard(Board.PlayableDevCard card) throws DoesNotOwnException
+	public void playDevelopmentCard(Board.PlayableDevCard card) throws DoesNotOwnException, CannotPlayException
 	{
 		Player p = players.get(currentPlayer);
 
@@ -401,8 +402,9 @@ public class ServerGame extends Game
 		Player other = getPlayer(id);
 		ResourceType r = ResourceType.Generic;
 
-		if (other.getNumResources() == 0) return Board.Steal.newBuilder().setVictim(Board.Player.newBuilder().setId(id).build())
-				.setResource(ResourceType.toProto(ResourceType.Generic)).setQuantity(0).build();
+		if (other.getNumResources() == 0)
+			return Board.Steal.newBuilder().setVictim(Board.Player.newBuilder().setId(id).build())
+					.setResource(ResourceType.toProto(ResourceType.Generic)).setQuantity(0).build();
 
 		// Randomly choose resource that the player has
 		while (r == ResourceType.Generic || other.getResources().get(r) == 0)
@@ -628,6 +630,9 @@ public class ServerGame extends Game
 	 */
 	public EmptyOuterClass.Empty changeTurn()
 	{
+		// Reset recent dev card for player, if they bought one this turn
+		getPlayer(getCurrentPlayer()).clearRecentDevCards();
+
 		// Update turn and set event.
 		setCurrentPlayer(getNextPlayer());
 		current++;

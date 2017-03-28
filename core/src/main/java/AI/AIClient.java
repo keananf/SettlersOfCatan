@@ -1,5 +1,6 @@
 package AI;
 
+import catan.SettlersOfCatan;
 import client.Client;
 import enums.Difficulty;
 
@@ -7,9 +8,32 @@ public abstract class AIClient extends Client
 {
 	protected AICore ai;
 
+	public AIClient(Difficulty difficulty, SettlersOfCatan game)
+	{
+		super(game);
+		assignAI(difficulty);
+	}
+
+	public AIClient()
+	{
+		super();
+		ai = new VeryEasyAI(this);
+	}
+
 	public AIClient(Difficulty difficulty)
 	{
 		super();
+		assignAI(difficulty);
+	}
+
+	public AIClient(SettlersOfCatan game)
+	{
+		super(game);
+		ai = new VeryEasyAI(this);
+	}
+
+	private void assignAI(Difficulty difficulty)
+	{
 		switch (difficulty)
 		{
 		case EASY:
@@ -23,19 +47,14 @@ public abstract class AIClient extends Client
 		}
 	}
 
-	public AIClient()
-	{
-		super();
-		ai = new VeryEasyAI(this);
-	}
-
 	@Override
 	public void run()
 	{
 		log("Client Play", "Starting AI client loop");
+		active = true;
 
 		// Loop processing events when needed and sending turns
-		while (getState() == null || !getState().isOver())
+		while (active && (getState() == null || !getState().isOver()))
 		{
 			try
 			{
@@ -68,10 +87,7 @@ public abstract class AIClient extends Client
 				getTurnLock().acquire();
 				try
 				{
-					if(ai != null)
-					{
- 						ai.performMove();
-					}
+					ai.performMove();
 				}
 				finally
 				{

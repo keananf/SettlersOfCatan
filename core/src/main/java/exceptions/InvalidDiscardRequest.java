@@ -14,7 +14,7 @@ public class InvalidDiscardRequest extends Exception
 	@Override
 	public String getMessage()
 	{
-		return String.format("Invalid discard request. Player needs 7 or less resources.\n" + "Before: %d. After: %d",
+		return String.format("Invalid discard request. Player needs 7 or less resources.%n" + "Before: %d. After: %d",
 				before, after);
 	}
 }

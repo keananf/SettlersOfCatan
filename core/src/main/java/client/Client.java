@@ -1,5 +1,6 @@
 package client;
 
+import catan.SettlersOfCatan;
 import com.badlogic.gdx.Gdx;
 import connection.IServerConnection;
 import enums.Colour;
@@ -20,6 +21,7 @@ import java.util.concurrent.Semaphore;
  */
 public abstract class Client implements Runnable
 {
+	protected SettlersOfCatan catan;
 	protected ClientGame state;
 	protected EventProcessor eventProcessor;
 	protected TurnProcessor turnProcessor;
@@ -29,23 +31,29 @@ public abstract class Client implements Runnable
 	private TurnState turn;
 	private IServerConnection conn;
 	private Semaphore stateLock, turnLock;
-	private Thread thread;
 	private List<String> usersInLobby;
+	protected boolean active;
+
+	public Client(SettlersOfCatan game)
+	{
+		this();
+		this.catan = game;
+	}
 
 	public Client()
 	{
 		thisPlayer = new ClientPlayer(Colour.BLUE, "Default");
 		usersInLobby = new ArrayList<String>(Game.NUM_PLAYERS);
 		setUpConnection();
-		thread = new Thread(this);
-		thread.start();
 	}
 
 	@Override
 	public void run()
 	{
+		active = true;
+
 		// Loop processing events when needed and sending turns
-		while (getState() == null || !getState().isOver())
+		while (active && (getState() == null || !getState().isOver()))
 		{
 			try
 			{
@@ -55,6 +63,7 @@ public abstract class Client implements Runnable
 			catch (Exception e)
 			{
 				e.printStackTrace();
+				shutDown();
 			}
 		}
 		log("Client Play", "Ending AI client loop");
@@ -152,6 +161,7 @@ public abstract class Client implements Runnable
 			break;
 		case SUBMITTARGETPLAYER:
 			getTurn().setTarget(selectedMove.getTarget());
+			break;
 		case BUILDSETTLEMENT:
 		case BUILDCITY:
 			getTurn().setChosenNode(selectedMove.getChosenNode());
@@ -184,7 +194,6 @@ public abstract class Client implements Runnable
 		}
 		else
 		{
-			// TODO else display error?
 			log("Client Play", String.format("Invalid Request %s for %s", turn.getChosenMove().name(),
 					getState().getPlayer().getId().name()));
 		}
@@ -235,14 +244,11 @@ public abstract class Client implements Runnable
 	 */
 	public void shutDown()
 	{
-		conn.shutDown();
-		try
+		if (active)
 		{
-			thread.join();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
+			active = false;
+			conn.shutDown();
+			if (catan != null && catan.isActive()) catan.dispose();
 		}
 	}
 
@@ -322,5 +328,10 @@ public abstract class Client implements Runnable
 	public void setPlayer(ClientPlayer p)
 	{
 		this.thisPlayer = p;
+	}
+
+	public boolean isActive()
+	{
+		return active;
 	}
 }

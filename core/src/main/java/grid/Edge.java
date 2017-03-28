@@ -183,7 +183,18 @@ public class Edge implements BoardElement
 	@Override
 	public boolean equals(Object e)
 	{
+		if (!(e instanceof Edge)) return false;
+
 		return ((Edge) e).getX().equals(getX()) && ((Edge) e).getY().equals(getY());
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int result = x.hashCode();
+		result = 31 * result + y.hashCode();
+		result = 31 * result + (road != null ? road.hashCode() : 0);
+		return result;
 	}
 
 	/**

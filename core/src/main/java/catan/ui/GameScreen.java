@@ -44,11 +44,12 @@ public class GameScreen implements Screen {
 
     final private Hud hud;
     final private Array<ModelInstance> instances = new Array<>();
+
 	final private Environment environment = new Environment();
 
 	final protected SettlersOfCatan game;
 
-    GameScreen(final SettlersOfCatan game)
+	GameScreen(final SettlersOfCatan game)
 	{
 		this.game = game;
 		ClientGame gameState = game.getState();

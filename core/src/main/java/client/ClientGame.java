@@ -558,9 +558,9 @@ public class ClientGame extends Game
 		{
 			int existing1 = resources.get(instigator.getColour()), existing2 = resources.get(recipient.getColour());
 			if (existing1 - offeringSize + wantingSize < 0) { throw new CannotAffordException(
-					String.format("Player %s cannot afford this trade.", instigator.getColour().name())); }
-			if (existing2 - offeringSize + wantingSize < 0) { throw new CannotAffordException(
-					String.format("Player %s cannot afford this trade.", recipient.getColour().name())); }
+					String.format("%s cannot afford this trade. %d %d %d", instigator.getId().name(), existing1, offeringSize, wantingSize)); }
+			if (existing2 + offeringSize - wantingSize < 0) { throw new CannotAffordException(
+					String.format("%s cannot afford this trade.", recipient.getId().name())); }
 			resources.put(instigator.getColour(), existing1 + wantingSize - offeringSize);
 			resources.put(recipient.getColour(), existing2 - wantingSize + offeringSize);
 		}
@@ -590,7 +590,7 @@ public class ClientGame extends Game
 			for (ResourceType r : processResources(cardsDiscarded).keySet())
 				sum += processResources(cardsDiscarded).get(r);
 			if (existing - sum < 0 || existing - sum > 7) { throw new CannotAffordException(
-					String.format("Invalid discard for Player %s. Before %s. After $s", player.getColour().name(),
+					String.format("Invalid discard for Player %s. Before %s. After %s", player.getColour().name(),
 							existing, existing - processResources(cardsDiscarded).size())); }
 			resources.put(player.getColour(), existing - sum);
 		}
@@ -609,6 +609,8 @@ public class ClientGame extends Game
 		Player victim = getPlayer(steal.getVictim().getId());
 		ResourceType r = ResourceType.fromProto(steal.getResource());
 		int quantity = steal.getQuantity();
+
+		if (quantity == 0) return;
 
 		// Update resources
 		Map<ResourceType, Integer> stolen = new HashMap<ResourceType, Integer>();
@@ -704,7 +706,10 @@ public class ClientGame extends Game
 		return client.getPlayer();
 	}
 
-	public void setPlayer(ClientPlayer p) {client.setPlayer(p);}
+	public void setPlayer(ClientPlayer p)
+	{
+		client.setPlayer(p);
+	}
 
 	public int getPlayerResources(Colour colour)
 	{

@@ -180,7 +180,9 @@ public class Edge implements BoardElement
 	@Override
 	public boolean equals(Object e)
 	{
-		return ((Edge) e).getX().equals(getX()) && ((Edge) e).getY().equals(getY());
+        if (!(e instanceof Edge)) return false;
+
+        return ((Edge) e).getX().equals(getX()) && ((Edge) e).getY().equals(getY());
 	}
 
     @Override

@@ -121,6 +121,8 @@ public class Hex extends GridElement
 	@Override
 	public boolean equals(Object o)
 	{
+	    if (!(o instanceof Hex)) return false;
+
 		Hex h = (Hex) o;
 
 		// Ensure properties are the same

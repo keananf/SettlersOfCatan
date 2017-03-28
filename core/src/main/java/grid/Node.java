@@ -75,7 +75,9 @@ public class Node extends GridElement
 	@Override
 	public boolean equals(Object other)
 	{
-		if (getX() == ((Node) other).getX() && getY() == ((Node) other).getY()) return true;
+        if (!(other instanceof Node)) return false;
+
+        if (getX() == ((Node) other).getX() && getY() == ((Node) other).getY()) return true;
 
 		return false;
 	}

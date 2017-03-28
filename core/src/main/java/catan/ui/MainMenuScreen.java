@@ -19,7 +19,7 @@ public class MainMenuScreen implements Screen
 {
 	final private Stage ui = new Stage(new ScreenViewport());
 
-    MainMenuScreen(final SettlersOfCatan game)
+	MainMenuScreen(final SettlersOfCatan game)
 	{
 		Gdx.input.setInputProcessor(ui);
 
@@ -78,9 +78,7 @@ public class MainMenuScreen implements Screen
 					Gdx.app.debug("UI", "Button click: Join Remote Game");
 
 					// TODO retrieve host name from text user entered in
-					
-					
-					
+
 					game.setScreen(new RemoteGameScreen(game));
 				}
 			});

@@ -121,7 +121,7 @@ public class Hex extends GridElement
 	@Override
 	public boolean equals(Object o)
 	{
-	    if (!(o instanceof Hex)) return false;
+		if (!(o instanceof Hex)) return false;
 
 		Hex h = (Hex) o;
 
@@ -140,17 +140,18 @@ public class Hex extends GridElement
 		return true;
 	}
 
-    @Override
-    public int hashCode() {
-        int result = terrain.hashCode();
-        result = 31 * result + resource.hashCode();
-        result = 31 * result + diceRoll;
-        result = 31 * result + (hasRobber ? 1 : 0);
-        result = 31 * result + nodes.hashCode();
-        return result;
-    }
+	@Override
+	public int hashCode()
+	{
+		int result = terrain.hashCode();
+		result = 31 * result + resource.hashCode();
+		result = 31 * result + diceRoll;
+		result = 31 * result + (hasRobber ? 1 : 0);
+		result = 31 * result + nodes.hashCode();
+		return result;
+	}
 
-    public void toggleHasRobber()
+	public void toggleHasRobber()
 	{
 		hasRobber = !hasRobber;
 	}

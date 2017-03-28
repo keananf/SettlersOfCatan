@@ -307,15 +307,15 @@ public class MessageProcessor
 		// Switch on trade type
 		switch (request.getTradeCase())
 		{
-			// Simply forward the message
-			case PLAYER:
-				currentTrade = request.getPlayer();
-				server.forwardTradeOffer(msg, request.getPlayer());
-				return null;
+		// Simply forward the message
+		case PLAYER:
+			currentTrade = request.getPlayer();
+			server.forwardTradeOffer(msg, request.getPlayer());
+			return null;
 
-			case BANK:
-				game.determineTradeType(request.getBank());
-				break;
+		case BANK:
+			game.determineTradeType(request.getBank());
+			break;
 		}
 
 		return request.getBank();

@@ -1,21 +1,22 @@
 package tests;
 
-import exceptions.BankLimitException;
-import intergroup.board.Board;
+import AI.LocalAIClientOnServer;
 import client.ClientGame;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
+import exceptions.BankLimitException;
 import exceptions.CannotAffordException;
 import exceptions.InvalidCoordinatesException;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
-import game.players.LocalPlayer;
+import game.players.ClientPlayer;
 import game.players.Player;
 import grid.Edge;
 import grid.Hex;
 import grid.Node;
+import intergroup.board.Board;
 import org.junit.Before;
 
 import java.util.Map;
@@ -30,8 +31,8 @@ public class ClientTestHelper extends TestHelper
 	public void start() throws CannotAffordException, InvalidCoordinatesException
 	{
 		reset();
-		clientGame = new ClientGame();
-		clientPlayer = new LocalPlayer(Colour.BLUE, "");
+		clientGame = new ClientGame(new LocalAIClientOnServer());
+		clientPlayer = new ClientPlayer(Colour.BLUE, "");
 		clientPlayer.setId(Board.Player.Id.PLAYER_1);
 		clientGame.addPlayer(clientPlayer);
 

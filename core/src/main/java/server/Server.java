@@ -1,5 +1,6 @@
 package server;
 
+import AI.AIClient;
 import AI.LocalAIClientOnServer;
 import com.badlogic.gdx.Gdx;
 import connection.LocalClientConnection;
@@ -36,10 +37,16 @@ public class Server implements Runnable
 	protected int numConnections;
 	protected Map<Colour, ListenerThread> connections;
 	protected ServerSocket serverSocket;
+	protected Map<Colour, Thread> aiThreads, threads;
+	protected Map<Colour, AIClient> ais;
 	protected static final int PORT = 12345;
+	private boolean active;
 
 	public Server()
 	{
+		ais = new HashMap<Colour, AIClient>();
+		aiThreads = new HashMap<Colour, Thread>();
+		threads = new HashMap<Colour, Thread>();
 		game = new ServerGame();
 		Game.NUM_PLAYERS = 2;
 
@@ -52,19 +59,23 @@ public class Server implements Runnable
 	{
 		try
 		{
+			active = true;
 			getPlayers();
-			broadcastBoard();
 			game.chooseFirstPlayer();
+			waitForJoinLobby();
+			broadcastBoard();
 			getInitialSettlementsAndRoads();
 
 			Thread.sleep(500);
 			log("Server Start", "\n\nAll players Connected. Beginning play.\n");
-			while (!game.isOver())
+			while (active && !game.isOver())
 			{
 				// Read moves from queue and log
 				processMessage();
 				sleep();
 			}
+
+			sendEvents(Event.newBuilder().setGameWon(EmptyOuterClass.Empty.getDefaultInstance()).build());
 		}
 		catch (IOException | InterruptedException e)
 		{
@@ -82,15 +93,36 @@ public class Server implements Runnable
 		t.start();
 	}
 
+	public void terminate()
+	{
+		active = false;
+	}
+
 	/**
 	 * Shuts down all individual connections, and then shut down
 	 */
-	public void shutDown()
+	private void shutDown()
 	{
 		// Shut down all individual connections
-		for (ListenerThread conn : connections.values())
+		for (Colour c : connections.keySet())
 		{
-			conn.shutDown();
+			try
+			{
+				// Instruct AI thread to terminate, then wait
+				if (ais.containsKey(c) && aiThreads.containsKey(c))
+				{
+					ais.get(c).shutDown();
+					aiThreads.get(c).join();
+				}
+
+				// Instruct ListenerThread to terminate, then wait
+				connections.get(c).shutDown();
+				threads.get(c).join();
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -274,13 +306,78 @@ public class Server implements Runnable
 				catch (GameFullException e)
 				{
 				}
-				connections.put(c, new ListenerThread(new RemoteClientConnection(connection), c, this));
+				ListenerThread l = new ListenerThread(new RemoteClientConnection(connection), c, this);
+				connections.put(c, l);
+				Thread t = new Thread(l);
+				t.start();
+				threads.put(c, t);
 				log("Server Setup", String.format("Player %d connected", numConnections));
 				numConnections++;
 			}
 		}
 
 		log("Server Setup", "All Players connected. Starting game...\n");
+	}
+
+	/**
+	 * Blocks until all players have sent a join lobby request
+	 */
+	private void waitForJoinLobby()
+	{
+		for (Colour c : connections.keySet())
+		{
+			getExpectedMoves(c).add(Request.BodyCase.JOINLOBBY);
+		}
+
+		while (!checkJoinedLobby())
+		{
+			try
+			{
+				Event ev = msgProc.processMessage();
+				if ((ev == null || !ev.isInitialized()) && msgProc.getLastMessage() != null)
+				{
+					replacePlayerWithAI(msgProc.getLastMessage().getCol());
+					continue;
+				}
+
+				for (Colour c : connections.keySet())
+				{
+					if (getExpectedMoves(c).contains(Request.BodyCase.JOINLOBBY))
+					{
+						continue;
+					}
+					else if (ev != null) sendMessage(Message.newBuilder().setEvent(ev).build(), c);
+				}
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		log("Server play", "All players connected\n\n");
+		try
+		{
+			Thread.sleep(1000);
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @return if everyone has joined the lobby
+	 */
+	private boolean checkJoinedLobby()
+	{
+		for (Colour c : connections.keySet())
+		{
+			// If the player still has an expected move, then this phase is NOT
+			// done yet.
+			if (!getExpectedMoves(c).isEmpty()) return false;
+		}
+		return true;
 	}
 
 	/**
@@ -359,7 +456,17 @@ public class Server implements Runnable
 		// Replace connection with a new ai
 		LocalAIClientOnServer ai = new LocalAIClientOnServer();
 		LocalClientConnection conn = ai.getConn().getConn();
-		connections.put(c, new ListenerThread(conn, c, this));
+		ais.put(c, ai);
+
+		ListenerThread l = new ListenerThread(conn, c, this);
+		connections.put(c, l);
+		Thread t = new Thread(l);
+		t.start();
+		threads.put(c, t);
+
+		t = new Thread(ai);
+		t.start();
+		aiThreads.put(c, t);
 		try
 		{
 			Thread.sleep(300);
@@ -392,10 +499,20 @@ public class Server implements Runnable
 	 */
 	protected void replacePlayerWithAI(Colour col)
 	{
-		if (connections.containsKey(col))
+		if (connections.containsKey(col) && connections.get(col).getConnection() instanceof RemoteClientConnection)
 		{
-			connections.get(col).shutDown();
-			replacePlayer(col);
+			try
+			{
+				// Instruct ListenerThread to shutdown and wait until it joins
+				connections.get(col).shutDown();
+				threads.get(col).join();
+
+				replacePlayer(col);
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 

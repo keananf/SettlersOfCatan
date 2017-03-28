@@ -1,8 +1,17 @@
 package client;
 
+import catan.SettlersOfCatan;
 import com.badlogic.gdx.Gdx;
 import connection.IServerConnection;
+import enums.Colour;
+import game.Game;
+import game.players.ClientPlayer;
+import intergroup.Requests;
+import intergroup.board.Board;
+import intergroup.lobby.Lobby;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -12,28 +21,39 @@ import java.util.concurrent.Semaphore;
  */
 public abstract class Client implements Runnable
 {
+	protected SettlersOfCatan catan;
 	protected ClientGame state;
 	protected EventProcessor eventProcessor;
 	protected TurnProcessor turnProcessor;
 	protected MoveProcessor moveProcessor;
+	protected ClientPlayer thisPlayer;
 	protected static final int PORT = 12345;
-	private Turn turn;
+	private TurnState turn;
 	private IServerConnection conn;
 	private Semaphore stateLock, turnLock;
-	private Thread thread;
+	private List<String> usersInLobby;
+	protected boolean active;
+
+	public Client(SettlersOfCatan game)
+	{
+		this();
+		this.catan = game;
+	}
 
 	public Client()
 	{
+		thisPlayer = new ClientPlayer(Colour.BLUE, "Default");
+		usersInLobby = new ArrayList<String>(Game.NUM_PLAYERS);
 		setUpConnection();
-		thread = new Thread(this);
-		thread.start();
 	}
 
 	@Override
 	public void run()
 	{
+		active = true;
+
 		// Loop processing events when needed and sending turns
-		while (getState() == null || !getState().isOver())
+		while (active && (getState() == null || !getState().isOver()))
 		{
 			try
 			{
@@ -43,6 +63,7 @@ public abstract class Client implements Runnable
 			catch (Exception e)
 			{
 				e.printStackTrace();
+				shutDown();
 			}
 		}
 		log("Client Play", "Ending AI client loop");
@@ -92,10 +113,12 @@ public abstract class Client implements Runnable
 		this.conn = conn;
 		this.stateLock = new Semaphore(1);
 		this.turnLock = new Semaphore(1);
-		this.turn = new Turn();
+		this.turn = new TurnState();
+
 		this.turnProcessor = new TurnProcessor(conn, this);
 		this.moveProcessor = new MoveProcessor(this);
 		this.eventProcessor = new EventProcessor(conn, this);
+		turn.getExpectedMoves().add(Requests.Request.BodyCase.JOINLOBBY);
 	}
 
 	/**
@@ -221,14 +244,11 @@ public abstract class Client implements Runnable
 	 */
 	public void shutDown()
 	{
-		conn.shutDown();
-		try
+		if (active)
 		{
-			thread.join();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
+			active = false;
+			conn.shutDown();
+			if (catan != null && catan.isActive()) catan.dispose();
 		}
 	}
 
@@ -248,12 +268,29 @@ public abstract class Client implements Runnable
 			Gdx.app.log(tag, msg);
 	}
 
+	/**
+	 * Processes the user who just joined the lobby
+	 *
+	 * @param lobbyUpdate the list of players in the lobby
+	 * @param instigator
+	 */
+	public void processPlayers(Lobby.Usernames lobbyUpdate, Board.Player instigator)
+	{
+		for (String username : lobbyUpdate.getUsernameList())
+		{
+			if (!usersInLobby.contains(username))
+			{
+				usersInLobby.add(username);
+			}
+		}
+	}
+
 	public ClientGame getState()
 	{
 		return state;
 	}
 
-	public Turn getTurn()
+	public TurnState getTurn()
 	{
 		return turn;
 	}
@@ -282,4 +319,19 @@ public abstract class Client implements Runnable
 	 * Attempts to set up a connection with the server
 	 */
 	protected abstract void setUpConnection();
+
+	public ClientPlayer getPlayer()
+	{
+		return thisPlayer;
+	}
+
+	public void setPlayer(ClientPlayer p)
+	{
+		this.thisPlayer = p;
+	}
+
+	public boolean isActive()
+	{
+		return active;
+	}
 }

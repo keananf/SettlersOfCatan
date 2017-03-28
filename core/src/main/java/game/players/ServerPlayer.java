@@ -178,7 +178,7 @@ public class ServerPlayer extends Player
 
 		// If you just bought this card and cannot play it this turn
 		if (recentBoughtCards.containsKey(card)
-				&& cards.get(card) == recentBoughtCards.get(card)) { throw new CannotPlayException(); }
+				&& cards.get(card).equals(recentBoughtCards.get(card))) { throw new CannotPlayException(); }
 
 		// Remove from inventory
 		super.playCard(card);

@@ -296,24 +296,21 @@ public class Server implements Runnable
 		{
 			Socket connection = serverSocket.accept();
 
-			if (connection != null)
-			{
-				Colour c = null;
-				try
-				{
-					c = game.joinGame();
-				}
-				catch (GameFullException e)
-				{
-				}
-				ListenerThread l = new ListenerThread(new RemoteClientConnection(connection), c, this);
-				connections.put(c, l);
-				Thread t = new Thread(l);
-				t.start();
-				threads.put(c, t);
-				log("Server Setup", String.format("Player %d connected", numConnections));
-				numConnections++;
-			}
+            Colour c = null;
+            try
+            {
+                c = game.joinGame();
+            }
+            catch (GameFullException e)
+            {
+            }
+            ListenerThread l = new ListenerThread(new RemoteClientConnection(connection), c, this);
+            connections.put(c, l);
+            Thread t = new Thread(l);
+            t.start();
+            threads.put(c, t);
+            log("Server Setup", String.format("Player %d connected", numConnections));
+            numConnections++;
 		}
 
 		log("Server Setup", "All Players connected. Starting game...%n");

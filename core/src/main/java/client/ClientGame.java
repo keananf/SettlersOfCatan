@@ -610,6 +610,8 @@ public class ClientGame extends Game
 		ResourceType r = ResourceType.fromProto(steal.getResource());
 		int quantity = steal.getQuantity();
 
+		if (quantity == 0) return;
+
 		// Update resources
 		Map<ResourceType, Integer> stolen = new HashMap<ResourceType, Integer>();
 		stolen.put(r, quantity);

@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static java.lang.System.exit;
-
 public abstract class AICore implements IAI
 {
 	private AIClient client;
@@ -40,7 +38,10 @@ public abstract class AICore implements IAI
 
 			client.sendTurn(turn);
 		}
-		else { client.log("Client Play", "No move"); }
+		else
+		{
+			client.log("Client Play", "No move");
+		}
 
 	}
 

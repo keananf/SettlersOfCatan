@@ -104,12 +104,12 @@ public class Server implements Runnable
 	private void shutDown()
 	{
 		// Shut down all individual connections
-		for(Colour c : connections.keySet())
+		for (Colour c : connections.keySet())
 		{
 			try
 			{
 				// Instruct AI thread to terminate, then wait
-				if(ais.containsKey(c) && aiThreads.containsKey(c))
+				if (ais.containsKey(c) && aiThreads.containsKey(c))
 				{
 					ais.get(c).shutDown();
 					aiThreads.get(c).join();

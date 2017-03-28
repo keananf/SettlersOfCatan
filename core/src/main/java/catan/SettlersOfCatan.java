@@ -37,14 +37,14 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	@Override
 	public void dispose()
 	{
-		if(active)
+		if (active)
 		{
-			if(client != null && client.isActive()) client.shutDown();
+			if (client != null && client.isActive()) client.shutDown();
 			client = null;
 			skin.dispose();
 			try
 			{
-				if(t != null) t.join();
+				if (t != null) t.join();
 			}
 			catch (InterruptedException e)
 			{

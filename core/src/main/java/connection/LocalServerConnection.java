@@ -36,7 +36,7 @@ public class LocalServerConnection implements IServerConnection
 		{
 		}
 
-		if(fromServer == null)
+		if (fromServer == null)
 		{
 			shutDown();
 			return null;

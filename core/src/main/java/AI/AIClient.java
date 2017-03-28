@@ -36,14 +36,14 @@ public abstract class AIClient extends Client
 	{
 		switch (difficulty)
 		{
-			case EASY:
-				ai = new EasyAI(this);
-				break;
+		case EASY:
+			ai = new EasyAI(this);
+			break;
 
-			case VERYEASY:
-			default:
-				ai = new VeryEasyAI(this);
-				break;
+		case VERYEASY:
+		default:
+			ai = new VeryEasyAI(this);
+			break;
 		}
 	}
 

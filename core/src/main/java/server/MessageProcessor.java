@@ -340,6 +340,13 @@ public class MessageProcessor
 			return true;
 		}
 
+		// Can play dev card on first turn
+		else if (!expected.isEmpty() && expected.contains(Requests.Request.BodyCase.ROLLDICE)
+				&& msg.getRequest().getBodyCase().equals(Requests.Request.BodyCase.PLAYDEVCARD))
+		{
+			return true;
+		}
+
 		// If the move is not expected
 		else if (!expected.isEmpty()) return false;
 

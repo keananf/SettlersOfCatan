@@ -66,7 +66,6 @@ public class RankNode {
         public void addResourceRank(){
             //priority of resource, with a focus on building settlements and roads
 
-            ResourceType r = null;
             for(Hex hex:surroundingHexes) {
                 ResourceType rt = hex.getResource();
 

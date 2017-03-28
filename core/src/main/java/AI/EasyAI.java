@@ -168,6 +168,7 @@ public class EasyAI extends AICore
             for (Edge e: toAnalyse.getEdges()) {
                 if(!e.hasSettlement()){
                     rank++;
+
                     Node nxtToAnalyse = (e.getX().getSettlement() == null && !e.getX().equals(toAnalyse) ) ? e.getX() : e.getY();
                     if(nxtToAnalyse.getSettlement() != null){
                          rank ++ ;
@@ -256,8 +257,12 @@ public class EasyAI extends AICore
         return 6;
     }
 
+
+
+
+
     @Override
-    public int rankTargetPlayer(Colour target)
+    public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)
     {
     	int rank = 5;
     	
@@ -305,8 +310,8 @@ public class EasyAI extends AICore
         return rank;
     }
 
-    @Override
-    public int rankInitiateTrade(Turn turn)
+    @Override// remains 0 as this is the EasyAI
+    public int rankEndTurn()
     {
         int rank = 0;
         
@@ -322,14 +327,14 @@ public class EasyAI extends AICore
         return rank;
     }
 
-    @Override
-    public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)
+    @Override   //done by jack
+    public int rankTargetPlayer(Colour target)
     {
         return -1;
     }
 
-    @Override
-    public int rankEndTurn()
+    @Override  //done by jack
+    public int rankInitiateTrade(Turn turn)
     {
         return 0;
     }

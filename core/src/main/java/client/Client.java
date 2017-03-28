@@ -194,7 +194,6 @@ public abstract class Client implements Runnable
 		}
 		else
 		{
-			// TODO else display error?
 			log("Client Play", String.format("Invalid Request %s for %s", turn.getChosenMove().name(),
 					getState().getPlayer().getId().name()));
 		}

@@ -7,12 +7,12 @@ import connection.LocalClientConnection;
 import connection.RemoteClientConnection;
 import enums.Colour;
 import exceptions.GameFullException;
+import game.CurrentTrade;
 import game.Game;
 import game.players.Player;
 import intergroup.EmptyOuterClass;
 import intergroup.Events;
 import intergroup.Events.Event;
-import intergroup.Messages;
 import intergroup.Messages.Message;
 import intergroup.Requests;
 import intergroup.Requests.Request;
@@ -170,7 +170,7 @@ public class Server implements Runnable
 		case CITYBUILT:
 		case ROADBUILT:
 		case BANKTRADE:
-		case PLAYERTRADE:
+		case PLAYERTRADEACCEPTED:
 		case LOBBYUPDATE:
 		case CHATMESSAGE:
 		case RESOURCESTOLEN:
@@ -180,7 +180,10 @@ public class Server implements Runnable
 			broadcastEvent(event);
 			break;
 
+
 		// Sent individually, so ignore
+		case PLAYERTRADEREJECTED:
+		case PLAYERTRADEINITIATED:
 		case BEGINGAME:
 			break;
 
@@ -531,16 +534,53 @@ public class Server implements Runnable
 	}
 
 	/**
-	 * Simply forwards the trade offer to the intended recipients
-	 * 
-	 * @param msg the original message
+	 * Simply forwards the trade offer to the intended recipient
+	 *
 	 * @param playerTrade the internal trade request inside the message
+	 * @param instigator the player who requested the trade that was rejected
 	 */
-	protected void forwardTradeOffer(Messages.Message msg, Trade.WithPlayer playerTrade)
+	protected void forwardTradeOffer(Trade.WithPlayer playerTrade, Board.Player instigator)
 	{
-		Colour col = game.getPlayer(playerTrade.getOther().getId()).getColour();
+		Colour player = game.getPlayer(instigator.getId()).getColour();
+		Colour recipient = game.getPlayer(playerTrade.getOther().getId()).getColour();
+		Event ev = Event.newBuilder().setPlayerTradeInitiated(playerTrade).setInstigator(instigator).build();
+		Message msg = Message.newBuilder().setEvent(ev).build();
 
-		if (connections.containsKey(col)) sendMessage(msg, col);
+		// Send messages
+		if (connections.containsKey(recipient))
+		{
+			sendMessage(msg, recipient);
+		}
+		if(connections.containsKey(player))
+		{
+			sendMessage(msg, player);
+		}
+	}
+
+	/**
+	 * Simply forwards the reject to the participants
+	 *
+	 * @param playerTrade the internal trade request inside the message
+	 * @param instigator the player who requested the trade that was rejected
+	 */
+	protected void forwardTradeReject(Trade.WithPlayer playerTrade, Board.Player instigator)
+	{
+		// Extract player info, and set up the reject event
+		Colour recipient = game.getPlayer(playerTrade.getOther().getId()).getColour();
+		Colour player = game.getPlayer(instigator.getId()).getColour();
+		Event ev = Event.newBuilder().setInstigator(instigator)
+				.setPlayerTradeRejected(EmptyOuterClass.Empty.getDefaultInstance()).build();
+		Message msg = Message.newBuilder().setEvent(ev).build();
+
+		// Send messages
+		if (connections.containsKey(recipient))
+		{
+			sendMessage(msg, recipient);
+		}
+		if(connections.containsKey(player))
+		{
+			sendMessage(msg, player);
+		}
 	}
 
 	/**
@@ -609,5 +649,10 @@ public class Server implements Runnable
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public CurrentTrade getCurrentTrade()
+	{
+		return msgProc.getCurrentTrade();
 	}
 }

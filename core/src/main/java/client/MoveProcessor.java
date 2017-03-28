@@ -3,6 +3,7 @@ package client;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
+import game.CurrentTrade;
 import game.build.Road;
 import game.players.Player;
 import grid.Edge;
@@ -95,8 +96,7 @@ public class MoveProcessor
 			possibilities.add(new Turn(Requests.Request.BodyCase.JOINLOBBY));
 			return possibilities;
 		}
-		if (getGame() == null)
-			return possibilities;
+		if (getGame() == null) return possibilities;
 		else
 		{
 			// Add initial possibilities
@@ -118,8 +118,12 @@ public class MoveProcessor
 		}
 		if (getExpectedMoves().isEmpty() && checkTurn())
 		{
-			possibilities.add(new Turn(Requests.Request.BodyCase.ENDTURN));
-			possibilities.add(new Turn(Requests.Request.BodyCase.INITIATETRADE));
+			// So as to not spam requests
+			if(getTurn().getCurrentTrade() == null)
+			{
+				possibilities.add(new Turn(Requests.Request.BodyCase.INITIATETRADE));
+				possibilities.add(new Turn(Requests.Request.BodyCase.ENDTURN));
+			}
 		}
 		if (getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
 		{
@@ -201,11 +205,10 @@ public class MoveProcessor
 				Turn turn = new Turn();
 				turn.setChosenMove(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
 				turn.setTradeResponse(resp);
-				turn.setPlayerTrade(getTurn().getPlayerTrade());
+				turn.setPlayerTrade(getTurn().getCurrentTrade().getTrade());
 				possibilities.add(turn);
 			}
 		}
-
 		return possibilities;
 	}
 
@@ -374,22 +377,20 @@ public class MoveProcessor
 	{
 		boolean val = false;
 
-		Trade.WithPlayer trade = getTurn().getPlayerTrade();
-		if (trade != null && getTurn().isTradePhase())
+		CurrentTrade t = getTurn().getCurrentTrade();
+		if (t != null && getTurn().isTradePhase() && t.getTrade().getOther().getId() == getGame().getPlayer().getId())
 		{
-			Resource.Counts cost = trade.getOther().getId().equals(getGame().getPlayer().getId()) ? trade.getWanting()
+			Trade.WithPlayer trade = t.getTrade();
+			Resource.Counts cost = trade.getOther().getId() == (getGame().getPlayer().getId()) ? trade.getWanting()
 					: trade.getOffering();
-			Resource.Counts wanting = trade.getOther().getId().equals(getGame().getPlayer().getId())
-					? trade.getOffering() : trade.getWanting();
 			Map<ResourceType, Integer> costMap = getGame().processResources(cost);
-			Map<ResourceType, Integer> wantingMap = getGame().processResources(wanting);
 
 			// If the move is expected, and the response is accept AND the
 			// player can afford it.
 			// OR if it is reject.
 			val = getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
-					&& ((response.equals(Trade.Response.ACCEPT) && getGame().getBank().canAfford(wantingMap)
-							&& getGame().getPlayer().canAfford(costMap)) || (response.equals(Trade.Response.REJECT)));
+					&& ((response.equals(Trade.Response.ACCEPT) && getGame().getPlayer().canAfford(costMap))
+					|| (response.equals(Trade.Response.REJECT)));
 		}
 
 		return val;
@@ -443,7 +444,8 @@ public class MoveProcessor
 		else if (!getExpectedMoves().isEmpty()) return false;
 
 		// If in trade phase and the given message isn't a trade
-		if (getTurn().isTradePhase() && ((!type.equals(Requests.Request.BodyCase.INITIATETRADE) && checkTurn())
+		if (getTurn().isTradePhase() && ((checkTurn() &&
+				!(type.equals(Requests.Request.BodyCase.INITIATETRADE) || type.equals(Requests.Request.BodyCase.ENDTURN)))
 				|| (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !checkTurn()))) { return false; }
 
 		// If it's not your turn and there are no expected moves from you
@@ -487,8 +489,6 @@ public class MoveProcessor
 			val = checkDiscard(turn.getChosenResources());
 			break;
 		case MOVEROBBER:
-			client.log("Client Play",
-					String.format("checking move robber for %s", getGame().getPlayer().getId().name()));
 			val = checkHex(turn.getChosenHex());
 			break;
 		case CHOOSERESOURCE:

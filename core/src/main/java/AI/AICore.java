@@ -12,7 +12,7 @@ import java.util.Random;
 
 public abstract class AICore implements IAI
 {
-	private AIClient client;
+	protected AIClient client;
 	private Random rand;
 
 	public AICore(AIClient client)
@@ -24,7 +24,8 @@ public abstract class AICore implements IAI
 	@Override
 	public void performMove()
 	{
-		client.log("Client Play", "Making move");
+		/*if (getPlayer() != null && getPlayer().getId() != null)
+			client.log("Client Play", String.format("Making move for %s", getPlayer().getId().name()));*/
 		Turn turn = selectAndPrepareMove();
 		if (turn != null)
 		{
@@ -38,10 +39,10 @@ public abstract class AICore implements IAI
 
 			client.sendTurn(turn);
 		}
-		else
+		/*else
 		{
 			client.log("Client Play", "No move");
-		}
+		}*/
 
 	}
 
@@ -162,8 +163,7 @@ public abstract class AICore implements IAI
 		// Eliminate trades and chats
 		for (Turn t : options)
 		{
-			if (t.getChosenMove().equals(Requests.Request.BodyCase.CHATMESSAGE)
-					|| t.getChosenMove().equals(Requests.Request.BodyCase.INITIATETRADE))
+			if (t.getChosenMove().equals(Requests.Request.BodyCase.CHATMESSAGE))
 				ret.remove(t);
 		}
 

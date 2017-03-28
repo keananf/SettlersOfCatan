@@ -553,7 +553,7 @@ public abstract class Player
 		// Update recent bought caught
 		existing = recentBoughtCards.containsKey(type) ? recentBoughtCards.get(type) : 0;
 		recentBoughtCards.put(type, existing + 1);
-		
+
 		// Grant VP point if necessary
 		if (type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University))
 		{
@@ -633,7 +633,7 @@ public abstract class Player
 		recentBoughtCards.clear();
 	}
 
-	public Map<DevelopmentCardType,Integer> getRecentBoughtDevCards()
+	public Map<DevelopmentCardType, Integer> getRecentBoughtDevCards()
 	{
 		return recentBoughtCards;
 	}

@@ -64,8 +64,8 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test
-	public void playAndRemoveDevelopmentCardTest() throws CannotAffordException, DoesNotOwnException,
-			BankLimitException, CannotPlayException
+	public void playAndRemoveDevelopmentCardTest()
+			throws CannotAffordException, DoesNotOwnException, BankLimitException, CannotPlayException
 	{
 		// Grant resources and buy a card
 		assertTrue(p.getDevelopmentCards().size() == 0);
@@ -358,7 +358,8 @@ public class DevelopmentCardTests extends TestHelper
 		req.setPlayDevCard(Board.PlayableDevCard.ROAD_BUILDING);
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
 
-		// Try to play move. CannotPlayException will be caught and nothing will happen
+		// Try to play move. CannotPlayException will be caught and nothing will
+		// happen
 		server.addMessageToProcess(
 				new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 		server.processMessage();
@@ -385,7 +386,8 @@ public class DevelopmentCardTests extends TestHelper
 		server.getExpectedMoves(p.getColour()).add(Requests.Request.BodyCase.ROLLDICE);
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 
-		// Try to play move. CannotPlayException will be caught and nothing will happen
+		// Try to play move. CannotPlayException will be caught and nothing will
+		// happen
 		server.addMessageToProcess(
 				new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 		server.processMessage();

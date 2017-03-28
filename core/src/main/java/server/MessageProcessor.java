@@ -341,7 +341,7 @@ public class MessageProcessor
 		}
 
 		// Can play dev card on first turn
-		else if(!expected.isEmpty() && expected.contains(Requests.Request.BodyCase.ROLLDICE)
+		else if (!expected.isEmpty() && expected.contains(Requests.Request.BodyCase.ROLLDICE)
 				&& msg.getRequest().getBodyCase().equals(Requests.Request.BodyCase.PLAYDEVCARD))
 		{
 			return true;

@@ -95,7 +95,8 @@ public class MoveProcessor
 			possibilities.add(new Turn(Requests.Request.BodyCase.JOINLOBBY));
 			return possibilities;
 		}
-		if (getGame() == null) return possibilities;
+		if (getGame() == null)
+			return possibilities;
 		else
 		{
 			// Add initial possibilities
@@ -299,14 +300,15 @@ public class MoveProcessor
 	{
 		if (type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University)) return false;
 
-		// If player's turn and no other moves are expected, or it is the start of their turn
-		if (checkTurn() && (getExpectedMoves().isEmpty() || getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE)))
+		// If player's turn and no other moves are expected, or it is the start
+		// of their turn
+		if (checkTurn()
+				&& (getExpectedMoves().isEmpty() || getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE)))
 		{
 			Player player = getGame().getPlayer();
 
 			// If the player owns the provided card
-			if (player.getDevelopmentCards().containsKey(type)
-					&& player.getDevelopmentCards().get(type) > 0)
+			if (player.getDevelopmentCards().containsKey(type) && player.getDevelopmentCards().get(type) > 0)
 			{
 				// If you didn't just buy this card / these cards
 				Map<DevelopmentCardType, Integer> recentCards = player.getRecentBoughtDevCards();

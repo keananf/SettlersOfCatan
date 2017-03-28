@@ -177,10 +177,8 @@ public class ServerPlayer extends Player
 		if (!cards.containsKey(card)) { throw new DoesNotOwnException(card, getColour()); }
 
 		// If you just bought this card and cannot play it this turn
-		if(recentBoughtCards.containsKey(card) && cards.get(card) == recentBoughtCards.get(card))
-		{
-			throw new CannotPlayException();
-		}
+		if (recentBoughtCards.containsKey(card)
+				&& cards.get(card) == recentBoughtCards.get(card)) { throw new CannotPlayException(); }
 
 		// Remove from inventory
 		super.playCard(card);

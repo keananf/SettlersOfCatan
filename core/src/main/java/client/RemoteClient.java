@@ -1,6 +1,5 @@
 package client;
 
-import catan.SettlersOfCatan;
 import connection.RemoteServerConnection;
 
 import java.io.IOException;

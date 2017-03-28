@@ -244,11 +244,11 @@ public abstract class Client implements Runnable
 	 */
 	public void shutDown()
 	{
-		if(active)
+		if (active)
 		{
 			active = false;
 			conn.shutDown();
-			if(catan != null && catan.isActive()) catan.dispose();
+			if (catan != null && catan.isActive()) catan.dispose();
 		}
 	}
 

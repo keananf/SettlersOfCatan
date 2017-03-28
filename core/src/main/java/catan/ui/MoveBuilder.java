@@ -19,7 +19,7 @@ class MoveBuilder
 		this.client = client;
 	}
 
-	protected void onSelect(BoardElement element)
+	void onSelect(BoardElement element)
 	{
 		Turn turn = new Turn();
 

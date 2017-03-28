@@ -23,7 +23,7 @@ public class RemoteGameScreen implements Screen
 	final private SettlersOfCatan game;
 	final private Stage ui = new Stage(new ScreenViewport());
 
-	public RemoteGameScreen(final SettlersOfCatan game)
+	RemoteGameScreen(final SettlersOfCatan game)
 	{
 		this.game = game;
 		Gdx.input.setInputProcessor(ui);

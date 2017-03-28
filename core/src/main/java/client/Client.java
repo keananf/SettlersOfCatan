@@ -161,6 +161,7 @@ public abstract class Client implements Runnable
 			break;
 		case SUBMITTARGETPLAYER:
 			getTurn().setTarget(selectedMove.getTarget());
+			break;
 		case BUILDSETTLEMENT:
 		case BUILDCITY:
 			getTurn().setChosenNode(selectedMove.getChosenNode());

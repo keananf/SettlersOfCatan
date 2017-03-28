@@ -81,6 +81,7 @@ public class EventProcessor
 			getGame().processGameInfo(ev.getGameInfo());
 			client.log("Event Proc",
 					String.format("Game information received. \tPlayer Id: %s", getGame().getPlayer().getId().name()));
+			break;
 		case CHATMESSAGE:
 			getGame().writeMessage(ev.getChatMessage(), ev.getInstigator());
 			break;

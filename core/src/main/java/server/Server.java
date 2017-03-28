@@ -67,7 +67,7 @@ public class Server implements Runnable
 			getInitialSettlementsAndRoads();
 
 			Thread.sleep(500);
-			log("Server Start", "\n\nAll players Connected. Beginning play.\n");
+			log("Server Start", "%n%nAll players Connected. Beginning play.%n");
 			while (active && !game.isOver())
 			{
 				// Read moves from queue and log
@@ -285,41 +285,38 @@ public class Server implements Runnable
 		// If no remote players
 		if (numConnections == Game.NUM_PLAYERS)
 		{
-			log("Server Setup", "All Players connected. Starting game...\n");
+			log("Server Setup", "All Players connected. Starting game...%n");
 			return;
 		}
 
 		serverSocket = new ServerSocket();
 		serverSocket.bind(new InetSocketAddress("localhost", PORT));
 		log("Server Setup",
-				String.format("Server started. Waiting for client(s)...%s\n", serverSocket.getInetAddress()));
+				String.format("Server started. Waiting for client(s)...%s%n", serverSocket.getInetAddress()));
 
 		// Loop until all players found
 		while (numConnections < Game.NUM_PLAYERS)
 		{
 			Socket connection = serverSocket.accept();
 
-			if (connection != null)
-			{
-				Colour c = null;
-				try
-				{
-					c = game.joinGame();
-				}
-				catch (GameFullException e)
-				{
-				}
-				ListenerThread l = new ListenerThread(new RemoteClientConnection(connection), c, this);
-				connections.put(c, l);
-				Thread t = new Thread(l);
-				t.start();
-				threads.put(c, t);
-				log("Server Setup", String.format("Player %d connected", numConnections));
-				numConnections++;
-			}
+            Colour c = null;
+            try
+            {
+                c = game.joinGame();
+            }
+            catch (GameFullException e)
+            {
+            }
+            ListenerThread l = new ListenerThread(new RemoteClientConnection(connection), c, this);
+            connections.put(c, l);
+            Thread t = new Thread(l);
+            t.start();
+            threads.put(c, t);
+            log("Server Setup", String.format("Player %d connected", numConnections));
+            numConnections++;
 		}
 
-		log("Server Setup", "All Players connected. Starting game...\n");
+		log("Server Setup", "All Players connected. Starting game...%n");
 	}
 
 	/**
@@ -358,7 +355,7 @@ public class Server implements Runnable
 			}
 		}
 
-		log("Server play", "All players connected\n\n");
+		log("Server play", "All players connected%n%n");
 		try
 		{
 			Thread.sleep(1000);

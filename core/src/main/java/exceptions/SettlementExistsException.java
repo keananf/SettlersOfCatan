@@ -17,6 +17,6 @@ public class SettlementExistsException extends Exception
 	{
 		Node n = settlement.getNode();
 
-		return String.format("Settlement at node (%d,%d) already exists\n", n.getX(), n.getY());
+		return String.format("Settlement at node (%d,%d) already exists%n", n.getX(), n.getY());
 	}
 }

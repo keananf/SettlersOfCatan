@@ -203,21 +203,23 @@ public class Port extends Edge
 		offerer.grantResources(request, bank);
 	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
 
-        Port port = (Port) o;
+		Port port = (Port) o;
 
-        return exchangeType == port.exchangeType;
-    }
+		return exchangeType == port.exchangeType;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (exchangeType != null ? exchangeType.hashCode() : 0);
-        return result;
-    }
+	@Override
+	public int hashCode()
+	{
+		int result = super.hashCode();
+		result = 31 * result + (exchangeType != null ? exchangeType.hashCode() : 0);
+		return result;
+	}
 }

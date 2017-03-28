@@ -349,7 +349,7 @@ public class DevelopmentCardTests extends TestHelper
 		// Grant
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
-		
+
 		// Set up request
 		Requests.Request.Builder req = Requests.Request.newBuilder();
 		req.setPlayDevCard(Board.PlayableDevCard.ROAD_BUILDING);

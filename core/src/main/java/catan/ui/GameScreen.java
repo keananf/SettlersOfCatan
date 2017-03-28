@@ -36,11 +36,10 @@ public class GameScreen implements Screen
 	final private AssMan assets = new AssMan();
 	final private ModelBatch MODEL_BATCH = new ModelBatch();
 
-	protected Camera cam;
+	Camera cam;
 	private CatanCamController camController;
-	private GameController gameController;
 
-	final protected Array<ModelInstance> instances = new Array<>();
+	final private Array<ModelInstance> instances = new Array<>();
 	final private Environment environment = new Environment();
 
 	final protected SettlersOfCatan game;
@@ -77,14 +76,14 @@ public class GameScreen implements Screen
 		stage.draw();
 	}
 
-	public GameScreen(final SettlersOfCatan game)
+	GameScreen(final SettlersOfCatan game)
 	{
 		this.game = game;
 		ClientGame gameState = game.getState();
 
 		initCamera();
 		camController = new CatanCamController(cam);
-		gameController = new GameController(this);
+		GameController gameController = new GameController(this);
 		gameController.setUp(gameState);
 
 		final InputMultiplexer multiplexer = new InputMultiplexer();

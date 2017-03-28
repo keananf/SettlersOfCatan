@@ -133,6 +133,10 @@ public class EventProcessor
 		updateExpectedMoves(ev);
 	}
 
+	/**
+	 * Updates the expected moves for this player based upon the event
+	 * @param ev the event that was just received from the server
+	 */
 	private void updateExpectedMoves(Event ev)
 	{
 		if (ev == null || ev.getTypeCase().equals(Event.TypeCase.TYPE_NOT_SET)

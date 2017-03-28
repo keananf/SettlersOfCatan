@@ -162,8 +162,7 @@ public abstract class AICore implements IAI
 		// Eliminate trades and chats
 		for (Turn t : options)
 		{
-			if (t.getChosenMove().equals(Requests.Request.BodyCase.CHATMESSAGE)
-					|| t.getChosenMove().equals(Requests.Request.BodyCase.INITIATETRADE))
+			if (t.getChosenMove().equals(Requests.Request.BodyCase.CHATMESSAGE))
 				ret.remove(t);
 		}
 

@@ -113,8 +113,7 @@ public abstract class Player
 
 					// If there is a settlement and it is not foreign, then the
 					// join is not broken
-					if ((building == null)
-							|| (building != null && building.getPlayerColour().equals(r.getPlayerColour())))
+					if ((building == null) || building.getPlayerColour().equals(r.getPlayerColour()))
 					{
 						isConnected = true;
 						listsAddedTo.add(index);

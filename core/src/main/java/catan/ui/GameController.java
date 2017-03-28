@@ -1,73 +1,191 @@
 package catan.ui;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Array;
+import client.ClientGame;
+import grid.BoardElement;
+import grid.Hex;
+import grid.Node;
+
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.math.Plane;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
+import grid.Edge;
+import java.util.List;
 
+/**
+ * Handles mouse input intended to interact with the game board.
+ */
 class GameController implements InputProcessor
 {
-	private final GameScreen screen;
-	private final static Plane PLANE = new Plane(new Vector3(0, 1, 0), 0.1f);
+	private final Camera camera;
+	private final MoveBuilder moveBuilder;
 
-	public GameController(GameScreen screen)
+	private List<Hex> hexes;
+	private List<Node> nodes;
+	private List<Edge> edges;
+
+	/** A plane parallel to the game board used to detect clicks. */
+	private final static float DETECTION_Y = 0.1f;
+	private final static Plane DETECTION_PLANE = new Plane(new Vector3(0, 1, 0), new Vector3(0, DETECTION_Y, 0));
+
+	GameController(GameScreen screen)
 	{
-		this.screen = screen;
+		this.camera = screen.cam;
+		this.moveBuilder = new MoveBuilder(screen.game.client);
 	}
 
-	@Override public boolean touchUp(int screenX, int screenY, int pointer, int button)
+	public void setUp(ClientGame state)
 	{
-		Ray ray = screen.cam.getPickRay(screenX, screenY);
+		this.hexes = state.getGrid().getHexesAsList();
+		this.nodes = state.getGrid().getNodesAsList();
+		this.edges = state.getGrid().getEdgesAsList();
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button)
+	{
+		Ray ray = camera.getPickRay(screenX, screenY);
 
 		Vector3 intersectionPoint = new Vector3();
-		if (!Intersector.intersectRayPlane(ray, PLANE, intersectionPoint))
-			return false;
+		if (!Intersector.intersectRayPlane(ray, DETECTION_PLANE, intersectionPoint)) return false;
 
-		GameObject inst = getObject(intersectionPoint.x, intersectionPoint.z);
-		if (inst == null)
-		{
-			return false;
-		}
-		else
-		{
-			inst.materials.get(0).set(ColorAttribute.createDiffuse(Color.BLACK));
-			return true;
-		}
+		BoardElement element = findElement(intersectionPoint.x, intersectionPoint.z);
+		if (element == null) return false;
+
+		// moveBuilder.onSelect(element);
+
+		return true;
 	}
 
-	public GameObject getObject(float planeX, float planeY) {
+	/** Returns the clicked on element or null if none. */
+	private BoardElement findElement(float planeX, float planeY)
+	{
+		BoardElement found = null;
 
-		for(GameObject hex : screen.hexes){
-			final float WIDTH = 2f;
-			double furthestLeft = hex.centre.x - WIDTH/2;
-			double furtherstRight = hex.centre.x + WIDTH/2;
-			double heighestHeight = hex.centre.z + ((Math.sqrt(3)*WIDTH)/4);
-			double lowestHeight = hex.centre.z - ((Math.sqrt(3)*WIDTH)/4);
+		found = findNode(planeX, planeY);
+		if (found != null) return found;
 
-			if (planeX <= furtherstRight && planeX >= furthestLeft)
+		found = findEdge(planeX, planeY);
+		if (found != null) return found;
+
+		found = findHex(planeX, planeY);
+		if (found != null) return found;
+
+		return null;
+	}
+
+	/**
+	 * @param planeX X-coord on {@code DETECTION_PLANE}
+	 * @param planeY Y-coord on {@code DETECTION_PLANE}
+	 * @return clicked on {@link Node} or null.
+	 */
+	private Node findNode(float planeX, float planeY)
+	{
+		for (Node node : nodes)
+		{
+			Vector2 coord = node.get2DPos();
+
+			if (coord.dst(planeX, planeY) <= 0.3) { return node; }
+		}
+
+		return null;
+
+	}
+
+	/**
+	 * @param planeX X-coord on {@code DETECTION_PLANE}
+	 * @param planeY Y-coord on {@code DETECTION_PLANE}
+	 * @return clicked on {@link Edge} or null.
+	 */
+	private Edge findEdge(float planeX, float planeY)
+	{
+		for (Edge edge : edges)
+		{
+			Vector2 nodeX = edge.getX().get2DPos();
+			Vector2 nodeY = edge.getY().get2DPos();
+
+			float x = (nodeX.x + nodeY.x) / 2;
+			float y = (nodeX.y + nodeY.y) / 2;
+			Vector2 check = new Vector2(x, y);
+			if (check.dst(planeX, planeY) <= 0.2) { return edge; }
+		}
+
+		return null;
+
+	}
+
+	/**
+	 * @param planeX X-coord on {@code DETECTION_PLANE}
+	 * @param planeY Y-coord on {@code DETECTION_PLANE}
+	 * @return clicked on {@link Hex} or null.
+	 */
+	private Hex findHex(float planeX, float planeY)
+	{
+		final float HEX_WIDTH = 2f;
+
+		for (Hex hex : hexes)
+		{
+			final Vector2 pos = hex.get2DPos();
+
+			final double furthestLeft = pos.x - HEX_WIDTH / 2;
+			final double furthestRight = pos.x + HEX_WIDTH / 2;
+			final double highestHeight = pos.y + ((Math.sqrt(3) * HEX_WIDTH) / 4);
+			final double lowestHeight = pos.y - ((Math.sqrt(3) * HEX_WIDTH) / 4);
+
+			if (planeX <= furthestRight && planeX >= furthestLeft)
 			{
-				if (planeY <= heighestHeight && planeY >= lowestHeight)
-				{
-					return hex;
-				}
+				if (planeY <= highestHeight && planeY >= lowestHeight) { return hex; }
 			}
 		}
 		return null;
 	}
 
-	@Override public boolean keyUp(int keycode) { return false; }
-	@Override public boolean keyDown(int keycode) { return false; }
-	@Override public boolean keyTyped(char character) { return false; }
-	@Override public boolean touchDown(int screenX, int screenY, int pointer, int button) { return false; }
-	@Override public boolean touchDragged(int screenX, int screenY, int pointer) { return false; }
-	@Override public boolean mouseMoved(int screenX, int screenY) { return false; }
-	@Override public boolean scrolled(int amount) { return false; }
+	// The InputProcessor interface requires these methods be implemented.
+	// However, we have no
+	// use for them so they all return false (indicating that the input event
+	// was not dealt with by us).
+	@Override
+	public boolean keyUp(int keycode)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean keyDown(int keycode)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount)
+	{
+		return false;
+	}
 }

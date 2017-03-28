@@ -4,10 +4,7 @@ import client.Turn;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
-import game.build.Building;
-import game.build.City;
-import game.build.Road;
-import game.build.Settlement;
+import game.Game;
 import game.players.Player;
 import grid.Edge;
 import grid.Hex;
@@ -15,7 +12,10 @@ import grid.Node;
 import grid.Port;
 import intergroup.trade.Trade;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by 140002949 on 19/03/17.
@@ -139,8 +139,9 @@ public class EasyAI extends AICore
     }
 
     @Override
-    public int rankBuyDevCard() {
-        int rank = 4;
+    public int rankBuyDevCard() 
+    {
+    	int rank = 4;
 
         //check if player can build or set a road if so-> decrease rank by 2
         if(getPlayer().canAfford(Settlement.getSettlementCost()
@@ -154,8 +155,9 @@ public class EasyAI extends AICore
 
 //TODO:ASAP
     @Override
-    public int rankNewRoad(Edge chosenEdge) {
-        Node n1 = chosenEdge.getX();
+    public int rankNewRoad(Edge chosenEdge)
+    {
+    	Node n1 = chosenEdge.getX();
         Node n2 = chosenEdge.getY();
 
         int rank = 3 ;
@@ -166,21 +168,25 @@ public class EasyAI extends AICore
             for (Edge e: toAnalyse.getEdges()) {
                 if(!e.hasSettlement()){
                     rank++;
-                    Node nxtToAnalyse = (e.getX().getSettlement() == null && !e.getX().equals(toAnalyse) ) ? e.getX() : e.getY;
-                    if(nxtToAnalyse.getSettlement() != null){
-                        return rank;
-                    }
-                    else {
 
+                    Node nxtToAnalyse = (e.getX().getSettlement() == null && !e.getX().equals(toAnalyse) ) ? e.getX() : e.getY();
+                    if(nxtToAnalyse.getSettlement() != null){
+                         rank ++ ;
+                    }
+                    else if(nxtToAnalyse.getSettlement().getPlayerColour() != getPlayer().getColour()){
+                        rank =- 2;
                     }
                 }
             }
 
         }else{// if settlement can be build at the end of this road
-
+            Node toAnalyse = (!n1.isNearRoad(getPlayer().getColour())) ? n1 :n2 ;
+            RankNode rn = new RankNode(toAnalyse, getPlayer());
+            rn.rank(false);
+            rank += rn.getRanking();
         }
 
-        return 0;
+        return rank;
     }
 
 
@@ -200,19 +206,73 @@ public class EasyAI extends AICore
     @Override
     public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)
     {
-        return 0;
+    	int rank = 5;
+    	
+    	HashMap<Colour, Integer> totalRank = new HashMap<Colour, Integer>();
+    	
+    	Game game = client.getState();
+    	
+    	HashMap<Colour, Player> players = (HashMap<Colour, Player>) game.getPlayers();
+    	
+    	Set<Colour> colours = players.keySet();
+    	
+    	for(Colour c : colours)
+    	{
+    		Player p = players.get(c);
+    		
+    		HashMap<ResourceType, Integer> resources = (HashMap<ResourceType, Integer>) p.getResources();
+    		
+    		Set<ResourceType> types = resources.keySet();
+    		
+    		for(ResourceType t: types)
+    		{
+    			totalRank.put(c, totalRank.get(c) + resources.get(t));
+    		}
+    		
+    		totalRank.put(c, totalRank.get(c) + p.getVp());
+    	}
+    	
+    	ArrayList<Integer> ranks = new ArrayList<Integer>();
+    	
+    	for(Colour c: colours)
+    	{
+    		ranks.add(totalRank.get(c));
+    	}
+    	
+    	int targetRank = totalRank.get(target);
+    	
+    	for(int i: ranks)
+    	{
+    		if(i > targetRank)
+    		{
+    			rank--;
+    		}
+    	}
+    	
+        return rank;
     }
 
     @Override// remains 0 as this is the EasyAI
     public int rankEndTurn()
     {
-        return 0;
+        int rank = 0;
+        
+        if(hasTraded)
+        {
+        	rank = -1;
+        }
+        else
+        {
+        	rank = -1;
+        }
+        
+        return rank;
     }
 
     @Override   //done by jack
     public int rankTargetPlayer(Colour target)
     {
-        return 0;
+        return -1;
     }
 
     @Override  //done by jack
@@ -220,6 +280,7 @@ public class EasyAI extends AICore
     {
         return 0;
     }
+
 
 
 }

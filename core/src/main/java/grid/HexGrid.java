@@ -29,7 +29,7 @@ public class HexGrid
 		edges = new ArrayList<Edge>();
 		ports = new ArrayList<Port>();
 
-		if(b) initGrid();
+		if (b) initGrid();
 	}
 
 	/**
@@ -117,9 +117,9 @@ public class HexGrid
 		{
 			List<Hex> adjacentHexes = new LinkedList<Hex>();
 			List<GridElement> neighbours = getNeighbours(node);
-			
+
 			// Create both edges AND find the adjacent hexes
-			for(GridElement neighbour : neighbours)
+			for (GridElement neighbour : neighbours)
 			{
 				// If neighbour is a node, create an edge
 				if (neighbour instanceof Node)
@@ -429,8 +429,8 @@ public class HexGrid
 			this.grid.put(new Point(h.getX(), h.getY()), h);
 
 			// Set default robber
-			if (h.getResource().equals(ResourceType.Generic) && (hexWithRobber == null
-					|| hexWithRobber.getResource().equals(ResourceType.Generic)))
+			if (h.getResource().equals(ResourceType.Generic)
+					&& (hexWithRobber == null || hexWithRobber.getResource().equals(ResourceType.Generic)))
 			{
 				h.toggleHasRobber();
 				hexWithRobber = h;

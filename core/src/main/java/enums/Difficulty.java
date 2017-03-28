@@ -1,10 +1,7 @@
 package enums;
 
-public enum Difficulty 
+public enum Difficulty
 {
-	//Placeholder names, can be changed or removed later
-	VERYEASY,
-	EASY,
-	NORMAL,
-	HARD;
+	// Placeholder names, can be changed or removed later
+	VERYEASY, EASY, NORMAL, HARD;
 }

@@ -1,10 +1,10 @@
 package catan;
 
+import AI.LocalAIClient;
 import AI.RemoteAIClient;
 import catan.ui.SplashScreen;
 import client.Client;
 import client.ClientGame;
-import client.LocalClient;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -12,7 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	public Skin skin;
-	private Client client;
+	public Client client;
+	private Thread t;
+	private boolean active;
 
 	@Override
 	public void create()
@@ -35,18 +37,33 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	@Override
 	public void dispose()
 	{
-		client.shutDown();
-		skin.dispose();
+		if (active)
+		{
+			if (client != null && client.isActive()) client.shutDown();
+			client = null;
+			skin.dispose();
+			try
+			{
+				if (t != null) t.join();
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
 	 * Starts up a new remote client.
+	 * 
 	 * @param host the host server to connect to
 	 * @return the status of the connection
 	 */
 	public boolean startNewRemoteClient(String host)
 	{
 		client = new RemoteAIClient(host);
+		t = new Thread(client);
+		t.start();
 		return ((RemoteAIClient) client).isInitialised();
 	}
 
@@ -55,7 +72,9 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	 */
 	public void startNewServer()
 	{
-		client = new LocalClient();
+		client = new LocalAIClient(this);
+		t = new Thread(client);
+		t.start();
 	}
 
 	/**
@@ -63,21 +82,25 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	 */
 	public ClientGame getState()
 	{
+		boolean val = false;
+
 		// Block until the game board is received.
 		client.log("Client Setup", "Waiting for Game Information....");
-		while(true)
+		while (true)
 		{
+			if (val) break;
 			try
 			{
 				client.getStateLock().acquire();
 				try
 				{
-					if (client.getState() != null) break;
+					if (client.getState() != null) val = true;
 				}
 				finally
 				{
 					client.getStateLock().release();
 				}
+				Thread.sleep(100);
 			}
 			catch (InterruptedException e)
 			{
@@ -86,5 +109,10 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		}
 		client.log("Client Setup", "Received Game Information");
 		return client.getState();
+	}
+
+	public boolean isActive()
+	{
+		return active;
 	}
 }

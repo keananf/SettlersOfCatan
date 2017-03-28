@@ -45,7 +45,7 @@ public class TestHelper
 
 		// Test it was built correctly and that resources were taken away
 		assertTrue(p.getSettlements().size() > oldSize);
-		//assertTrue(oldResources > p.getNumResources());
+		// assertTrue(oldResources > p.getNumResources());
 
 		return (Settlement) p.getSettlements().values().toArray()[p.getSettlements().values().size() - 1];
 	}
@@ -96,7 +96,7 @@ public class TestHelper
 
 		// Test it was built correctly and that resources were taken away
 		assertTrue(p.getRoads().size() > oldSize);
-		//assertFalse(hasResources(p));
+		// assertFalse(hasResources(p));
 
 		return p.getRoads().get(p.getRoads().size() - 1);
 	}
@@ -118,7 +118,7 @@ public class TestHelper
 
 		// Test it was built correctly and that resources were taken away
 		assertTrue(p.getDevelopmentCards().size() > oldSize);
-		//assertFalse(hasResources(p));
+		// assertFalse(hasResources(p));
 
 		return c;
 	}

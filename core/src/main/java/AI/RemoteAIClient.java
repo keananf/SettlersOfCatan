@@ -10,62 +10,63 @@ import java.io.IOException;
  */
 public class RemoteAIClient extends AIClient
 {
-    private String host;
-    private RemoteServerConnection conn;
+	private String host;
+	private RemoteServerConnection conn;
 
-    public RemoteAIClient(String host, Difficulty difficulty)
-    {
-        super(difficulty);
-        this.host = host;
-    }
+	public RemoteAIClient(String host, Difficulty difficulty)
+	{
+		super(difficulty);
+		this.host = host;
+	}
 
-    public RemoteAIClient(String host)
-    {
-        super();
-        this.host = host;
-    }
+	public RemoteAIClient(String host)
+	{
+		super();
+		this.host = host;
+	}
 
-    /**
-     * Attempts to connect to the given string
-     * @param host the host
-     * @return if connected or not
-     */
-    public boolean tryAgain(String host)
-    {
-        this.host = host;
-        setUpConnection();
+	/**
+	 * Attempts to connect to the given string
+	 * 
+	 * @param host the host
+	 * @return if connected or not
+	 */
+	public boolean tryAgain(String host)
+	{
+		this.host = host;
+		setUpConnection();
 
-        return isInitialised();
-    }
+		return isInitialised();
+	}
 
-    /**
-     * @return if this client is connected or not
-     */
-    public boolean isInitialised()
-    {
-        return conn != null && conn.isInitialised();
-    }
+	/**
+	 * @return if this client is connected or not
+	 */
+	public boolean isInitialised()
+	{
+		return conn != null && conn.isInitialised();
+	}
 
-    /**
-     * Attempts to establish a connection with the given host
-     */
-    protected void setUpConnection()
-    {
-        try
-        {
-            conn = new RemoteServerConnection();
-            setUp(conn);
-            conn.connect(host, PORT, this);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
+	/**
+	 * Attempts to establish a connection with the given host
+	 */
+	protected void setUpConnection()
+	{
+		try
+		{
+			conn = new RemoteServerConnection();
+			setUp(conn);
+			conn.connect(host, PORT, this);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
-    @Override
-    public void shutDown()
-    {
-        super.shutDown();
-    }
+	@Override
+	public void shutDown()
+	{
+		super.shutDown();
+	}
 }

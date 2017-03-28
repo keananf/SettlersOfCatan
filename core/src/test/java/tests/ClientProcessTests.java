@@ -7,7 +7,7 @@ import exceptions.*;
 import game.build.Building;
 import game.build.City;
 import game.build.Settlement;
-import game.players.LocalPlayer;
+import game.players.ClientPlayer;
 import game.players.Player;
 import grid.Edge;
 import grid.Hex;
@@ -49,7 +49,7 @@ public class ClientProcessTests extends ClientTestHelper
 			assertTrue(processedBoard.getHexesAsList().contains(h1));
 		}
 
-		for(Edge e : actualBoard.getEdgesAsList())
+		for (Edge e : actualBoard.getEdgesAsList())
 		{
 			assertTrue(processedBoard.getEdgesAsList().contains(e));
 		}
@@ -102,7 +102,7 @@ public class ClientProcessTests extends ClientTestHelper
 	public void settlementBreaksRoadTest()
 	{
 		Player p = clientPlayer;
-		Player p2 = new LocalPlayer(Colour.RED, "");
+		Player p2 = new ClientPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		clientGame.addPlayer(p2);
 
@@ -179,7 +179,7 @@ public class ClientProcessTests extends ClientTestHelper
 	public void settlementBreaksRoadTest2()
 	{
 		Player p = clientPlayer;
-		Player p2 = new LocalPlayer(Colour.RED, "");
+		Player p2 = new ClientPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		clientGame.addPlayer(p2);
 
@@ -256,7 +256,7 @@ public class ClientProcessTests extends ClientTestHelper
 	public void largestArmyTest() throws BankLimitException
 	{
 		Player p = clientPlayer;
-		Player p2 = new LocalPlayer(Colour.RED, "");
+		Player p2 = new ClientPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		clientGame.addPlayer(p2);
 
@@ -314,7 +314,7 @@ public class ClientProcessTests extends ClientTestHelper
 	public void longestRoadTest()
 	{
 		Player p = clientPlayer;
-		Player p2 = new LocalPlayer(Colour.RED, "");
+		Player p2 = new ClientPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		clientGame.addPlayer(p2);
 
@@ -387,24 +387,21 @@ public class ClientProcessTests extends ClientTestHelper
 		assertEquals(2, p.getVp());
 	}
 
-	/*@Test
-	public void moveRobberTest() throws InvalidCoordinatesException
-	{
-		Hex h = game.getGrid().getHexWithRobber();
-
-		// Set up request
-		Board.Point point = h.toHexProto().getLocation();
-
-		// Move and check
-		clientGame.moveRobber(point);
-		assertNotEquals(h, clientGame.getGrid().getHexWithRobber());
-	}*/
+	/*
+	 * @Test public void moveRobberTest() throws InvalidCoordinatesException {
+	 * Hex h = game.getGrid().getHexWithRobber();
+	 * 
+	 * // Set up request Board.Point point = h.toHexProto().getLocation();
+	 * 
+	 * // Move and check clientGame.moveRobber(point); assertNotEquals(h,
+	 * clientGame.getGrid().getHexWithRobber()); }
+	 */
 
 	@Test
 	public void stealTest() throws CannotAffordException, BankLimitException
 	{
 		Player p = clientPlayer;
-		Player p2 = new LocalPlayer(Colour.RED, "");
+		Player p2 = new ClientPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		clientGame.addPlayer(p2);
 
@@ -460,7 +457,7 @@ public class ClientProcessTests extends ClientTestHelper
 	public void playerTradeTest() throws CannotAffordException, BankLimitException
 	{
 		Player p = clientPlayer;
-		Player p2 = new LocalPlayer(Colour.RED, "");
+		Player p2 = new ClientPlayer(Colour.RED, "");
 		p2.setId(Board.Player.Id.PLAYER_2);
 		clientGame.addPlayer(p2);
 
@@ -507,26 +504,25 @@ public class ClientProcessTests extends ClientTestHelper
 		assertTrue(clientGame.getBoughtDevCards().get(clientPlayer.getColour()) == 1);
 	}
 
-/*	@Test
-	public void diceAndResourceTest()
-	{
-		Player p = clientPlayer;
-		Node n = clientGame.getGrid().getNode(-1, 0);
-		int dice = n.getHexes().get(0).getChit();
-		List<Board.ResourceAllocation> list = new ArrayList<Board.ResourceAllocation>();
-
-		// Build Settlement so resources can be granted
-		processSettlementEvent(n, p.getColour());
-
-		list.add(Board.ResourceAllocation.newBuilder().setPlayer(Board.Player.newBuilder().setId(p.getId()).build())
-				.setResources(processResources(clientGame.getNewResources(dice, p.getColour()))).build());
-
-		// Move and check
-		assertEquals(0, clientGame.getPlayer().getNumResources());
-		clientGame.processDice(dice, list);
-		assertEquals(clientGame.getDice(), dice);
-		assertEquals(1, clientGame.getPlayer().getNumResources());
-	}*/
+	/*
+	 * @Test public void diceAndResourceTest() { Player p = clientPlayer; Node n
+	 * = clientGame.getGrid().getNode(-1, 0); int dice =
+	 * n.getHexes().get(0).getChit(); List<Board.ResourceAllocation> list = new
+	 * ArrayList<Board.ResourceAllocation>();
+	 * 
+	 * // Build Settlement so resources can be granted processSettlementEvent(n,
+	 * p.getColour());
+	 * 
+	 * list.add(Board.ResourceAllocation.newBuilder().setPlayer(Board.Player.
+	 * newBuilder().setId(p.getId()).build())
+	 * .setResources(processResources(clientGame.getNewResources(dice,
+	 * p.getColour()))).build());
+	 * 
+	 * // Move and check assertEquals(0,
+	 * clientGame.getPlayer().getNumResources()); clientGame.processDice(dice,
+	 * list); assertEquals(clientGame.getDice(), dice); assertEquals(1,
+	 * clientGame.getPlayer().getNumResources()); }
+	 */
 
 	private Resource.Counts processResources(Map<ResourceType, Integer> newResources)
 	{

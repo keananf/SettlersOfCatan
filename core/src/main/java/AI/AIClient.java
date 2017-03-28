@@ -1,5 +1,6 @@
 package AI;
 
+import catan.SettlersOfCatan;
 import client.Client;
 import enums.Difficulty;
 
@@ -7,46 +8,62 @@ public abstract class AIClient extends Client
 {
 	protected AICore ai;
 
-	public AIClient(Difficulty difficulty)
+	public AIClient(Difficulty difficulty, SettlersOfCatan game)
 	{
-		super();
-		switch(difficulty)
-		{
-			case EASY:
-				ai = new EasyAI(this);
-				break;
-
-			case VERYEASY:
-			default:
-				ai = new RandomAI(this);
-				break;
-		}
+		super(game);
+		assignAI(difficulty);
 	}
 
 	public AIClient()
 	{
 		super();
-		ai = new RandomAI(this);
+		ai = new VeryEasyAI(this);
+	}
+
+	public AIClient(Difficulty difficulty)
+	{
+		super();
+		assignAI(difficulty);
+	}
+
+	public AIClient(SettlersOfCatan game)
+	{
+		super(game);
+		ai = new VeryEasyAI(this);
+	}
+
+	private void assignAI(Difficulty difficulty)
+	{
+		switch (difficulty)
+		{
+		case EASY:
+			ai = new EasyAI(this);
+			break;
+
+		case VERYEASY:
+		default:
+			ai = new VeryEasyAI(this);
+			break;
+		}
 	}
 
 	@Override
 	public void run()
 	{
+		log("Client Play", "Starting AI client loop");
+		active = true;
+
 		// Loop processing events when needed and sending turns
-		while(getState() == null || !getState().isOver())
+		while (active && (getState() == null || !getState().isOver()))
 		{
 			try
 			{
-				acquireLocksAndGetEvents();
-
-				if(getState() != null)
-				log("Client Play", String.format("Client expected moves %s %s", getState().getPlayer().getId().name(), getTurn().getExpectedMoves().toString()));
-
-				// Sleep while it is NOT your turn and while you do not have expected moves
-				Thread.sleep(100);
-
 				// Attempt to make a move and send a turn
 				acquireLocksAndPerformMove();
+				Thread.sleep(100);
+
+				acquireLocksAndGetEvents();
+				Thread.sleep(100);
 			}
 			catch (Exception e)
 			{
@@ -77,7 +94,7 @@ public abstract class AIClient extends Client
 					getTurnLock().release();
 				}
 			}
-			catch(InterruptedException e)
+			catch (InterruptedException e)
 			{
 				e.printStackTrace();
 			}
@@ -86,7 +103,7 @@ public abstract class AIClient extends Client
 				getStateLock().release();
 			}
 		}
-		catch(InterruptedException e)
+		catch (InterruptedException e)
 		{
 			e.printStackTrace();
 		}

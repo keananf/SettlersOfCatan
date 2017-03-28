@@ -12,23 +12,23 @@ import java.io.IOException;
  */
 public class ListenerThread implements Runnable
 {
-	private Thread thread;
 	protected IClientConnection conn;
 	private Colour colour;
 	private Server server;
+	private boolean active;
 
-    public ListenerThread(IClientConnection conn, Colour c, Server server)
-    {
-        this.conn = conn;
-        this.server = server;
-        colour = c;
-        this.thread = new Thread(this);
-        this.thread.start();
-    }
+	public ListenerThread(IClientConnection conn, Colour c, Server server)
+	{
+		this.conn = conn;
+		this.server = server;
+		colour = c;
+	}
 
 	@Override
 	public void run()
 	{
+		active = true;
+
 		// Continually poll for new messages
 		try
 		{
@@ -37,64 +37,64 @@ public class ListenerThread implements Runnable
 		}
 		catch (Exception e)
 		{
-			// TODO replace 'conn' with a LocalClientConnection to a LocalAIClient
 			conn = null;
-			//e.printStackTrace();
+			e.printStackTrace();
+			active = false;
 		}
 	}
 
-    /**
-     * Listens for moves from the current player
-     * @return the bytes received from the current player
-     * @throws IOException
-     */
-    private void receiveMoves() throws Exception
-    {
-        // Receive and process moves until the end one is received
-        while(true)
-        {
-        	if(conn == null)
+	/**
+	 * Listens for moves from the current player
+	 * 
+	 * @return the bytes received from the current player
+	 * @throws IOException
+	 */
+	private void receiveMoves() throws Exception
+	{
+		// Receive and process moves until the end one is received
+		while (active)
+		{
+			if (conn == null)
 			{
 				break;
 			}
 
-            // Parse message and add to queue
-            Message msg = conn.getMessageFromClient();
-            server.addMessageToProcess(new ReceivedMessage(colour, msg));
+			// Parse message and add to queue
+			Message msg = conn.getMessageFromClient();
+			server.addMessageToProcess(new ReceivedMessage(colour, msg));
 		}
 	}
 
-    /**
-     * Sends the message out to the client
-     * @param msg the message
-     * @throws IOException
-     */
-    public void sendMessage(Message msg) throws Exception
-    {
-    	if(conn != null)
+	/**
+	 * Sends the message out to the client
+	 * 
+	 * @param msg the message
+	 * @throws IOException
+	 */
+	public void sendMessage(Message msg) throws Exception
+	{
+		if (conn != null)
 		{
-    		conn.sendMessageToClient(msg);
+			conn.sendMessageToClient(msg);
 		}
-    }
+	}
 
 	/**
 	 * Terminates the underlying connection and this thread
 	 */
 	public void shutDown()
 	{
+		active = false;
 		conn.shutDown();
-		try
-		{
-			thread.join();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
 	}
 
-    public Colour getColour()
+	public Colour getColour()
 	{
-        return colour;
-    }
+		return colour;
+	}
+
+	public IClientConnection getConnection()
+	{
+		return conn;
+	}
 }

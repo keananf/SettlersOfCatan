@@ -349,10 +349,7 @@ public class DevelopmentCardTests extends TestHelper
 		// Grant
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
-
-		// Reset recent dev card for player, so they can play this turn
-		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
-
+		
 		// Set up request
 		Requests.Request.Builder req = Requests.Request.newBuilder();
 		req.setPlayDevCard(Board.PlayableDevCard.ROAD_BUILDING);

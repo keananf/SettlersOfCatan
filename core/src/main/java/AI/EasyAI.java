@@ -138,18 +138,54 @@ public class EasyAI extends AICore
         // else--> high rank
     }
 
-//TODO:ASAP
     @Override
-    public int rankBuyDevCard() {
-        int rank = 4;
+    public int rankBuyDevCard() 
+    {
+    	int rank = 4;
+
+        //check if player can build or set a road if so-> decrease rank by 2
+        if(getPlayer().canAfford(Settlement.getSettlementCost()
+        || getPlayer().canAfford(Road.getRoadCost())
+        || getPlayer().canAfford(City.getCityCost())){
+           rank =-2;
+        }
         return rank - getPlayer().getNumDevCards();
+        // the less cards you have the higher the priority
     }
 
 //TODO:ASAP
     @Override
     public int rankNewRoad(Edge chosenEdge)
     {
-        return 0;
+    	Node n1 = chosenEdge.getX();
+        Node n2 = chosenEdge.getY();
+
+        int rank = 3 ;
+
+        if(chosenEdge.hasSettlement()) {// if next settlement has to be 2 roads away
+            Node toAnalyse = (n1.getSettlement()!=null && n1.getSettlement().getPlayerColour() == getPlayer().getColour()) ? n2 : n1;
+
+            for (Edge e: toAnalyse.getEdges()) {
+                if(!e.hasSettlement()){
+                    rank++;
+                    Node nxtToAnalyse = (e.getX().getSettlement() == null && !e.getX().equals(toAnalyse) ) ? e.getX() : e.getY();
+                    if(nxtToAnalyse.getSettlement() != null){
+                         rank ++ ;
+                    }
+                    else if(nxtToAnalyse.getSettlement().getPlayerColour() != getPlayer().getColour()){
+                        rank =- 2;
+                    }
+                }
+            }
+
+        }else{// if settlement can be build at the end of this road
+            Node toAnalyse = (!n1.isNearRoad(getPlayer().getColour())) ? n1 :n2 ;
+            RankNode rn = new RankNode(toAnalyse, getPlayer());
+            rn.rank(false);
+            rank += rn.getRanking();
+        }
+
+        return rank;
     }
 
 

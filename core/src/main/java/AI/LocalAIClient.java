@@ -41,7 +41,7 @@ public class LocalAIClient extends AIClient
 	public void shutDown()
 	{
 		super.shutDown();
-		server.shutDown();
+		server.terminate();
 		try
 		{
 			serverThread.join();

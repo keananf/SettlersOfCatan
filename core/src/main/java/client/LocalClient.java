@@ -37,7 +37,7 @@ public class LocalClient extends Client
 	public void shutDown()
 	{
 		super.shutDown();
-		server.shutDown();
+		server.terminate();
 		try
 		{
 			serverThread.join();

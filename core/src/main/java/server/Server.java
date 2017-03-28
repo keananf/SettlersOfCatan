@@ -40,6 +40,7 @@ public class Server implements Runnable
 	protected Map<Colour, Thread> aiThreads, threads;
 	protected Map<Colour, AIClient> ais;
 	protected static final int PORT = 12345;
+	private boolean active;
 
 	public Server()
 	{
@@ -58,6 +59,7 @@ public class Server implements Runnable
 	{
 		try
 		{
+			active = true;
 			getPlayers();
 			game.chooseFirstPlayer();
 			waitForJoinLobby();
@@ -66,12 +68,14 @@ public class Server implements Runnable
 
 			Thread.sleep(500);
 			log("Server Start", "\n\nAll players Connected. Beginning play.\n");
-			while (!game.isOver())
+			while (active && !game.isOver())
 			{
 				// Read moves from queue and log
 				processMessage();
 				sleep();
 			}
+
+			sendEvents(Event.newBuilder().setGameWon(EmptyOuterClass.Empty.getDefaultInstance()).build());
 		}
 		catch (IOException | InterruptedException e)
 		{
@@ -89,10 +93,15 @@ public class Server implements Runnable
 		t.start();
 	}
 
+	public void terminate()
+	{
+		active = false;
+	}
+
 	/**
 	 * Shuts down all individual connections, and then shut down
 	 */
-	public void shutDown()
+	private void shutDown()
 	{
 		// Shut down all individual connections
 		for(Colour c : connections.keySet())

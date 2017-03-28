@@ -1,5 +1,6 @@
-package server;
+package game;
 
+import intergroup.board.Board;
 import intergroup.trade.Trade;
 
 /**
@@ -8,12 +9,14 @@ import intergroup.trade.Trade;
  */
 public class CurrentTrade
 {
-    private Trade.WithPlayer trade;
+    private final Board.Player instigator;
+    private final Trade.WithPlayer trade;
     private long time = System.currentTimeMillis();
-    private static int EXPIRY = 30 * 1000; // 30 seconds
+    private static final int EXPIRY = 30 * 1000; // 30 seconds
 
-    public CurrentTrade(Trade.WithPlayer trade)
+    public CurrentTrade(Trade.WithPlayer trade, Board.Player instigator)
     {
+        this.instigator = instigator;
         this.trade = trade;
     }
 
@@ -34,6 +37,12 @@ public class CurrentTrade
 
     public boolean isExpired()
     {
-        return System.currentTimeMillis() - time > EXPIRY;
+        long diff = System.currentTimeMillis() - time;
+        return diff > EXPIRY;
+    }
+
+    public Board.Player getInstigator()
+    {
+        return instigator;
     }
 }

@@ -6,6 +6,8 @@ import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import intergroup.Requests;
 import intergroup.board.Board;
+import game.CurrentTrade;
+import intergroup.trade.Trade;
 
 import java.io.IOException;
 import java.util.List;
@@ -86,16 +88,28 @@ public class EventProcessor
 			getTurn().setTradePhase(true);
 			getGame().processBankTrade(ev.getBankTrade(), ev.getInstigator());
 			break;
-		case PLAYERTRADE:
+		case PLAYERTRADEINITIATED:
 			getTurn().setTradePhase(true);
-			if (getTurn().getPlayerTrade() != null)
+			getTurn().setCurrentTrade(new CurrentTrade(ev.getPlayerTradeInitiated(), ev.getInstigator()));
+			break;
+		case PLAYERTRADEACCEPTED:
+			if (getTurn().getCurrentTrade() != null)
 			{
-				getGame().processPlayerTrade(ev.getPlayerTrade(), ev.getInstigator());
+				CurrentTrade trade = getTurn().getCurrentTrade();
+				getGame().processPlayerTrade(trade.getTrade(), trade.getInstigator());
+				getTurn().setCurrentTrade(null);
+			}
+			else
+			{
+				Trade.WithPlayer trade = ev.getPlayerTradeAccepted();
+				getGame().processPlayerTrade(trade, ev.getInstigator());
 			}
 			break;
+		case PLAYERTRADEREJECTED:
+			client.log("Client Play", "Player Trade rejected");
+			getTurn().setCurrentTrade(null);
+			break;
 		case LOBBYUPDATE:
-			client.log("Event Proc",
-					String.format("Lobby Update received. \tPlayer Id: %s", ev.getInstigator().getId().name()));
 			client.processPlayers(ev.getLobbyUpdate(), ev.getInstigator());
 			break;
 		case CARDSDISCARDED:
@@ -276,18 +290,15 @@ public class EventProcessor
 				getExpectedMoves().remove(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
 			}
 			break;
-		case PLAYERTRADE:
-			if (getTurn().getPlayerTrade() != null
-					&& getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
+		case PLAYERTRADEACCEPTED:
+			if (getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
 			{
 				getExpectedMoves().remove(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
-				getTurn().setPlayerTrade(null);
 			}
-			else
-			{
-				getTurn().setPlayerTrade(ev.getPlayerTrade());
-				getExpectedMoves().add(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
-			}
+			break;
+		case PLAYERTRADEINITIATED:
+			getTurn().setCurrentTrade(new CurrentTrade(ev.getPlayerTradeInitiated(), ev.getInstigator()));
+			getExpectedMoves().add(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
 			break;
 		case CARDSDISCARDED:
 			if (ev.getInstigator().getId() == getGame().getPlayer().getId()

@@ -5,6 +5,7 @@ import exceptions.BankLimitException;
 import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
+import game.CurrentTrade;
 import game.players.Player;
 import intergroup.Events;
 import intergroup.Messages;
@@ -169,22 +170,27 @@ public class MessageProcessor
 				if (steal != null) ev.setResourceStolen(steal);
 				break;
 			case INITIATETRADE:
-				Trade.WithBank trade = processTradeType(request.getInitiateTrade(), msg);
+				Trade.WithBank trade = processTradeType(request.getInitiateTrade(), ev.getInstigator());
 				if (trade != null) ev.setBankTrade(trade);
 				break;
 			case SUBMITTRADERESPONSE:
 				if (currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT) && !currentTrade.isExpired())
 				{
-					ev.setPlayerTrade(currentTrade.getTrade());
+					ev.setPlayerTradeAccepted(currentTrade.getTrade());
 					game.processPlayerTrade(currentTrade.getTrade());
 					currentTrade = null;
-					break;
+				}
+				else if(currentTrade != null && (request.getSubmitTradeResponse().equals(Trade.Response.REJECT) || !currentTrade.isExpired()))
+				{
+					server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
+					currentTrade = null;
+					return null;
 				}
 				else
 				{
-					currentTrade = null; // TODO send rejection?
-					return null;
+					ev.setError(Events.Event.Error.newBuilder().setDescription("No active trade to respond to."));
 				}
+				break;
 			case CHATMESSAGE:
 				ev.setChatMessage(request.getChatMessage());
 				break;
@@ -296,10 +302,9 @@ public class MessageProcessor
 	 * Forwards the trade request to the other player and blocks for a response
 	 * 
 	 * @param request the trade request
-	 * @param msg the original request, received from across the network
-	 * @return the status of the trade "accepted, denied, offer"
+	 * @return the bank trade or null
 	 */
-	private Trade.WithBank processTradeType(Trade.Kind request, Messages.Message msg) throws IllegalPortTradeException,
+	private Trade.WithBank processTradeType(Trade.Kind request, Board.Player instigator) throws IllegalPortTradeException,
 			IllegalBankTradeException, CannotAffordException, IOException, BankLimitException
 	{
 		tradePhase = true;
@@ -309,8 +314,8 @@ public class MessageProcessor
 		{
 			// Simply forward the message
 			case PLAYER:
-				currentTrade = new CurrentTrade(request.getPlayer());
-				server.forwardTradeOffer(request.getPlayer());
+				currentTrade = new CurrentTrade(request.getPlayer(), instigator);
+				server.forwardTradeOffer(request.getPlayer(), instigator);
 				return null;
 
 			case BANK:

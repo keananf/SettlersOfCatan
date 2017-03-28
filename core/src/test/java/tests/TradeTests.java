@@ -150,7 +150,7 @@ public class TradeTests extends TestHelper
 		assertTrue(server.getCurrentTrade() != null);
 
 		// Player 2 sends response after 30 sec
-		server.getCurrentTrade().setTime(server.getCurrentTrade().getTime() - 30000);
+		server.getCurrentTrade().setTime(server.getCurrentTrade().getTime() - 30001);
 		assertTrue(server.getCurrentTrade().isExpired());
 		msg = Messages.Message.newBuilder().
 				setRequest(Requests.Request.newBuilder().setSubmitTradeResponse(Trade.Response.ACCEPT).build()).build();

@@ -26,14 +26,16 @@ message Event {
     resource.Kind resourceChosen = 11;
     resource.Counts cardsDiscarded = 12;
     trade.WithBank bankTrade = 13;
-    trade.WithPlayer playerTrade = 14;
-    Empty turnEnded = 15;
-    Empty gameWon = 16;
-    lobby.GameSetup beginGame = 17;
-    lobby.Usernames lobbyUpdate = 18;
-    board.MultiSteal monopolyResolution = 19;
-    string chatMessage = 20;
-    lobby.GameInfo gameInfo = 21;
+    trade.WithPlayer playerTradeInitiated = 14;
+    trade.WithPlayer playerTradeAccepted = 15;
+    Empty playerTradeRejected = 22;
+    Empty turnEnded = 16;
+    Empty gameWon = 17;
+    lobby.GameSetup beginGame = 18;
+    lobby.Usernames lobbyUpdate = 19;
+    board.MultiSteal monopolyResolution = 20;
+    string chatMessage = 21;
+    lobby.GameInfo gameInfo = 23;
   }
 
   message Error {

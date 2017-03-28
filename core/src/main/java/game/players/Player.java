@@ -41,6 +41,7 @@ public abstract class Player
 	protected int armySize;
 	protected Board.Player.Id id;
 	protected String userName;
+	protected Map<DevelopmentCardType, Integer> recentBoughtCards;
 
 	private static final int VP_THRESHOLD = 10;
 	private static final int MIN_SETTLEMENTS = 2;
@@ -49,6 +50,7 @@ public abstract class Player
 	{
 		this.colour = colour;
 		roads = new ArrayList<List<Road>>();
+		recentBoughtCards = new HashMap<DevelopmentCardType, Integer>();
 		settlements = new HashMap<Point, Building>();
 		resources = new HashMap<ResourceType, Integer>();
 		cards = new HashMap<DevelopmentCardType, Integer>();
@@ -553,6 +555,10 @@ public abstract class Player
 		int existing = cards.containsKey(type) ? cards.get(type) : 0;
 		cards.put(type, existing + 1);
 
+		// Update recent bought caught
+		existing = recentBoughtCards.containsKey(type) ? recentBoughtCards.get(type) : 0;
+		recentBoughtCards.put(type, existing + 1);
+
 		// Grant VP point if necessary
 		if (type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University))
 		{
@@ -625,5 +631,15 @@ public abstract class Player
 	public void setDevelopmentCards(Map<DevelopmentCardType, Integer> developmentCards)
 	{
 		this.cards = developmentCards;
+	}
+
+	public void clearRecentDevCards()
+	{
+		recentBoughtCards.clear();
+	}
+
+	public Map<DevelopmentCardType, Integer> getRecentBoughtDevCards()
+	{
+		return recentBoughtCards;
 	}
 }

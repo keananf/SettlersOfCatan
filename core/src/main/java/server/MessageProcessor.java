@@ -165,8 +165,7 @@ public class MessageProcessor
 				break;
 			case SUBMITTARGETPLAYER:
 				Board.Steal steal = game.takeResource(request.getSubmitTargetPlayer().getId());
-				if (steal != null)
-					ev.setResourceStolen(steal);
+				if (steal != null) ev.setResourceStolen(steal);
 				break;
 			case INITIATETRADE:
 				Trade.WithBank trade = processTradeType(request.getInitiateTrade(), msg);
@@ -308,15 +307,15 @@ public class MessageProcessor
 		// Switch on trade type
 		switch (request.getTradeCase())
 		{
-		// Simply forward the message
-		case PLAYER:
-			currentTrade = request.getPlayer();
-			server.forwardTradeOffer(msg, request.getPlayer());
-			return null;
+			// Simply forward the message
+			case PLAYER:
+				currentTrade = request.getPlayer();
+				server.forwardTradeOffer(msg, request.getPlayer());
+				return null;
 
-		case BANK:
-			game.determineTradeType(request.getBank());
-			break;
+			case BANK:
+				game.determineTradeType(request.getBank());
+				break;
 		}
 
 		return request.getBank();
@@ -334,9 +333,16 @@ public class MessageProcessor
 	{
 		Requests.Request.BodyCase type = msg.getRequest().getBodyCase();
 		List<Requests.Request.BodyCase> expected = expectedMoves.get(col);
-		if (type == null) return false;
+		if (type == null || game == null) return false;
 
 		if (!expected.isEmpty() && expected.contains(type))
+		{
+			return true;
+		}
+
+		// Can play dev card on first turn
+		else if (!expected.isEmpty() && expected.contains(Requests.Request.BodyCase.ROLLDICE)
+				&& msg.getRequest().getBodyCase().equals(Requests.Request.BodyCase.PLAYDEVCARD))
 		{
 			return true;
 		}

@@ -8,7 +8,7 @@ import intergroup.Requests;
 import intergroup.board.Board;
 
 import java.io.IOException;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.List;
 
 /**
  * Class which continuously listens for updates from the server Created by
@@ -69,13 +69,13 @@ public class EventProcessor
 			getGame().processPlayedDevCard(ev.getDevCardPlayed(), ev.getInstigator());
 			break;
 		case BEGINGAME:
-			client.setGame(new ClientGame());
+			client.setGame(new ClientGame(client));
 			getGame().setBoard(ev.getBeginGame());
 			client.log("Event Proc",
 					String.format("Game information received. \tPlayer Id: %s", getGame().getPlayer().getId().name()));
 			break;
 		case GAMEINFO:
-			client.setGame(new ClientGame());
+			client.setGame(new ClientGame(client));
 			getGame().processGameInfo(ev.getGameInfo());
 			client.log("Event Proc",
 					String.format("Game information received. \tPlayer Id: %s", getGame().getPlayer().getId().name()));
@@ -94,7 +94,9 @@ public class EventProcessor
 			}
 			break;
 		case LOBBYUPDATE:
-			getGame().processPlayers(ev.getLobbyUpdate(), ev.getInstigator());
+			client.log("Event Proc",
+					String.format("Lobby Update received. \tPlayer Id: %s", ev.getInstigator().getId().name()));
+			client.processPlayers(ev.getLobbyUpdate(), ev.getInstigator());
 			break;
 		case CARDSDISCARDED:
 			getGame().processDiscard(ev.getCardsDiscarded(), ev.getInstigator());
@@ -119,15 +121,25 @@ public class EventProcessor
 
 	private void updateExpectedMoves(Event ev)
 	{
-		if (ev == null
+		if (ev == null || ev.getTypeCase().equals(Event.TypeCase.TYPE_NOT_SET)
 				|| (getGame() == null && !(ev.getTypeCase().equals(Event.TypeCase.BEGINGAME)
-						|| ev.getTypeCase().equals(Event.TypeCase.GAMEINFO)))
-				|| ev.getTypeCase().equals(Event.TypeCase.TYPE_NOT_SET))
+						|| ev.getTypeCase().equals(Event.TypeCase.GAMEINFO)
+						|| ev.getTypeCase().equals(Event.TypeCase.LOBBYUPDATE))))
 			return;
 
 		// Switch on request type
 		switch (ev.getTypeCase())
 		{
+		case LOBBYUPDATE:
+			if (ev.getLobbyUpdate().getUsernameList().contains(client.getPlayer().getUsername()))
+			{
+				if (getExpectedMoves().contains(Requests.Request.BodyCase.JOINLOBBY))
+				{
+					client.log("Client Play", "Removing JOINLOBBY for " + ev.getInstigator().getId().name());
+					getExpectedMoves().remove(Requests.Request.BodyCase.JOINLOBBY);
+				}
+			}
+			break;
 		case TURNENDED:
 			if (getTurn().isInitialPhase() && getGame().getPlayer().getSettlements().size() < 2
 					&& getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()))
@@ -290,6 +302,13 @@ public class EventProcessor
 				getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
 			}
 			break;
+		case GAMEINFO:
+			if (getExpectedMoves().contains(Requests.Request.BodyCase.JOINLOBBY))
+			{
+				client.log("Client Play", "Removing JOINLOBBY for " + ev.getInstigator().getId().name());
+				getExpectedMoves().remove(Requests.Request.BodyCase.JOINLOBBY);
+			}
+			break;
 
 		// No new expected moves
 		default:
@@ -323,12 +342,12 @@ public class EventProcessor
 		return client.getState();
 	}
 
-	private Turn getTurn()
+	private TurnState getTurn()
 	{
 		return client.getTurn();
 	}
 
-	private ConcurrentLinkedQueue<Requests.Request.BodyCase> getExpectedMoves()
+	private List<Requests.Request.BodyCase> getExpectedMoves()
 	{
 		return client.getTurn().getExpectedMoves();
 	}

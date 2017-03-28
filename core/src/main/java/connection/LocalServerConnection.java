@@ -32,8 +32,14 @@ public class LocalServerConnection implements IServerConnection
 	public Messages.Message getMessageFromServer()
 	{
 		// Block until message is in
-		while (fromServer.isEmpty())
+		while (fromServer != null && fromServer.isEmpty())
 		{
+		}
+
+		if (fromServer == null)
+		{
+			shutDown();
+			return null;
 		}
 
 		Messages.Message m = fromServer.poll();

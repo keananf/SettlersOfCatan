@@ -27,7 +27,7 @@ public class VeryEasyAI extends AICore
 	@Override
 	public int rankBuyDevCard()
 	{
-		return 0;
+		return 1;
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class VeryEasyAI extends AICore
 	@Override
 	public int rankPlayDevCard(DevelopmentCardType chosenCard)
 	{
-		return 0;
+		return 2;
 	}
 
 	@Override

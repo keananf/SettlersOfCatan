@@ -12,7 +12,6 @@ import game.players.Player;
 import intergroup.EmptyOuterClass;
 import intergroup.Events;
 import intergroup.Events.Event;
-import intergroup.Messages;
 import intergroup.Messages.Message;
 import intergroup.Requests;
 import intergroup.Requests.Request;
@@ -25,7 +24,10 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Server implements Runnable
 {
@@ -532,13 +534,14 @@ public class Server implements Runnable
 
 	/**
 	 * Simply forwards the trade offer to the intended recipients
-	 * 
-	 * @param msg the original message
+	 *
 	 * @param playerTrade the internal trade request inside the message
 	 */
-	protected void forwardTradeOffer(Messages.Message msg, Trade.WithPlayer playerTrade)
+	protected void forwardTradeOffer(Trade.WithPlayer playerTrade)
 	{
 		Colour col = game.getPlayer(playerTrade.getOther().getId()).getColour();
+		Event ev = Event.newBuilder().setPlayerTrade(playerTrade).build();
+		Message msg = Message.newBuilder().setEvent(ev).build();
 
 		if (connections.containsKey(col)) sendMessage(msg, col);
 	}

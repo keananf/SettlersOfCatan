@@ -64,10 +64,11 @@ public class MessageProcessor
 		logger.logReceivedMessage(msg);
 
 		// If not valid
-		if (!validateMsg(msg,
-				col)) { return Events.Event.newBuilder()
-						.setError(Events.Event.Error.newBuilder().setDescription("Move unexpected or invalid.").build())
-						.build(); }
+		if (!validateMsg(msg, col))
+		{
+			return Events.Event.newBuilder().setError(
+					Events.Event.Error.newBuilder().setDescription("Move unexpected or invalid.").build()).build();
+		}
 
 		// switch on message type
 		switch (msg.getTypeCase())
@@ -309,7 +310,7 @@ public class MessageProcessor
 			// Simply forward the message
 			case PLAYER:
 				currentTrade = new CurrentTrade(request.getPlayer());
-				server.forwardTradeOffer(msg, request.getPlayer());
+				server.forwardTradeOffer(request.getPlayer());
 				return null;
 
 			case BANK:

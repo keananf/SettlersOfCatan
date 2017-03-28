@@ -9,9 +9,9 @@ import grid.Edge;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocalPlayer extends Player
+public class ClientPlayer extends Player
 {
-	public LocalPlayer(Colour colour, String username)
+	public ClientPlayer(Colour colour, String username)
 	{
 		super(colour, username);
 	}

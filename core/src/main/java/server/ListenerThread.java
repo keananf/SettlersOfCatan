@@ -12,23 +12,23 @@ import java.io.IOException;
  */
 public class ListenerThread implements Runnable
 {
-	private Thread thread;
 	protected IClientConnection conn;
 	private Colour colour;
 	private Server server;
+	private boolean active;
 
 	public ListenerThread(IClientConnection conn, Colour c, Server server)
 	{
 		this.conn = conn;
 		this.server = server;
 		colour = c;
-		this.thread = new Thread(this);
-		this.thread.start();
 	}
 
 	@Override
 	public void run()
 	{
+		active = true;
+
 		// Continually poll for new messages
 		try
 		{
@@ -37,10 +37,9 @@ public class ListenerThread implements Runnable
 		}
 		catch (Exception e)
 		{
-			// TODO replace 'conn' with a LocalClientConnection to a
-			// LocalAIClient
 			conn = null;
-			// e.printStackTrace();
+			e.printStackTrace();
+			active = false;
 		}
 	}
 
@@ -53,7 +52,7 @@ public class ListenerThread implements Runnable
 	private void receiveMoves() throws Exception
 	{
 		// Receive and process moves until the end one is received
-		while (true)
+		while (active)
 		{
 			if (conn == null)
 			{
@@ -85,19 +84,17 @@ public class ListenerThread implements Runnable
 	 */
 	public void shutDown()
 	{
+		active = false;
 		conn.shutDown();
-		try
-		{
-			thread.join();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 	public Colour getColour()
 	{
 		return colour;
+	}
+
+	public IClientConnection getConnection()
+	{
+		return conn;
 	}
 }

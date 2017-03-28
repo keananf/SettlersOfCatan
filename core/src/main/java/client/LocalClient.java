@@ -1,5 +1,6 @@
 package client;
 
+import catan.SettlersOfCatan;
 import connection.LocalClientConnection;
 import connection.LocalServerConnection;
 import server.LocalServer;
@@ -16,9 +17,9 @@ public class LocalClient extends Client
 	private Server server;
 	private Thread serverThread;
 
-	public LocalClient()
+	public LocalClient(SettlersOfCatan game)
 	{
-		super();
+		super(game);
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class LocalClient extends Client
 	public void shutDown()
 	{
 		super.shutDown();
-		server.shutDown();
+		server.terminate();
 		try
 		{
 			serverThread.join();

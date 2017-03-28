@@ -17,12 +17,10 @@ import catan.SettlersOfCatan;
 
 public class MainMenuScreen implements Screen
 {
-	final private SettlersOfCatan game;
 	final private Stage ui = new Stage(new ScreenViewport());
 
-	public MainMenuScreen(final SettlersOfCatan game)
+    MainMenuScreen(final SettlersOfCatan game)
 	{
-		this.game = game;
 		Gdx.input.setInputProcessor(ui);
 
 		// Background

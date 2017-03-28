@@ -103,6 +103,7 @@ public class TurnProcessor
 			conn = null;
 			client.log("Client Error",
 					String.format("Error sending request %s to server", request.getBodyCase().name()));
+			client.shutDown();
 			e.printStackTrace();
 		}
 	}
@@ -113,7 +114,7 @@ public class TurnProcessor
 	private Lobby.Join getJoinLobby()
 	{
 		// TODO update gameID?
-		return Lobby.Join.newBuilder().setUsername(getGame().getPlayer().getUsername()).setGameId(0).build();
+		return Lobby.Join.newBuilder().setUsername(client.getPlayer().getUsername()).setGameId(0).build();
 	}
 
 	/**

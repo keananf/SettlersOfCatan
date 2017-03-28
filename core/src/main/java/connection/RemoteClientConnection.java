@@ -1,7 +1,9 @@
 package connection;
 
 import com.badlogic.gdx.Gdx;
-import intergroup.Events;
+import com.google.protobuf.ByteString;
+import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.CodedOutputStream;
 import intergroup.Messages;
 
 import java.io.IOException;
@@ -26,17 +28,23 @@ public class RemoteClientConnection implements IClientConnection
 	{
 		if (conn != null)
 		{
-			Events.Event ev = message.getEvent();
-			message.writeDelimitedTo(conn.getOutputStream());
+			CodedOutputStream c = CodedOutputStream.newInstance(conn.getOutputStream());
+			int size = message.getSerializedSize();
+			c.writeUInt64NoTag(size);
+			message.writeTo(c);
+			c.flush();
+			conn.getOutputStream().flush();
 		}
 	}
 
 	@Override
 	public Messages.Message getMessageFromClient() throws Exception
 	{
-		if (conn != null || conn.isClosed() || !conn.isConnected())
+		if (conn != null && (conn.isClosed() || !conn.isConnected()))
 		{
-			Messages.Message m = Messages.Message.parseDelimitedFrom(conn.getInputStream());
+			CodedInputStream c = CodedInputStream.newInstance(conn.getInputStream());
+			ByteString b = c.readBytes();
+			Messages.Message m = Messages.Message.parseFrom(b);
 			return m;
 		}
 

@@ -1,5 +1,6 @@
 package AI;
 
+import catan.SettlersOfCatan;
 import connection.LocalClientConnection;
 import connection.LocalServerConnection;
 import enums.Difficulty;
@@ -15,14 +16,14 @@ public class LocalAIClient extends AIClient
 	private Server server;
 	private Thread serverThread;
 
-	public LocalAIClient(Difficulty difficulty)
+	public LocalAIClient(Difficulty difficulty, SettlersOfCatan game)
 	{
-		super(difficulty);
+		super(difficulty, game);
 	}
 
-	public LocalAIClient()
+	public LocalAIClient(SettlersOfCatan game)
 	{
-		super();
+		super(game);
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class LocalAIClient extends AIClient
 	public void shutDown()
 	{
 		super.shutDown();
-		server.shutDown();
+		server.terminate();
 		try
 		{
 			serverThread.join();

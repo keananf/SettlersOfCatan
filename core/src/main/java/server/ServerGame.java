@@ -329,7 +329,7 @@ public class ServerGame extends Game
 	 * 
 	 * @param card the card of development card to play
 	 */
-	public void playDevelopmentCard(Board.PlayableDevCard card) throws DoesNotOwnException
+	public void playDevelopmentCard(Board.PlayableDevCard card) throws DoesNotOwnException, CannotPlayException
 	{
 		Player p = players.get(currentPlayer);
 
@@ -630,6 +630,9 @@ public class ServerGame extends Game
 	 */
 	public EmptyOuterClass.Empty changeTurn()
 	{
+		// Reset recent dev card for player, if they bought one this turn
+		getPlayer(getCurrentPlayer()).clearRecentDevCards();
+
 		// Update turn and set event.
 		setCurrentPlayer(getNextPlayer());
 		current++;

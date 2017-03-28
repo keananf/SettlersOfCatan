@@ -28,7 +28,7 @@ public class LocalServer extends Server
 	{
 		super();
 		ServerGame.NUM_PLAYERS = 4;
-		addAIs(3);
+		addAIs(4);
 		localPlayer = game.getPlayers().get(0);
 	}
 

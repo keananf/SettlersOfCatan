@@ -47,7 +47,7 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test(expected = DoesNotOwnException.class)
-	public void cannotPlayDevCardTest() throws DoesNotOwnException
+	public void cannotPlayDevCardTest() throws DoesNotOwnException, CannotPlayException
 	{
 		// This development card does not exist in the player's hand
 		p.playDevelopmentCard(c);
@@ -64,13 +64,20 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test
-	public void playAndRemoveDevelopmentCardTest() throws CannotAffordException, DoesNotOwnException, BankLimitException
+	public void playAndRemoveDevelopmentCardTest() throws CannotAffordException, DoesNotOwnException,
+			BankLimitException, CannotPlayException
 	{
 		// Grant resources and buy a card
 		assertTrue(p.getDevelopmentCards().size() == 0);
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		DevelopmentCardType c = buyDevelopmentCard();
 		assertTrue(p.getDevelopmentCards().get(c) == 1);
+
+		// Reset recent dev card for player, so they can play this turn
+		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
+
+		// Reset recent dev card for player, so they can play this turn
+		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
 
 		// Play card and test it was removed
 		DevelopmentCardType key = (DevelopmentCardType) p.getDevelopmentCards().keySet().toArray()[0];
@@ -129,6 +136,10 @@ public class DevelopmentCardTests extends TestHelper
 			req.setPlayDevCard(Board.PlayableDevCard.KNIGHT);
 			p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 			p.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
+
+			// Reset recent dev card for player, so they can play this turn
+			game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
+
 			assertEquals(0, server.getExpectedMoves(p.getColour()).size());
 			server.addMessageToProcess(
 					new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
@@ -169,6 +180,10 @@ public class DevelopmentCardTests extends TestHelper
 			req.setPlayDevCard(Board.PlayableDevCard.KNIGHT);
 			p2.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 			p2.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
+
+			// Reset recent dev card for player, so they can play this turn
+			game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
+
 			assertEquals(0, server.getExpectedMoves(p2.getColour()).size());
 			server.addMessageToProcess(
 					new ReceivedMessage(p2.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
@@ -205,6 +220,9 @@ public class DevelopmentCardTests extends TestHelper
 		// Grant Card
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		p.buyDevelopmentCard(DevelopmentCardType.Monopoly, game.getBank());
+
+		// Reset recent dev card for player, so they can play this turn
+		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
 
 		// Set up resources grant
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
@@ -254,6 +272,9 @@ public class DevelopmentCardTests extends TestHelper
 		// Grant
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		p.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
+
+		// Reset recent dev card for player, so they can play this turn
+		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
 
 		// Set up player 2
 		Player p2 = new ServerPlayer(Colour.RED, "");
@@ -323,6 +344,57 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test
+	public void cannotPlayCardSameTurnTest() throws Exception
+	{
+		// Grant
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+		p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
+
+		// Reset recent dev card for player, so they can play this turn
+		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
+
+		// Set up request
+		Requests.Request.Builder req = Requests.Request.newBuilder();
+		req.setPlayDevCard(Board.PlayableDevCard.ROAD_BUILDING);
+		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
+
+		// Try to play move. CannotPlayException will be caught and nothing will happen
+		server.addMessageToProcess(
+				new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
+		server.processMessage();
+
+		// This value would be two if the card was successfully played
+		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
+	}
+
+	@Test
+	public void playBeforeDiceRollTest() throws Exception
+	{
+		// Grant
+		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
+		p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
+
+		// Reset recent dev card for player, so they can play this turn
+		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
+
+		// Set up request, don't grant card
+		Requests.Request.Builder req = Requests.Request.newBuilder();
+		req.setPlayDevCard(Board.PlayableDevCard.ROAD_BUILDING);
+
+		// Add dice roll as expected move
+		server.getExpectedMoves(p.getColour()).add(Requests.Request.BodyCase.ROLLDICE);
+		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
+
+		// Try to play move. CannotPlayException will be caught and nothing will happen
+		server.addMessageToProcess(
+				new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
+		server.processMessage();
+
+		// Card was successfully played
+		assertEquals(3, server.getExpectedMoves(p.getColour()).size());
+	}
+
+	@Test
 	public void cannotStealFromSpecifiedPlayerTest() throws Exception
 	{
 		Hex oldHex = game.getGrid().getHexWithRobber();
@@ -330,6 +402,9 @@ public class DevelopmentCardTests extends TestHelper
 		// Grant
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		p.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
+
+		// Reset recent dev card for player, so they can play this turn
+		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
 
 		// Set up player 2
 		Player p2 = new ServerPlayer(Colour.RED, "");
@@ -344,6 +419,10 @@ public class DevelopmentCardTests extends TestHelper
 		req.setPlayDevCard(Board.PlayableDevCard.KNIGHT);
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		p.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
+
+		// Reset recent dev card for player, so they can play this turn
+		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
+
 		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
 		server.addMessageToProcess(
 				new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
@@ -383,6 +462,9 @@ public class DevelopmentCardTests extends TestHelper
 		// Grant
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		p.buyDevelopmentCard(DevelopmentCardType.Knight, game.getBank());
+
+		// Reset recent dev card for player, so they can play this turn
+		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
 
 		// Set up player 2, make settlement, grant resources so one can be taken
 		Player p2 = new ServerPlayer(Colour.RED, "");
@@ -433,6 +515,9 @@ public class DevelopmentCardTests extends TestHelper
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		p.buyDevelopmentCard(DevelopmentCardType.YearOfPlenty, game.getBank());
 
+		// Reset recent dev card for player, so they can play this turn
+		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
+
 		// Set up YOP card request, play the card
 		Requests.Request.Builder req = Requests.Request.newBuilder();
 		req.setPlayDevCard(Board.PlayableDevCard.YEAR_OF_PLENTY);
@@ -466,6 +551,9 @@ public class DevelopmentCardTests extends TestHelper
 		Edge e1 = n.getEdges().get(0), e2 = n.getEdges().get(1);
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
+
+		// Reset recent dev card for player, so they can play this turn
+		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
 
 		// Grant resources and make settlement
 		p.grantResources(Settlement.getSettlementCost(), game.getBank());
@@ -522,6 +610,9 @@ public class DevelopmentCardTests extends TestHelper
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		DevelopmentCardType card = DevelopmentCardType.RoadBuilding;
 		p.buyDevelopmentCard(card, game.getBank());
+
+		// Reset recent dev card for player, so they can play this turn
+		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
 
 		// Grant resources and make settlement
 		p.grantResources(Settlement.getSettlementCost(), game.getBank());

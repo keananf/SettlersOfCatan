@@ -96,29 +96,31 @@ public class MoveProcessor
 			return possibilities;
 		}
 		if (getGame() == null) return possibilities;
-
-		// Add initial possibilities
-		possibilities.add(new Turn(Requests.Request.BodyCase.CHATMESSAGE));
-		possibilities.addAll(getBuildingPossibilities());
+		else
+		{
+			// Add initial possibilities
+			possibilities.add(new Turn(Requests.Request.BodyCase.CHATMESSAGE));
+			possibilities.addAll(getBuildingPossibilities());
+		}
 
 		if (getTurn().isInitialPhase()) { return possibilities; }
 
-		// Check other possibilities
-		if (checkBuyDevCard())
-		{
-			possibilities.add(new Turn(Requests.Request.BodyCase.BUYDEVCARD));
-		}
 		// If the turn hasn't started, then the player can roll the dice
 		if (!getTurn().hasTurnStarted() && getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE))
 		{
 			possibilities.add(new Turn(Requests.Request.BodyCase.ROLLDICE));
+		}
+		// Check other possibilities
+		if (checkBuyDevCard())
+		{
+			possibilities.add(new Turn(Requests.Request.BodyCase.BUYDEVCARD));
 		}
 		if (getExpectedMoves().isEmpty() && checkTurn())
 		{
 			possibilities.add(new Turn(Requests.Request.BodyCase.ENDTURN));
 			possibilities.add(new Turn(Requests.Request.BodyCase.INITIATETRADE));
 		}
-		else if (getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
+		if (getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
 		{
 			possibilities.add(new Turn(Requests.Request.BodyCase.DISCARDRESOURCES));
 		}
@@ -219,9 +221,10 @@ public class MoveProcessor
 		// Check there is indeed a foreign settlement on one of the hexes nodes
 		for (Node n : hex.getNodes())
 		{
-			if (n.getSettlement() != null
-					&& !n.getSettlement().getPlayerColour().equals(getGame().getPlayer().getColour())
-					&& getGame().getPlayerResources(n.getSettlement().getPlayerColour()) > 0)
+			// If there is a foreign settlement, or NO settlement
+			if ((n.getSettlement() != null
+					&& !n.getSettlement().getPlayerColour().equals(getGame().getPlayer().getColour()))
+					|| n.getSettlement() == null)
 			{
 				val = true;
 			}
@@ -296,14 +299,20 @@ public class MoveProcessor
 	{
 		if (type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University)) return false;
 
-		// If player's turn and no other moves are expected
-		if (checkTurn() && getExpectedMoves().isEmpty())
+		// If player's turn and no other moves are expected, or it is the start of their turn
+		if (checkTurn() && (getExpectedMoves().isEmpty() || getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE)))
 		{
 			Player player = getGame().getPlayer();
 
 			// If the player owns the provided card
 			if (player.getDevelopmentCards().containsKey(type)
-					&& player.getDevelopmentCards().get(type) > 0) { return true; }
+					&& player.getDevelopmentCards().get(type) > 0)
+			{
+				// If you didn't just buy this card / these cards
+				Map<DevelopmentCardType, Integer> recentCards = player.getRecentBoughtDevCards();
+				int num = recentCards.containsKey(type) ? recentCards.get(type) : 0;
+				return player.getDevelopmentCards().get(type) > num;
+			}
 		}
 
 		return false;

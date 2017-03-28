@@ -540,12 +540,13 @@ public class Server implements Runnable
 	 * Simply forwards the trade offer to the intended recipient
 	 *
 	 * @param playerTrade the internal trade request inside the message
+	 * @param instigator the player who requested the trade that was rejected
 	 */
 	protected void forwardTradeOffer(Trade.WithPlayer playerTrade, Board.Player instigator)
 	{
 		Colour player = game.getPlayer(instigator.getId()).getColour();
 		Colour recipient = game.getPlayer(playerTrade.getOther().getId()).getColour();
-		Event ev = Event.newBuilder().setPlayerTradeInitiated(playerTrade).build();
+		Event ev = Event.newBuilder().setPlayerTradeInitiated(playerTrade).setInstigator(instigator).build();
 		Message msg = Message.newBuilder().setEvent(ev).build();
 
 		// Send messages
@@ -563,13 +564,15 @@ public class Server implements Runnable
 	 * Simply forwards the reject to the participants
 	 *
 	 * @param playerTrade the internal trade request inside the message
+	 * @param instigator the player who requested the trade that was rejected
 	 */
 	protected void forwardTradeReject(Trade.WithPlayer playerTrade, Board.Player instigator)
 	{
 		// Extract player info, and set up the reject event
-		Colour player = game.getPlayer(instigator.getId()).getColour();
 		Colour recipient = game.getPlayer(playerTrade.getOther().getId()).getColour();
-		Event ev = Event.newBuilder().setPlayerTradeRejected(EmptyOuterClass.Empty.getDefaultInstance()).build();
+		Colour player = game.getPlayer(instigator.getId()).getColour();
+		Event ev = Event.newBuilder().setInstigator(instigator)
+				.setPlayerTradeRejected(EmptyOuterClass.Empty.getDefaultInstance()).build();
 		Message msg = Message.newBuilder().setEvent(ev).build();
 
 		// Send messages

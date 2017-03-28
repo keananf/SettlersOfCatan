@@ -102,7 +102,7 @@ public class VeryEasyAI extends AICore
 
 		// Update Turn:
 		turn.setPlayerTrade(trade.build());
-		return 2;
+		return 0;
 	}
 
 	@Override

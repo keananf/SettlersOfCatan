@@ -7,6 +7,7 @@ import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
 import game.CurrentTrade;
 import game.players.Player;
+import intergroup.EmptyOuterClass;
 import intergroup.Events;
 import intergroup.Messages;
 import intergroup.Requests;
@@ -184,7 +185,7 @@ public class MessageProcessor
 				{
 					server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
 					currentTrade = null;
-					return null;
+					ev.setPlayerTradeRejected(EmptyOuterClass.Empty.getDefaultInstance());
 				}
 				else
 				{
@@ -265,7 +266,11 @@ public class MessageProcessor
 
 		// Add that a response is expected from this player
 		case INITIATETRADE:
-			moves.add(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
+			if(!moves.contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
+			{
+				server.log("Server Play", String.format("Adding trade response to %s", game.getPlayer(colour).getId().name()));
+				moves.add(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
+			}
 			break;
 
 		// Add expected moves based on recently played dev card
@@ -356,13 +361,14 @@ public class MessageProcessor
 		else if (!expected.isEmpty()) return false;
 
 		// If in trade phase and the given message isn't a trade
-		if (tradePhase
-				&& ((!type.equals(Requests.Request.BodyCase.INITIATETRADE) && game.getCurrentPlayer().equals(col))
-						|| (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
-								&& game.getCurrentPlayer().equals(col)))) { return false; }
+		if (tradePhase && game.getCurrentPlayer().equals(col)
+				&& !(type.equals(Requests.Request.BodyCase.INITIATETRADE) ||
+				type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) ||
+				type.equals(Requests.Request.BodyCase.ENDTURN)))
+		{ return false; }
 
 		// If it's not your turn and there are no expected moves from you
-		if (!game.getCurrentPlayer().equals(col) || (!game.getCurrentPlayer().equals(col) && expected.isEmpty()))
+		if (!game.getCurrentPlayer().equals(col) && expected.isEmpty())
 			return false;
 
 		return true;
@@ -378,11 +384,8 @@ public class MessageProcessor
 	private boolean validateMsg(Messages.Message msg, Colour col) throws IOException
 	{
 		// If it is not the player's turn, the message type is unknown OR the
-		// given request is NOT expected
-		// send error and return false
-		if (!isExpected(msg, col)) { return false; }
-
-		return true;
+		// given request is NOT expected, return false
+		return isExpected(msg, col);
 	}
 
 	/**

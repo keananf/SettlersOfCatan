@@ -558,9 +558,9 @@ public class ClientGame extends Game
 		{
 			int existing1 = resources.get(instigator.getColour()), existing2 = resources.get(recipient.getColour());
 			if (existing1 - offeringSize + wantingSize < 0) { throw new CannotAffordException(
-					String.format("Player %s cannot afford this trade.", instigator.getColour().name())); }
-			if (existing2 - offeringSize + wantingSize < 0) { throw new CannotAffordException(
-					String.format("Player %s cannot afford this trade.", recipient.getColour().name())); }
+					String.format("%s cannot afford this trade. %d %d %d", instigator.getId().name(), existing1, offeringSize, wantingSize)); }
+			if (existing2 + offeringSize - wantingSize < 0) { throw new CannotAffordException(
+					String.format("%s cannot afford this trade.", recipient.getId().name())); }
 			resources.put(instigator.getColour(), existing1 + wantingSize - offeringSize);
 			resources.put(recipient.getColour(), existing2 - wantingSize + offeringSize);
 		}

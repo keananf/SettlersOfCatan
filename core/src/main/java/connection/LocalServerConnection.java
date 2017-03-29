@@ -1,7 +1,6 @@
 package connection;
 
 import client.Client;
-import com.badlogic.gdx.Gdx;
 import intergroup.Messages;
 
 import java.util.concurrent.BlockingQueue;
@@ -78,22 +77,5 @@ public class LocalServerConnection implements IServerConnection
 	public LocalClientConnection getConn()
 	{
 		return conn;
-	}
-
-	/**
-	 * Logs the message depending on whether or not this is a local or remote
-	 * server
-	 * 
-	 * @param tag the tag (for Gdx)
-	 * @param msg the msg to log
-	 */
-	public void log(String tag, String msg)
-	{
-		if (Gdx.app == null)
-		{
-			System.out.println(msg);
-		}
-		else
-			Gdx.app.log(tag, msg);
 	}
 }

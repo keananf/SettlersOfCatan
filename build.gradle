@@ -137,7 +137,7 @@ project(":core") {
         inputFiles.matching(fbxFiles).each { f ->
             String out = (String)projectDir + "/assets/models/" + f.getName().replace(".fbx", ".g3db")
             println "Converting ${f} to ${out}"
-            def proc  = "/usr/local/bin/fbx-conv ${f} ${out}".execute();
+            def proc  = "bin/fbx-conv-lin64 ${f} ${out}".execute();
             proc.waitFor();
         }
     }

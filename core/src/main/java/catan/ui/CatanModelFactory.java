@@ -27,13 +27,25 @@ class CatanModelFactory
 	private final Model SEA;
 	private final Model ISLAND;
 	private final Model HEX;
+	private final Model GRAIN;
+	private final Model ORE;
+	private final Model WOOL;
+	private final Model LUMBER;
+	private final Model BRICK;
+	private final Model GENERIC;
 
-	CatanModelFactory()
+	CatanModelFactory(AssMan assets)
 	{
 		final ModelBuilder builder = new ModelBuilder();
 		SEA = builder.createCylinder(150f, 0.01f, 150f, 6, WATER, DEFAULT_ATTRS);
 		ISLAND = builder.createCylinder(11f, 0.1f, 11f, 6, DIRT, DEFAULT_ATTRS);
 		HEX = builder.createCylinder(2.2f, 0.2f, 2.2f, 6, new Material(), DEFAULT_ATTRS);
+		GRAIN = assets.getModel("ore.g3db") ;
+		ORE = assets.getModel("ore.g3db");
+		WOOL = assets.getModel("grass.g3db");
+		LUMBER = assets.getModel("grass.g3db");
+		GENERIC = assets.getModel("desert.g3db");
+		BRICK = assets.getModel("mine.g3db");
 	}
 
 	ModelInstance getSeaInstance()
@@ -74,4 +86,41 @@ class CatanModelFactory
 			return null;
 		}
 	}
+	
+	ModelInstance getTerrainInstance(ResourceType type, Vector3 pos) {
+		Model model = null;
+		switch (type) {
+		case Brick:
+			model = BRICK;
+			break;
+		case Generic:
+			model = GENERIC;
+			break;
+		case Grain:
+			model = GRAIN;
+			break;
+		case Lumber:
+			model = LUMBER;
+			break;
+		case Ore:
+			model = ORE;
+			break;
+		case Wool:
+			model = WOOL;
+			break;
+			
+		default:
+			break;
+
+		}
+		
+		ModelInstance mod = new ModelInstance(model, pos);
+		mod.transform.translate(0, 0.2f, 0);
+		mod.transform.scale(1.6f, 1, 1f);
+		return mod;
+	}
+	
+	
+	
+	
 }

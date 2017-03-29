@@ -136,9 +136,12 @@ project(":core") {
         PatternSet fbxFiles = new PatternSet().include({ def f -> f.getName().endsWith(".fbx") })
         inputFiles.matching(fbxFiles).each { f ->
             String out = (String)projectDir + "/assets/models/" + f.getName().replace(".fbx", ".g3db")
-            println "Converting ${f} to ${out}"
-            def proc  = "bin/fbx-conv-lin64 ${f} ${out}".execute();
-            proc.waitFor();
+            exec {
+                environment "LD_LIBRARY_PATH", "bin"
+                commandLine "./bin/fbx-conv-lin64", "${f}", "${out}"
+
+            }
+            println "Converted ${f} to ${out}"
         }
     }
 }

@@ -178,7 +178,15 @@ public class Server implements Runnable
 	 */
 	public void processMessage() throws IOException
 	{
-		Event ev = msgProc.processMessage();
+		Event ev = null;
+		try
+		{
+			ev = msgProc.processMessage();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 
 		if ((ev == null || !ev.isInitialized()) && msgProc.getLastMessage() != null)
 		{
@@ -397,7 +405,7 @@ public class Server implements Runnable
 					else if (ev != null) sendMessage(Message.newBuilder().setEvent(ev).build(), c);
 				}
 			}
-			catch (IOException e)
+			catch (Exception e)
 			{
 				e.printStackTrace();
 			}

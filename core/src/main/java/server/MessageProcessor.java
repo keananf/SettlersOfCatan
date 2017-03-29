@@ -18,7 +18,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Class for processing messages received from the server
@@ -32,7 +33,7 @@ public class MessageProcessor
 	private boolean monopoly;
 	private Logger logger;
 	private HashMap<Colour, List<Requests.Request.BodyCase>> expectedMoves;
-	private ConcurrentLinkedQueue<ReceivedMessage> movesToProcess;
+	private BlockingQueue<ReceivedMessage> movesToProcess;
 	private CurrentTrade currentTrade;
 	private boolean tradePhase;
 	private ReceivedMessage lastMessage;
@@ -43,7 +44,7 @@ public class MessageProcessor
 		this.server = server;
 		logger = new Logger();
 		expectedMoves = new HashMap<Colour, List<Requests.Request.BodyCase>>();
-		movesToProcess = new ConcurrentLinkedQueue<ReceivedMessage>();
+		movesToProcess = new LinkedBlockingQueue<ReceivedMessage>();
 		for (Colour c : Colour.values())
 		{
 			expectedMoves.put(c, new ArrayList<>());
@@ -55,9 +56,9 @@ public class MessageProcessor
 	 * 
 	 * @throws IOException
 	 */
-	public Events.Event processMessage() throws IOException
+	public Events.Event processMessage() throws Exception
 	{
-		ReceivedMessage receivedMessage = movesToProcess.poll();
+		ReceivedMessage receivedMessage = movesToProcess.take();
 		lastMessage = receivedMessage;
 		if (receivedMessage == null || receivedMessage.getMsg() == null) { return null; }
 
@@ -423,7 +424,15 @@ public class MessageProcessor
 
 	public void addMoveToProcess(ReceivedMessage msg)
 	{
-		movesToProcess.add(msg);
+
+		try
+		{
+			movesToProcess.put(msg);
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public void setGame(ServerGame game)

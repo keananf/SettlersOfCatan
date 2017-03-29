@@ -24,7 +24,11 @@ import game.build.Settlement;
 import grid.Edge;
 import grid.Hex;
 import grid.Node;
+import grid.Port;
 
+import java.awt.Point;
+
+import java.util.Hashtable;
 import java.util.List;
 
 public class GameScreen implements Screen
@@ -43,6 +47,7 @@ public class GameScreen implements Screen
 	private final SpriteBatch hudBatch = new SpriteBatch();
 	private final PerspectiveCamera cam;
 	private final CameraController camController;
+	private static final Vector3 ORIGIN = new Vector3(0, 0, 0);
 
 	/** Initial world setup */
 	GameScreen(final SettlersOfCatan game)
@@ -64,14 +69,17 @@ public class GameScreen implements Screen
 		multiplexer.addProcessor(new GameController(cam, game.getState()));
 		Gdx.input.setInputProcessor(multiplexer);
 
-		final CatanModelFactory factory = new CatanModelFactory();
+		final CatanModelFactory factory = new CatanModelFactory(game.assets);
 		persistentInstances.add(factory.getSeaInstance());
 		persistentInstances.add(factory.getIslandInstance());
-
+		
 		for (final Hex hex : game.getState().getGrid().getHexesAsList())
 		{
 			persistentInstances.add(factory.getHexInstance(hex.get3DPos(), hex.getResource()));
-		}
+			persistentInstances.add(factory.getTerrainInstance(hex.getResource(), hex.get3DPos()));
+			
+		}	
+		drawPorts();
 	}
 
 	@Override
@@ -167,6 +175,38 @@ public class GameScreen implements Screen
 		}
 
 	}
+	
+	
+	public void drawPorts(){
+		Model model = game.assets.getModel("port.g3db");
+		
+		List<Port> ports = game.client.getState().getGrid().getPortsAsList();
+		for(Port port : ports){
+			 Vector3 n = port.getX().get3DPos();
+			 Vector3 n2 = port.getY().get3DPos();
+			 float xMidpoint = (n.x+n2.x)/2;
+			 float yMidpoint = (n.y+n2.y)/2;
+			 
+			 Vector3 Midpoint = new Vector3 (xMidpoint, 0.1f ,yMidpoint);
+			 ModelInstance instance = new ModelInstance(model, Midpoint);
+			 persistentInstances.add(instance);
+			
+			
+			
+		}
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 
 	private static Color playerToColour(final Colour name)
 	{
@@ -178,7 +218,13 @@ public class GameScreen implements Screen
 			default:     return null;
 		}
 	}
-
+	
+	
+	
+	
+	
+	
+	
 	@Override
 	public void dispose()
 	{

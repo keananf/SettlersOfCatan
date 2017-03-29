@@ -1,6 +1,5 @@
 package catan.ui;
 
-import client.ClientGame;
 import game.Game;
 import grid.BoardElement;
 import grid.Hex;

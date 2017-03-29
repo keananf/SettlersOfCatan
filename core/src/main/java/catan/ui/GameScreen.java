@@ -27,7 +27,8 @@ import grid.Node;
 
 import java.util.List;
 
-public class GameScreen implements Screen {
+public class GameScreen implements Screen
+{
 	private static final Environment ENVIRONMENT = new Environment();
 	static
 	{
@@ -93,15 +94,18 @@ public class GameScreen implements Screen {
 		drawBuildings();
 	}
 
-	private void drawRoads() {
+	private void drawRoads()
+	{
 		Model model = game.assets.getModel("road.g3db");
 
 		List<Edge> edges = game.client.getState().getGrid().getEdgesAsList();
-		for (Edge edge : edges) {
+		for (Edge edge : edges)
+		{
 
 			Road road = edge.getRoad();
 
-			if (road != null) {
+			if (road != null)
+			{
 				Vector3 place = edge.get3dVectorMidpoint(edge);
 				ModelInstance instance = new ModelInstance(model, place);
 
@@ -112,10 +116,13 @@ public class GameScreen implements Screen {
 
 				if (compare.x != compareTo.x)
 				{
-					if(compare.y > compareTo.y){
-						instance.transform.rotate(0,1,0,-60f);
-					} else {
-						instance.transform.rotate(0,1,0,60f);
+					if (compare.y > compareTo.y)
+					{
+						instance.transform.rotate(0, 1, 0, -60f);
+					}
+					else
+					{
+						instance.transform.rotate(0, 1, 0, 60f);
 					}
 				}
 
@@ -126,24 +133,29 @@ public class GameScreen implements Screen {
 
 	}
 
-	private void drawBuildings() {
+	private void drawBuildings()
+	{
 		Model model = game.assets.getModel("settlement.g3db");
 		Model modelCity = game.assets.getModel("city.g3db");
 
 		List<Node> nodes = game.client.getState().getGrid().getNodesAsList();
-		for (Node node : nodes) {
+		for (Node node : nodes)
+		{
 			Vector3 place = node.get3DPos();
 			ModelInstance instance;
 
 			Building building = node.getBuilding();
 
-			if (building != null) {
-				if (building instanceof Settlement) {
+			if (building != null)
+			{
+				if (building instanceof Settlement)
+				{
 					instance = new ModelInstance(model, place);
-				} else {
+				}
+				else
+				{
 					instance = new ModelInstance(modelCity, place);
 				}
-
 
 				instance.materials.get(0).set(ColorAttribute.createDiffuse(playerToColour(building.getPlayerColour())));
 				instance.transform.scale(0.2f, 0.2f, 0.2f);

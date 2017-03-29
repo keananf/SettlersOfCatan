@@ -15,20 +15,18 @@ import enums.ResourceType;
 
 class CatanModelFactory
 {
-	private static final long DEFAULT_ATTRS =
-			VertexAttributes.Usage.Position
-			| VertexAttributes.Usage.Normal
+	private static final long DEFAULT_ATTRS = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal
 			| VertexAttributes.Usage.TextureCoordinates;
 	private static final Vector3 ORIGIN = new Vector3(0, 0, 0);
 
-    private static final Material WATER = new Material(
+	private static final Material WATER = new Material(
 			TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));
 	private static final Material DIRT = new Material(
 			TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
 
-    private final Model SEA;
-    private final Model ISLAND;
-    private final Model HEX;
+	private final Model SEA;
+	private final Model ISLAND;
+	private final Model HEX;
 
 	CatanModelFactory()
 	{
@@ -38,14 +36,14 @@ class CatanModelFactory
 		HEX = builder.createCylinder(2.2f, 0.2f, 2.2f, 6, new Material(), DEFAULT_ATTRS);
 	}
 
-    ModelInstance getSeaInstance()
-    {
-        return new ModelInstance(SEA, ORIGIN);
-    }
-
-    ModelInstance getIslandInstance()
+	ModelInstance getSeaInstance()
 	{
-        return new ModelInstance(ISLAND, ORIGIN);
+		return new ModelInstance(SEA, ORIGIN);
+	}
+
+	ModelInstance getIslandInstance()
+	{
+		return new ModelInstance(ISLAND, ORIGIN);
 	}
 
 	ModelInstance getHexInstance(final Vector3 pos, final ResourceType type)

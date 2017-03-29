@@ -387,8 +387,8 @@ public class ClientGame extends Game
 
 		// If invalid coordinates
 		if (node == null || (node.getBuilding() != null
-				&& node.getBuilding() instanceof Settlement)) { throw new InvalidCoordinatesException(
-						settlement.getX(), settlement.getY()); }
+				&& node.getBuilding() instanceof Settlement)) { throw new InvalidCoordinatesException(settlement.getX(),
+						settlement.getY()); }
 
 		// Spend resources if this is not an initial move
 		if (player.getSettlements().size() >= 2)
@@ -557,8 +557,10 @@ public class ClientGame extends Game
 		else
 		{
 			int existing1 = resources.get(instigator.getColour()), existing2 = resources.get(recipient.getColour());
-			if (existing1 - offeringSize + wantingSize < 0) { throw new CannotAffordException(
-					String.format("%s cannot afford this trade. %d %d %d", instigator.getId().name(), existing1, offeringSize, wantingSize)); }
+			if (existing1 - offeringSize
+					+ wantingSize < 0) { throw new CannotAffordException(
+							String.format("%s cannot afford this trade. %d %d %d", instigator.getId().name(), existing1,
+									offeringSize, wantingSize)); }
 			if (existing2 + offeringSize - wantingSize < 0) { throw new CannotAffordException(
 					String.format("%s cannot afford this trade.", recipient.getId().name())); }
 			resources.put(instigator.getColour(), existing1 + wantingSize - offeringSize);

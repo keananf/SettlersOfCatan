@@ -15,11 +15,10 @@ import intergroup.trade.Trade;
 import java.util.*;
 
 /**
- * This class assigns nearly every move a rank of 0, so that the AICore treats all
- * moves as being equally valid. When it comes to 'selectMove,' a random element
- * of the list will be chosen.
- * Methods that DON't return 0 are so that the AI is able to show that it is capable
- * of moves of all types.
+ * This class assigns nearly every move a rank of 0, so that the AICore treats
+ * all moves as being equally valid. When it comes to 'selectMove,' a random
+ * element of the list will be chosen. Methods that DON't return 0 are so that
+ * the AI is able to show that it is capable of moves of all types.
  */
 public class VeryEasyAI extends AICore
 {
@@ -76,7 +75,7 @@ public class VeryEasyAI extends AICore
 		Trade.WithPlayer.Builder trade = Trade.WithPlayer.newBuilder();
 
 		// Set up the resources the player is wanting
-		if(want.size() == 0)
+		if (want.size() == 0)
 		{
 			// Request one of the resource that the player has the least of
 			leastResource = findLeast(resources);
@@ -152,6 +151,7 @@ public class VeryEasyAI extends AICore
 
 	/**
 	 * Finds a player to trade with based on what the user wants
+	 * 
 	 * @param wanting the resources the user wants
 	 * @return the player who should have some of this resource
 	 */
@@ -161,20 +161,20 @@ public class VeryEasyAI extends AICore
 		Colour c = Colour.BLUE.equals(getPlayer().getColour()) ? Colour.RED : Colour.BLUE;
 
 		// Loop through players
-		for(Player p : getState().getPlayers().values())
+		for (Player p : getState().getPlayers().values())
 		{
 			boolean val = false;
 
 			// Skip this player
-			if(p.equals(getPlayer())) continue;
+			if (p.equals(getPlayer())) continue;
 
 			// Loop through players settlements
-			for(Building b : p.getSettlements().values())
+			for (Building b : p.getSettlements().values())
 			{
 				// Check each hex this building is adjacent to
-				for(Hex h : b.getNode().getHexes())
+				for (Hex h : b.getNode().getHexes())
 				{
-					if(h.getResource().equals(wanting))
+					if (h.getResource().equals(wanting))
 					{
 						c = p.getColour();
 						val = true;
@@ -182,10 +182,10 @@ public class VeryEasyAI extends AICore
 					}
 				}
 
-				if(val) break;
+				if (val) break;
 			}
 
-			if(val) break;
+			if (val) break;
 		}
 
 		return Board.Player.newBuilder().setId(getState().getPlayer(c).getId()).build();
@@ -193,6 +193,7 @@ public class VeryEasyAI extends AICore
 
 	/**
 	 * Ascertains which resource types the player does NOT have
+	 * 
 	 * @param resources the player's resources
 	 * @return a list of resource types that the player does NOT have
 	 */
@@ -201,10 +202,10 @@ public class VeryEasyAI extends AICore
 		List<ResourceType> want = new ArrayList<ResourceType>();
 
 		// Ask for resources this player does NOT have
-		for(ResourceType type : ResourceType.values())
+		for (ResourceType type : ResourceType.values())
 		{
 			// If the player has none of this resource
-			if(!resources.containsKey(type) || resources.get(type) == 0)
+			if (!resources.containsKey(type) || resources.get(type) == 0)
 			{
 				want.add(type);
 			}
@@ -214,6 +215,7 @@ public class VeryEasyAI extends AICore
 
 	/**
 	 * Finds the resource that the player owns the most of
+	 * 
 	 * @param resources the player's resources
 	 * @return the max resource
 	 */
@@ -223,9 +225,9 @@ public class VeryEasyAI extends AICore
 		ResourceType r = null;
 
 		// Loop through player resources to find most common
-		for(ResourceType type : resources.keySet())
+		for (ResourceType type : resources.keySet())
 		{
-			if(resources.get(type) > max)
+			if (resources.get(type) > max)
 			{
 				max = resources.get(type);
 				r = type;
@@ -237,6 +239,7 @@ public class VeryEasyAI extends AICore
 
 	/**
 	 * Finds the resource that the player owns the least of
+	 * 
 	 * @param resources the player's resources
 	 * @return the least resource
 	 */
@@ -246,9 +249,9 @@ public class VeryEasyAI extends AICore
 		ResourceType r = null;
 
 		// Loop through player resources to find least common
-		for(ResourceType type : resources.keySet())
+		for (ResourceType type : resources.keySet())
 		{
-			if(resources.get(type) < min)
+			if (resources.get(type) < min)
 			{
 				min = resources.get(type);
 				r = type;

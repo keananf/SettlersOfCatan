@@ -96,7 +96,8 @@ public class MoveProcessor
 			possibilities.add(new Turn(Requests.Request.BodyCase.JOINLOBBY));
 			return possibilities;
 		}
-		if (getGame() == null) return possibilities;
+		if (getGame() == null)
+			return possibilities;
 		else
 		{
 			// Add initial possibilities
@@ -119,7 +120,7 @@ public class MoveProcessor
 		if (getExpectedMoves().isEmpty() && checkTurn())
 		{
 			// So as to not spam requests
-			if(getTurn().getCurrentTrade() == null)
+			if (getTurn().getCurrentTrade() == null)
 			{
 				possibilities.add(new Turn(Requests.Request.BodyCase.INITIATETRADE));
 				possibilities.add(new Turn(Requests.Request.BodyCase.ENDTURN));
@@ -225,8 +226,7 @@ public class MoveProcessor
 		// Check there is indeed a foreign settlement on one of the hexes nodes
 		for (Node n : hex.getNodes())
 		{
-			if (n.getBuilding() != null
-					&& !n.getBuilding().getPlayerColour().equals(getGame().getPlayer().getColour())
+			if (n.getBuilding() != null && !n.getBuilding().getPlayerColour().equals(getGame().getPlayer().getColour())
 					&& getGame().getPlayerResources(n.getBuilding().getPlayerColour()) > 0)
 			{
 				val = true;
@@ -389,7 +389,7 @@ public class MoveProcessor
 			// OR if it is reject.
 			val = getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
 					&& ((response.equals(Trade.Response.ACCEPT) && getGame().getPlayer().canAfford(costMap))
-					|| (response.equals(Trade.Response.REJECT)));
+							|| (response.equals(Trade.Response.REJECT)));
 		}
 
 		return val;
@@ -443,8 +443,8 @@ public class MoveProcessor
 		else if (!getExpectedMoves().isEmpty()) return false;
 
 		// If in trade phase and the given message isn't a trade
-		if (getTurn().isTradePhase() && ((checkTurn() &&
-				!(type.equals(Requests.Request.BodyCase.INITIATETRADE) || type.equals(Requests.Request.BodyCase.ENDTURN)))
+		if (getTurn().isTradePhase() && ((checkTurn() && !(type.equals(Requests.Request.BodyCase.INITIATETRADE)
+				|| type.equals(Requests.Request.BodyCase.ENDTURN)))
 				|| (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !checkTurn()))) { return false; }
 
 		// If it's not your turn and there are no expected moves from you

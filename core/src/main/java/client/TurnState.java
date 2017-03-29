@@ -95,12 +95,12 @@ public class TurnState extends Turn
 		this.roll = roll;
 	}
 
-    public void setCurrentTrade(CurrentTrade currentTrade)
+	public void setCurrentTrade(CurrentTrade currentTrade)
 	{
-        this.currentTrade = currentTrade;
-    }
+		this.currentTrade = currentTrade;
+	}
 
-    public CurrentTrade getCurrentTrade()
+	public CurrentTrade getCurrentTrade()
 	{
 		return currentTrade;
 	}

@@ -5,7 +5,6 @@ import game.build.Road;
 
 import java.util.List;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 /**
@@ -280,29 +279,24 @@ public class Edge implements BoardElement
 
 		return false;
 	}
-	
-	public Vector3 get3dVectorMidpoint(Edge edge){
+
+	public Vector3 get3dVectorMidpoint(Edge edge)
+	{
 		Node a = edge.getX();
 		Node b = edge.getY();
 		int aX = a.getX();
 		int bX = b.getX();
 		int aY = a.getY();
 		int bY = b.getY();
-		
-		Vector3 aVector = new Vector3((float)aX, 0.1f, (float) ((2* (float) aY - (float) aX )/Math.sqrt(3)));
-		Vector3 bVector = new Vector3((float)bX, 0.1f, (float) ((2* (float) bY - (float) bX )/Math.sqrt(3)));
-		
-		float cartesianXMidpoint = (aVector.x+bVector.x)/2;
-		float cartesianYMidpoint = (aVector.z + bVector.z)/2;
-		
+
+		Vector3 aVector = new Vector3((float) aX, 0.1f, (float) ((2 * (float) aY - (float) aX) / Math.sqrt(3)));
+		Vector3 bVector = new Vector3((float) bX, 0.1f, (float) ((2 * (float) bY - (float) bX) / Math.sqrt(3)));
+
+		float cartesianXMidpoint = (aVector.x + bVector.x) / 2;
+		float cartesianYMidpoint = (aVector.z + bVector.z) / 2;
+
 		return new Vector3(cartesianXMidpoint, 0.1f, cartesianYMidpoint);
 
-		
 	}
-	
-	
-	
-	
-	
-	
+
 }

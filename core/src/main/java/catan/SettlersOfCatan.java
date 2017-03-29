@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	public Skin skin;
-    public AssMan assets = new AssMan();
+	public AssMan assets = new AssMan();
 	public Client client;
 	private Thread t;
 	private boolean active;

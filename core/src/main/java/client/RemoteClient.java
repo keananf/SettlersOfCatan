@@ -1,5 +1,6 @@
 package client;
 
+import catan.SettlersOfCatan;
 import connection.RemoteServerConnection;
 
 import java.io.IOException;
@@ -14,10 +15,11 @@ public class RemoteClient extends Client
 	private String host;
 	private RemoteServerConnection conn;
 
-	public RemoteClient(String host)
+	public RemoteClient(String host, SettlersOfCatan game)
 	{
-		super();
+		super(game);
 		this.host = host;
+		setUpConnection();
 	}
 
 	/**
@@ -55,7 +57,7 @@ public class RemoteClient extends Client
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			log("Client Set-Up", String.format("Could not connect to: %s", host));
 		}
 	}
 

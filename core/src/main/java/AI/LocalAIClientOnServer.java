@@ -14,11 +14,13 @@ public class LocalAIClientOnServer extends AIClient
 	public LocalAIClientOnServer(Difficulty difficulty)
 	{
 		super(difficulty);
+		setUpConnection();
 	}
 
 	public LocalAIClientOnServer()
 	{
 		super();
+		setUpConnection();
 	}
 
 	@Override

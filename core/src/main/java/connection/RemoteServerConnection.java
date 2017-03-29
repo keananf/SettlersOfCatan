@@ -90,6 +90,6 @@ public class RemoteServerConnection implements IServerConnection
 
 	public boolean isInitialised()
 	{
-		return conn.isConnected();
+		return conn != null && conn.isConnected();
 	}
 }

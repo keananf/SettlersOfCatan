@@ -30,7 +30,7 @@ public final class CameraController implements InputProcessor
 		this.camera = camera;
 	}
 
-	public void update()
+	void update()
 	{
 		boolean changed = false;
 
@@ -72,9 +72,9 @@ public final class CameraController implements InputProcessor
 	}
 
 	@Override
-	public boolean scrolled(int amount)
+	public boolean scrolled(int direction)
 	{
-		scrollDirection = amount;
+		scrollDirection = direction;
 		return true;
 	}
 
@@ -110,21 +110,21 @@ public final class CameraController implements InputProcessor
 
 	private boolean zoomIn()
 	{
+		scrollDirection = SCROLL_NONE;
 		if (camera.position.dst(ORIGIN) > MIN_DIST)
 		{
 			camera.position.scl(ZOOM_RATE);
 			return true;
 		}
-		scrollDirection = SCROLL_NONE;
 		return false;
 	}
 
 	private boolean zoomOut()
 	{
+		scrollDirection = SCROLL_NONE;
 		if (camera.position.dst(ORIGIN) < MAX_DIST)
 		{
 			camera.position.scl(1 / ZOOM_RATE);
-			scrollDirection = SCROLL_NONE;
 			return true;
 		}
 		return false;

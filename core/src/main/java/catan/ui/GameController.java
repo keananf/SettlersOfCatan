@@ -31,12 +31,12 @@ class GameController implements InputProcessor
 	private final static float DETECTION_Y = 0.1f;
 	private final static Plane DETECTION_PLANE = new Plane(new Vector3(0, 1, 0), new Vector3(0, DETECTION_Y, 0));
 
-	GameController(final GameScreen screen, final Game state)
+	GameController(final Camera camera, final Game state)
 	{
-		this.camera = screen.cam;
-        this.hexes = state.getGrid().getHexesAsList();
-        this.nodes = state.getGrid().getNodesAsList();
-        this.edges = state.getGrid().getEdgesAsList();
+		this.camera = camera;
+		this.hexes = state.getGrid().getHexesAsList();
+		this.nodes = state.getGrid().getNodesAsList();
+		this.edges = state.getGrid().getEdgesAsList();
 	}
 
 	@Override

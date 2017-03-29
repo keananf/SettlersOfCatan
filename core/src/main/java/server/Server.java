@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 public class Server implements Runnable
 {
@@ -41,6 +42,7 @@ public class Server implements Runnable
 	protected Map<Colour, AIClient> ais;
 	protected static final int PORT = 12345;
 	private boolean active;
+	private Semaphore lock;
 
 	public Server()
 	{
@@ -53,6 +55,7 @@ public class Server implements Runnable
 		// Set up
 		msgProc = new MessageProcessor(game, this);
 		connections = new HashMap<Colour, ListenerThread>();
+		lock = new Semaphore(1);
 	}
 
 	public void run()
@@ -70,12 +73,30 @@ public class Server implements Runnable
 			log("Server Start", "%n%nAll players Connected. Beginning play.%n");
 			while (active && !game.isOver())
 			{
-				// Read moves from queue and log
-				processMessage();
-				sleep();
+				try
+				{
+					lock.acquire();
+					try
+					{
+						// Read moves from queue and log
+						processMessage();
+					}
+					finally
+					{
+						lock.release();
+					}
+					sleep();
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 			}
 
-			sendEvents(Event.newBuilder().setGameWon(EmptyOuterClass.Empty.getDefaultInstance()).build());
+			if(active)
+			{
+				sendEvents(Event.newBuilder().setGameWon(EmptyOuterClass.Empty.getDefaultInstance()).build());
+			}
 		}
 		catch (IOException | InterruptedException e)
 		{
@@ -95,7 +116,25 @@ public class Server implements Runnable
 
 	public void terminate()
 	{
-		active = false;
+		try
+		{
+			lock.acquire();
+			try
+			{
+				if(active)
+				{
+					active = false;
+				}
+			}
+			finally
+			{
+				lock.release();
+			}
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -103,21 +142,27 @@ public class Server implements Runnable
 	 */
 	private void shutDown()
 	{
+		log("Shutdown Server", "Shutting down.");
+		int i = 1;
+
 		// Shut down all individual connections
 		for (Colour c : connections.keySet())
 		{
+			log("Shutdown Server", String.format("Thread %d / %d shutdown.", i++, connections.size()));
 			try
 			{
+				// Instruct ListenerThread to terminate, then wait
+				threads.get(c).interrupt();
+				connections.get(c).shutDown();
+				threads.get(c).join();
+
 				// Instruct AI thread to terminate, then wait
 				if (ais.containsKey(c) && aiThreads.containsKey(c))
 				{
+					aiThreads.get(c).interrupt();
 					ais.get(c).shutDown();
 					aiThreads.get(c).join();
 				}
-
-				// Instruct ListenerThread to terminate, then wait
-				connections.get(c).shutDown();
-				threads.get(c).join();
 			}
 			catch (InterruptedException e)
 			{
@@ -133,7 +178,15 @@ public class Server implements Runnable
 	 */
 	public void processMessage() throws IOException
 	{
-		Event ev = msgProc.processMessage();
+		Event ev = null;
+		try
+		{
+			ev = msgProc.processMessage();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 
 		if ((ev == null || !ev.isInitialized()) && msgProc.getLastMessage() != null)
 		{
@@ -283,7 +336,7 @@ public class Server implements Runnable
 	private void getPlayers() throws IOException
 	{
 		// If no remote players
-		if (numConnections == Game.NUM_PLAYERS)
+		if (numConnections == Game.NUM_PLAYERS && active)
 		{
 			log("Server Setup", "All Players connected. Starting game...%n");
 			return;
@@ -295,7 +348,7 @@ public class Server implements Runnable
 				String.format("Server started. Waiting for client(s)...%s%n", serverSocket.getInetAddress()));
 
 		// Loop until all players found
-		while (numConnections < Game.NUM_PLAYERS)
+		while (active && numConnections < Game.NUM_PLAYERS)
 		{
 			Socket connection = serverSocket.accept();
 
@@ -316,7 +369,10 @@ public class Server implements Runnable
 			numConnections++;
 		}
 
-		log("Server Setup", "All Players connected. Starting game...%n");
+		if(active && numConnections == Game.NUM_PLAYERS)
+		{
+			log("Server Setup", "All Players connected. Starting game...%n");
+		}
 	}
 
 	/**
@@ -329,7 +385,7 @@ public class Server implements Runnable
 			getExpectedMoves(c).add(Request.BodyCase.JOINLOBBY);
 		}
 
-		while (!checkJoinedLobby())
+		while (active && !checkJoinedLobby())
 		{
 			try
 			{
@@ -349,20 +405,23 @@ public class Server implements Runnable
 					else if (ev != null) sendMessage(Message.newBuilder().setEvent(ev).build(), c);
 				}
 			}
-			catch (IOException e)
+			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
 		}
 
-		log("Server play", "All players connected%n%n");
-		try
+		if(active)
 		{
-			Thread.sleep(1000);
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
+			log("Server play", "All players connected\n\n");
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -389,7 +448,7 @@ public class Server implements Runnable
 		Board.Player.Id current = game.getPlayer(game.getCurrentPlayer()).getId();
 
 		// Get settlements and roads forwards from the first player
-		for (int i = 0; i < Game.NUM_PLAYERS; i++)
+		for (int i = 0; active && i < Game.NUM_PLAYERS; i++)
 		{
 			log("Server Initial Phase", String.format("Player %s receive initial moves", current.name()));
 			receiveInitialMoves(game.getPlayer(current).getColour());
@@ -402,7 +461,7 @@ public class Server implements Runnable
 		}
 
 		// Get second set of settlements and roads in reverse order
-		for (int i = Game.NUM_PLAYERS - 1; i >= 0; i--)
+		for (int i = Game.NUM_PLAYERS - 1; active && i >= 0; i--)
 		{
 			log("Server Initial Phase", String.format("Player %s receive initial moves", current.name()));
 			receiveInitialMoves(game.getPlayer(current).getColour());
@@ -429,7 +488,7 @@ public class Server implements Runnable
 
 		// Loop until player sends valid new settlement
 		getExpectedMoves(c).add(Requests.Request.BodyCase.BUILDSETTLEMENT);
-		while (p.getSettlements().size() == oldSettlementsAmount)
+		while (active && p.getSettlements().size() == oldSettlementsAmount)
 		{
 			game.setCurrentPlayer(c);
 
@@ -439,7 +498,7 @@ public class Server implements Runnable
 
 		// Loop until player sends valid new road
 		getExpectedMoves(c).add(Requests.Request.BodyCase.BUILDROAD);
-		while (p.getRoads().size() == oldRoadAmount)
+		while (active && p.getRoads().size() == oldRoadAmount)
 		{
 			processMessage();
 			sleep();

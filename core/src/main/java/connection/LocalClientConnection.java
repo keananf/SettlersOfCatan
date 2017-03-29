@@ -34,10 +34,7 @@ public class LocalClientConnection implements IClientConnection
 		{
 			conn.fromServer.put(message);
 		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
+		catch (InterruptedException e) {}
 	}
 
 	@Override
@@ -49,10 +46,7 @@ public class LocalClientConnection implements IClientConnection
 		{
 			return fromClient.take();
 		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
+		catch (InterruptedException e) {}
 		return null;
 	}
 

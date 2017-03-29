@@ -14,12 +14,12 @@ class MoveBuilder
 {
 	private final Client client;
 
-    MoveBuilder(Client client)
+	MoveBuilder(Client client)
 	{
 		this.client = client;
 	}
 
-	protected void onSelect(BoardElement element)
+	void onSelect(BoardElement element)
 	{
 		Turn turn = new Turn();
 
@@ -48,13 +48,13 @@ class MoveBuilder
 			turn.setChosenEdge((Edge) element);
 			if (((Edge) element).getRoad() == null)
 			{
-                turn.setChosenMove(Requests.Request.BodyCase.BUILDROAD);
+				turn.setChosenMove(Requests.Request.BodyCase.BUILDROAD);
 
-            }
-            else
-            {
-                return;
-            }
+			}
+			else
+			{
+				return;
+			}
 		}
 
 		if (element instanceof Hex)

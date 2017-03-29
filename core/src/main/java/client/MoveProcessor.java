@@ -449,8 +449,8 @@ public class MoveProcessor
 				|| (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !checkTurn()))) { return false; }
 
 		// If it's not your turn and there are no expected moves from you
-        return !(!checkTurn() && getExpectedMoves().isEmpty());
-    }
+		return !(!checkTurn() && getExpectedMoves().isEmpty());
+	}
 
 	/**
 	 * Ensures the request is valid at this current stage of the game

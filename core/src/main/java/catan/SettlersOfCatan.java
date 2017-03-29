@@ -26,6 +26,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 
 		// start off at the splash screen
 		setScreen(new SplashScreen(this));
+		active = true;
 	}
 
 	@Override
@@ -39,9 +40,11 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	{
 		if (active)
 		{
+			client.log("Shutdown Client", "Shutting down.");
+			active = false;
+			skin.dispose();
 			if (client != null && client.isActive()) client.shutDown();
 			client = null;
-			skin.dispose();
 			try
 			{
 				if (t != null) t.join();

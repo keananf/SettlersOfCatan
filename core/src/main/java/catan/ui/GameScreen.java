@@ -69,7 +69,7 @@ public class GameScreen implements Screen {
 
 		for (final Hex hex : game.getState().getGrid().getHexesAsList())
 		{
-			persistentInstances.add(factory.getHexInstance(hex.get3DPos()));
+			persistentInstances.add(factory.getHexInstance(hex.get3DPos(), hex.getResource()));
 		}
 	}
 

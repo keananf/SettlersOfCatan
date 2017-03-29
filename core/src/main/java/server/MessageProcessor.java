@@ -365,13 +365,10 @@ public class MessageProcessor
 				&& !(type.equals(Requests.Request.BodyCase.INITIATETRADE) ||
 				type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) ||
 				type.equals(Requests.Request.BodyCase.ENDTURN)))
-		{ return false; }
-
-		// If it's not your turn and there are no expected moves from you
-		if (!game.getCurrentPlayer().equals(col) && expected.isEmpty())
 			return false;
 
-		return true;
+		// If it's not your turn and there are no expected moves from you
+		return !(!game.getCurrentPlayer().equals(col) && expected.isEmpty());
 	}
 
 	/**

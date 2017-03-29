@@ -20,9 +20,9 @@ public class LocalClient extends Client
 	public LocalClient(SettlersOfCatan game)
 	{
 		super(game);
+		setUpConnection();
 	}
 
-	@Override
 	protected void setUpConnection()
 	{
 		conn = new LocalServerConnection(this);

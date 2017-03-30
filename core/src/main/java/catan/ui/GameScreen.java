@@ -79,7 +79,7 @@ public class GameScreen implements Screen
 			persistentInstances.add(factory.getTerrainInstance(hex.getResource(), hex.get3DPos()));
 			
 		}	
-		drawPorts();
+		//drawPorts();
 	}
 
 	@Override

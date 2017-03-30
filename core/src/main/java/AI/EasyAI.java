@@ -264,6 +264,29 @@ public class EasyAI extends AICore
     @Override
     public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)
     {
+    	return -1;
+    }
+
+    @Override// remains 0 as this is the EasyAI
+    public int rankEndTurn()
+    {
+        int rank = 0;
+        
+        if(hasTraded)
+        {
+        	rank = -1;
+        }
+        else
+        {
+        	rank = -1;
+        }
+        
+        return rank;
+    }
+
+    @Override   //done by jack
+    public int rankTargetPlayer(Colour target)
+    {
     	int rank = 5;
     	
     	HashMap<Colour, Integer> totalRank = new HashMap<Colour, Integer>();
@@ -310,33 +333,10 @@ public class EasyAI extends AICore
         return rank;
     }
 
-    @Override// remains 0 as this is the EasyAI
-    public int rankEndTurn()
-    {
-        int rank = 0;
-        
-        if(hasTraded)
-        {
-        	rank = -1;
-        }
-        else
-        {
-        	rank = -1;
-        }
-        
-        return rank;
-    }
-
-    @Override   //done by jack
-    public int rankTargetPlayer(Colour target)
-    {
-        return -1;
-    }
-
-    @Override  //done by jack
+    @Override
     public int rankInitiateTrade(Turn turn)
     {
-        return 0;
+        return -1;
     }
 
 

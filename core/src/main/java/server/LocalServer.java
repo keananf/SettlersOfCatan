@@ -3,6 +3,7 @@ package server;
 import AI.LocalAIClientOnServer;
 import connection.LocalClientConnection;
 import enums.Colour;
+import enums.Difficulty;
 import exceptions.GameFullException;
 import game.players.Player;
 
@@ -55,7 +56,7 @@ public class LocalServer extends Server
 				break;
 			}
 
-			LocalAIClientOnServer ai = new LocalAIClientOnServer();
+			LocalAIClientOnServer ai = new LocalAIClientOnServer(Difficulty.EASY);
 			LocalClientConnection conn = ai.getConn().getConn();
 			Thread t = new Thread(ai);
 			t.start();

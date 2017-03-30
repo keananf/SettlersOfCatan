@@ -180,6 +180,8 @@ public class GameScreen implements Screen
 
 			Vector3 Midpoint = new Vector3(xMidpoint, 0.1f, yMidpoint);
 			ModelInstance instance = new ModelInstance(model, Midpoint);
+			instance.transform.rotate(0,1f, 0, 45f);
+			instance.transform.scale(0.5f, 0.5f, 0.5f);
 			persistentInstances.add(instance);
 
 		}

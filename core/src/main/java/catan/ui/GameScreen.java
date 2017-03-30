@@ -41,7 +41,7 @@ public class GameScreen implements Screen
 	private final Array<ModelInstance> volatileInstances = new Array<>();
 	private final ModelBatch worldBatch = new ModelBatch();
 	private final SpriteBatch hudBatch = new SpriteBatch();
-	private final PerspectiveCamera cam;
+	private final PerspectiveCamera camera;
 	private final CameraController camController;
 
 	/** Initial world setup */
@@ -50,16 +50,16 @@ public class GameScreen implements Screen
 		this.game = game;
 
 		// camera
-		cam = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(0f, 8f, -10f);
-		cam.lookAt(0, 0, 0); // look at centre of world
-		cam.near = 0.01f; // closest distance to be rendered
-		cam.far = 300f; // farthest distance to be rendered
-		cam.update();
+		camera = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera.position.set(0f, 8f, -10f);
+		camera.lookAt(0, 0, 0); // look at centre of world
+		camera.near = 0.01f; // closest distance to be rendered
+		camera.far = 300f; // farthest distance to be rendered
+		camera.update();
 
 		// input processors
 		final InputMultiplexer multiplexer = new InputMultiplexer();
-		camController = new CameraController(cam);
+		camController = new CameraController(camera);
 		multiplexer.addProcessor(camController);
 		multiplexer.addProcessor(new GameController(cam, game.getState()));
 		Gdx.input.setInputProcessor(multiplexer);
@@ -81,7 +81,7 @@ public class GameScreen implements Screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); // clear screen
 		updateInstancesFromState();
 
-		worldBatch.begin(cam);
+		worldBatch.begin(camera);
 		worldBatch.render(persistentInstances, ENVIRONMENT);
 		worldBatch.render(volatileInstances, ENVIRONMENT);
 		worldBatch.end();

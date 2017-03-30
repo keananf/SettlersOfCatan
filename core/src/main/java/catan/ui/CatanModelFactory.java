@@ -38,20 +38,26 @@ class CatanModelFactory
 		ISLAND = builder.createCylinder(11f, 0.1f, 11f, 6, DIRT, DEFAULT_ATTRS);
 		GRAIN = assets.getModel("grain.g3db");
 		ORE = assets.getModel("ore.g3db");
-		WOOL = assets.getModel("lumber.g3db");
-		LUMBER = assets.getModel("lumber.g3db");
-		GENERIC = assets.getModel("desert.g3db");
-		BRICK = assets.getModel("Mine.g3db");
+		WOOL = assets.getModel("Lumber.g3db");
+		LUMBER = assets.getModel("Lumber.g3db");
+		GENERIC = assets.getModel("Desert.g3db");
+		BRICK = assets.getModel("Mine2.g3db");
 	}
 
 	ModelInstance getSeaInstance()
 	{
-		return new ModelInstance(SEA, ORIGIN);
+		
+		
+		ModelInstance sea = new ModelInstance(SEA, ORIGIN);
+		sea.transform.translate(0,-0.1f,0);
+		return sea;
 	}
 
 	ModelInstance getIslandInstance()
 	{
-		return new ModelInstance(ISLAND, ORIGIN);
+		ModelInstance island = new ModelInstance(ISLAND, ORIGIN);
+		island.transform.translate(0,-0.1f,0);
+		return island;
 	}
 
 	ModelInstance getTerrainInstance(ResourceType type, Vector3 pos)

@@ -74,7 +74,7 @@ public class GameScreen implements Screen
 		{
 			persistentInstances.add(factory.getTerrainInstance(hex.getResource(), hex.get3DPos()));
 		}
-		// drawPorts();
+		drawPorts();
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class GameScreen implements Screen
 						instance.transform.rotate(0, 1, 0, 60f);
 					}
 				}
-
+				//instance.transform.scale(0.3f, 0.25f, 0.25f);
 				volatileInstances.add(instance);
 			}
 		}
@@ -159,8 +159,8 @@ public class GameScreen implements Screen
 				}
 
 				instance.materials.get(0).set(ColorAttribute.createDiffuse(playerToColour(building.getPlayerColour())));
-				instance.transform.scale(0.2f, 0.2f, 0.2f);
-
+				instance.transform.scale(0.3f, 0.25f, 0.25f);
+				//instance.transform.scale(2f, 2f, 2f);
 				volatileInstances.add(instance);
 			}
 		}
@@ -173,8 +173,8 @@ public class GameScreen implements Screen
 		List<Port> ports = game.client.getState().getGrid().getPortsAsList();
 		for (Port port : ports)
 		{
-			Vector3 n = port.getX().get3DPos();
-			Vector3 n2 = port.getY().get3DPos();
+			Vector2 n = port.getX().get2DPos();
+			Vector2 n2 = port.getY().get2DPos();
 			float xMidpoint = (n.x + n2.x) / 2;
 			float yMidpoint = (n.y + n2.y) / 2;
 

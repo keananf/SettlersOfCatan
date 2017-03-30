@@ -176,8 +176,12 @@ public class EasyAI extends AICore
                     if(nxtToAnalyse.getSettlement() != null){
                          rank ++ ;
                     }
-                    else if(nxtToAnalyse.getSettlement().getPlayerColour() != getPlayer().getColour()){
-                        rank =- 2;
+                    else if(nxtToAnalyse.getSettlement() != null)
+                    {
+                    	if(nxtToAnalyse.getSettlement().getPlayerColour() != getPlayer().getColour())
+                    	{
+                    		rank =- 2;
+                    	}
                     }
                 }
             }
@@ -198,7 +202,8 @@ public class EasyAI extends AICore
     @Override
     public int rankDiscard(Turn turn)
     {
-    	int amount = getPlayer().getNumResources(), diff = amount / 2;
+    	int amount = getPlayer().getNumResources(); 
+    	int diff = amount / 2;
 		Map<ResourceType, Integer> discard = new HashMap<ResourceType, Integer>();
 		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
 		resources.putAll(getPlayer().getResources());
@@ -212,7 +217,6 @@ public class EasyAI extends AICore
 			{
 				resources.put(r, resources.get(r) - 1);
 				discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
-				diff--;
 			}
 			else
 			{
@@ -222,8 +226,7 @@ public class EasyAI extends AICore
 					if(resources.containsKey(r) && resources.get(r) > 0)
 					{
 						resources.put(r, resources.get(r) - 1);
-						discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
-						diff--;		
+						discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));	
 					}
 				}
 				else if(resources.containsKey(ResourceType.Wool) && resources.get(ResourceType.Wool) > 0)
@@ -231,7 +234,6 @@ public class EasyAI extends AICore
 					r = ResourceType.Wool;
 					resources.put(r, resources.get(r) - 1);
 					discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
-					diff--;
 				}
 				else if(resources.get(ResourceType.Lumber) > resources.get(ResourceType.Brick))
 				{
@@ -240,7 +242,6 @@ public class EasyAI extends AICore
 					{
 						resources.put(r, resources.get(r) - 1);
 						discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
-						diff--;		
 					}
 				}
 				else
@@ -249,12 +250,14 @@ public class EasyAI extends AICore
 					if(resources.containsKey(r) && resources.get(r) > 0)
 					{
 						resources.put(r, resources.get(r) - 1);
-						discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
-						diff--;		
+						discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));	
 					}
 				}
 				
+							
 			}
+			turn.setChosenResources(discard);
+			diff--;
 		}
 		
         return 6;
@@ -299,6 +302,10 @@ public class EasyAI extends AICore
     		
     		for(ResourceType t: types)
     		{
+    			if(!totalRank.keySet().contains(c))
+    			{
+    				totalRank.put(c, 0);
+    			}
     			totalRank.put(c, totalRank.get(c) + resources.get(t));
     		}
     		

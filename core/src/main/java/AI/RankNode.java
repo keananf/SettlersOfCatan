@@ -11,6 +11,7 @@ import grid.Node;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 public class RankNode {
         Player player;
@@ -19,12 +20,12 @@ public class RankNode {
         int ranking = 0;
         ResourceType[] stdResourceList = new ResourceType[]{ResourceType.Grain, ResourceType.Brick, ResourceType.Lumber, ResourceType.Wool, ResourceType.Ore};
         ArrayList<ResourceType> resourceQueue = new ArrayList<>(Arrays.asList(stdResourceList));//change to queue if wanted
-        ArrayList<Hex> surroundingHexes  = new ArrayList<>();
+        LinkedList<Hex> surroundingHexes  = new LinkedList<Hex>();
 
         public RankNode(Node node, Player player){
             this.player = player;
             this.node = node;
-            surroundingHexes = (ArrayList<Hex>) node.getHexes();
+            surroundingHexes = (LinkedList<Hex>) node.getHexes();
         }
 
         public void rank(boolean preRound){

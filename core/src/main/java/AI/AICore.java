@@ -123,8 +123,9 @@ public abstract class AICore implements IAI
 
 		// Should rank apply for ENDTURN / ROLLDICE? Maybe sometimes..
 		case ENDTURN:
+			return rankEndTurn();
 		case ROLLDICE:
-			break;
+			return 6;
 
 		// ai will never chat
 		case CHATMESSAGE:
@@ -147,8 +148,9 @@ public abstract class AICore implements IAI
 	public Turn selectMove(List<Turn> optimalMoves)
 	{
 		// Randomly choose one of the highest rank
-		return optimalMoves != null && optimalMoves.size() > 0 ? optimalMoves.get(rand.nextInt(optimalMoves.size()))
-				: null;
+		if (optimalMoves == null) return null;
+		if (optimalMoves.size() < 1) return null;
+		return optimalMoves.get(rand.nextInt(optimalMoves.size()));
 	}
 
 	/**

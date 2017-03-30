@@ -267,7 +267,7 @@ public class EasyAI extends AICore
     @Override
     public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)
     {
-    	return -1;
+    	return (tradeResponse == Trade.Response.REJECT) ? 0 : -1;
     }
 
     // remains 0 as this is the EasyAI

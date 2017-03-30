@@ -5,6 +5,9 @@ import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
 import game.Game;
+import game.build.City;
+import game.build.Road;
+import game.build.Settlement;
 import game.players.Player;
 import grid.Edge;
 import grid.Hex;
@@ -36,7 +39,7 @@ public class EasyAI extends AICore
 
     }
 
-    @Override
+
     public int rankInitialSettlement(Node chosenNode) {
         RankNode rankNode = new RankNode(chosenNode, super.getPlayer());
         rankNode.rank(true);
@@ -52,7 +55,7 @@ public class EasyAI extends AICore
 
     @Override
     public int rankNewRobberLocation(Hex chosenHex) {
-        RankHex rh = new RankHex(chosenHex, getGame());
+        RankHex rh = new RankHex(chosenHex, getState());
         rh.rank();
         return rh.getRanking();
     }
@@ -70,8 +73,8 @@ public class EasyAI extends AICore
                 Player p = null;
 
                 playerLoop:
-                for (Colour c : getGame().getPlayers().keySet()) {
-                    if ((p = getGame().getPlayer(c)).hasLongestRoad()) {
+                for (Colour c : getState().getPlayers().keySet()) {
+                    if ((p = getState().getPlayer(c)).getHasLongestRoad()) {
 
                         //if building 2 roads gains you the longest road
                         if (p.getNumOfRoadChains() - 1 == getPlayer().calcRoadLength()) {
@@ -104,7 +107,7 @@ public class EasyAI extends AICore
 
             case Monopoly:
 
-                for (Port port : getGame().getGrid().getPortsAsList()) {
+                for (Port port : getState().getGrid().getPortsAsList()) {
                     if (port.hasSettlement()) {
 
                         Colour col = port.getRoad().getPlayerColour();
@@ -144,7 +147,7 @@ public class EasyAI extends AICore
     	int rank = 4;
 
         //check if player can build or set a road if so-> decrease rank by 2
-        if(getPlayer().canAfford(Settlement.getSettlementCost()
+        if(getPlayer().canAfford(Settlement.getSettlementCost())
         || getPlayer().canAfford(Road.getRoadCost())
         || getPlayer().canAfford(City.getCityCost())){
            rank =-2;
@@ -267,21 +270,10 @@ public class EasyAI extends AICore
     	return -1;
     }
 
-    @Override// remains 0 as this is the EasyAI
+    // remains 0 as this is the EasyAI
     public int rankEndTurn()
     {
-        int rank = 0;
-        
-        if(hasTraded)
-        {
-        	rank = -1;
-        }
-        else
-        {
-        	rank = -1;
-        }
-        
-        return rank;
+        return 0;
     }
 
     @Override   //done by jack

@@ -257,7 +257,7 @@ public abstract class Player
 
 	/**
 	 * Checks to see if building a road is valid at the given edge
-	 * 
+	 * getGame()
 	 * @param edge the desired road location
 	 * @return if the desired location is valid for a road
 	 */
@@ -317,7 +317,7 @@ public abstract class Player
 
 		return canAfford(City.getCityCost()) && settlements.containsKey(p) && settlements.get(p) instanceof Settlement;
 	}
-
+getGame()
 //TODO: canAffordDevCard
 	public boolean canAffordDevCard (DevelopmentCardType developmentCardType){
 		return false;
@@ -495,6 +495,9 @@ public abstract class Player
 	public void setHasLongestRoad(boolean hasLongestRoad)
 	{
 		this.hasLongestRoad = hasLongestRoad;
+	}
+	public boolean getHasLongestRoad(){
+		return hasLongestRoad;
 	}
 
 	public int getNumOfRoadChains()

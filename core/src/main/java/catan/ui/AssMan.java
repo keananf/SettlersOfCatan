@@ -7,7 +7,7 @@ public final class AssMan extends AssetManager
 {
 	private static final String MODELS = "models/";
 
-	public AssMan()
+	AssMan()
 	{
 		super();
 	}

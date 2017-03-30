@@ -5,7 +5,9 @@ import exceptions.BankLimitException;
 import exceptions.CannotAffordException;
 import exceptions.IllegalBankTradeException;
 import exceptions.IllegalPortTradeException;
+import game.CurrentTrade;
 import game.players.Player;
+import intergroup.EmptyOuterClass;
 import intergroup.Events;
 import intergroup.Messages;
 import intergroup.Requests;
@@ -16,7 +18,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Class for processing messages received from the server
@@ -30,8 +33,8 @@ public class MessageProcessor
 	private boolean monopoly;
 	private Logger logger;
 	private HashMap<Colour, List<Requests.Request.BodyCase>> expectedMoves;
-	private ConcurrentLinkedQueue<ReceivedMessage> movesToProcess;
-	private Trade.WithPlayer currentTrade;
+	private BlockingQueue<ReceivedMessage> movesToProcess;
+	private CurrentTrade currentTrade;
 	private boolean tradePhase;
 	private ReceivedMessage lastMessage;
 
@@ -41,7 +44,7 @@ public class MessageProcessor
 		this.server = server;
 		logger = new Logger();
 		expectedMoves = new HashMap<Colour, List<Requests.Request.BodyCase>>();
-		movesToProcess = new ConcurrentLinkedQueue<ReceivedMessage>();
+		movesToProcess = new LinkedBlockingQueue<ReceivedMessage>();
 		for (Colour c : Colour.values())
 		{
 			expectedMoves.put(c, new ArrayList<>());
@@ -53,9 +56,9 @@ public class MessageProcessor
 	 * 
 	 * @throws IOException
 	 */
-	public Events.Event processMessage() throws IOException
+	public Events.Event processMessage() throws Exception
 	{
-		ReceivedMessage receivedMessage = movesToProcess.poll();
+		ReceivedMessage receivedMessage = movesToProcess.take();
 		lastMessage = receivedMessage;
 		if (receivedMessage == null || receivedMessage.getMsg() == null) { return null; }
 
@@ -64,10 +67,11 @@ public class MessageProcessor
 		logger.logReceivedMessage(msg);
 
 		// If not valid
-		if (!validateMsg(msg,
-				col)) { return Events.Event.newBuilder()
-						.setError(Events.Event.Error.newBuilder().setDescription("Move unexpected or invalid.").build())
-						.build(); }
+		if (!validateMsg(msg, col))
+		{
+			return Events.Event.newBuilder().setError(
+					Events.Event.Error.newBuilder().setDescription("Move unexpected or invalid.").build()).build();
+		}
 
 		// switch on message type
 		switch (msg.getTypeCase())
@@ -168,23 +172,27 @@ public class MessageProcessor
 				if (steal != null) ev.setResourceStolen(steal);
 				break;
 			case INITIATETRADE:
-				Trade.WithBank trade = processTradeType(request.getInitiateTrade(), msg);
+				Trade.WithBank trade = processTradeType(request.getInitiateTrade(), ev.getInstigator());
 				if (trade != null) ev.setBankTrade(trade);
 				break;
 			case SUBMITTRADERESPONSE:
-				// TODO timeouts?
-				if (currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT))
+				if (currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT) && !currentTrade.isExpired())
 				{
-					ev.setPlayerTrade(currentTrade);
-					game.processPlayerTrade(currentTrade);
+					ev.setPlayerTradeAccepted(currentTrade.getTrade());
+					game.processPlayerTrade(currentTrade.getTrade());
 					currentTrade = null;
-					break;
+				}
+				else if(currentTrade != null && (request.getSubmitTradeResponse().equals(Trade.Response.REJECT) || !currentTrade.isExpired()))
+				{
+					server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
+					currentTrade = null;
+					ev.setPlayerTradeRejected(EmptyOuterClass.Empty.getDefaultInstance());
 				}
 				else
 				{
-					currentTrade = null; // TODO send rejection?
-					return null;
+					ev.setError(Events.Event.Error.newBuilder().setDescription("No active trade to respond to."));
 				}
+				break;
 			case CHATMESSAGE:
 				ev.setChatMessage(request.getChatMessage());
 				break;
@@ -259,7 +267,11 @@ public class MessageProcessor
 
 		// Add that a response is expected from this player
 		case INITIATETRADE:
-			moves.add(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
+			if(!moves.contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
+			{
+				server.log("Server Play", String.format("Adding trade response to %s", game.getPlayer(colour).getId().name()));
+				moves.add(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
+			}
 			break;
 
 		// Add expected moves based on recently played dev card
@@ -296,10 +308,9 @@ public class MessageProcessor
 	 * Forwards the trade request to the other player and blocks for a response
 	 * 
 	 * @param request the trade request
-	 * @param msg the original request, received from across the network
-	 * @return the status of the trade "accepted, denied, offer"
+	 * @return the bank trade or null
 	 */
-	private Trade.WithBank processTradeType(Trade.Kind request, Messages.Message msg) throws IllegalPortTradeException,
+	private Trade.WithBank processTradeType(Trade.Kind request, Board.Player instigator) throws IllegalPortTradeException,
 			IllegalBankTradeException, CannotAffordException, IOException, BankLimitException
 	{
 		tradePhase = true;
@@ -307,15 +318,15 @@ public class MessageProcessor
 		// Switch on trade type
 		switch (request.getTradeCase())
 		{
-			// Simply forward the message
-			case PLAYER:
-				currentTrade = request.getPlayer();
-				server.forwardTradeOffer(msg, request.getPlayer());
-				return null;
+		// Simply forward the message
+		case PLAYER:
+			currentTrade = new CurrentTrade(request.getPlayer(), instigator);
+			server.forwardTradeOffer(request.getPlayer(), instigator);
+			return null;
 
-			case BANK:
-				game.determineTradeType(request.getBank());
-				break;
+		case BANK:
+			game.determineTradeType(request.getBank());
+			break;
 		}
 
 		return request.getBank();
@@ -351,16 +362,14 @@ public class MessageProcessor
 		else if (!expected.isEmpty()) return false;
 
 		// If in trade phase and the given message isn't a trade
-		if (tradePhase
-				&& ((!type.equals(Requests.Request.BodyCase.INITIATETRADE) && game.getCurrentPlayer().equals(col))
-						|| (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
-								&& game.getCurrentPlayer().equals(col)))) { return false; }
-
-		// If it's not your turn and there are no expected moves from you
-		if (!game.getCurrentPlayer().equals(col) || (!game.getCurrentPlayer().equals(col) && expected.isEmpty()))
+		if (tradePhase && game.getCurrentPlayer().equals(col)
+				&& !(type.equals(Requests.Request.BodyCase.INITIATETRADE) ||
+				type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) ||
+				type.equals(Requests.Request.BodyCase.ENDTURN)))
 			return false;
 
-		return true;
+		// If it's not your turn and there are no expected moves from you
+		return !(!game.getCurrentPlayer().equals(col) && expected.isEmpty());
 	}
 
 	/**
@@ -373,11 +382,8 @@ public class MessageProcessor
 	private boolean validateMsg(Messages.Message msg, Colour col) throws IOException
 	{
 		// If it is not the player's turn, the message type is unknown OR the
-		// given request is NOT expected
-		// send error and return false
-		if (!isExpected(msg, col)) { return false; }
-
-		return true;
+		// given request is NOT expected, return false
+		return isExpected(msg, col);
 	}
 
 	/**
@@ -418,7 +424,15 @@ public class MessageProcessor
 
 	public void addMoveToProcess(ReceivedMessage msg)
 	{
-		movesToProcess.add(msg);
+
+		try
+		{
+			movesToProcess.put(msg);
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public void setGame(ServerGame game)
@@ -429,5 +443,10 @@ public class MessageProcessor
 	public ReceivedMessage getLastMessage()
 	{
 		return lastMessage;
+	}
+
+	public CurrentTrade getCurrentTrade()
+	{
+		return currentTrade;
 	}
 }

@@ -20,9 +20,9 @@ public class LocalClient extends Client
 	public LocalClient(SettlersOfCatan game)
 	{
 		super(game);
+		setUpConnection();
 	}
 
-	@Override
 	protected void setUpConnection()
 	{
 		conn = new LocalServerConnection(this);
@@ -36,7 +36,6 @@ public class LocalClient extends Client
 	@Override
 	public void shutDown()
 	{
-		super.shutDown();
 		server.terminate();
 		try
 		{
@@ -46,6 +45,7 @@ public class LocalClient extends Client
 		{
 			e.printStackTrace();
 		}
+		super.shutDown();
 	}
 
 	public Server getServer()

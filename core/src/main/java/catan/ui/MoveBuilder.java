@@ -10,16 +10,16 @@ import grid.BoardElement;
 import grid.Edge;
 import grid.Hex;
 
-public class MoveBuilder
+class MoveBuilder
 {
 	private final Client client;
 
-	public MoveBuilder(Client client)
+	MoveBuilder(Client client)
 	{
 		this.client = client;
 	}
 
-	protected void onSelect(BoardElement element)
+	void onSelect(BoardElement element)
 	{
 		Turn turn = new Turn();
 
@@ -41,8 +41,8 @@ public class MoveBuilder
 			{
 				return;
 			}
-
 		}
+
 		if (element instanceof Edge)
 		{
 			turn.setChosenEdge((Edge) element);
@@ -51,10 +51,10 @@ public class MoveBuilder
 				turn.setChosenMove(Requests.Request.BodyCase.BUILDROAD);
 
 			}
-		}
-		else
-		{
-			return;
+			else
+			{
+				return;
+			}
 		}
 
 		if (element instanceof Hex)

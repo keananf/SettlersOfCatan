@@ -17,12 +17,10 @@ import catan.SettlersOfCatan;
 
 public class MainMenuScreen implements Screen
 {
-	final private SettlersOfCatan game;
 	final private Stage ui = new Stage(new ScreenViewport());
 
-	public MainMenuScreen(final SettlersOfCatan game)
+	MainMenuScreen(final SettlersOfCatan game)
 	{
-		this.game = game;
 		Gdx.input.setInputProcessor(ui);
 
 		// Background
@@ -48,7 +46,6 @@ public class MainMenuScreen implements Screen
 			{
 				public void changed(ChangeEvent event, Actor actor)
 				{
-					Gdx.app.debug("UI", "Button click: New Single Player Game");
 
 					game.startNewServer();
 					game.setScreen(new GameScreen(game));
@@ -80,9 +77,7 @@ public class MainMenuScreen implements Screen
 				{
 					Gdx.app.debug("UI", "Button click: Join Remote Game");
 
-					// TODO retrieve host name from text user entered in
-					game.startNewRemoteClient("localhost");
-					game.setScreen(new GameScreen(game));
+					game.setScreen(new RemoteGameScreen(game));
 				}
 			});
 			body.addActor(button);

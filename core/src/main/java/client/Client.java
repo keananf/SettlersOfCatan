@@ -44,7 +44,6 @@ public abstract class Client implements Runnable
 	{
 		thisPlayer = new ClientPlayer(Colour.BLUE, "Default");
 		usersInLobby = new ArrayList<String>(Game.NUM_PLAYERS);
-		setUpConnection();
 	}
 
 	@Override
@@ -161,6 +160,7 @@ public abstract class Client implements Runnable
 			break;
 		case SUBMITTARGETPLAYER:
 			getTurn().setTarget(selectedMove.getTarget());
+			break;
 		case BUILDSETTLEMENT:
 		case BUILDCITY:
 			getTurn().setChosenNode(selectedMove.getChosenNode());
@@ -193,7 +193,6 @@ public abstract class Client implements Runnable
 		}
 		else
 		{
-			// TODO else display error?
 			log("Client Play", String.format("Invalid Request %s for %s", turn.getChosenMove().name(),
 					getState().getPlayer().getId().name()));
 		}

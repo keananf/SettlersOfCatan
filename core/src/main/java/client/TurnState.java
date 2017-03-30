@@ -1,6 +1,7 @@
 package client;
 
 import enums.ResourceType;
+import game.CurrentTrade;
 import intergroup.Requests;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ public class TurnState extends Turn
 	private List<Requests.Request.BodyCase> expectedMoves;
 	private boolean tradePhase, turnStarted, initialPhase;
 	private int roll;
+	private CurrentTrade currentTrade;
 
 	public TurnState()
 	{
@@ -33,11 +35,12 @@ public class TurnState extends Turn
 		roll = 0;
 		tradePhase = false;
 		turnStarted = false;
+		currentTrade = null;
 		expectedMoves.clear();
 	}
 
 	/**
-	 * Same as above but leaves expected moves in tact
+	 * Same as above but leaves expected moves and current trade in tact
 	 */
 	public void resetInfo()
 	{
@@ -90,5 +93,15 @@ public class TurnState extends Turn
 	public void setRoll(int roll)
 	{
 		this.roll = roll;
+	}
+
+    public void setCurrentTrade(CurrentTrade currentTrade)
+	{
+        this.currentTrade = currentTrade;
+    }
+
+    public CurrentTrade getCurrentTrade()
+	{
+		return currentTrade;
 	}
 }

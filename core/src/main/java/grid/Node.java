@@ -75,9 +75,20 @@ public class Node extends GridElement
 	@Override
 	public boolean equals(Object other)
 	{
+		if (!(other instanceof Node)) return false;
+
 		if (getX() == ((Node) other).getX() && getY() == ((Node) other).getY()) return true;
 
 		return false;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int result = hexes.hashCode();
+		result = 31 * result + edges.hashCode();
+		result = 31 * result + (settlement != null ? settlement.hashCode() : 0);
+		return result;
 	}
 
 	/**

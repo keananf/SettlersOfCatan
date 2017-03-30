@@ -40,12 +40,12 @@ class CatanModelFactory
 		SEA = builder.createCylinder(150f, 0.01f, 150f, 6, WATER, DEFAULT_ATTRS);
 		ISLAND = builder.createCylinder(11f, 0.1f, 11f, 6, DIRT, DEFAULT_ATTRS);
 		HEX = builder.createCylinder(2.2f, 0.2f, 2.2f, 6, new Material(), DEFAULT_ATTRS);
-		GRAIN = assets.getModel("ore.g3db") ;
+		GRAIN = assets.getModel("grain.g3db") ;
 		ORE = assets.getModel("ore.g3db");
-		WOOL = assets.getModel("grass.g3db");
-		LUMBER = assets.getModel("grass.g3db");
+		WOOL = assets.getModel("lumber.g3db");
+		LUMBER = assets.getModel("lumber.g3db");
 		GENERIC = assets.getModel("desert.g3db");
-		BRICK = assets.getModel("mine.g3db");
+		BRICK = assets.getModel("Mine.g3db");
 	}
 
 	ModelInstance getSeaInstance()
@@ -71,17 +71,17 @@ class CatanModelFactory
 		switch (type)
 		{
 		case Generic:
-			return Color.BLACK;
+			return Color.FIREBRICK;
 		case Wool:
-			return Color.WHITE;
+			return Color.FIREBRICK;
 		case Ore:
-			return Color.BLUE;
+			return Color.FIREBRICK;
 		case Grain:
-			return Color.YELLOW;
+			return Color.FIREBRICK;
 		case Brick:
 			return Color.FIREBRICK;
 		case Lumber:
-			return Color.FOREST;
+			return Color.FIREBRICK;
 		default:
 			return null;
 		}

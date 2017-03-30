@@ -1,13 +1,13 @@
 package catan.ui;
 
 import catan.SettlersOfCatan;
+import catan.ui.hud.HeadsUpDisplay;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -40,9 +40,9 @@ public class GameScreen implements Screen
 	private final Array<ModelInstance> persistentInstances = new Array<>();
 	private final Array<ModelInstance> volatileInstances = new Array<>();
 	private final ModelBatch worldBatch = new ModelBatch();
-	private final SpriteBatch hudBatch = new SpriteBatch();
 	private final PerspectiveCamera camera;
 	private final CameraController camController;
+	private final HeadsUpDisplay hud;
 
 	/** Initial world setup */
 	GameScreen(final SettlersOfCatan game)
@@ -60,10 +60,13 @@ public class GameScreen implements Screen
 		// input processors
 		final InputMultiplexer multiplexer = new InputMultiplexer();
 		camController = new CameraController(camera);
+		hud = new HeadsUpDisplay(game);
 		multiplexer.addProcessor(camController);
-		multiplexer.addProcessor(new GameController(cam, game.getState()));
+		multiplexer.addProcessor(hud);
+		multiplexer.addProcessor(new GameController(camera, game.getState()));
 		Gdx.input.setInputProcessor(multiplexer);
 
+		// add 3D models that won't change during gameplay
 		final CatanModelFactory factory = new CatanModelFactory();
 		persistentInstances.add(factory.getSeaInstance());
 		persistentInstances.add(factory.getIslandInstance());
@@ -78,13 +81,16 @@ public class GameScreen implements Screen
 	public void render(final float delta)
 	{
 		camController.update();
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); // clear screen
 		updateInstancesFromState();
+
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); // clear screen
 
 		worldBatch.begin(camera);
 		worldBatch.render(persistentInstances, ENVIRONMENT);
 		worldBatch.render(volatileInstances, ENVIRONMENT);
 		worldBatch.end();
+
+		hud.render();
 	}
 
 	private void updateInstancesFromState()
@@ -183,13 +189,16 @@ public class GameScreen implements Screen
 	public void dispose()
 	{
 		worldBatch.dispose();
-		hudBatch.dispose();
 		persistentInstances.clear();
 		volatileInstances.clear();
 	}
 
-	// Required but unused
-	@Override public void resize(final int width, final int height) {}
+	@Override
+	public void resize(final int width, final int height)
+	{
+		hud.getViewport().update(width, height, true);
+	}
+
 	@Override public void pause() {}
 	@Override public void resume() {}
 	@Override public void hide() {}

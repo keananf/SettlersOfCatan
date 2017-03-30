@@ -26,9 +26,6 @@ import grid.Hex;
 import grid.Node;
 import grid.Port;
 
-import java.awt.Point;
-
-import java.util.Hashtable;
 import java.util.List;
 
 public class GameScreen implements Screen
@@ -72,20 +69,20 @@ public class GameScreen implements Screen
 		final CatanModelFactory factory = new CatanModelFactory(game.assets);
 		persistentInstances.add(factory.getSeaInstance());
 		persistentInstances.add(factory.getIslandInstance());
-		
+
 		for (final Hex hex : game.getState().getGrid().getHexesAsList())
 		{
 			persistentInstances.add(factory.getTerrainInstance(hex.getResource(), hex.get3DPos()));
-			
-		}	
-		//drawPorts();
+		}
+		// drawPorts();
 	}
 
 	@Override
 	public void render(final float delta)
 	{
 		camController.update();
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); // clear screen
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); // clear
+																				// screen
 		updateInstancesFromState();
 
 		worldBatch.begin(cam);
@@ -108,7 +105,6 @@ public class GameScreen implements Screen
 		List<Edge> edges = game.client.getState().getGrid().getEdgesAsList();
 		for (Edge edge : edges)
 		{
-
 			Road road = edge.getRoad();
 
 			if (road != null)
@@ -135,9 +131,7 @@ public class GameScreen implements Screen
 
 				volatileInstances.add(instance);
 			}
-
 		}
-
 	}
 
 	private void drawBuildings()
@@ -168,62 +162,46 @@ public class GameScreen implements Screen
 				instance.transform.scale(0.2f, 0.2f, 0.2f);
 
 				volatileInstances.add(instance);
-
 			}
-
 		}
-
 	}
-	
-	
-	public void drawPorts(){
+
+	public void drawPorts()
+	{
 		Model model = game.assets.getModel("port.g3db");
-		
+
 		List<Port> ports = game.client.getState().getGrid().getPortsAsList();
-		for(Port port : ports){
-			 Vector3 n = port.getX().get3DPos();
-			 Vector3 n2 = port.getY().get3DPos();
-			 float xMidpoint = (n.x+n2.x)/2;
-			 float yMidpoint = (n.y+n2.y)/2;
-			 
-			 Vector3 Midpoint = new Vector3 (xMidpoint, 0.1f ,yMidpoint);
-			 ModelInstance instance = new ModelInstance(model, Midpoint);
-			 persistentInstances.add(instance);
-			
-			
-			
+		for (Port port : ports)
+		{
+			Vector3 n = port.getX().get3DPos();
+			Vector3 n2 = port.getY().get3DPos();
+			float xMidpoint = (n.x + n2.x) / 2;
+			float yMidpoint = (n.y + n2.y) / 2;
+
+			Vector3 Midpoint = new Vector3(xMidpoint, 0.1f, yMidpoint);
+			ModelInstance instance = new ModelInstance(model, Midpoint);
+			persistentInstances.add(instance);
+
 		}
-		
-		
-		
-		
-		
 	}
-	
-	
-	
-	
-	
-	
-	
 
 	private static Color playerToColour(final Colour name)
 	{
-		switch (name) {
-			case BLUE:   return Color.BLUE;
-			case RED:    return Color.RED;
-			case WHITE:  return Color.WHITE;
-			case ORANGE: return Color.ORANGE;
-			default:     return null;
+		switch (name)
+		{
+		case BLUE:
+			return Color.BLUE;
+		case RED:
+			return Color.RED;
+		case WHITE:
+			return Color.WHITE;
+		case ORANGE:
+			return Color.ORANGE;
+		default:
+			return null;
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
+
 	@Override
 	public void dispose()
 	{

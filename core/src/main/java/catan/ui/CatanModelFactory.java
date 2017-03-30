@@ -36,7 +36,7 @@ class CatanModelFactory
 		final ModelBuilder builder = new ModelBuilder();
 		SEA = builder.createCylinder(150f, 0.01f, 150f, 6, WATER, DEFAULT_ATTRS);
 		ISLAND = builder.createCylinder(11f, 0.1f, 11f, 6, DIRT, DEFAULT_ATTRS);
-		GRAIN = assets.getModel("grain.g3db") ;
+		GRAIN = assets.getModel("grain.g3db");
 		ORE = assets.getModel("ore.g3db");
 		WOOL = assets.getModel("lumber.g3db");
 		LUMBER = assets.getModel("lumber.g3db");

@@ -1,7 +1,6 @@
 package grid;
 
 import intergroup.board.Board;
-import enums.Colour;
 import enums.ResourceType;
 
 import java.awt.*;
@@ -168,7 +167,7 @@ public class HexGrid
 
 		ports = Port.makePorts(edges, potentialPorts);
 	}
-	
+
 	/**
 	 * @return map of available chits that can be allocated
 	 */

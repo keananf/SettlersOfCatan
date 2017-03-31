@@ -333,4 +333,10 @@ public abstract class Client implements Runnable
 	{
 		return active;
 	}
+
+    public void render()
+    {
+        if(Gdx.graphics != null)
+			Gdx.graphics.requestRendering();
+    }
 }

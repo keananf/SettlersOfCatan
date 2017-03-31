@@ -48,27 +48,34 @@ public class EventProcessor
 			break;
 		case CITYBUILT:
 			getGame().processNewCity(ev.getCityBuilt(), ev.getInstigator());
+			client.render();
 			break;
 		case SETTLEMENTBUILT:
 			getGame().processNewSettlement(ev.getSettlementBuilt(), ev.getInstigator());
+			client.render();
 			break;
 		case ROADBUILT:
 			getGame().processRoad(ev.getRoadBuilt(), ev.getInstigator());
+			client.render();
 			break;
 		case ROLLED:
 			int roll = ev.getRolled().getA() + ev.getRolled().getB();
 			getTurn().setTurnStarted(true);
 			getTurn().setRoll(roll);
 			getGame().processDice(roll, ev.getRolled().getResourceAllocationList());
+			client.render();
 			break;
 		case ROBBERMOVED:
 			getGame().moveRobber(ev.getRobberMoved());
+			client.render();
 			break;
 		case DEVCARDBOUGHT:
 			getGame().recordDevCard(ev.getDevCardBought(), ev.getInstigator());
+			client.render();
 			break;
 		case DEVCARDPLAYED:
 			getGame().processPlayedDevCard(ev.getDevCardPlayed(), ev.getInstigator());
+			client.render();
 			break;
 		case BEGINGAME:
 			client.setGame(new ClientGame(client));
@@ -105,6 +112,7 @@ public class EventProcessor
 				Trade.WithPlayer trade = ev.getPlayerTradeAccepted();
 				getGame().processPlayerTrade(trade, ev.getInstigator());
 			}
+			client.render();
 			break;
 		case PLAYERTRADEREJECTED:
 			client.log("Client Play", "Player Trade rejected");
@@ -115,15 +123,19 @@ public class EventProcessor
 			break;
 		case CARDSDISCARDED:
 			getGame().processDiscard(ev.getCardsDiscarded(), ev.getInstigator());
+			client.render();
 			break;
 		case MONOPOLYRESOLUTION:
 			getGame().processMonopoly(ev.getMonopolyResolution(), ev.getInstigator());
+			client.render();
 			break;
 		case RESOURCECHOSEN:
 			getGame().processResourceChosen(ev.getResourceChosen(), ev.getInstigator());
+			client.render();
 			break;
 		case RESOURCESTOLEN:
 			getGame().processResourcesStolen(ev.getResourceStolen(), ev.getInstigator());
+			client.render();
 			break;
 		case ERROR:
 			client.log("Client Error", String.format("Error Message: %s", ev.getError().getDescription()));

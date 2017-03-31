@@ -1,7 +1,6 @@
 package catan.ui.hud;
 
 import catan.ui.AssMan;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -41,7 +40,6 @@ class Counter<T> extends Stack
 	@Override
 	public void act(final float delta)
 	{
-		Gdx.app.debug("Counter", "Acting");
 		final Integer newCount = countSupplier.get();
 		countLabel.setText(String.format("%d", newCount));
 	}

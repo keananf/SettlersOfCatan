@@ -2,6 +2,7 @@ package catan;
 
 import AI.LocalAIClient;
 import AI.RemoteAIClient;
+import catan.ui.AssMan;
 import catan.ui.SplashScreen;
 import client.Client;
 import client.ClientGame;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	public Skin skin;
+	public AssMan assets = new AssMan();
 	public Client client;
 	private Thread t;
 	private boolean active;
@@ -38,11 +40,12 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	@Override
 	public void dispose()
 	{
+		skin.dispose();
+
 		if (active)
 		{
 			client.log("Shutdown Client", "Shutting down.");
 			active = false;
-			skin.dispose();
 			if (client != null && client.isActive()) client.shutDown();
 			client = null;
 			try
@@ -58,7 +61,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 
 	/**
 	 * Starts up a new remote client.
-	 * 
+	 *
 	 * @param host the host server to connect to
 	 * @return the status of the connection
 	 */

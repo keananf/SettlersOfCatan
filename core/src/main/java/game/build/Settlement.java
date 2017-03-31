@@ -53,7 +53,7 @@ public class Settlement extends Building
 			Node other = e.getX().equals(node) ? e.getY() : e.getX();
 
 			// if the opposite end has a settlement, return true
-			if (other.getSettlement() != null) return true;
+			if (other.getBuilding() != null) return true;
 
 		}
 

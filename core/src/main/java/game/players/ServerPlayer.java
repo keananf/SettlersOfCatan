@@ -123,7 +123,7 @@ public class ServerPlayer extends Player
 		}
 
 		// Check if empty
-		else if (node.getSettlement() != null)
+		else if (node.getBuilding() != null)
 		{
 			throw new SettlementExistsException(s);
 		}
@@ -201,7 +201,7 @@ public class ServerPlayer extends Player
 			spendResources(c.getCost(), bank);
 			addSettlement(c);
 		}
-		else if (node.getSettlement() == null)
+		else if (node.getBuilding() == null)
 		{
 			throw new CannotUpgradeException(node.getX(), node.getY());
 		}

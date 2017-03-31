@@ -5,6 +5,8 @@ import game.build.Road;
 
 import java.util.List;
 
+import com.badlogic.gdx.math.Vector3;
+
 /**
  * Class uniquely describing an edge (between two edges)
  * 
@@ -172,7 +174,7 @@ public class Edge implements BoardElement
 		Node n1 = getX(), n2 = getY();
 
 		// If there is a settlement on one of its nodes
-		if (n1.getSettlement() != null || n2.getSettlement() != null) { return true; }
+		if (n1.getBuilding() != null || n2.getBuilding() != null) { return true; }
 
 		return false;
 	}
@@ -277,4 +279,24 @@ public class Edge implements BoardElement
 
 		return false;
 	}
+
+	public Vector3 get3dVectorMidpoint(Edge edge)
+	{
+		Node a = edge.getX();
+		Node b = edge.getY();
+		int aX = a.getX();
+		int bX = b.getX();
+		int aY = a.getY();
+		int bY = b.getY();
+
+		Vector3 aVector = new Vector3((float) aX, 0.1f, (float) ((2 * (float) aY - (float) aX) / Math.sqrt(3)));
+		Vector3 bVector = new Vector3((float) bX, 0.1f, (float) ((2 * (float) bY - (float) bX) / Math.sqrt(3)));
+
+		float cartesianXMidpoint = (aVector.x + bVector.x) / 2;
+		float cartesianYMidpoint = (aVector.z + bVector.z) / 2;
+
+		return new Vector3(cartesianXMidpoint, 0.1f, cartesianYMidpoint);
+
+	}
+
 }

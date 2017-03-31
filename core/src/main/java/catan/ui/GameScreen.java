@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import enums.Colour;
+import enums.ResourceType;
 import game.build.Building;
 import game.build.Road;
 import game.build.Settlement;
@@ -74,6 +75,8 @@ public class GameScreen implements Screen
 		for (final Hex hex : game.getState().getGrid().getHexesAsList())
 		{
 			persistentInstances.add(factory.getHexInstance(hex.get3DPos(), hex.getResource()));
+			if (hex.getResource().equals(ResourceType.Generic)) continue;
+			persistentInstances.add(factory.getChitInstance(hex));
 		}
 	}
 

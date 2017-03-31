@@ -42,6 +42,17 @@ public class HeadsUpDisplay extends Stage {
 						() -> me.getPlayedDevCards().get(DevelopmentCardType.Knight)));
 		root.add(developmentCards);
 
+		/*
+		 * PLAYERS
+		 */
+		final VerticalGroup players = new VerticalGroup();
+		players.space(5);
+		for (Player player : game.getState().getPlayersAsList())
+		{
+			players.addActor(new PlayerBar(player));
+		}
+		root.add(players).expand().right().top().pad(10);
+
 		root.row();
 
 		/*

@@ -131,6 +131,7 @@ public class EventProcessor
 			break;
 		}
 
+		client.render();
 		updateExpectedMoves(ev);
 	}
 

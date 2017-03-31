@@ -333,4 +333,9 @@ public abstract class Client implements Runnable
 	{
 		return active;
 	}
+
+    public void render()
+	{
+		catan.render();
+    }
 }

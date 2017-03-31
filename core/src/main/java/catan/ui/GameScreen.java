@@ -168,22 +168,26 @@ public class GameScreen implements Screen
 
 	public void drawPorts()
 	{
-		Model model = game.assets.getModel("port.g3db");
+		Model model = game.assets.getModel("port2.g3db");
 
 		List<Port> ports = game.client.getState().getGrid().getPortsAsList();
 		for (Port port : ports)
 		{
-			Vector2 n = port.getX().get2DPos();
-			Vector2 n2 = port.getY().get2DPos();
+			Vector3 n = port.getX().get3DPos();
+			Vector3 n2 = port.getY().get3DPos();
 			float xMidpoint = (n.x + n2.x) / 2;
 			float yMidpoint = (n.y + n2.y) / 2;
 
 			Vector3 Midpoint = new Vector3(xMidpoint, 0.1f, yMidpoint);
-			ModelInstance instance = new ModelInstance(model, Midpoint);
-			instance.transform.rotate(0,1f, 0, 45f);
-			instance.transform.scale(0.5f, 0.5f, 0.5f);
+			ModelInstance instance = new ModelInstance(model, n);
+			ModelInstance instance2 = new ModelInstance(model, n2);
+			
+			
+			//instance.transform.rotate(0,1f, 0, 45f);
+			instance.transform.scale(0.5f, 0.5f, 0.2f);			
+			instance2.transform.scale(0.5f,0.5f,0.2f);
 			persistentInstances.add(instance);
-
+			persistentInstances.add(instance2);
 		}
 	}
 

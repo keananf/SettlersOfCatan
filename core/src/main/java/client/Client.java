@@ -335,7 +335,8 @@ public abstract class Client implements Runnable
 	}
 
     public void render()
-	{
-		catan.render();
+    {
+        if(Gdx.graphics != null)
+			Gdx.graphics.requestRendering();
     }
 }

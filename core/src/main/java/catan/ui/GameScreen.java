@@ -110,7 +110,6 @@ public class GameScreen implements Screen
 		List<Edge> edges = game.client.getState().getGrid().getEdgesAsList();
 		for (Edge edge : edges)
 		{
-
 			Road road = edge.getRoad();
 
 			if (road != null)
@@ -134,12 +133,9 @@ public class GameScreen implements Screen
 						instance.transform.rotate(0, 1, 0, 60f);
 					}
 				}
-
 				volatileInstances.add(instance);
 			}
-
 		}
-
 	}
 
 	private void drawBuildings()
@@ -170,16 +166,14 @@ public class GameScreen implements Screen
 				instance.transform.scale(0.2f, 0.2f, 0.2f);
 
 				volatileInstances.add(instance);
-
 			}
-
 		}
-
 	}
 
 	private static Color playerToColour(final Colour name)
 	{
-		switch (name) {
+		switch (name)
+		{
 			case BLUE:   return Color.BLUE;
 			case RED:    return Color.RED;
 			case WHITE:  return Color.WHITE;
@@ -199,6 +193,10 @@ public class GameScreen implements Screen
 	@Override
 	public void resize(final int width, final int height)
 	{
+		camera.viewportWidth = width;
+		camera.viewportHeight = height;
+		camera.update();
+
 		hud.getViewport().update(width, height, true);
 	}
 

@@ -430,7 +430,7 @@ public class ServerGame extends Game
 		for (Node n : getGrid().getHexWithRobber().getNodes())
 		{
 			// If node has a settlement and it is of the specified colour
-			if (n.getSettlement() != null && n.getSettlement().getPlayerColour().equals(otherColour))
+			if (n.getBuilding() != null && n.getBuilding().getPlayerColour().equals(otherColour))
 			{
 				ServerPlayer p = (ServerPlayer) players.get(currentPlayer);
 				p.takeResource(players.get(otherColour), resource, bank);
@@ -591,7 +591,7 @@ public class ServerGame extends Game
 		// Set settlements and cities
 		for (Node n : grid.nodes.values())
 		{
-			Building building = n.getSettlement();
+			Building building = n.getBuilding();
 			if (building != null && building instanceof Settlement)
 			{
 				Lobby.GameInfo.Settlement.Builder s = Lobby.GameInfo.Settlement.newBuilder();

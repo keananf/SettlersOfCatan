@@ -67,11 +67,10 @@ public class MessageProcessor
 		logger.logReceivedMessage(msg);
 
 		// If not valid
-		if (!validateMsg(msg, col))
-		{
-			return Events.Event.newBuilder().setError(
-					Events.Event.Error.newBuilder().setDescription("Move unexpected or invalid.").build()).build();
-		}
+		if (!validateMsg(msg,
+				col)) { return Events.Event.newBuilder()
+						.setError(Events.Event.Error.newBuilder().setDescription("Move unexpected or invalid.").build())
+						.build(); }
 
 		// switch on message type
 		switch (msg.getTypeCase())
@@ -176,13 +175,15 @@ public class MessageProcessor
 				if (trade != null) ev.setBankTrade(trade);
 				break;
 			case SUBMITTRADERESPONSE:
-				if (currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT) && !currentTrade.isExpired())
+				if (currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT)
+						&& !currentTrade.isExpired())
 				{
 					ev.setPlayerTradeAccepted(currentTrade.getTrade());
 					game.processPlayerTrade(currentTrade.getTrade());
 					currentTrade = null;
 				}
-				else if(currentTrade != null && (request.getSubmitTradeResponse().equals(Trade.Response.REJECT) || !currentTrade.isExpired()))
+				else if (currentTrade != null && (request.getSubmitTradeResponse().equals(Trade.Response.REJECT)
+						|| !currentTrade.isExpired()))
 				{
 					server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
 					currentTrade = null;
@@ -267,9 +268,10 @@ public class MessageProcessor
 
 		// Add that a response is expected from this player
 		case INITIATETRADE:
-			if(!moves.contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
+			if (!moves.contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
 			{
-				server.log("Server Play", String.format("Adding trade response to %s", game.getPlayer(colour).getId().name()));
+				server.log("Server Play",
+						String.format("Adding trade response to %s", game.getPlayer(colour).getId().name()));
 				moves.add(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
 			}
 			break;
@@ -310,8 +312,9 @@ public class MessageProcessor
 	 * @param request the trade request
 	 * @return the bank trade or null
 	 */
-	private Trade.WithBank processTradeType(Trade.Kind request, Board.Player instigator) throws IllegalPortTradeException,
-			IllegalBankTradeException, CannotAffordException, IOException, BankLimitException
+	private Trade.WithBank processTradeType(Trade.Kind request, Board.Player instigator)
+			throws IllegalPortTradeException, IllegalBankTradeException, CannotAffordException, IOException,
+			BankLimitException
 	{
 		tradePhase = true;
 

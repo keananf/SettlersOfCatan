@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * Class which determines move possibilities based upon a game state
- * 
+ *
  * @author 140001596
  */
 public class MoveProcessor
@@ -34,7 +34,7 @@ public class MoveProcessor
 
 	/**
 	 * Retrieve a list of all building possibilities, regardless of game context
-	 * 
+	 *
 	 * @return a list of all possible building turns
 	 */
 	private List<Turn> getBuildingPossibilities()
@@ -52,13 +52,13 @@ public class MoveProcessor
 			if (!checkBuild(n)) continue;
 
 			Turn turn = new Turn();
-			if (n.getSettlement() == null)
+			if (n.getBuilding() == null)
 			{
 				turn.setChosenNode(n);
 				turn.setChosenMove(Requests.Request.BodyCase.BUILDSETTLEMENT);
 
 			}
-			else if (n.getSettlement() != null)
+			else if (n.getBuilding() != null)
 			{
 				turn.setChosenNode(n);
 				turn.setChosenMove(Requests.Request.BodyCase.BUILDCITY);
@@ -83,7 +83,7 @@ public class MoveProcessor
 
 	/**
 	 * Processes a turn and ascertains all possible moves
-	 * 
+	 *
 	 * @return list of possible choices from this proposed turn
 	 */
 	public List<Turn> getPossibleMoves()
@@ -96,7 +96,8 @@ public class MoveProcessor
 			possibilities.add(new Turn(Requests.Request.BodyCase.JOINLOBBY));
 			return possibilities;
 		}
-		if (getGame() == null) return possibilities;
+		if (getGame() == null)
+			return possibilities;
 		else
 		{
 			// Add initial possibilities
@@ -119,7 +120,7 @@ public class MoveProcessor
 		if (getExpectedMoves().isEmpty() && checkTurn())
 		{
 			// So as to not spam requests
-			if(getTurn().getCurrentTrade() == null)
+			if (getTurn().getCurrentTrade() == null)
 			{
 				possibilities.add(new Turn(Requests.Request.BodyCase.INITIATETRADE));
 				possibilities.add(new Turn(Requests.Request.BodyCase.ENDTURN));
@@ -171,9 +172,9 @@ public class MoveProcessor
 		boolean valid = false;
 		for (Node n : getGame().getGrid().getHexWithRobber().getNodes())
 		{
-			if (n.getSettlement() == null) continue;
+			if (n.getBuilding() == null) continue;
 
-			Colour c = n.getSettlement().getPlayerColour();
+			Colour c = n.getBuilding().getPlayerColour();
 			if (checkTarget(c))
 			{
 				Turn turn = new Turn();
@@ -214,7 +215,7 @@ public class MoveProcessor
 
 	/**
 	 * Checks that a MOVEROBBER move is valid
-	 * 
+	 *
 	 * @param hex the chosen hex
 	 * @return whether or not the move is valid
 	 */
@@ -225,10 +226,8 @@ public class MoveProcessor
 		// Check there is indeed a foreign settlement on one of the hexes nodes
 		for (Node n : hex.getNodes())
 		{
-			// If there is a foreign settlement, or NO settlement
-			if ((n.getSettlement() != null
-					&& !n.getSettlement().getPlayerColour().equals(getGame().getPlayer().getColour()))
-					|| n.getSettlement() == null)
+			if (n.getBuilding() != null && !n.getBuilding().getPlayerColour().equals(getGame().getPlayer().getColour())
+					&& getGame().getPlayerResources(n.getBuilding().getPlayerColour()) > 0)
 			{
 				val = true;
 			}
@@ -242,7 +241,7 @@ public class MoveProcessor
 
 	/**
 	 * Checks that a MOVEROBBER move is valid
-	 * 
+	 *
 	 * @param resources the chosen resources
 	 * @return whether or not the move is valid
 	 */
@@ -267,7 +266,7 @@ public class MoveProcessor
 
 	/**
 	 * Checks that a SUBMITTARGETPLAYER move is valid
-	 * 
+	 *
 	 * @param target the target
 	 * @return whether or not the move is valid
 	 */
@@ -282,7 +281,7 @@ public class MoveProcessor
 
 	/**
 	 * Checks that a CHOOSERESOURCE move is valid
-	 * 
+	 *
 	 * @param r the resource in question
 	 * @return whether or not the move is valid
 	 */
@@ -296,7 +295,7 @@ public class MoveProcessor
 
 	/**
 	 * Checks the player can play the given card
-	 * 
+	 *
 	 * @param type the type of card wanting to be played
 	 */
 	private boolean checkPlayDevCard(DevelopmentCardType type)
@@ -335,7 +334,7 @@ public class MoveProcessor
 
 	/**
 	 * Checks if a city or settlement can be built on the given nodeS
-	 * 
+	 *
 	 * @param node the desired settlement / city location
 	 */
 	private boolean checkBuild(Node node)
@@ -357,7 +356,7 @@ public class MoveProcessor
 
 	/**
 	 * Checks to see if the player can build a road
-	 * 
+	 *
 	 * @param edge the desired road location
 	 */
 	private boolean checkBuildRoad(Edge edge)
@@ -369,7 +368,7 @@ public class MoveProcessor
 
 	/**
 	 * Checks to see if the player can submit a trade response
-	 * 
+	 *
 	 * @return whether or not this is a valid move
 	 * @param response the response
 	 */
@@ -390,7 +389,7 @@ public class MoveProcessor
 			// OR if it is reject.
 			val = getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
 					&& ((response.equals(Trade.Response.ACCEPT) && getGame().getPlayer().canAfford(costMap))
-					|| (response.equals(Trade.Response.REJECT)));
+							|| (response.equals(Trade.Response.REJECT)));
 		}
 
 		return val;
@@ -398,7 +397,7 @@ public class MoveProcessor
 
 	/**
 	 * Checks whether or not the player can trade the following trade
-	 * 
+	 *
 	 * @param initiateTrade the initiate trade request
 	 * @return whether or not the trade is valid
 	 */
@@ -426,7 +425,7 @@ public class MoveProcessor
 	/**
 	 * Checks that the given player is currently able to make a move of the
 	 * given type
-	 * 
+	 *
 	 * @param turn the message
 	 * @return true / false depending on legality of move
 	 */
@@ -444,8 +443,8 @@ public class MoveProcessor
 		else if (!getExpectedMoves().isEmpty()) return false;
 
 		// If in trade phase and the given message isn't a trade
-		if (getTurn().isTradePhase() && ((checkTurn() &&
-				!(type.equals(Requests.Request.BodyCase.INITIATETRADE) || type.equals(Requests.Request.BodyCase.ENDTURN)))
+		if (getTurn().isTradePhase() && ((checkTurn() && !(type.equals(Requests.Request.BodyCase.INITIATETRADE)
+				|| type.equals(Requests.Request.BodyCase.ENDTURN)))
 				|| (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !checkTurn()))) { return false; }
 
 		// If it's not your turn and there are no expected moves from you
@@ -454,7 +453,7 @@ public class MoveProcessor
 
 	/**
 	 * Ensures the request is valid at this current stage of the game
-	 * 
+	 *
 	 * @param turn the request polled from the queue
 	 * @return a boolean indicating success or not
 	 */

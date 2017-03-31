@@ -1,221 +1,206 @@
 package catan.ui;
 
 import catan.SettlersOfCatan;
-import client.ClientGame;
+import catan.ui.hud.HeadsUpDisplay;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.Array;
+import enums.Colour;
+import game.build.Building;
+import game.build.Road;
+import game.build.Settlement;
+import grid.Edge;
 import grid.Hex;
+import grid.Node;
 
-import java.awt.*;
-import java.util.Map.Entry;
+import java.util.List;
 
 public class GameScreen implements Screen
 {
-	final private static Vector3 ORIGIN = new Vector3(0, 0, 0);
-	final private AssMan assets = new AssMan();
-	final private ModelBatch MODEL_BATCH = new ModelBatch();
-
-	Camera cam;
-	private CatanCamController camController;
-
-	final private Array<ModelInstance> instances = new Array<>();
-	final private Environment environment = new Environment();
-
-	final protected SettlersOfCatan game;
-
-	Stage stage;
-	TextButton button;
-	TextButtonStyle textButtonStyle;
-	Skin skin;
-	TextureAtlas buttonAtlas;
-	BitmapFont font;
-
-	// button creation
-	public void create()
+	private static final Environment ENVIRONMENT = new Environment();
+	static
 	{
-		stage = new Stage();
-		Gdx.input.setInputProcessor(stage);
-		font = new BitmapFont();
-		skin = new Skin();
-		buttonAtlas = new TextureAtlas(Gdx.files.internal("buttons/buttons,pack"));
-		skin.addRegions(buttonAtlas);
-		textButtonStyle = new TextButtonStyle();
-		textButtonStyle.font = font;
-		textButtonStyle.up = skin.getDrawable("up-button");
-		textButtonStyle.down = skin.getDrawable("down-button");
-		textButtonStyle.checked = skin.getDrawable("checked-button");
-		button = new TextButton("Button1", textButtonStyle);
-		stage.addActor(button);
-
+		ENVIRONMENT.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
+		ENVIRONMENT.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 	}
 
-	// @Override
-	public void render()
-	{
-		stage.draw();
-	}
+	private final SettlersOfCatan game;
+	private final Array<ModelInstance> persistentInstances = new Array<>();
+	private final Array<ModelInstance> volatileInstances = new Array<>();
+	private final ModelBatch worldBatch = new ModelBatch();
+	private final PerspectiveCamera camera;
+	private final CameraController camController;
+	private final HeadsUpDisplay hud;
 
+	/** Initial world setup */
 	GameScreen(final SettlersOfCatan game)
 	{
 		this.game = game;
-		ClientGame gameState = game.getState();
 
-		initCamera();
-		camController = new CatanCamController(cam);
-		GameController gameController = new GameController(this);
-		gameController.setUp(gameState);
+		// camera
+		camera = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera.position.set(0f, 8f, -10f);
+		camera.lookAt(0, 0, 0); // look at centre of world
+		camera.near = 0.01f; // closest distance to be rendered
+		camera.far = 300f; // farthest distance to be rendered
+		camera.update();
 
+		// input processors
 		final InputMultiplexer multiplexer = new InputMultiplexer();
+		camController = new CameraController(camera);
+		hud = new HeadsUpDisplay(game);
 		multiplexer.addProcessor(camController);
-		multiplexer.addProcessor(gameController);
+		multiplexer.addProcessor(hud);
+		multiplexer.addProcessor(new GameController(camera, game.getState()));
 		Gdx.input.setInputProcessor(multiplexer);
 
-		initBoard(gameState);
-		initEnvironment();
-	}
+		// add 3D models that won't change during gameplay
+		final CatanModelFactory factory = new CatanModelFactory();
+		persistentInstances.add(factory.getSeaInstance());
+		persistentInstances.add(factory.getIslandInstance());
 
-	private void initCamera()
-	{
-		cam = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(0f, 8f, -10f);
-		cam.lookAt(0, 0, 0); // look at centre of world
-		cam.near = 0.01f; // closest things to be rendered
-		cam.far = 300f; // farthest things to be rendered
-		cam.update();
-	}
-
-	private void initBoard(ClientGame gameState)
-	{
-
-		final ModelBuilder builder = new ModelBuilder();
-		final long attributes = Usage.Position | Usage.Normal | Usage.TextureCoordinates;
-
-		// sea
-		final Material water = new Material(
-				TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));
-		final Model sea = builder.createCylinder(150f, 0.01f, 150f, 6, water, attributes);
-		instances.add(new ModelInstance(sea, ORIGIN));
-
-		// land
-		final Material dirt = new Material(
-				TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
-		final Model land = builder.createCylinder(11f, 0.1f, 11f, 6, dirt, attributes);
-		final ModelInstance landInstance = new ModelInstance(land, ORIGIN);
-		landInstance.materials.get(0).set(ColorAttribute.createDiffuse(Color.BLACK));
-		instances.add(landInstance);
-
-		// hex tiles
-		final Model hex = builder.createCylinder(2.2f, 0.2f, 2.2f, 6, dirt, attributes);
-
-		System.out.println("****Entering init board.****");
-		for (Entry<Point, Hex> coord : gameState.getGrid().grid.entrySet())
+		for (final Hex hex : game.getState().getGrid().getHexesAsList())
 		{
-			final ModelInstance instance = new ModelInstance(hex, coord.getValue().get3DPos());
-			instance.transform.rotate(0, 1, 0, 90f);
-
-			final Color colour;
-			switch (coord.getValue().getResource())
-			{
-			case Grain:
-				colour = Color.YELLOW;
-				break;
-			case Wool:
-				colour = Color.WHITE;
-				break;
-			case Ore:
-				colour = Color.GRAY;
-				break;
-			case Brick:
-				colour = Color.FIREBRICK;
-				break;
-			case Lumber:
-				colour = Color.FOREST;
-				break;
-			case Generic:
-				colour = Color.ORANGE;
-				break;
-			default:
-				colour = null;
-				break;
-			}
-			instance.materials.get(0).set(ColorAttribute.createDiffuse(colour));
-
-			instances.add(instance);
+			persistentInstances.add(factory.getHexInstance(hex.get3DPos(), hex.getResource()));
 		}
-	}
-
-	private void initEnvironment()
-	{
-		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
-		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 	}
 
 	@Override
 	public void render(final float delta)
 	{
-		Gdx.gl.glClearColor(0 / 255, 128 / 255, 255 / 255, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
 		camController.update();
+		updateInstancesFromState();
 
-		MODEL_BATCH.begin(cam);
-		MODEL_BATCH.render(instances, environment);
-		MODEL_BATCH.end();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); // clear screen
+
+		worldBatch.begin(camera);
+		worldBatch.render(persistentInstances, ENVIRONMENT);
+		worldBatch.render(volatileInstances, ENVIRONMENT);
+		worldBatch.end();
+
+		hud.render();
+	}
+
+	private void updateInstancesFromState()
+	{
+		volatileInstances.clear();
+		drawRoads();
+		drawBuildings();
+	}
+
+	private void drawRoads()
+	{
+		Model model = game.assets.getModel("road.g3db");
+
+		List<Edge> edges = game.client.getState().getGrid().getEdgesAsList();
+		for (Edge edge : edges)
+		{
+
+			Road road = edge.getRoad();
+
+			if (road != null)
+			{
+				Vector3 place = edge.get3dVectorMidpoint(edge);
+				ModelInstance instance = new ModelInstance(model, place);
+
+				instance.materials.get(0).set(ColorAttribute.createDiffuse(playerToColour(road.getPlayerColour())));
+				instance.transform.scale(0.1f, 0.1f, 0.1f);
+				Vector2 compare = edge.getX().get2DPos();
+				Vector2 compareTo = edge.getY().get2DPos();
+
+				if (compare.x != compareTo.x)
+				{
+					if (compare.y > compareTo.y)
+					{
+						instance.transform.rotate(0, 1, 0, -60f);
+					}
+					else
+					{
+						instance.transform.rotate(0, 1, 0, 60f);
+					}
+				}
+
+				volatileInstances.add(instance);
+			}
+
+		}
+
+	}
+
+	private void drawBuildings()
+	{
+		Model model = game.assets.getModel("settlement.g3db");
+		Model modelCity = game.assets.getModel("city.g3db");
+
+		List<Node> nodes = game.client.getState().getGrid().getNodesAsList();
+		for (Node node : nodes)
+		{
+			Vector3 place = node.get3DPos();
+			ModelInstance instance;
+
+			Building building = node.getBuilding();
+
+			if (building != null)
+			{
+				if (building instanceof Settlement)
+				{
+					instance = new ModelInstance(model, place);
+				}
+				else
+				{
+					instance = new ModelInstance(modelCity, place);
+				}
+
+				instance.materials.get(0).set(ColorAttribute.createDiffuse(playerToColour(building.getPlayerColour())));
+				instance.transform.scale(0.2f, 0.2f, 0.2f);
+
+				volatileInstances.add(instance);
+
+			}
+
+		}
+
+	}
+
+	private static Color playerToColour(final Colour name)
+	{
+		switch (name) {
+			case BLUE:   return Color.BLUE;
+			case RED:    return Color.RED;
+			case WHITE:  return Color.WHITE;
+			case ORANGE: return Color.ORANGE;
+			default:     return null;
+		}
 	}
 
 	@Override
 	public void dispose()
 	{
-		assets.dispose();
-		MODEL_BATCH.dispose();
-		instances.clear();
+		worldBatch.dispose();
+		persistentInstances.clear();
+		volatileInstances.clear();
 	}
-
-	// Required but unused
 
 	@Override
 	public void resize(final int width, final int height)
 	{
+		hud.getViewport().update(width, height, true);
 	}
 
-	@Override
-	public void pause()
-	{
-	}
-
-	@Override
-	public void resume()
-	{
-	}
-
-	@Override
-	public void hide()
-	{
-	}
-
-	@Override
-	public void show()
-	{
-	}
+	@Override public void pause() {}
+	@Override public void resume() {}
+	@Override public void hide() {}
+	@Override public void show() {}
 }

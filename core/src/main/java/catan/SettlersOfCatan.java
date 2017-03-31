@@ -8,6 +8,7 @@ import client.ClientGame;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import enums.Difficulty;
 
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
@@ -75,7 +76,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	 */
 	public void startNewServer()
 	{
-		client = new LocalAIClient(this);
+		client = new LocalAIClient(Difficulty.EASY,this);
 		t = new Thread(client);
 		t.start();
 	}

@@ -19,11 +19,13 @@ public class LocalAIClient extends AIClient
 	public LocalAIClient(Difficulty difficulty, SettlersOfCatan game)
 	{
 		super(difficulty, game);
+		setUpConnection();
 	}
 
 	public LocalAIClient(SettlersOfCatan game)
 	{
 		super(game);
+		setUpConnection();
 	}
 
 	@Override

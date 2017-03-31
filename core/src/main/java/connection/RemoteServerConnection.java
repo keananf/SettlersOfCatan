@@ -2,9 +2,6 @@ package connection;
 
 import client.Client;
 import com.badlogic.gdx.Gdx;
-import com.google.protobuf.ByteString;
-import com.google.protobuf.CodedInputStream;
-import com.google.protobuf.CodedOutputStream;
 import intergroup.Messages;
 
 import java.io.IOException;
@@ -31,10 +28,7 @@ public class RemoteServerConnection implements IServerConnection
 	{
 		if (conn != null)
 		{
-			CodedInputStream c = CodedInputStream.newInstance(conn.getInputStream());
-			ByteString b = c.readBytes();
-			Messages.Message m = Messages.Message.parseFrom(b);
-			return m;
+			return Messages.Message.parseDelimitedFrom(conn.getInputStream());
 		}
 
 		return null;
@@ -45,12 +39,7 @@ public class RemoteServerConnection implements IServerConnection
 	{
 		if (conn != null)
 		{
-			CodedOutputStream c = CodedOutputStream.newInstance(conn.getOutputStream());
-			int size = message.getSerializedSize();
-			c.writeUInt64NoTag(size);
-			message.writeTo(c);
-			c.flush();
-			conn.getOutputStream().flush();
+			message.writeDelimitedTo(conn.getOutputStream());
 		}
 	}
 
@@ -90,6 +79,6 @@ public class RemoteServerConnection implements IServerConnection
 
 	public boolean isInitialised()
 	{
-		return conn.isConnected();
+		return conn != null && conn.isConnected();
 	}
 }

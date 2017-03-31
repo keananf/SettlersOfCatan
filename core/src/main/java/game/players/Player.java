@@ -272,13 +272,13 @@ public abstract class Player
 
 		// Find out where this road is connected
 		boolean valid = checkRoadsAndAdd(r, listsAddedTo);
-		if(r.getEdge().getX().getSettlement() != null && r.getEdge().getX().getSettlement().getPlayerColour().equals(colour))
+		if(r.getEdge().getX().getBuilding() != null && r.getEdge().getX().getBuilding().getPlayerColour().equals(colour))
 		{
-			b = r.getEdge().getX().getSettlement();
+			b = r.getEdge().getX().getBuilding();
 		}
-		else if(r.getEdge().getY().getSettlement() != null && r.getEdge().getY().getSettlement().getPlayerColour().equals(colour))
+		else if(r.getEdge().getY().getBuilding() != null && r.getEdge().getY().getBuilding().getPlayerColour().equals(colour))
 		{
-			b = r.getEdge().getY().getSettlement();
+			b = r.getEdge().getY().getBuilding();
 		}
 
 		// Check the location is valid for building and that the player can

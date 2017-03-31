@@ -44,7 +44,6 @@ public abstract class Client implements Runnable
 	{
 		thisPlayer = new ClientPlayer(Colour.BLUE, "Default");
 		usersInLobby = new ArrayList<String>(Game.NUM_PLAYERS);
-		setUpConnection();
 	}
 
 	@Override
@@ -334,4 +333,10 @@ public abstract class Client implements Runnable
 	{
 		return active;
 	}
+
+    public void render()
+    {
+        if(Gdx.graphics != null)
+			Gdx.graphics.requestRendering();
+    }
 }

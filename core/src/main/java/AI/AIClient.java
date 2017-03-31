@@ -17,7 +17,7 @@ public abstract class AIClient extends Client
 	public AIClient()
 	{
 		super();
-		ai = new VeryEasyAI(this);
+		assignAI(Difficulty.VERYEASY);
 	}
 
 	public AIClient(Difficulty difficulty)

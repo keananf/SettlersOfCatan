@@ -265,17 +265,26 @@ public abstract class Player
 	{
 		List<Integer> listsAddedTo = new ArrayList<Integer>();
 		Road r = new Road(edge, colour);
+		Building b = null;
 
 		// Road already here. Cannot build
 		if (edge.getRoad() != null) return false;
 
 		// Find out where this road is connected
 		boolean valid = checkRoadsAndAdd(r, listsAddedTo);
+		if(r.getEdge().getX().getBuilding() != null && r.getEdge().getX().getBuilding().getPlayerColour().equals(colour))
+		{
+			b = r.getEdge().getX().getBuilding();
+		}
+		else if(r.getEdge().getY().getBuilding() != null && r.getEdge().getY().getBuilding().getPlayerColour().equals(colour))
+		{
+			b = r.getEdge().getY().getBuilding();
+		}
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		if (r.getEdge().hasSettlement() || valid
-				|| (getRoads().size() < 2 && r.getEdge().hasSettlement())) { return true; }
+		if (b != null || valid
+				|| (getRoads().size() < 2 && b != null)) { return true; }
 
 		return false;
 	}
@@ -465,22 +474,6 @@ public abstract class Player
 			total.addAll(list);
 
 		return total;
-	}
-
-	/**
-	 * @return the hasLargestArmy
-	 */
-	public boolean hasLargestArmy()
-	{
-		return hasLargestArmy;
-	}
-
-	/**
-	 * @return the hasLongestRoad
-	 */
-	public boolean hasLongestRoad()
-	{
-		return hasLongestRoad;
 	}
 
 	/**

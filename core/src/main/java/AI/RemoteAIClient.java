@@ -17,12 +17,14 @@ public class RemoteAIClient extends AIClient
 	{
 		super(difficulty);
 		this.host = host;
+		setUpConnection();
 	}
 
 	public RemoteAIClient(String host)
 	{
 		super();
 		this.host = host;
+		setUpConnection();
 	}
 
 	/**
@@ -55,12 +57,14 @@ public class RemoteAIClient extends AIClient
 		try
 		{
 			conn = new RemoteServerConnection();
-			setUp(conn);
 			conn.connect(host, PORT, this);
+			if(conn.isInitialised())
+				log("Client Set-Up", String.format("Connected to: %s", host));
+			setUp(conn);
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			log("Client Set-Up", String.format("Could not connect to: %s", host));
 		}
 	}
 

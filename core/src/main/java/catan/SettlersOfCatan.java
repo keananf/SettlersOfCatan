@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
-	public Skin skin;
+	public static Skin skin;
 	public AssMan assets = new AssMan();
 	public Client client;
 	private Thread t;
@@ -28,22 +28,20 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 
 		// start off at the splash screen
 		setScreen(new SplashScreen(this));
-	}
-
-	@Override
-	public void render()
-	{
-		super.render();
+		active = true;
 	}
 
 	@Override
 	public void dispose()
 	{
+		skin.dispose();
+
 		if (active)
 		{
+			client.log("Shutdown Client", "Shutting down.");
+			active = false;
 			if (client != null && client.isActive()) client.shutDown();
 			client = null;
-			skin.dispose();
 			try
 			{
 				if (t != null) t.join();

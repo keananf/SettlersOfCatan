@@ -1,13 +1,13 @@
 package catan.ui;
 
 import catan.SettlersOfCatan;
+import catan.ui.hud.HeadsUpDisplay;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import enums.Colour;
+import enums.ResourceType;
 import game.build.Building;
 import game.build.Road;
 import game.build.Settlement;
@@ -41,10 +42,9 @@ public class GameScreen implements Screen
 	private final Array<ModelInstance> persistentInstances = new Array<>();
 	private final Array<ModelInstance> volatileInstances = new Array<>();
 	private final ModelBatch worldBatch = new ModelBatch();
-	private final SpriteBatch hudBatch = new SpriteBatch();
-	private final PerspectiveCamera cam;
+	private final PerspectiveCamera camera;
 	private final CameraController camController;
-	private static final Vector3 ORIGIN = new Vector3(0, 0, 0);
+	private final HeadsUpDisplay hud;
 
 	/** Initial world setup */
 	GameScreen(final SettlersOfCatan game)
@@ -52,27 +52,31 @@ public class GameScreen implements Screen
 		this.game = game;
 
 		// camera
-		cam = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(0f, 8f, -10f);
-		cam.lookAt(0, 0, 0); // look at centre of world
-		cam.near = 0.01f; // closest distance to be rendered
-		cam.far = 300f; // farthest distance to be rendered
-		cam.update();
+		camera = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera.position.set(0f, 8f, -10f);
+		camera.lookAt(0, 0, 0); // look at centre of world
+		camera.near = 0.01f; // closest distance to be rendered
+		camera.far = 300f; // farthest distance to be rendered
+		camera.update();
 
 		// input processors
 		final InputMultiplexer multiplexer = new InputMultiplexer();
-		camController = new CameraController(cam);
+		camController = new CameraController(camera);
+		hud = new HeadsUpDisplay(game);
 		multiplexer.addProcessor(camController);
-		multiplexer.addProcessor(new GameController(cam, game.getState()));
+		multiplexer.addProcessor(hud);
+		multiplexer.addProcessor(new GameController(camera, game.getState()));
 		Gdx.input.setInputProcessor(multiplexer);
 
+		// add 3D models that won't change during gameplay
 		final CatanModelFactory factory = new CatanModelFactory(game.assets);
 		persistentInstances.add(factory.getSeaInstance());
 		persistentInstances.add(factory.getIslandInstance());
 
 		for (final Hex hex : game.getState().getGrid().getHexesAsList())
 		{
-			persistentInstances.add(factory.getTerrainInstance(hex.getResource(), hex.get3DPos()));
+			if (hex.getResource().equals(ResourceType.Generic)) continue;
+			persistentInstances.add(factory.getChitInstance(hex));
 		}
 		drawPorts();
 	}
@@ -81,14 +85,16 @@ public class GameScreen implements Screen
 	public void render(final float delta)
 	{
 		camController.update();
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); // clear
-																				// screen
 		updateInstancesFromState();
 
-		worldBatch.begin(cam);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); // clear screen
+
+		worldBatch.begin(camera);
 		worldBatch.render(persistentInstances, ENVIRONMENT);
 		worldBatch.render(volatileInstances, ENVIRONMENT);
 		worldBatch.end();
+
+		hud.render();
 	}
 
 	private void updateInstancesFromState()
@@ -128,7 +134,6 @@ public class GameScreen implements Screen
 						instance.transform.rotate(0, 1, 0, 60f);
 					}
 				}
-				//instance.transform.scale(0.3f, 0.25f, 0.25f);
 				volatileInstances.add(instance);
 			}
 		}
@@ -195,16 +200,11 @@ public class GameScreen implements Screen
 	{
 		switch (name)
 		{
-		case BLUE:
-			return Color.BLUE;
-		case RED:
-			return Color.RED;
-		case WHITE:
-			return Color.WHITE;
-		case ORANGE:
-			return Color.ORANGE;
-		default:
-			return null;
+			case BLUE:   return Color.BLUE;
+			case RED:    return Color.RED;
+			case WHITE:  return Color.WHITE;
+			case ORANGE: return Color.ORANGE;
+			default:     return null;
 		}
 	}
 
@@ -212,13 +212,20 @@ public class GameScreen implements Screen
 	public void dispose()
 	{
 		worldBatch.dispose();
-		hudBatch.dispose();
 		persistentInstances.clear();
 		volatileInstances.clear();
 	}
 
-	// Required but unused
-	@Override public void resize(final int width, final int height) {}
+	@Override
+	public void resize(final int width, final int height)
+	{
+		camera.viewportWidth = width;
+		camera.viewportHeight = height;
+		camera.update();
+
+		hud.getViewport().update(width, height, true);
+	}
+
 	@Override public void pause() {}
 	@Override public void resume() {}
 	@Override public void hide() {}

@@ -72,14 +72,11 @@ class CatanModelFactory
 		final Vector3 pos = hex.get3DPos();
 		pos.y = 0.8f;
 
+		final Model chit = builder.createCylinder(2f, 0f, 2f, 16, getChitMaterial(hex.getChit()), DEFAULT_ATTRS);
 
-		final Model chit = builder.createCylinder(
-				2f,0f,
-				2f, 16,
-				getChitMaterial(hex.getChit()),
-				DEFAULT_ATTRS);
-
-		return new ModelInstance(chit, pos);
+		final ModelInstance instance = new ModelInstance(chit, pos);
+		instance.transform.rotate(0, 1, 0, 180);
+		return instance;
 	}
 
 	private Color resourceTypeToColor(final ResourceType type)
@@ -110,31 +107,17 @@ class CatanModelFactory
 		if (n < 10)
 		{
 			final BitmapFont.Glyph glyph = data.getGlyph(Character.forDigit(n, 10));
-			tile.drawPixmap(fontPixmap,
-					(tile.getWidth() - glyph.width) / 2,
-					(tile.getHeight() - glyph.height) / 2,
-					glyph.srcX,
-					glyph.srcY,
-					glyph.width,
-					glyph.height);
-
-		} else {
+			tile.drawPixmap(fontPixmap, (tile.getWidth() - glyph.width) / 2, (tile.getHeight() - glyph.height) / 2,
+					glyph.srcX, glyph.srcY, glyph.width, glyph.height);
+		}
+		else
+		{
 			final BitmapFont.Glyph tens = data.getGlyph('1');
 			final BitmapFont.Glyph units = data.getGlyph(Character.forDigit(n - 10, 10));
-			tile.drawPixmap(fontPixmap,
-					(tile.getWidth() - tens.width - units.width) / 2,
-					(tile.getHeight() - tens.height) / 2,
-					tens.srcX,
-					tens.srcY,
-					tens.width,
-					tens.height);
-			tile.drawPixmap(fontPixmap,
-					(tile.getWidth() - units.width + tens.width) / 2,
-					(tile.getHeight() - units.height) / 2,
-					units.srcX,
-					units.srcY,
-					units.width,
-					units.height);
+			tile.drawPixmap(fontPixmap, (tile.getWidth() - tens.width - units.width) / 2,
+					(tile.getHeight() - tens.height) / 2, tens.srcX, tens.srcY, tens.width, tens.height);
+			tile.drawPixmap(fontPixmap, (tile.getWidth() - units.width + tens.width) / 2,
+					(tile.getHeight() - units.height) / 2, units.srcX, units.srcY, units.width, units.height);
 		}
 
 		final Texture texture = new Texture(tile);

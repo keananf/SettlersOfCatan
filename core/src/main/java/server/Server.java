@@ -233,7 +233,6 @@ public class Server implements Runnable
 			broadcastEvent(event);
 			break;
 
-
 		// Sent individually, so ignore
 		case PLAYERTRADEREJECTED:
 		case PLAYERTRADEINITIATED:
@@ -610,7 +609,7 @@ public class Server implements Runnable
 		{
 			sendMessage(msg, recipient);
 		}
-		if(connections.containsKey(player))
+		if (connections.containsKey(player))
 		{
 			sendMessage(msg, player);
 		}
@@ -636,7 +635,7 @@ public class Server implements Runnable
 		{
 			sendMessage(msg, recipient);
 		}
-		if(connections.containsKey(player))
+		if (connections.containsKey(player))
 		{
 			sendMessage(msg, player);
 		}

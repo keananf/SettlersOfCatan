@@ -24,8 +24,11 @@ public abstract class AICore implements IAI
 	@Override
 	public void performMove()
 	{
-		/*if (getPlayer() != null && getPlayer().getId() != null)
-			client.log("Client Play", String.format("Making move for %s", getPlayer().getId().name()));*/
+		/*
+		 * if (getPlayer() != null && getPlayer().getId() != null)
+		 * client.log("Client Play", String.format("Making move for %s",
+		 * getPlayer().getId().name()));
+		 */
 		Turn turn = selectAndPrepareMove();
 		if (turn != null)
 		{
@@ -39,10 +42,9 @@ public abstract class AICore implements IAI
 
 			client.sendTurn(turn);
 		}
-		/*else
-		{
-			client.log("Client Play", "No move");
-		}*/
+		/*
+		 * else { client.log("Client Play", "No move"); }
+		 */
 
 	}
 
@@ -163,8 +165,7 @@ public abstract class AICore implements IAI
 		// Eliminate trades and chats
 		for (Turn t : options)
 		{
-			if (t.getChosenMove().equals(Requests.Request.BodyCase.CHATMESSAGE))
-				ret.remove(t);
+			if (t.getChosenMove().equals(Requests.Request.BodyCase.CHATMESSAGE)) ret.remove(t);
 		}
 
 		return ret;

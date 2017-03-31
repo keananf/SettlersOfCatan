@@ -16,7 +16,7 @@ public class Node extends GridElement
 {
 	private List<Hex> hexes;
 	private List<Edge> edges;
-	private Building settlement;
+	private Building building;
 
 	public Node(int x, int y)
 	{
@@ -87,7 +87,7 @@ public class Node extends GridElement
 	{
 		int result = hexes.hashCode();
 		result = 31 * result + edges.hashCode();
-		result = 31 * result + (settlement != null ? settlement.hashCode() : 0);
+		result = 31 * result + (building != null ? building.hashCode() : 0);
 		return result;
 	}
 
@@ -130,17 +130,17 @@ public class Node extends GridElement
 	/**
 	 * @return the settlement
 	 */
-	public Building getSettlement()
+	public Building getBuilding()
 	{
-		return settlement;
+		return building;
 	}
 
 	/**
-	 * @param settlement the settlement to set
+	 * @param building the settlement to set
 	 */
-	public void setSettlement(Building settlement)
+	public void setBuilding(Building building)
 	{
-		this.settlement = settlement;
+		this.building = building;
 	}
 
 	/**

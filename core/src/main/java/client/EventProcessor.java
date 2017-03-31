@@ -137,12 +137,13 @@ public class EventProcessor
 
 	/**
 	 * Updates the expected moves for this player based upon the event
+	 * 
 	 * @param ev the event that was just received from the server
 	 */
 	private void updateExpectedMoves(Event ev)
 	{
 		if (ev == null || ev.getTypeCase().equals(Event.TypeCase.TYPE_NOT_SET)
-						|| (getGame() == null && !(ev.getTypeCase().equals(Event.TypeCase.BEGINGAME)
+				|| (getGame() == null && !(ev.getTypeCase().equals(Event.TypeCase.BEGINGAME)
 						|| ev.getTypeCase().equals(Event.TypeCase.GAMEINFO)
 						|| ev.getTypeCase().equals(Event.TypeCase.LOBBYUPDATE))))
 			return;
@@ -299,18 +300,20 @@ public class EventProcessor
 			break;
 		case PLAYERTRADEREJECTED:
 		case PLAYERTRADEACCEPTED:
-			if (getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE) &&
-					ev.getPlayerTradeInitiated().getOther().getId() == getGame().getPlayer().getId())
+			if (getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
+					&& ev.getPlayerTradeInitiated().getOther().getId() == getGame().getPlayer().getId())
 			{
-				client.log("Client Play", String.format("Removing SUBMITTRADERESPONSE from %s", ev.getPlayerTradeInitiated().getOther().getId().name()));
+				client.log("Client Play", String.format("Removing SUBMITTRADERESPONSE from %s",
+						ev.getPlayerTradeInitiated().getOther().getId().name()));
 				getExpectedMoves().remove(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
 			}
 			break;
 		case PLAYERTRADEINITIATED:
-			if(ev.getPlayerTradeInitiated().getOther().getId() == getGame().getPlayer().getId() &&
-					!getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
+			if (ev.getPlayerTradeInitiated().getOther().getId() == getGame().getPlayer().getId()
+					&& !getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
 			{
-				client.log("Client Play", String.format("Adding SUBMITTRADERESPONSE to %s", ev.getPlayerTradeInitiated().getOther().getId().name()));
+				client.log("Client Play", String.format("Adding SUBMITTRADERESPONSE to %s",
+						ev.getPlayerTradeInitiated().getOther().getId().name()));
 				getExpectedMoves().add(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
 			}
 			break;

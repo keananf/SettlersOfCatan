@@ -133,8 +133,7 @@ public class TradeTests extends TestHelper
 		playerTrade.setOffering(resource.build());
 		resource.clearGrain().setBrick(1);
 		playerTrade.setWanting(resource);
-		playerTrade
-				.setOther(Board.Player.newBuilder().setIdValue(p2.getId().getNumber()).build());
+		playerTrade.setOther(Board.Player.newBuilder().setIdValue(p2.getId().getNumber()).build());
 
 		// assert resources are set up
 		assertTrue(1 == p.getResources().get(ResourceType.Grain) && 1 == p.getNumResources());
@@ -152,8 +151,9 @@ public class TradeTests extends TestHelper
 		// Player 2 sends response after 30 sec
 		server.getCurrentTrade().setTime(server.getCurrentTrade().getTime() - 30001);
 		assertTrue(server.getCurrentTrade().isExpired());
-		msg = Messages.Message.newBuilder().
-				setRequest(Requests.Request.newBuilder().setSubmitTradeResponse(Trade.Response.ACCEPT).build()).build();
+		msg = Messages.Message.newBuilder()
+				.setRequest(Requests.Request.newBuilder().setSubmitTradeResponse(Trade.Response.ACCEPT).build())
+				.build();
 		server.addMessageToProcess(new ReceivedMessage(p2.getColour(), msg));
 		server.processMessage();
 
@@ -525,11 +525,13 @@ public class TradeTests extends TestHelper
 						.build()));
 		server.processMessage();
 
-		// Assert it is the trade phase, and that player red has an expected move
+		// Assert it is the trade phase, and that player red has an expected
+		// move
 		assertTrue(server.isTradePhase());
 		assertTrue(server.getExpectedMoves(Colour.RED).get(0).equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE));
 
-		// Player red accepts. Assert trade occurred and that it is still trade phase
+		// Player red accepts. Assert trade occurred and that it is still trade
+		// phase
 		server.addMessageToProcess(
 				new ReceivedMessage(p2.getColour(),
 						Messages.Message.newBuilder()

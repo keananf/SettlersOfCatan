@@ -22,6 +22,7 @@ class CatanModelFactory
 			| VertexAttributes.Usage.Normal
 			| VertexAttributes.Usage.TextureCoordinates;
 	private static final Vector3 ORIGIN = new Vector3(0, 0, 0);
+	private static final float GROUND_LEVEL = 0.55f;
 
 	private static final Material WATER = new Material(
 			TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));
@@ -46,7 +47,7 @@ class CatanModelFactory
 	{
 		final ModelBuilder builder = new ModelBuilder();
 		SEA = builder.createCylinder(150f, 0f, 150f, 6, WATER, DEFAULT_ATTRS);
-		ISLAND = builder.createCylinder(11f, 0f, 11f, 6, DIRT, DEFAULT_ATTRS);
+		ISLAND = builder.createCylinder(11f, 1f, 11f, 6, DIRT, DEFAULT_ATTRS);
 		GRAIN = assets.getModel("grain.g3db");
 		ORE = assets.getModel("ore.g3db");
 		WOOL = assets.getModel("wool.g3db");
@@ -57,18 +58,12 @@ class CatanModelFactory
 
 	ModelInstance getSeaInstance()
 	{
-		
-		
-		ModelInstance sea = new ModelInstance(SEA, ORIGIN);
-		sea.transform.translate(0,-0.1f,0);
-		return sea;
+		return new ModelInstance(SEA, ORIGIN);
 	}
 
 	ModelInstance getIslandInstance()
 	{
-		final ModelInstance instance = new ModelInstance(ISLAND, ORIGIN);
-		instance.transform.translate(0, 0.1f, 0);
-		return instance;
+		return new ModelInstance(ISLAND, ORIGIN);
 	}
 
 	ModelInstance getTerrainInstance(ResourceType type, Vector3 pos)
@@ -99,16 +94,16 @@ class CatanModelFactory
 		}
 
 		final ModelInstance mod = new ModelInstance(model, pos);
-		mod.transform.translate(0, 0.1f, 0);
+		mod.transform.translate(0, GROUND_LEVEL ,0);
 		return mod;
 	}
 	
 	ModelInstance getChitInstance(final Hex hex)
 	{
-        final Vector3 pos = hex.get3DPos();
-		pos.y = 0.8f;
 		final Model chit = builder.createCylinder(2f, 0f, 2f, 16, getChitMaterial(hex.getChit()), DEFAULT_ATTRS);
 
+		final Vector3 pos = hex.get3DPos();
+		pos.y = GROUND_LEVEL + 0.8f;
 		final ModelInstance instance = new ModelInstance(chit, pos);
 		instance.transform.rotate(0, 1, 0, 180);
 		return instance;

@@ -75,6 +75,7 @@ public class GameScreen implements Screen
 
 		for (final Hex hex : game.getState().getGrid().getHexesAsList())
 		{
+			persistentInstances.add(factory.getTerrainInstance(hex.getResource(), hex.get3DPos()));
 			if (hex.getResource().equals(ResourceType.Generic)) continue;
 			persistentInstances.add(factory.getChitInstance(hex));
 		}
@@ -120,6 +121,7 @@ public class GameScreen implements Screen
 
 				instance.materials.get(0).set(ColorAttribute.createDiffuse(playerToColour(road.getPlayerColour())));
 				instance.transform.scale(0.1f, 0.1f, 0.1f);
+				instance.transform.translate(0, 1.5f, 0);
 				Vector2 compare = edge.getX().get2DPos();
 				Vector2 compareTo = edge.getY().get2DPos();
 
@@ -165,13 +167,13 @@ public class GameScreen implements Screen
 
 				instance.materials.get(0).set(ColorAttribute.createDiffuse(playerToColour(building.getPlayerColour())));
 				instance.transform.scale(0.3f, 0.25f, 0.25f);
-				//instance.transform.scale(2f, 2f, 2f);
+				instance.transform.translate(0, 1.5f, 0);
 				volatileInstances.add(instance);
 			}
 		}
 	}
 
-	public void drawPorts()
+	private void drawPorts()
 	{
 		Model model = game.assets.getModel("port2.g3db");
 
@@ -191,6 +193,8 @@ public class GameScreen implements Screen
 			//instance.transform.rotate(0,1f, 0, 45f);
 			instance.transform.scale(0.5f, 0.5f, 0.2f);			
 			instance2.transform.scale(0.5f,0.5f,0.2f);
+			instance.transform.translate(0, 1.5f, 0);
+			instance2.transform.translate(0, 1.5f, 0);
 			persistentInstances.add(instance);
 			persistentInstances.add(instance2);
 		}

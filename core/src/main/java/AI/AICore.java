@@ -9,12 +9,16 @@ import intergroup.Requests;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Semaphore;
+
+import com.badlogic.gdx.Gdx;
 
 public abstract class AICore implements IAI
 {
 	protected AIClient client;
 	private Random rand;
 	protected boolean hasTraded;
+	Semaphore semaphore = new Semaphore(1);
 
 	public AICore(AIClient client)
 	{
@@ -71,7 +75,7 @@ public abstract class AICore implements IAI
 		{
 			// Implementation-defined
 			int rank = rankMove(entry);
-
+			Gdx.app.debug(entry.getChosenMove().toString(), ""  + rank);
 			if (rank > maxRank)
 			{
 				maxRank = rank;
@@ -90,58 +94,80 @@ public abstract class AICore implements IAI
 	@Override
 	public int rankMove(Turn turn)
 	{
+		int rank = -999;
+		Gdx.app.debug("MessageType", turn.getChosenMove().toString());
 		// Switch on turn type and rank move
+
 		switch (turn.getChosenMove())
 		{
 		case BUYDEVCARD:
-			return rankBuyDevCard();
+			rank = rankBuyDevCard();
+			break;
 		case BUILDROAD:
-			return rankNewRoad(turn.getChosenEdge());
+			rank = rankNewRoad(turn.getChosenEdge());
+			break;
 		case BUILDSETTLEMENT:
-			return rankNewSettlement(turn.getChosenNode());
+			rank = rankNewSettlement(turn.getChosenNode());
+			break;
 		case BUILDCITY:
-			return rankNewCity(turn.getChosenNode());
+			rank = rankNewCity(turn.getChosenNode());
+			break;
 		case MOVEROBBER:
-			return rankNewRobberLocation(turn.getChosenHex());
+			rank = rankNewRobberLocation(turn.getChosenHex());
+			break;
 		case PLAYDEVCARD:
-			return rankPlayDevCard(turn.getChosenCard());
+			rank = rankPlayDevCard(turn.getChosenCard());
+			break;
 		case INITIATETRADE:
 			// Set the player or bank trade in 'turn' as well
-			return rankInitiateTrade(turn);
+			Gdx.app.debug("INITIATETRADE", "Found");
+			Gdx.app.debug("RankBefore", "" + rank);
+			rank = rankInitiateTrade(turn);
+			Gdx.app.debug("RankAfter", "" + rank);
+			break;
 		case SUBMITTRADERESPONSE:
-			return rankTradeResponse(turn.getTradeResponse(), turn.getPlayerTrade());
+			rank = rankTradeResponse(turn.getTradeResponse(), turn.getPlayerTrade());
+			break;
 		case DISCARDRESOURCES:
 			// If a discard move has gotten this for, then we know it is
 			// an expected move.
 			// Set the chosenResources in 'turn' to be a valid discard as well
 			// as rank.
-			return rankDiscard(turn);
+			rank = rankDiscard(turn);
+			break;
 		case SUBMITTARGETPLAYER:
-			return rankTargetPlayer(turn.getTarget());
+			rank = rankTargetPlayer(turn.getTarget());
+			break;
 		case CHOOSERESOURCE:
-			return rankChosenResource(turn.getChosenResource());
-
-		// Should rank apply for ENDTURN / ROLLDICE? Maybe sometimes..
-		case ENDTURN:
-			return rankEndTurn();
-		case ROLLDICE:
-			return 6;
-
-		// ai will never chat
-		case CHATMESSAGE:
+			rank = rankChosenResource(turn.getChosenResource());
 			break;
 
-		// If Join Lobby, then the ai has to join a lobby and the rest of the
-		// list will be empty
-		// So, it's rank doesn't matter
+			// Should rank apply for ENDTURN / ROLLDICE? Maybe sometimes..
+		case ENDTURN:
+			rank = rankEndTurn();
+			break;
+		case ROLLDICE:
+			rank = 6;
+			break;
+
+			// ai will never chat
+		case CHATMESSAGE:
+			rank = -1;
+			break;
+
+			// If Join Lobby, then the ai has to join a lobby and the rest of the
+			// list will be empty
+			// So, it's rank doesn't matter
 		case JOINLOBBY:
+			rank = 6;
 			break;
 		case BODY_NOT_SET:
 		default:
 			break;
 		}
-
-		return 0;
+		
+		
+		return rank;
 	}
 
 	@Override

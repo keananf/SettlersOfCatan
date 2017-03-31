@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.badlogic.gdx.Gdx;
+
 /**
  * Created by 140002949 on 19/03/17.
  */
@@ -332,9 +334,10 @@ public class EasyAI extends AICore
         return rank;
     }
 
-    @Override
+    
     public int rankInitiateTrade(Turn turn)
     {
+    	Gdx.app.debug("rankInitiateTrade", "Called");
         return -1;
     }
 

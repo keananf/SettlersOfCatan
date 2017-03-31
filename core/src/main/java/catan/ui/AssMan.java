@@ -12,7 +12,7 @@ public final class AssMan extends AssetManager
 	private static final String MODELS = "models/";
 	private static final String TEXTURES = "textures/";
 
-	private final HashMap<String, Texture> textures = new HashMap<>();
+	private static final HashMap<String, Texture> textures = new HashMap<>();
 
 	public AssMan()
 	{
@@ -32,7 +32,7 @@ public final class AssMan extends AssetManager
 		return get(path, Model.class);
 	}
 
-	public Texture getTexture(String name)
+	public static  Texture getTexture(String name)
 	{
 
 		if (textures.containsKey(name))

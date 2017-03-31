@@ -1,19 +1,19 @@
 package catan.ui.hud;
 
+import catan.SettlersOfCatan;
 import catan.ui.AssMan;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.utils.Align;
 
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
+
 class Counter<T> extends Stack
 {
-	private final static String TEXTURE_PATH_FMT = "icons/%s.jpg";
-	private static Skin skin;
-	private static AssMan assets;
+	private final static String ICON_FMT = "icons/%s.png";
 
 	private final T type;
 	private final Supplier<Integer> countSupplier;
@@ -24,12 +24,11 @@ class Counter<T> extends Stack
 		this.type = type;
 		this.countSupplier = countSupplier;
 
-		Image backgroundImage = new Image(
-				assets.getTexture(
-						String.format(TEXTURE_PATH_FMT, type.toString().toLowerCase())));
-		add(backgroundImage);
+		Image bground = new Image(AssMan.getTexture(format(ICON_FMT, type.toString().toLowerCase())));
+		add(bground);
 
-		countLabel = new Label("0", skin);
+		countLabel = new Label("0", SettlersOfCatan.skin);
+		countLabel.setAlignment(Align.center);
 		add(countLabel);
 	}
 
@@ -41,14 +40,7 @@ class Counter<T> extends Stack
 	@Override
 	public void act(final float delta)
 	{
-		Gdx.app.debug("Counter", "Acting");
 		final Integer newCount = countSupplier.get();
-		countLabel.setText(String.format("%d", newCount));
-	}
-
-	static void setup(final Skin skin, final AssMan assets)
-	{
-		Counter.skin = skin;
-		Counter.assets = assets;
+		countLabel.setText(format("%d", newCount));
 	}
 }

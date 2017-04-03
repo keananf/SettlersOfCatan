@@ -243,6 +243,7 @@ public abstract class Client implements Runnable
 	 */
 	public void shutDown()
 	{
+		System.exit(1);
 		if (active)
 		{
 			active = false;

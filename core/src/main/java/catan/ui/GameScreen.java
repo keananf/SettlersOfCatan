@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import enums.Colour;
+import enums.ResourceType;
 import game.build.Building;
 import game.build.Road;
 import game.build.Settlement;
@@ -74,6 +75,8 @@ public class GameScreen implements Screen
 		for (final Hex hex : game.getState().getGrid().getHexesAsList())
 		{
 			persistentInstances.add(factory.getHexInstance(hex.get3DPos(), hex.getResource()));
+			if (hex.getResource().equals(ResourceType.Generic)) continue;
+			persistentInstances.add(factory.getChitInstance(hex));
 		}
 	}
 
@@ -107,7 +110,6 @@ public class GameScreen implements Screen
 		List<Edge> edges = game.client.getState().getGrid().getEdgesAsList();
 		for (Edge edge : edges)
 		{
-
 			Road road = edge.getRoad();
 
 			if (road != null)
@@ -131,12 +133,9 @@ public class GameScreen implements Screen
 						instance.transform.rotate(0, 1, 0, 60f);
 					}
 				}
-
 				volatileInstances.add(instance);
 			}
-
 		}
-
 	}
 
 	private void drawBuildings()
@@ -167,16 +166,14 @@ public class GameScreen implements Screen
 				instance.transform.scale(0.2f, 0.2f, 0.2f);
 
 				volatileInstances.add(instance);
-
 			}
-
 		}
-
 	}
 
 	private static Color playerToColour(final Colour name)
 	{
-		switch (name) {
+		switch (name)
+		{
 			case BLUE:   return Color.BLUE;
 			case RED:    return Color.RED;
 			case WHITE:  return Color.WHITE;
@@ -196,6 +193,10 @@ public class GameScreen implements Screen
 	@Override
 	public void resize(final int width, final int height)
 	{
+		camera.viewportWidth = width;
+		camera.viewportHeight = height;
+		camera.update();
+
 		hud.getViewport().update(width, height, true);
 	}
 

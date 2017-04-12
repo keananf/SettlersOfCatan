@@ -236,7 +236,7 @@ public class MoveProcessor
 			if (n.getBuilding() != null && !n.getBuilding().getPlayerColour().equals(getGame().getPlayer().getColour())
 					&& getGame().getPlayerResources(n.getBuilding().getPlayerColour()) > 0)
 			{
-				val = true;
+				val = getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER);
 			}
 		}
 
@@ -267,7 +267,8 @@ public class MoveProcessor
 		// afforded and that it brings the user
 		// into a safe position having 7 or less resources.
 		return !getExpectedMoves().isEmpty()
-				&& isExpected(turn) && getGame().getPlayer().canAfford(resources) && sum <= 7;
+				&& isExpected(turn) && getGame().getPlayer().canAfford(resources) && sum <= 7
+				&& sum*2 <= getGame().getPlayer().getNumResources();
 	}
 
 	/**
@@ -282,7 +283,7 @@ public class MoveProcessor
 
 		// Ensure that a SUBMITTARGETPLAYER move is expected, and that the
 		// player has resources
-		return (checkTurn() && isExpected(turn)
+		return (checkTurn() && isExpected(turn) && getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
 				&& !target.equals(getGame().getPlayer().getColour()));
 	}
 

@@ -1,7 +1,6 @@
 package catan.ui;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
@@ -24,6 +22,7 @@ class CatanModelFactory
 			| VertexAttributes.Usage.Normal
 			| VertexAttributes.Usage.TextureCoordinates;
 	private static final Vector3 ORIGIN = new Vector3(0, 0, 0);
+	private static final float GROUND_LEVEL = 0.55f;
 
 	private static final Material WATER = new Material(
 			TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));
@@ -37,13 +36,24 @@ class CatanModelFactory
 	private static final ModelBuilder builder = new ModelBuilder();
 	private final Model SEA;
 	private final Model ISLAND;
-	private final Model HEX;
+	private final Model GRAIN;
+	private final Model ORE;
+	private final Model WOOL;
+	private final Model LUMBER;
+	private final Model BRICK;
+	private final Model GENERIC;
 
-	CatanModelFactory()
+	CatanModelFactory(AssMan assets)
 	{
+		final ModelBuilder builder = new ModelBuilder();
 		SEA = builder.createCylinder(150f, 0f, 150f, 6, WATER, DEFAULT_ATTRS);
-		ISLAND = builder.createCylinder(11f, 0f, 11f, 6, DIRT, DEFAULT_ATTRS);
-		HEX = builder.createCylinder(2.2f, 0f, 2.2f, 6, new Material(), DEFAULT_ATTRS);
+		ISLAND = builder.createCylinder(11f, 1f, 11f, 6, DIRT, DEFAULT_ATTRS);
+		GRAIN = assets.getModel("grain.g3db");
+		ORE = assets.getModel("ore.g3db");
+		WOOL = assets.getModel("wool.g3db");
+		LUMBER = assets.getModel("Lumber.g3db");
+		GENERIC = assets.getModel("Desert.g3db");
+		BRICK = assets.getModel("Mine2.g3db");
 	}
 
 	ModelInstance getSeaInstance()
@@ -53,51 +63,50 @@ class CatanModelFactory
 
 	ModelInstance getIslandInstance()
 	{
-		final ModelInstance instance = new ModelInstance(ISLAND, ORIGIN);
-		instance.transform.translate(0, 0.1f, 0);
-		return instance;
+		return new ModelInstance(ISLAND, ORIGIN);
 	}
 
-	ModelInstance getHexInstance(final Vector3 pos, final ResourceType type)
+	ModelInstance getTerrainInstance(ResourceType type, Vector3 pos)
 	{
-		final ModelInstance instance = new ModelInstance(HEX, pos);
-		instance.transform.translate(0, 0.2f, 0);
-		instance.transform.rotate(0, 1, 0, 90f);
-		instance.materials.get(0).set(ColorAttribute.createDiffuse(resourceTypeToColor(type)));
-		return instance;
-	}
-
-	ModelInstance getChitInstance(final Hex hex)
-	{
-		final Vector3 pos = hex.get3DPos();
-		pos.y = 0.8f;
-
-		final Model chit = builder.createCylinder(2f, 0f, 2f, 16, getChitMaterial(hex.getChit()), DEFAULT_ATTRS);
-
-		final ModelInstance instance = new ModelInstance(chit, pos);
-		instance.transform.rotate(0, 1, 0, 180);
-		return instance;
-	}
-
-	private Color resourceTypeToColor(final ResourceType type)
-	{
+		final Model model;
 		switch (type)
 		{
-		case Generic:
-			return Color.BLACK;
-		case Wool:
-			return Color.WHITE;
-		case Ore:
-			return Color.BLUE;
-		case Grain:
-			return Color.YELLOW;
 		case Brick:
-			return Color.FIREBRICK;
+			model = BRICK;
+			break;
+		case Generic:
+			model = GENERIC;
+			break;
+		case Grain:
+			model = GRAIN;
+			break;
 		case Lumber:
-			return Color.FOREST;
+			model = LUMBER;
+			break;
+		case Ore:
+			model = ORE;
+			break;
+		case Wool:
+			model = WOOL;
+			break;
 		default:
 			return null;
 		}
+
+		final ModelInstance mod = new ModelInstance(model, pos);
+		mod.transform.translate(0, GROUND_LEVEL ,0);
+		return mod;
+	}
+	
+	ModelInstance getChitInstance(final Hex hex)
+	{
+		final Model chit = builder.createCylinder(2f, 0f, 2f, 16, getChitMaterial(hex.getChit()), DEFAULT_ATTRS);
+
+		final Vector3 pos = hex.get3DPos();
+		pos.y = GROUND_LEVEL + 0.8f;
+		final ModelInstance instance = new ModelInstance(chit, pos);
+		instance.transform.rotate(0, 1, 0, 180);
+		return instance;
 	}
 
 	private Material getChitMaterial(final int n)

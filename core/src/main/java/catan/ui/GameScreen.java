@@ -25,6 +25,7 @@ import game.build.Settlement;
 import grid.Edge;
 import grid.Hex;
 import grid.Node;
+import grid.Port;
 
 import java.util.List;
 
@@ -68,16 +69,17 @@ public class GameScreen implements Screen
 		Gdx.input.setInputProcessor(multiplexer);
 
 		// add 3D models that won't change during gameplay
-		final CatanModelFactory factory = new CatanModelFactory();
+		final CatanModelFactory factory = new CatanModelFactory(game.assets);
 		persistentInstances.add(factory.getSeaInstance());
 		persistentInstances.add(factory.getIslandInstance());
 
 		for (final Hex hex : game.getState().getGrid().getHexesAsList())
 		{
-			persistentInstances.add(factory.getHexInstance(hex.get3DPos(), hex.getResource()));
+			persistentInstances.add(factory.getTerrainInstance(hex.getResource(), hex.get3DPos()));
 			if (hex.getResource().equals(ResourceType.Generic)) continue;
 			persistentInstances.add(factory.getChitInstance(hex));
 		}
+		drawPorts();
 	}
 
 	@Override
@@ -119,6 +121,7 @@ public class GameScreen implements Screen
 
 				instance.materials.get(0).set(ColorAttribute.createDiffuse(playerToColour(road.getPlayerColour())));
 				instance.transform.scale(0.1f, 0.1f, 0.1f);
+				instance.transform.translate(0, 1.5f, 0);
 				Vector2 compare = edge.getX().get2DPos();
 				Vector2 compareTo = edge.getY().get2DPos();
 
@@ -163,10 +166,37 @@ public class GameScreen implements Screen
 				}
 
 				instance.materials.get(0).set(ColorAttribute.createDiffuse(playerToColour(building.getPlayerColour())));
-				instance.transform.scale(0.2f, 0.2f, 0.2f);
-
+				instance.transform.scale(0.3f, 0.25f, 0.25f);
+				instance.transform.translate(0, 1.5f, 0);
 				volatileInstances.add(instance);
 			}
+		}
+	}
+
+	private void drawPorts()
+	{
+		Model model = game.assets.getModel("port2.g3db");
+
+		List<Port> ports = game.client.getState().getGrid().getPortsAsList();
+		for (Port port : ports)
+		{
+			Vector3 n = port.getX().get3DPos();
+			Vector3 n2 = port.getY().get3DPos();
+			float xMidpoint = (n.x + n2.x) / 2;
+			float yMidpoint = (n.y + n2.y) / 2;
+
+			Vector3 Midpoint = new Vector3(xMidpoint, 0.1f, yMidpoint);
+			ModelInstance instance = new ModelInstance(model, n);
+			ModelInstance instance2 = new ModelInstance(model, n2);
+			
+			
+			//instance.transform.rotate(0,1f, 0, 45f);
+			instance.transform.scale(0.5f, 0.5f, 0.2f);			
+			instance2.transform.scale(0.5f,0.5f,0.2f);
+			instance.transform.translate(0, 1.5f, 0);
+			instance2.transform.translate(0, 1.5f, 0);
+			persistentInstances.add(instance);
+			persistentInstances.add(instance2);
 		}
 	}
 

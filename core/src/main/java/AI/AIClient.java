@@ -3,10 +3,12 @@ package AI;
 import catan.SettlersOfCatan;
 import client.Client;
 import enums.Difficulty;
+import intergroup.Events;
 
 public abstract class AIClient extends Client
 {
 	protected AICore ai;
+	private Thread aiThread;
 
 	public AIClient(Difficulty difficulty, SettlersOfCatan game)
 	{
@@ -50,19 +52,22 @@ public abstract class AIClient extends Client
 	@Override
 	public void run()
 	{
-		log("Client Play", "Starting AI client loop");
 		active = true;
+		aiThread = new Thread(ai);
+		aiThread.start();
 
 		// Loop processing events when needed and sending turns
 		while (active && (getState() == null || !getState().isOver()))
 		{
 			try
 			{
-				// Attempt to make a move and send a turn
-				acquireLocksAndPerformMove();
-				Thread.sleep(100);
+				Events.Event ev = acquireLocksAndGetEvents();
+				if(ai.getExpectedEvents().contains(ev.getTypeCase()) || ev.getTypeCase().equals(Events.Event.TypeCase.ERROR))
+				{
+					log("Client Proc", "Resuming");
+					ai.resume();
+				}
 
-				acquireLocksAndGetEvents();
 				Thread.sleep(100);
 			}
 			catch (Exception e)
@@ -77,8 +82,9 @@ public abstract class AIClient extends Client
 	/**
 	 * Acquires locks and attempts to move
 	 */
-	protected void acquireLocksAndPerformMove() throws Exception
+	protected boolean acquireLocksAndPerformMove() throws Exception
 	{
+		boolean val = false;
 		try
 		{
 			getStateLock().acquire();
@@ -87,7 +93,7 @@ public abstract class AIClient extends Client
 				getTurnLock().acquire();
 				try
 				{
-					ai.performMove();
+					val = ai.performMove();
 				}
 				finally
 				{
@@ -107,5 +113,7 @@ public abstract class AIClient extends Client
 		{
 			e.printStackTrace();
 		}
+
+		return val;
 	}
 }

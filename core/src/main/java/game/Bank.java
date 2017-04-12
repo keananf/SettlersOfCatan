@@ -39,6 +39,8 @@ public class Bank
 		// For each resource type
 		for (ResourceType r : ResourceType.values())
 		{
+			if(r.equals(ResourceType.Generic)) continue;
+
 			availableResources.put(r, resourceAmount);
 		}
 

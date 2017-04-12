@@ -58,6 +58,7 @@ public class ServerGame extends Game
 		// For each resource type, ensure there is enough to go around
 		for (ResourceType r : ResourceType.values())
 		{
+			if(r.equals(ResourceType.Generic)) continue;
 			int total = bank.getAvailableResources().get(r);
 
 			// Subtract each player's new amount of 'r'

@@ -37,6 +37,7 @@ public class MessageProcessor
 	private CurrentTrade currentTrade;
 	private boolean tradePhase;
 	private ReceivedMessage lastMessage;
+	protected boolean initialPhase;
 
 	public MessageProcessor(ServerGame game, Server server)
 	{
@@ -67,10 +68,12 @@ public class MessageProcessor
 		logger.logReceivedMessage(msg);
 
 		// If not valid
-		if (!validateMsg(msg,
-				col)) { return Events.Event.newBuilder()
+		if (!validateMsg(msg, col))
+		{
+			return Events.Event.newBuilder()
 						.setError(Events.Event.Error.newBuilder().setDescription("Move unexpected or invalid.").build())
-						.build(); }
+						.build();
+		}
 
 		// switch on message type
 		switch (msg.getTypeCase())
@@ -142,6 +145,7 @@ public class MessageProcessor
 					ev.setTurnEnded(game.changeTurn());
 					tradePhase = false;
 					currentTrade = null;
+					initialPhase = true;
 				}
 				else
 					ev.setError(Events.Event.Error.newBuilder().setDescription("Cannot end turn yet."));
@@ -160,7 +164,16 @@ public class MessageProcessor
 				ev.setResourceChosen(request.getChooseResource());
 				break;
 			case ROLLDICE:
-				ev.setRolled(game.generateDiceRoll());
+				if(initialPhase)
+				{
+					server.log("Server Proc", "Rolling dice");
+					ev.setRolled(game.generateDiceRoll());
+					initialPhase = false;
+				}
+				else
+				{
+					ev.setError(Events.Event.Error.newBuilder().setDescription("Dice already rolled."));
+				}
 				break;
 			case PLAYDEVCARD:
 				game.playDevelopmentCard(request.getPlayDevCard());
@@ -202,7 +215,8 @@ public class MessageProcessor
 		}
 		catch (Exception e)
 		{
-			ev.setError(Events.Event.Error.newBuilder().setDescription(e.getMessage()).build());
+			String errMsg = e.getMessage();
+			ev.setError(Events.Event.Error.newBuilder().setDescription(errMsg != null ? errMsg : "Error").build());
 		}
 
 		// Add expected trade response for other player
@@ -349,16 +363,22 @@ public class MessageProcessor
 		List<Requests.Request.BodyCase> expected = expectedMoves.get(col);
 		if (type == null || game == null) return false;
 
-		if (!expected.isEmpty() && expected.contains(type))
+		if (expected.contains(type))
 		{
 			return true;
 		}
 
 		// Can play dev card on first turn
-		else if (!expected.isEmpty() && expected.contains(Requests.Request.BodyCase.ROLLDICE)
-				&& msg.getRequest().getBodyCase().equals(Requests.Request.BodyCase.PLAYDEVCARD))
+		else if (expected.contains(Requests.Request.BodyCase.ROLLDICE)
+				&& type.equals(Requests.Request.BodyCase.PLAYDEVCARD))
 		{
 			return true;
+		}
+
+		else if((type.equals(Requests.Request.BodyCase.MOVEROBBER) || type.equals(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
+				|| type.equals(Requests.Request.BodyCase.CHOOSERESOURCE)) && !expected.contains(type))
+		{
+			return false;
 		}
 
 		// If the move is not expected

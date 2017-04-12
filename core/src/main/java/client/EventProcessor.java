@@ -363,20 +363,30 @@ public class EventProcessor
 	 * 
 	 * @throws IOException
 	 */
-	public void processMessage() throws Exception
+	public Event processMessage(Message msg ) throws Exception
 	{
-		Message msg = conn.getMessageFromServer();
-
-		if (msg == null) return;
+		if (msg == null) return null;
 
 		// switch on message type
 		switch (msg.getTypeCase())
 		{
-		// Extract and process event
-		case EVENT:
-			processEvent(msg.getEvent());
-			break;
+			// Extract and process event
+			case EVENT:
+				processEvent(msg.getEvent());
+				return msg.getEvent();
 		}
+
+		return null;
+	}
+
+	/**
+	 * Blocks and retrieves the next message from the server
+	 * @return the next message
+	 * @throws Exception
+	 */
+	public Message getNextMessage() throws Exception
+	{
+		return conn.getMessageFromServer();
 	}
 
 	private ClientGame getGame()

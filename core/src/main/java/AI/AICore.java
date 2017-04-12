@@ -4,22 +4,24 @@ import client.ClientGame;
 import client.Turn;
 import client.TurnState;
 import game.players.Player;
+import intergroup.Events;
 import intergroup.Requests;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public abstract class AICore implements IAI, Runnable
 {
 	protected AIClient client;
 	private Random rand;
 	private boolean waiting;
+	private ArrayList<Events.Event.TypeCase> expectedEventPossibilities;
+	private Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> expectedEvents;
 
 	public AICore(AIClient client)
 	{
 		this.client = client;
 		this.rand = new Random();
+		expectedEvents = setUpExpectedEvents();
 	}
 
 	@Override
@@ -63,6 +65,7 @@ public abstract class AICore implements IAI, Runnable
 						String.format("%s Chose move %s", getPlayer().getId().name(), turn.getChosenMove().name()));
 			}
 
+			expectedEventPossibilities = expectedEvents.get(turn.getChosenMove());
 			return client.sendTurn(turn);
 		}
 		return false;
@@ -191,6 +194,37 @@ public abstract class AICore implements IAI, Runnable
 		return ret;
 	}
 
+	/**
+	 * @return a map of request types to expected event types
+	 */
+	private Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> setUpExpectedEvents()
+	{
+		Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> evs = new HashMap<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>>();
+		for(Requests.Request.BodyCase c : Requests.Request.BodyCase.values())
+		{
+			evs.put(c, new ArrayList<Events.Event.TypeCase>());
+		}
+
+		evs.get(Requests.Request.BodyCase.BUILDCITY).add(Events.Event.TypeCase.CITYBUILT);
+		evs.get(Requests.Request.BodyCase.BUILDROAD).add(Events.Event.TypeCase.ROADBUILT);
+		evs.get(Requests.Request.BodyCase.BUILDSETTLEMENT).add(Events.Event.TypeCase.SETTLEMENTBUILT);
+		evs.get(Requests.Request.BodyCase.BUYDEVCARD).add(Events.Event.TypeCase.DEVCARDBOUGHT);
+		evs.get(Requests.Request.BodyCase.PLAYDEVCARD).add(Events.Event.TypeCase.DEVCARDPLAYED);
+		evs.get(Requests.Request.BodyCase.ENDTURN).add(Events.Event.TypeCase.TURNENDED);
+		evs.get(Requests.Request.BodyCase.INITIATETRADE).add(Events.Event.TypeCase.PLAYERTRADEINITIATED);
+		evs.get(Requests.Request.BodyCase.ROLLDICE).add(Events.Event.TypeCase.ROLLED);
+		evs.get(Requests.Request.BodyCase.MOVEROBBER).add(Events.Event.TypeCase.ROBBERMOVED);
+		evs.get(Requests.Request.BodyCase.DISCARDRESOURCES).add(Events.Event.TypeCase.CARDSDISCARDED);
+		evs.get(Requests.Request.BodyCase.SUBMITTRADERESPONSE).add(Events.Event.TypeCase.PLAYERTRADEACCEPTED);
+		evs.get(Requests.Request.BodyCase.SUBMITTRADERESPONSE).add(Events.Event.TypeCase.PLAYERTRADEREJECTED);
+		evs.get(Requests.Request.BodyCase.CHATMESSAGE).add(Events.Event.TypeCase.CHATMESSAGE);
+		evs.get(Requests.Request.BodyCase.JOINLOBBY).add(Events.Event.TypeCase.LOBBYUPDATE);
+		evs.get(Requests.Request.BodyCase.CHOOSERESOURCE).add(Events.Event.TypeCase.RESOURCECHOSEN);
+		evs.get(Requests.Request.BodyCase.SUBMITTARGETPLAYER).add(Events.Event.TypeCase.RESOURCESTOLEN);
+
+		return evs;
+	}
+
 	protected Player getPlayer()
 	{
 		return client.getPlayer() == null ? null : client.getPlayer();
@@ -209,5 +243,10 @@ public abstract class AICore implements IAI, Runnable
 	public void resume()
 	{
 		waiting = false;
+	}
+
+	public ArrayList<Events.Event.TypeCase> getExpectedEvents()
+	{
+		return expectedEventPossibilities;
 	}
 }

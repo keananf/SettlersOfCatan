@@ -3,6 +3,7 @@ package AI;
 import catan.SettlersOfCatan;
 import client.Client;
 import enums.Difficulty;
+import intergroup.Events;
 
 public abstract class AIClient extends Client
 {
@@ -60,8 +61,8 @@ public abstract class AIClient extends Client
 		{
 			try
 			{
-				boolean val = acquireLocksAndGetEvents();
-				if(val)
+				Events.Event ev = acquireLocksAndGetEvents();
+				if(ai.getExpectedEvents().contains(ev.getTypeCase()) || ev.getTypeCase().equals(Events.Event.TypeCase.ERROR))
 				{
 					ai.resume();
 				}

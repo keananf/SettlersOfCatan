@@ -363,9 +363,9 @@ public class EventProcessor
 	 * 
 	 * @throws IOException
 	 */
-	public boolean processMessage(Message msg ) throws Exception
+	public Event processMessage(Message msg ) throws Exception
 	{
-		if (msg == null) return false;
+		if (msg == null) return null;
 
 		// switch on message type
 		switch (msg.getTypeCase())
@@ -373,10 +373,10 @@ public class EventProcessor
 			// Extract and process event
 			case EVENT:
 				processEvent(msg.getEvent());
-				return true;
+				return msg.getEvent();
 		}
 
-		return false;
+		return null;
 	}
 
 	/**

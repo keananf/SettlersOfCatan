@@ -6,6 +6,7 @@ import connection.IServerConnection;
 import enums.Colour;
 import game.Game;
 import game.players.ClientPlayer;
+import intergroup.Events;
 import intergroup.Messages;
 import intergroup.Requests;
 import intergroup.board.Board;
@@ -72,9 +73,9 @@ public abstract class Client implements Runnable
 	/**
 	 * Acquires locks and attempts to process an event
 	 */
-	protected boolean acquireLocksAndGetEvents() throws Exception
+	protected Events.Event acquireLocksAndGetEvents() throws Exception
 	{
-		boolean val = false;
+		Events.Event ev = null;
 		try
 		{
 			Messages.Message msg = eventProcessor.getNextMessage();
@@ -84,7 +85,7 @@ public abstract class Client implements Runnable
 				getTurnLock().acquire();
 				try
 				{
-					val = eventProcessor.processMessage(msg);
+					ev = eventProcessor.processMessage(msg);
 				}
 				finally
 				{
@@ -105,7 +106,7 @@ public abstract class Client implements Runnable
 		{
 			e.printStackTrace();
 		}
-		return val;
+		return ev;
 	}
 
 	/**

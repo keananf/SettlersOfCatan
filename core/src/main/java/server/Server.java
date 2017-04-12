@@ -69,8 +69,7 @@ public class Server implements Runnable
 			broadcastBoard();
 			getInitialSettlementsAndRoads();
 
-			Thread.sleep(500);
-			log("Server Start", "%n%nAll players Connected. Beginning play.%n");
+			log("Server Start", "\n\nAll players Connected. Beginning play.\n");
 			while (active && !game.isOver())
 			{
 				try
@@ -98,7 +97,7 @@ public class Server implements Runnable
 				sendEvents(Event.newBuilder().setGameWon(EmptyOuterClass.Empty.getDefaultInstance()).build());
 			}
 		}
-		catch (IOException | InterruptedException e)
+		catch (IOException e)
 		{
 			e.printStackTrace();
 			log("Server Setup", "Error connecting players");
@@ -337,14 +336,14 @@ public class Server implements Runnable
 		// If no remote players
 		if (numConnections == Game.NUM_PLAYERS && active)
 		{
-			log("Server Setup", "All Players connected. Starting game...%n");
+			log("Server Setup", "All Players connected. Starting game...\n");
 			return;
 		}
 
 		serverSocket = new ServerSocket();
 		serverSocket.bind(new InetSocketAddress("localhost", PORT));
 		log("Server Setup",
-				String.format("Server started. Waiting for client(s)...%s%n", serverSocket.getInetAddress()));
+				String.format("Server started. Waiting for client(s)...%s\n", serverSocket.getInetAddress()));
 
 		// Loop until all players found
 		while (active && numConnections < Game.NUM_PLAYERS)
@@ -370,7 +369,7 @@ public class Server implements Runnable
 
 		if(active && numConnections == Game.NUM_PLAYERS)
 		{
-			log("Server Setup", "All Players connected. Starting game...%n");
+			log("Server Setup", "All Players connected. Starting game...\n");
 		}
 	}
 
@@ -464,14 +463,19 @@ public class Server implements Runnable
 		{
 			log("Server Initial Phase", String.format("Player %s receive initial moves", current.name()));
 			receiveInitialMoves(game.getPlayer(current).getColour());
-			sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 
-			if (i > 0) current = Board.Player.Id.values()[i - 1];
+			if (i > 0)
+			{
+				sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
+				current = Board.Player.Id.values()[i - 1];
+			}
 		}
 
 		// Add roll dice to start the game off
 		game.setCurrentPlayer(game.getPlayer(Board.Player.Id.PLAYER_1).getColour());
 		getExpectedMoves(game.getCurrentPlayer()).add(Requests.Request.BodyCase.ROLLDICE);
+		msgProc.initialPhase = true;
+		sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 	}
 
 	/**

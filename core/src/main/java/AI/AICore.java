@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class AICore implements IAI
+public abstract class AICore implements IAI, Runnable
 {
 	protected AIClient client;
 	private Random rand;
+	private boolean waiting;
 
 	public AICore(AIClient client)
 	{
@@ -22,13 +23,35 @@ public abstract class AICore implements IAI
 	}
 
 	@Override
-	public void performMove()
+	public void run()
 	{
-		/*
-		 * if (getPlayer() != null && getPlayer().getId() != null)
-		 * client.log("Client Play", String.format("Making move for %s",
-		 * getPlayer().getId().name()));
-		 */
+		client.log("Client Play", "Starting AI client loop");
+		waiting = false;
+
+		// Loop sending turns
+		while (client.isActive() && (getState() == null || !getState().isOver()))
+		{
+			try
+			{
+				// Attempt to make a move and send a turn
+				if(!waiting)
+				{
+					waiting = client.acquireLocksAndPerformMove();
+				}
+				Thread.sleep(100);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				client.shutDown();
+			}
+		}
+		client.log("Client Play", "Ending AI client loop");
+	}
+
+	@Override
+	public boolean performMove()
+	{
 		Turn turn = selectAndPrepareMove();
 		if (turn != null)
 		{
@@ -40,12 +63,9 @@ public abstract class AICore implements IAI
 						String.format("%s Chose move %s", getPlayer().getId().name(), turn.getChosenMove().name()));
 			}
 
-			client.sendTurn(turn);
+			return client.sendTurn(turn);
 		}
-		/*
-		 * else { client.log("Client Play", "No move"); }
-		 */
-
+		return false;
 	}
 
 	/**
@@ -184,5 +204,10 @@ public abstract class AICore implements IAI
 	public TurnState getTurn()
 	{
 		return client.getTurn();
+	}
+
+	public void resume()
+	{
+		waiting = false;
 	}
 }

@@ -6,6 +6,7 @@ import connection.IServerConnection;
 import enums.Colour;
 import game.Game;
 import game.players.ClientPlayer;
+import intergroup.Messages;
 import intergroup.Requests;
 import intergroup.board.Board;
 import intergroup.lobby.Lobby;
@@ -65,23 +66,25 @@ public abstract class Client implements Runnable
 				shutDown();
 			}
 		}
-		log("Client Play", "Ending AI client loop");
+		log("Client Play", "Ending client loop");
 	}
 
 	/**
 	 * Acquires locks and attempts to process an event
 	 */
-	protected void acquireLocksAndGetEvents() throws Exception
+	protected boolean acquireLocksAndGetEvents() throws Exception
 	{
+		boolean val = false;
 		try
 		{
+			Messages.Message msg = eventProcessor.getNextMessage();
 			getStateLock().acquire();
 			try
 			{
 				getTurnLock().acquire();
 				try
 				{
-					eventProcessor.processMessage();
+					val = eventProcessor.processMessage(msg);
 				}
 				finally
 				{
@@ -102,6 +105,7 @@ public abstract class Client implements Runnable
 		{
 			e.printStackTrace();
 		}
+		return val;
 	}
 
 	/**
@@ -183,19 +187,19 @@ public abstract class Client implements Runnable
 	 * 
 	 * @param turn the turn to send
 	 */
-	public void sendTurn(Turn turn)
+	public boolean sendTurn(Turn turn)
 	{
 		// Send to server if it is a valid move
 		if (getMoveProcessor().validateMsg(turn))
 		{
 			updateTurn(turn);
 			turnProcessor.sendMove();
+			return true;
 		}
-		else
-		{
-			log("Client Play", String.format("Invalid Request %s for %s", turn.getChosenMove().name(),
+
+		log("Client Play", String.format("Invalid Request %s for %s", turn.getChosenMove().name(),
 					getState().getPlayer().getId().name()));
-		}
+		return false;
 	}
 
 	/**
@@ -333,6 +337,12 @@ public abstract class Client implements Runnable
 	public boolean isActive()
 	{
 		return active;
+	}
+
+
+	public void setActive(boolean active)
+	{
+		this.active = active;
 	}
 
     public void render()

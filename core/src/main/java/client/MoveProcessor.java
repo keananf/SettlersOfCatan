@@ -434,7 +434,7 @@ public class MoveProcessor
 		Requests.Request.BodyCase type = turn.getChosenMove();
 		if (type == null) return false;
 
-		if (!getExpectedMoves().isEmpty() && getExpectedMoves().contains(type))
+		if (getExpectedMoves().contains(type))
 		{
 			return true;
 		}

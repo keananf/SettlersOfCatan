@@ -261,13 +261,12 @@ public class MoveProcessor
 		}
 		client.log("Client Play", String.format("%d - %d for %s", getGame().getPlayer().getNumResources(), sum,
 				getGame().getPlayer().getId().name()));
-		sum = getGame().getPlayer().getNumResources() - sum;
 
 		// Ensure that a discard is expected, and that the discard can be
 		// afforded and that it brings the user
 		// into a safe position having 7 or less resources.
 		return !getExpectedMoves().isEmpty()
-				&& isExpected(turn) && getGame().getPlayer().canAfford(resources) && sum <= 7
+				&& isExpected(turn) && getGame().getPlayer().canAfford(resources)
 				&& sum*2 <= getGame().getPlayer().getNumResources();
 	}
 

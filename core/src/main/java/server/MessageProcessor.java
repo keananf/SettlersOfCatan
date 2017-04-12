@@ -166,6 +166,7 @@ public class MessageProcessor
 			case ROLLDICE:
 				if(initialPhase)
 				{
+					server.log("Server Proc", "Rolling dice");
 					ev.setRolled(game.generateDiceRoll());
 					initialPhase = false;
 				}
@@ -214,7 +215,8 @@ public class MessageProcessor
 		}
 		catch (Exception e)
 		{
-			ev.setError(Events.Event.Error.newBuilder().setDescription(e.getMessage()).build());
+			String errMsg = e.getMessage();
+			ev.setError(Events.Event.Error.newBuilder().setDescription(errMsg != null ? errMsg : "Error").build());
 		}
 
 		// Add expected trade response for other player

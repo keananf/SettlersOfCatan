@@ -360,7 +360,7 @@ public class Server implements Runnable
 			{
 				c = game.joinGame();
 			}
-			catch (GameFullException e)
+			catch (GameFullException ignored)
 			{
 			}
 			ListenerThread l = new ListenerThread(new RemoteClientConnection(connection), c, this);

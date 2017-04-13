@@ -78,7 +78,7 @@ public class LocalServer extends Server
 		{
 			c = game.joinGame();
 		}
-		catch (GameFullException e)
+		catch (GameFullException ignored)
 		{
 		}
 

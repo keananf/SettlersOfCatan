@@ -87,7 +87,7 @@ public class ServerGame extends Game
 			{
 				getPlayer(c).grantResources(playerResources.get(c), bank);
 			}
-			catch (BankLimitException e)
+			catch (BankLimitException ignored)
 			{
 			}
 		}

@@ -167,19 +167,19 @@ public class EasyAI extends AICore
         int rank = 3 ;
 
         if(chosenEdge.hasSettlement()) {// if next settlement has to be 2 roads away
-            Node toAnalyse = (n1.getSettlement()!=null && n1.getSettlement().getPlayerColour() == getPlayer().getColour()) ? n2 : n1;
+            Node toAnalyse = (n1.getBuilding()!=null && n1.getBuilding().getPlayerColour() == getPlayer().getColour()) ? n2 : n1;
 
             for (Edge e: toAnalyse.getEdges()) {
                 if(!e.hasSettlement()){
                     rank++;
 
-                    Node nxtToAnalyse = (e.getX().getSettlement() == null && !e.getX().equals(toAnalyse) ) ? e.getX() : e.getY();
-                    if(nxtToAnalyse.getSettlement() != null){
+                    Node nxtToAnalyse = (e.getX().getBuilding() == null && !e.getX().equals(toAnalyse) ) ? e.getX() : e.getY();
+                    if(nxtToAnalyse.getBuilding() != null){
                          rank ++ ;
                     }
-                    else if(nxtToAnalyse.getSettlement() != null)
+                    else if(nxtToAnalyse.getBuilding() != null)
                     {
-                    	if(nxtToAnalyse.getSettlement().getPlayerColour() != getPlayer().getColour())
+                    	if(nxtToAnalyse.getBuilding().getPlayerColour() != getPlayer().getColour())
                     	{
                     		rank =- 2;
                     	}
@@ -336,7 +336,6 @@ public class EasyAI extends AICore
     @Override
     public int rankInitiateTrade(Turn turn)
     {
-    	Gdx.app.debug("rankInitiateTrade", "Called");
         return -1;
     }
 

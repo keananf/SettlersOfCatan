@@ -35,7 +35,7 @@ public class RankHex {
         Building build = null;
         for (Node node: hex.getNodes()) {
 
-            if((build = node.getSettlement()) != null){
+            if((build = node.getBuilding()) != null){
                 Colour c = build.getPlayerColour();
                 ranking += game.getPlayerResources(c);
             }

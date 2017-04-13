@@ -99,7 +99,6 @@ public abstract class AICore implements IAI, Runnable
 		{
 			// Implementation-defined
 			int rank = rankMove(entry);
-			Gdx.app.debug(entry.getChosenMove().toString(), ""  + rank);
 			if (rank > maxRank)
 			{
 				maxRank = rank;
@@ -119,7 +118,6 @@ public abstract class AICore implements IAI, Runnable
 	public int rankMove(Turn turn)
 	{
 		int rank = -999;
-		Gdx.app.debug("MessageType", turn.getChosenMove().toString());
 		// Switch on turn type and rank move
 
 		switch (turn.getChosenMove())
@@ -144,10 +142,7 @@ public abstract class AICore implements IAI, Runnable
 			break;
 		case INITIATETRADE:
 			// Set the player or bank trade in 'turn' as well
-			Gdx.app.debug("INITIATETRADE", "Found");
-			Gdx.app.debug("RankBefore", "" + rank);
 			rank = rankInitiateTrade(turn);
-			Gdx.app.debug("RankAfter", "" + rank);
 			break;
 		case SUBMITTRADERESPONSE:
 			rank = rankTradeResponse(turn.getTradeResponse(), turn.getPlayerTrade());

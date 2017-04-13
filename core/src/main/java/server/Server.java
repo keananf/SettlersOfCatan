@@ -7,6 +7,7 @@ import connection.LocalClientConnection;
 import connection.RemoteClientConnection;
 import enums.Colour;
 import enums.ResourceType;
+import exceptions.BankLimitException;
 import exceptions.GameFullException;
 import game.CurrentTrade;
 import game.Game;
@@ -498,6 +499,14 @@ public class Server implements Runnable
 				resources.put(h.getResource(), existing + 1);
 			}
 
+			try
+			{
+				p.grantResources(resources, game.getBank());
+			}
+			catch (BankLimitException e)
+			{
+				e.printStackTrace();
+			}
 			Board.ResourceAllocation.Builder alloc = Board.ResourceAllocation.newBuilder();
 			alloc.setPlayer(Board.Player.newBuilder().setId(p.getId()).build());
 			alloc.setResources(game.processResources(resources));

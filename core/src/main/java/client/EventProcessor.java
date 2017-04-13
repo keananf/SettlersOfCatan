@@ -2,6 +2,8 @@ package client;
 
 import connection.IServerConnection;
 import game.Game;
+import game.players.Player;
+import intergroup.Events;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import intergroup.Requests;
@@ -174,37 +176,6 @@ public class EventProcessor
 				}
 			}
 			break;
-		case TURNENDED:
-			if (getTurn().isInitialPhase() && getGame().getPlayer().getSettlements().size() < 2
-					&& getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()))
-			{
-				if (getGame().getTurns() < Game.NUM_PLAYERS)
-				{
-					client.log("Client initial phase", String.format("Adding BUILDSETTLEMENT to expected moves for %s",
-							ev.getInstigator().getId().name()));
-					getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
-				}
-				if (getGame().getTurns() >= Game.NUM_PLAYERS && getGame().getTurns() < Game.NUM_PLAYERS * 2 - 1)
-				{
-					client.log("Client initial phase", String.format("Adding BUILDSETTLEMENT to expected moves for %s",
-							ev.getInstigator().getId().name()));
-					getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
-				}
-
-			}
-			else if (getTurn().isInitialPhase()
-					&& getGame().getPlayer(getGame().getCurrentPlayer()).getSettlements().size() >= 2
-					&& getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()))
-			{
-				getTurn().setInitialPhase(false);
-			}
-
-			if (getGame().getPlayer().getSettlements().size() >= 2
-					&& getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()))
-			{
-				getExpectedMoves().add(Requests.Request.BodyCase.ROLLDICE);
-			}
-			break;
 
 		// Add expected moves based on recently played dev card
 		case DEVCARDPLAYED:
@@ -275,19 +246,15 @@ public class EventProcessor
 				getExpectedMoves().remove(Requests.Request.BodyCase.CHOOSERESOURCE);
 			}
 			break;
-		case ROADBUILT:
-			if (getGame().getPlayer(getGame().getCurrentPlayer()).getRoads().size() == 1
-					&& getGame().getPlayer(getGame().getCurrentPlayer()).getId()
-							.equals(Board.Player.Id.forNumber(Game.NUM_PLAYERS - 1))
+		case TURNENDED:
+			if (getGame().getPlayer().getSettlements().size() >= 2
 					&& getGame().getCurrentPlayer().equals(getGame().getPlayer().getColour()))
 			{
-				getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
+				getExpectedMoves().add(Requests.Request.BodyCase.ROLLDICE);
 			}
-			if (ev.getInstigator().getId() == getGame().getPlayer().getId()
-					&& getExpectedMoves().contains(Requests.Request.BodyCase.BUILDROAD))
-			{
-				getExpectedMoves().remove(Requests.Request.BodyCase.BUILDROAD);
-			}
+			break;
+		case ROADBUILT:
+			handleRoad(ev);
 			break;
 		case SETTLEMENTBUILT:
 			if (getGame().getPlayer().getRoads().size() < 2
@@ -357,6 +324,63 @@ public class EventProcessor
 		// No new expected moves
 		default:
 			break;
+		}
+	}
+
+	private void handleRoad(Event ev)
+	{
+		int turns = getGame().getTurns();
+		Player p = getGame().getPlayer();
+		Player current = getGame().getPlayer(getGame().getCurrentPlayer());
+		boolean added = false;
+
+		// If initial phase
+		if(getTurn().isInitialPhase())
+		{
+			// If you're the last player, it is your turn, and you have one road, build another settlement
+			if (current.getRoads().size() == 1 && current.getId().equals(Board.Player.Id.PLAYER_4))
+			{
+				if(current.getColour().equals(p.getColour()))
+				{
+					client.log("Client initial phase", "Player 4 again");
+					getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
+					added = true;
+				}
+			}
+			else if(getGame().getPlayer(Board.Player.Id.PLAYER_1).getRoads().size() != 2)
+			{
+				client.log("Client initial phase", "Updating player");
+
+				getGame().updateCurrentPlayer();
+				current = getGame().getPlayer(getGame().getCurrentPlayer());
+			}
+
+			// If current player has less than two settlements
+			if (!added && p.getSettlements().size() < 2 && current.getColour().equals(p.getColour()))
+			{
+				int num = Game.NUM_PLAYERS;
+				client.log("Client initial phase", String.format("Adding BUILDSETTLEMENT to expected moves for %s",
+						ev.getInstigator().getId().name()));
+
+				// Add settlement depending on which order
+				if (!added && (turns < num || (turns >= num && turns < num * 2 - 1)))
+				{
+					getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
+				}
+			}
+			else if (!added && current.getSettlements().size() == 2 && current.getColour().equals(p.getColour()))
+			{
+				client.log("Client initial phase", "Start");
+				getTurn().setInitialPhase(false);
+				getExpectedMoves().add(Requests.Request.BodyCase.ROLLDICE);
+			}
+		}
+
+		// Remove event if necessary
+		if (ev.getInstigator().getId() == getGame().getPlayer().getId()
+				&& getExpectedMoves().contains(Requests.Request.BodyCase.BUILDROAD))
+		{
+			getExpectedMoves().remove(Requests.Request.BodyCase.BUILDROAD);
 		}
 	}
 

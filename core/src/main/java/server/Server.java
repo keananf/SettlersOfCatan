@@ -459,7 +459,6 @@ public class Server implements Runnable
 
 			if (i + 1 < Game.NUM_PLAYERS)
 			{
-				sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 				current = Board.Player.Id.values()[i + 1];
 			}
 		}
@@ -472,7 +471,6 @@ public class Server implements Runnable
 
 			if (i > 0)
 			{
-				sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 				current = Board.Player.Id.values()[i - 1];
 			}
 		}
@@ -481,7 +479,6 @@ public class Server implements Runnable
 		game.setCurrentPlayer(game.getPlayer(Board.Player.Id.PLAYER_1).getColour());
 		getExpectedMoves(game.getCurrentPlayer()).add(Requests.Request.BodyCase.ROLLDICE);
 		msgProc.initialPhase = true;
-		sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 	}
 
 	/**

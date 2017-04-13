@@ -29,7 +29,7 @@ public abstract class Client implements Runnable
 	protected TurnProcessor turnProcessor;
 	protected MoveProcessor moveProcessor;
 	protected ClientPlayer thisPlayer;
-	protected static final int PORT = 12345;
+	protected static final int PORT = 7000;
 	private TurnState turn;
 	private IServerConnection conn;
 	private Semaphore stateLock, turnLock;

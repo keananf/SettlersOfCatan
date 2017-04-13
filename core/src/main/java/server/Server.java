@@ -44,7 +44,7 @@ public class Server implements Runnable
 	protected ServerSocket serverSocket;
 	protected Map<Colour, Thread> aiThreads, threads;
 	protected Map<Colour, AIClient> ais;
-	protected static final int PORT = 12345;
+	protected static final int PORT = 7000;
 	private boolean active;
 	private Semaphore lock;
 

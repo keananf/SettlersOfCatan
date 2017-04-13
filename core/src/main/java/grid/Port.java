@@ -25,23 +25,19 @@ public class Port extends Edge
 	}
 
 	/**
-	 * Makes a new port between the given nodes, provided it is not a duplicate
+	 * Makes a new port between the given nodes, by randomly allocating the type
 	 * 
 	 * @param node one of the nodes uniquely describing this port
 	 * @param neighbour one of the nodes uniquely describing this port
-	 * @param currentPorts the total set of ports so far
 	 * @param availablePorts a list of total available ports
 	 * @return
 	 */
-	public static Port makePort(Node node, Node neighbour, List<Port> currentPorts, List<Port> availablePorts)
+	public static Port makePort(Node node, Node neighbour, List<Port> availablePorts)
 	{
-		Port port = null;
-		boolean duplicate = false;
-		Random rand = new Random();
-
 		// Allocate port
+		Random rand = new Random();
 		int index = rand.nextInt(availablePorts.size());
-		port = availablePorts.get(index);
+		Port port = availablePorts.get(index);
 
 		// Add in right order
 		if (node.getX() + node.getY() < neighbour.getX() + neighbour.getY())
@@ -55,72 +51,29 @@ public class Port extends Edge
 			port.setY(node);
 		}
 
-		// Check this edge has not been created before
-		for (Port other : currentPorts)
-		{
-			if (other.getX().equals(port.getX()) && other.getY().equals(port.getY()))
-			{
-				duplicate = true;
-			}
-		}
-
-		// If successful, update collections
-		if (!duplicate && port.validCoordinates(currentPorts))
-		{
-			availablePorts.remove(index);
-			currentPorts.add(port);
-			return port;
-		}
-
-		return null;
+		availablePorts.remove(index);
+		return port;
 	}
 
-	private boolean validCoordinates(List<Port> currentPorts)
-	{
-		boolean three = false;
-
-		for (Port port : currentPorts)
-		{
-			// Find number of edges apart
-			int distance = this.distance(port);
-
-			if (distance == 0 || distance == 1) return false;
-
-			if (distance == 3)
-			{
-				// Can only be three edges away from one port.
-				// The other must be two away
-				if (!three)
-					three = true;
-				else
-					return false;
-			}
-		}
-
-		return true;
-	}
-
-	public static List<Port> makePorts(List<Edge> edges, List<Edge> potentialPorts)
+	public static List<Port> makePorts(List<Edge> edges, List<Edge> portLocations)
 	{
 		List<Port> availablePorts = getAvailablePorts();
 		List<Port> ports = new ArrayList<Port>();
 
 		// For each potential port
-		for (Edge e : potentialPorts)
+		for (Edge e : portLocations)
 		{
-			if (availablePorts.size() > 0)
+			Port p = makePort(e.getX(), e.getY(), availablePorts);
+			if (p != null)
 			{
-				Port p = makePort(e.getX(), e.getY(), ports, availablePorts);
-				if (p != null)
-				{
-					e.getX().removeEdge(e);
-					e.getY().removeEdge(e);
-					edges.remove(e);
+				e.getX().removeEdge(e);
+				e.getY().removeEdge(e);
+				edges.remove(e);
 
-					e.getX().addEdge(p);
-					e.getY().addEdge(p);
-					edges.add(p);
-				}
+				e.getX().addEdge(p);
+				e.getY().addEdge(p);
+				edges.add(p);
+				ports.add(p);
 			}
 		}
 
@@ -138,8 +91,7 @@ public class Port extends Edge
 		// Default ports
 		for (int i = 0; i < 4; i++)
 		{
-			Port p = new Port(new Node(0, 0), new Node(-1, -1)); // default
-																	// nodes
+			Port p = new Port(new Node(0, 0), new Node(-1, -1));
 			p.exchangeType = ResourceType.Generic; // signifies 'Any'
 
 			ports.add(p);
@@ -150,8 +102,7 @@ public class Port extends Edge
 		{
 			if (r == ResourceType.Generic) continue;
 
-			Port p = new Port(new Node(0, 0), new Node(-1, -1)); // default
-																	// nodes
+			Port p = new Port(new Node(0, 0), new Node(-1, -1));
 			p.exchangeType = r;
 
 			ports.add(p);

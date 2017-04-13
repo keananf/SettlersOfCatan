@@ -155,17 +155,18 @@ public class HexGrid
 	 */
 	private void makePorts()
 	{
-		List<Edge> potentialPorts = new ArrayList<Edge>();
+		List<Edge> portLocations = new ArrayList<Edge>();
+		portLocations.add(getEdge(new Point(-5,-3), new Point(-4,-3)));
+		portLocations.add(getEdge(new Point(-3,-5), new Point(-3,-4)));
+		portLocations.add(getEdge(new Point(-1,-4), new Point(0,-4)));
+		portLocations.add(getEdge(new Point(2,-3), new Point(3,-2)));
+		portLocations.add(getEdge(new Point(4,0), new Point(4,1)));
+		portLocations.add(getEdge(new Point(4,3), new Point(4,4)));
+		portLocations.add(getEdge(new Point(2,5), new Point(3,5)));
+		portLocations.add(getEdge(new Point(-1, 3), new Point(0,4)));
+		portLocations.add(getEdge(new Point(-4,0), new Point(-3,1)));
 
-		for (Edge e : edges)
-		{
-			if (e.getX().onBoundaries() || e.getY().onBoundaries())
-			{
-				potentialPorts.add(e);
-			}
-		}
-
-		ports = Port.makePorts(edges, potentialPorts);
+		ports = Port.makePorts(edges, portLocations);
 	}
 
 	/**
@@ -282,20 +283,6 @@ public class HexGrid
 		return hexWithRobber;
 	}
 
-	public Hex getDesert()
-	{
-		Hex desert = null;
-		for (Hex h : grid.values())
-		{
-			if (h.getResource().equals(ResourceType.Generic))
-			{
-				desert = h;
-				break;
-			}
-		}
-		return desert;
-	}
-
 	/**
 	 * Retrieve the hex at the given coordinates
 	 * 
@@ -385,40 +372,20 @@ public class HexGrid
 	}
 
 	/**
-	 * Finds the port associated with the two points
-	 * 
+	 * Finds the edge associated with the two points
+	 *
 	 * @param p1 the first point
 	 * @param p2 the second point
-	 * @return the internal version of the port
+	 * @return the internal version of the road
 	 */
-	public Port getPort(Board.Point p1, Board.Point p2)
+	public Edge getEdge(Point p1, Point p2)
 	{
-		return (Port) getEdge(p1, p2);
-	}
+		// Find nodes and edges
+		Node n1 = getNode((int)p1.getX(), (int)p1.getY());
+		Node n2 = getNode((int)p2.getX(), (int)p2.getY());
+		Edge e = n1.findEdge(n2);
 
-	/**
-	 * Overwrite this grid's nodes and hexes, and set up references between
-	 * them.
-	 * 
-	 * @param nodes the nodes to set
-	 * @param hexes the hexes to set
-	 */
-	public void setNodesAndHexes(List<Node> nodes, List<Hex> hexes)
-	{
-		// Add nodes
-		for (Node n : nodes)
-		{
-			this.nodes.put(new Point(n.getX(), n.getY()), n);
-		}
-
-		// Add hexes
-		for (Hex h : hexes)
-		{
-			this.grid.put(new Point(h.getX(), h.getY()), h);
-		}
-
-		// Add references between hexes and nodes
-		setUpReferences();
+		return e;
 	}
 
 	public void setNodesAndHexes(List<Hex> hexes)

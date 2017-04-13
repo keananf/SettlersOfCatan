@@ -367,9 +367,8 @@ public class HexGrid
 		// Find nodes and edges
 		Node n1 = getNode(p1.getX(), p1.getY());
 		Node n2 = getNode(p2.getX(), p2.getY());
-		Edge e = n1.findEdge(n2);
 
-		return e;
+		return n1.findEdge(n2);
 	}
 
 	/**
@@ -384,9 +383,8 @@ public class HexGrid
 		// Find nodes and edges
 		Node n1 = getNode((int) p1.getX(), (int) p1.getY());
 		Node n2 = getNode((int) p2.getX(), (int) p2.getY());
-		Edge e = n1.findEdge(n2);
 
-		return e;
+		return n1.findEdge(n2);
 	}
 
 	public void setNodesAndHexes(List<Hex> hexes)

@@ -1,5 +1,6 @@
 package catan.ui.hud;
 
+import client.ClientGame;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -12,9 +13,10 @@ import game.players.Player;
 public class HeadsUpDisplay extends Stage {
 	private enum PlayedCard { PlayedKnight }
 
-	public HeadsUpDisplay(final Player me)
+	public HeadsUpDisplay(final ClientGame state)
 	{
 		super(new ScreenViewport());
+		final Player me = state.getPlayer();
 
 		final Table root = new Table();
 		root.setFillParent(true);
@@ -40,7 +42,7 @@ public class HeadsUpDisplay extends Stage {
 		 */
 		final VerticalGroup players = new VerticalGroup();
 		players.space(5);
-		for (Player player : game.getState().getPlayersAsList())
+		for (Player player : state.getPlayersAsList())
 		{
 			players.addActor(new PlayerBar(player));
 		}

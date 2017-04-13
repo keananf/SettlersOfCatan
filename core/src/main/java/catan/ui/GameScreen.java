@@ -8,13 +8,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import enums.ResourceType;
 import game.build.Building;
@@ -23,8 +20,6 @@ import grid.Edge;
 import grid.Hex;
 import grid.Node;
 import grid.Port;
-
-import java.util.List;
 
 public class GameScreen implements Screen
 {
@@ -57,7 +52,7 @@ public class GameScreen implements Screen
 		// input processors
 		final InputMultiplexer multiplexer = new InputMultiplexer();
 		camController = new CameraController(camera);
-		hud = new HeadsUpDisplay(game.getState().getPlayer());
+		hud = new HeadsUpDisplay(game.getState());
 		multiplexer.addProcessor(camController);
 		multiplexer.addProcessor(hud);
 		multiplexer.addProcessor(new GameController(camera, game.client));

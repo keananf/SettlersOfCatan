@@ -67,9 +67,4 @@ public class RemoteAIClient extends AIClient
 		}
 	}
 
-	@Override
-	public void shutDown()
-	{
-		super.shutDown();
-	}
 }

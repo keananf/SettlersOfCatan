@@ -31,12 +31,6 @@ public class LocalAIClientOnServer extends AIClient
 		setUp(conn);
 	}
 
-	@Override
-	public void shutDown()
-	{
-		super.shutDown();
-	}
-
 	public LocalServerConnection getConn()
 	{
 		return conn;

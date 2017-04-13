@@ -61,9 +61,4 @@ public class RemoteClient extends Client
 		}
 	}
 
-	@Override
-	public void shutDown()
-	{
-		super.shutDown();
-	}
 }

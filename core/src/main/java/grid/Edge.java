@@ -280,10 +280,10 @@ public class Edge implements BoardElement
 		return false;
 	}
 
-	public Vector3 get3dVectorMidpoint(Edge edge)
+	public Vector3 get3dVectorMidpoint()
 	{
-		Node a = edge.getX();
-		Node b = edge.getY();
+		Node a = getX();
+		Node b = getY();
 		int aX = a.getX();
 		int bX = b.getX();
 		int aY = a.getY();

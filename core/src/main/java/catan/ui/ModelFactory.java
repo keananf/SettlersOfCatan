@@ -14,17 +14,20 @@ import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.sun.media.sound.ModelOscillator;
 import enums.Colour;
 import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
 import grid.Hex;
+import grid.Port;
 
 import java.util.Set;
 
-class CatanModelFactory
+class ModelFactory
 {
 	private static final long DEFAULT_ATTRS
 			= VertexAttributes.Usage.Position
@@ -43,7 +46,7 @@ class CatanModelFactory
 	private static final Pixmap fontPixmap = new Pixmap(Gdx.files.internal(data.imagePaths[0]));
 
 	private static final ModelBuilder builder = new ModelBuilder();
-	private static final Model SEA, ISLAND, GRAIN, ORE, WOOL, LUMBER, BRICK, GENERIC, ROAD, SETTLEMENT, CITY;
+	private static final Model SEA, ISLAND, GRAIN, ORE, WOOL, LUMBER, BRICK, GENERIC, PORT, ROAD, SETTLEMENT, CITY;
 
 	static
 	{
@@ -56,6 +59,7 @@ class CatanModelFactory
 		LUMBER = SettlersOfCatan.assets.getModel("Lumber.g3db");
 		GENERIC = SettlersOfCatan.assets.getModel("Desert.g3db");
         BRICK = SettlersOfCatan.assets.getModel("Mine2.g3db");
+        PORT = SettlersOfCatan.assets.getModel("port.g3db");
         ROAD = SettlersOfCatan.assets.getModel("road.g3db");
         SETTLEMENT = SettlersOfCatan.assets.getModel("settlement.g3db");
         CITY = SettlersOfCatan.assets.getModel("city.g3db");
@@ -129,6 +133,14 @@ class CatanModelFactory
         return material;
     }
 
+    static ModelInstance getPortInstance(final Port port)
+    {
+        final ModelInstance instance = new ModelInstance(PORT, port.getX().get3DPos());
+        instance.transform.scale(0.5f, 0.5f, 0.2f);
+        instance.transform.translate(0, 1.5f, 0);
+        return instance;
+    }
+
     static ModelInstance getBuildingInstance(final Building building)
     {
         final Model model;
@@ -148,7 +160,28 @@ class CatanModelFactory
 
     static ModelInstance getRoadInstance(final Road road)
     {
+        final Vector3 pos = road.getEdge().get3dVectorMidpoint();
+        final ModelInstance instance = new ModelInstance(ROAD, pos);
+        paint(instance, playerToColor(road.getPlayerColour()));
+        instance.transform.scale(0.1f, 0.1f, 0.1f);
+        instance.transform.translate(0, 1.5f, 0);
 
+        Vector2 compare = road.getEdge().getX().get2DPos();
+        Vector2 compareTo = road.getEdge().getY().get2DPos();
+
+        if (compare.x != compareTo.x)
+        {
+            if (compare.y > compareTo.y)
+            {
+                instance.transform.rotate(0, 1, 0, -60f);
+            }
+            else
+            {
+                instance.transform.rotate(0, 1, 0, 60f);
+            }
+        }
+
+        return instance;
     }
 
     private static Color playerToColor(final Colour player)

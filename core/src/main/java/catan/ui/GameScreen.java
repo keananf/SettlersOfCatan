@@ -5,7 +5,6 @@ import catan.ui.hud.HeadsUpDisplay;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -17,12 +16,9 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import enums.Colour;
 import enums.ResourceType;
 import game.build.Building;
-import game.build.City;
 import game.build.Road;
-import game.build.Settlement;
 import grid.Edge;
 import grid.Hex;
 import grid.Node;
@@ -70,22 +66,21 @@ public class GameScreen implements Screen
 		Gdx.input.setInputProcessor(multiplexer);
 
 		// add 3D models that won't change during gameplay
-		final CatanModelFactory factory = new CatanModelFactory();
-		persistentInstances.add(factory.getSeaInstance());
-		persistentInstances.add(factory.getIslandInstance());
+		persistentInstances.add(ModelFactory.getSeaInstance());
+		persistentInstances.add(ModelFactory.getIslandInstance());
 
 		for (final Hex hex : game.getState().getGrid().getHexesAsList())
 		{
-			persistentInstances.add(factory.getHexInstance(hex));
+			persistentInstances.add(ModelFactory.getHexInstance(hex));
 			if (!hex.getResource().equals(ResourceType.Generic))
             {
-                persistentInstances.add(factory.getChitInstance(hex));
+                persistentInstances.add(ModelFactory.getChitInstance(hex));
             }
 		}
 
 		for (final Port port : game.getState().getGrid().getPortsAsList())
         {
-
+            persistentInstances.add(ModelFactory.getPortInstance(port));
         }
 	}
 
@@ -111,72 +106,22 @@ public class GameScreen implements Screen
 
         for (final Node node : game.getState().getGrid().getNodesAsList())
         {
-            Building building = node.getBuilding();
+            final Building building = node.getBuilding();
             if (building != null)
             {
-                volatileInstances.add(CatanModelFactory.getBuildingInstance(building));
+                volatileInstances.add(ModelFactory.getBuildingInstance(building));
+            }
+        }
+
+        for (final Edge edge : game.getState().getGrid().getEdgesAsList())
+        {
+            final Road road = edge.getRoad();
+            if (road != null)
+            {
+                volatileInstances.add(ModelFactory.getRoadInstance(road));
             }
         }
 	}
-
-	private void drawRoads()
-	{
-		Model model = SettlersOfCatan.assets.getModel("road.g3db");
-
-		List<Edge> edges = game.client.getState().getGrid().getEdgesAsList();
-		for (Edge edge : edges)
-		{
-			Road road = edge.getRoad();
-
-			if (road != null)
-			{
-				Vector3 place = edge.get3dVectorMidpoint(edge);
-				ModelInstance instance = new ModelInstance(model, place);
-
-				instance.materials.get(0).set(ColorAttribute.createDiffuse(playerToColour(road.getPlayerColour())));
-				instance.transform.scale(0.1f, 0.1f, 0.1f);
-				instance.transform.translate(0, 1.5f, 0);
-				Vector2 compare = edge.getX().get2DPos();
-				Vector2 compareTo = edge.getY().get2DPos();
-
-				if (compare.x != compareTo.x)
-				{
-					if (compare.y > compareTo.y)
-					{
-						instance.transform.rotate(0, 1, 0, -60f);
-					}
-					else
-					{
-						instance.transform.rotate(0, 1, 0, 60f);
-					}
-				}
-				volatileInstances.add(instance);
-			}
-		}
-	}
-
-	private void drawPorts()
-	{
-		Model model = SettlersOfCatan.assets.getModel("port2.g3db");
-
-		List<Port> ports = game.client.getState().getGrid().getPortsAsList();
-		for (Port port : ports)
-		{
-			Vector3 n = port.getX().get3DPos();
-			Vector3 n2 = port.getY().get3DPos();
-
-            ModelInstance instance = new ModelInstance(model, n);
-			ModelInstance instance2 = new ModelInstance(model, n2);
-
-			instance.transform.scale(0.5f, 0.5f, 0.2f);			
-			instance2.transform.scale(0.5f,0.5f,0.2f);
-			instance.transform.translate(0, 1.5f, 0);
-			instance2.transform.translate(0, 1.5f, 0);
-			persistentInstances.add(instance);
-			persistentInstances.add(instance2);
-		}
-	}
-
 
 	@Override
 	public void dispose()

@@ -60,9 +60,9 @@ public class TurnState extends Turn
 		return tradePhase;
 	}
 
-	public void setTradePhase(boolean tradePhase)
+	void setTradePhase()
 	{
-		this.tradePhase = tradePhase;
+		this.tradePhase = true;
 	}
 
 	public boolean hasTurnStarted()
@@ -70,9 +70,9 @@ public class TurnState extends Turn
 		return turnStarted;
 	}
 
-	public void setTurnStarted(boolean turnStarted)
+	void setTurnStarted()
 	{
-		this.turnStarted = turnStarted;
+		this.turnStarted = true;
 	}
 
 	public boolean isInitialPhase()

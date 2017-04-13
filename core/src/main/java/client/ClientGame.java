@@ -245,7 +245,7 @@ public class ClientGame extends Game
 	 */
 	public void processDice(int dice, List<Board.ResourceAllocation> resourceAllocationList)
 	{
-		client.getTurn().setTurnStarted(true);
+		client.getTurn().setTurnStarted();
 		client.getTurn().setRoll(dice);
 		if (dice != 7)
 		{

@@ -66,12 +66,10 @@ public class MessageProcessor
 		logger.logReceivedMessage(msg);
 
 		// If not valid
-		if (!validateMsg(msg, col))
-		{
-			return Events.Event.newBuilder()
+		if (!validateMsg(msg,
+				col)) { return Events.Event.newBuilder()
 						.setError(Events.Event.Error.newBuilder().setDescription("Move unexpected or invalid.").build())
-						.build();
-		}
+						.build(); }
 
 		// switch on message type
 		switch (msg.getTypeCase())
@@ -162,7 +160,7 @@ public class MessageProcessor
 				ev.setResourceChosen(request.getChooseResource());
 				break;
 			case ROLLDICE:
-				if(initialPhase)
+				if (initialPhase)
 				{
 					server.log("Server Proc", "Rolling dice");
 					ev.setRolled(game.generateDiceRoll());
@@ -195,7 +193,7 @@ public class MessageProcessor
 					{
 						game.processPlayerTrade(currentTrade.getTrade());
 					}
-					catch(IllegalTradeException e)
+					catch (IllegalTradeException e)
 					{
 						server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
 					}
@@ -382,7 +380,8 @@ public class MessageProcessor
 			return true;
 		}
 
-		else if((type.equals(Requests.Request.BodyCase.MOVEROBBER) || type.equals(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
+		else if ((type.equals(Requests.Request.BodyCase.MOVEROBBER)
+				|| type.equals(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
 				|| type.equals(Requests.Request.BodyCase.CHOOSERESOURCE)) && !expected.contains(type))
 		{
 			return false;
@@ -393,9 +392,9 @@ public class MessageProcessor
 
 		// If in trade phase and the given message isn't a trade
 		if (tradePhase && game.getCurrentPlayer().equals(col)
-				&& !(type.equals(Requests.Request.BodyCase.INITIATETRADE) ||
-				type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) ||
-				type.equals(Requests.Request.BodyCase.ENDTURN)))
+				&& !(type.equals(Requests.Request.BodyCase.INITIATETRADE)
+						|| type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
+						|| type.equals(Requests.Request.BodyCase.ENDTURN)))
 			return false;
 
 		// If it's not your turn and there are no expected moves from you

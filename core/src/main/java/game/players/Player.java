@@ -272,19 +272,20 @@ public abstract class Player
 
 		// Find out where this road is connected
 		boolean valid = checkRoadsAndAdd(r, listsAddedTo);
-		if(r.getEdge().getX().getBuilding() != null && r.getEdge().getX().getBuilding().getPlayerColour().equals(colour))
+		if (r.getEdge().getX().getBuilding() != null
+				&& r.getEdge().getX().getBuilding().getPlayerColour().equals(colour))
 		{
 			b = r.getEdge().getX().getBuilding();
 		}
-		else if(r.getEdge().getY().getBuilding() != null && r.getEdge().getY().getBuilding().getPlayerColour().equals(colour))
+		else if (r.getEdge().getY().getBuilding() != null
+				&& r.getEdge().getY().getBuilding().getPlayerColour().equals(colour))
 		{
 			b = r.getEdge().getY().getBuilding();
 		}
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		if (b != null || valid
-				|| (getRoads().size() < 2 && b != null)) { return true; }
+		if (b != null || valid || (getRoads().size() < 2 && b != null)) { return true; }
 
 		return false;
 	}

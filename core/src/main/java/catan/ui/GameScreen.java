@@ -5,29 +5,21 @@ import catan.ui.hud.HeadsUpDisplay;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import enums.Colour;
 import enums.ResourceType;
 import game.build.Building;
 import game.build.Road;
-import game.build.Settlement;
 import grid.Edge;
 import grid.Hex;
 import grid.Node;
 import grid.Port;
-
-import java.util.List;
 
 public class GameScreen implements Screen
 {
@@ -53,33 +45,36 @@ public class GameScreen implements Screen
 
 		// camera
 		camera = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		camera.position.set(0f, 8f, -10f);
+		camera.position.set(0f, 8f, -10f); // look from down negative z-axis
 		camera.lookAt(0, 0, 0); // look at centre of world
-		camera.near = 0.01f; // closest distance to be rendered
-		camera.far = 300f; // farthest distance to be rendered
 		camera.update();
 
 		// input processors
 		final InputMultiplexer multiplexer = new InputMultiplexer();
 		camController = new CameraController(camera);
-		hud = new HeadsUpDisplay(game);
+		hud = new HeadsUpDisplay(game.getState());
 		multiplexer.addProcessor(camController);
 		multiplexer.addProcessor(hud);
 		multiplexer.addProcessor(new GameController(camera, game.client));
 		Gdx.input.setInputProcessor(multiplexer);
 
 		// add 3D models that won't change during gameplay
-		final CatanModelFactory factory = new CatanModelFactory(game.assets);
-		persistentInstances.add(factory.getSeaInstance());
-		persistentInstances.add(factory.getIslandInstance());
+		persistentInstances.add(ModelFactory.getSeaInstance());
+		persistentInstances.add(ModelFactory.getIslandInstance());
 
 		for (final Hex hex : game.getState().getGrid().getHexesAsList())
 		{
-			persistentInstances.add(factory.getTerrainInstance(hex.getResource(), hex.get3DPos()));
-			if (hex.getResource().equals(ResourceType.Generic)) continue;
-			persistentInstances.add(factory.getChitInstance(hex));
+			persistentInstances.add(ModelFactory.getHexInstance(hex));
+			if (!hex.getResource().equals(ResourceType.Generic))
+			{
+				persistentInstances.add(ModelFactory.getChitInstance(hex));
+			}
 		}
-		drawPorts();
+
+		for (final Port port : game.getState().getGrid().getPortsAsList())
+		{
+			persistentInstances.add(ModelFactory.getPortInstance(port));
+		}
 	}
 
 	@Override
@@ -101,114 +96,23 @@ public class GameScreen implements Screen
 	private void updateInstancesFromState()
 	{
 		volatileInstances.clear();
-		drawRoads();
-		drawBuildings();
-	}
 
-	private void drawRoads()
-	{
-		Model model = game.assets.getModel("road.g3db");
-
-		List<Edge> edges = game.client.getState().getGrid().getEdgesAsList();
-		for (Edge edge : edges)
+		for (final Node node : game.getState().getGrid().getNodesAsList())
 		{
-			Road road = edge.getRoad();
-
-			if (road != null)
-			{
-				Vector3 place = edge.get3dVectorMidpoint(edge);
-				ModelInstance instance = new ModelInstance(model, place);
-
-				instance.materials.get(0).set(ColorAttribute.createDiffuse(playerToColour(road.getPlayerColour())));
-				instance.transform.scale(0.1f, 0.1f, 0.1f);
-				instance.transform.translate(0, 1.5f, 0);
-				Vector2 compare = edge.getX().get2DPos();
-				Vector2 compareTo = edge.getY().get2DPos();
-
-				if (compare.x != compareTo.x)
-				{
-					if (compare.y > compareTo.y)
-					{
-						instance.transform.rotate(0, 1, 0, -60f);
-					}
-					else
-					{
-						instance.transform.rotate(0, 1, 0, 60f);
-					}
-				}
-				volatileInstances.add(instance);
-			}
-		}
-	}
-
-	private void drawBuildings()
-	{
-		Model model = game.assets.getModel("settlement.g3db");
-		Model modelCity = game.assets.getModel("city.g3db");
-
-		List<Node> nodes = game.client.getState().getGrid().getNodesAsList();
-		for (Node node : nodes)
-		{
-			Vector3 place = node.get3DPos();
-			ModelInstance instance;
-
-			Building building = node.getBuilding();
-
+			final Building building = node.getBuilding();
 			if (building != null)
 			{
-				if (building instanceof Settlement)
-				{
-					instance = new ModelInstance(model, place);
-				}
-				else
-				{
-					instance = new ModelInstance(modelCity, place);
-				}
-
-				instance.materials.get(0).set(ColorAttribute.createDiffuse(playerToColour(building.getPlayerColour())));
-				instance.transform.scale(0.3f, 0.25f, 0.25f);
-				instance.transform.translate(0, 1.5f, 0);
-				volatileInstances.add(instance);
+				volatileInstances.add(ModelFactory.getBuildingInstance(building));
 			}
 		}
-	}
 
-	private void drawPorts()
-	{
-		Model model = game.assets.getModel("port2.g3db");
-
-		List<Port> ports = game.client.getState().getGrid().getPortsAsList();
-		for (Port port : ports)
+		for (final Edge edge : game.getState().getGrid().getEdgesAsList())
 		{
-			Vector3 n = port.getX().get3DPos();
-			Vector3 n2 = port.getY().get3DPos();
-			float xMidpoint = (n.x + n2.x) / 2;
-			float yMidpoint = (n.y + n2.y) / 2;
-
-			Vector3 Midpoint = new Vector3(xMidpoint, 0.1f, yMidpoint);
-			ModelInstance instance = new ModelInstance(model, n);
-			ModelInstance instance2 = new ModelInstance(model, n2);
-			
-			
-			//instance.transform.rotate(0,1f, 0, 45f);
-			instance.transform.scale(0.5f, 0.5f, 0.2f);			
-			instance2.transform.scale(0.5f,0.5f,0.2f);
-			instance.transform.translate(0, 1.5f, 0);
-			instance2.transform.translate(0, 1.5f, 0);
-			persistentInstances.add(instance);
-			persistentInstances.add(instance2);
-		}
-	}
-
-	private static Color playerToColour(final Colour name)
-	{
-		switch (name)
-		{
-			case BLUE:   return Color.BLUE;
-			case RED:    return Color.RED;
-			case WHITE:  return Color.WHITE;
-			case ORANGE: return Color.ORANGE;
-			default:     return null;
+			final Road road = edge.getRoad();
+			if (road != null)
+			{
+				volatileInstances.add(ModelFactory.getRoadInstance(road));
+			}
 		}
 	}
 

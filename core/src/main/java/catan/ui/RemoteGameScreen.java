@@ -51,7 +51,7 @@ public class RemoteGameScreen implements Screen
 			{
 
 				boolean valid = game.startNewRemoteClient(text.getText());
-				if(valid)
+				if (valid)
 				{
 					game.setScreen(new GameScreen(game));
 				}

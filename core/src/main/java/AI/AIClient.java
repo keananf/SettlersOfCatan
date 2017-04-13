@@ -62,7 +62,8 @@ public abstract class AIClient extends Client
 			try
 			{
 				Events.Event ev = acquireLocksAndGetEvents();
-				if(ai.getExpectedEvents().contains(ev.getTypeCase()) || ev.getTypeCase().equals(Events.Event.TypeCase.ERROR))
+				if (ai.getExpectedEvents().contains(ev.getTypeCase())
+						|| ev.getTypeCase().equals(Events.Event.TypeCase.ERROR))
 				{
 					log("Client Proc", "Resuming");
 					ai.resume();

@@ -58,7 +58,7 @@ public class ServerGame extends Game
 		// For each resource type, ensure there is enough to go around
 		for (ResourceType r : ResourceType.values())
 		{
-			if(r.equals(ResourceType.Generic)) continue;
+			if (r.equals(ResourceType.Generic)) continue;
 			int total = bank.getAvailableResources().get(r);
 
 			// Subtract each player's new amount of 'r'
@@ -733,24 +733,24 @@ public class ServerGame extends Game
 		vps.add(DevelopmentCardType.University);
 
 		// Set card reveal
-		for(Player p : getPlayers().values())
+		for (Player p : getPlayers().values())
 		{
 			Lobby.GameWon.CardReveal.Builder reveal = Lobby.GameWon.CardReveal.newBuilder();
 			reveal.setPlayer(Board.Player.newBuilder().setId(p.getId()).build());
 
 			// If is the winner
-			if(p.hasWon())
+			if (p.hasWon())
 			{
 				gameWon.setWinner(reveal.getPlayer());
 			}
 
 			// For each type of VP card
-			for(DevelopmentCardType type : vps)
+			for (DevelopmentCardType type : vps)
 			{
 				int num = p.getDevelopmentCards().containsKey(type) ? p.getDevelopmentCards().get(type) : 0;
 
 				// For the number of this vp card that are revealed
-				for(int i = 0; i < num; i++)
+				for (int i = 0; i < num; i++)
 					reveal.addVPCards(DevelopmentCardType.toProto(type).getVictoryPoint());
 			}
 			gameWon.addHiddenCards(reveal.build());

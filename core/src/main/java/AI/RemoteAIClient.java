@@ -58,8 +58,7 @@ public class RemoteAIClient extends AIClient
 		{
 			conn = new RemoteServerConnection();
 			conn.connect(host, PORT, this);
-			if(conn.isInitialised())
-				log("Client Set-Up", String.format("Connected to: %s", host));
+			if (conn.isInitialised()) log("Client Set-Up", String.format("Connected to: %s", host));
 			setUp(conn);
 		}
 		catch (IOException e)

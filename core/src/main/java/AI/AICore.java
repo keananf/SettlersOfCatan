@@ -36,7 +36,7 @@ public abstract class AICore implements IAI, Runnable
 			try
 			{
 				// Attempt to make a move and send a turn
-				if(!waiting)
+				if (!waiting)
 				{
 					waiting = client.acquireLocksAndPerformMove();
 				}
@@ -200,7 +200,7 @@ public abstract class AICore implements IAI, Runnable
 	private Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> setUpExpectedEvents()
 	{
 		Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> evs = new HashMap<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>>();
-		for(Requests.Request.BodyCase c : Requests.Request.BodyCase.values())
+		for (Requests.Request.BodyCase c : Requests.Request.BodyCase.values())
 		{
 			evs.put(c, new ArrayList<Events.Event.TypeCase>());
 		}

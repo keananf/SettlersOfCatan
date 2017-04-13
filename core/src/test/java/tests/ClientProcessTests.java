@@ -506,27 +506,27 @@ public class ClientProcessTests extends ClientTestHelper
 		assertTrue(clientGame.getBoughtDevCards().get(clientPlayer.getColour()) == 1);
 	}
 
-	 @Test
-	 public void diceAndResourceTest()
-	 {
-	 	Player p = clientPlayer;
-	 	Node n = clientGame.getGrid().getNode(-1, 0);
-	 	int dice = n.getHexes().get(0).getChit();
-	 	ArrayList<Board.ResourceAllocation> list = new ArrayList<Board.ResourceAllocation>();
+	@Test
+	public void diceAndResourceTest()
+	{
+		Player p = clientPlayer;
+		Node n = clientGame.getGrid().getNode(-1, 0);
+		int dice = n.getHexes().get(0).getChit();
+		ArrayList<Board.ResourceAllocation> list = new ArrayList<Board.ResourceAllocation>();
 
-	 	// Build Settlement so resources can be granted
-		 processSettlementEvent(n,p.getColour());
+		// Build Settlement so resources can be granted
+		processSettlementEvent(n, p.getColour());
 		assertEquals(1, p.getSettlements().size());
 
-	 	list.add(Board.ResourceAllocation.newBuilder().setPlayer(Board.Player.newBuilder().setId(p.getId()).build())
-	 		.setResources(processResources(clientGame.getNewResources(dice, p.getColour()))).build());
+		list.add(Board.ResourceAllocation.newBuilder().setPlayer(Board.Player.newBuilder().setId(p.getId()).build())
+				.setResources(processResources(clientGame.getNewResources(dice, p.getColour()))).build());
 
-	 	// Move and check assertEquals(0,
-	 	clientGame.getPlayer().getNumResources();
+		// Move and check assertEquals(0,
+		clientGame.getPlayer().getNumResources();
 		clientGame.processDice(dice, list);
-	 	assertEquals(clientGame.getDice(), dice);
-	 	assertEquals(1,clientGame.getPlayer().getNumResources());
-	 }
+		assertEquals(clientGame.getDice(), dice);
+		assertEquals(1, clientGame.getPlayer().getNumResources());
+	}
 
 	private Resource.Counts processResources(Map<ResourceType, Integer> newResources)
 	{

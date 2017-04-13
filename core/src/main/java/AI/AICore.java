@@ -67,13 +67,10 @@ public abstract class AICore implements IAI, Runnable
 				client.log("Client Play",
 						String.format("%s Chose move %s", getPlayer().getId().name(), turn.getChosenMove().name()));
 			}
-<<<<<<< HEAD
-			client.sendTurn(turn);
-=======
 
 			expectedEventPossibilities = expectedEvents.get(turn.getChosenMove());
 			return client.sendTurn(turn);
->>>>>>> c69fc347754a043f6b0f8dcc2ec960c408715bf0
+
 		}
 		return false;
 	}
@@ -270,12 +267,6 @@ public abstract class AICore implements IAI, Runnable
 	{
 		return client.getTurn();
 	}
-<<<<<<< HEAD
-	
-	private void cleanup()
-	{
-		hasTraded = false;
-=======
 
 	public void resume()
 	{
@@ -285,6 +276,5 @@ public abstract class AICore implements IAI, Runnable
 	public ArrayList<Events.Event.TypeCase> getExpectedEvents()
 	{
 		return expectedEventPossibilities;
->>>>>>> c69fc347754a043f6b0f8dcc2ec960c408715bf0
 	}
 }

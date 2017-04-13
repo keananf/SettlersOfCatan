@@ -717,7 +717,7 @@ public class ClientGame extends Game
 			setCurrentPlayer(getLastPlayer());
 			current--;
 		}
-		else if (turns != NUM_PLAYERS * 2 - 1)
+		else if (turns != Game.NUM_PLAYERS * 2 - 2)
 		{
 			setCurrentPlayer(getNextPlayer());
 			current++;

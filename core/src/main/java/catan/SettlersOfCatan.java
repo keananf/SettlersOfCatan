@@ -1,11 +1,11 @@
 package catan;
 
-import AI.LocalAIClient;
 import AI.RemoteAIClient;
 import catan.ui.AssMan;
 import catan.ui.SplashScreen;
 import client.Client;
 import client.ClientGame;
+import client.LocalClient;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -72,7 +72,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	 */
 	public void startNewServer()
 	{
-		client = new LocalAIClient(this);
+		client = new LocalClient(this);
 		t = new Thread(client);
 		t.start();
 	}

@@ -12,6 +12,7 @@ import intergroup.Events;
 import intergroup.Messages;
 import intergroup.Requests;
 import intergroup.board.Board;
+import intergroup.lobby.Lobby;
 import intergroup.trade.Trade;
 
 import java.io.IOException;
@@ -428,6 +429,11 @@ public class MessageProcessor
 		}
 
 		return valid;
+	}
+
+	public Lobby.GameWon getGameWon()
+	{
+		return game.getGameWon();
 	}
 
 	public boolean isTradePhase()

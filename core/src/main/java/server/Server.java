@@ -94,7 +94,7 @@ public class Server implements Runnable
 
 			if(active)
 			{
-				sendEvents(Event.newBuilder().setGameWon(EmptyOuterClass.Empty.getDefaultInstance()).build());
+				sendEvents(Event.newBuilder().setGameWon(msgProc.getGameWon()).build());
 			}
 		}
 		catch (IOException e)

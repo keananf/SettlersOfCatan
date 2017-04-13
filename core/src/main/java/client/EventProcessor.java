@@ -326,20 +326,20 @@ public class EventProcessor
 		{
 			switch (ev.getDevCardPlayed())
 			{
-				case KNIGHT:
-					getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
-					break;
-				case YEAR_OF_PLENTY:
-					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
-					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
-					break;
-				case ROAD_BUILDING:
-					getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
-					getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
-					break;
-				case MONOPOLY:
-					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
-					break;
+			case KNIGHT:
+				getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
+				break;
+			case YEAR_OF_PLENTY:
+				getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
+				getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
+				break;
+			case ROAD_BUILDING:
+				getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
+				getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
+				break;
+			case MONOPOLY:
+				getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
+				break;
 			}
 		}
 	}
@@ -352,19 +352,20 @@ public class EventProcessor
 		boolean added = false;
 
 		// If initial phase
-		if(getTurn().isInitialPhase())
+		if (getTurn().isInitialPhase())
 		{
-			// If you're the last player, it is your turn, and you have one road, build another settlement
+			// If you're the last player, it is your turn, and you have one
+			// road, build another settlement
 			if (current.getRoads().size() == 1 && current.getId().equals(Board.Player.Id.PLAYER_4))
 			{
-				if(current.getColour().equals(p.getColour()))
+				if (current.getColour().equals(p.getColour()))
 				{
 					client.log("Client initial phase", "Player 4 again");
 					getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
 					added = true;
 				}
 			}
-			else if(getGame().getPlayer(Board.Player.Id.PLAYER_1).getRoads().size() != 2)
+			else if (getGame().getPlayer(Board.Player.Id.PLAYER_1).getRoads().size() != 2)
 			{
 				client.log("Client initial phase", "Updating player");
 
@@ -406,17 +407,17 @@ public class EventProcessor
 	 * 
 	 * @throws IOException
 	 */
-	public Event processMessage(Message msg ) throws Exception
+	public Event processMessage(Message msg) throws Exception
 	{
 		if (msg == null) return null;
 
 		// switch on message type
 		switch (msg.getTypeCase())
 		{
-			// Extract and process event
-			case EVENT:
-				processEvent(msg.getEvent());
-				return msg.getEvent();
+		// Extract and process event
+		case EVENT:
+			processEvent(msg.getEvent());
+			return msg.getEvent();
 		}
 
 		return null;
@@ -424,6 +425,7 @@ public class EventProcessor
 
 	/**
 	 * Blocks and retrieves the next message from the server
+	 * 
 	 * @return the next message
 	 * @throws Exception
 	 */

@@ -10,8 +10,12 @@ import enums.DevelopmentCardType;
 import enums.ResourceType;
 import game.players.Player;
 
-public class HeadsUpDisplay extends Stage {
-	private enum PlayedCard { PlayedKnight }
+public class HeadsUpDisplay extends Stage
+{
+	private enum PlayedCard
+	{
+		PlayedKnight
+	}
 
 	public HeadsUpDisplay(final ClientGame state)
 	{
@@ -31,10 +35,8 @@ public class HeadsUpDisplay extends Stage {
 		{
 			developmentCards.addActor(new Counter<>(type, () -> me.getDevelopmentCards().getOrDefault(type, 0)));
 		}
-		developmentCards.addActor(
-				new Counter<>(
-						PlayedCard.PlayedKnight,
-						() -> me.getPlayedDevCards().getOrDefault(DevelopmentCardType.Knight, 0)));
+		developmentCards.addActor(new Counter<>(PlayedCard.PlayedKnight,
+				() -> me.getPlayedDevCards().getOrDefault(DevelopmentCardType.Knight, 0)));
 		root.add(developmentCards).expand().left();
 
 		/*

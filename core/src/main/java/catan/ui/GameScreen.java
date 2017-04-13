@@ -66,15 +66,15 @@ public class GameScreen implements Screen
 		{
 			persistentInstances.add(ModelFactory.getHexInstance(hex));
 			if (!hex.getResource().equals(ResourceType.Generic))
-            {
-                persistentInstances.add(ModelFactory.getChitInstance(hex));
-            }
+			{
+				persistentInstances.add(ModelFactory.getChitInstance(hex));
+			}
 		}
 
 		for (final Port port : game.getState().getGrid().getPortsAsList())
-        {
-            persistentInstances.add(ModelFactory.getPortInstance(port));
-        }
+		{
+			persistentInstances.add(ModelFactory.getPortInstance(port));
+		}
 	}
 
 	@Override
@@ -97,23 +97,23 @@ public class GameScreen implements Screen
 	{
 		volatileInstances.clear();
 
-        for (final Node node : game.getState().getGrid().getNodesAsList())
-        {
-            final Building building = node.getBuilding();
-            if (building != null)
-            {
-                volatileInstances.add(ModelFactory.getBuildingInstance(building));
-            }
-        }
+		for (final Node node : game.getState().getGrid().getNodesAsList())
+		{
+			final Building building = node.getBuilding();
+			if (building != null)
+			{
+				volatileInstances.add(ModelFactory.getBuildingInstance(building));
+			}
+		}
 
-        for (final Edge edge : game.getState().getGrid().getEdgesAsList())
-        {
-            final Road road = edge.getRoad();
-            if (road != null)
-            {
-                volatileInstances.add(ModelFactory.getRoadInstance(road));
-            }
-        }
+		for (final Edge edge : game.getState().getGrid().getEdgesAsList())
+		{
+			final Road road = edge.getRoad();
+			if (road != null)
+			{
+				volatileInstances.add(ModelFactory.getRoadInstance(road));
+			}
+		}
 	}
 
 	@Override

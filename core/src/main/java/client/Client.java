@@ -202,7 +202,7 @@ public abstract class Client implements Runnable
 		}
 
 		log("Client Play", String.format("Invalid Request %s for %s", turn.getChosenMove().name(),
-					getState().getPlayer().getId().name()));
+				getState().getPlayer().getId().name()));
 		return false;
 	}
 
@@ -343,15 +343,13 @@ public abstract class Client implements Runnable
 		return active;
 	}
 
-
 	public void setActive(boolean active)
 	{
 		this.active = active;
 	}
 
-    public void render()
-    {
-        if(Gdx.graphics != null)
-			Gdx.graphics.requestRendering();
-    }
+	public void render()
+	{
+		if (Gdx.graphics != null) Gdx.graphics.requestRendering();
+	}
 }

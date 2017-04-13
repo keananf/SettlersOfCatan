@@ -34,7 +34,7 @@ class ModelFactory
 			| VertexAttributes.Usage.Normal
 			| VertexAttributes.Usage.TextureCoordinates;
 	private static final Vector3 ORIGIN = new Vector3(0, 0, 0);
-	private static final float GROUND_LEVEL = 0.55f;
+	private static final float GROUND_LEVEL = 0.6f;
 
 	private static final Material WATER = new Material(
 			TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));

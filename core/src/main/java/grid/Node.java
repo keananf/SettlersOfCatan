@@ -77,9 +77,8 @@ public class Node extends GridElement
 	{
 		if (!(other instanceof Node)) return false;
 
-		if (getX() == ((Node) other).getX() && getY() == ((Node) other).getY()) return true;
+		return getX() == ((Node) other).getX() && getY() == ((Node) other).getY();
 
-		return false;
 	}
 
 	@Override
@@ -118,13 +117,8 @@ public class Node extends GridElement
 		int x = getX();
 		int y = getY();
 
-		if (y - 2 * x == 8 || 2 * y - x == 8 || x + y == 8 || y - 2 * x == -8 || 2 * y - x == -8 || x + y == -8) // TODO
-																													// fix
-																													// magic
-																													// numbers
-		{ return true; }
+		return y - 2 * x == 8 || 2 * y - x == 8 || x + y == 8 || y - 2 * x == -8 || 2 * y - x == -8 || x + y == -8;
 
-		return false;
 	}
 
 	/**

@@ -174,9 +174,8 @@ public class Edge implements BoardElement
 		Node n1 = getX(), n2 = getY();
 
 		// If there is a settlement on one of its nodes
-		if (n1.getBuilding() != null || n2.getBuilding() != null) { return true; }
+		return n1.getBuilding() != null || n2.getBuilding() != null;
 
-		return false;
 	}
 
 	@Override
@@ -274,10 +273,9 @@ public class Edge implements BoardElement
 	public boolean isConnected(Edge otherEdge)
 	{
 		// If these two edges share a node
-		if (getX().equals(otherEdge.getX()) || getX().equals(otherEdge.getY()) || getY().equals(otherEdge.getX())
-				|| getY().equals(otherEdge.getY())) { return true; }
+		return getX().equals(otherEdge.getX()) || getX().equals(otherEdge.getY()) || getY().equals(otherEdge.getX())
+				|| getY().equals(otherEdge.getY());
 
-		return false;
 	}
 
 	public Vector3 get3dVectorMidpoint()

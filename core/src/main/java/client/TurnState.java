@@ -1,6 +1,5 @@
 package client;
 
-import enums.ResourceType;
 import game.CurrentTrade;
 import intergroup.Requests;
 

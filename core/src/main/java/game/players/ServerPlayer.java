@@ -61,7 +61,7 @@ public class ServerPlayer extends Player
 	public int buildRoad(Edge edge, Bank bank)
 			throws CannotAffordException, CannotBuildRoadException, RoadExistsException
 	{
-		List<Integer> listsAddedTo = new ArrayList<Integer>();
+		List<Integer> listsAddedTo = new ArrayList<>();
 		Road r = new Road(edge, colour);
 
 		// Road already here. Cannot build
@@ -80,7 +80,7 @@ public class ServerPlayer extends Player
 			// If not connected to any other roads
 			if (listsAddedTo.size() == 0)
 			{
-				List<Road> newList = new ArrayList<Road>();
+				List<Road> newList = new ArrayList<>();
 				newList.add(r);
 				roads.add(newList);
 			}
@@ -219,7 +219,7 @@ public class ServerPlayer extends Player
 	 */
 	public ResourceType takeResource(Player other, ResourceType resource, Bank bank)
 	{
-		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> grant = new HashMap<>();
 
 		// Check the specified resource can be taken
 		if (resource.equals(ResourceType.Generic) || !other.getResources().containsKey(resource)

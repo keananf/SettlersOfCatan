@@ -116,8 +116,8 @@ project(":core") {
 
     tasks.withType(FindBugs) {
         reports {
-            xml.enabled false
-            html.enabled true
+            xml.enabled = false
+            html.enabled = true
         }
         effort = "max"
         reportLevel = "low"

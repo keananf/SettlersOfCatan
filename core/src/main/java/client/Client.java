@@ -45,7 +45,7 @@ public abstract class Client implements Runnable
 	public Client()
 	{
 		thisPlayer = new ClientPlayer(Colour.BLUE, "Default");
-		usersInLobby = new ArrayList<String>(Game.NUM_PLAYERS);
+		usersInLobby = new ArrayList<>(Game.NUM_PLAYERS);
 	}
 
 	@Override

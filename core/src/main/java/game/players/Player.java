@@ -49,12 +49,12 @@ public abstract class Player
 	public Player(Colour colour, String userName)
 	{
 		this.colour = colour;
-		roads = new ArrayList<List<Road>>();
-		recentBoughtCards = new HashMap<DevelopmentCardType, Integer>();
-		settlements = new HashMap<Point, Building>();
-		resources = new HashMap<ResourceType, Integer>();
-		cards = new HashMap<DevelopmentCardType, Integer>();
-		playedDevCards = new HashMap<DevelopmentCardType, Integer>();
+		roads = new ArrayList<>();
+		recentBoughtCards = new HashMap<>();
+		settlements = new HashMap<>();
+		resources = new HashMap<>();
+		cards = new HashMap<>();
+		playedDevCards = new HashMap<>();
 		this.userName = userName;
 
 		// Initialise resources
@@ -141,8 +141,8 @@ public abstract class Player
 	 */
 	public void breakRoad(Edge e, Edge other)
 	{
-		List<Road> newList1 = new ArrayList<Road>();
-		List<Road> newList2 = new ArrayList<Road>();
+		List<Road> newList1 = new ArrayList<>();
+		List<Road> newList2 = new ArrayList<>();
 		boolean isConnected = false;
 		int index = 0;
 
@@ -263,7 +263,7 @@ public abstract class Player
 	 */
 	public boolean canBuildRoad(Edge edge)
 	{
-		List<Integer> listsAddedTo = new ArrayList<Integer>();
+		List<Integer> listsAddedTo = new ArrayList<>();
 		Road r = new Road(edge, colour);
 		Building b = null;
 
@@ -285,9 +285,9 @@ public abstract class Player
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		if (b != null || valid || (getRoads().size() < 2 && b != null)) { return true; }
+		return b != null || valid
+				|| (getRoads().size() < 2 && b != null);
 
-		return false;
 	}
 
 	/**
@@ -346,7 +346,7 @@ public abstract class Player
 	 */
 	public void grantResources(Resource.Counts count, Bank bank) throws CannotAffordException, BankLimitException
 	{
-		Map<ResourceType, Integer> newResources = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> newResources = new HashMap<>();
 		newResources.put(ResourceType.Brick, count.getBrick());
 		newResources.put(ResourceType.Wool, count.getWool());
 		newResources.put(ResourceType.Ore, count.getOre());
@@ -366,7 +366,7 @@ public abstract class Player
 	 */
 	public void spendResources(Resource.Counts count, Bank bank) throws CannotAffordException
 	{
-		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> cost = new HashMap<>();
 		cost.put(ResourceType.Brick, count.getBrick());
 		cost.put(ResourceType.Wool, count.getWool());
 		cost.put(ResourceType.Ore, count.getOre());
@@ -474,7 +474,7 @@ public abstract class Player
 	 */
 	public List<Road> getRoads()
 	{
-		List<Road> total = new ArrayList<Road>();
+		List<Road> total = new ArrayList<>();
 
 		for (List<Road> list : roads)
 			total.addAll(list);

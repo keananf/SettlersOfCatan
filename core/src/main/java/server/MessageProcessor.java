@@ -42,8 +42,8 @@ public class MessageProcessor
 		this.game = game;
 		this.server = server;
 		logger = new Logger();
-		expectedMoves = new HashMap<Colour, List<Requests.Request.BodyCase>>();
-		movesToProcess = new LinkedBlockingQueue<ReceivedMessage>();
+		expectedMoves = new HashMap<>();
+		movesToProcess = new LinkedBlockingQueue<>();
 		for (Colour c : Colour.values())
 		{
 			expectedMoves.put(c, new ArrayList<>());

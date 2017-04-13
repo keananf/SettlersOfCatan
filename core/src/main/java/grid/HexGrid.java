@@ -6,6 +6,7 @@ import enums.ResourceType;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Class describing the hex board
@@ -19,15 +20,15 @@ public class HexGrid
 	public List<Port> ports; // All ports
 	public Hashtable<Point, Node> nodes; // All nodes
 	private Hex hexWithRobber;
-	public static final int SIZE_OF_GRID = 5;
+	private static final int SIZE_OF_GRID = 5;
 
 	public HexGrid(boolean b)
 	{
-		grid = new Hashtable<Point, Hex>();
-		nodes = new Hashtable<Point, Node>();
+		grid = new Hashtable<>();
+		nodes = new Hashtable<>();
 
-		edges = new ArrayList<Edge>();
-		ports = new ArrayList<Port>();
+		edges = new ArrayList<>();
+		ports = new ArrayList<>();
 
 		if (b) initGrid();
 	}
@@ -47,7 +48,7 @@ public class HexGrid
 			for (int y = -SIZE_OF_GRID; y <= SIZE_OF_GRID; y++)
 			{
 				// If in boundaries
-				if (y - 2 * x <= 8 && 2 * y - x <= 8 && x + y <= 8 && y - 2 * x >= -8 && 2 * y - x >= -8 && x + y >= -8)
+				if (inBoundries(x, y))
 				{
 
 					// Condition for whether or not the coordinate is a hex.
@@ -84,7 +85,7 @@ public class HexGrid
 	 */
 	private List<GridElement> getNeighbours(Node node)
 	{
-		List<GridElement> neighbours = new LinkedList<GridElement>();
+		List<GridElement> neighbours = new LinkedList<>();
 
 		// Find all 6 neighbours
 		for (int i = -1; i <= 1; i++)
@@ -115,7 +116,7 @@ public class HexGrid
 		// for each node
 		for (Node node : nodes.values())
 		{
-			List<Hex> adjacentHexes = new LinkedList<Hex>();
+			List<Hex> adjacentHexes = new LinkedList<>();
 			List<GridElement> neighbours = getNeighbours(node);
 
 			// Create both edges AND find the adjacent hexes
@@ -155,7 +156,7 @@ public class HexGrid
 	 */
 	private void makePorts()
 	{
-		List<Edge> portLocations = new ArrayList<Edge>();
+		List<Edge> portLocations = new ArrayList<>();
 		portLocations.add(getEdge(new Point(-5, -3), new Point(-4, -3)));
 		portLocations.add(getEdge(new Point(-3, -5), new Point(-3, -4)));
 		portLocations.add(getEdge(new Point(-1, -4), new Point(0, -4)));
@@ -174,7 +175,7 @@ public class HexGrid
 	 */
 	private Map<Integer, Integer> getChitsAvailable()
 	{
-		Map<Integer, Integer> chitsAvailable = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> chitsAvailable = new HashMap<>();
 		chitsAvailable.put(2, 1);
 		chitsAvailable.put(3, 2);
 		chitsAvailable.put(4, 2);
@@ -195,7 +196,7 @@ public class HexGrid
 	private Map<ResourceType, Integer> getResourcesAvailable()
 	{
 
-		Map<ResourceType, Integer> resourcesAvailable = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> resourcesAvailable = new HashMap<>();
 		resourcesAvailable.put(ResourceType.Brick, 3);
 		resourcesAvailable.put(ResourceType.Grain, 4);
 		resourcesAvailable.put(ResourceType.Ore, 3);
@@ -314,7 +315,7 @@ public class HexGrid
 	 */
 	public List<Hex> getHexesAsList()
 	{
-		List<Hex> hexes = new ArrayList<Hex>();
+		List<Hex> hexes = new ArrayList<>();
 		hexes.addAll(this.grid.values());
 
 		return hexes;
@@ -325,7 +326,7 @@ public class HexGrid
 	 */
 	public List<Port> getPortsAsList()
 	{
-		List<Port> ports = new ArrayList<Port>();
+		List<Port> ports = new ArrayList<>();
 		ports.addAll(this.ports);
 
 		return ports;
@@ -336,7 +337,7 @@ public class HexGrid
 	 */
 	public List<Node> getNodesAsList()
 	{
-		List<Node> nodes = new ArrayList<Node>();
+		List<Node> nodes = new ArrayList<>();
 		nodes.addAll(this.nodes.values());
 
 		return nodes;
@@ -347,7 +348,7 @@ public class HexGrid
 	 */
 	public List<Edge> getEdgesAsList()
 	{
-		List<Edge> edges = new ArrayList<Edge>();
+		List<Edge> edges = new ArrayList<>();
 		edges.addAll(this.edges);
 
 		return edges;
@@ -366,9 +367,8 @@ public class HexGrid
 		// Find nodes and edges
 		Node n1 = getNode(p1.getX(), p1.getY());
 		Node n2 = getNode(p2.getX(), p2.getY());
-		Edge e = n1.findEdge(n2);
 
-		return e;
+		return n1.findEdge(n2);
 	}
 
 	/**
@@ -383,9 +383,8 @@ public class HexGrid
 		// Find nodes and edges
 		Node n1 = getNode((int) p1.getX(), (int) p1.getY());
 		Node n2 = getNode((int) p2.getX(), (int) p2.getY());
-		Edge e = n1.findEdge(n2);
 
-		return e;
+		return n1.findEdge(n2);
 	}
 
 	public void setNodesAndHexes(List<Hex> hexes)
@@ -410,8 +409,7 @@ public class HexGrid
 			// for each row
 			for (int y = -SIZE_OF_GRID; y <= SIZE_OF_GRID; y++)
 			{
-				// If in boundaries
-				if (y - 2 * x <= 8 && 2 * y - x <= 8 && x + y <= 8 && y - 2 * x >= -8 && 2 * y - x >= -8 && x + y >= -8)
+				if (inBoundries(x, y))
 				{
 					// Condition for whether or not the coordinate is a node.
 					if (Math.abs(x + y) % 3 != 0 && x + y != 0)
@@ -432,7 +430,7 @@ public class HexGrid
 	 */
 	public void setPorts(List<Port> ports)
 	{
-		List<Edge> es = new ArrayList<Edge>();
+		List<Edge> es = new ArrayList<>();
 		es.addAll(edges);
 		this.ports = ports;
 
@@ -455,5 +453,18 @@ public class HexGrid
 			}
 		}
 
+	}
+
+	private boolean inBoundries(int x, int y)
+	{
+		Boolean terms[] = {
+				y - 2 * x <= 8,
+				2 * y - x <= 8,
+				x + y <= 8,
+				y - 2 * x >= -8,
+				2 * y - x >= -8,
+				x + y >= -8
+		};
+		return Stream.of(terms).reduce(true, (a, b) -> a && b);
 	}
 }

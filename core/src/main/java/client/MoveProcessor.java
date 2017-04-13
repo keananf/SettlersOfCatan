@@ -39,7 +39,7 @@ public class MoveProcessor
 	 */
 	private List<Turn> getBuildingPossibilities()
 	{
-		List<Turn> moves = new ArrayList<Turn>();
+		List<Turn> moves = new ArrayList<>();
 
 		// This player
 		Player p = getGame().getPlayer();
@@ -91,7 +91,7 @@ public class MoveProcessor
 	public List<Turn> getPossibleMoves()
 	{
 
-		List<Turn> possibilities = new ArrayList<Turn>();
+		List<Turn> possibilities = new ArrayList<>();
 
 		if (getExpectedMoves().contains(Requests.Request.BodyCase.JOINLOBBY))
 		{
@@ -412,8 +412,8 @@ public class MoveProcessor
 	 */
 	public boolean checkInitiateTrade(Turn turn)
 	{
-		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer>(),
-				wanting = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> cost = new HashMap<>(),
+				wanting = new HashMap<>();
 
 		Trade.Kind.Builder builder = Trade.Kind.newBuilder();
 		Trade.Kind initiateTrade = turn.getPlayerTrade() != null ? builder.setPlayer(turn.getPlayerTrade()).build()

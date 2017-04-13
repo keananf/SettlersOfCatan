@@ -1,6 +1,5 @@
 package connection;
 
-import client.Client;
 import intergroup.Messages;
 
 import java.util.concurrent.BlockingQueue;
@@ -13,13 +12,11 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class LocalServerConnection implements IServerConnection
 {
-	private final Client client;
 	private LocalClientConnection conn;
 	protected BlockingQueue<Messages.Message> fromServer;
 
-	public LocalServerConnection(Client client)
+	public LocalServerConnection()
 	{
-		this.client = client;
 		fromServer = new LinkedBlockingQueue<>();
 	}
 

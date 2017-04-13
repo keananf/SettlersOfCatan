@@ -26,7 +26,7 @@ public class LocalAIClientOnServer extends AIClient
 	@Override
 	protected void setUpConnection()
 	{
-		conn = new LocalServerConnection(this);
+		conn = new LocalServerConnection();
 		conn.setConn(new LocalClientConnection(conn));
 		setUp(conn);
 	}

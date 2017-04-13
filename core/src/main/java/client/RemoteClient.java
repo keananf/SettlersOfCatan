@@ -53,7 +53,7 @@ public class RemoteClient extends Client
 		{
 			conn = new RemoteServerConnection();
 			setUp(conn);
-			conn.connect(host, PORT, this);
+			conn.connect(host, PORT);
 		}
 		catch (IOException e)
 		{

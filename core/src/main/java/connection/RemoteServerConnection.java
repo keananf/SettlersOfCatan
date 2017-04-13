@@ -1,6 +1,5 @@
 package connection;
 
-import client.Client;
 import com.badlogic.gdx.Gdx;
 import intergroup.Messages;
 
@@ -15,11 +14,9 @@ import java.net.Socket;
 public class RemoteServerConnection implements IServerConnection
 {
 	private Socket conn;
-	private Client client;
 
-	public void connect(String host, int port, Client client) throws IOException
+	public void connect(String host, int port) throws IOException
 	{
-		this.client = client;
 		conn = new Socket(host, port);
 	}
 

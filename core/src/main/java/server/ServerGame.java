@@ -58,6 +58,7 @@ public class ServerGame extends Game
 		// For each resource type, ensure there is enough to go around
 		for (ResourceType r : ResourceType.values())
 		{
+			if(r.equals(ResourceType.Generic)) continue;
 			int total = bank.getAvailableResources().get(r);
 
 			// Subtract each player's new amount of 'r'
@@ -430,7 +431,7 @@ public class ServerGame extends Game
 		for (Node n : getGrid().getHexWithRobber().getNodes())
 		{
 			// If node has a settlement and it is of the specified colour
-			if (n.getSettlement() != null && n.getSettlement().getPlayerColour().equals(otherColour))
+			if (n.getBuilding() != null && n.getBuilding().getPlayerColour().equals(otherColour))
 			{
 				ServerPlayer p = (ServerPlayer) players.get(currentPlayer);
 				p.takeResource(players.get(otherColour), resource, bank);
@@ -591,7 +592,7 @@ public class ServerGame extends Game
 		// Set settlements and cities
 		for (Node n : grid.nodes.values())
 		{
-			Building building = n.getSettlement();
+			Building building = n.getBuilding();
 			if (building != null && building instanceof Settlement)
 			{
 				Lobby.GameInfo.Settlement.Builder s = Lobby.GameInfo.Settlement.newBuilder();
@@ -719,6 +720,43 @@ public class ServerGame extends Game
 		idsToColours.put(id, newCol);
 		players.put(p.getColour(), p);
 		return p.getColour();
+	}
+
+	/**
+	 * @return the gameWon message with everyone's card reveals
+	 */
+	public Lobby.GameWon getGameWon()
+	{
+		Lobby.GameWon.Builder gameWon = Lobby.GameWon.newBuilder();
+		List<DevelopmentCardType> vps = new ArrayList<>();
+		vps.add(DevelopmentCardType.Library);
+		vps.add(DevelopmentCardType.University);
+
+		// Set card reveal
+		for(Player p : getPlayers().values())
+		{
+			Lobby.GameWon.CardReveal.Builder reveal = Lobby.GameWon.CardReveal.newBuilder();
+			reveal.setPlayer(Board.Player.newBuilder().setId(p.getId()).build());
+
+			// If is the winner
+			if(p.hasWon())
+			{
+				gameWon.setWinner(reveal.getPlayer());
+			}
+
+			// For each type of VP card
+			for(DevelopmentCardType type : vps)
+			{
+				int num = p.getDevelopmentCards().containsKey(type) ? p.getDevelopmentCards().get(type) : 0;
+
+				// For the number of this vp card that are revealed
+				for(int i = 0; i < num; i++)
+					reveal.addVPCards(DevelopmentCardType.toProto(type).getVictoryPoint());
+			}
+			gameWon.addHiddenCards(reveal.build());
+		}
+
+		return gameWon.build();
 	}
 
 	public Map<Colour, Player> getPlayers()

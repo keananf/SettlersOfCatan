@@ -245,35 +245,42 @@ public class ClientGame extends Game
 	 */
 	public void processDice(int dice, List<Board.ResourceAllocation> resourceAllocationList)
 	{
+		client.getTurn().setTurnStarted(true);
+		client.getTurn().setRoll(dice);
 		if (dice != 7)
 		{
-			// For each player's new resources
-			for (Board.ResourceAllocation alloc : resourceAllocationList)
-			{
-				Map<ResourceType, Integer> grant = processResources(alloc.getResources());
-				Player p = getPlayer(alloc.getPlayer().getId());
-				int num = 0;
+			processAllocation(resourceAllocationList);
+		}
+	}
 
-				try
+	protected void processAllocation(List<Board.ResourceAllocation> resourceAllocationList)
+	{
+		// For each player's new resources
+		for (Board.ResourceAllocation alloc : resourceAllocationList)
+		{
+			Map<ResourceType, Integer> grant = processResources(alloc.getResources());
+			Player p = getPlayer(alloc.getPlayer().getId());
+			int num = 0;
+
+			try
+			{
+				if (p.getColour().equals(getPlayer().getColour()))
 				{
-					if (p.getColour().equals(getPlayer().getColour()))
-					{
-						p.grantResources(grant, bank);
-					}
-					else
-					{
-						int existing = resources.containsKey(p.getColour()) ? resources.get(p.getColour()) : 0;
-						for (ResourceType r : grant.keySet())
-						{
-							num += grant.get(r);
-						}
-						resources.put(p.getColour(), existing + num);
-					}
+					p.grantResources(grant, bank);
 				}
-				catch (BankLimitException e)
+				else
 				{
-					e.printStackTrace();
+					int existing = resources.containsKey(p.getColour()) ? resources.get(p.getColour()) : 0;
+					for (ResourceType r : grant.keySet())
+					{
+						num += grant.get(r);
+					}
+					resources.put(p.getColour(), existing + num);
 				}
+			}
+			catch (BankLimitException e)
+			{
+				e.printStackTrace();
 			}
 		}
 	}
@@ -316,8 +323,6 @@ public class ClientGame extends Game
 			else
 			{
 				int existing = resources.get(player.getColour());
-				if (existing - Road.getRoadCost().size() < 0) { throw new CannotAffordException(
-						String.format("Player %s cannot afford this road.", player.getColour().name())); }
 				resources.put(player.getColour(), existing - Road.getRoadCost().size());
 			}
 		}
@@ -344,7 +349,7 @@ public class ClientGame extends Game
 		Player player = getPlayer(instigator.getId());
 
 		// If invalid coordinates
-		if (node == null || (node.getSettlement() != null && node.getSettlement() instanceof City))
+		if (node == null || (node.getBuilding() != null && node.getBuilding() instanceof City))
 			throw new InvalidCoordinatesException(city.getX(), city.getY());
 
 		// Handle resources
@@ -358,8 +363,6 @@ public class ClientGame extends Game
 			int cost = 0;
 			for (ResourceType r : City.getCityCost().keySet())
 				cost += City.getCityCost().get(r);
-			if (existing - cost < 0) { throw new CannotAffordException(
-					String.format("Player %s cannot afford this city.", player.getColour().name())); }
 			resources.put(player.getColour(), existing - cost);
 		}
 
@@ -386,9 +389,9 @@ public class ClientGame extends Game
 		Player player = getPlayer(instigator.getId());
 
 		// If invalid coordinates
-		if (node == null || (node.getSettlement() != null
-				&& node.getSettlement() instanceof Settlement)) { throw new InvalidCoordinatesException(
-						settlement.getX(), settlement.getY()); }
+		if (node == null || (node.getBuilding() != null
+				&& node.getBuilding() instanceof Settlement)) { throw new InvalidCoordinatesException(settlement.getX(),
+						settlement.getY()); }
 
 		// Spend resources if this is not an initial move
 		if (player.getSettlements().size() >= 2)
@@ -400,8 +403,6 @@ public class ClientGame extends Game
 			else
 			{
 				int existing = resources.get(player.getColour());
-				if (existing - Settlement.getSettlementCost().size() < 0) { throw new CannotAffordException(
-						String.format("Player %s cannot afford this settlement.", player.getColour().name())); }
 				resources.put(player.getColour(), existing - Settlement.getSettlementCost().size());
 			}
 		}
@@ -473,8 +474,6 @@ public class ClientGame extends Game
 		else
 		{
 			int existing = resources.get(player.getColour());
-			if (existing - DevelopmentCardType.getCardCost().size() < 0) { throw new CannotAffordException(
-					String.format("Player %s cannot afford this development card.", player.getColour().name())); }
 			resources.put(player.getColour(), existing - DevelopmentCardType.getCardCost().size());
 		}
 
@@ -512,8 +511,6 @@ public class ClientGame extends Game
 		else
 		{
 			int existing = resources.get(player.getColour());
-			if (existing - offeringSize + wantingSize < 0) { throw new CannotAffordException(
-					String.format("Player %s cannot afford this trade.", player.getColour().name())); }
 			resources.put(player.getColour(), existing - offeringSize + wantingSize);
 		}
 	}
@@ -557,10 +554,6 @@ public class ClientGame extends Game
 		else
 		{
 			int existing1 = resources.get(instigator.getColour()), existing2 = resources.get(recipient.getColour());
-			if (existing1 - offeringSize + wantingSize < 0) { throw new CannotAffordException(
-					String.format("%s cannot afford this trade. %d %d %d", instigator.getId().name(), existing1, offeringSize, wantingSize)); }
-			if (existing2 + offeringSize - wantingSize < 0) { throw new CannotAffordException(
-					String.format("%s cannot afford this trade.", recipient.getId().name())); }
 			resources.put(instigator.getColour(), existing1 + wantingSize - offeringSize);
 			resources.put(recipient.getColour(), existing2 - wantingSize + offeringSize);
 		}
@@ -589,9 +582,6 @@ public class ClientGame extends Game
 			int sum = 0;
 			for (ResourceType r : processResources(cardsDiscarded).keySet())
 				sum += processResources(cardsDiscarded).get(r);
-			if (existing - sum < 0 || existing - sum > 7) { throw new CannotAffordException(
-					String.format("Invalid discard for Player %s. Before %s. After %s", player.getColour().name(),
-							existing, existing - processResources(cardsDiscarded).size())); }
 			resources.put(player.getColour(), existing - sum);
 		}
 	}
@@ -634,8 +624,6 @@ public class ClientGame extends Game
 		else
 		{
 			int existing1 = resources.get(instigator.getColour()), existing2 = resources.get(victim.getColour());
-			if (existing2 - quantity < 0) { throw new CannotAffordException(
-					String.format("Player %s cannot afford this steal.", instigator.getColour().name())); }
 			resources.put(instigator.getColour(), existing1 + quantity);
 			resources.put(victim.getColour(), existing2 - quantity);
 		}
@@ -741,4 +729,8 @@ public class ClientGame extends Game
 		return turns;
 	}
 
+	public int getDice()
+	{
+		return client.getTurn().getRoll();
+	}
 }

@@ -1,6 +1,6 @@
 package catan.ui;
 
-import client.ClientGame;
+import game.Game;
 import grid.BoardElement;
 import grid.Hex;
 import grid.Node;
@@ -21,7 +21,6 @@ import java.util.List;
 class GameController implements InputProcessor
 {
 	private final Camera camera;
-	private final MoveBuilder moveBuilder;
 
 	private List<Hex> hexes;
 	private List<Node> nodes;
@@ -31,14 +30,9 @@ class GameController implements InputProcessor
 	private final static float DETECTION_Y = 0.1f;
 	private final static Plane DETECTION_PLANE = new Plane(new Vector3(0, 1, 0), new Vector3(0, DETECTION_Y, 0));
 
-	GameController(GameScreen screen)
+	GameController(final Camera camera, final Game state)
 	{
-		this.camera = screen.cam;
-		this.moveBuilder = new MoveBuilder(screen.game.client);
-	}
-
-	public void setUp(ClientGame state)
-	{
+		this.camera = camera;
 		this.hexes = state.getGrid().getHexesAsList();
 		this.nodes = state.getGrid().getNodesAsList();
 		this.edges = state.getGrid().getEdgesAsList();
@@ -55,7 +49,7 @@ class GameController implements InputProcessor
 		BoardElement element = findElement(intersectionPoint.x, intersectionPoint.z);
 		if (element == null) return false;
 
-		moveBuilder.onSelect(element);
+		// moveBuilder.onSelect(element);
 
 		return true;
 	}

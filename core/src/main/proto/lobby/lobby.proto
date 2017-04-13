@@ -58,6 +58,7 @@ message GameInfo {
     }
 }
 
+
 // When the game server is ready to begin the game, it sends a
 // GameSetup event to all players
 message GameSetup {
@@ -81,5 +82,15 @@ message GameSetup {
             BROWN = 5;
         }
     }
+}
+
+message GameWon {
+	board.Player winner = 1;
+	repeated CardReveal hiddenCards = 2;
+
+	message CardReveal {
+		board.Player player = 1;
+		repeated board.VictoryPoint VPCards = 2;
+	}
 }
 

@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * Class which determines move possibilities based upon a game state
- * 
+ *
  * @author 140001596
  */
 public class MoveProcessor
@@ -34,7 +34,7 @@ public class MoveProcessor
 
 	/**
 	 * Retrieve a list of all building possibilities, regardless of game context
-	 * 
+	 *
 	 * @return a list of all possible building turns
 	 */
 	private List<Turn> getBuildingPossibilities()
@@ -49,31 +49,33 @@ public class MoveProcessor
 		// For each node
 		for (Node n : getGame().getGrid().nodes.values())
 		{
-			if (!checkBuild(n)) continue;
-
 			Turn turn = new Turn();
-			if (n.getSettlement() == null)
+			if (n.getBuilding() == null)
 			{
 				turn.setChosenNode(n);
 				turn.setChosenMove(Requests.Request.BodyCase.BUILDSETTLEMENT);
 
 			}
-			else if (n.getSettlement() != null)
+			else if (n.getBuilding() != null)
 			{
 				turn.setChosenNode(n);
 				turn.setChosenMove(Requests.Request.BodyCase.BUILDCITY);
 			}
-			moves.add(turn);
+
+			if(checkBuild(turn))
+			{
+				moves.add(turn);
+			}
 		}
 
 		// For each edge
 		for (Edge e : getGame().getGrid().getEdgesAsList())
 		{
 			Turn turn = new Turn();
-			if (checkBuildRoad(e))
+			turn.setChosenEdge(e);
+			turn.setChosenMove(Requests.Request.BodyCase.BUILDROAD);
+			if (checkBuildRoad(turn))
 			{
-				turn.setChosenEdge(e);
-				turn.setChosenMove(Requests.Request.BodyCase.BUILDROAD);
 				moves.add(turn);
 			}
 		}
@@ -83,7 +85,7 @@ public class MoveProcessor
 
 	/**
 	 * Processes a turn and ascertains all possible moves
-	 * 
+	 *
 	 * @return list of possible choices from this proposed turn
 	 */
 	public List<Turn> getPossibleMoves()
@@ -96,7 +98,8 @@ public class MoveProcessor
 			possibilities.add(new Turn(Requests.Request.BodyCase.JOINLOBBY));
 			return possibilities;
 		}
-		if (getGame() == null) return possibilities;
+		if (getGame() == null)
+			return possibilities;
 		else
 		{
 			// Add initial possibilities
@@ -119,7 +122,7 @@ public class MoveProcessor
 		if (getExpectedMoves().isEmpty() && checkTurn())
 		{
 			// So as to not spam requests
-			if(getTurn().getCurrentTrade() == null)
+			if (getTurn().getCurrentTrade() == null)
 			{
 				possibilities.add(new Turn(Requests.Request.BodyCase.INITIATETRADE));
 				possibilities.add(new Turn(Requests.Request.BodyCase.ENDTURN));
@@ -133,11 +136,11 @@ public class MoveProcessor
 		// Check owned dev cards
 		for (DevelopmentCardType type : getGame().getPlayer().getDevelopmentCards().keySet())
 		{
-			if (checkPlayDevCard(type))
+			Turn turn = new Turn();
+			turn.setChosenMove(Requests.Request.BodyCase.PLAYDEVCARD);
+			turn.setChosenCard(type);
+			if (checkPlayDevCard(turn))
 			{
-				Turn turn = new Turn();
-				turn.setChosenMove(Requests.Request.BodyCase.PLAYDEVCARD);
-				turn.setChosenCard(type);
 				possibilities.add(turn);
 			}
 		}
@@ -145,12 +148,13 @@ public class MoveProcessor
 		// For every owned resource type
 		for (ResourceType r : ResourceType.values())
 		{
+			Turn turn = new Turn();
+			turn.setChosenMove(Requests.Request.BodyCase.CHOOSERESOURCE);
+			turn.setChosenResource(r);
+
 			if (r.equals(ResourceType.Generic)) continue;
-			if (checkChosenResource(r))
+			if (checkChosenResource(turn))
 			{
-				Turn turn = new Turn();
-				turn.setChosenMove(Requests.Request.BodyCase.CHOOSERESOURCE);
-				turn.setChosenResource(r);
 				possibilities.add(turn);
 			}
 		}
@@ -158,11 +162,12 @@ public class MoveProcessor
 		// For every hex
 		for (Hex h : getGame().getGrid().grid.values())
 		{
-			if (checkHex(h))
+			Turn turn = new Turn();
+			turn.setChosenHex(h);
+			turn.setChosenMove(Requests.Request.BodyCase.MOVEROBBER);
+
+			if (checkHex(turn))
 			{
-				Turn turn = new Turn();
-				turn.setChosenHex(h);
-				turn.setChosenMove(Requests.Request.BodyCase.MOVEROBBER);
 				possibilities.add(turn);
 			}
 		}
@@ -171,14 +176,15 @@ public class MoveProcessor
 		boolean valid = false;
 		for (Node n : getGame().getGrid().getHexWithRobber().getNodes())
 		{
-			if (n.getSettlement() == null) continue;
+			if (n.getBuilding() == null) continue;
 
-			Colour c = n.getSettlement().getPlayerColour();
-			if (checkTarget(c))
+			Colour c = n.getBuilding().getPlayerColour();
+			Turn turn = new Turn();
+			turn.setTarget(c);
+			turn.setChosenMove(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+
+			if (checkTarget(turn))
 			{
-				Turn turn = new Turn();
-				turn.setTarget(c);
-				turn.setChosenMove(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
 				possibilities.add(turn);
 				valid = true;
 			}
@@ -200,11 +206,12 @@ public class MoveProcessor
 		// For each response type
 		for (Trade.Response resp : Trade.Response.values())
 		{
-			if (checkSendResponse(resp))
+			Turn turn = new Turn();
+			turn.setChosenMove(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
+			turn.setTradeResponse(resp);
+
+			if (checkSendResponse(turn))
 			{
-				Turn turn = new Turn();
-				turn.setChosenMove(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
-				turn.setTradeResponse(resp);
 				turn.setPlayerTrade(getTurn().getCurrentTrade().getTrade());
 				possibilities.add(turn);
 			}
@@ -214,99 +221,100 @@ public class MoveProcessor
 
 	/**
 	 * Checks that a MOVEROBBER move is valid
-	 * 
-	 * @param hex the chosen hex
+	 *
+	 * @param turn the chosen hex
 	 * @return whether or not the move is valid
 	 */
-	private boolean checkHex(Hex hex)
+	private boolean checkHex(Turn turn)
 	{
 		boolean val = false;
+		Hex hex = turn.getChosenHex();
 
 		// Check there is indeed a foreign settlement on one of the hexes nodes
 		for (Node n : hex.getNodes())
 		{
-			// If there is a foreign settlement, or NO settlement
-			if ((n.getSettlement() != null
-					&& !n.getSettlement().getPlayerColour().equals(getGame().getPlayer().getColour()))
-					|| n.getSettlement() == null)
+			if (n.getBuilding() != null && !n.getBuilding().getPlayerColour().equals(getGame().getPlayer().getColour())
+					&& getGame().getPlayerResources(n.getBuilding().getPlayerColour()) > 0)
 			{
-				val = true;
+				val = getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER);
 			}
 		}
 
 		// Ensure this hex doesn't already have the robber, and that the move is
 		// expected
-		return checkTurn() && !hex.equals(getGame().getGrid().getHexWithRobber()) && val
-				&& (!getExpectedMoves().isEmpty() && getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER));
+		return checkTurn() && !hex.equals(getGame().getGrid().getHexWithRobber()) && val && isExpected(turn);
 	}
 
 	/**
 	 * Checks that a MOVEROBBER move is valid
-	 * 
-	 * @param resources the chosen resources
+	 *
+	 * @param turn the chosen resources
 	 * @return whether or not the move is valid
 	 */
-	private boolean checkDiscard(Map<ResourceType, Integer> resources)
+	private boolean checkDiscard(Turn turn)
 	{
 		int sum = 0;
+		Map<ResourceType, Integer> resources = turn.getChosenResources();
 		for (ResourceType r : resources.keySet())
 		{
 			sum += resources.get(r);
 		}
 		client.log("Client Play", String.format("%d - %d for %s", getGame().getPlayer().getNumResources(), sum,
 				getGame().getPlayer().getId().name()));
-		sum = getGame().getPlayer().getNumResources() - sum;
 
 		// Ensure that a discard is expected, and that the discard can be
 		// afforded and that it brings the user
 		// into a safe position having 7 or less resources.
-		return (!getExpectedMoves().isEmpty()
-				&& getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
-				&& getGame().getPlayer().canAfford(resources) && sum <= 7;
+		return !getExpectedMoves().isEmpty()
+				&& isExpected(turn) && getGame().getPlayer().canAfford(resources)
+				&& sum*2 <= getGame().getPlayer().getNumResources();
 	}
 
 	/**
 	 * Checks that a SUBMITTARGETPLAYER move is valid
-	 * 
-	 * @param target the target
+	 *
+	 * @param turn the target
 	 * @return whether or not the move is valid
 	 */
-	private boolean checkTarget(Colour target)
+	private boolean checkTarget(Turn turn)
 	{
+		Colour target = turn.getTarget();
+
 		// Ensure that a SUBMITTARGETPLAYER move is expected, and that the
-		// player
-		// has resources
-		return (checkTurn() && getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
+		// player has resources
+		return (checkTurn() && isExpected(turn) && getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
 				&& !target.equals(getGame().getPlayer().getColour()));
 	}
 
 	/**
 	 * Checks that a CHOOSERESOURCE move is valid
-	 * 
-	 * @param r the resource in question
+	 *
+	 * @param turn the resource in question
 	 * @return whether or not the move is valid
 	 */
-	private boolean checkChosenResource(ResourceType r)
+	private boolean checkChosenResource(Turn turn)
 	{
+		ResourceType r = turn.getChosenResource();
+
 		// Ensure that a CHOOSE RESOURCE move is expected, and that the bank
 		// has the requested resource available
-		return !r.equals(ResourceType.Generic) && (getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE)
-				&& getGame().getBank().getAvailableResources().get(r) > 0);
+		return isExpected(turn) && getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE)
+				&& getGame().getBank().getAvailableResources().get(r) > 0;
 	}
 
 	/**
 	 * Checks the player can play the given card
-	 * 
-	 * @param type the type of card wanting to be played
+	 *
+	 * @param turn the type of card wanting to be played
 	 */
-	private boolean checkPlayDevCard(DevelopmentCardType type)
+	private boolean checkPlayDevCard(Turn turn)
 	{
+		DevelopmentCardType type = turn.getChosenCard();
 		if (type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University)) return false;
 
 		// If player's turn and no other moves are expected, or it is the start
 		// of their turn
-		if (checkTurn()
-				&& (getExpectedMoves().isEmpty() || getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE)))
+		if (checkTurn() && isExpected(turn))
 		{
 			Player player = getGame().getPlayer();
 
@@ -328,23 +336,23 @@ public class MoveProcessor
 	 */
 	private boolean checkBuyDevCard()
 	{
+		Turn turn = new Turn(Requests.Request.BodyCase.BUYDEVCARD);
+
 		// If its the user's turn, they have no expected moves, and
-		return checkTurn() && getExpectedMoves().isEmpty()
+		return checkTurn() && isExpected(turn)
 				&& getGame().getPlayer().canAfford(DevelopmentCardType.getCardCost());
 	}
 
 	/**
 	 * Checks if a city or settlement can be built on the given nodeS
-	 * 
-	 * @param node the desired settlement / city location
+	 *
+	 * @param turn the desired settlement / city location
 	 */
-	private boolean checkBuild(Node node)
+	private boolean checkBuild(Turn turn)
 	{
 		Player p = getGame().getPlayer();
-		return checkTurn() && ((getExpectedMoves().isEmpty() && (p.canBuildSettlement(node) || p.canBuildCity(node)))
-				|| (getExpectedMoves().contains(Requests.Request.BodyCase.BUILDSETTLEMENT)
-						&& p.canBuildSettlement(node))
-				|| (getExpectedMoves().contains(Requests.Request.BodyCase.BUILDCITY) && p.canBuildCity(node)));
+		Node node = turn.getChosenNode();
+		return checkTurn() && (isExpected(turn) && (p.canBuildSettlement(node) || p.canBuildCity(node)));
 	}
 
 	/**
@@ -357,25 +365,26 @@ public class MoveProcessor
 
 	/**
 	 * Checks to see if the player can build a road
-	 * 
-	 * @param edge the desired road location
+	 *
+	 * @param turn the desired road location
 	 */
-	private boolean checkBuildRoad(Edge edge)
+	private boolean checkBuildRoad(Turn turn)
 	{
-		return checkTurn() && getGame().getPlayer().canBuildRoad(edge)
-				&& (getGame().getPlayer().getRoads().size() < 2 || getGame().getPlayer().canAfford(Road.getRoadCost()))
-				&& (getExpectedMoves().isEmpty() || getExpectedMoves().contains(Requests.Request.BodyCase.BUILDROAD));
+		Edge edge = turn.getChosenEdge();
+		return checkTurn() && getGame().getPlayer().canBuildRoad(edge) && isExpected(turn) &&
+				(getGame().getPlayer().getRoads().size() < 2 || getGame().getPlayer().canAfford(Road.getRoadCost()));
 	}
 
 	/**
 	 * Checks to see if the player can submit a trade response
-	 * 
+	 *
 	 * @return whether or not this is a valid move
-	 * @param response the response
+	 * @param turn the response
 	 */
-	private boolean checkSendResponse(Trade.Response response)
+	private boolean checkSendResponse(Turn turn)
 	{
 		boolean val = false;
+		Trade.Response response = turn.getTradeResponse();
 
 		CurrentTrade t = getTurn().getCurrentTrade();
 		if (t != null && getTurn().isTradePhase() && t.getTrade().getOther().getId() == getGame().getPlayer().getId())
@@ -388,9 +397,9 @@ public class MoveProcessor
 			// If the move is expected, and the response is accept AND the
 			// player can afford it.
 			// OR if it is reject.
-			val = getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
-					&& ((response.equals(Trade.Response.ACCEPT) && getGame().getPlayer().canAfford(costMap))
-					|| (response.equals(Trade.Response.REJECT)));
+			val = isExpected(turn) &&
+					((response.equals(Trade.Response.ACCEPT) && getGame().getPlayer().canAfford(costMap))
+							|| (response.equals(Trade.Response.REJECT)));
 		}
 
 		return val;
@@ -398,14 +407,18 @@ public class MoveProcessor
 
 	/**
 	 * Checks whether or not the player can trade the following trade
-	 * 
-	 * @param initiateTrade the initiate trade request
+	 *
+	 * @param turn the initiate trade request
 	 * @return whether or not the trade is valid
 	 */
-	public boolean checkInitiateTrade(Trade.Kind initiateTrade)
+	public boolean checkInitiateTrade(Turn turn)
 	{
 		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer>(),
 				wanting = new HashMap<ResourceType, Integer>();
+
+		Trade.Kind.Builder builder = Trade.Kind.newBuilder();
+		Trade.Kind initiateTrade = turn.getPlayerTrade() != null ? builder.setPlayer(turn.getPlayerTrade()).build()
+				: builder.setBank(turn.getBankTrade()).build();
 
 		switch (initiateTrade.getTradeCase())
 		{
@@ -420,13 +433,13 @@ public class MoveProcessor
 		}
 
 		// If both the player and the bank can afford the given trade
-		return getGame().getPlayer().canAfford(cost) && getGame().getBank().canAfford(wanting);
+		return isExpected(turn) && getGame().getPlayer().canAfford(cost) && getGame().getBank().canAfford(wanting);
 	}
 
 	/**
 	 * Checks that the given player is currently able to make a move of the
 	 * given type
-	 * 
+	 *
 	 * @param turn the message
 	 * @return true / false depending on legality of move
 	 */
@@ -435,7 +448,7 @@ public class MoveProcessor
 		Requests.Request.BodyCase type = turn.getChosenMove();
 		if (type == null) return false;
 
-		if (!getExpectedMoves().isEmpty() && getExpectedMoves().contains(type))
+		if (getExpectedMoves().contains(type))
 		{
 			return true;
 		}
@@ -444,8 +457,8 @@ public class MoveProcessor
 		else if (!getExpectedMoves().isEmpty()) return false;
 
 		// If in trade phase and the given message isn't a trade
-		if (getTurn().isTradePhase() && ((checkTurn() &&
-				!(type.equals(Requests.Request.BodyCase.INITIATETRADE) || type.equals(Requests.Request.BodyCase.ENDTURN)))
+		if (getTurn().isTradePhase() && ((checkTurn() && !(type.equals(Requests.Request.BodyCase.INITIATETRADE)
+				|| type.equals(Requests.Request.BodyCase.ENDTURN)))
 				|| (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !checkTurn()))) { return false; }
 
 		// If it's not your turn and there are no expected moves from you
@@ -454,7 +467,7 @@ public class MoveProcessor
 
 	/**
 	 * Ensures the request is valid at this current stage of the game
-	 * 
+	 *
 	 * @param turn the request polled from the queue
 	 * @return a boolean indicating success or not
 	 */
@@ -471,36 +484,34 @@ public class MoveProcessor
 		{
 		case BUILDCITY:
 		case BUILDSETTLEMENT:
-			val = checkBuild(turn.getChosenNode());
+			val = checkBuild(turn);
 			break;
 		case BUILDROAD:
-			val = checkBuildRoad(turn.getChosenEdge());
+			val = checkBuildRoad(turn);
 			break;
 		case BUYDEVCARD:
 			val = checkBuyDevCard();
 			break;
 		case PLAYDEVCARD:
-			val = checkPlayDevCard(turn.getChosenCard());
+			val = checkPlayDevCard(turn);
 			break;
 		case SUBMITTARGETPLAYER:
-			val = checkTarget(turn.getTarget());
+			val = checkTarget(turn);
 			break;
 		case DISCARDRESOURCES:
-			val = checkDiscard(turn.getChosenResources());
+			val = checkDiscard(turn);
 			break;
 		case MOVEROBBER:
-			val = checkHex(turn.getChosenHex());
+			val = checkHex(turn);
 			break;
 		case CHOOSERESOURCE:
-			val = checkChosenResource(turn.getChosenResource());
+			val = checkChosenResource(turn);
 			break;
 		case SUBMITTRADERESPONSE:
-			val = checkSendResponse(turn.getTradeResponse());
+			val = checkSendResponse(turn);
 			break;
 		case INITIATETRADE:
-			val = turn.getBankTrade() == null
-					? checkInitiateTrade(Trade.Kind.newBuilder().setPlayer(turn.getPlayerTrade()).build())
-					: checkInitiateTrade(Trade.Kind.newBuilder().setBank(turn.getBankTrade()).build());
+			val = checkInitiateTrade(turn);
 			break;
 
 		case JOINLOBBY:

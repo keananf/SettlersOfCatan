@@ -48,27 +48,32 @@ public class EventProcessor
 			break;
 		case CITYBUILT:
 			getGame().processNewCity(ev.getCityBuilt(), ev.getInstigator());
+			client.render();
 			break;
 		case SETTLEMENTBUILT:
 			getGame().processNewSettlement(ev.getSettlementBuilt(), ev.getInstigator());
+			client.render();
 			break;
 		case ROADBUILT:
 			getGame().processRoad(ev.getRoadBuilt(), ev.getInstigator());
+			client.render();
 			break;
 		case ROLLED:
 			int roll = ev.getRolled().getA() + ev.getRolled().getB();
-			getTurn().setTurnStarted(true);
-			getTurn().setRoll(roll);
 			getGame().processDice(roll, ev.getRolled().getResourceAllocationList());
+			client.render();
 			break;
 		case ROBBERMOVED:
 			getGame().moveRobber(ev.getRobberMoved());
+			client.render();
 			break;
 		case DEVCARDBOUGHT:
 			getGame().recordDevCard(ev.getDevCardBought(), ev.getInstigator());
+			client.render();
 			break;
 		case DEVCARDPLAYED:
 			getGame().processPlayedDevCard(ev.getDevCardPlayed(), ev.getInstigator());
+			client.render();
 			break;
 		case BEGINGAME:
 			client.setGame(new ClientGame(client));
@@ -105,6 +110,7 @@ public class EventProcessor
 				Trade.WithPlayer trade = ev.getPlayerTradeAccepted();
 				getGame().processPlayerTrade(trade, ev.getInstigator());
 			}
+			client.render();
 			break;
 		case PLAYERTRADEREJECTED:
 			client.log("Client Play", "Player Trade rejected");
@@ -115,15 +121,23 @@ public class EventProcessor
 			break;
 		case CARDSDISCARDED:
 			getGame().processDiscard(ev.getCardsDiscarded(), ev.getInstigator());
+			client.render();
 			break;
 		case MONOPOLYRESOLUTION:
 			getGame().processMonopoly(ev.getMonopolyResolution(), ev.getInstigator());
+			client.render();
 			break;
 		case RESOURCECHOSEN:
 			getGame().processResourceChosen(ev.getResourceChosen(), ev.getInstigator());
+			client.render();
 			break;
 		case RESOURCESTOLEN:
 			getGame().processResourcesStolen(ev.getResourceStolen(), ev.getInstigator());
+			client.render();
+			break;
+		case INITIALALLOCATION:
+			getGame().processAllocation(ev.getInitialAllocation().getResourceAllocationList());
+			client.render();
 			break;
 		case ERROR:
 			client.log("Client Error", String.format("Error Message: %s", ev.getError().getDescription()));
@@ -136,12 +150,13 @@ public class EventProcessor
 
 	/**
 	 * Updates the expected moves for this player based upon the event
+	 * 
 	 * @param ev the event that was just received from the server
 	 */
 	private void updateExpectedMoves(Event ev)
 	{
 		if (ev == null || ev.getTypeCase().equals(Event.TypeCase.TYPE_NOT_SET)
-						|| (getGame() == null && !(ev.getTypeCase().equals(Event.TypeCase.BEGINGAME)
+				|| (getGame() == null && !(ev.getTypeCase().equals(Event.TypeCase.BEGINGAME)
 						|| ev.getTypeCase().equals(Event.TypeCase.GAMEINFO)
 						|| ev.getTypeCase().equals(Event.TypeCase.LOBBYUPDATE))))
 			return;
@@ -298,18 +313,20 @@ public class EventProcessor
 			break;
 		case PLAYERTRADEREJECTED:
 		case PLAYERTRADEACCEPTED:
-			if (getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE) &&
-					ev.getPlayerTradeInitiated().getOther().getId() == getGame().getPlayer().getId())
+			if (getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
+					&& ev.getPlayerTradeInitiated().getOther().getId() == getGame().getPlayer().getId())
 			{
-				client.log("Client Play", String.format("Removing SUBMITTRADERESPONSE from %s", ev.getPlayerTradeInitiated().getOther().getId().name()));
+				client.log("Client Play", String.format("Removing SUBMITTRADERESPONSE from %s",
+						ev.getPlayerTradeInitiated().getOther().getId().name()));
 				getExpectedMoves().remove(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
 			}
 			break;
 		case PLAYERTRADEINITIATED:
-			if(ev.getPlayerTradeInitiated().getOther().getId() == getGame().getPlayer().getId() &&
-					!getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
+			if (ev.getPlayerTradeInitiated().getOther().getId() == getGame().getPlayer().getId()
+					&& !getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
 			{
-				client.log("Client Play", String.format("Adding SUBMITTRADERESPONSE to %s", ev.getPlayerTradeInitiated().getOther().getId().name()));
+				client.log("Client Play", String.format("Adding SUBMITTRADERESPONSE to %s",
+						ev.getPlayerTradeInitiated().getOther().getId().name()));
 				getExpectedMoves().add(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
 			}
 			break;
@@ -348,20 +365,30 @@ public class EventProcessor
 	 * 
 	 * @throws IOException
 	 */
-	public void processMessage() throws Exception
+	public Event processMessage(Message msg ) throws Exception
 	{
-		Message msg = conn.getMessageFromServer();
-
-		if (msg == null) return;
+		if (msg == null) return null;
 
 		// switch on message type
 		switch (msg.getTypeCase())
 		{
-		// Extract and process event
-		case EVENT:
-			processEvent(msg.getEvent());
-			break;
+			// Extract and process event
+			case EVENT:
+				processEvent(msg.getEvent());
+				return msg.getEvent();
 		}
+
+		return null;
+	}
+
+	/**
+	 * Blocks and retrieves the next message from the server
+	 * @return the next message
+	 * @throws Exception
+	 */
+	public Message getNextMessage() throws Exception
+	{
+		return conn.getMessageFromServer();
 	}
 
 	private ClientGame getGame()

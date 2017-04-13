@@ -109,7 +109,7 @@ public abstract class Player
 				{
 					// Find if the joined node has a settlement on it
 					Node joinedNode = e.getX().equals(e2.getX()) || e.getX().equals(e2.getY()) ? e.getX() : e.getY();
-					Building building = joinedNode.getSettlement();
+					Building building = joinedNode.getBuilding();
 
 					// If there is a settlement and it is not foreign, then the
 					// join is not broken
@@ -272,13 +272,13 @@ public abstract class Player
 
 		// Find out where this road is connected
 		boolean valid = checkRoadsAndAdd(r, listsAddedTo);
-		if(r.getEdge().getX().getSettlement() != null && r.getEdge().getX().getSettlement().getPlayerColour().equals(colour))
+		if(r.getEdge().getX().getBuilding() != null && r.getEdge().getX().getBuilding().getPlayerColour().equals(colour))
 		{
-			b = r.getEdge().getX().getSettlement();
+			b = r.getEdge().getX().getBuilding();
 		}
-		else if(r.getEdge().getY().getSettlement() != null && r.getEdge().getY().getSettlement().getPlayerColour().equals(colour))
+		else if(r.getEdge().getY().getBuilding() != null && r.getEdge().getY().getBuilding().getPlayerColour().equals(colour))
 		{
-			b = r.getEdge().getY().getSettlement();
+			b = r.getEdge().getY().getBuilding();
 		}
 
 		// Check the location is valid for building and that the player can
@@ -301,7 +301,7 @@ public abstract class Player
 		Settlement s = new Settlement(node, colour);
 
 		return (canAfford(Settlement.getSettlementCost()) || getSettlements().size() < MIN_SETTLEMENTS)
-				&& !settlements.containsKey(p) && node.getSettlement() == null && !s.isNearSettlement()
+				&& !settlements.containsKey(p) && node.getBuilding() == null && !s.isNearSettlement()
 				&& (node.isNearRoad(colour) || getSettlements().size() < MIN_SETTLEMENTS);
 	}
 
@@ -441,6 +441,11 @@ public abstract class Player
 	 */
 	public boolean hasWon()
 	{
+		// Add the card reveal
+		int vp = this.vp;
+		vp += cards.containsKey(DevelopmentCardType.University) ? cards.get(DevelopmentCardType.University) : 0;
+		vp += cards.containsKey(DevelopmentCardType.Library) ? cards.get(DevelopmentCardType.Library) : 0;
+
 		return vp >= VP_THRESHOLD;
 	}
 
@@ -533,7 +538,7 @@ public abstract class Player
 		Node node = b.getNode();
 		Point point = new Point(node.getX(), node.getY());
 
-		node.setSettlement(b);
+		node.setBuilding(b);
 		addVp(1);
 		settlements.put(point, b);
 	}
@@ -553,22 +558,6 @@ public abstract class Player
 		// Update recent bought caught
 		existing = recentBoughtCards.containsKey(type) ? recentBoughtCards.get(type) : 0;
 		recentBoughtCards.put(type, existing + 1);
-
-		// Grant VP point if necessary
-		if (type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University))
-		{
-			existing = playedDevCards.containsKey(DevelopmentCardType.Library)
-					? playedDevCards.get(DevelopmentCardType.Library) : 0;
-			playedDevCards.put(DevelopmentCardType.Library, existing + 1);
-			vp++;
-		}
-		else if (type.equals(DevelopmentCardType.University))
-		{
-			existing = playedDevCards.containsKey(DevelopmentCardType.University)
-					? playedDevCards.get(DevelopmentCardType.University) : 0;
-			playedDevCards.put(DevelopmentCardType.University, existing + 1);
-			vp++;
-		}
 	}
 
 	/**

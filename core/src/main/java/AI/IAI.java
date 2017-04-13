@@ -43,7 +43,7 @@ public interface IAI
 	 * TurnProcessor to send to the server. Every ai function must be called
 	 * from within the call hierarchy that his function is the root of.
 	 */
-	void performMove();
+	boolean performMove();
 
 	/**
 	 * Given this being a valid move, analyse if this is good based on the game

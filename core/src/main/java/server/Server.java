@@ -6,10 +6,13 @@ import com.badlogic.gdx.Gdx;
 import connection.LocalClientConnection;
 import connection.RemoteClientConnection;
 import enums.Colour;
+import enums.ResourceType;
 import exceptions.GameFullException;
 import game.CurrentTrade;
 import game.Game;
 import game.players.Player;
+import game.players.ServerPlayer;
+import grid.Hex;
 import intergroup.EmptyOuterClass;
 import intergroup.Events;
 import intergroup.Events.Event;
@@ -68,9 +71,9 @@ public class Server implements Runnable
 			waitForJoinLobby();
 			broadcastBoard();
 			getInitialSettlementsAndRoads();
+			allocateInitialResources();
 
-			Thread.sleep(500);
-			log("Server Start", "%n%nAll players Connected. Beginning play.%n");
+			log("\n\nServer Start", "All players Connected. Beginning play.\n");
 			while (active && !game.isOver())
 			{
 				try
@@ -95,10 +98,10 @@ public class Server implements Runnable
 
 			if(active)
 			{
-				sendEvents(Event.newBuilder().setGameWon(EmptyOuterClass.Empty.getDefaultInstance()).build());
+				sendEvents(Event.newBuilder().setGameWon(msgProc.getGameWon()).build());
 			}
 		}
-		catch (IOException | InterruptedException e)
+		catch (IOException e)
 		{
 			e.printStackTrace();
 			log("Server Setup", "Error connecting players");
@@ -230,9 +233,9 @@ public class Server implements Runnable
 		case RESOURCECHOSEN:
 		case MONOPOLYRESOLUTION:
 		case CARDSDISCARDED:
+		case INITIALALLOCATION:
 			broadcastEvent(event);
 			break;
-
 
 		// Sent individually, so ignore
 		case PLAYERTRADEREJECTED:
@@ -338,14 +341,14 @@ public class Server implements Runnable
 		// If no remote players
 		if (numConnections == Game.NUM_PLAYERS && active)
 		{
-			log("Server Setup", "All Players connected. Starting game...%n");
+			log("Server Setup", "All Players connected. Starting game...\n");
 			return;
 		}
 
 		serverSocket = new ServerSocket();
 		serverSocket.bind(new InetSocketAddress("localhost", PORT));
 		log("Server Setup",
-				String.format("Server started. Waiting for client(s)...%s%n", serverSocket.getInetAddress()));
+				String.format("Server started. Waiting for client(s)...%s\n", serverSocket.getInetAddress()));
 
 		// Loop until all players found
 		while (active && numConnections < Game.NUM_PLAYERS)
@@ -371,7 +374,7 @@ public class Server implements Runnable
 
 		if(active && numConnections == Game.NUM_PLAYERS)
 		{
-			log("Server Setup", "All Players connected. Starting game...%n");
+			log("Server Setup", "All Players connected. Starting game...\n");
 		}
 	}
 
@@ -465,14 +468,43 @@ public class Server implements Runnable
 		{
 			log("Server Initial Phase", String.format("Player %s receive initial moves", current.name()));
 			receiveInitialMoves(game.getPlayer(current).getColour());
-			sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 
-			if (i > 0) current = Board.Player.Id.values()[i - 1];
+			if (i > 0)
+			{
+				sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
+				current = Board.Player.Id.values()[i - 1];
+			}
 		}
 
 		// Add roll dice to start the game off
 		game.setCurrentPlayer(game.getPlayer(Board.Player.Id.PLAYER_1).getColour());
 		getExpectedMoves(game.getCurrentPlayer()).add(Requests.Request.BodyCase.ROLLDICE);
+		msgProc.initialPhase = true;
+		sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
+	}
+
+	/**
+	 * Give the player one of each resource which pertains to the second built settlement
+	 */
+	private void allocateInitialResources() throws IOException
+	{
+		Board.InitialResourceAllocation.Builder allocs = Board.InitialResourceAllocation.newBuilder();
+		for(Player p : game.getPlayers().values())
+		{
+			Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+			for(Hex h : ((ServerPlayer)p).getSettlementForInitialResources().getNode().getHexes())
+			{
+				int existing = resources.containsKey(h.getResource()) ? resources.get(h.getResource()) : 0;
+				resources.put(h.getResource(), existing + 1);
+			}
+
+			Board.ResourceAllocation.Builder alloc = Board.ResourceAllocation.newBuilder();
+			alloc.setPlayer(Board.Player.newBuilder().setId(p.getId()).build());
+			alloc.setResources(game.processResources(resources));
+			allocs.addResourceAllocation(alloc.build());
+		}
+
+		sendEvents(Event.newBuilder().setInitialAllocation(allocs.build()).build());
 	}
 
 	/**
@@ -610,7 +642,7 @@ public class Server implements Runnable
 		{
 			sendMessage(msg, recipient);
 		}
-		if(connections.containsKey(player))
+		if (connections.containsKey(player))
 		{
 			sendMessage(msg, player);
 		}
@@ -636,7 +668,7 @@ public class Server implements Runnable
 		{
 			sendMessage(msg, recipient);
 		}
-		if(connections.containsKey(player))
+		if (connections.containsKey(player))
 		{
 			sendMessage(msg, player);
 		}

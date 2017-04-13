@@ -38,6 +38,11 @@ message ResourceAllocation {
     Player player = 1;
     resource.Counts resources = 2;
 }
+
+message InitialResourceAllocation {
+    repeated ResourceAllocation resourceAllocation = 1;
+}
+
 enum PlayableDevCard {
   KNIGHT = 0;
   ROAD_BUILDING = 1;

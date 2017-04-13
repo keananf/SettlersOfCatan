@@ -436,6 +436,11 @@ public abstract class Player
 	 */
 	public boolean hasWon()
 	{
+		// Add the card reveal
+		int vp = this.vp;
+		vp += cards.containsKey(DevelopmentCardType.University) ? cards.get(DevelopmentCardType.University) : 0;
+		vp += cards.containsKey(DevelopmentCardType.Library) ? cards.get(DevelopmentCardType.Library) : 0;
+
 		return vp >= VP_THRESHOLD;
 	}
 
@@ -545,22 +550,6 @@ public abstract class Player
 		// Update recent bought caught
 		existing = recentBoughtCards.containsKey(type) ? recentBoughtCards.get(type) : 0;
 		recentBoughtCards.put(type, existing + 1);
-
-		// Grant VP point if necessary
-		if (type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University))
-		{
-			existing = playedDevCards.containsKey(DevelopmentCardType.Library)
-					? playedDevCards.get(DevelopmentCardType.Library) : 0;
-			playedDevCards.put(DevelopmentCardType.Library, existing + 1);
-			vp++;
-		}
-		else if (type.equals(DevelopmentCardType.University))
-		{
-			existing = playedDevCards.containsKey(DevelopmentCardType.University)
-					? playedDevCards.get(DevelopmentCardType.University) : 0;
-			playedDevCards.put(DevelopmentCardType.University, existing + 1);
-			vp++;
-		}
 	}
 
 	/**

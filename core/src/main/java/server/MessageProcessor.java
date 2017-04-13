@@ -1,10 +1,7 @@
 package server;
 
 import enums.Colour;
-import exceptions.BankLimitException;
-import exceptions.CannotAffordException;
-import exceptions.IllegalBankTradeException;
-import exceptions.IllegalPortTradeException;
+import exceptions.*;
 import game.CurrentTrade;
 import game.players.Player;
 import intergroup.EmptyOuterClass;
@@ -12,6 +9,7 @@ import intergroup.Events;
 import intergroup.Messages;
 import intergroup.Requests;
 import intergroup.board.Board;
+import intergroup.lobby.Lobby;
 import intergroup.trade.Trade;
 
 import java.io.IOException;
@@ -192,7 +190,16 @@ public class MessageProcessor
 						&& !currentTrade.isExpired())
 				{
 					ev.setPlayerTradeAccepted(currentTrade.getTrade());
-					game.processPlayerTrade(currentTrade.getTrade());
+
+					try
+					{
+						game.processPlayerTrade(currentTrade.getTrade());
+					}
+					catch(IllegalTradeException e)
+					{
+						server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
+					}
+
 					currentTrade = null;
 				}
 				else if (currentTrade != null && (request.getSubmitTradeResponse().equals(Trade.Response.REJECT)
@@ -428,6 +435,11 @@ public class MessageProcessor
 		}
 
 		return valid;
+	}
+
+	public Lobby.GameWon getGameWon()
+	{
+		return game.getGameWon();
 	}
 
 	public boolean isTradePhase()

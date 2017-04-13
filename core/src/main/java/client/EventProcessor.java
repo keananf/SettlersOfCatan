@@ -60,8 +60,6 @@ public class EventProcessor
 			break;
 		case ROLLED:
 			int roll = ev.getRolled().getA() + ev.getRolled().getB();
-			getTurn().setTurnStarted(true);
-			getTurn().setRoll(roll);
 			getGame().processDice(roll, ev.getRolled().getResourceAllocationList());
 			client.render();
 			break;
@@ -135,6 +133,10 @@ public class EventProcessor
 			break;
 		case RESOURCESTOLEN:
 			getGame().processResourcesStolen(ev.getResourceStolen(), ev.getInstigator());
+			client.render();
+			break;
+		case INITIALALLOCATION:
+			getGame().processAllocation(ev.getInitialAllocation().getResourceAllocationList());
 			client.render();
 			break;
 		case ERROR:

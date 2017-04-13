@@ -722,6 +722,43 @@ public class ServerGame extends Game
 		return p.getColour();
 	}
 
+	/**
+	 * @return the gameWon message with everyone's card reveals
+	 */
+	public Lobby.GameWon getGameWon()
+	{
+		Lobby.GameWon.Builder gameWon = Lobby.GameWon.newBuilder();
+		List<DevelopmentCardType> vps = new ArrayList<>();
+		vps.add(DevelopmentCardType.Library);
+		vps.add(DevelopmentCardType.University);
+
+		// Set card reveal
+		for(Player p : getPlayers().values())
+		{
+			Lobby.GameWon.CardReveal.Builder reveal = Lobby.GameWon.CardReveal.newBuilder();
+			reveal.setPlayer(Board.Player.newBuilder().setId(p.getId()).build());
+
+			// If is the winner
+			if(p.hasWon())
+			{
+				gameWon.setWinner(reveal.getPlayer());
+			}
+
+			// For each type of VP card
+			for(DevelopmentCardType type : vps)
+			{
+				int num = p.getDevelopmentCards().containsKey(type) ? p.getDevelopmentCards().get(type) : 0;
+
+				// For the number of this vp card that are revealed
+				for(int i = 0; i < num; i++)
+					reveal.addVPCards(DevelopmentCardType.toProto(type).getVictoryPoint());
+			}
+			gameWon.addHiddenCards(reveal.build());
+		}
+
+		return gameWon.build();
+	}
+
 	public Map<Colour, Player> getPlayers()
 	{
 		return players;

@@ -661,7 +661,7 @@ public class DevelopmentCardTests extends TestHelper
 		assertFalse(p.getDevelopmentCards().containsKey(DevelopmentCardType.Library));
 		assertEquals(0, p.getVp());
 		p.buyDevelopmentCard(DevelopmentCardType.Library, game.getBank());
-		assertEquals(1, p.getVp());
+		assertEquals(0, p.getVp());
 		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.Library) == 1);
 	}
 
@@ -675,7 +675,7 @@ public class DevelopmentCardTests extends TestHelper
 		assertFalse(p.getDevelopmentCards().containsKey(DevelopmentCardType.University));
 		assertEquals(0, p.getVp());
 		p.buyDevelopmentCard(DevelopmentCardType.University, game.getBank());
-		assertEquals(1, p.getVp());
+		assertEquals(0, p.getVp());
 		assertTrue(p.getDevelopmentCards().get(DevelopmentCardType.University) == 1);
 	}
 }

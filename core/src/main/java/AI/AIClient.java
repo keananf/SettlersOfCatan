@@ -8,7 +8,6 @@ import intergroup.Events;
 public abstract class AIClient extends Client
 {
 	protected AICore ai;
-	private Thread aiThread;
 
 	public AIClient(Difficulty difficulty, SettlersOfCatan game)
 	{
@@ -53,7 +52,7 @@ public abstract class AIClient extends Client
 	public void run()
 	{
 		active = true;
-		aiThread = new Thread(ai);
+		Thread aiThread = new Thread(ai);
 		aiThread.start();
 
 		// Loop processing events when needed and sending turns

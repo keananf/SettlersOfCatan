@@ -65,7 +65,7 @@ public class GameScreen implements Screen
 		hud = new HeadsUpDisplay(game);
 		multiplexer.addProcessor(camController);
 		multiplexer.addProcessor(hud);
-		multiplexer.addProcessor(new GameController(camera, game.getState()));
+		multiplexer.addProcessor(new GameController(camera, game.client));
 		Gdx.input.setInputProcessor(multiplexer);
 
 		// add 3D models that won't change during gameplay

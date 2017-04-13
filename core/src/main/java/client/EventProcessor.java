@@ -1,14 +1,13 @@
 package client;
 
 import connection.IServerConnection;
+import game.CurrentTrade;
 import game.Game;
 import game.players.Player;
-import intergroup.Events;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import intergroup.Requests;
 import intergroup.board.Board;
-import game.CurrentTrade;
 import intergroup.trade.Trade;
 
 import java.io.IOException;
@@ -167,77 +166,17 @@ public class EventProcessor
 		switch (ev.getTypeCase())
 		{
 		case LOBBYUPDATE:
-			if (ev.getLobbyUpdate().getUsernameList().contains(client.getPlayer().getUsername()))
-			{
-				if (getExpectedMoves().contains(Requests.Request.BodyCase.JOINLOBBY))
-				{
-					client.log("Client Play", "Removing JOINLOBBY for " + ev.getInstigator().getId().name());
-					getExpectedMoves().remove(Requests.Request.BodyCase.JOINLOBBY);
-				}
-			}
+			handleLobby(ev);
 			break;
-
-		// Add expected moves based on recently played dev card
 		case DEVCARDPLAYED:
-		{
-			if (ev.getInstigator().getId() == getGame().getPlayer().getId())
-			{
-				switch (ev.getDevCardPlayed())
-				{
-				case KNIGHT:
-					getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
-					break;
-				case YEAR_OF_PLENTY:
-					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
-					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
-					break;
-				case ROAD_BUILDING:
-					getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
-					getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
-					break;
-				case MONOPOLY:
-					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
-					break;
-				}
-			}
+			handleDevCard(ev);
 			break;
-		}
-
 		case ROLLED:
-			getTurn().setInitialPhase(false);
-			int dice = ev.getRolled().getA() + ev.getRolled().getB();
-			if (dice == 7)
-			{
-				if (getGame().getPlayer().getNumResources() > 7)
-				{
-					getExpectedMoves().add(Requests.Request.BodyCase.DISCARDRESOURCES);
-				}
-				if (ev.getInstigator().getId().getNumber() == getGame().getPlayer().getId().getNumber())
-				{
-					getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
-				}
-			}
-			if (ev.getInstigator().getId() == getGame().getPlayer().getId()
-					&& getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE))
-			{
-				getExpectedMoves().remove(Requests.Request.BodyCase.ROLLDICE);
-			}
+			handleDice(ev);
 			break;
-
-		// Expect for the player to send a steal request next
 		case ROBBERMOVED:
-			if (getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
-			{
-				getExpectedMoves().add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
-			}
-			if (ev.getInstigator().getId() == getGame().getPlayer().getId()
-					&& getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER))
-			{
-				getExpectedMoves().remove(Requests.Request.BodyCase.MOVEROBBER);
-			}
+			handleRobber(ev);
 			break;
-
-		// Remove expected moves if necessary
 		case MONOPOLYRESOLUTION:
 		case RESOURCECHOSEN:
 			if (ev.getInstigator().getId() == getGame().getPlayer().getId()
@@ -257,19 +196,7 @@ public class EventProcessor
 			handleRoad(ev);
 			break;
 		case SETTLEMENTBUILT:
-			if (getGame().getPlayer().getRoads().size() < 2
-					&& getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
-			{
-				client.log("Client initial phase",
-						String.format("Adding BUILDROAD to expected moves for %s", ev.getInstigator().getId().name()));
-				getTurn().setInitialPhase(true);
-				getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
-			}
-			if (ev.getInstigator().getId() == getGame().getPlayer().getId()
-					&& getExpectedMoves().contains(Requests.Request.BodyCase.BUILDSETTLEMENT))
-			{
-				getExpectedMoves().remove(Requests.Request.BodyCase.BUILDSETTLEMENT);
-			}
+			handleSettlement(ev);
 			break;
 		case RESOURCESTOLEN:
 			if (ev.getInstigator().getId() == getGame().getPlayer().getId()
@@ -324,6 +251,96 @@ public class EventProcessor
 		// No new expected moves
 		default:
 			break;
+		}
+	}
+
+	private void handleRobber(Event ev)
+	{
+		// Expect for the player to send a steal request next
+		if (getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
+		{
+			getExpectedMoves().add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+		}
+		if (ev.getInstigator().getId() == getGame().getPlayer().getId()
+				&& getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER))
+		{
+			getExpectedMoves().remove(Requests.Request.BodyCase.MOVEROBBER);
+		}
+	}
+
+	private void handleLobby(Event ev)
+	{
+		if (ev.getLobbyUpdate().getUsernameList().contains(client.getPlayer().getUsername()))
+		{
+			if (getExpectedMoves().contains(Requests.Request.BodyCase.JOINLOBBY))
+			{
+				client.log("Client Play", "Removing JOINLOBBY for " + ev.getInstigator().getId().name());
+				getExpectedMoves().remove(Requests.Request.BodyCase.JOINLOBBY);
+			}
+		}
+	}
+
+	private void handleDice(Event ev)
+	{
+		getTurn().setInitialPhase(false);
+		int dice = ev.getRolled().getA() + ev.getRolled().getB();
+		if (dice == 7)
+		{
+			if (getGame().getPlayer().getNumResources() > 7)
+			{
+				getExpectedMoves().add(Requests.Request.BodyCase.DISCARDRESOURCES);
+			}
+			if (ev.getInstigator().getId().getNumber() == getGame().getPlayer().getId().getNumber())
+			{
+				getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
+			}
+		}
+		if (ev.getInstigator().getId() == getGame().getPlayer().getId()
+				&& getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE))
+		{
+			getExpectedMoves().remove(Requests.Request.BodyCase.ROLLDICE);
+		}
+	}
+
+	private void handleSettlement(Event ev)
+	{
+		if (getGame().getPlayer().getRoads().size() < 2
+				&& getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
+		{
+			client.log("Client initial phase",
+					String.format("Adding BUILDROAD to expected moves for %s", ev.getInstigator().getId().name()));
+			getTurn().setInitialPhase(true);
+			getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
+		}
+		if (ev.getInstigator().getId() == getGame().getPlayer().getId()
+				&& getExpectedMoves().contains(Requests.Request.BodyCase.BUILDSETTLEMENT))
+		{
+			getExpectedMoves().remove(Requests.Request.BodyCase.BUILDSETTLEMENT);
+		}
+	}
+
+	private void handleDevCard(Event ev)
+	{
+		// Add expected moves based on recently played dev card
+		if (ev.getInstigator().getId() == getGame().getPlayer().getId())
+		{
+			switch (ev.getDevCardPlayed())
+			{
+				case KNIGHT:
+					getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
+					break;
+				case YEAR_OF_PLENTY:
+					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
+					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
+					break;
+				case ROAD_BUILDING:
+					getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
+					getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
+					break;
+				case MONOPOLY:
+					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
+					break;
+			}
 		}
 	}
 

@@ -53,6 +53,9 @@ public abstract class Client implements Runnable
 	{
 		active = true;
 
+		Turn turn = new Turn(Requests.Request.BodyCase.JOINLOBBY);
+		acquireLocksAndSendTurn(turn);
+
 		// Loop processing events when needed and sending turns
 		while (active && (getState() == null || !getState().isOver()))
 		{

@@ -46,24 +46,19 @@ class ModelFactory
 	private static final Pixmap fontPixmap = new Pixmap(Gdx.files.internal(data.imagePaths[0]));
 
 	private static final ModelBuilder builder = new ModelBuilder();
-	private static final Model SEA, ISLAND, GRAIN, ORE, WOOL, LUMBER, BRICK, GENERIC, PORT, ROAD, SETTLEMENT, CITY;
 
-	static
-	{
-		final ModelBuilder builder = new ModelBuilder();
-		SEA = builder.createCylinder(150f, 0f, 150f, 6, WATER, DEFAULT_ATTRS);
-		ISLAND = builder.createCylinder(11f, 1f, 11f, 6, DIRT, DEFAULT_ATTRS);
-		GRAIN = SettlersOfCatan.assets.getModel("grain.g3db");
-		ORE = SettlersOfCatan.assets.getModel("ore.g3db");
-		WOOL = SettlersOfCatan.assets.getModel("wool.g3db");
-		LUMBER = SettlersOfCatan.assets.getModel("Lumber.g3db");
-		GENERIC = SettlersOfCatan.assets.getModel("Desert.g3db");
-        BRICK = SettlersOfCatan.assets.getModel("Mine2.g3db");
-        PORT = SettlersOfCatan.assets.getModel("port.g3db");
-        ROAD = SettlersOfCatan.assets.getModel("road.g3db");
-        SETTLEMENT = SettlersOfCatan.assets.getModel("settlement.g3db");
-        CITY = SettlersOfCatan.assets.getModel("city.g3db");
-	}
+    private static final Model SEA = builder.createCylinder(150f, 0f, 150f, 6, WATER, DEFAULT_ATTRS);
+    private static final Model ISLAND = builder.createCylinder(11f, 1f, 11f, 6, DIRT, DEFAULT_ATTRS);
+    private static final Model GRAIN = SettlersOfCatan.assets.getModel("grain.g3db");
+    private static final Model ORE = SettlersOfCatan.assets.getModel("ore.g3db");
+    private static final Model WOOL = SettlersOfCatan.assets.getModel("wool.g3db");
+    private static final Model LUMBER = SettlersOfCatan.assets.getModel("lumber.g3db");
+    private static final Model GENERIC = SettlersOfCatan.assets.getModel("desert.g3db");
+    private static final Model BRICK = SettlersOfCatan.assets.getModel("mine.g3db");
+    private static final Model PORT = SettlersOfCatan.assets.getModel("port.g3db");
+    private static final Model ROAD = SettlersOfCatan.assets.getModel("road.g3db");
+    private static final Model SETTLEMENT = SettlersOfCatan.assets.getModel("settlement.g3db");
+    private static final Model CITY = SettlersOfCatan.assets.getModel("city.g3db");
 
 	static ModelInstance getSeaInstance()
 	{

@@ -21,7 +21,7 @@ public class Node extends GridElement
 	public Node(int x, int y)
 	{
 		super(x, y);
-		edges = new ArrayList<Edge>(3);
+		edges = new ArrayList<>(3);
 	}
 
 	/**

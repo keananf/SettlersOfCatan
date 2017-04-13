@@ -35,7 +35,7 @@ public abstract class Building implements IBuildable
 	 */
 	public Map<ResourceType, Integer> calculateResources(int diceRoll)
 	{
-		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> resources = new HashMap<>();
 
 		int numOfResource = this instanceof City ? 2 : 1;
 

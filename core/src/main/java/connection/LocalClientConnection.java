@@ -18,7 +18,7 @@ public class LocalClientConnection implements IClientConnection
 	public LocalClientConnection(LocalServerConnection conn)
 	{
 		this.conn = conn;
-		fromClient = new LinkedBlockingQueue<Messages.Message>();
+		fromClient = new LinkedBlockingQueue<>();
 	}
 
 	@Override

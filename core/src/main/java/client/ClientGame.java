@@ -38,9 +38,9 @@ public class ClientGame extends Game
 	{
 		super();
 		grid = null;
-		boughtDevCards = new HashMap<Colour, Integer>();
-		resources = new HashMap<Colour, Integer>();
-		playedDevCards = new HashMap<Colour, Map<DevelopmentCardType, Integer>>();
+		boughtDevCards = new HashMap<>();
+		resources = new HashMap<>();
+		playedDevCards = new HashMap<>();
 		chatBoard = new ChatBoard();
 
 		// Instantiate the playedDevCards maps
@@ -48,7 +48,7 @@ public class ClientGame extends Game
 		{
 			resources.put(c, 0);
 			boughtDevCards.put(c, 0);
-			playedDevCards.put(c, new HashMap<DevelopmentCardType, Integer>());
+			playedDevCards.put(c, new HashMap<>());
 
 			for (DevelopmentCardType d : DevelopmentCardType.values())
 			{
@@ -175,7 +175,7 @@ public class ClientGame extends Game
 	 */
 	private List<Hex> processHexes(List<Board.Hex> protos)
 	{
-		List<Hex> hexes = new ArrayList<Hex>();
+		List<Hex> hexes = new ArrayList<>();
 
 		// Add nodes
 		for (Board.Hex proto : protos)
@@ -193,7 +193,7 @@ public class ClientGame extends Game
 	 */
 	private List<Port> processPorts(List<Board.Harbour> protos)
 	{
-		List<Port> ports = new ArrayList<Port>();
+		List<Port> ports = new ArrayList<>();
 
 		// Add ports
 		for (Board.Harbour harbour : protos)
@@ -603,7 +603,7 @@ public class ClientGame extends Game
 		if (quantity == 0) return;
 
 		// Update resources
-		Map<ResourceType, Integer> stolen = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> stolen = new HashMap<>();
 		stolen.put(r, quantity);
 
 		// Handle resources for this player
@@ -657,7 +657,7 @@ public class ClientGame extends Game
 
 		if (p.equals(getPlayer()))
 		{
-			Map<ResourceType, Integer> map = new HashMap<ResourceType, Integer>();
+			Map<ResourceType, Integer> map = new HashMap<>();
 			map.put(ResourceType.fromProto(resource), 1);
 			p.grantResources(map, bank);
 		}

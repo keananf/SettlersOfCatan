@@ -29,7 +29,7 @@ public class Settlement extends Building
 	 */
 	public Map<ResourceType, Integer> getCost()
 	{
-		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> resources = new HashMap<>();
 
 		resources.put(ResourceType.Brick, 1);
 		resources.put(ResourceType.Lumber, 1);

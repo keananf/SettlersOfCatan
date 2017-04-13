@@ -85,7 +85,7 @@ public abstract class AICore implements IAI, Runnable
 	@Override
 	public List<Turn> rankMoves(List<Turn> moves)
 	{
-		List<Turn> optimalMoves = new ArrayList<Turn>();
+		List<Turn> optimalMoves = new ArrayList<>();
 		int maxRank = -1;
 
 		if (moves == null) return null;
@@ -182,7 +182,7 @@ public abstract class AICore implements IAI, Runnable
 	{
 		List<Turn> options = client.getMoveProcessor().getPossibleMoves();
 
-		List<Turn> ret = new ArrayList<Turn>();
+		List<Turn> ret = new ArrayList<>();
 		ret.addAll(options);
 
 		// Eliminate trades and chats
@@ -199,10 +199,10 @@ public abstract class AICore implements IAI, Runnable
 	 */
 	private Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> setUpExpectedEvents()
 	{
-		Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> evs = new HashMap<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>>();
+		Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> evs = new HashMap<>();
 		for (Requests.Request.BodyCase c : Requests.Request.BodyCase.values())
 		{
-			evs.put(c, new ArrayList<Events.Event.TypeCase>());
+			evs.put(c, new ArrayList<>());
 		}
 
 		evs.get(Requests.Request.BodyCase.BUILDCITY).add(Events.Event.TypeCase.CITYBUILT);

@@ -40,8 +40,8 @@ public abstract class Game
 	{
 		bank = new Bank();
 		grid = new HexGrid(true);
-		players = new HashMap<Colour, Player>();
-		idsToColours = new HashMap<Board.Player.Id, Colour>();
+		players = new HashMap<>();
+		idsToColours = new HashMap<>();
 	}
 
 	/**
@@ -55,7 +55,7 @@ public abstract class Game
 	{
 		int resourceLimit = 7;
 		Player player = players.get(c);
-		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> grant = new HashMap<>();
 
 		// If 7, check that no one is above the resource limit
 		if (dice == resourceLimit) { return grant; }
@@ -109,7 +109,7 @@ public abstract class Game
 	 */
 	public Map<DevelopmentCardType, Integer> processCards(Lobby.GameInfo.PlayerDevCardInfo info)
 	{
-		Map<DevelopmentCardType, Integer> ret = new HashMap<DevelopmentCardType, Integer>();
+		Map<DevelopmentCardType, Integer> ret = new HashMap<>();
 
 		// Add all info with amounts
 		if (info.getKnight() > 0) ret.put(DevelopmentCardType.Knight, info.getKnight());
@@ -131,7 +131,7 @@ public abstract class Game
 	 */
 	public Map<ResourceType, Integer> processResources(Resource.Counts resources)
 	{
-		Map<ResourceType, Integer> ret = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> ret = new HashMap<>();
 
 		// Add all resources with amounts
 		if (resources.getBrick() > 0) ret.put(ResourceType.Brick, resources.getBrick());

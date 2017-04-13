@@ -58,7 +58,7 @@ public class Port extends Edge
 	public static List<Port> makePorts(List<Edge> edges, List<Edge> portLocations)
 	{
 		List<Port> availablePorts = getAvailablePorts();
-		List<Port> ports = new ArrayList<Port>();
+		List<Port> ports = new ArrayList<>();
 
 		// For each potential port
 		for (Edge e : portLocations)
@@ -86,7 +86,7 @@ public class Port extends Edge
 	 */
 	private static List<Port> getAvailablePorts()
 	{
-		List<Port> ports = new LinkedList<Port>();
+		List<Port> ports = new LinkedList<>();
 
 		// Default ports
 		for (int i = 0; i < 4; i++)

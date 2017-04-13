@@ -20,7 +20,7 @@ public class LocalServerConnection implements IServerConnection
 	public LocalServerConnection(Client client)
 	{
 		this.client = client;
-		fromServer = new LinkedBlockingQueue<Messages.Message>();
+		fromServer = new LinkedBlockingQueue<>();
 	}
 
 	public void setConn(LocalClientConnection conn)

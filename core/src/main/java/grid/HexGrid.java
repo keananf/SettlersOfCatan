@@ -23,11 +23,11 @@ public class HexGrid
 
 	public HexGrid(boolean b)
 	{
-		grid = new Hashtable<Point, Hex>();
-		nodes = new Hashtable<Point, Node>();
+		grid = new Hashtable<>();
+		nodes = new Hashtable<>();
 
-		edges = new ArrayList<Edge>();
-		ports = new ArrayList<Port>();
+		edges = new ArrayList<>();
+		ports = new ArrayList<>();
 
 		if (b) initGrid();
 	}
@@ -84,7 +84,7 @@ public class HexGrid
 	 */
 	private List<GridElement> getNeighbours(Node node)
 	{
-		List<GridElement> neighbours = new LinkedList<GridElement>();
+		List<GridElement> neighbours = new LinkedList<>();
 
 		// Find all 6 neighbours
 		for (int i = -1; i <= 1; i++)
@@ -115,7 +115,7 @@ public class HexGrid
 		// for each node
 		for (Node node : nodes.values())
 		{
-			List<Hex> adjacentHexes = new LinkedList<Hex>();
+			List<Hex> adjacentHexes = new LinkedList<>();
 			List<GridElement> neighbours = getNeighbours(node);
 
 			// Create both edges AND find the adjacent hexes
@@ -155,7 +155,7 @@ public class HexGrid
 	 */
 	private void makePorts()
 	{
-		List<Edge> portLocations = new ArrayList<Edge>();
+		List<Edge> portLocations = new ArrayList<>();
 		portLocations.add(getEdge(new Point(-5, -3), new Point(-4, -3)));
 		portLocations.add(getEdge(new Point(-3, -5), new Point(-3, -4)));
 		portLocations.add(getEdge(new Point(-1, -4), new Point(0, -4)));
@@ -174,7 +174,7 @@ public class HexGrid
 	 */
 	private Map<Integer, Integer> getChitsAvailable()
 	{
-		Map<Integer, Integer> chitsAvailable = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> chitsAvailable = new HashMap<>();
 		chitsAvailable.put(2, 1);
 		chitsAvailable.put(3, 2);
 		chitsAvailable.put(4, 2);
@@ -195,7 +195,7 @@ public class HexGrid
 	private Map<ResourceType, Integer> getResourcesAvailable()
 	{
 
-		Map<ResourceType, Integer> resourcesAvailable = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> resourcesAvailable = new HashMap<>();
 		resourcesAvailable.put(ResourceType.Brick, 3);
 		resourcesAvailable.put(ResourceType.Grain, 4);
 		resourcesAvailable.put(ResourceType.Ore, 3);
@@ -314,7 +314,7 @@ public class HexGrid
 	 */
 	public List<Hex> getHexesAsList()
 	{
-		List<Hex> hexes = new ArrayList<Hex>();
+		List<Hex> hexes = new ArrayList<>();
 		hexes.addAll(this.grid.values());
 
 		return hexes;
@@ -325,7 +325,7 @@ public class HexGrid
 	 */
 	public List<Port> getPortsAsList()
 	{
-		List<Port> ports = new ArrayList<Port>();
+		List<Port> ports = new ArrayList<>();
 		ports.addAll(this.ports);
 
 		return ports;
@@ -336,7 +336,7 @@ public class HexGrid
 	 */
 	public List<Node> getNodesAsList()
 	{
-		List<Node> nodes = new ArrayList<Node>();
+		List<Node> nodes = new ArrayList<>();
 		nodes.addAll(this.nodes.values());
 
 		return nodes;
@@ -347,7 +347,7 @@ public class HexGrid
 	 */
 	public List<Edge> getEdgesAsList()
 	{
-		List<Edge> edges = new ArrayList<Edge>();
+		List<Edge> edges = new ArrayList<>();
 		edges.addAll(this.edges);
 
 		return edges;
@@ -432,7 +432,7 @@ public class HexGrid
 	 */
 	public void setPorts(List<Port> ports)
 	{
-		List<Edge> es = new ArrayList<Edge>();
+		List<Edge> es = new ArrayList<>();
 		es.addAll(edges);
 		this.ports = ports;
 

@@ -43,8 +43,8 @@ public class ServerGame extends Game
 	 */
 	public Map<Colour, Map<ResourceType, Integer>> allocateResources(int dice)
 	{
-		Map<Colour, Map<ResourceType, Integer>> playerResources = new HashMap<Colour, Map<ResourceType, Integer>>();
-		List<ResourceType> list = new ArrayList<ResourceType>();
+		Map<Colour, Map<ResourceType, Integer>> playerResources = new HashMap<>();
+		List<ResourceType> list = new ArrayList<>();
 
 		if (dice == 7) return playerResources;
 
@@ -450,7 +450,7 @@ public class ServerGame extends Game
 	public void chooseResources(Resource.Kind r1) throws BankLimitException
 	{
 		// Set up grant
-		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> grant = new HashMap<>();
 		grant.put(ResourceType.fromProto(r1), 1);
 		players.get(currentPlayer).grantResources(grant, bank);
 	}
@@ -464,7 +464,7 @@ public class ServerGame extends Game
 	public Board.MultiSteal playMonopolyCard(Resource.Kind r)
 	{
 		Board.MultiSteal.Builder multiSteal = Board.MultiSteal.newBuilder();
-		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> grant = new HashMap<>();
 		ResourceType type = ResourceType.fromProto(r);
 		int sum = 0;
 

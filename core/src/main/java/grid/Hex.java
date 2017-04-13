@@ -24,7 +24,7 @@ public class Hex extends GridElement
 	{
 		super(x, y);
 		resource = ResourceType.Generic;
-		nodes = new ArrayList<Node>();
+		nodes = new ArrayList<>();
 	}
 
 	/**

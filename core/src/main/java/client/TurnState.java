@@ -22,8 +22,8 @@ public class TurnState extends Turn
 	@Override
 	protected void setUp()
 	{
-		expectedMoves = new ArrayList<Requests.Request.BodyCase>();
-		chosenResources = new HashMap<ResourceType, Integer>();
+		expectedMoves = new ArrayList<>();
+		chosenResources = new HashMap<>();
 		reset();
 	}
 

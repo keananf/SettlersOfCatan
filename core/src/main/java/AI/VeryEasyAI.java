@@ -70,8 +70,8 @@ public class VeryEasyAI extends AICore
 		// the server
 		if (getTurn().isTradePhase()) return -1;
 
-		Map<ResourceType, Integer> tradeReq = new HashMap<ResourceType, Integer>();
-		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> tradeReq = new HashMap<>();
+		Map<ResourceType, Integer> resources = new HashMap<>();
 		resources.putAll(getPlayer().getResources());
 		List<ResourceType> want = getDesiredResources(resources);
 		ResourceType maxResource = findMax(resources);
@@ -118,8 +118,8 @@ public class VeryEasyAI extends AICore
 	public int rankDiscard(Turn turn)
 	{
 		int amount = getPlayer().getNumResources(), diff = amount / 2;
-		Map<ResourceType, Integer> discard = new HashMap<ResourceType, Integer>();
-		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> discard = new HashMap<>();
+		Map<ResourceType, Integer> resources = new HashMap<>();
 		resources.putAll(getPlayer().getResources());
 
 		// Randomly assign resources to discard
@@ -203,7 +203,7 @@ public class VeryEasyAI extends AICore
 	 */
 	private List<ResourceType> getDesiredResources(Map<ResourceType, Integer> resources)
 	{
-		List<ResourceType> want = new ArrayList<ResourceType>();
+		List<ResourceType> want = new ArrayList<>();
 
 		// Ask for resources this player does NOT have
 		for (ResourceType type : ResourceType.values())

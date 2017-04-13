@@ -49,15 +49,15 @@ public class Server implements Runnable
 
 	public Server()
 	{
-		ais = new HashMap<Colour, AIClient>();
-		aiThreads = new HashMap<Colour, Thread>();
-		threads = new HashMap<Colour, Thread>();
+		ais = new HashMap<>();
+		aiThreads = new HashMap<>();
+		threads = new HashMap<>();
 		game = new ServerGame();
 		Game.NUM_PLAYERS = 2;
 
 		// Set up
 		msgProc = new MessageProcessor(game, this);
-		connections = new HashMap<Colour, ListenerThread>();
+		connections = new HashMap<>();
 		lock = new Semaphore(1);
 	}
 
@@ -286,7 +286,7 @@ public class Server implements Runnable
 	{
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(ev);
-		List<Colour> sent = new ArrayList<Colour>(2);
+		List<Colour> sent = new ArrayList<>(2);
 
 		// Modify event before sending to other players
 		if (ev.getTypeCase().equals(Event.TypeCase.RESOURCESTOLEN)
@@ -489,7 +489,7 @@ public class Server implements Runnable
 		Board.InitialResourceAllocation.Builder allocs = Board.InitialResourceAllocation.newBuilder();
 		for (Player p : game.getPlayers().values())
 		{
-			Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+			Map<ResourceType, Integer> resources = new HashMap<>();
 			for (Hex h : ((ServerPlayer) p).getSettlementForInitialResources().getNode().getHexes())
 			{
 				if (h.getResource().equals(ResourceType.Generic)) continue;

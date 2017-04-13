@@ -17,7 +17,7 @@ public class ChatBoard
 
 	public ChatBoard()
 	{
-		chatMessages = new ArrayList<ChatMessage>();
+		chatMessages = new ArrayList<>();
 	}
 
 	/**

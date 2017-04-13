@@ -23,6 +23,7 @@ import java.util.Map;
 public class ServerPlayer extends Player
 {
 	private InetAddress inetAddress;
+	private Settlement settlementForInitialResources;
 
 	public ServerPlayer(Colour colour, String username)
 	{
@@ -114,6 +115,7 @@ public class ServerPlayer extends Player
 		if (canBuildSettlement(node))
 		{
 			if (settlements.size() >= 2) spendResources(s.getCost(), bank);
+			if(settlements.size() == 1) settlementForInitialResources = s;
 			addSettlement(s);
 		}
 
@@ -238,4 +240,8 @@ public class ServerPlayer extends Player
 		return resource;
 	}
 
+	public Settlement getSettlementForInitialResources()
+	{
+		return settlementForInitialResources;
+	}
 }

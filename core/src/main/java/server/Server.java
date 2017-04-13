@@ -6,10 +6,13 @@ import com.badlogic.gdx.Gdx;
 import connection.LocalClientConnection;
 import connection.RemoteClientConnection;
 import enums.Colour;
+import enums.ResourceType;
 import exceptions.GameFullException;
 import game.CurrentTrade;
 import game.Game;
 import game.players.Player;
+import game.players.ServerPlayer;
+import grid.Hex;
 import intergroup.EmptyOuterClass;
 import intergroup.Events;
 import intergroup.Events.Event;
@@ -68,8 +71,9 @@ public class Server implements Runnable
 			waitForJoinLobby();
 			broadcastBoard();
 			getInitialSettlementsAndRoads();
+			allocateInitialResources();
 
-			log("Server Start", "\n\nAll players Connected. Beginning play.\n");
+			log("\n\nServer Start", "All players Connected. Beginning play.\n");
 			while (active && !game.isOver())
 			{
 				try
@@ -229,6 +233,7 @@ public class Server implements Runnable
 		case RESOURCECHOSEN:
 		case MONOPOLYRESOLUTION:
 		case CARDSDISCARDED:
+		case INITIALALLOCATION:
 			broadcastEvent(event);
 			break;
 
@@ -476,6 +481,30 @@ public class Server implements Runnable
 		getExpectedMoves(game.getCurrentPlayer()).add(Requests.Request.BodyCase.ROLLDICE);
 		msgProc.initialPhase = true;
 		sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
+	}
+
+	/**
+	 * Give the player one of each resource which pertains to the second built settlement
+	 */
+	private void allocateInitialResources() throws IOException
+	{
+		Board.InitialResourceAllocation.Builder allocs = Board.InitialResourceAllocation.newBuilder();
+		for(Player p : game.getPlayers().values())
+		{
+			Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+			for(Hex h : ((ServerPlayer)p).getSettlementForInitialResources().getNode().getHexes())
+			{
+				int existing = resources.containsKey(h.getResource()) ? resources.get(h.getResource()) : 0;
+				resources.put(h.getResource(), existing + 1);
+			}
+
+			Board.ResourceAllocation.Builder alloc = Board.ResourceAllocation.newBuilder();
+			alloc.setPlayer(Board.Player.newBuilder().setId(p.getId()).build());
+			alloc.setResources(game.processResources(resources));
+			allocs.addResourceAllocation(alloc.build());
+		}
+
+		sendEvents(Event.newBuilder().setInitialAllocation(allocs.build()).build());
 	}
 
 	/**

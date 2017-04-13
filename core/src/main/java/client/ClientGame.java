@@ -245,35 +245,42 @@ public class ClientGame extends Game
 	 */
 	public void processDice(int dice, List<Board.ResourceAllocation> resourceAllocationList)
 	{
+		client.getTurn().setTurnStarted(true);
+		client.getTurn().setRoll(dice);
 		if (dice != 7)
 		{
-			// For each player's new resources
-			for (Board.ResourceAllocation alloc : resourceAllocationList)
-			{
-				Map<ResourceType, Integer> grant = processResources(alloc.getResources());
-				Player p = getPlayer(alloc.getPlayer().getId());
-				int num = 0;
+			processAllocation(resourceAllocationList);
+		}
+	}
 
-				try
+	protected void processAllocation(List<Board.ResourceAllocation> resourceAllocationList)
+	{
+		// For each player's new resources
+		for (Board.ResourceAllocation alloc : resourceAllocationList)
+		{
+			Map<ResourceType, Integer> grant = processResources(alloc.getResources());
+			Player p = getPlayer(alloc.getPlayer().getId());
+			int num = 0;
+
+			try
+			{
+				if (p.getColour().equals(getPlayer().getColour()))
 				{
-					if (p.getColour().equals(getPlayer().getColour()))
-					{
-						p.grantResources(grant, bank);
-					}
-					else
-					{
-						int existing = resources.containsKey(p.getColour()) ? resources.get(p.getColour()) : 0;
-						for (ResourceType r : grant.keySet())
-						{
-							num += grant.get(r);
-						}
-						resources.put(p.getColour(), existing + num);
-					}
+					p.grantResources(grant, bank);
 				}
-				catch (BankLimitException e)
+				else
 				{
-					e.printStackTrace();
+					int existing = resources.containsKey(p.getColour()) ? resources.get(p.getColour()) : 0;
+					for (ResourceType r : grant.keySet())
+					{
+						num += grant.get(r);
+					}
+					resources.put(p.getColour(), existing + num);
 				}
+			}
+			catch (BankLimitException e)
+			{
+				e.printStackTrace();
 			}
 		}
 	}
@@ -722,4 +729,8 @@ public class ClientGame extends Game
 		return turns;
 	}
 
+	public int getDice()
+	{
+		return client.getTurn().getRoll();
+	}
 }

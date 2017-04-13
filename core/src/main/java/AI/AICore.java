@@ -227,7 +227,7 @@ public abstract class AICore implements IAI, Runnable
 
 	protected Player getPlayer()
 	{
-		return client.getPlayer() == null ? null : client.getPlayer();
+		return client.getPlayer();
 	}
 
 	protected ClientGame getState()

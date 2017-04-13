@@ -6,6 +6,7 @@ import enums.ResourceType;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Class describing the hex board
@@ -47,7 +48,7 @@ public class HexGrid
 			for (int y = -SIZE_OF_GRID; y <= SIZE_OF_GRID; y++)
 			{
 				// If in boundaries
-				if (y - 2 * x <= 8 && 2 * y - x <= 8 && x + y <= 8 && y - 2 * x >= -8 && 2 * y - x >= -8 && x + y >= -8)
+				if (inBoundries(x, y))
 				{
 
 					// Condition for whether or not the coordinate is a hex.
@@ -410,8 +411,7 @@ public class HexGrid
 			// for each row
 			for (int y = -SIZE_OF_GRID; y <= SIZE_OF_GRID; y++)
 			{
-				// If in boundaries
-				if (y - 2 * x <= 8 && 2 * y - x <= 8 && x + y <= 8 && y - 2 * x >= -8 && 2 * y - x >= -8 && x + y >= -8)
+				if (inBoundries(x, y))
 				{
 					// Condition for whether or not the coordinate is a node.
 					if (Math.abs(x + y) % 3 != 0 && x + y != 0)
@@ -455,5 +455,18 @@ public class HexGrid
 			}
 		}
 
+	}
+
+	private boolean inBoundries(int x, int y)
+	{
+		Boolean terms[] = {
+				y - 2 * x <= 8,
+				2 * y - x <= 8,
+				x + y <= 8,
+				y - 2 * x >= -8,
+				2 * y - x >= -8,
+				x + y >= -8
+		};
+		return Stream.of(terms).reduce(true, (a, b) -> a && b);
 	}
 }

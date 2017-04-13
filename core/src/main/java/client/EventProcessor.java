@@ -180,13 +180,13 @@ public class EventProcessor
 			{
 				if (getGame().getTurns() < Game.NUM_PLAYERS)
 				{
-					client.log("Server initial phase", String.format("Adding BUILDSETTLEMENT to expected moves for %s",
+					client.log("Client initial phase", String.format("Adding BUILDSETTLEMENT to expected moves for %s",
 							ev.getInstigator().getId().name()));
 					getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
 				}
 				if (getGame().getTurns() >= Game.NUM_PLAYERS && getGame().getTurns() < Game.NUM_PLAYERS * 2 - 1)
 				{
-					client.log("Server initial phase", String.format("Adding BUILDSETTLEMENT to expected moves for %s",
+					client.log("Client initial phase", String.format("Adding BUILDSETTLEMENT to expected moves for %s",
 							ev.getInstigator().getId().name()));
 					getExpectedMoves().add(Requests.Request.BodyCase.BUILDSETTLEMENT);
 				}
@@ -293,7 +293,7 @@ public class EventProcessor
 			if (getGame().getPlayer().getRoads().size() < 2
 					&& getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
 			{
-				client.log("Server initial phase",
+				client.log("Client initial phase",
 						String.format("Adding BUILDROAD to expected moves for %s", ev.getInstigator().getId().name()));
 				getTurn().setInitialPhase(true);
 				getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);

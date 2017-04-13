@@ -32,7 +32,7 @@ public final class AssMan extends AssetManager
 		return get(path, Model.class);
 	}
 
-	public static  Texture getTexture(String name)
+	public static Texture getTexture(String name)
 	{
 
 		if (textures.containsKey(name))

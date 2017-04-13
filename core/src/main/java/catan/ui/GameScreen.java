@@ -69,15 +69,17 @@ public class GameScreen implements Screen
 		Gdx.input.setInputProcessor(multiplexer);
 
 		// add 3D models that won't change during gameplay
-		final CatanModelFactory factory = new CatanModelFactory(game.assets);
+		final CatanModelFactory factory = new CatanModelFactory();
 		persistentInstances.add(factory.getSeaInstance());
 		persistentInstances.add(factory.getIslandInstance());
 
 		for (final Hex hex : game.getState().getGrid().getHexesAsList())
 		{
-			persistentInstances.add(factory.getTerrainInstance(hex.getResource(), hex.get3DPos()));
-			if (hex.getResource().equals(ResourceType.Generic)) continue;
-			persistentInstances.add(factory.getChitInstance(hex));
+			persistentInstances.add(factory.getHexInstance(hex));
+			if (!hex.getResource().equals(ResourceType.Generic))
+            {
+                persistentInstances.add(factory.getChitInstance(hex));
+            }
 		}
 		drawPorts();
 	}

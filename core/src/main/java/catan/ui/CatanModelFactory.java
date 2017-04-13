@@ -1,5 +1,6 @@
 package catan.ui;
 
+import catan.SettlersOfCatan;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -34,26 +35,19 @@ class CatanModelFactory
 	private static final Pixmap fontPixmap = new Pixmap(Gdx.files.internal(data.imagePaths[0]));
 
 	private static final ModelBuilder builder = new ModelBuilder();
-	private final Model SEA;
-	private final Model ISLAND;
-	private final Model GRAIN;
-	private final Model ORE;
-	private final Model WOOL;
-	private final Model LUMBER;
-	private final Model BRICK;
-	private final Model GENERIC;
+	private final Model SEA, ISLAND, GRAIN, ORE, WOOL, LUMBER, BRICK, GENERIC;
 
-	CatanModelFactory(AssMan assets)
+	CatanModelFactory()
 	{
 		final ModelBuilder builder = new ModelBuilder();
 		SEA = builder.createCylinder(150f, 0f, 150f, 6, WATER, DEFAULT_ATTRS);
 		ISLAND = builder.createCylinder(11f, 1f, 11f, 6, DIRT, DEFAULT_ATTRS);
-		GRAIN = assets.getModel("grain.g3db");
-		ORE = assets.getModel("ore.g3db");
-		WOOL = assets.getModel("wool.g3db");
-		LUMBER = assets.getModel("Lumber.g3db");
-		GENERIC = assets.getModel("Desert.g3db");
-		BRICK = assets.getModel("Mine2.g3db");
+		GRAIN = SettlersOfCatan.assets.getModel("grain.g3db");
+		ORE = SettlersOfCatan.assets.getModel("ore.g3db");
+		WOOL = SettlersOfCatan.assets.getModel("wool.g3db");
+		LUMBER = SettlersOfCatan.assets.getModel("Lumber.g3db");
+		GENERIC = SettlersOfCatan.assets.getModel("Desert.g3db");
+		BRICK = SettlersOfCatan.assets.getModel("Mine2.g3db");
 	}
 
 	ModelInstance getSeaInstance()
@@ -66,34 +60,21 @@ class CatanModelFactory
 		return new ModelInstance(ISLAND, ORIGIN);
 	}
 
-	ModelInstance getTerrainInstance(ResourceType type, Vector3 pos)
+	ModelInstance getHexInstance(final Hex hex)
 	{
 		final Model model;
-		switch (type)
+		switch (hex.getResource())
 		{
-		case Brick:
-			model = BRICK;
-			break;
-		case Generic:
-			model = GENERIC;
-			break;
-		case Grain:
-			model = GRAIN;
-			break;
-		case Lumber:
-			model = LUMBER;
-			break;
-		case Ore:
-			model = ORE;
-			break;
-		case Wool:
-			model = WOOL;
-			break;
-		default:
-			return null;
+		case Brick:   model = BRICK;   break;
+		case Generic: model = GENERIC; break;
+		case Grain:   model = GRAIN;   break;
+		case Lumber:  model = LUMBER;  break;
+		case Ore:     model = ORE;     break;
+		case Wool:    model = WOOL;    break;
+		default:      return null;
 		}
 
-		final ModelInstance mod = new ModelInstance(model, pos);
+		final ModelInstance mod = new ModelInstance(model, hex.get3DPos());
 		mod.transform.translate(0, GROUND_LEVEL ,0);
 		return mod;
 	}

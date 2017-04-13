@@ -1,6 +1,6 @@
 package catan.ui.hud;
 
-import catan.SettlersOfCatan;
+import client.ClientGame;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -10,15 +10,17 @@ import enums.DevelopmentCardType;
 import enums.ResourceType;
 import game.players.Player;
 
-public class HeadsUpDisplay extends Stage {
-	private final Player me;
-	private enum PlayedCard { PlayedKnight }
+public class HeadsUpDisplay extends Stage
+{
+	private enum PlayedCard
+	{
+		PlayedKnight
+	}
 
-	public HeadsUpDisplay(SettlersOfCatan game)
+	public HeadsUpDisplay(final ClientGame state)
 	{
 		super(new ScreenViewport());
-
-		this.me = game.getState().getPlayer();
+		final Player me = state.getPlayer();
 
 		final Table root = new Table();
 		root.setFillParent(true);
@@ -33,11 +35,20 @@ public class HeadsUpDisplay extends Stage {
 		{
 			developmentCards.addActor(new Counter<>(type, () -> me.getDevelopmentCards().getOrDefault(type, 0)));
 		}
-		developmentCards.addActor(
-				new Counter<>(
-						PlayedCard.PlayedKnight,
-						() -> me.getPlayedDevCards().getOrDefault(DevelopmentCardType.Knight, 0)));
+		developmentCards.addActor(new Counter<>(PlayedCard.PlayedKnight,
+				() -> me.getPlayedDevCards().getOrDefault(DevelopmentCardType.Knight, 0)));
 		root.add(developmentCards).expand().left();
+
+		/*
+		 * PLAYERS
+		 */
+		final VerticalGroup players = new VerticalGroup();
+		players.space(5);
+		for (Player player : state.getPlayersAsList())
+		{
+			players.addActor(new PlayerBar(player));
+		}
+		root.add(players).expand().right().top().pad(10);
 
 		root.row();
 

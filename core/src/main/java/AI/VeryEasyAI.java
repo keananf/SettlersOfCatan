@@ -66,6 +66,10 @@ public class VeryEasyAI extends AICore
 	@Override
 	public int rankInitiateTrade(Turn turn)
 	{
+		// Ensures the AI only trades once per turn, so as not to spam
+		// the server
+		if (getTurn().isTradePhase()) return -1;
+
 		Map<ResourceType, Integer> tradeReq = new HashMap<ResourceType, Integer>();
 		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
 		resources.putAll(getPlayer().getResources());

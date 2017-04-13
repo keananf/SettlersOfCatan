@@ -156,15 +156,15 @@ public class HexGrid
 	private void makePorts()
 	{
 		List<Edge> portLocations = new ArrayList<Edge>();
-		portLocations.add(getEdge(new Point(-5,-3), new Point(-4,-3)));
-		portLocations.add(getEdge(new Point(-3,-5), new Point(-3,-4)));
-		portLocations.add(getEdge(new Point(-1,-4), new Point(0,-4)));
-		portLocations.add(getEdge(new Point(2,-3), new Point(3,-2)));
-		portLocations.add(getEdge(new Point(4,0), new Point(4,1)));
-		portLocations.add(getEdge(new Point(4,3), new Point(4,4)));
-		portLocations.add(getEdge(new Point(2,5), new Point(3,5)));
-		portLocations.add(getEdge(new Point(-1, 3), new Point(0,4)));
-		portLocations.add(getEdge(new Point(-4,0), new Point(-3,1)));
+		portLocations.add(getEdge(new Point(-5, -3), new Point(-4, -3)));
+		portLocations.add(getEdge(new Point(-3, -5), new Point(-3, -4)));
+		portLocations.add(getEdge(new Point(-1, -4), new Point(0, -4)));
+		portLocations.add(getEdge(new Point(2, -3), new Point(3, -2)));
+		portLocations.add(getEdge(new Point(4, 0), new Point(4, 1)));
+		portLocations.add(getEdge(new Point(4, 3), new Point(4, 4)));
+		portLocations.add(getEdge(new Point(2, 5), new Point(3, 5)));
+		portLocations.add(getEdge(new Point(-1, 3), new Point(0, 4)));
+		portLocations.add(getEdge(new Point(-4, 0), new Point(-3, 1)));
 
 		ports = Port.makePorts(edges, portLocations);
 	}
@@ -381,8 +381,8 @@ public class HexGrid
 	public Edge getEdge(Point p1, Point p2)
 	{
 		// Find nodes and edges
-		Node n1 = getNode((int)p1.getX(), (int)p1.getY());
-		Node n2 = getNode((int)p2.getX(), (int)p2.getY());
+		Node n1 = getNode((int) p1.getX(), (int) p1.getY());
+		Node n2 = getNode((int) p2.getX(), (int) p2.getY());
 		Edge e = n1.findEdge(n2);
 
 		return e;

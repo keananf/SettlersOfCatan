@@ -15,7 +15,6 @@ import game.players.Player;
 import game.players.ServerPlayer;
 import grid.Hex;
 import intergroup.EmptyOuterClass;
-import intergroup.Events;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import intergroup.Requests;
@@ -97,7 +96,7 @@ public class Server implements Runnable
 				}
 			}
 
-			if(active)
+			if (active)
 			{
 				sendEvents(Event.newBuilder().setGameWon(msgProc.getGameWon()).build());
 			}
@@ -125,7 +124,7 @@ public class Server implements Runnable
 			lock.acquire();
 			try
 			{
-				if(active)
+				if (active)
 				{
 					active = false;
 				}
@@ -373,7 +372,7 @@ public class Server implements Runnable
 			numConnections++;
 		}
 
-		if(active && numConnections == Game.NUM_PLAYERS)
+		if (active && numConnections == Game.NUM_PLAYERS)
 		{
 			log("Server Setup", "All Players connected. Starting game...\n");
 		}
@@ -415,7 +414,7 @@ public class Server implements Runnable
 			}
 		}
 
-		if(active)
+		if (active)
 		{
 			log("Server play", "All players connected\n\n");
 			try
@@ -459,7 +458,6 @@ public class Server implements Runnable
 
 			if (i + 1 < Game.NUM_PLAYERS)
 			{
-				sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 				current = Board.Player.Id.values()[i + 1];
 			}
 		}
@@ -472,7 +470,6 @@ public class Server implements Runnable
 
 			if (i > 0)
 			{
-				sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 				current = Board.Player.Id.values()[i - 1];
 			}
 		}
@@ -481,21 +478,21 @@ public class Server implements Runnable
 		game.setCurrentPlayer(game.getPlayer(Board.Player.Id.PLAYER_1).getColour());
 		getExpectedMoves(game.getCurrentPlayer()).add(Requests.Request.BodyCase.ROLLDICE);
 		msgProc.initialPhase = true;
-		sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 	}
 
 	/**
-	 * Give the player one of each resource which pertains to the second built settlement
+	 * Give the player one of each resource which pertains to the second built
+	 * settlement
 	 */
 	private void allocateInitialResources() throws IOException
 	{
 		Board.InitialResourceAllocation.Builder allocs = Board.InitialResourceAllocation.newBuilder();
-		for(Player p : game.getPlayers().values())
+		for (Player p : game.getPlayers().values())
 		{
 			Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
-			for(Hex h : ((ServerPlayer)p).getSettlementForInitialResources().getNode().getHexes())
+			for (Hex h : ((ServerPlayer) p).getSettlementForInitialResources().getNode().getHexes())
 			{
-				if(h.getResource().equals(ResourceType.Generic)) continue;
+				if (h.getResource().equals(ResourceType.Generic)) continue;
 				int existing = resources.containsKey(h.getResource()) ? resources.get(h.getResource()) : 0;
 				resources.put(h.getResource(), existing + 1);
 			}

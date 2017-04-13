@@ -8,13 +8,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import enums.ResourceType;
 import game.build.Building;
@@ -23,8 +20,6 @@ import grid.Edge;
 import grid.Hex;
 import grid.Node;
 import grid.Port;
-
-import java.util.List;
 
 public class GameScreen implements Screen
 {
@@ -57,10 +52,10 @@ public class GameScreen implements Screen
 		// input processors
 		final InputMultiplexer multiplexer = new InputMultiplexer();
 		camController = new CameraController(camera);
-		hud = new HeadsUpDisplay(game);
+		hud = new HeadsUpDisplay(game.getState());
 		multiplexer.addProcessor(camController);
 		multiplexer.addProcessor(hud);
-		multiplexer.addProcessor(new GameController(camera, game.getState()));
+		multiplexer.addProcessor(new GameController(camera, game.client));
 		Gdx.input.setInputProcessor(multiplexer);
 
 		// add 3D models that won't change during gameplay
@@ -71,15 +66,15 @@ public class GameScreen implements Screen
 		{
 			persistentInstances.add(ModelFactory.getHexInstance(hex));
 			if (!hex.getResource().equals(ResourceType.Generic))
-            {
-                persistentInstances.add(ModelFactory.getChitInstance(hex));
-            }
+			{
+				persistentInstances.add(ModelFactory.getChitInstance(hex));
+			}
 		}
 
 		for (final Port port : game.getState().getGrid().getPortsAsList())
-        {
-            persistentInstances.add(ModelFactory.getPortInstance(port));
-        }
+		{
+			persistentInstances.add(ModelFactory.getPortInstance(port));
+		}
 	}
 
 	@Override
@@ -102,23 +97,23 @@ public class GameScreen implements Screen
 	{
 		volatileInstances.clear();
 
-        for (final Node node : game.getState().getGrid().getNodesAsList())
-        {
-            final Building building = node.getBuilding();
-            if (building != null)
-            {
-                volatileInstances.add(ModelFactory.getBuildingInstance(building));
-            }
-        }
+		for (final Node node : game.getState().getGrid().getNodesAsList())
+		{
+			final Building building = node.getBuilding();
+			if (building != null)
+			{
+				volatileInstances.add(ModelFactory.getBuildingInstance(building));
+			}
+		}
 
-        for (final Edge edge : game.getState().getGrid().getEdgesAsList())
-        {
-            final Road road = edge.getRoad();
-            if (road != null)
-            {
-                volatileInstances.add(ModelFactory.getRoadInstance(road));
-            }
-        }
+		for (final Edge edge : game.getState().getGrid().getEdgesAsList())
+		{
+			final Road road = edge.getRoad();
+			if (road != null)
+			{
+				volatileInstances.add(ModelFactory.getRoadInstance(road));
+			}
+		}
 	}
 
 	@Override

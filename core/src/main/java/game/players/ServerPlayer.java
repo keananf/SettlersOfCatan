@@ -115,7 +115,7 @@ public class ServerPlayer extends Player
 		if (canBuildSettlement(node))
 		{
 			if (settlements.size() >= 2) spendResources(s.getCost(), bank);
-			if(settlements.size() == 1) settlementForInitialResources = s;
+			if (settlements.size() == 1) settlementForInitialResources = s;
 			addSettlement(s);
 		}
 

@@ -26,10 +26,7 @@ public class RemoteServerConnection implements IServerConnection
 	@Override
 	public Messages.Message getMessageFromServer() throws Exception
 	{
-		if (conn != null)
-		{
-			return Messages.Message.parseDelimitedFrom(conn.getInputStream());
-		}
+		if (conn != null) { return Messages.Message.parseDelimitedFrom(conn.getInputStream()); }
 
 		return null;
 	}

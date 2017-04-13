@@ -14,7 +14,7 @@ public class TurnState extends Turn
 	private int roll;
 	private CurrentTrade currentTrade;
 
-	public TurnState()
+	TurnState()
 	{
 		super();
 	}
@@ -54,7 +54,7 @@ public class TurnState extends Turn
 		return expectedMoves;
 	}
 
-	public boolean isTradePhase()
+	boolean isTradePhase()
 	{
 		return tradePhase;
 	}
@@ -64,7 +64,7 @@ public class TurnState extends Turn
 		this.tradePhase = true;
 	}
 
-	public boolean hasTurnStarted()
+	boolean hasTurnStarted()
 	{
 		return turnStarted;
 	}
@@ -74,12 +74,12 @@ public class TurnState extends Turn
 		this.turnStarted = true;
 	}
 
-	public boolean isInitialPhase()
+	boolean isInitialPhase()
 	{
 		return initialPhase;
 	}
 
-	public void setInitialPhase(boolean initialPhase)
+	void setInitialPhase(boolean initialPhase)
 	{
 		this.initialPhase = initialPhase;
 	}
@@ -94,12 +94,12 @@ public class TurnState extends Turn
 		this.roll = roll;
 	}
 
-	public void setCurrentTrade(CurrentTrade currentTrade)
+	void setCurrentTrade(CurrentTrade currentTrade)
 	{
 		this.currentTrade = currentTrade;
 	}
 
-	public CurrentTrade getCurrentTrade()
+	CurrentTrade getCurrentTrade()
 	{
 		return currentTrade;
 	}

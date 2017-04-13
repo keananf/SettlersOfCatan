@@ -19,7 +19,7 @@ public class HexGrid
 	public List<Port> ports; // All ports
 	public Hashtable<Point, Node> nodes; // All nodes
 	private Hex hexWithRobber;
-	public static final int SIZE_OF_GRID = 5;
+	private static final int SIZE_OF_GRID = 5;
 
 	public HexGrid(boolean b)
 	{

@@ -490,7 +490,7 @@ public class Server implements Runnable
 			for (Hex h : ((ServerPlayer) p).getSettlementForInitialResources().getNode().getHexes())
 			{
 				if (h.getResource().equals(ResourceType.Generic)) continue;
-				int existing = resources.containsKey(h.getResource()) ? resources.get(h.getResource()) : 0;
+				int existing = resources.getOrDefault(h.getResource(), 0);
 				resources.put(h.getResource(), existing + 1);
 			}
 

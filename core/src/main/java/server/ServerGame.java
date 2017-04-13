@@ -64,7 +64,7 @@ public class ServerGame extends Game
 			// Subtract each player's new amount of 'r'
 			for (Colour c : playerResources.keySet())
 			{
-				total -= playerResources.get(c).containsKey(r) ? playerResources.get(c).get(r) : 0;
+				total -= playerResources.get(c).getOrDefault(r, 0);
 			}
 
 			// Not enough
@@ -747,7 +747,7 @@ public class ServerGame extends Game
 			// For each type of VP card
 			for (DevelopmentCardType type : vps)
 			{
-				int num = p.getDevelopmentCards().containsKey(type) ? p.getDevelopmentCards().get(type) : 0;
+				int num = p.getDevelopmentCards().getOrDefault(type, 0);
 
 				// For the number of this vp card that are revealed
 				for (int i = 0; i < num; i++)

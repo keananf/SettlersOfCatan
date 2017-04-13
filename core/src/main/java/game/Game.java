@@ -89,14 +89,14 @@ public abstract class Game
 	{
 		Lobby.GameInfo.PlayerDevCardInfo.Builder info = Lobby.GameInfo.PlayerDevCardInfo.newBuilder();
 		info.setUniversity(
-				map.containsKey(DevelopmentCardType.University) ? map.get(DevelopmentCardType.University) : 0);
-		info.setLibrary(map.containsKey(DevelopmentCardType.Library) ? map.get(DevelopmentCardType.Library) : 0);
+				map.getOrDefault(DevelopmentCardType.University, 0));
+		info.setLibrary(map.getOrDefault(DevelopmentCardType.Library, 0));
 		info.setYearOfPlenty(
-				map.containsKey(DevelopmentCardType.YearOfPlenty) ? map.get(DevelopmentCardType.YearOfPlenty) : 0);
-		info.setMonopoly(map.containsKey(DevelopmentCardType.Monopoly) ? map.get(DevelopmentCardType.Monopoly) : 0);
+				map.getOrDefault(DevelopmentCardType.YearOfPlenty, 0));
+		info.setMonopoly(map.getOrDefault(DevelopmentCardType.Monopoly, 0));
 		info.setRoadBuilding(
-				map.containsKey(DevelopmentCardType.RoadBuilding) ? map.get(DevelopmentCardType.RoadBuilding) : 0);
-		info.setKnight(map.containsKey(DevelopmentCardType.Knight) ? map.get(DevelopmentCardType.Knight) : 0);
+				map.getOrDefault(DevelopmentCardType.RoadBuilding, 0));
+		info.setKnight(map.getOrDefault(DevelopmentCardType.Knight, 0));
 
 		return info.build();
 	}
@@ -152,11 +152,11 @@ public abstract class Game
 	public Resource.Counts processResources(Map<ResourceType, Integer> map)
 	{
 		Resource.Counts.Builder resources = Resource.Counts.newBuilder();
-		resources.setGrain(map.containsKey(ResourceType.Grain) ? map.get(ResourceType.Grain) : 0);
-		resources.setBrick(map.containsKey(ResourceType.Brick) ? map.get(ResourceType.Brick) : 0);
-		resources.setOre(map.containsKey(ResourceType.Ore) ? map.get(ResourceType.Ore) : 0);
-		resources.setWool(map.containsKey(ResourceType.Wool) ? map.get(ResourceType.Wool) : 0);
-		resources.setLumber(map.containsKey(ResourceType.Lumber) ? map.get(ResourceType.Lumber) : 0);
+		resources.setGrain(map.getOrDefault(ResourceType.Grain, 0));
+		resources.setBrick(map.getOrDefault(ResourceType.Brick, 0));
+		resources.setOre(map.getOrDefault(ResourceType.Ore, 0));
+		resources.setWool(map.getOrDefault(ResourceType.Wool, 0));
+		resources.setLumber(map.getOrDefault(ResourceType.Lumber, 0));
 
 		return resources.build();
 	}

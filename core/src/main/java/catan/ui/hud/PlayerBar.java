@@ -7,12 +7,9 @@ import game.players.Player;
 
 class PlayerBar extends Stack
 {
-	private final Player player;
 
 	PlayerBar(final Player player)
 	{
-		this.player = player;
-
 		final Image bground = new Image(AssMan.getTexture("playerbar.png"));
 		addActor(bground);
 		final HorizontalGroup row = new HorizontalGroup();

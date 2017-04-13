@@ -11,5 +11,5 @@ import java.util.Map;
  */
 public interface IBuildable
 {
-	public Map<ResourceType, Integer> getCost();
+	Map<ResourceType, Integer> getCost();
 }

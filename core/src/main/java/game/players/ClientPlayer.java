@@ -23,7 +23,7 @@ public class ClientPlayer extends Player
 	 */
 	public Road addRoad(Edge edge) throws RoadExistsException, CannotBuildRoadException
 	{
-		List<Integer> listsAddedTo = new ArrayList<Integer>();
+		List<Integer> listsAddedTo = new ArrayList<>();
 		Road r = new Road(edge, colour);
 
 		// Road already here. Cannot build
@@ -41,7 +41,7 @@ public class ClientPlayer extends Player
 			// If not connected to any other roads
 			if (listsAddedTo.size() == 0)
 			{
-				List<Road> newList = new ArrayList<Road>();
+				List<Road> newList = new ArrayList<>();
 				newList.add(r);
 				roads.add(newList);
 			}

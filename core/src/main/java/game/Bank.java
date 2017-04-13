@@ -23,11 +23,11 @@ public class Bank
 
 	public Bank()
 	{
-		availableResources = new HashMap<ResourceType, Integer>();
-		availableDevCards = new HashMap<DevelopmentCardType, Integer>();
-		availableSettlements = new HashMap<Colour, Integer>();
-		availableCities = new HashMap<Colour, Integer>();
-		availableRoads = new HashMap<Colour, Integer>();
+		availableResources = new HashMap<>();
+		availableDevCards = new HashMap<>();
+		availableSettlements = new HashMap<>();
+		availableCities = new HashMap<>();
+		availableRoads = new HashMap<>();
 		setUpAvailability();
 	}
 

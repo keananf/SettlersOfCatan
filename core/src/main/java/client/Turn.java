@@ -41,7 +41,7 @@ public class Turn
 
 	protected void setUp()
 	{
-		chosenResources = new HashMap<ResourceType, Integer>();
+		chosenResources = new HashMap<>();
 		reset();
 	}
 

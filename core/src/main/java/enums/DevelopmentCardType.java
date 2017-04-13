@@ -117,7 +117,7 @@ public enum DevelopmentCardType
 	 */
 	public static Map<ResourceType, Integer> getCardCost()
 	{
-		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> resources = new HashMap<>();
 
 		resources.put(ResourceType.Ore, 1);
 		resources.put(ResourceType.Grain, 1);

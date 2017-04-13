@@ -37,11 +37,11 @@ public class MainMenuScreen implements Screen
 		ui.addActor(body);
 
 		// Title
-		body.addActor(new Label("Settlers of Catan", game.skin, "title"));
+		body.addActor(new Label("Settlers of Catan", SettlersOfCatan.skin, "title"));
 
 		// Buttons
 		{
-			TextButton button = new TextButton("New Single Player Game", game.skin);
+			TextButton button = new TextButton("New Single Player Game", SettlersOfCatan.skin);
 			button.addListener(new ChangeListener()
 			{
 				public void changed(ChangeEvent event, Actor actor)
@@ -55,7 +55,7 @@ public class MainMenuScreen implements Screen
 		}
 
 		{
-			TextButton button = new TextButton("Host New Multiplayer Game", game.skin);
+			TextButton button = new TextButton("Host New Multiplayer Game", SettlersOfCatan.skin);
 			button.addListener(new ChangeListener()
 			{
 				public void changed(ChangeEvent event, Actor actor)
@@ -70,7 +70,7 @@ public class MainMenuScreen implements Screen
 		}
 
 		{
-			TextButton button = new TextButton("Join Remote Game", game.skin);
+			TextButton button = new TextButton("Join Remote Game", SettlersOfCatan.skin);
 			button.addListener(new ChangeListener()
 			{
 				public void changed(ChangeEvent event, Actor actor)
@@ -84,7 +84,7 @@ public class MainMenuScreen implements Screen
 		}
 
 		{
-			TextButton button = new TextButton("Quit", game.skin);
+			TextButton button = new TextButton("Quit", SettlersOfCatan.skin);
 			button.addListener(new ChangeListener()
 			{
 				public void changed(ChangeEvent event, Actor actor)

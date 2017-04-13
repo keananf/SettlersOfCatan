@@ -21,10 +21,12 @@ import org.junit.Test;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ClientProcessTests extends ClientTestHelper
@@ -389,15 +391,20 @@ public class ClientProcessTests extends ClientTestHelper
 		assertEquals(2, p.getVp());
 	}
 
-	/*
-	 * @Test public void moveRobberTest() throws InvalidCoordinatesException {
-	 * Hex h = game.getGrid().getHexWithRobber();
-	 * 
-	 * // Set up request Board.Point point = h.toHexProto().getLocation();
-	 * 
-	 * // Move and check clientGame.moveRobber(point); assertNotEquals(h,
-	 * clientGame.getGrid().getHexWithRobber()); }
-	 */
+	 @Test
+	 public void moveRobberTest() throws InvalidCoordinatesException
+	 {
+		 Hex h = game.getGrid().getHexWithRobber();
+		 List<Hex> hexes = h.getNodes().get(0).getHexes();
+
+		 // Set up request
+		 h = hexes.get(0).equals(h) ? hexes.get(1) : hexes.get(0);
+		 Board.Point point = h.toHexProto().getLocation();
+
+		 // Move and check
+		 clientGame.moveRobber(point);
+		 assertNotEquals(h,clientGame.getGrid().getHexWithRobber());
+	 }
 
 	@Test
 	public void stealTest() throws CannotAffordException, BankLimitException

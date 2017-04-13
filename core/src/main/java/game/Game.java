@@ -15,6 +15,7 @@ import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.resource.Resource;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -169,25 +170,52 @@ public abstract class Game
 	protected void checkLongestRoad(boolean broken)
 	{
 		Player playerWithLongestRoad = players.get(this.playerWithLongestRoad);
+		List<Colour> cols = new ArrayList<Colour>();
+		int max = 0;
 
-		// Calculate who has longest road
-		for (Colour c : Colour.values())
+		// Calculate which player(s) has / have the longest road
+		for (Player player : players.values())
 		{
-			if (!players.containsKey(c)) continue;
-
-			Player player = players.get(c);
+			Colour c = player.getColour();
 			int length = player.calcRoadLength();
-			if (length > longestRoad || (broken && c.equals(currentPlayer)))
-			{
-				// Update victory points
-				if (longestRoad >= MIN_ROAD_LENGTH)
-				{
-					playerWithLongestRoad.addVp(-2);
-				}
-				if (length >= MIN_ROAD_LENGTH) player.addVp(2);
-				if (playerWithLongestRoad != null) playerWithLongestRoad.setHasLongestRoad(false);
 
-				longestRoad = length;
+			if(length > max)
+			{
+				cols.clear();
+				max = length;
+				cols.add(c);
+			}
+			else if(length == max) cols.add(c);
+		}
+
+		// Remove longest road victory points if necessary
+		if (longestRoad >= MIN_ROAD_LENGTH)
+		{
+			// If the player no longer has longest road
+			if(max < MIN_ROAD_LENGTH || !cols.contains(playerWithLongestRoad.getColour()))
+			{
+				this.playerWithLongestRoad = null;
+				playerWithLongestRoad.setHasLongestRoad(false);
+			}
+
+			// if the road was broken but the player with the longest road still has it
+			if(broken && cols.contains(playerWithLongestRoad.getColour()))
+			{
+				longestRoad = max;
+				return;
+			}
+		}
+		longestRoad = max;
+
+		// If the new longest road meets the threshold
+		if (max >= MIN_ROAD_LENGTH)
+		{
+			// If there is a tie, no one gets longest road
+			if(broken && cols.size() > 1) return;
+			else
+			{
+				Colour c = cols.get(0);
+				Player player = players.get(c);
 				this.playerWithLongestRoad = c;
 				player.setHasLongestRoad(true);
 			}

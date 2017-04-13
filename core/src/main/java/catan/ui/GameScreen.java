@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import enums.Colour;
 import enums.ResourceType;
 import game.build.Building;
+import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
 import grid.Edge;
@@ -81,7 +82,11 @@ public class GameScreen implements Screen
                 persistentInstances.add(factory.getChitInstance(hex));
             }
 		}
-		drawPorts();
+
+		for (final Port port : game.getState().getGrid().getPortsAsList())
+        {
+
+        }
 	}
 
 	@Override
@@ -103,13 +108,20 @@ public class GameScreen implements Screen
 	private void updateInstancesFromState()
 	{
 		volatileInstances.clear();
-		drawRoads();
-		drawBuildings();
+
+        for (final Node node : game.getState().getGrid().getNodesAsList())
+        {
+            Building building = node.getBuilding();
+            if (building != null)
+            {
+                volatileInstances.add(CatanModelFactory.getBuildingInstance(building));
+            }
+        }
 	}
 
 	private void drawRoads()
 	{
-		Model model = game.assets.getModel("road.g3db");
+		Model model = SettlersOfCatan.assets.getModel("road.g3db");
 
 		List<Edge> edges = game.client.getState().getGrid().getEdgesAsList();
 		for (Edge edge : edges)
@@ -143,56 +155,19 @@ public class GameScreen implements Screen
 		}
 	}
 
-	private void drawBuildings()
-	{
-		Model model = game.assets.getModel("settlement.g3db");
-		Model modelCity = game.assets.getModel("city.g3db");
-
-		List<Node> nodes = game.client.getState().getGrid().getNodesAsList();
-		for (Node node : nodes)
-		{
-			Vector3 place = node.get3DPos();
-			ModelInstance instance;
-
-			Building building = node.getBuilding();
-
-			if (building != null)
-			{
-				if (building instanceof Settlement)
-				{
-					instance = new ModelInstance(model, place);
-				}
-				else
-				{
-					instance = new ModelInstance(modelCity, place);
-				}
-
-				instance.materials.get(0).set(ColorAttribute.createDiffuse(playerToColour(building.getPlayerColour())));
-				instance.transform.scale(0.3f, 0.25f, 0.25f);
-				instance.transform.translate(0, 1.5f, 0);
-				volatileInstances.add(instance);
-			}
-		}
-	}
-
 	private void drawPorts()
 	{
-		Model model = game.assets.getModel("port2.g3db");
+		Model model = SettlersOfCatan.assets.getModel("port2.g3db");
 
 		List<Port> ports = game.client.getState().getGrid().getPortsAsList();
 		for (Port port : ports)
 		{
 			Vector3 n = port.getX().get3DPos();
 			Vector3 n2 = port.getY().get3DPos();
-			float xMidpoint = (n.x + n2.x) / 2;
-			float yMidpoint = (n.y + n2.y) / 2;
 
-			Vector3 Midpoint = new Vector3(xMidpoint, 0.1f, yMidpoint);
-			ModelInstance instance = new ModelInstance(model, n);
+            ModelInstance instance = new ModelInstance(model, n);
 			ModelInstance instance2 = new ModelInstance(model, n2);
-			
-			
-			//instance.transform.rotate(0,1f, 0, 45f);
+
 			instance.transform.scale(0.5f, 0.5f, 0.2f);			
 			instance2.transform.scale(0.5f,0.5f,0.2f);
 			instance.transform.translate(0, 1.5f, 0);
@@ -202,17 +177,6 @@ public class GameScreen implements Screen
 		}
 	}
 
-	private static Color playerToColour(final Colour name)
-	{
-		switch (name)
-		{
-			case BLUE:   return Color.BLUE;
-			case RED:    return Color.RED;
-			case WHITE:  return Color.WHITE;
-			case ORANGE: return Color.ORANGE;
-			default:     return null;
-		}
-	}
 
 	@Override
 	public void dispose()

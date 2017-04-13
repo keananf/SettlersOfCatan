@@ -401,11 +401,8 @@ public class Server implements Runnable
 
 				for (Colour c : connections.keySet())
 				{
-					if (getExpectedMoves(c).contains(Request.BodyCase.JOINLOBBY))
-					{
-						continue;
-					}
-					else if (ev != null) sendMessage(Message.newBuilder().setEvent(ev).build(), c);
+					if (!getExpectedMoves(c).contains(Request.BodyCase.JOINLOBBY) && ev != null)
+						sendMessage(Message.newBuilder().setEvent(ev).build(), c);
 				}
 			}
 			catch (Exception e)

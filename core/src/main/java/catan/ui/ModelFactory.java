@@ -146,7 +146,7 @@ class ModelFactory
 			return null;
 
 		final ModelInstance instance = new ModelInstance(model, building.getNode().get3DPos());
-		paint(instance, playerToColor(building.getPlayerColour()));
+		paint(instance, building.getPlayerColour().getDisplayColor());
 		instance.transform.scale(0.3f, 0.25f, 0.25f);
 		instance.transform.translate(0, 1.5f, 0);
 		return instance;
@@ -156,7 +156,7 @@ class ModelFactory
 	{
 		final Vector3 pos = road.getEdge().get3dVectorMidpoint();
 		final ModelInstance instance = new ModelInstance(ROAD, pos);
-		paint(instance, playerToColor(road.getPlayerColour()));
+		paint(instance, road.getPlayerColour().getDisplayColor());
 		instance.transform.scale(0.1f, 0.1f, 0.1f);
 		instance.transform.translate(0, 1.5f, 0);
 
@@ -176,23 +176,6 @@ class ModelFactory
 		}
 
 		return instance;
-	}
-
-	private static Color playerToColor(final Colour player)
-	{
-		switch (player)
-		{
-		case BLUE:
-			return Color.BLUE;
-		case RED:
-			return Color.RED;
-		case WHITE:
-			return Color.WHITE;
-		case ORANGE:
-			return Color.ORANGE;
-		default:
-			return null; // if player == null
-		}
 	}
 
 	private static void paint(final ModelInstance instance, final Color color)

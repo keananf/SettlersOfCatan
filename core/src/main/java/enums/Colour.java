@@ -1,5 +1,6 @@
 package enums;
 
+import com.badlogic.gdx.graphics.Color;
 import intergroup.lobby.Lobby;
 
 public enum Colour
@@ -58,5 +59,23 @@ public enum Colour
 		}
 
 		return p;
+	}
+
+	public Color getDisplayColor()
+	{
+		switch (this)
+		{
+			case BLUE:
+				return Color.BLUE;
+			case RED:
+				return Color.RED;
+			case WHITE:
+				return Color.WHITE;
+			case ORANGE:
+				return Color.ORANGE;
+			default:
+				assert(false);
+				return null;
+		}
 	}
 }

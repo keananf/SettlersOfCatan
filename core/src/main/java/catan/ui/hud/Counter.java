@@ -20,9 +20,12 @@ class Counter extends Stack
 
 	Counter(final String type, final Supplier<Integer> countSupplier)
 	{
-		this.countSupplier = countSupplier;
+		this(new Image(AssMan.getTexture(format(ICON_FMT, type))), countSupplier);
+	}
 
-		Image bground = new Image(AssMan.getTexture(format(ICON_FMT, type)));
+	Counter(final Image bground, final Supplier<Integer> countSupplier)
+	{
+		this.countSupplier = countSupplier;
 		add(bground);
 
 		countLabel = new Label("0", SettlersOfCatan.getSkin());

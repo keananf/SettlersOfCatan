@@ -4,11 +4,7 @@ import catan.SettlersOfCatan;
 import catan.ui.AssMan;
 import client.ClientGame;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
@@ -36,7 +32,9 @@ public class HeadsUpDisplay extends Stage
 		// ======================================================================================
 
 		{
-			final Counter vps = new Counter("victory-points", me::getVp);
+			final Image bground = new Image(AssMan.getTexture("icons/player.png"));
+			bground.setColor(state.getPlayer().getColour().getDisplayColor());
+			final Counter vps = new Counter(bground, me::getVp);
 			root.add(vps).left();
 		}
 
@@ -48,7 +46,7 @@ public class HeadsUpDisplay extends Stage
 		root.add(messageBox).center();
 
 		{
-			currentTurn = new Image(AssMan.getDrawable("turn.png"));
+			currentTurn = new Image(AssMan.getDrawable("icons/player.png"));
 			root.add(currentTurn).right();
 		}
 
@@ -66,7 +64,7 @@ public class HeadsUpDisplay extends Stage
 		}
 		developmentCards.addActor(new Counter("playedknight",
 				() -> me.getPlayedDevCards().getOrDefault(DevelopmentCardType.Knight, 0)));
-		root.add(developmentCards).left();
+		root.add(developmentCards).expandY().left();
 
 		root.add(); // blank centre middle cell
 
@@ -95,11 +93,18 @@ public class HeadsUpDisplay extends Stage
 		resources.space(5);
 		for (ResourceType type : ResourceType.values())
 		{
-			if (type == ResourceType.Generic) continue;
-			resources.addActor(new Counter(type.toString().toLowerCase(),
-					() -> me.getResources().getOrDefault(type, 0)));
+			if (type != ResourceType.Generic)
+			{
+				resources.addActor(new Counter(type.toString().toLowerCase(),
+						() -> me.getResources().getOrDefault(type, 0)));
+			}
 		}
-		root.add(resources).expand().bottom().colspan(2);
+		root.add(resources).expandX().center();
+
+		{
+			ImageButton endTurnBtn = new ImageButton(AssMan.getDrawable("end-turn.png"));
+			root.add(endTurnBtn).right();
+		}
 
 		// ======================================================================================
 	}

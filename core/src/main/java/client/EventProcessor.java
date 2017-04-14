@@ -44,7 +44,7 @@ public class EventProcessor
 			getGame().setGameOver();
 			break;
 		case TURNENDED:
-			//getGame().getPlayer().clearRecentDevCards();
+			getGame().getPlayer().clearRecentDevCards();
 			getGame().updateCurrentPlayer();
 			getTurn().reset();
 			break;

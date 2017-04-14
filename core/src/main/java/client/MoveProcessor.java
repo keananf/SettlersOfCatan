@@ -412,8 +412,7 @@ public class MoveProcessor
 	 */
 	public boolean checkInitiateTrade(Turn turn)
 	{
-		Map<ResourceType, Integer> cost = new HashMap<>(),
-				wanting = new HashMap<>();
+		Map<ResourceType, Integer> cost = new HashMap<>(), wanting = new HashMap<>();
 
 		Trade.Kind.Builder builder = Trade.Kind.newBuilder();
 		Trade.Kind initiateTrade = turn.getPlayerTrade() != null ? builder.setPlayer(turn.getPlayerTrade()).build()

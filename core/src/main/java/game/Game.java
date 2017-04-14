@@ -88,14 +88,11 @@ public abstract class Game
 	public Lobby.GameInfo.PlayerDevCardInfo processCards(Map<DevelopmentCardType, Integer> map)
 	{
 		Lobby.GameInfo.PlayerDevCardInfo.Builder info = Lobby.GameInfo.PlayerDevCardInfo.newBuilder();
-		info.setUniversity(
-				map.getOrDefault(DevelopmentCardType.University, 0));
+		info.setUniversity(map.getOrDefault(DevelopmentCardType.University, 0));
 		info.setLibrary(map.getOrDefault(DevelopmentCardType.Library, 0));
-		info.setYearOfPlenty(
-				map.getOrDefault(DevelopmentCardType.YearOfPlenty, 0));
+		info.setYearOfPlenty(map.getOrDefault(DevelopmentCardType.YearOfPlenty, 0));
 		info.setMonopoly(map.getOrDefault(DevelopmentCardType.Monopoly, 0));
-		info.setRoadBuilding(
-				map.getOrDefault(DevelopmentCardType.RoadBuilding, 0));
+		info.setRoadBuilding(map.getOrDefault(DevelopmentCardType.RoadBuilding, 0));
 		info.setKnight(map.getOrDefault(DevelopmentCardType.Knight, 0));
 
 		return info.build();

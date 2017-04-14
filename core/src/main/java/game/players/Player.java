@@ -285,8 +285,7 @@ public abstract class Player
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		return b != null || valid
-				|| (getRoads().size() < 2 && b != null);
+		return b != null || valid || (getRoads().size() < 2 && b != null);
 
 	}
 

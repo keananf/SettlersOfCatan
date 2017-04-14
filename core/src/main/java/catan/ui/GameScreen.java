@@ -83,7 +83,8 @@ public class GameScreen implements Screen
 		camController.update();
 		updateInstancesFromState();
 
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); // clear screen
+		// clear screen
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		worldBatch.begin(camera);
 		worldBatch.render(persistentInstances, ENVIRONMENT);
@@ -134,8 +135,19 @@ public class GameScreen implements Screen
 		hud.getViewport().update(width, height, true);
 	}
 
-	@Override public void pause() {}
-	@Override public void resume() {}
-	@Override public void hide() {}
-	@Override public void show() {}
+	@Override
+	public void pause()
+	{}
+
+	@Override
+	public void resume()
+	{}
+
+	@Override
+	public void hide()
+	{}
+
+	@Override
+	public void show()
+	{}
 }

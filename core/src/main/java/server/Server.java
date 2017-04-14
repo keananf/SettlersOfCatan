@@ -361,8 +361,7 @@ public class Server implements Runnable
 				c = game.joinGame();
 			}
 			catch (GameFullException ignored)
-			{
-			}
+			{}
 			ListenerThread l = new ListenerThread(new RemoteClientConnection(connection), c, this);
 			connections.put(c, l);
 			Thread t = new Thread(l);

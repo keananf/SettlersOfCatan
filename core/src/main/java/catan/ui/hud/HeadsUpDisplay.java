@@ -3,6 +3,7 @@ package catan.ui.hud;
 import client.ClientGame;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -12,6 +13,9 @@ import game.players.Player;
 
 public class HeadsUpDisplay extends Stage
 {
+	private static final float MESSAGE_DURATION = 5; // seconds
+	private float messageTimeLeft = 0;
+	private final Label messageBox;
 
 	public HeadsUpDisplay(final ClientGame state)
 	{
@@ -21,6 +25,13 @@ public class HeadsUpDisplay extends Stage
 		final Table root = new Table();
 		root.setFillParent(true);
 		addActor(root);
+
+		/*
+		 * Outlet for miscilanious messages
+		 */
+		messageBox = new Label("", SettlersOfCatan.getSkin());
+		messageBox.setVisible(false);
+		root.add(messageBox).center();
 
 		/*
 		 * DEVELOPMENT CARDS
@@ -63,9 +74,25 @@ public class HeadsUpDisplay extends Stage
 		root.add(resources).expand().bottom().colspan(2);
 	}
 
-	public void render()
+	public void render(final float delta)
 	{
 		act();
 		draw();
+
+		if (messageTimeLeft > 0)
+		{
+			messageTimeLeft -= delta;
+		} else {
+			messageBox.setVisible(false);
+		}
+
+		currentTurn.setColor(state.getCurrentPlayer().getDisplayColor());
+	}
+
+	public void sendMessage(final String message)
+	{
+		messageBox.setText(message);
+		messageTimeLeft = MESSAGE_DURATION;
+		messageBox.setVisible(true);
 	}
 }

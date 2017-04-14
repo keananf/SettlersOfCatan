@@ -26,6 +26,13 @@ public class HeadsUpDisplay extends Stage
 		root.setFillParent(true);
 		addActor(root);
 
+		// ======================================================================================
+
+		{
+			final Counter vps = new Counter("victory-points", me::getVp);
+			root.add(vps).left();
+		}
+
 		/*
 		 * Outlet for miscilanious messages
 		 */

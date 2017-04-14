@@ -1,8 +1,11 @@
 package catan.ui.hud;
 
+import catan.SettlersOfCatan;
+import catan.ui.AssMan;
 import client.ClientGame;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
@@ -17,9 +20,13 @@ public class HeadsUpDisplay extends Stage
 	private float messageTimeLeft = 0;
 	private final Label messageBox;
 
+	private final Image currentTurn;
+	private final ClientGame state;
+
 	public HeadsUpDisplay(final ClientGame state)
 	{
 		super(new ScreenViewport());
+		this.state = state;
 		final Player me = state.getPlayer();
 
 		final Table root = new Table();
@@ -40,6 +47,13 @@ public class HeadsUpDisplay extends Stage
 		messageBox.setVisible(false);
 		root.add(messageBox).center();
 
+		{
+			currentTurn = new Image(AssMan.getDrawable("turn.png"));
+			root.add(currentTurn).right();
+		}
+
+		root.row(); // ==========================================================================
+
 		/*
 		 * DEVELOPMENT CARDS
 		 */
@@ -52,7 +66,9 @@ public class HeadsUpDisplay extends Stage
 		}
 		developmentCards.addActor(new Counter("playedknight",
 				() -> me.getPlayedDevCards().getOrDefault(DevelopmentCardType.Knight, 0)));
-		root.add(developmentCards).expand().left();
+		root.add(developmentCards).left();
+
+		root.add(); // blank centre middle cell
 
 		/*
 		 * PLAYERS
@@ -63,9 +79,10 @@ public class HeadsUpDisplay extends Stage
 		{
 			players.addActor(new PlayerBar(player));
 		}
-		root.add(players).expand().right().top().pad(10);
+		root.add(players).right().pad(10);
 
-		root.row();
+
+		root.row(); // ==========================================================================
 
 		/*
 		 * RESOURCES
@@ -79,6 +96,8 @@ public class HeadsUpDisplay extends Stage
 					() -> me.getResources().getOrDefault(type, 0)));
 		}
 		root.add(resources).expand().bottom().colspan(2);
+
+		// ======================================================================================
 	}
 
 	public void render(final float delta)

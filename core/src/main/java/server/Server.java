@@ -255,7 +255,7 @@ public class Server implements Runnable
 	 * 
 	 * @throws IOException
 	 */
-	private void broadcastBoard() throws IOException
+	private void broadcastBoard()
 	{
 		// Set up message
 		Message.Builder msg = Message.newBuilder();
@@ -282,7 +282,7 @@ public class Server implements Runnable
 	 * 
 	 * @throws IOException
 	 */
-	private void broadcastEvent(Event ev) throws IOException
+	private void broadcastEvent(Event ev)
 	{
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(ev);
@@ -713,7 +713,7 @@ public class Server implements Runnable
 		sendMessage(msg, c);
 	}
 
-	public void addMessageToProcess(ReceivedMessage msg) throws IOException
+	public void addMessageToProcess(ReceivedMessage msg)
 	{
 		msgProc.addMoveToProcess(msg);
 	}

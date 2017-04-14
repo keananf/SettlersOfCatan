@@ -344,7 +344,7 @@ public abstract class Player
 	 * 
 	 * @param count a map of resources to give to the player
 	 */
-	public void grantResources(Resource.Counts count, Bank bank) throws CannotAffordException, BankLimitException
+	public void grantResources(Resource.Counts count, Bank bank) throws BankLimitException
 	{
 		Map<ResourceType, Integer> newResources = new HashMap<>();
 		newResources.put(ResourceType.Brick, count.getBrick());

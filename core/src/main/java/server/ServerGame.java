@@ -398,7 +398,7 @@ public class ServerGame extends Game
 	 * @param id the id of the player to take from
 	 * @throws CannotStealException
 	 */
-	public Board.Steal takeResource(Board.Player.Id id) throws CannotStealException
+	public Board.Steal takeResource(Board.Player.Id id)
 	{
 		Player other = getPlayer(id);
 		ResourceType r = ResourceType.Generic;

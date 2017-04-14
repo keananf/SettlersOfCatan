@@ -56,10 +56,6 @@ project(":core") {
     apply plugin: "com.diffplug.gradle.spotless"
     apply plugin: 'findbugs'
 
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:all"
-    }
-
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"

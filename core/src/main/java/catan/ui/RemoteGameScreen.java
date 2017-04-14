@@ -34,8 +34,8 @@ public class RemoteGameScreen implements Screen
 		body.space(60);
 		ui.addActor(body);
 
-		body.addActor(new Label("Remote Game ", SettlersOfCatan.skin, "title"));
-		TextField text = new TextField("Type Here", SettlersOfCatan.skin);
+		body.addActor(new Label("Remote Game ", SettlersOfCatan.getSkin(), "title"));
+		TextField text = new TextField("Type Here", SettlersOfCatan.getSkin());
 		body.addActor(text);
 
 		addSubmitButton(body, text);
@@ -44,7 +44,7 @@ public class RemoteGameScreen implements Screen
 
 	private void addSubmitButton(VerticalGroup body, TextField text)
 	{
-		TextButton button = new TextButton("Submit", SettlersOfCatan.skin);
+		TextButton button = new TextButton("Submit", SettlersOfCatan.getSkin());
 		button.addListener(new ChangeListener()
 		{
 			public void changed(ChangeEvent event, Actor actor)
@@ -64,7 +64,7 @@ public class RemoteGameScreen implements Screen
 
 	private void addBackButton(VerticalGroup body)
 	{
-		TextButton button = new TextButton("Main Menu", SettlersOfCatan.skin);
+		TextButton button = new TextButton("Main Menu", SettlersOfCatan.getSkin());
 		button.addListener(new ChangeListener()
 		{
 			public void changed(ChangeEvent event, Actor actor)

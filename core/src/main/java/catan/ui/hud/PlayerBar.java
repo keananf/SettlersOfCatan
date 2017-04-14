@@ -15,10 +15,10 @@ class PlayerBar extends Stack
 		final HorizontalGroup row = new HorizontalGroup();
 		addActor(row);
 
-		final Label name = new Label(player.getUsername(), SettlersOfCatan.skin, "username");
+		final Label name = new Label(player.getUsername(), SettlersOfCatan.getSkin(), "username");
 		row.addActor(name);
 
-		final TextButton tradeBtn = new TextButton("Trade", SettlersOfCatan.skin);
+		final TextButton tradeBtn = new TextButton("Trade", SettlersOfCatan.getSkin());
 		row.addActor(tradeBtn);
 	}
 }

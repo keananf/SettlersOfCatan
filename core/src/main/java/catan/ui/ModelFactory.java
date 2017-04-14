@@ -46,18 +46,18 @@ class ModelFactory
 	private static final Pixmap fontPixmap = new Pixmap(Gdx.files.internal(data.imagePaths[0]));
 
 	// Models
-	private static final Model SEA = builder.createCylinder(150f, 0f, 150f, 6, WATER, DEFAULT_ATTRS);
-	private static final Model ISLAND = builder.createCylinder(11f, 1f, 11f, 6, DIRT, DEFAULT_ATTRS);
-	private static final Model GRAIN = SettlersOfCatan.assets.getModel("grain.g3db");
-	private static final Model ORE = SettlersOfCatan.assets.getModel("ore.g3db");
-	private static final Model WOOL = SettlersOfCatan.assets.getModel("wool.g3db");
-	private static final Model LUMBER = SettlersOfCatan.assets.getModel("lumber.g3db");
-	private static final Model GENERIC = SettlersOfCatan.assets.getModel("desert.g3db");
-	private static final Model BRICK = SettlersOfCatan.assets.getModel("mine.g3db");
-	private static final Model PORT = SettlersOfCatan.assets.getModel("port.g3db");
-	private static final Model ROAD = SettlersOfCatan.assets.getModel("road.g3db");
-	private static final Model SETTLEMENT = SettlersOfCatan.assets.getModel("settlement.g3db");
-	private static final Model CITY = SettlersOfCatan.assets.getModel("city.g3db");
+    private static final Model SEA = builder.createCylinder(150f, 0f, 150f, 6, WATER, DEFAULT_ATTRS);
+    private static final Model ISLAND = builder.createCylinder(11f, 1f, 11f, 6, DIRT, DEFAULT_ATTRS);
+    private static final Model GRAIN = SettlersOfCatan.getAssets().getModel("grain.g3db");
+    private static final Model ORE = SettlersOfCatan.getAssets().getModel("ore.g3db");
+    private static final Model WOOL = SettlersOfCatan.getAssets().getModel("woolScaled.g3db");
+    private static final Model LUMBER = SettlersOfCatan.getAssets().getModel("lumber.g3db");
+    private static final Model GENERIC = SettlersOfCatan.getAssets().getModel("desert.g3db");
+    private static final Model BRICK = SettlersOfCatan.getAssets().getModel("claymine.g3db");
+    private static final Model PORT = SettlersOfCatan.getAssets().getModel("port2.g3db");
+    private static final Model ROAD = SettlersOfCatan.getAssets().getModel("road.g3db");
+    private static final Model SETTLEMENT = SettlersOfCatan.getAssets().getModel("settlement.g3db");
+    private static final Model CITY = SettlersOfCatan.getAssets().getModel("city.g3db");
 
 	static ModelInstance getSeaInstance()
 	{
@@ -146,7 +146,7 @@ class ModelFactory
 			return null;
 
 		final ModelInstance instance = new ModelInstance(model, building.getNode().get3DPos());
-		paint(instance, playerToColor(building.getPlayerColour()));
+		paint(instance, building.getPlayerColour().getDisplayColor());
 		instance.transform.scale(0.3f, 0.25f, 0.25f);
 		instance.transform.translate(0, 1.5f, 0);
 		return instance;
@@ -156,7 +156,7 @@ class ModelFactory
 	{
 		final Vector3 pos = road.getEdge().get3dVectorMidpoint();
 		final ModelInstance instance = new ModelInstance(ROAD, pos);
-		paint(instance, playerToColor(road.getPlayerColour()));
+		paint(instance, road.getPlayerColour().getDisplayColor());
 		instance.transform.scale(0.1f, 0.1f, 0.1f);
 		instance.transform.translate(0, 1.5f, 0);
 
@@ -176,23 +176,6 @@ class ModelFactory
 		}
 
 		return instance;
-	}
-
-	private static Color playerToColor(final Colour player)
-	{
-		switch (player)
-		{
-		case BLUE:
-			return Color.BLUE;
-		case RED:
-			return Color.RED;
-		case WHITE:
-			return Color.WHITE;
-		case ORANGE:
-			return Color.ORANGE;
-		default:
-			return null; // if player == null
-		}
 	}
 
 	private static void paint(final ModelInstance instance, final Color color)

@@ -75,6 +75,8 @@ public class GameScreen implements Screen
 		{
 			persistentInstances.add(ModelFactory.getPortInstance(port));
 		}
+
+		hud.sendMessage("Welcome!");
 	}
 
 	@Override
@@ -91,7 +93,7 @@ public class GameScreen implements Screen
 		worldBatch.render(volatileInstances, ENVIRONMENT);
 		worldBatch.end();
 
-		hud.render();
+		hud.render(delta);
 	}
 
 	private void updateInstancesFromState()

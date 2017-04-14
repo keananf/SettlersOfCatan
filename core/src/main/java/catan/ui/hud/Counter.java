@@ -11,30 +11,23 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 
-class Counter<T> extends Stack
+class Counter extends Stack
 {
 	private final static String ICON_FMT = "icons/%s.png";
 
-	private final T type;
 	private final Supplier<Integer> countSupplier;
 	private final Label countLabel;
 
-	Counter(final T type, final Supplier<Integer> countSupplier)
+	Counter(final String type, final Supplier<Integer> countSupplier)
 	{
-		this.type = type;
 		this.countSupplier = countSupplier;
 
-		Image bground = new Image(AssMan.getTexture(format(ICON_FMT, type.toString().toLowerCase())));
+		Image bground = new Image(AssMan.getTexture(format(ICON_FMT, type)));
 		add(bground);
 
 		countLabel = new Label("0", SettlersOfCatan.getSkin());
 		countLabel.setAlignment(Align.center);
 		add(countLabel);
-	}
-
-	T getType()
-	{
-		return type;
 	}
 
 	@Override

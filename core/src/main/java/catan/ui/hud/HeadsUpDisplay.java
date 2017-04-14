@@ -12,10 +12,6 @@ import game.players.Player;
 
 public class HeadsUpDisplay extends Stage
 {
-	private enum PlayedCard
-	{
-		PlayedKnight
-	}
 
 	public HeadsUpDisplay(final ClientGame state)
 	{
@@ -33,9 +29,10 @@ public class HeadsUpDisplay extends Stage
 		developmentCards.space(5f);
 		for (DevelopmentCardType type : DevelopmentCardType.values())
 		{
-			developmentCards.addActor(new Counter<>(type, () -> me.getDevelopmentCards().getOrDefault(type, 0)));
+			developmentCards.addActor(new Counter(type.toString().toLowerCase(),
+					() -> me.getDevelopmentCards().getOrDefault(type, 0)));
 		}
-		developmentCards.addActor(new Counter<>(PlayedCard.PlayedKnight,
+		developmentCards.addActor(new Counter("playedknight",
 				() -> me.getPlayedDevCards().getOrDefault(DevelopmentCardType.Knight, 0)));
 		root.add(developmentCards).expand().left();
 
@@ -60,7 +57,8 @@ public class HeadsUpDisplay extends Stage
 		for (ResourceType type : ResourceType.values())
 		{
 			if (type == ResourceType.Generic) continue;
-			resources.addActor(new Counter<>(type, () -> me.getResources().getOrDefault(type, 0)));
+			resources.addActor(new Counter(type.toString().toLowerCase(),
+					() -> me.getResources().getOrDefault(type, 0)));
 		}
 		root.add(resources).expand().bottom().colspan(2);
 	}

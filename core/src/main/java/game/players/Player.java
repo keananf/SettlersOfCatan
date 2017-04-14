@@ -179,40 +179,54 @@ public abstract class Player
 	{
 		List<Road> newList1 = new ArrayList<Road>();
 		List<Road> newList2 = new ArrayList<Road>();
+		List<Road> skipped = new ArrayList<Road>();
+		Road eRoad = e.getRoad(), otherRoad = other.getRoad();
+		newList1.add(eRoad);
+		newList2.add(otherRoad);
 
+		// For each road in the chain
+		for (Road road : sublist)
+		{
+			if(newList1.contains(road) || newList2.contains(road)) continue;
+
+			// Divide up subList
+			if (e.getRoad().isConnected(road))
+			{
+				newList1.add(road);
+			}
+			else if (other.getRoad().isConnected(road))
+			{
+				newList2.add(road);
+			}
+			else skipped.add(road);
+		}
+
+		// Loop until all roads sorted
 		while(newList1.size() + newList2.size() != sublist.size())
 		{
-			// For each road in the chain
-			for (Road road : sublist)
+			// For each skipped road
+			for(Road road : skipped)
 			{
-				if(newList1.contains(road) || newList2.contains(road)) continue;
-
-				// Divide up subList
-				if (e.getRoad().isConnected(road))
+				// Check if connected to any road in first list
+				boolean added = false;
+				for(Road r1 : newList1)
 				{
-					newList1.add(road);
-				}
-				else if (other.getRoad().isConnected(road))
-				{
-					newList2.add(road);
-				}
-				else
-				{
-					for(Road r1 : newList1)
+					if (road.isConnected(r1))
 					{
-						if (road.isConnected(r1))
-						{
-							newList1.add(road);
-							break;
-						}
+						newList1.add(road);
+						added = true;
+						break;
 					}
-					for(Road r2 : newList2)
+				}
+
+				// Check if connected to any road in second list
+				for(Road r2 : newList2)
+				{
+					if(added) break;
+					if (road.isConnected(r2))
 					{
-						if (road.isConnected(r2))
-						{
-							newList2.add(road);
-							break;
-						}
+						newList2.add(road);
+						break;
 					}
 				}
 			}
@@ -548,7 +562,7 @@ public abstract class Player
 		{
 			addVp(-2);
 		}
-		else addVp(2);
+		else if(!this.hasLongestRoad) addVp(2);
 		this.hasLongestRoad = hasLongestRoad;
 	}
 

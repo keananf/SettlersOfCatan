@@ -378,9 +378,10 @@ public class ClientProcessTests extends ClientTestHelper
 
 		// Build fifth road chained onto the sixth
 		processRoadEvent(e5, p.getColour());
+		processRoadEvent(e6, p.getColour());
 
 		// Assert longest road
-		assertEquals(5, p.calcRoadLength());
+		assertEquals(6, p.calcRoadLength());
 		assertEquals(1, p.getNumOfRoadChains());
 		assertEquals(4, p.getVp());
 

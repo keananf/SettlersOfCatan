@@ -67,7 +67,7 @@ public class ClientGame extends Game
 	 * @return a representation of the board that is compatible with protofbufs
 	 * @param beginGame
 	 */
-	public HexGrid setBoard(Lobby.GameSetup beginGame) throws InvalidCoordinatesException, CannotAffordException
+	public HexGrid setBoard(Lobby.GameSetup beginGame)
 	{
 		HexGrid grid = new HexGrid(false);
 		this.grid = grid;
@@ -565,8 +565,7 @@ public class ClientGame extends Game
 	 * @param cardsDiscarded the discarded resources
 	 * @param instigator the player who discarded them
 	 */
-	public void processDiscard(Resource.Counts cardsDiscarded, Board.Player instigator)
-			throws CannotAffordException, BankLimitException
+	public void processDiscard(Resource.Counts cardsDiscarded, Board.Player instigator) throws CannotAffordException
 	{
 		Player player = getPlayer(instigator.getId());
 

@@ -54,7 +54,7 @@ public class TurnState extends Turn
 		return expectedMoves;
 	}
 
-	boolean isTradePhase()
+	public boolean isTradePhase()
 	{
 		return tradePhase;
 	}

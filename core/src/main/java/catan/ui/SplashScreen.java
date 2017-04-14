@@ -34,10 +34,10 @@ public class SplashScreen implements Screen
 		body.space(50);
 		ui.addActor(body);
 
-		Label title = new Label("Settlers of Catan", SettlersOfCatan.skin, "title");
+		Label title = new Label("Settlers of Catan", SettlersOfCatan.getSkin(), "title");
 		body.addActor(title);
 
-		Label prompt = new Label("Click to start", SettlersOfCatan.skin);
+		Label prompt = new Label("Click to start", SettlersOfCatan.getSkin());
 		body.addActor(prompt);
 
 		body.setSize(body.getPrefWidth(), body.getPrefHeight());

@@ -27,7 +27,7 @@ class Counter<T> extends Stack
 		Image bground = new Image(AssMan.getTexture(format(ICON_FMT, type.toString().toLowerCase())));
 		add(bground);
 
-		countLabel = new Label("0", SettlersOfCatan.skin);
+		countLabel = new Label("0", SettlersOfCatan.getSkin());
 		countLabel.setAlignment(Align.center);
 		add(countLabel);
 	}

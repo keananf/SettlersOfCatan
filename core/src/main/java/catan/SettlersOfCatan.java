@@ -12,11 +12,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
-	public static Skin skin;
-	public static AssMan assets = new AssMan();
+	private static Skin skin;
+	private static AssMan assets = new AssMan();
 	public Client client;
 	private Thread t;
 	private boolean active;
+
+	public static Skin getSkin() {
+		return skin;
+	}
+
+	public static AssMan getAssets() {
+		return assets;
+	}
 
 	@Override
 	public void create()

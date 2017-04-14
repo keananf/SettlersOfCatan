@@ -26,8 +26,7 @@ public class Road implements IBuildable
 	}
 
 	private Road()
-	{
-	}
+	{}
 
 	/**
 	 * @return a map containing the total cost for all resources

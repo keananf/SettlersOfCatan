@@ -20,8 +20,7 @@ public class City extends Building
 	}
 
 	private City()
-	{
-	}
+	{}
 
 	/**
 	 * @return a map containing the total cost for all resources

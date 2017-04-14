@@ -119,21 +119,17 @@ public class MainMenuScreen implements Screen
 	// Required but unused
 	@Override
 	public void pause()
-	{
-	}
+	{}
 
 	@Override
 	public void resume()
-	{
-	}
+	{}
 
 	@Override
 	public void hide()
-	{
-	}
+	{}
 
 	@Override
 	public void show()
-	{
-	}
+	{}
 }

@@ -285,8 +285,7 @@ public abstract class Player
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		return b != null || valid
-				|| (getRoads().size() < 2 && b != null);
+		return b != null || valid || (getRoads().size() < 2 && b != null);
 
 	}
 
@@ -332,7 +331,7 @@ public abstract class Player
 		for (ResourceType r : newResources.keySet())
 		{
 			int value = newResources.get(r);
-			int existing = resources.containsKey(r) ? resources.get(r) : 0;
+			int existing = resources.getOrDefault(r, 0);
 
 			// Add to overall resource bank
 			resources.put(r, value + existing);
@@ -344,7 +343,7 @@ public abstract class Player
 	 * 
 	 * @param count a map of resources to give to the player
 	 */
-	public void grantResources(Resource.Counts count, Bank bank) throws CannotAffordException, BankLimitException
+	public void grantResources(Resource.Counts count, Bank bank) throws BankLimitException
 	{
 		Map<ResourceType, Integer> newResources = new HashMap<>();
 		newResources.put(ResourceType.Brick, count.getBrick());
@@ -392,7 +391,7 @@ public abstract class Player
 		for (ResourceType r : cost.keySet())
 		{
 			int value = cost.get(r);
-			int existing = resources.containsKey(r) ? resources.get(r) : 0;
+			int existing = resources.getOrDefault(r, 0);
 
 			// Add to overall resource bank
 			resources.put(r, existing - value);
@@ -439,8 +438,8 @@ public abstract class Player
 	{
 		// Add the card reveal
 		int vp = this.vp;
-		vp += cards.containsKey(DevelopmentCardType.University) ? cards.get(DevelopmentCardType.University) : 0;
-		vp += cards.containsKey(DevelopmentCardType.Library) ? cards.get(DevelopmentCardType.Library) : 0;
+		vp += cards.getOrDefault(DevelopmentCardType.University, 0);
+		vp += cards.getOrDefault(DevelopmentCardType.Library, 0);
 
 		return vp >= VP_THRESHOLD;
 	}
@@ -545,11 +544,11 @@ public abstract class Player
 	{
 		DevelopmentCardType type = DevelopmentCardType.fromProto(card);
 
-		int existing = cards.containsKey(type) ? cards.get(type) : 0;
+		int existing = cards.getOrDefault(type, 0);
 		cards.put(type, existing + 1);
 
 		// Update recent bought caught
-		existing = recentBoughtCards.containsKey(type) ? recentBoughtCards.get(type) : 0;
+		existing = recentBoughtCards.getOrDefault(type, 0);
 		recentBoughtCards.put(type, existing + 1);
 	}
 
@@ -560,7 +559,7 @@ public abstract class Player
 	 */
 	protected void playCard(DevelopmentCardType card)
 	{
-		int existing = cards.containsKey(card) ? cards.get(card) : 0;
+		int existing = cards.getOrDefault(card, 0);
 		cards.put(card, existing - 1);
 	}
 

@@ -81,8 +81,12 @@ public class HeadsUpDisplay extends Stage
 		}
 		root.add(players).right().pad(10);
 
-
 		root.row(); // ==========================================================================
+
+		{
+			ImageButton buyDevCardBtn = new ImageButton(AssMan.getDrawable("buy-dev-card.png"));
+			root.add(buyDevCardBtn).left();
+		}
 
 		/*
 		 * RESOURCES

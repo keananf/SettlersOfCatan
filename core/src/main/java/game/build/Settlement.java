@@ -21,8 +21,7 @@ public class Settlement extends Building
 	}
 
 	private Settlement()
-	{
-	}
+	{}
 
 	/**
 	 * @return a map containing the total cost for all resources

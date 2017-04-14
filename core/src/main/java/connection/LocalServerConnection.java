@@ -39,8 +39,7 @@ public class LocalServerConnection implements IServerConnection
 			return fromServer.take();
 		}
 		catch (InterruptedException ignored)
-		{
-		}
+		{}
 		return null;
 	}
 
@@ -58,8 +57,7 @@ public class LocalServerConnection implements IServerConnection
 			conn.fromClient.put(message);
 		}
 		catch (InterruptedException ignored)
-		{
-		}
+		{}
 	}
 
 	@Override

@@ -25,8 +25,7 @@ public abstract class Building implements IBuildable
 	}
 
 	protected Building()
-	{
-	}
+	{}
 
 	/**
 	 * Calculates the total resources gained for this settlement

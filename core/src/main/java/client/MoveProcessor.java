@@ -323,7 +323,7 @@ public class MoveProcessor
 			{
 				// If you didn't just buy this card / these cards
 				Map<DevelopmentCardType, Integer> recentCards = player.getRecentBoughtDevCards();
-				int num = recentCards.containsKey(type) ? recentCards.get(type) : 0;
+				int num = recentCards.getOrDefault(type, 0);
 				return player.getDevelopmentCards().get(type) > num;
 			}
 		}
@@ -412,8 +412,7 @@ public class MoveProcessor
 	 */
 	public boolean checkInitiateTrade(Turn turn)
 	{
-		Map<ResourceType, Integer> cost = new HashMap<>(),
-				wanting = new HashMap<>();
+		Map<ResourceType, Integer> cost = new HashMap<>(), wanting = new HashMap<>();
 
 		Trade.Kind.Builder builder = Trade.Kind.newBuilder();
 		Trade.Kind initiateTrade = turn.getPlayerTrade() != null ? builder.setPlayer(turn.getPlayerTrade()).build()

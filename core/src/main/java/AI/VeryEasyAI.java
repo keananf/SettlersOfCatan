@@ -129,7 +129,7 @@ public class VeryEasyAI extends AICore
 			if (resources.containsKey(r) && resources.get(r) > 0)
 			{
 				resources.put(r, resources.get(r) - 1);
-				discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
+				discard.put(r, 1 + (discard.getOrDefault(r, 0)));
 				diff--;
 			}
 		}

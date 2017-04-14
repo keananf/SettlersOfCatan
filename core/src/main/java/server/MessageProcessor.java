@@ -94,7 +94,7 @@ public class MessageProcessor
 	 * @param msg the message received from across the network
 	 * @return the response message
 	 */
-	private Events.Event processMove(Messages.Message msg, Colour colour) throws IOException
+	private Events.Event processMove(Messages.Message msg, Colour colour)
 	{
 		Requests.Request request = msg.getRequest();
 		Events.Event.Builder ev = Events.Event.newBuilder();
@@ -332,8 +332,7 @@ public class MessageProcessor
 	 * @return the bank trade or null
 	 */
 	private Trade.WithBank processTradeType(Trade.Kind request, Board.Player instigator)
-			throws IllegalPortTradeException, IllegalBankTradeException, CannotAffordException, IOException,
-			BankLimitException
+			throws IllegalPortTradeException, IllegalBankTradeException, CannotAffordException, BankLimitException
 	{
 		tradePhase = true;
 
@@ -408,7 +407,7 @@ public class MessageProcessor
 	 * @return a boolean indicating success or not
 	 * @throws IOException
 	 */
-	private boolean validateMsg(Messages.Message msg, Colour col) throws IOException
+	private boolean validateMsg(Messages.Message msg, Colour col)
 	{
 		// If it is not the player's turn, the message type is unknown OR the
 		// given request is NOT expected, return false

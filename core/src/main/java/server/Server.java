@@ -255,7 +255,7 @@ public class Server implements Runnable
 	 * 
 	 * @throws IOException
 	 */
-	private void broadcastBoard() throws IOException
+	private void broadcastBoard()
 	{
 		// Set up message
 		Message.Builder msg = Message.newBuilder();
@@ -282,7 +282,7 @@ public class Server implements Runnable
 	 * 
 	 * @throws IOException
 	 */
-	private void broadcastEvent(Event ev) throws IOException
+	private void broadcastEvent(Event ev)
 	{
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(ev);
@@ -360,9 +360,8 @@ public class Server implements Runnable
 			{
 				c = game.joinGame();
 			}
-			catch (GameFullException e)
-			{
-			}
+			catch (GameFullException ignored)
+			{}
 			ListenerThread l = new ListenerThread(new RemoteClientConnection(connection), c, this);
 			connections.put(c, l);
 			Thread t = new Thread(l);
@@ -490,7 +489,7 @@ public class Server implements Runnable
 			for (Hex h : ((ServerPlayer) p).getSettlementForInitialResources().getNode().getHexes())
 			{
 				if (h.getResource().equals(ResourceType.Generic)) continue;
-				int existing = resources.containsKey(h.getResource()) ? resources.get(h.getResource()) : 0;
+				int existing = resources.getOrDefault(h.getResource(), 0);
 				resources.put(h.getResource(), existing + 1);
 			}
 
@@ -713,7 +712,7 @@ public class Server implements Runnable
 		sendMessage(msg, c);
 	}
 
-	public void addMessageToProcess(ReceivedMessage msg) throws IOException
+	public void addMessageToProcess(ReceivedMessage msg)
 	{
 		msgProc.addMoveToProcess(msg);
 	}

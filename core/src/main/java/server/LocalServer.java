@@ -78,9 +78,8 @@ public class LocalServer extends Server
 		{
 			c = game.joinGame();
 		}
-		catch (GameFullException e)
-		{
-		}
+		catch (GameFullException ignored)
+		{}
 
 		ListenerThread l = new ListenerThread(connection, c, this);
 		connections.put(c, l);

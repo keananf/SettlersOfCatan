@@ -82,7 +82,7 @@ public abstract class AIClient extends Client
 	/**
 	 * Acquires locks and attempts to move
 	 */
-	protected boolean acquireLocksAndPerformMove() throws Exception
+	protected boolean acquireLocksAndPerformMove()
 	{
 		boolean val = false;
 		try

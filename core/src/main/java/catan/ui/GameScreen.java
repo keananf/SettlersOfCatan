@@ -21,6 +21,8 @@ import grid.Hex;
 import grid.Node;
 import grid.Port;
 
+import java.util.List;
+
 public class GameScreen implements Screen
 {
 	private static final Environment ENVIRONMENT = new Environment();
@@ -38,10 +40,15 @@ public class GameScreen implements Screen
 	private final CameraController camController;
 	private final HeadsUpDisplay hud;
 
+	private final List<Node> nodes;
+	private final List<Edge> edges;
+
 	/** Initial world setup */
 	GameScreen(final SettlersOfCatan game)
 	{
 		this.game = game;
+		nodes = game.getState().getGrid().getNodesAsList();
+		edges = game.getState().getGrid().getEdgesAsList();
 
 		// camera
 		camera = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -99,7 +106,7 @@ public class GameScreen implements Screen
 	{
 		volatileInstances.clear();
 
-		for (final Node node : game.getState().getGrid().getNodesAsList())
+		for (final Node node : nodes)
 		{
 			final Building building = node.getBuilding();
 			if (building != null)
@@ -108,7 +115,7 @@ public class GameScreen implements Screen
 			}
 		}
 
-		for (final Edge edge : game.getState().getGrid().getEdgesAsList())
+		for (final Edge edge : edges)
 		{
 			final Road road = edge.getRoad();
 			if (road != null)

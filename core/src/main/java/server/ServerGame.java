@@ -64,7 +64,7 @@ public class ServerGame extends Game
 			// Subtract each player's new amount of 'r'
 			for (Colour c : playerResources.keySet())
 			{
-				total -= playerResources.get(c).containsKey(r) ? playerResources.get(c).get(r) : 0;
+				total -= playerResources.get(c).getOrDefault(r, 0);
 			}
 
 			// Not enough
@@ -87,9 +87,8 @@ public class ServerGame extends Game
 			{
 				getPlayer(c).grantResources(playerResources.get(c), bank);
 			}
-			catch (BankLimitException e)
-			{
-			}
+			catch (BankLimitException ignored)
+			{}
 		}
 
 		return playerResources;
@@ -315,8 +314,7 @@ public class ServerGame extends Game
 		if (node == null) { throw new InvalidCoordinatesException(request.getX(), request.getY()); }
 
 		// Cannot upgrade
-		if (bank.getAvailableSettlements() == 0) { throw new BankLimitException(
-				"No more settlements available"); }
+		if (bank.getAvailableSettlements() == 0) { throw new BankLimitException("No more settlements available"); }
 
 		// Try to build settlement
 		((ServerPlayer) p).buildSettlement(node, bank);
@@ -364,8 +362,7 @@ public class ServerGame extends Game
 		Player p = players.get(currentPlayer);
 
 		// Cannot upgrade
-		if (bank.getNumAvailableDevCards() == 0) { throw new BankLimitException(
-				"No more settlements available"); }
+		if (bank.getNumAvailableDevCards() == 0) { throw new BankLimitException("No more settlements available"); }
 
 		// Try to buy card
 		DevelopmentCardType card = ((ServerPlayer) p).buyDevelopmentCard(bank);
@@ -398,7 +395,7 @@ public class ServerGame extends Game
 	 * @param id the id of the player to take from
 	 * @throws CannotStealException
 	 */
-	public Board.Steal takeResource(Board.Player.Id id) throws CannotStealException
+	public Board.Steal takeResource(Board.Player.Id id)
 	{
 		Player other = getPlayer(id);
 		ResourceType r = ResourceType.Generic;
@@ -522,8 +519,7 @@ public class ServerGame extends Game
 		if (n2 == null) { throw new InvalidCoordinatesException(p2.getX(), p2.getY()); }
 
 		// Cannot upgrade
-		if (bank.getAvailableRoads(
-				p.getColour()) == 0) { throw new BankLimitException("No more roads available"); }
+		if (bank.getAvailableRoads(p.getColour()) == 0) { throw new BankLimitException("No more roads available"); }
 
 		// Try to build the road and update the longest road
 		p.buildRoad(grid.getEdge(p1, p2), bank);
@@ -747,7 +743,7 @@ public class ServerGame extends Game
 			// For each type of VP card
 			for (DevelopmentCardType type : vps)
 			{
-				int num = p.getDevelopmentCards().containsKey(type) ? p.getDevelopmentCards().get(type) : 0;
+				int num = p.getDevelopmentCards().getOrDefault(type, 0);
 
 				// For the number of this vp card that are revealed
 				for (int i = 0; i < num; i++)

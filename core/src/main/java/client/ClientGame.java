@@ -67,7 +67,7 @@ public class ClientGame extends Game
 	 * @return a representation of the board that is compatible with protofbufs
 	 * @param beginGame
 	 */
-	public HexGrid setBoard(Lobby.GameSetup beginGame) throws InvalidCoordinatesException, CannotAffordException
+	public HexGrid setBoard(Lobby.GameSetup beginGame)
 	{
 		HexGrid grid = new HexGrid(false);
 		this.grid = grid;
@@ -270,7 +270,7 @@ public class ClientGame extends Game
 				}
 				else
 				{
-					int existing = resources.containsKey(p.getColour()) ? resources.get(p.getColour()) : 0;
+					int existing = resources.getOrDefault(p.getColour(), 0);
 					for (ResourceType r : grant.keySet())
 					{
 						num += grant.get(r);
@@ -433,7 +433,7 @@ public class ClientGame extends Game
 		playedCards.put(card, existing + 1);
 
 		// Eliminate one bought dev card from player
-		existing = boughtDevCards.containsKey(player.getColour()) ? boughtDevCards.get(player.getColour()) : 0;
+		existing = boughtDevCards.getOrDefault(player.getColour(), 0);
 		if (existing > 0)
 		{
 			boughtDevCards.put(player.getColour(), existing - 1);
@@ -479,7 +479,7 @@ public class ClientGame extends Game
 
 		// Update number of dev cards each player is known to have
 		Colour c = player.getColour();
-		int existing = boughtDevCards.containsKey(c) ? boughtDevCards.get(c) : 0;
+		int existing = boughtDevCards.getOrDefault(c, 0);
 		boughtDevCards.put(c, existing + 1);
 	}
 
@@ -565,8 +565,7 @@ public class ClientGame extends Game
 	 * @param cardsDiscarded the discarded resources
 	 * @param instigator the player who discarded them
 	 */
-	public void processDiscard(Resource.Counts cardsDiscarded, Board.Player instigator)
-			throws CannotAffordException, BankLimitException
+	public void processDiscard(Resource.Counts cardsDiscarded, Board.Player instigator) throws CannotAffordException
 	{
 		Player player = getPlayer(instigator.getId());
 

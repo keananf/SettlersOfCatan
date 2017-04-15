@@ -122,7 +122,7 @@ public class ServerPlayer extends Player
 	 * @return the bought development card
 	 * @throws CannotAffordException
 	 */
-	public DevelopmentCardType buyDevelopmentCard(Bank bank) throws CannotAffordException
+	public DevelopmentCardType buyDevelopmentCard(Bank bank) throws CannotAffordException, BankLimitException
 	{
 		// Try to buy a development card
 		spendResources(DevelopmentCardType.getCardCost(), bank);

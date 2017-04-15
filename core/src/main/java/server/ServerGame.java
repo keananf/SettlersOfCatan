@@ -287,7 +287,7 @@ public class ServerGame extends Game
 		if (node == null) { throw new InvalidCoordinatesException(city.getX(), city.getY()); }
 
 		// Cannot upgrade
-		if (bank.getAvailableCities() == 0) { throw new BankLimitException("No more cities available"); }
+		if (bank.getAvailableCities(p.getColour()) == 0) { throw new BankLimitException("No more cities available"); }
 
 		// Try to upgrade settlement
 		((ServerPlayer) p).upgradeSettlement(node, bank);
@@ -314,7 +314,7 @@ public class ServerGame extends Game
 		if (node == null) { throw new InvalidCoordinatesException(request.getX(), request.getY()); }
 
 		// Cannot upgrade
-		if (bank.getAvailableSettlements() == 0) { throw new BankLimitException("No more settlements available"); }
+		if (bank.getAvailableSettlements(p.getColour()) == 0) { throw new BankLimitException("No more settlements available"); }
 
 		// Try to build settlement
 		((ServerPlayer) p).buildSettlement(node, bank);

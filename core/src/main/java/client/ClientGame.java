@@ -326,6 +326,7 @@ public class ClientGame extends Game
 		// Make new road object
 		boolean me = player.getColour().equals(getPlayer().getColour());
 		Road r = ((ClientPlayer) players.get(player.getColour())).addRoad(newEdge, me, getBank());
+		getBank().setAvailableRoads(player.getColour(), getBank().getAvailableRoads(player.getColour()) - 1);
 		checkLongestRoad(false);
 
 		return r;
@@ -368,6 +369,8 @@ public class ClientGame extends Game
 
 		// Updates settlement and score
 		players.get(player.getColour()).addSettlement(c);
+		getBank().setAvailableCities(player.getColour(), getBank().getAvailableCities(player.getColour()) - 1);
+		getBank().setAvailableSettlements(player.getColour(), getBank().getAvailableSettlements(player.getColour()) + 1);
 		return c;
 	}
 
@@ -410,6 +413,7 @@ public class ClientGame extends Game
 
 		// Updates settlement and score
 		players.get(player.getColour()).addSettlement(s);
+		getBank().setAvailableSettlements(player.getColour(), getBank().getAvailableSettlements(player.getColour()) - 1);
 		return s;
 	}
 
@@ -477,6 +481,7 @@ public class ClientGame extends Game
 		Colour c = player.getColour();
 		int existing = boughtDevCards.getOrDefault(c, 0);
 		boughtDevCards.put(c, existing + 1);
+		getBank().subtractAvailableDevCards(DevelopmentCardType.fromProto(boughtDevCard));
 	}
 
 	/**

@@ -41,7 +41,7 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test(expected = CannotAffordException.class)
-	public void cannotBuyDevCardTest() throws CannotAffordException
+	public void cannotBuyDevCardTest() throws CannotAffordException, BankLimitException
 	{
 		p.buyDevelopmentCard(game.getBank());
 	}

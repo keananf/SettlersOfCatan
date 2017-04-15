@@ -125,7 +125,7 @@ public class ClientGame extends Game
 			Node n = getGrid().getNode(road.getEdge().getA().getX(), road.getEdge().getA().getY());
 			Node n2 = getGrid().getNode(road.getEdge().getB().getX(), road.getEdge().getB().getY());
 			Edge e = n.findEdge(n2);
-			((ClientPlayer) players.get(c)).addRoad(e);
+			((ClientPlayer) players.get(c)).addRoad(e, false, getBank());
 		}
 
 		return grid;
@@ -316,11 +316,7 @@ public class ClientGame extends Game
 		// Spend resources if it is not a preliminary move
 		if (player.getRoads().size() >= 2)
 		{
-			if (player.getColour().equals(getPlayer().getColour()))
-			{
-				player.spendResources(Road.getRoadCost(), bank);
-			}
-			else
+			if(!player.getColour().equals(getPlayer().getColour()))
 			{
 				int existing = resources.get(player.getColour());
 				resources.put(player.getColour(), existing - Road.getRoadCost().size());
@@ -328,7 +324,8 @@ public class ClientGame extends Game
 		}
 
 		// Make new road object
-		Road r = ((ClientPlayer) players.get(player.getColour())).addRoad(newEdge);
+		boolean me = player.getColour().equals(getPlayer().getColour());
+		Road r = ((ClientPlayer) players.get(player.getColour())).addRoad(newEdge, me, getBank());
 		checkLongestRoad(false);
 
 		return r;
@@ -443,8 +440,7 @@ public class ClientGame extends Game
 
 		if (player.getColour().equals(getPlayer().getColour()))
 		{
-			existing = player.getDevelopmentCards().get(card);
-			player.getDevelopmentCards().put(card, existing - 1);
+			player.playCard(card);
 		}
 
 		// Update largest army

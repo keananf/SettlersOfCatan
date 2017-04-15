@@ -45,6 +45,7 @@ public abstract class Player
 
 	private static final int VP_THRESHOLD = 10;
 	private static final int MIN_SETTLEMENTS = 2;
+	protected int expectedRoads;
 
 	public Player(Colour colour, String userName)
 	{
@@ -325,7 +326,7 @@ public abstract class Player
 	 * @param edge the desired road location
 	 * @return if the desired location is valid for a road
 	 */
-	public boolean canBuildRoad(Edge edge)
+	public boolean canBuildRoad(Edge edge, Bank bank)
 	{
 		List<Integer> listsAddedTo = new ArrayList<>();
 		Road r = new Road(edge, colour);
@@ -349,7 +350,8 @@ public abstract class Player
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		return b != null || valid || (getRoads().size() < 2 && b != null);
+		return bank.getAvailableRoads(colour) > 0 && ((getRoads().size() < 2 || canAfford(Road.getRoadCost())
+						|| expectedRoads > 0) && (b != null || valid));
 
 	}
 
@@ -359,12 +361,13 @@ public abstract class Player
 	 * @param node the desired settlement location
 	 * @return if building a settlement at the given node is legal
 	 */
-	public boolean canBuildSettlement(Node node)
+	public boolean canBuildSettlement(Node node, Bank bank)
 	{
 		Point p = new Point(node.getX(), node.getY());
 		Settlement s = new Settlement(node, colour);
 
-		return (canAfford(Settlement.getSettlementCost()) || getSettlements().size() < MIN_SETTLEMENTS)
+		return bank.getAvailableSettlements(colour) > 0 &&(canAfford(Settlement.getSettlementCost())
+				|| getSettlements().size() < MIN_SETTLEMENTS)
 				&& !settlements.containsKey(p) && node.getBuilding() == null && !s.isNearSettlement()
 				&& (node.isNearRoad(colour) || getSettlements().size() < MIN_SETTLEMENTS);
 	}
@@ -375,11 +378,12 @@ public abstract class Player
 	 * @param node the desired city location
 	 * @return if building a city at the given node is legal
 	 */
-	public boolean canBuildCity(Node node)
+	public boolean canBuildCity(Node node, Bank bank)
 	{
 		Point p = new Point(node.getX(), node.getY());
 
-		return canAfford(City.getCityCost()) && settlements.containsKey(p) && settlements.get(p) instanceof Settlement;
+		return bank.getAvailableCities(colour) > 0 && canAfford(City.getCityCost()) && settlements.containsKey(p)
+				&& settlements.get(p) instanceof Settlement;
 	}
 
 	/**
@@ -626,10 +630,15 @@ public abstract class Player
 	 * 
 	 * @param card the development card to add
 	 */
-	protected void playCard(DevelopmentCardType card)
+	public void playCard(DevelopmentCardType card)
 	{
 		int existing = cards.getOrDefault(card, 0);
 		cards.put(card, existing - 1);
+
+		if(card.equals(DevelopmentCardType.RoadBuilding))
+		{
+			expectedRoads = 2;
+		}
 	}
 
 	/**

@@ -145,9 +145,9 @@ public abstract class AICore implements IAI, Runnable
 		case CHOOSERESOURCE:
 			return rankChosenResource(turn.getChosenResource());
 
-		// Should rank apply for ENDTURN / ROLLDICE? Maybe sometimes..
-		case ENDTURN:
 		case ROLLDICE:
+			return -1;
+		case ENDTURN:
 			break;
 
 		// ai will never chat

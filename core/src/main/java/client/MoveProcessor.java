@@ -3,8 +3,8 @@ package client;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
+import game.Bank;
 import game.CurrentTrade;
-import game.build.Road;
 import game.players.Player;
 import grid.Edge;
 import grid.Hex;
@@ -110,7 +110,7 @@ public class MoveProcessor
 		if (getTurn().isInitialPhase()) { return possibilities; }
 
 		// If the turn hasn't started, then the player can roll the dice
-		if (!getTurn().hasTurnStarted() && getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE))
+		if (getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE))
 		{
 			possibilities.add(new Turn(Requests.Request.BodyCase.ROLLDICE));
 		}
@@ -351,7 +351,8 @@ public class MoveProcessor
 	{
 		Player p = getGame().getPlayer();
 		Node node = turn.getChosenNode();
-		return checkTurn() && (isExpected(turn) && (p.canBuildSettlement(node) || p.canBuildCity(node)));
+		Bank bank = getGame().getBank();
+		return checkTurn() && (isExpected(turn) && (p.canBuildSettlement(node, bank) || p.canBuildCity(node, bank)));
 	}
 
 	/**
@@ -370,8 +371,8 @@ public class MoveProcessor
 	private boolean checkBuildRoad(Turn turn)
 	{
 		Edge edge = turn.getChosenEdge();
-		return checkTurn() && getGame().getPlayer().canBuildRoad(edge) && isExpected(turn)
-				&& (getGame().getPlayer().getRoads().size() < 2 || getGame().getPlayer().canAfford(Road.getRoadCost()));
+		Bank bank = getGame().getBank();
+		return checkTurn() && getGame().getPlayer().canBuildRoad(edge, bank) && isExpected(turn);
 	}
 
 	/**

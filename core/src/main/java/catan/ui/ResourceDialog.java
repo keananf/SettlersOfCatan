@@ -48,7 +48,7 @@ public class ResourceDialog extends Dialog
             resources.put(r, 0);
             addOptions(r, vert);
         }
-        
+
         root.add(vert);
         addConfirmButtons();
     }
@@ -108,16 +108,32 @@ public class ResourceDialog extends Dialog
             {
                 super.clicked(event, x, y);
 
-                // Set up trade
-                Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
-                Trade.WithPlayer.Builder builder = Trade.WithPlayer.newBuilder();
-                builder.setOther(player).build();
-                builder.setOffering(client.getState().processResources(resources));
-                builder.setWanting(client.getState().processResources(otherResources));
+                // If a player trade
+                if(player != null)
+                {
+                    // Set up trade
+                    Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
+                    Trade.WithPlayer.Builder builder = Trade.WithPlayer.newBuilder();
+                    builder.setOther(player).build();
+                    builder.setOffering(client.getState().processResources(resources));
+                    builder.setWanting(client.getState().processResources(otherResources));
 
-                // Set Trade
-                turn.setPlayerTrade(builder.build());
-                client.acquireLocksAndSendTurn(turn);
+                    // Set Trade
+                    turn.setPlayerTrade(builder.build());
+                    client.acquireLocksAndSendTurn(turn);
+                }
+                else
+                {
+                    // Set up trade
+                    Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
+                    Trade.WithBank.Builder builder = Trade.WithBank.newBuilder();
+                    builder.setOffering(client.getState().processResources(resources));
+                    builder.setWanting(client.getState().processResources(otherResources));
+
+                    // Set Trade
+                    turn.setBankTrade(builder.build());
+                    client.acquireLocksAndSendTurn(turn);
+                }
             }
         });
         button(button, true).button("Cancel", false);

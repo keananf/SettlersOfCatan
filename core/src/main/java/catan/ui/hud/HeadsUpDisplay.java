@@ -2,6 +2,7 @@ package catan.ui.hud;
 
 import catan.SettlersOfCatan;
 import catan.ui.AssMan;
+import catan.ui.ResourceDialog;
 import client.Client;
 import client.ClientGame;
 import client.Turn;
@@ -15,7 +16,6 @@ import enums.DevelopmentCardType;
 import enums.ResourceType;
 import game.players.Player;
 import intergroup.Requests;
-import intergroup.trade.Trade;
 
 public class HeadsUpDisplay extends Stage
 {
@@ -26,41 +26,51 @@ public class HeadsUpDisplay extends Stage
 
 	private final Image currentTurn;
 	private final ClientGame state;
+	private final Player me;
 
 	public HeadsUpDisplay(final Client client)
 	{
 		super(new ScreenViewport());
 		this.state = client.getState();
 		this.client = client;
-		final Player me = state.getPlayer();
+		me = state.getPlayer();
 
 		final Table root = new Table();
 		root.setFillParent(true);
 		addActor(root);
 
-		// ======================================================================================
+		final Image bground = new Image(AssMan.getTexture("icons/player.png"));
+		bground.setColor(state.getPlayer().getColour().getDisplayColor());
+		final Counter vps = new Counter(bground, me::getVp);
+		root.add(vps).left();
 
-		{
-			final Image bground = new Image(AssMan.getTexture("icons/player.png"));
-			bground.setColor(state.getPlayer().getColour().getDisplayColor());
-			final Counter vps = new Counter(bground, me::getVp);
-			root.add(vps).left();
-		}
 
-		/*
-		 * Outlet for miscilanious messages
-		 */
+		//Outlet for miscellaneous messages
 		messageBox = new Label("", SettlersOfCatan.getSkin());
 		messageBox.setVisible(false);
 		root.add(messageBox).center();
 
-		{
-			currentTurn = new Image(AssMan.getDrawable("icons/player.png"));
-			root.add(currentTurn).right();
-		}
+		currentTurn = new Image(AssMan.getDrawable("icons/player.png"));
+		root.add(currentTurn).right();
+		root.row();
 
-		root.row(); // ==========================================================================
+		// Add player's HUD info
+		addDevelopmentCards(root);
+		addPlayerBars(root);
+		addResources(root);
 
+		// Buttons Stacked on top of one another
+		VerticalGroup buttons = new VerticalGroup();
+		buttons.space(1f);
+		buttons.addActor(addBuyDevCardButton());
+		buttons.addActor(addDiceRollButton());
+		buttons.addActor(addBankTradeButton());
+		buttons.addActor(addEndTurnButton());
+		root.add(buttons).right();
+	}
+
+	private void addDevelopmentCards(Table root)
+	{
 		/*
 		 * DEVELOPMENT CARDS
 		 */
@@ -91,7 +101,10 @@ public class HeadsUpDisplay extends Stage
 		root.add(developmentCards).expandY().left();
 
 		root.add(); // blank centre middle cell
+	}
 
+	private void addPlayerBars(Table root)
+	{
 		/*
 		 * PLAYERS
 		 */
@@ -103,23 +116,11 @@ public class HeadsUpDisplay extends Stage
 		}
 		root.add(players).right().pad(10);
 
-		root.row(); // ==========================================================================
+		root.row();
+	}
 
-		{
-			ImageButton buyDevCardBtn = new ImageButton(AssMan.getDrawable("BuyDevelopmentCard.png"));
-			buyDevCardBtn.addListener(new ClickListener()
-			{
-				@Override
-				public void clicked(InputEvent event, float x, float y)
-				{
-					super.clicked(event, x, y);
-					client.log("UI", "Buy Dev Card Button Clicked");
-					client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.BUYDEVCARD));
-				}
-			});
-			root.add(buyDevCardBtn).left();
-		}
-
+	private void addResources(Table root)
+	{
 		/*
 		 * RESOURCES
 		 */
@@ -134,58 +135,75 @@ public class HeadsUpDisplay extends Stage
 			}
 		}
 		root.add(resources).expandX().center();
+	}
 
+	private ImageButton addBuyDevCardButton()
+	{
+		ImageButton buyDevCardBtn = new ImageButton(AssMan.getDrawable("BuyDevelopmentCard.png"));
+		buyDevCardBtn.addListener(new ClickListener()
 		{
-
-			ImageButton diceRoll = new ImageButton(AssMan.getDrawable("rollDice.png"));
-			diceRoll.addListener(new ClickListener()
+			@Override
+			public void clicked(InputEvent event, float x, float y)
 			{
-				@Override
-				public void clicked(InputEvent event, float x, float y)
-				{
-					super.clicked(event, x, y);
-					client.log("UI", "Roll Dice Button Clicked");
-					client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.ROLLDICE));
-				}
-			});
-			ImageButton endTurnBtn = new ImageButton(AssMan.getDrawable("EndTurn.png"));
-			endTurnBtn.addListener(new ClickListener()
+				super.clicked(event, x, y);
+				client.log("UI", "Buy Dev Card Button Clicked");
+				client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.BUYDEVCARD));
+			}
+		});
+		return buyDevCardBtn;
+	}
+
+	private ImageButton addDiceRollButton()
+	{
+		ImageButton diceRoll = new ImageButton(AssMan.getDrawable("rollDice.png"));
+		diceRoll.addListener(new ClickListener()
+		{
+			@Override
+			public void clicked(InputEvent event, float x, float y)
 			{
-				@Override
-				public void clicked(InputEvent event, float x, float y)
-				{
-					super.clicked(event, x, y);
-					client.log("UI", "End Turn Button Clicked");
-					client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.ENDTURN));
-				}
-			});
-			ImageButton bankTradeBtn = new ImageButton(AssMan.getDrawable("TradeWithBank.png"));
-			bankTradeBtn.addListener(new ClickListener()
+				super.clicked(event, x, y);
+				client.log("UI", "Roll Dice Button Clicked");
+				client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.ROLLDICE));
+			}
+		});
+
+		return diceRoll;
+	}
+
+	private ImageButton addEndTurnButton()
+	{
+		ImageButton endTurnBtn = new ImageButton(AssMan.getDrawable("EndTurn.png"));
+		endTurnBtn.addListener(new ClickListener()
+		{
+			@Override
+			public void clicked(InputEvent event, float x, float y)
 			{
-				@Override
-				public void clicked(InputEvent event, float x, float y)
-				{
-					super.clicked(event, x, y);
-					client.log("UI", String.format("Bank Trade Button Clicked"));
+				super.clicked(event, x, y);
+				client.log("UI", "End Turn Button Clicked");
+				client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.ENDTURN));
+			}
+		});
+		return endTurnBtn;
+	}
 
-					// Set up trade
-					Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
-					Trade.WithBank.Builder builder = Trade.WithBank.newBuilder();
+	public ImageButton addBankTradeButton()
+	{
+		HeadsUpDisplay hud = this;
+		ImageButton bankTradeBtn = new ImageButton(AssMan.getDrawable("TradeWithBank.png"));
+		bankTradeBtn.addListener(new ClickListener()
+		{
+			@Override
+			public void clicked(InputEvent event, float x, float y)
+			{
+				super.clicked(event, x, y);
+				client.log("UI", String.format("Bank Trade Button Clicked"));
 
-					//TODO SETUP RESOURCES
-
-					// Set Trade
-					turn.setBankTrade(builder.build());
-					//client.acquireLocksAndSendTurn(turn);
-				}
-			});
-
-			root.add(diceRoll).right();
-			root.add(endTurnBtn).right();
-			root.add(bankTradeBtn).left();
-		}
-
-		// ======================================================================================
+				ResourceDialog dialog = new ResourceDialog("Resources", SettlersOfCatan.getSkin(),
+						null, client);
+				dialog.show(hud);
+			}
+		});
+		return bankTradeBtn;
 	}
 
 	public void render(final float delta)

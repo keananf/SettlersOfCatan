@@ -18,7 +18,7 @@ public class RankNode {
 
         Node node;
         int ranking = 0;
-        ResourceType[] stdResourceList = new ResourceType[]{ResourceType.Grain, ResourceType.Brick, ResourceType.Lumber, ResourceType.Wool, ResourceType.Ore};
+        ResourceType[] stdResourceList = new ResourceType[]{ResourceType.Brick, ResourceType.Lumber, ResourceType.Grain, ResourceType.Wool, ResourceType.Ore};
         ArrayList<ResourceType> resourceQueue = new ArrayList<>(Arrays.asList(stdResourceList));//change to queue if wanted
         LinkedList<Hex> surroundingHexes  = new LinkedList<Hex>();
 

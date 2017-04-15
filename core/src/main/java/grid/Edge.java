@@ -158,6 +158,18 @@ public class Edge implements BoardElement
 				|| getY().equals(otherEdge.getY());
 
 	}
+	
+	public boolean hasSettlement()
+	{
+		boolean has = false;
+		
+		if(x.getBuilding() != null || y.getBuilding() != null)
+		{
+			has = true;
+		}
+		
+		return has;
+	}
 
 	public Vector3 get3dVectorMidpoint()
 	{

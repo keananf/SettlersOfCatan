@@ -45,16 +45,5 @@ public abstract class Building
 	{
 		return playerColour;
 	}
-<<<<<<< HEAD
 
-	/**
-	 * @param playerColour the playerColour to set
-	 */
-	public void setPlayerColour(Colour playerColour)
-	{
-		this.playerColour = playerColour;
-	}
-
-=======
->>>>>>> 20a0aa4f32b028697b1ebe1aaaac03aa0f7861bd
 }

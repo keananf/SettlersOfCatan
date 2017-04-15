@@ -153,7 +153,7 @@ class ModelFactory
 		final ModelInstance instance = new ModelInstance(model, building.getNode().get3DPos());
 		paint(instance, building.getPlayerColour().getDisplayColor());
 		instance.transform.scale(0.3f, 0.25f, 0.25f);
-		instance.transform.translate(0.2f, 1.5f, 0.2f);
+		instance.transform.translate(0.2f, 2f, 0.2f);
 		return instance;
 	}
 

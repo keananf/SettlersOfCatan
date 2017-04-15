@@ -82,7 +82,7 @@ public class HeadsUpDisplay extends Stage
 		root.row(); // ==========================================================================
 
 		{
-			ImageButton buyDevCardBtn = new ImageButton(AssMan.getDrawable("TradeWithBank.png"));
+			ImageButton buyDevCardBtn = new ImageButton(AssMan.getDrawable("BuyDevelopmentCard.png"));
 			root.add(buyDevCardBtn).left();
 		}
 
@@ -102,8 +102,12 @@ public class HeadsUpDisplay extends Stage
 		root.add(resources).expandX().center();
 
 		{
+			
+			
 			ImageButton endTurnBtn = new ImageButton(AssMan.getDrawable("EndTurn.png"));
 			root.add(endTurnBtn).right();
+			ImageButton bankTradeBtn = new ImageButton(AssMan.getDrawable("TradeWithBank.png"));
+			root.add(bankTradeBtn).left();
 		}
 
 		// ======================================================================================

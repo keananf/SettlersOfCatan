@@ -85,7 +85,7 @@ public class TradeDialog extends Dialog
                 int num = 0;
                 try
                 {
-                    num = Integer.parseInt(text.getText());
+                    num = Integer.parseInt(text2.getText());
                 }
                 catch(NumberFormatException e)
                 {

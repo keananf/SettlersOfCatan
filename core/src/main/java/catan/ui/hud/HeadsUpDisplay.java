@@ -98,7 +98,7 @@ public class HeadsUpDisplay extends Stage
 		players.space(5);
 		for (Player player : state.getPlayersAsList())
 		{
-			players.addActor(new PlayerBar(player));
+			players.addActor(new PlayerBar(player, client));
 		}
 		root.add(players).right().pad(10);
 
@@ -109,7 +109,8 @@ public class HeadsUpDisplay extends Stage
 			buyDevCardBtn.addListener(new ClickListener()
 			{
 				@Override
-				public void clicked(InputEvent event, float x, float y) {
+				public void clicked(InputEvent event, float x, float y)
+				{
 					super.clicked(event, x, y);
 					client.log("UI", "Buy Dev Card Button Clicked");
 					client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.BUYDEVCARD));

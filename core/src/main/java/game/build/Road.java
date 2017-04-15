@@ -14,7 +14,7 @@ import java.util.Map;
  * 
  * @author 140001596
  */
-public class Road implements IBuildable
+public class Road
 {
 	private Edge edge;
 	private Colour playerColour;

@@ -316,7 +316,7 @@ public class ClientGame extends Game
 		// Spend resources if it is not a preliminary move
 		if (player.getRoads().size() >= 2)
 		{
-			if (player.equals(getPlayer()))
+			if (player.getColour().equals(getPlayer().getColour()))
 			{
 				player.spendResources(Road.getRoadCost(), bank);
 			}
@@ -353,7 +353,7 @@ public class ClientGame extends Game
 			throw new InvalidCoordinatesException(city.getX(), city.getY());
 
 		// Handle resources
-		if (player.equals(getPlayer()))
+		if (player.getColour().equals(getPlayer().getColour()))
 		{
 			player.spendResources(City.getCityCost(), bank);
 		}
@@ -396,7 +396,7 @@ public class ClientGame extends Game
 		// Spend resources if this is not an initial move
 		if (player.getSettlements().size() >= 2)
 		{
-			if (player.equals(getPlayer()))
+			if (player.getColour().equals(getPlayer().getColour()))
 			{
 				player.spendResources(Settlement.getSettlementCost(), bank);
 			}
@@ -441,7 +441,7 @@ public class ClientGame extends Game
 		else
 			throw new DoesNotOwnException(card, player.getColour());
 
-		if (player.equals(getPlayer()))
+		if (player.getColour().equals(getPlayer().getColour()))
 		{
 			existing = player.getDevelopmentCards().get(card);
 			player.getDevelopmentCards().put(card, existing - 1);
@@ -466,7 +466,7 @@ public class ClientGame extends Game
 		Player player = getPlayer(instigator.getId());
 
 		// Handle resources
-		if (player.equals(getPlayer()))
+		if (player.getColour().equals(getPlayer().getColour()))
 		{
 			player.spendResources(DevelopmentCardType.getCardCost(), bank);
 			getPlayer().addDevelopmentCard(boughtDevCard);
@@ -502,7 +502,7 @@ public class ClientGame extends Game
 			wantingSize += wanting.get(r);
 
 		// Handle resources
-		if (player.equals(getPlayer()))
+		if (player.getColour().equals(getPlayer().getColour()))
 		{
 			// Update resources
 			player.spendResources(offering, bank);
@@ -535,7 +535,7 @@ public class ClientGame extends Game
 			wantingSize += wanting.get(r);
 
 		// Handle resources for this player
-		if (instigator.equals(getPlayer()))
+		if (instigator.getColour().equals(getPlayer().getColour()))
 		{
 			instigator.spendResources(offering, bank);
 			instigator.grantResources(wanting, bank);
@@ -543,7 +543,7 @@ public class ClientGame extends Game
 			int existing = resources.get(recipient.getColour());
 			resources.put(recipient.getColour(), existing - wantingSize + offeringSize);
 		}
-		else if (recipient.equals(getPlayer()))
+		else if (recipient.getColour().equals(getPlayer().getColour()))
 		{
 			recipient.spendResources(wanting, bank);
 			recipient.grantResources(offering, bank);

@@ -314,7 +314,7 @@ public class MoveProcessor
 
 		// If player's turn and no other moves are expected, or it is the start
 		// of their turn
-		if (checkTurn() && isExpected(turn))
+		if (isExpected(turn))
 		{
 			Player player = getGame().getPlayer();
 
@@ -447,6 +447,11 @@ public class MoveProcessor
 		if (type == null) return false;
 
 		if (getExpectedMoves().contains(type))
+		{
+			return true;
+		}
+		else if(getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE)
+				&& type.equals(Requests.Request.BodyCase.PLAYDEVCARD))
 		{
 			return true;
 		}

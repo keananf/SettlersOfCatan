@@ -197,7 +197,7 @@ public abstract class Client implements Runnable
 		if (getMoveProcessor().validateMsg(turn))
 		{
 			updateTurn(turn);
-			turnProcessor.sendMove();
+			turnProcessor.setUpMove();
 			return true;
 		}
 

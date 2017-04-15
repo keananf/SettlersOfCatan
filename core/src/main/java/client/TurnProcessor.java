@@ -24,7 +24,7 @@ public class TurnProcessor
 	/**
 	 * Switches on the move type to ascertain which proto message to form
 	 */
-	protected void sendMove()
+	protected void setUpMove()
 	{
 		Requests.Request.Builder request = Requests.Request.newBuilder();
 

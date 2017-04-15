@@ -153,25 +153,89 @@ public abstract class Player
 			for (Road road : subList)
 			{
 				// Divide up subList
-				if (e.getRoad().isConnected(road))
+				if (e.getRoad().isConnected(road) || other.getRoad().isConnected(road))
 				{
 					isConnected = true;
-					newList1.add(road);
-				}
-				else if (other.getRoad().isConnected(road))
-				{
-					isConnected = true;
-					newList2.add(road);
+					break;
 				}
 			}
 			index++;
-			if (isConnected) break;
+			if (isConnected)
+			{
+				List<List<Road>> lists = segmentRoads(subList, e, other);
+				newList1 = lists.get(0);
+				newList2 = lists.get(1);
+				break;
+			}
 		}
 
 		// Remove old list and add two new ones
 		roads.remove(index - 1);
 		roads.add(newList1);
 		roads.add(newList2);
+	}
+
+	public List<List<Road>> segmentRoads(List<Road> sublist, Edge e, Edge other)
+	{
+		List<Road> newList1 = new ArrayList<Road>();
+		List<Road> newList2 = new ArrayList<Road>();
+		List<Road> skipped = new ArrayList<Road>();
+		Road eRoad = e.getRoad(), otherRoad = other.getRoad();
+		newList1.add(eRoad);
+		newList2.add(otherRoad);
+
+		// For each road in the chain
+		for (Road road : sublist)
+		{
+			if(newList1.contains(road) || newList2.contains(road)) continue;
+
+			// Divide up subList
+			if (e.getRoad().isConnected(road))
+			{
+				newList1.add(road);
+			}
+			else if (other.getRoad().isConnected(road))
+			{
+				newList2.add(road);
+			}
+			else skipped.add(road);
+		}
+
+		// Loop until all roads sorted
+		while(newList1.size() + newList2.size() != sublist.size())
+		{
+			// For each skipped road
+			for(Road road : skipped)
+			{
+				// Check if connected to any road in first list
+				boolean added = false;
+				for(Road r1 : newList1)
+				{
+					if (road.isConnected(r1))
+					{
+						newList1.add(road);
+						added = true;
+						break;
+					}
+				}
+
+				// Check if connected to any road in second list
+				for(Road r2 : newList2)
+				{
+					if(added) break;
+					if (road.isConnected(r2))
+					{
+						newList2.add(road);
+						break;
+					}
+				}
+			}
+		}
+
+		List<List<Road>> newList = new ArrayList<List<Road>>();
+		newList.add(newList1);
+		newList.add(newList2);
+		return newList;
 	}
 
 	/**
@@ -494,6 +558,11 @@ public abstract class Player
 	 */
 	public void setHasLongestRoad(boolean hasLongestRoad)
 	{
+		if(!hasLongestRoad)
+		{
+			addVp(-2);
+		}
+		else if(!this.hasLongestRoad) addVp(2);
 		this.hasLongestRoad = hasLongestRoad;
 	}
 

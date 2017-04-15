@@ -44,6 +44,7 @@ public class EventProcessor
 			getGame().setGameOver();
 			break;
 		case TURNENDED:
+			getGame().getPlayer().clearRecentDevCards();
 			getGame().updateCurrentPlayer();
 			getTurn().reset();
 			break;
@@ -228,6 +229,7 @@ public class EventProcessor
 			if (ev.getInstigator().getId() == getGame().getPlayer().getId()
 					&& getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
 			{
+				client.log("Client Play", String.format("Removing DISCARDRESOURCES for %s", getGame().getPlayer().getId().name()));
 				getExpectedMoves().remove(Requests.Request.BodyCase.DISCARDRESOURCES);
 			}
 			break;
@@ -288,6 +290,8 @@ public class EventProcessor
 		{
 			if (getGame().getPlayer().getNumResources() > 7)
 			{
+				client.log("Client Play",
+						String.format("Adding DISCARDRESOURCES for %s", getGame().getPlayer().getId().name()));
 				getExpectedMoves().add(Requests.Request.BodyCase.DISCARDRESOURCES);
 			}
 			if (ev.getInstigator().getId().getNumber() == getGame().getPlayer().getId().getNumber())

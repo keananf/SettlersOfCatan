@@ -187,11 +187,11 @@ public class MessageProcessor
 				if (currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT)
 						&& !currentTrade.isExpired())
 				{
-					ev.setPlayerTradeAccepted(currentTrade.getTrade());
-
 					try
 					{
 						game.processPlayerTrade(currentTrade.getTrade());
+						ev.setPlayerTradeAccepted(currentTrade.getTrade());
+						ev.setInstigator(currentTrade.getInstigator());
 					}
 					catch (IllegalTradeException e)
 					{

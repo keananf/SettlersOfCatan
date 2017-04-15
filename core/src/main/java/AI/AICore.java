@@ -220,6 +220,7 @@ public abstract class AICore implements IAI, Runnable
 		evs.get(Requests.Request.BodyCase.CHATMESSAGE).add(Events.Event.TypeCase.CHATMESSAGE);
 		evs.get(Requests.Request.BodyCase.JOINLOBBY).add(Events.Event.TypeCase.LOBBYUPDATE);
 		evs.get(Requests.Request.BodyCase.CHOOSERESOURCE).add(Events.Event.TypeCase.RESOURCECHOSEN);
+		evs.get(Requests.Request.BodyCase.CHOOSERESOURCE).add(Events.Event.TypeCase.MONOPOLYRESOLUTION);
 		evs.get(Requests.Request.BodyCase.SUBMITTARGETPLAYER).add(Events.Event.TypeCase.RESOURCESTOLEN);
 
 		return evs;

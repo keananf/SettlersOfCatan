@@ -55,7 +55,7 @@ class ModelFactory
     private static final Model LUMBER = SettlersOfCatan.getAssets().getModel("lumber.g3db");
     private static final Model GENERIC = SettlersOfCatan.getAssets().getModel("desert.g3db");
     private static final Model BRICK = SettlersOfCatan.getAssets().getModel("claymine.g3db");
-    private static final Model PORT = SettlersOfCatan.getAssets().getModel("port2.g3db");
+    private static final Model PORT = SettlersOfCatan.getAssets().getModel("port.g3db");
     private static final Model ROAD = SettlersOfCatan.getAssets().getModel("road.g3db");
     private static final Model SETTLEMENT = SettlersOfCatan.getAssets().getModel("settlement.g3db");
     private static final Model CITY = SettlersOfCatan.getAssets().getModel("city.g3db");
@@ -134,7 +134,7 @@ class ModelFactory
 		
 		
 		final ModelInstance instance = new ModelInstance(PORT, node.get3DPos());
-		instance.transform.scale(0.5f, 0.5f, 0.2f);
+		instance.transform.scale(0.5f, 0.5f, 0.4f);
 		instance.transform.translate(0, 1.5f, 0);
 		return instance;
 		
@@ -153,7 +153,7 @@ class ModelFactory
 		final ModelInstance instance = new ModelInstance(model, building.getNode().get3DPos());
 		paint(instance, building.getPlayerColour().getDisplayColor());
 		instance.transform.scale(0.3f, 0.25f, 0.25f);
-		instance.transform.translate(0, 1.5f, 0);
+		instance.transform.translate(0.2f, 1.5f, 0.2f);
 		return instance;
 	}
 

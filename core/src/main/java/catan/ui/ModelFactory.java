@@ -22,6 +22,7 @@ import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
 import grid.Hex;
+import grid.Node;
 import grid.Port;
 
 class ModelFactory
@@ -58,6 +59,7 @@ class ModelFactory
     private static final Model ROAD = SettlersOfCatan.getAssets().getModel("road.g3db");
     private static final Model SETTLEMENT = SettlersOfCatan.getAssets().getModel("settlement.g3db");
     private static final Model CITY = SettlersOfCatan.getAssets().getModel("city.g3db");
+    private static final Model ROBBER = SettlersOfCatan.getAssets().getModel("robber.g3db");
 
 	static ModelInstance getSeaInstance()
 	{
@@ -127,12 +129,15 @@ class ModelFactory
 		return material;
 	}
 
-	static ModelInstance getPortInstance(final Port port)
+	static ModelInstance getPortInstance(final Node node) //fix
 	{
-		final ModelInstance instance = new ModelInstance(PORT, port.getX().get3DPos());
+		
+		
+		final ModelInstance instance = new ModelInstance(PORT, node.get3DPos());
 		instance.transform.scale(0.5f, 0.5f, 0.2f);
 		instance.transform.translate(0, 1.5f, 0);
 		return instance;
+		
 	}
 
 	static ModelInstance getBuildingInstance(final Building building)
@@ -177,6 +182,13 @@ class ModelFactory
 
 		return instance;
 	}
+	
+	static ModelInstance placeRobber(final Hex hex){
+		ModelInstance model = new ModelInstance(ROBBER, hex.get3DPos());
+		model.transform.translate(0,0.9f,0);
+		return model;
+	}
+	
 
 	private static void paint(final ModelInstance instance, final Color color)
 	{

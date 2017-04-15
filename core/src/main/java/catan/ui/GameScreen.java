@@ -42,14 +42,14 @@ public class GameScreen implements Screen
 
 	private final List<Node> nodes;
 	private final List<Edge> edges;
-
+	private final List<Hex> hexes;
 	/** Initial world setup */
 	GameScreen(final SettlersOfCatan game)
 	{
 		this.game = game;
 		nodes = game.getState().getGrid().getNodesAsList();
 		edges = game.getState().getGrid().getEdgesAsList();
-
+		hexes = game.getState().getGrid().getHexesAsList();
 		// camera
 		camera = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(0f, 8f, -10f); // look from down negative z-axis
@@ -80,7 +80,10 @@ public class GameScreen implements Screen
 
 		for (final Port port : game.getState().getGrid().getPortsAsList())
 		{
-			persistentInstances.add(ModelFactory.getPortInstance(port));
+			
+			persistentInstances.add(ModelFactory.getPortInstance(port.getX()));
+			persistentInstances.add(ModelFactory.getPortInstance(port.getY()));
+
 		}
 
 		hud.sendMessage("Welcome!");
@@ -124,7 +127,17 @@ public class GameScreen implements Screen
 				volatileInstances.add(ModelFactory.getRoadInstance(road));
 			}
 		}
+	
+		for(final Hex hex : hexes) {
+			if(hex.hasRobber()){
+				volatileInstances.add(ModelFactory.placeRobber(hex));
+			}
+		}
+	
 	}
+	
+	
+	
 
 	@Override
 	public void dispose()

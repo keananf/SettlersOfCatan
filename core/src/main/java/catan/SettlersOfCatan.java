@@ -44,10 +44,11 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	{
 		skin.dispose();
 
+		System.exit(1);
 		if (active)
 		{
-			client.log("Shutdown Client", "Shutting down.");
 			active = false;
+			client.log("Shutdown Client", "Shutting down.");
 			if (client != null && client.isActive()) client.shutDown();
 			client = null;
 			try

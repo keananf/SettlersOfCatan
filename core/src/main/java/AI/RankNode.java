@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public class RankNode {
+public class git ststauRankNode {
         Player player;
 
         Node node;

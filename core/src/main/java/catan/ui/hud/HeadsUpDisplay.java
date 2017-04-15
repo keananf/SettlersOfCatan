@@ -118,8 +118,17 @@ public class HeadsUpDisplay extends Stage
 		root.add(resources).expandX().center();
 
 		{
-			
-			
+
+			ImageButton diceRoll = new ImageButton(AssMan.getDrawable("rollDice.png"));
+			diceRoll.addListener(new ClickListener()
+			{
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					super.clicked(event, x, y);
+					client.log("UI", "Roll Dice Button Clicked");
+					client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.ROLLDICE));
+				}
+			});
 			ImageButton endTurnBtn = new ImageButton(AssMan.getDrawable("EndTurn.png"));
 			endTurnBtn.addListener(new ClickListener()
 			{
@@ -130,8 +139,9 @@ public class HeadsUpDisplay extends Stage
 					client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.ENDTURN));
 				}
 			});
-			root.add(endTurnBtn).right();
 			ImageButton bankTradeBtn = new ImageButton(AssMan.getDrawable("TradeWithBank.png"));
+			root.add(diceRoll).right();
+			root.add(endTurnBtn).right();
 			root.add(bankTradeBtn).left();
 		}
 

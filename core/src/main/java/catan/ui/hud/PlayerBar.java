@@ -20,5 +20,15 @@ class PlayerBar extends Stack
 
 		final ImageButton trade = new ImageButton(AssMan.getDrawable("buttonTrade.png"));
 		row.addActor(trade);
+		/*trade.addListener(new changeListener(){
+			public void changed(changeEvent event, Actor actor){
+			
+			}
+			
+			
+			
+			
+			
+		});*/
 	}
 }

@@ -15,6 +15,7 @@ import enums.DevelopmentCardType;
 import enums.ResourceType;
 import game.players.Player;
 import intergroup.Requests;
+import intergroup.trade.Trade;
 
 public class HeadsUpDisplay extends Stage
 {
@@ -159,6 +160,26 @@ public class HeadsUpDisplay extends Stage
 				}
 			});
 			ImageButton bankTradeBtn = new ImageButton(AssMan.getDrawable("TradeWithBank.png"));
+			bankTradeBtn.addListener(new ClickListener()
+			{
+				@Override
+				public void clicked(InputEvent event, float x, float y)
+				{
+					super.clicked(event, x, y);
+					client.log("UI", String.format("Bank Trade Button Clicked"));
+
+					// Set up trade
+					Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
+					Trade.WithBank.Builder builder = Trade.WithBank.newBuilder();
+
+					//TODO SETUP RESOURCES
+
+					// Set Trade
+					turn.setBankTrade(builder.build());
+					//client.acquireLocksAndSendTurn(turn);
+				}
+			});
+
 			root.add(diceRoll).right();
 			root.add(endTurnBtn).right();
 			root.add(bankTradeBtn).left();

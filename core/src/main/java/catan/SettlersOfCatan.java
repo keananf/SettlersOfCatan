@@ -8,7 +8,9 @@ import client.ClientGame;
 import client.LocalClient;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
@@ -33,6 +35,8 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		Gdx.graphics.setContinuousRendering(false);
 
 		skin = new Skin(Gdx.files.internal("skin.json"));
+		Window.WindowStyle ws = new Window.WindowStyle(SettlersOfCatan.getSkin().getFont("body"), Color.WHITE, AssMan.getDrawable("resources.png"));
+		SettlersOfCatan.getSkin().add("default", ws);
 
 		// start off at the splash screen
 		setScreen(new SplashScreen(this));

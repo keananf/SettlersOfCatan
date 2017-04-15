@@ -99,7 +99,7 @@ public class HeadsUpDisplay extends Stage
 		players.space(5);
 		for (Player player : state.getPlayersAsList())
 		{
-			players.addActor(new PlayerBar(player, client));
+			players.addActor(new PlayerBar(player, client, this));
 		}
 		root.add(players).right().pad(10);
 

@@ -5,6 +5,7 @@ import catan.ui.AssMan;
 import client.Client;
 import client.ClientGame;
 import client.Turn;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -66,11 +67,26 @@ public class HeadsUpDisplay extends Stage
 		developmentCards.space(5f);
 		for (DevelopmentCardType type : DevelopmentCardType.values())
 		{
-			developmentCards.addActor(new Counter(type.toString().toLowerCase(),
-					() -> me.getDevelopmentCards().getOrDefault(type, 0)));
+			ImageButton i = new ImageButton(AssMan.getDrawable(String.format("%sCardButton.png", type.name())));
+			Actor a = new Counter(type.toString().toLowerCase(),
+					() -> me.getDevelopmentCards().getOrDefault(type, 0));
+			a.scaleBy(0.5f);
+			a.setPosition(i.getX() + i.getWidth(), i.getY());
+			i.addActor(a);
+			i.addListener(new ClickListener()
+			{
+				@Override
+				public void clicked(InputEvent event, float x, float y)
+				{
+					super.clicked(event, x, y);
+					client.log("UI", String.format("%s Button Clicked", type.name()));
+					Turn turn = new Turn(Requests.Request.BodyCase.PLAYDEVCARD);
+					turn.setChosenCard(type);
+					client.acquireLocksAndSendTurn(turn);
+				}
+			});
+			developmentCards.addActor(i);
 		}
-		developmentCards.addActor(new Counter("playedknight",
-				() -> me.getPlayedDevCards().getOrDefault(DevelopmentCardType.Knight, 0)));
 		root.add(developmentCards).expandY().left();
 
 		root.add(); // blank centre middle cell
@@ -123,7 +139,8 @@ public class HeadsUpDisplay extends Stage
 			diceRoll.addListener(new ClickListener()
 			{
 				@Override
-				public void clicked(InputEvent event, float x, float y) {
+				public void clicked(InputEvent event, float x, float y)
+				{
 					super.clicked(event, x, y);
 					client.log("UI", "Roll Dice Button Clicked");
 					client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.ROLLDICE));
@@ -133,7 +150,8 @@ public class HeadsUpDisplay extends Stage
 			endTurnBtn.addListener(new ClickListener()
 			{
 				@Override
-				public void clicked(InputEvent event, float x, float y) {
+				public void clicked(InputEvent event, float x, float y)
+				{
 					super.clicked(event, x, y);
 					client.log("UI", "End Turn Button Clicked");
 					client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.ENDTURN));

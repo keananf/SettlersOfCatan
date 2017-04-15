@@ -2,7 +2,6 @@ package catan.ui.hud;
 
 import catan.SettlersOfCatan;
 import catan.ui.AssMan;
-import catan.ui.ResourceDialog;
 import client.Client;
 import client.Turn;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -56,7 +55,7 @@ class PlayerBar extends Stack
 				super.clicked(event, x, y);
 				client.log("UI", String.format("Trade Button with %s Clicked", player.getId().name()));
 
-				ResourceDialog dialog = new ResourceDialog("Resources", SettlersOfCatan.getSkin(),
+				TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(),
 						Board.Player.newBuilder().setId(player.getId()).build(), client);
 				dialog.show(hud);
 			}

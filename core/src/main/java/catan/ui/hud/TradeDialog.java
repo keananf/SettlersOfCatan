@@ -1,4 +1,4 @@
-package catan.ui;
+package catan.ui.hud;
 
 import catan.SettlersOfCatan;
 import client.Client;
@@ -15,18 +15,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class ResourceDialog extends Dialog
+public class TradeDialog extends Dialog
 {
     private final Board.Player player;
     private final Client client;
     Map<ResourceType, Integer> resources, otherResources;
-    public ResourceDialog(String title, Skin skin, Board.Player player, Client client)
+
+    public TradeDialog(String title, Skin skin, Board.Player player, Client client)
     {
         super(title, skin);
         this.player = player;
         this.client = client;
         resources = new HashMap<ResourceType, Integer>();
         otherResources = new HashMap<ResourceType, Integer>();
+
         VerticalGroup vert  = new VerticalGroup();
         final Table root = new Table();
         root.setFillParent(true);

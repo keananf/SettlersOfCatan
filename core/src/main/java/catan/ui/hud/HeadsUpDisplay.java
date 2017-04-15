@@ -2,7 +2,6 @@ package catan.ui.hud;
 
 import catan.SettlersOfCatan;
 import catan.ui.AssMan;
-import catan.ui.ResourceDialog;
 import client.Client;
 import client.ClientGame;
 import client.Turn;
@@ -65,6 +64,7 @@ public class HeadsUpDisplay extends Stage
 		buttons.addActor(addBuyDevCardButton());
 		buttons.addActor(addDiceRollButton());
 		buttons.addActor(addBankTradeButton());
+		buttons.addActor(addDiscardButton());
 		buttons.addActor(addEndTurnButton());
 		root.add(buttons).right();
 	}
@@ -198,8 +198,27 @@ public class HeadsUpDisplay extends Stage
 				super.clicked(event, x, y);
 				client.log("UI", String.format("Bank Trade Button Clicked"));
 
-				ResourceDialog dialog = new ResourceDialog("Resources", SettlersOfCatan.getSkin(),
+				TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(),
 						null, client);
+				dialog.show(hud);
+			}
+		});
+		return bankTradeBtn;
+	}
+
+	public ImageButton addDiscardButton()
+	{
+		HeadsUpDisplay hud = this;
+		ImageButton bankTradeBtn = new ImageButton(AssMan.getDrawable("Discard.png"));
+		bankTradeBtn.addListener(new ClickListener()
+		{
+			@Override
+			public void clicked(InputEvent event, float x, float y)
+			{
+				super.clicked(event, x, y);
+				client.log("UI", String.format("Discard Button Clicked"));
+
+				DiscardDialog dialog = new DiscardDialog("Discard", SettlersOfCatan.getSkin(), client);
 				dialog.show(hud);
 			}
 		});

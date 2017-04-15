@@ -331,9 +331,15 @@ public class ServerGame extends Game
 	public void playDevelopmentCard(Board.PlayableDevCard card) throws DoesNotOwnException, CannotPlayException
 	{
 		Player p = players.get(currentPlayer);
+		DevelopmentCardType type = DevelopmentCardType.fromProto(card);
+
+		// Not enough roads available to play a road building card
+		if(type.equals(DevelopmentCardType.RoadBuilding) && bank.getAvailableRoads(p.getColour()) < 2)
+		{
+			throw new CannotPlayException();
+		}
 
 		// Try to play card
-		DevelopmentCardType type = DevelopmentCardType.fromProto(card);
 		((ServerPlayer) p).playDevelopmentCard(type);
 
 		// Perform any additional actions not accomplished through

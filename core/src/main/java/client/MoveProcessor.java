@@ -321,6 +321,12 @@ public class MoveProcessor
 			// If the player owns the provided card
 			if (player.getDevelopmentCards().containsKey(type) && player.getDevelopmentCards().get(type) > 0)
 			{
+				Bank bank = getGame().getBank();
+				if(type.equals(DevelopmentCardType.RoadBuilding) && bank.getAvailableRoads(player.getColour()) < 2)
+				{
+					return false;
+				}
+
 				// If you didn't just buy this card / these cards
 				Map<DevelopmentCardType, Integer> recentCards = player.getRecentBoughtDevCards();
 				int num = recentCards.getOrDefault(type, 0);

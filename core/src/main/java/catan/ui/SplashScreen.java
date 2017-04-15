@@ -34,10 +34,10 @@ public class SplashScreen implements Screen
 		body.space(50);
 		ui.addActor(body);
 
-		Label title = new Label("Settlers of Catan", game.skin, "title");
+		Label title = new Label("Settlers of Catan", SettlersOfCatan.getSkin(), "title");
 		body.addActor(title);
 
-		Label prompt = new Label("Click to start", game.skin);
+		Label prompt = new Label("Click to start", SettlersOfCatan.getSkin());
 		body.addActor(prompt);
 
 		body.setSize(body.getPrefWidth(), body.getPrefHeight());
@@ -70,21 +70,17 @@ public class SplashScreen implements Screen
 
 	@Override
 	public void pause()
-	{
-	}
+	{}
 
 	@Override
 	public void resume()
-	{
-	}
+	{}
 
 	@Override
 	public void hide()
-	{
-	}
+	{}
 
 	@Override
 	public void show()
-	{
-	}
+	{}
 }

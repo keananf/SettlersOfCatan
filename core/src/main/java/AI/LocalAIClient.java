@@ -12,7 +12,6 @@ import server.Server;
  */
 public class LocalAIClient extends AIClient
 {
-	private LocalServerConnection conn;
 	private Server server;
 	private Thread serverThread;
 
@@ -31,7 +30,7 @@ public class LocalAIClient extends AIClient
 	@Override
 	protected void setUpConnection()
 	{
-		conn = new LocalServerConnection(this);
+		LocalServerConnection conn = new LocalServerConnection();
 		conn.setConn(new LocalClientConnection(conn));
 		setUp(conn);
 		server = new LocalServer(conn.getConn());

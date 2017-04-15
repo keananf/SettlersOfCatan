@@ -1,0 +1,28 @@
+syntax = "proto3";
+package intergroup;
+
+import "empty.proto";
+import "board/board.proto";
+import "trade/trade.proto";
+import "resource/resource.proto";
+import "lobby/lobby.proto";
+
+message Request {
+  oneof body {
+    Empty rollDice = 1;
+    Empty buyDevCard = 2;
+    board.Edge buildRoad = 3;
+    board.Point buildSettlement = 4;
+    board.Point buildCity = 5;
+    board.Point moveRobber = 6;
+    board.PlayableDevCard playDevCard = 7;
+    trade.Kind initiateTrade = 8;
+    trade.Response submitTradeResponse = 9;
+    resource.Counts discardResources = 10;
+    board.Player submitTargetPlayer = 11;
+    resource.Kind chooseResource = 12;
+    Empty endTurn = 13;
+    lobby.Join joinLobby = 14;
+    string chatMessage = 15;
+  }
+}

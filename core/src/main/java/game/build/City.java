@@ -20,15 +20,14 @@ public class City extends Building
 	}
 
 	private City()
-	{
-	}
+	{}
 
 	/**
 	 * @return a map containing the total cost for all resources
 	 */
 	public Map<ResourceType, Integer> getCost()
 	{
-		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> resources = new HashMap<>();
 
 		resources.put(ResourceType.Grain, 2);
 		resources.put(ResourceType.Ore, 3);

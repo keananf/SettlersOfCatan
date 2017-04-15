@@ -42,8 +42,8 @@ public class MessageProcessor
 		this.game = game;
 		this.server = server;
 		logger = new Logger();
-		expectedMoves = new HashMap<Colour, List<Requests.Request.BodyCase>>();
-		movesToProcess = new LinkedBlockingQueue<ReceivedMessage>();
+		expectedMoves = new HashMap<>();
+		movesToProcess = new LinkedBlockingQueue<>();
 		for (Colour c : Colour.values())
 		{
 			expectedMoves.put(c, new ArrayList<>());
@@ -66,12 +66,10 @@ public class MessageProcessor
 		logger.logReceivedMessage(msg);
 
 		// If not valid
-		if (!validateMsg(msg, col))
-		{
-			return Events.Event.newBuilder()
+		if (!validateMsg(msg,
+				col)) { return Events.Event.newBuilder()
 						.setError(Events.Event.Error.newBuilder().setDescription("Move unexpected or invalid.").build())
-						.build();
-		}
+						.build(); }
 
 		// switch on message type
 		switch (msg.getTypeCase())
@@ -96,7 +94,7 @@ public class MessageProcessor
 	 * @param msg the message received from across the network
 	 * @return the response message
 	 */
-	private Events.Event processMove(Messages.Message msg, Colour colour) throws IOException
+	private Events.Event processMove(Messages.Message msg, Colour colour)
 	{
 		Requests.Request request = msg.getRequest();
 		Events.Event.Builder ev = Events.Event.newBuilder();
@@ -162,7 +160,7 @@ public class MessageProcessor
 				ev.setResourceChosen(request.getChooseResource());
 				break;
 			case ROLLDICE:
-				if(initialPhase)
+				if (initialPhase)
 				{
 					server.log("Server Proc", "Rolling dice");
 					ev.setRolled(game.generateDiceRoll());
@@ -189,13 +187,13 @@ public class MessageProcessor
 				if (currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT)
 						&& !currentTrade.isExpired())
 				{
-					ev.setPlayerTradeAccepted(currentTrade.getTrade());
-
 					try
 					{
 						game.processPlayerTrade(currentTrade.getTrade());
+						ev.setPlayerTradeAccepted(currentTrade.getTrade());
+						ev.setInstigator(currentTrade.getInstigator());
 					}
-					catch(IllegalTradeException e)
+					catch (IllegalTradeException e)
 					{
 						server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
 					}
@@ -334,8 +332,7 @@ public class MessageProcessor
 	 * @return the bank trade or null
 	 */
 	private Trade.WithBank processTradeType(Trade.Kind request, Board.Player instigator)
-			throws IllegalPortTradeException, IllegalBankTradeException, CannotAffordException, IOException,
-			BankLimitException
+			throws IllegalPortTradeException, IllegalBankTradeException, CannotAffordException, BankLimitException
 	{
 		tradePhase = true;
 
@@ -382,7 +379,8 @@ public class MessageProcessor
 			return true;
 		}
 
-		else if((type.equals(Requests.Request.BodyCase.MOVEROBBER) || type.equals(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
+		else if ((type.equals(Requests.Request.BodyCase.MOVEROBBER)
+				|| type.equals(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
 				|| type.equals(Requests.Request.BodyCase.CHOOSERESOURCE)) && !expected.contains(type))
 		{
 			return false;
@@ -393,9 +391,9 @@ public class MessageProcessor
 
 		// If in trade phase and the given message isn't a trade
 		if (tradePhase && game.getCurrentPlayer().equals(col)
-				&& !(type.equals(Requests.Request.BodyCase.INITIATETRADE) ||
-				type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) ||
-				type.equals(Requests.Request.BodyCase.ENDTURN)))
+				&& !(type.equals(Requests.Request.BodyCase.INITIATETRADE)
+						|| type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
+						|| type.equals(Requests.Request.BodyCase.ENDTURN)))
 			return false;
 
 		// If it's not your turn and there are no expected moves from you
@@ -409,7 +407,7 @@ public class MessageProcessor
 	 * @return a boolean indicating success or not
 	 * @throws IOException
 	 */
-	private boolean validateMsg(Messages.Message msg, Colour col) throws IOException
+	private boolean validateMsg(Messages.Message msg, Colour col)
 	{
 		// If it is not the player's turn, the message type is unknown OR the
 		// given request is NOT expected, return false

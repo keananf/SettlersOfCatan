@@ -1,10 +1,6 @@
 package catan.ui;
 
-import game.Game;
-import grid.BoardElement;
-import grid.Hex;
-import grid.Node;
-
+import client.Client;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Intersector;
@@ -12,7 +8,11 @@ import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import grid.BoardElement;
 import grid.Edge;
+import grid.Hex;
+import grid.Node;
+
 import java.util.List;
 
 /**
@@ -21,6 +21,7 @@ import java.util.List;
 class GameController implements InputProcessor
 {
 	private final Camera camera;
+	private final MoveBuilder moveBuilder;
 
 	private List<Hex> hexes;
 	private List<Node> nodes;
@@ -30,12 +31,13 @@ class GameController implements InputProcessor
 	private final static float DETECTION_Y = 0.1f;
 	private final static Plane DETECTION_PLANE = new Plane(new Vector3(0, 1, 0), new Vector3(0, DETECTION_Y, 0));
 
-	GameController(final Camera camera, final Game state)
+	GameController(final Camera camera, Client client)
 	{
 		this.camera = camera;
-		this.hexes = state.getGrid().getHexesAsList();
-		this.nodes = state.getGrid().getNodesAsList();
-		this.edges = state.getGrid().getEdgesAsList();
+		this.hexes = client.getState().getGrid().getHexesAsList();
+		this.nodes = client.getState().getGrid().getNodesAsList();
+		this.edges = client.getState().getGrid().getEdgesAsList();
+		this.moveBuilder = new MoveBuilder(client);
 	}
 
 	@Override
@@ -49,7 +51,7 @@ class GameController implements InputProcessor
 		BoardElement element = findElement(intersectionPoint.x, intersectionPoint.z);
 		if (element == null) return false;
 
-		// moveBuilder.onSelect(element);
+		moveBuilder.onSelect(element);
 
 		return true;
 	}

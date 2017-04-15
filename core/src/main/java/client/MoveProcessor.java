@@ -39,7 +39,7 @@ public class MoveProcessor
 	 */
 	private List<Turn> getBuildingPossibilities()
 	{
-		List<Turn> moves = new ArrayList<Turn>();
+		List<Turn> moves = new ArrayList<>();
 
 		// This player
 		Player p = getGame().getPlayer();
@@ -62,7 +62,7 @@ public class MoveProcessor
 				turn.setChosenMove(Requests.Request.BodyCase.BUILDCITY);
 			}
 
-			if(checkBuild(turn))
+			if (checkBuild(turn))
 			{
 				moves.add(turn);
 			}
@@ -91,7 +91,7 @@ public class MoveProcessor
 	public List<Turn> getPossibleMoves()
 	{
 
-		List<Turn> possibilities = new ArrayList<Turn>();
+		List<Turn> possibilities = new ArrayList<>();
 
 		if (getExpectedMoves().contains(Requests.Request.BodyCase.JOINLOBBY))
 		{
@@ -265,9 +265,8 @@ public class MoveProcessor
 		// Ensure that a discard is expected, and that the discard can be
 		// afforded and that it brings the user
 		// into a safe position having 7 or less resources.
-		return !getExpectedMoves().isEmpty()
-				&& isExpected(turn) && getGame().getPlayer().canAfford(resources)
-				&& sum*2 <= getGame().getPlayer().getNumResources();
+		return !getExpectedMoves().isEmpty() && isExpected(turn) && getGame().getPlayer().canAfford(resources)
+				&& sum * 2 <= getGame().getPlayer().getNumResources();
 	}
 
 	/**
@@ -282,7 +281,8 @@ public class MoveProcessor
 
 		// Ensure that a SUBMITTARGETPLAYER move is expected, and that the
 		// player has resources
-		return (checkTurn() && isExpected(turn) && getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
+		return (checkTurn() && isExpected(turn)
+				&& getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
 				&& !target.equals(getGame().getPlayer().getColour()));
 	}
 
@@ -314,7 +314,7 @@ public class MoveProcessor
 
 		// If player's turn and no other moves are expected, or it is the start
 		// of their turn
-		if (checkTurn() && isExpected(turn))
+		if (isExpected(turn))
 		{
 			Player player = getGame().getPlayer();
 
@@ -323,7 +323,7 @@ public class MoveProcessor
 			{
 				// If you didn't just buy this card / these cards
 				Map<DevelopmentCardType, Integer> recentCards = player.getRecentBoughtDevCards();
-				int num = recentCards.containsKey(type) ? recentCards.get(type) : 0;
+				int num = recentCards.getOrDefault(type, 0);
 				return player.getDevelopmentCards().get(type) > num;
 			}
 		}
@@ -339,8 +339,7 @@ public class MoveProcessor
 		Turn turn = new Turn(Requests.Request.BodyCase.BUYDEVCARD);
 
 		// If its the user's turn, they have no expected moves, and
-		return checkTurn() && isExpected(turn)
-				&& getGame().getPlayer().canAfford(DevelopmentCardType.getCardCost());
+		return checkTurn() && isExpected(turn) && getGame().getPlayer().canAfford(DevelopmentCardType.getCardCost());
 	}
 
 	/**
@@ -371,8 +370,8 @@ public class MoveProcessor
 	private boolean checkBuildRoad(Turn turn)
 	{
 		Edge edge = turn.getChosenEdge();
-		return checkTurn() && getGame().getPlayer().canBuildRoad(edge) && isExpected(turn) &&
-				(getGame().getPlayer().getRoads().size() < 2 || getGame().getPlayer().canAfford(Road.getRoadCost()));
+		return checkTurn() && getGame().getPlayer().canBuildRoad(edge) && isExpected(turn)
+				&& (getGame().getPlayer().getRoads().size() < 2 || getGame().getPlayer().canAfford(Road.getRoadCost()));
 	}
 
 	/**
@@ -397,8 +396,8 @@ public class MoveProcessor
 			// If the move is expected, and the response is accept AND the
 			// player can afford it.
 			// OR if it is reject.
-			val = isExpected(turn) &&
-					((response.equals(Trade.Response.ACCEPT) && getGame().getPlayer().canAfford(costMap))
+			val = isExpected(turn)
+					&& ((response.equals(Trade.Response.ACCEPT) && getGame().getPlayer().canAfford(costMap))
 							|| (response.equals(Trade.Response.REJECT)));
 		}
 
@@ -413,8 +412,7 @@ public class MoveProcessor
 	 */
 	public boolean checkInitiateTrade(Turn turn)
 	{
-		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer>(),
-				wanting = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> cost = new HashMap<>(), wanting = new HashMap<>();
 
 		Trade.Kind.Builder builder = Trade.Kind.newBuilder();
 		Trade.Kind initiateTrade = turn.getPlayerTrade() != null ? builder.setPlayer(turn.getPlayerTrade()).build()
@@ -449,6 +447,11 @@ public class MoveProcessor
 		if (type == null) return false;
 
 		if (getExpectedMoves().contains(type))
+		{
+			return true;
+		}
+		else if(getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE)
+				&& type.equals(Requests.Request.BodyCase.PLAYDEVCARD))
 		{
 			return true;
 		}

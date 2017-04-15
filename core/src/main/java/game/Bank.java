@@ -23,11 +23,11 @@ public class Bank
 
 	public Bank()
 	{
-		availableResources = new HashMap<ResourceType, Integer>();
-		availableDevCards = new HashMap<DevelopmentCardType, Integer>();
-		availableSettlements = new HashMap<Colour, Integer>();
-		availableCities = new HashMap<Colour, Integer>();
-		availableRoads = new HashMap<Colour, Integer>();
+		availableResources = new HashMap<>();
+		availableDevCards = new HashMap<>();
+		availableSettlements = new HashMap<>();
+		availableCities = new HashMap<>();
+		availableRoads = new HashMap<>();
 		setUpAvailability();
 	}
 
@@ -39,7 +39,7 @@ public class Bank
 		// For each resource type
 		for (ResourceType r : ResourceType.values())
 		{
-			if(r.equals(ResourceType.Generic)) continue;
+			if (r.equals(ResourceType.Generic)) continue;
 
 			availableResources.put(r, resourceAmount);
 		}

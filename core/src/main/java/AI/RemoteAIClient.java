@@ -57,9 +57,8 @@ public class RemoteAIClient extends AIClient
 		try
 		{
 			conn = new RemoteServerConnection();
-			conn.connect(host, PORT, this);
-			if(conn.isInitialised())
-				log("Client Set-Up", String.format("Connected to: %s", host));
+			conn.connect(host, PORT);
+			if (conn.isInitialised()) log("Client Set-Up", String.format("Connected to: %s", host));
 			setUp(conn);
 		}
 		catch (IOException e)
@@ -68,9 +67,4 @@ public class RemoteAIClient extends AIClient
 		}
 	}
 
-	@Override
-	public void shutDown()
-	{
-		super.shutDown();
-	}
 }

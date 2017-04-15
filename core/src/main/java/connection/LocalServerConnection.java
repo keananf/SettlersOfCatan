@@ -1,6 +1,5 @@
 package connection;
 
-import client.Client;
 import intergroup.Messages;
 
 import java.util.concurrent.BlockingQueue;
@@ -13,14 +12,12 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class LocalServerConnection implements IServerConnection
 {
-	private final Client client;
 	private LocalClientConnection conn;
 	protected BlockingQueue<Messages.Message> fromServer;
 
-	public LocalServerConnection(Client client)
+	public LocalServerConnection()
 	{
-		this.client = client;
-		fromServer = new LinkedBlockingQueue<Messages.Message>();
+		fromServer = new LinkedBlockingQueue<>();
 	}
 
 	public void setConn(LocalClientConnection conn)
@@ -41,7 +38,8 @@ public class LocalServerConnection implements IServerConnection
 		{
 			return fromServer.take();
 		}
-		catch (InterruptedException e) {}
+		catch (InterruptedException ignored)
+		{}
 		return null;
 	}
 
@@ -58,7 +56,8 @@ public class LocalServerConnection implements IServerConnection
 		{
 			conn.fromClient.put(message);
 		}
-		catch (InterruptedException e) {}
+		catch (InterruptedException ignored)
+		{}
 	}
 
 	@Override

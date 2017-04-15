@@ -1,11 +1,11 @@
 package catan;
 
-import AI.LocalAIClient;
 import AI.RemoteAIClient;
 import catan.ui.AssMan;
 import catan.ui.SplashScreen;
 import client.Client;
 import client.ClientGame;
+import client.LocalClient;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -13,11 +13,19 @@ import enums.Difficulty;
 
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
-	public static Skin skin;
-	public AssMan assets = new AssMan();
+	private static Skin skin;
+	private static AssMan assets = new AssMan();
 	public Client client;
 	private Thread t;
 	private boolean active;
+
+	public static Skin getSkin() {
+		return skin;
+	}
+
+	public static AssMan getAssets() {
+		return assets;
+	}
 
 	@Override
 	public void create()
@@ -37,10 +45,11 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	{
 		skin.dispose();
 
+		System.exit(1);
 		if (active)
 		{
-			client.log("Shutdown Client", "Shutting down.");
 			active = false;
+			client.log("Shutdown Client", "Shutting down.");
 			if (client != null && client.isActive()) client.shutDown();
 			client = null;
 			try
@@ -73,7 +82,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	 */
 	public void startNewServer()
 	{
-		client = new LocalAIClient(Difficulty.EASY,this);
+		client = new LocalClient(this);
 		t = new Thread(client);
 		t.start();
 	}
@@ -86,7 +95,6 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		boolean val = false;
 
 		// Block until the game board is received.
-		client.log("Client Setup", "Waiting for Game Information....");
 		while (true)
 		{
 			if (val) break;
@@ -108,7 +116,6 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 				e.printStackTrace();
 			}
 		}
-		client.log("Client Setup", "Received Game Information");
 		return client.getState();
 	}
 

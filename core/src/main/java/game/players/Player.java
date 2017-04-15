@@ -49,12 +49,12 @@ public abstract class Player
 	public Player(Colour colour, String userName)
 	{
 		this.colour = colour;
-		roads = new ArrayList<List<Road>>();
-		recentBoughtCards = new HashMap<DevelopmentCardType, Integer>();
-		settlements = new HashMap<Point, Building>();
-		resources = new HashMap<ResourceType, Integer>();
-		cards = new HashMap<DevelopmentCardType, Integer>();
-		playedDevCards = new HashMap<DevelopmentCardType, Integer>();
+		roads = new ArrayList<>();
+		recentBoughtCards = new HashMap<>();
+		settlements = new HashMap<>();
+		resources = new HashMap<>();
+		cards = new HashMap<>();
+		playedDevCards = new HashMap<>();
 		this.userName = userName;
 
 		// Initialise resources
@@ -141,8 +141,8 @@ public abstract class Player
 	 */
 	public void breakRoad(Edge e, Edge other)
 	{
-		List<Road> newList1 = new ArrayList<Road>();
-		List<Road> newList2 = new ArrayList<Road>();
+		List<Road> newList1 = new ArrayList<>();
+		List<Road> newList2 = new ArrayList<>();
 		boolean isConnected = false;
 		int index = 0;
 
@@ -153,25 +153,89 @@ public abstract class Player
 			for (Road road : subList)
 			{
 				// Divide up subList
-				if (e.getRoad().isConnected(road))
+				if (e.getRoad().isConnected(road) || other.getRoad().isConnected(road))
 				{
 					isConnected = true;
-					newList1.add(road);
-				}
-				else if (other.getRoad().isConnected(road))
-				{
-					isConnected = true;
-					newList2.add(road);
+					break;
 				}
 			}
 			index++;
-			if (isConnected) break;
+			if (isConnected)
+			{
+				List<List<Road>> lists = segmentRoads(subList, e, other);
+				newList1 = lists.get(0);
+				newList2 = lists.get(1);
+				break;
+			}
 		}
 
 		// Remove old list and add two new ones
 		roads.remove(index - 1);
 		roads.add(newList1);
 		roads.add(newList2);
+	}
+
+	public List<List<Road>> segmentRoads(List<Road> sublist, Edge e, Edge other)
+	{
+		List<Road> newList1 = new ArrayList<Road>();
+		List<Road> newList2 = new ArrayList<Road>();
+		List<Road> skipped = new ArrayList<Road>();
+		Road eRoad = e.getRoad(), otherRoad = other.getRoad();
+		newList1.add(eRoad);
+		newList2.add(otherRoad);
+
+		// For each road in the chain
+		for (Road road : sublist)
+		{
+			if(newList1.contains(road) || newList2.contains(road)) continue;
+
+			// Divide up subList
+			if (e.getRoad().isConnected(road))
+			{
+				newList1.add(road);
+			}
+			else if (other.getRoad().isConnected(road))
+			{
+				newList2.add(road);
+			}
+			else skipped.add(road);
+		}
+
+		// Loop until all roads sorted
+		while(newList1.size() + newList2.size() != sublist.size())
+		{
+			// For each skipped road
+			for(Road road : skipped)
+			{
+				// Check if connected to any road in first list
+				boolean added = false;
+				for(Road r1 : newList1)
+				{
+					if (road.isConnected(r1))
+					{
+						newList1.add(road);
+						added = true;
+						break;
+					}
+				}
+
+				// Check if connected to any road in second list
+				for(Road r2 : newList2)
+				{
+					if(added) break;
+					if (road.isConnected(r2))
+					{
+						newList2.add(road);
+						break;
+					}
+				}
+			}
+		}
+
+		List<List<Road>> newList = new ArrayList<List<Road>>();
+		newList.add(newList1);
+		newList.add(newList2);
+		return newList;
 	}
 
 	/**
@@ -263,7 +327,7 @@ public abstract class Player
 	 */
 	public boolean canBuildRoad(Edge edge)
 	{
-		List<Integer> listsAddedTo = new ArrayList<Integer>();
+		List<Integer> listsAddedTo = new ArrayList<>();
 		Road r = new Road(edge, colour);
 		Building b = null;
 
@@ -272,21 +336,21 @@ public abstract class Player
 
 		// Find out where this road is connected
 		boolean valid = checkRoadsAndAdd(r, listsAddedTo);
-		if(r.getEdge().getX().getBuilding() != null && r.getEdge().getX().getBuilding().getPlayerColour().equals(colour))
+		if (r.getEdge().getX().getBuilding() != null
+				&& r.getEdge().getX().getBuilding().getPlayerColour().equals(colour))
 		{
 			b = r.getEdge().getX().getBuilding();
 		}
-		else if(r.getEdge().getY().getBuilding() != null && r.getEdge().getY().getBuilding().getPlayerColour().equals(colour))
+		else if (r.getEdge().getY().getBuilding() != null
+				&& r.getEdge().getY().getBuilding().getPlayerColour().equals(colour))
 		{
 			b = r.getEdge().getY().getBuilding();
 		}
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		if (b != null || valid
-				|| (getRoads().size() < 2 && b != null)) { return true; }
+		return b != null || valid || (getRoads().size() < 2 && b != null);
 
-		return false;
 	}
 
 	/**
@@ -336,7 +400,7 @@ public abstract class Player
 		for (ResourceType r : newResources.keySet())
 		{
 			int value = newResources.get(r);
-			int existing = resources.containsKey(r) ? resources.get(r) : 0;
+			int existing = resources.getOrDefault(r, 0);
 
 			// Add to overall resource bank
 			resources.put(r, value + existing);
@@ -348,9 +412,9 @@ public abstract class Player
 	 * 
 	 * @param count a map of resources to give to the player
 	 */
-	public void grantResources(Resource.Counts count, Bank bank) throws CannotAffordException, BankLimitException
+	public void grantResources(Resource.Counts count, Bank bank) throws BankLimitException
 	{
-		Map<ResourceType, Integer> newResources = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> newResources = new HashMap<>();
 		newResources.put(ResourceType.Brick, count.getBrick());
 		newResources.put(ResourceType.Wool, count.getWool());
 		newResources.put(ResourceType.Ore, count.getOre());
@@ -370,7 +434,7 @@ public abstract class Player
 	 */
 	public void spendResources(Resource.Counts count, Bank bank) throws CannotAffordException
 	{
-		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> cost = new HashMap<>();
 		cost.put(ResourceType.Brick, count.getBrick());
 		cost.put(ResourceType.Wool, count.getWool());
 		cost.put(ResourceType.Ore, count.getOre());
@@ -396,7 +460,7 @@ public abstract class Player
 		for (ResourceType r : cost.keySet())
 		{
 			int value = cost.get(r);
-			int existing = resources.containsKey(r) ? resources.get(r) : 0;
+			int existing = resources.getOrDefault(r, 0);
 
 			// Add to overall resource bank
 			resources.put(r, existing - value);
@@ -443,8 +507,8 @@ public abstract class Player
 	{
 		// Add the card reveal
 		int vp = this.vp;
-		vp += cards.containsKey(DevelopmentCardType.University) ? cards.get(DevelopmentCardType.University) : 0;
-		vp += cards.containsKey(DevelopmentCardType.Library) ? cards.get(DevelopmentCardType.Library) : 0;
+		vp += cards.getOrDefault(DevelopmentCardType.University, 0);
+		vp += cards.getOrDefault(DevelopmentCardType.Library, 0);
 
 		return vp >= VP_THRESHOLD;
 	}
@@ -478,7 +542,7 @@ public abstract class Player
 	 */
 	public List<Road> getRoads()
 	{
-		List<Road> total = new ArrayList<Road>();
+		List<Road> total = new ArrayList<>();
 
 		for (List<Road> list : roads)
 			total.addAll(list);
@@ -499,6 +563,11 @@ public abstract class Player
 	 */
 	public void setHasLongestRoad(boolean hasLongestRoad)
 	{
+		if(!hasLongestRoad)
+		{
+			addVp(-2);
+		}
+		else if(!this.hasLongestRoad) addVp(2);
 		this.hasLongestRoad = hasLongestRoad;
 	}
 	public boolean getHasLongestRoad(){
@@ -552,11 +621,11 @@ public abstract class Player
 	{
 		DevelopmentCardType type = DevelopmentCardType.fromProto(card);
 
-		int existing = cards.containsKey(type) ? cards.get(type) : 0;
+		int existing = cards.getOrDefault(type, 0);
 		cards.put(type, existing + 1);
 
 		// Update recent bought caught
-		existing = recentBoughtCards.containsKey(type) ? recentBoughtCards.get(type) : 0;
+		existing = recentBoughtCards.getOrDefault(type, 0);
 		recentBoughtCards.put(type, existing + 1);
 	}
 
@@ -567,7 +636,7 @@ public abstract class Player
 	 */
 	protected void playCard(DevelopmentCardType card)
 	{
-		int existing = cards.containsKey(card) ? cards.get(card) : 0;
+		int existing = cards.getOrDefault(card, 0);
 		cards.put(card, existing - 1);
 	}
 

@@ -18,7 +18,7 @@ public class LocalClientConnection implements IClientConnection
 	public LocalClientConnection(LocalServerConnection conn)
 	{
 		this.conn = conn;
-		fromClient = new LinkedBlockingQueue<Messages.Message>();
+		fromClient = new LinkedBlockingQueue<>();
 	}
 
 	@Override
@@ -34,7 +34,8 @@ public class LocalClientConnection implements IClientConnection
 		{
 			conn.fromServer.put(message);
 		}
-		catch (InterruptedException e) {}
+		catch (InterruptedException ignored)
+		{}
 	}
 
 	@Override
@@ -46,7 +47,8 @@ public class LocalClientConnection implements IClientConnection
 		{
 			return fromClient.take();
 		}
-		catch (InterruptedException e) {}
+		catch (InterruptedException ignored)
+		{}
 		return null;
 	}
 

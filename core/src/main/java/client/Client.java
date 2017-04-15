@@ -29,7 +29,7 @@ public abstract class Client implements Runnable
 	protected TurnProcessor turnProcessor;
 	protected MoveProcessor moveProcessor;
 	protected ClientPlayer thisPlayer;
-	protected static final int PORT = 12345;
+	protected static final int PORT = 7000;
 	private TurnState turn;
 	private IServerConnection conn;
 	private Semaphore stateLock, turnLock;
@@ -45,13 +45,16 @@ public abstract class Client implements Runnable
 	public Client()
 	{
 		thisPlayer = new ClientPlayer(Colour.BLUE, "Default");
-		usersInLobby = new ArrayList<String>(Game.NUM_PLAYERS);
+		usersInLobby = new ArrayList<>(Game.NUM_PLAYERS);
 	}
 
 	@Override
 	public void run()
 	{
 		active = true;
+
+		Turn turn = new Turn(Requests.Request.BodyCase.JOINLOBBY);
+		acquireLocksAndSendTurn(turn);
 
 		// Loop processing events when needed and sending turns
 		while (active && (getState() == null || !getState().isOver()))
@@ -194,12 +197,12 @@ public abstract class Client implements Runnable
 		if (getMoveProcessor().validateMsg(turn))
 		{
 			updateTurn(turn);
-			turnProcessor.sendMove();
+			turnProcessor.setUpMove();
 			return true;
 		}
 
 		log("Client Play", String.format("Invalid Request %s for %s", turn.getChosenMove().name(),
-					getState().getPlayer().getId().name()));
+				getState().getPlayer().getId().name()));
 		return false;
 	}
 
@@ -340,15 +343,13 @@ public abstract class Client implements Runnable
 		return active;
 	}
 
-
 	public void setActive(boolean active)
 	{
 		this.active = active;
 	}
 
-    public void render()
-    {
-        if(Gdx.graphics != null)
-			Gdx.graphics.requestRendering();
-    }
+	public void render()
+	{
+		if (Gdx.graphics != null) Gdx.graphics.requestRendering();
+	}
 }

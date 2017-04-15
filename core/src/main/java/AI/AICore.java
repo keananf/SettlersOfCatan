@@ -39,7 +39,7 @@ public abstract class AICore implements IAI, Runnable
 			try
 			{
 				// Attempt to make a move and send a turn
-				if(!waiting)
+				if (!waiting)
 				{
 					waiting = client.acquireLocksAndPerformMove();
 				}
@@ -89,7 +89,7 @@ public abstract class AICore implements IAI, Runnable
 	@Override
 	public List<Turn> rankMoves(List<Turn> moves)
 	{
-		List<Turn> optimalMoves = new ArrayList<Turn>();
+		List<Turn> optimalMoves = new ArrayList<>();
 		int maxRank = -1;
 
 		if (moves == null) return null;
@@ -205,7 +205,7 @@ public abstract class AICore implements IAI, Runnable
 	{
 		List<Turn> options = client.getMoveProcessor().getPossibleMoves();
 
-		List<Turn> ret = new ArrayList<Turn>();
+		List<Turn> ret = new ArrayList<>();
 		ret.addAll(options);
 
 		// Eliminate trades and chats
@@ -222,10 +222,10 @@ public abstract class AICore implements IAI, Runnable
 	 */
 	private Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> setUpExpectedEvents()
 	{
-		Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> evs = new HashMap<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>>();
-		for(Requests.Request.BodyCase c : Requests.Request.BodyCase.values())
+		Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> evs = new HashMap<>();
+		for (Requests.Request.BodyCase c : Requests.Request.BodyCase.values())
 		{
-			evs.put(c, new ArrayList<Events.Event.TypeCase>());
+			evs.put(c, new ArrayList<>());
 		}
 
 		evs.get(Requests.Request.BodyCase.BUILDCITY).add(Events.Event.TypeCase.CITYBUILT);
@@ -243,6 +243,7 @@ public abstract class AICore implements IAI, Runnable
 		evs.get(Requests.Request.BodyCase.CHATMESSAGE).add(Events.Event.TypeCase.CHATMESSAGE);
 		evs.get(Requests.Request.BodyCase.JOINLOBBY).add(Events.Event.TypeCase.LOBBYUPDATE);
 		evs.get(Requests.Request.BodyCase.CHOOSERESOURCE).add(Events.Event.TypeCase.RESOURCECHOSEN);
+		evs.get(Requests.Request.BodyCase.CHOOSERESOURCE).add(Events.Event.TypeCase.MONOPOLYRESOLUTION);
 		evs.get(Requests.Request.BodyCase.SUBMITTARGETPLAYER).add(Events.Event.TypeCase.RESOURCESTOLEN);
 
 		return evs;
@@ -250,7 +251,7 @@ public abstract class AICore implements IAI, Runnable
 
 	protected Player getPlayer()
 	{
-		return client.getPlayer() == null ? null : client.getPlayer();
+		return client.getPlayer();
 	}
 
 	protected ClientGame getState()

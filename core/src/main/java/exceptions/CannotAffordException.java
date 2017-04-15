@@ -19,7 +19,7 @@ public class CannotAffordException extends Exception
 
 	public CannotAffordException(Map<ResourceType, Integer> resources, Resource.Counts offer)
 	{
-		Map<ResourceType, Integer> cost = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> cost = new HashMap<>();
 		cost.put(ResourceType.Brick, offer.getBrick());
 		cost.put(ResourceType.Wool, offer.getWool());
 		cost.put(ResourceType.Ore, offer.getOre());

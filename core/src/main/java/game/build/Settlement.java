@@ -21,15 +21,14 @@ public class Settlement extends Building
 	}
 
 	private Settlement()
-	{
-	}
+	{}
 
 	/**
 	 * @return a map containing the total cost for all resources
 	 */
 	public Map<ResourceType, Integer> getCost()
 	{
-		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> resources = new HashMap<>();
 
 		resources.put(ResourceType.Brick, 1);
 		resources.put(ResourceType.Lumber, 1);

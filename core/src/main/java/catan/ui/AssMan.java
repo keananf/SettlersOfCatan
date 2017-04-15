@@ -3,7 +3,9 @@ package catan.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.util.HashMap;
 
@@ -14,12 +16,7 @@ public final class AssMan extends AssetManager
 
 	private static final HashMap<String, Texture> textures = new HashMap<>();
 
-	public AssMan()
-	{
-		super();
-	}
-
-	public Model getModel(String name)
+	Model getModel(final String name)
 	{
 		final String path = MODELS + name;
 
@@ -32,7 +29,7 @@ public final class AssMan extends AssetManager
 		return get(path, Model.class);
 	}
 
-	public static  Texture getTexture(String name)
+	public static Texture getTexture(final String name)
 	{
 
 		if (textures.containsKey(name))
@@ -46,5 +43,10 @@ public final class AssMan extends AssetManager
 			textures.put(name, texture);
 			return texture;
 		}
+	}
+
+	public static TextureRegionDrawable getDrawable(final String name)
+	{
+		return new TextureRegionDrawable(new TextureRegion(getTexture(name)));
 	}
 }

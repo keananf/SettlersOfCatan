@@ -15,6 +15,7 @@ import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.resource.Resource;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +41,8 @@ public abstract class Game
 	{
 		bank = new Bank();
 		grid = new HexGrid(true);
-		players = new HashMap<Colour, Player>();
-		idsToColours = new HashMap<Board.Player.Id, Colour>();
+		players = new HashMap<>();
+		idsToColours = new HashMap<>();
 	}
 
 	/**
@@ -55,7 +56,7 @@ public abstract class Game
 	{
 		int resourceLimit = 7;
 		Player player = players.get(c);
-		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> grant = new HashMap<>();
 
 		// If 7, check that no one is above the resource limit
 		if (dice == resourceLimit) { return grant; }
@@ -88,15 +89,12 @@ public abstract class Game
 	public Lobby.GameInfo.PlayerDevCardInfo processCards(Map<DevelopmentCardType, Integer> map)
 	{
 		Lobby.GameInfo.PlayerDevCardInfo.Builder info = Lobby.GameInfo.PlayerDevCardInfo.newBuilder();
-		info.setUniversity(
-				map.containsKey(DevelopmentCardType.University) ? map.get(DevelopmentCardType.University) : 0);
-		info.setLibrary(map.containsKey(DevelopmentCardType.Library) ? map.get(DevelopmentCardType.Library) : 0);
-		info.setYearOfPlenty(
-				map.containsKey(DevelopmentCardType.YearOfPlenty) ? map.get(DevelopmentCardType.YearOfPlenty) : 0);
-		info.setMonopoly(map.containsKey(DevelopmentCardType.Monopoly) ? map.get(DevelopmentCardType.Monopoly) : 0);
-		info.setRoadBuilding(
-				map.containsKey(DevelopmentCardType.RoadBuilding) ? map.get(DevelopmentCardType.RoadBuilding) : 0);
-		info.setKnight(map.containsKey(DevelopmentCardType.Knight) ? map.get(DevelopmentCardType.Knight) : 0);
+		info.setUniversity(map.getOrDefault(DevelopmentCardType.University, 0));
+		info.setLibrary(map.getOrDefault(DevelopmentCardType.Library, 0));
+		info.setYearOfPlenty(map.getOrDefault(DevelopmentCardType.YearOfPlenty, 0));
+		info.setMonopoly(map.getOrDefault(DevelopmentCardType.Monopoly, 0));
+		info.setRoadBuilding(map.getOrDefault(DevelopmentCardType.RoadBuilding, 0));
+		info.setKnight(map.getOrDefault(DevelopmentCardType.Knight, 0));
 
 		return info.build();
 	}
@@ -109,7 +107,7 @@ public abstract class Game
 	 */
 	public Map<DevelopmentCardType, Integer> processCards(Lobby.GameInfo.PlayerDevCardInfo info)
 	{
-		Map<DevelopmentCardType, Integer> ret = new HashMap<DevelopmentCardType, Integer>();
+		Map<DevelopmentCardType, Integer> ret = new HashMap<>();
 
 		// Add all info with amounts
 		if (info.getKnight() > 0) ret.put(DevelopmentCardType.Knight, info.getKnight());
@@ -131,7 +129,7 @@ public abstract class Game
 	 */
 	public Map<ResourceType, Integer> processResources(Resource.Counts resources)
 	{
-		Map<ResourceType, Integer> ret = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> ret = new HashMap<>();
 
 		// Add all resources with amounts
 		if (resources.getBrick() > 0) ret.put(ResourceType.Brick, resources.getBrick());
@@ -152,11 +150,11 @@ public abstract class Game
 	public Resource.Counts processResources(Map<ResourceType, Integer> map)
 	{
 		Resource.Counts.Builder resources = Resource.Counts.newBuilder();
-		resources.setGrain(map.containsKey(ResourceType.Grain) ? map.get(ResourceType.Grain) : 0);
-		resources.setBrick(map.containsKey(ResourceType.Brick) ? map.get(ResourceType.Brick) : 0);
-		resources.setOre(map.containsKey(ResourceType.Ore) ? map.get(ResourceType.Ore) : 0);
-		resources.setWool(map.containsKey(ResourceType.Wool) ? map.get(ResourceType.Wool) : 0);
-		resources.setLumber(map.containsKey(ResourceType.Lumber) ? map.get(ResourceType.Lumber) : 0);
+		resources.setGrain(map.getOrDefault(ResourceType.Grain, 0));
+		resources.setBrick(map.getOrDefault(ResourceType.Brick, 0));
+		resources.setOre(map.getOrDefault(ResourceType.Ore, 0));
+		resources.setWool(map.getOrDefault(ResourceType.Wool, 0));
+		resources.setLumber(map.getOrDefault(ResourceType.Lumber, 0));
 
 		return resources.build();
 	}
@@ -169,25 +167,52 @@ public abstract class Game
 	protected void checkLongestRoad(boolean broken)
 	{
 		Player playerWithLongestRoad = players.get(this.playerWithLongestRoad);
+		List<Colour> cols = new ArrayList<Colour>();
+		int max = 0;
 
-		// Calculate who has longest road
-		for (Colour c : Colour.values())
+		// Calculate which player(s) has / have the longest road
+		for (Player player : players.values())
 		{
-			if (!players.containsKey(c)) continue;
-
-			Player player = players.get(c);
+			Colour c = player.getColour();
 			int length = player.calcRoadLength();
-			if (length > longestRoad || (broken && c.equals(currentPlayer)))
-			{
-				// Update victory points
-				if (longestRoad >= MIN_ROAD_LENGTH)
-				{
-					playerWithLongestRoad.addVp(-2);
-				}
-				if (length >= MIN_ROAD_LENGTH) player.addVp(2);
-				if (playerWithLongestRoad != null) playerWithLongestRoad.setHasLongestRoad(false);
 
-				longestRoad = length;
+			if(length > max)
+			{
+				cols.clear();
+				max = length;
+				cols.add(c);
+			}
+			else if(length == max) cols.add(c);
+		}
+
+		// Remove longest road victory points if necessary
+		if (longestRoad >= MIN_ROAD_LENGTH)
+		{
+			// If the player no longer has longest road
+			if(max < MIN_ROAD_LENGTH || !cols.contains(playerWithLongestRoad.getColour()))
+			{
+				this.playerWithLongestRoad = null;
+				playerWithLongestRoad.setHasLongestRoad(false);
+			}
+
+			// if the road was broken but the player with the longest road still has it
+			if(broken && cols.contains(playerWithLongestRoad.getColour()))
+			{
+				longestRoad = max;
+				return;
+			}
+		}
+		longestRoad = max;
+
+		// If the new longest road meets the threshold
+		if (max >= MIN_ROAD_LENGTH)
+		{
+			// If there is a tie, no one gets longest road
+			if(broken && cols.size() > 1) return;
+			else
+			{
+				Colour c = cols.get(0);
+				Player player = players.get(c);
 				this.playerWithLongestRoad = c;
 				player.setHasLongestRoad(true);
 			}

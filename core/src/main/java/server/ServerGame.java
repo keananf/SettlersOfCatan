@@ -43,8 +43,8 @@ public class ServerGame extends Game
 	 */
 	public Map<Colour, Map<ResourceType, Integer>> allocateResources(int dice)
 	{
-		Map<Colour, Map<ResourceType, Integer>> playerResources = new HashMap<Colour, Map<ResourceType, Integer>>();
-		List<ResourceType> list = new ArrayList<ResourceType>();
+		Map<Colour, Map<ResourceType, Integer>> playerResources = new HashMap<>();
+		List<ResourceType> list = new ArrayList<>();
 
 		if (dice == 7) return playerResources;
 
@@ -58,13 +58,13 @@ public class ServerGame extends Game
 		// For each resource type, ensure there is enough to go around
 		for (ResourceType r : ResourceType.values())
 		{
-			if(r.equals(ResourceType.Generic)) continue;
+			if (r.equals(ResourceType.Generic)) continue;
 			int total = bank.getAvailableResources().get(r);
 
 			// Subtract each player's new amount of 'r'
 			for (Colour c : playerResources.keySet())
 			{
-				total -= playerResources.get(c).containsKey(r) ? playerResources.get(c).get(r) : 0;
+				total -= playerResources.get(c).getOrDefault(r, 0);
 			}
 
 			// Not enough
@@ -87,9 +87,8 @@ public class ServerGame extends Game
 			{
 				getPlayer(c).grantResources(playerResources.get(c), bank);
 			}
-			catch (BankLimitException e)
-			{
-			}
+			catch (BankLimitException ignored)
+			{}
 		}
 
 		return playerResources;
@@ -288,7 +287,7 @@ public class ServerGame extends Game
 		if (node == null) { throw new InvalidCoordinatesException(city.getX(), city.getY()); }
 
 		// Cannot upgrade
-		if (bank.getAvailableCities() == 0) { throw new BankLimitException(String.format("No more cities available")); }
+		if (bank.getAvailableCities() == 0) { throw new BankLimitException("No more cities available"); }
 
 		// Try to upgrade settlement
 		((ServerPlayer) p).upgradeSettlement(node, bank);
@@ -315,8 +314,7 @@ public class ServerGame extends Game
 		if (node == null) { throw new InvalidCoordinatesException(request.getX(), request.getY()); }
 
 		// Cannot upgrade
-		if (bank.getAvailableSettlements() == 0) { throw new BankLimitException(
-				String.format("No more settlements available")); }
+		if (bank.getAvailableSettlements() == 0) { throw new BankLimitException("No more settlements available"); }
 
 		// Try to build settlement
 		((ServerPlayer) p).buildSettlement(node, bank);
@@ -364,8 +362,7 @@ public class ServerGame extends Game
 		Player p = players.get(currentPlayer);
 
 		// Cannot upgrade
-		if (bank.getNumAvailableDevCards() == 0) { throw new BankLimitException(
-				String.format("No more settlements available")); }
+		if (bank.getNumAvailableDevCards() == 0) { throw new BankLimitException("No more settlements available"); }
 
 		// Try to buy card
 		DevelopmentCardType card = ((ServerPlayer) p).buyDevelopmentCard(bank);
@@ -398,7 +395,7 @@ public class ServerGame extends Game
 	 * @param id the id of the player to take from
 	 * @throws CannotStealException
 	 */
-	public Board.Steal takeResource(Board.Player.Id id) throws CannotStealException
+	public Board.Steal takeResource(Board.Player.Id id)
 	{
 		Player other = getPlayer(id);
 		ResourceType r = ResourceType.Generic;
@@ -450,7 +447,7 @@ public class ServerGame extends Game
 	public void chooseResources(Resource.Kind r1) throws BankLimitException
 	{
 		// Set up grant
-		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> grant = new HashMap<>();
 		grant.put(ResourceType.fromProto(r1), 1);
 		players.get(currentPlayer).grantResources(grant, bank);
 	}
@@ -464,7 +461,7 @@ public class ServerGame extends Game
 	public Board.MultiSteal playMonopolyCard(Resource.Kind r)
 	{
 		Board.MultiSteal.Builder multiSteal = Board.MultiSteal.newBuilder();
-		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> grant = new HashMap<>();
 		ResourceType type = ResourceType.fromProto(r);
 		int sum = 0;
 
@@ -522,8 +519,7 @@ public class ServerGame extends Game
 		if (n2 == null) { throw new InvalidCoordinatesException(p2.getX(), p2.getY()); }
 
 		// Cannot upgrade
-		if (bank.getAvailableRoads(
-				p.getColour()) == 0) { throw new BankLimitException(String.format("No more roads available")); }
+		if (bank.getAvailableRoads(p.getColour()) == 0) { throw new BankLimitException("No more roads available"); }
 
 		// Try to build the road and update the longest road
 		p.buildRoad(grid.getEdge(p1, p2), bank);
@@ -733,24 +729,24 @@ public class ServerGame extends Game
 		vps.add(DevelopmentCardType.University);
 
 		// Set card reveal
-		for(Player p : getPlayers().values())
+		for (Player p : getPlayers().values())
 		{
 			Lobby.GameWon.CardReveal.Builder reveal = Lobby.GameWon.CardReveal.newBuilder();
 			reveal.setPlayer(Board.Player.newBuilder().setId(p.getId()).build());
 
 			// If is the winner
-			if(p.hasWon())
+			if (p.hasWon())
 			{
 				gameWon.setWinner(reveal.getPlayer());
 			}
 
 			// For each type of VP card
-			for(DevelopmentCardType type : vps)
+			for (DevelopmentCardType type : vps)
 			{
-				int num = p.getDevelopmentCards().containsKey(type) ? p.getDevelopmentCards().get(type) : 0;
+				int num = p.getDevelopmentCards().getOrDefault(type, 0);
 
 				// For the number of this vp card that are revealed
-				for(int i = 0; i < num; i++)
+				for (int i = 0; i < num; i++)
 					reveal.addVPCards(DevelopmentCardType.toProto(type).getVictoryPoint());
 			}
 			gameWon.addHiddenCards(reveal.build());

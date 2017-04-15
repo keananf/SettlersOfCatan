@@ -13,7 +13,6 @@ import server.Server;
  */
 public class LocalClient extends Client
 {
-	private LocalServerConnection conn;
 	private Server server;
 	private Thread serverThread;
 
@@ -25,7 +24,7 @@ public class LocalClient extends Client
 
 	protected void setUpConnection()
 	{
-		conn = new LocalServerConnection(this);
+		LocalServerConnection conn = new LocalServerConnection();
 		conn.setConn(new LocalClientConnection(conn));
 		setUp(conn);
 		server = new LocalServer(conn.getConn());

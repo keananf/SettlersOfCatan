@@ -29,7 +29,7 @@ public class LocalServer extends Server
 	{
 		super();
 		ServerGame.NUM_PLAYERS = 4;
-		addAIs(3);
+		addAIs(4);
 		localPlayer = game.getPlayers().get(0);
 	}
 
@@ -79,9 +79,8 @@ public class LocalServer extends Server
 		{
 			c = game.joinGame();
 		}
-		catch (GameFullException e)
-		{
-		}
+		catch (GameFullException ignored)
+		{}
 
 		ListenerThread l = new ListenerThread(connection, c, this);
 		connections.put(c, l);

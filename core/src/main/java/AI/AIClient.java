@@ -8,7 +8,6 @@ import intergroup.Events;
 public abstract class AIClient extends Client
 {
 	protected AICore ai;
-	private Thread aiThread;
 
 	public AIClient(Difficulty difficulty, SettlersOfCatan game)
 	{
@@ -53,7 +52,7 @@ public abstract class AIClient extends Client
 	public void run()
 	{
 		active = true;
-		aiThread = new Thread(ai);
+		Thread aiThread = new Thread(ai);
 		aiThread.start();
 
 		// Loop processing events when needed and sending turns
@@ -62,10 +61,14 @@ public abstract class AIClient extends Client
 			try
 			{
 				Events.Event ev = acquireLocksAndGetEvents();
-				if(ai.getExpectedEvents().contains(ev.getTypeCase()) || ev.getTypeCase().equals(Events.Event.TypeCase.ERROR))
+				if ((ai.getExpectedEvents().contains(ev.getTypeCase())|| ev.getTypeCase().equals(Events.Event.TypeCase.ERROR)))
 				{
-					log("Client Proc", "Resuming");
-					ai.resume();
+					if(!ev.getTypeCase().equals(Events.Event.TypeCase.CARDSDISCARDED)
+							|| ev.getInstigator().getId().getNumber() == getPlayer().getId().getNumber())
+					{
+						log("Client Proc", "Resuming");
+						ai.resume();
+					}
 				}
 
 				Thread.sleep(100);
@@ -82,7 +85,7 @@ public abstract class AIClient extends Client
 	/**
 	 * Acquires locks and attempts to move
 	 */
-	protected boolean acquireLocksAndPerformMove() throws Exception
+	protected boolean acquireLocksAndPerformMove()
 	{
 		boolean val = false;
 		try

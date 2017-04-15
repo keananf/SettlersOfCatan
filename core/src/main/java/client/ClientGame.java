@@ -38,9 +38,9 @@ public class ClientGame extends Game
 	{
 		super();
 		grid = null;
-		boughtDevCards = new HashMap<Colour, Integer>();
-		resources = new HashMap<Colour, Integer>();
-		playedDevCards = new HashMap<Colour, Map<DevelopmentCardType, Integer>>();
+		boughtDevCards = new HashMap<>();
+		resources = new HashMap<>();
+		playedDevCards = new HashMap<>();
 		chatBoard = new ChatBoard();
 
 		// Instantiate the playedDevCards maps
@@ -48,7 +48,7 @@ public class ClientGame extends Game
 		{
 			resources.put(c, 0);
 			boughtDevCards.put(c, 0);
-			playedDevCards.put(c, new HashMap<DevelopmentCardType, Integer>());
+			playedDevCards.put(c, new HashMap<>());
 
 			for (DevelopmentCardType d : DevelopmentCardType.values())
 			{
@@ -67,7 +67,7 @@ public class ClientGame extends Game
 	 * @return a representation of the board that is compatible with protofbufs
 	 * @param beginGame
 	 */
-	public HexGrid setBoard(Lobby.GameSetup beginGame) throws InvalidCoordinatesException, CannotAffordException
+	public HexGrid setBoard(Lobby.GameSetup beginGame)
 	{
 		HexGrid grid = new HexGrid(false);
 		this.grid = grid;
@@ -175,7 +175,7 @@ public class ClientGame extends Game
 	 */
 	private List<Hex> processHexes(List<Board.Hex> protos)
 	{
-		List<Hex> hexes = new ArrayList<Hex>();
+		List<Hex> hexes = new ArrayList<>();
 
 		// Add nodes
 		for (Board.Hex proto : protos)
@@ -193,7 +193,7 @@ public class ClientGame extends Game
 	 */
 	private List<Port> processPorts(List<Board.Harbour> protos)
 	{
-		List<Port> ports = new ArrayList<Port>();
+		List<Port> ports = new ArrayList<>();
 
 		// Add ports
 		for (Board.Harbour harbour : protos)
@@ -245,7 +245,7 @@ public class ClientGame extends Game
 	 */
 	public void processDice(int dice, List<Board.ResourceAllocation> resourceAllocationList)
 	{
-		client.getTurn().setTurnStarted(true);
+		client.getTurn().setTurnStarted();
 		client.getTurn().setRoll(dice);
 		if (dice != 7)
 		{
@@ -270,7 +270,7 @@ public class ClientGame extends Game
 				}
 				else
 				{
-					int existing = resources.containsKey(p.getColour()) ? resources.get(p.getColour()) : 0;
+					int existing = resources.getOrDefault(p.getColour(), 0);
 					for (ResourceType r : grant.keySet())
 					{
 						num += grant.get(r);
@@ -316,7 +316,7 @@ public class ClientGame extends Game
 		// Spend resources if it is not a preliminary move
 		if (player.getRoads().size() >= 2)
 		{
-			if (player.equals(getPlayer()))
+			if (player.getColour().equals(getPlayer().getColour()))
 			{
 				player.spendResources(Road.getRoadCost(), bank);
 			}
@@ -353,7 +353,7 @@ public class ClientGame extends Game
 			throw new InvalidCoordinatesException(city.getX(), city.getY());
 
 		// Handle resources
-		if (player.equals(getPlayer()))
+		if (player.getColour().equals(getPlayer().getColour()))
 		{
 			player.spendResources(City.getCityCost(), bank);
 		}
@@ -396,7 +396,7 @@ public class ClientGame extends Game
 		// Spend resources if this is not an initial move
 		if (player.getSettlements().size() >= 2)
 		{
-			if (player.equals(getPlayer()))
+			if (player.getColour().equals(getPlayer().getColour()))
 			{
 				player.spendResources(Settlement.getSettlementCost(), bank);
 			}
@@ -433,7 +433,7 @@ public class ClientGame extends Game
 		playedCards.put(card, existing + 1);
 
 		// Eliminate one bought dev card from player
-		existing = boughtDevCards.containsKey(player.getColour()) ? boughtDevCards.get(player.getColour()) : 0;
+		existing = boughtDevCards.getOrDefault(player.getColour(), 0);
 		if (existing > 0)
 		{
 			boughtDevCards.put(player.getColour(), existing - 1);
@@ -441,7 +441,7 @@ public class ClientGame extends Game
 		else
 			throw new DoesNotOwnException(card, player.getColour());
 
-		if (player.equals(getPlayer()))
+		if (player.getColour().equals(getPlayer().getColour()))
 		{
 			existing = player.getDevelopmentCards().get(card);
 			player.getDevelopmentCards().put(card, existing - 1);
@@ -466,7 +466,7 @@ public class ClientGame extends Game
 		Player player = getPlayer(instigator.getId());
 
 		// Handle resources
-		if (player.equals(getPlayer()))
+		if (player.getColour().equals(getPlayer().getColour()))
 		{
 			player.spendResources(DevelopmentCardType.getCardCost(), bank);
 			getPlayer().addDevelopmentCard(boughtDevCard);
@@ -479,7 +479,7 @@ public class ClientGame extends Game
 
 		// Update number of dev cards each player is known to have
 		Colour c = player.getColour();
-		int existing = boughtDevCards.containsKey(c) ? boughtDevCards.get(c) : 0;
+		int existing = boughtDevCards.getOrDefault(c, 0);
 		boughtDevCards.put(c, existing + 1);
 	}
 
@@ -502,7 +502,7 @@ public class ClientGame extends Game
 			wantingSize += wanting.get(r);
 
 		// Handle resources
-		if (player.equals(getPlayer()))
+		if (player.getColour().equals(getPlayer().getColour()))
 		{
 			// Update resources
 			player.spendResources(offering, bank);
@@ -535,7 +535,7 @@ public class ClientGame extends Game
 			wantingSize += wanting.get(r);
 
 		// Handle resources for this player
-		if (instigator.equals(getPlayer()))
+		if (instigator.getColour().equals(getPlayer().getColour()))
 		{
 			instigator.spendResources(offering, bank);
 			instigator.grantResources(wanting, bank);
@@ -543,7 +543,7 @@ public class ClientGame extends Game
 			int existing = resources.get(recipient.getColour());
 			resources.put(recipient.getColour(), existing - wantingSize + offeringSize);
 		}
-		else if (recipient.equals(getPlayer()))
+		else if (recipient.getColour().equals(getPlayer().getColour()))
 		{
 			recipient.spendResources(wanting, bank);
 			recipient.grantResources(offering, bank);
@@ -565,8 +565,7 @@ public class ClientGame extends Game
 	 * @param cardsDiscarded the discarded resources
 	 * @param instigator the player who discarded them
 	 */
-	public void processDiscard(Resource.Counts cardsDiscarded, Board.Player instigator)
-			throws CannotAffordException, BankLimitException
+	public void processDiscard(Resource.Counts cardsDiscarded, Board.Player instigator) throws CannotAffordException
 	{
 		Player player = getPlayer(instigator.getId());
 
@@ -603,7 +602,7 @@ public class ClientGame extends Game
 		if (quantity == 0) return;
 
 		// Update resources
-		Map<ResourceType, Integer> stolen = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> stolen = new HashMap<>();
 		stolen.put(r, quantity);
 
 		// Handle resources for this player
@@ -657,7 +656,7 @@ public class ClientGame extends Game
 
 		if (p.equals(getPlayer()))
 		{
-			Map<ResourceType, Integer> map = new HashMap<ResourceType, Integer>();
+			Map<ResourceType, Integer> map = new HashMap<>();
 			map.put(ResourceType.fromProto(resource), 1);
 			p.grantResources(map, bank);
 		}
@@ -717,7 +716,7 @@ public class ClientGame extends Game
 			setCurrentPlayer(getLastPlayer());
 			current--;
 		}
-		else if (turns != NUM_PLAYERS * 2 - 1)
+		else if (turns != Game.NUM_PLAYERS * 2 - 2)
 		{
 			setCurrentPlayer(getNextPlayer());
 			current++;

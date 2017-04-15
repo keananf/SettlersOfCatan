@@ -15,7 +15,6 @@ import game.players.Player;
 import game.players.ServerPlayer;
 import grid.Hex;
 import intergroup.EmptyOuterClass;
-import intergroup.Events;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import intergroup.Requests;
@@ -44,21 +43,21 @@ public class Server implements Runnable
 	protected ServerSocket serverSocket;
 	protected Map<Colour, Thread> aiThreads, threads;
 	protected Map<Colour, AIClient> ais;
-	protected static final int PORT = 12345;
+	protected static final int PORT = 7000;
 	private boolean active;
 	private Semaphore lock;
 
 	public Server()
 	{
-		ais = new HashMap<Colour, AIClient>();
-		aiThreads = new HashMap<Colour, Thread>();
-		threads = new HashMap<Colour, Thread>();
+		ais = new HashMap<>();
+		aiThreads = new HashMap<>();
+		threads = new HashMap<>();
 		game = new ServerGame();
 		Game.NUM_PLAYERS = 2;
 
 		// Set up
 		msgProc = new MessageProcessor(game, this);
-		connections = new HashMap<Colour, ListenerThread>();
+		connections = new HashMap<>();
 		lock = new Semaphore(1);
 	}
 
@@ -97,7 +96,7 @@ public class Server implements Runnable
 				}
 			}
 
-			if(active)
+			if (active)
 			{
 				sendEvents(Event.newBuilder().setGameWon(msgProc.getGameWon()).build());
 			}
@@ -125,7 +124,7 @@ public class Server implements Runnable
 			lock.acquire();
 			try
 			{
-				if(active)
+				if (active)
 				{
 					active = false;
 				}
@@ -256,7 +255,7 @@ public class Server implements Runnable
 	 * 
 	 * @throws IOException
 	 */
-	private void broadcastBoard() throws IOException
+	private void broadcastBoard()
 	{
 		// Set up message
 		Message.Builder msg = Message.newBuilder();
@@ -283,11 +282,11 @@ public class Server implements Runnable
 	 * 
 	 * @throws IOException
 	 */
-	private void broadcastEvent(Event ev) throws IOException
+	private void broadcastEvent(Event ev)
 	{
 		Message.Builder msg = Message.newBuilder();
 		msg.setEvent(ev);
-		List<Colour> sent = new ArrayList<Colour>(2);
+		List<Colour> sent = new ArrayList<>(2);
 
 		// Modify event before sending to other players
 		if (ev.getTypeCase().equals(Event.TypeCase.RESOURCESTOLEN)
@@ -361,9 +360,8 @@ public class Server implements Runnable
 			{
 				c = game.joinGame();
 			}
-			catch (GameFullException e)
-			{
-			}
+			catch (GameFullException ignored)
+			{}
 			ListenerThread l = new ListenerThread(new RemoteClientConnection(connection), c, this);
 			connections.put(c, l);
 			Thread t = new Thread(l);
@@ -373,7 +371,7 @@ public class Server implements Runnable
 			numConnections++;
 		}
 
-		if(active && numConnections == Game.NUM_PLAYERS)
+		if (active && numConnections == Game.NUM_PLAYERS)
 		{
 			log("Server Setup", "All Players connected. Starting game...\n");
 		}
@@ -402,11 +400,8 @@ public class Server implements Runnable
 
 				for (Colour c : connections.keySet())
 				{
-					if (getExpectedMoves(c).contains(Request.BodyCase.JOINLOBBY))
-					{
-						continue;
-					}
-					else if (ev != null) sendMessage(Message.newBuilder().setEvent(ev).build(), c);
+					if (!getExpectedMoves(c).contains(Request.BodyCase.JOINLOBBY) && ev != null)
+						sendMessage(Message.newBuilder().setEvent(ev).build(), c);
 				}
 			}
 			catch (Exception e)
@@ -415,7 +410,7 @@ public class Server implements Runnable
 			}
 		}
 
-		if(active)
+		if (active)
 		{
 			log("Server play", "All players connected\n\n");
 			try
@@ -459,7 +454,6 @@ public class Server implements Runnable
 
 			if (i + 1 < Game.NUM_PLAYERS)
 			{
-				sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 				current = Board.Player.Id.values()[i + 1];
 			}
 		}
@@ -472,7 +466,6 @@ public class Server implements Runnable
 
 			if (i > 0)
 			{
-				sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 				current = Board.Player.Id.values()[i - 1];
 			}
 		}
@@ -481,21 +474,22 @@ public class Server implements Runnable
 		game.setCurrentPlayer(game.getPlayer(Board.Player.Id.PLAYER_1).getColour());
 		getExpectedMoves(game.getCurrentPlayer()).add(Requests.Request.BodyCase.ROLLDICE);
 		msgProc.initialPhase = true;
-		sendEvents(Events.Event.newBuilder().setTurnEnded(EmptyOuterClass.Empty.getDefaultInstance()).build());
 	}
 
 	/**
-	 * Give the player one of each resource which pertains to the second built settlement
+	 * Give the player one of each resource which pertains to the second built
+	 * settlement
 	 */
 	private void allocateInitialResources() throws IOException
 	{
 		Board.InitialResourceAllocation.Builder allocs = Board.InitialResourceAllocation.newBuilder();
-		for(Player p : game.getPlayers().values())
+		for (Player p : game.getPlayers().values())
 		{
-			Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
-			for(Hex h : ((ServerPlayer)p).getSettlementForInitialResources().getNode().getHexes())
+			Map<ResourceType, Integer> resources = new HashMap<>();
+			for (Hex h : ((ServerPlayer) p).getSettlementForInitialResources().getNode().getHexes())
 			{
-				int existing = resources.containsKey(h.getResource()) ? resources.get(h.getResource()) : 0;
+				if (h.getResource().equals(ResourceType.Generic)) continue;
+				int existing = resources.getOrDefault(h.getResource(), 0);
 				resources.put(h.getResource(), existing + 1);
 			}
 
@@ -718,7 +712,7 @@ public class Server implements Runnable
 		sendMessage(msg, c);
 	}
 
-	public void addMessageToProcess(ReceivedMessage msg) throws IOException
+	public void addMessageToProcess(ReceivedMessage msg)
 	{
 		msgProc.addMoveToProcess(msg);
 	}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+package intergroup;
+
+import "requests.proto";
+import "events.proto";
+
+
+message Message {
+    oneof type {
+        intergroup.Request request = 1;
+	intergroup.Event event = 2;
+    }
+}

@@ -11,7 +11,7 @@ task run(dependsOn: classes, type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.assetsDir
-    ignoreExitValue = true
+    ignoreExitValue = true as JavaExecSpec
     if (System.getProperty("os.name").toLowerCase().contains("mac")) {
         run.jvmArgs += "-XstartOnFirstThread"
     }

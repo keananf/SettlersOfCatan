@@ -14,7 +14,7 @@ import java.util.Map;
  * 
  * @author 140001596
  */
-public class Road implements IBuildable
+public class Road
 {
 	private Edge edge;
 	private Colour playerColour;
@@ -26,15 +26,14 @@ public class Road implements IBuildable
 	}
 
 	private Road()
-	{
-	}
+	{}
 
 	/**
 	 * @return a map containing the total cost for all resources
 	 */
 	public Map<ResourceType, Integer> getCost()
 	{
-		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+		Map<ResourceType, Integer> resources = new HashMap<>();
 
 		resources.put(ResourceType.Brick, 1);
 		resources.put(ResourceType.Lumber, 1);

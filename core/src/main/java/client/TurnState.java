@@ -1,6 +1,5 @@
 package client;
 
-import enums.ResourceType;
 import game.CurrentTrade;
 import intergroup.Requests;
 
@@ -15,7 +14,7 @@ public class TurnState extends Turn
 	private int roll;
 	private CurrentTrade currentTrade;
 
-	public TurnState()
+	TurnState()
 	{
 		super();
 	}
@@ -23,8 +22,8 @@ public class TurnState extends Turn
 	@Override
 	protected void setUp()
 	{
-		expectedMoves = new ArrayList<Requests.Request.BodyCase>();
-		chosenResources = new HashMap<ResourceType, Integer>();
+		expectedMoves = new ArrayList<>();
+		chosenResources = new HashMap<>();
 		reset();
 	}
 
@@ -60,27 +59,27 @@ public class TurnState extends Turn
 		return tradePhase;
 	}
 
-	public void setTradePhase(boolean tradePhase)
+	void setTradePhase()
 	{
-		this.tradePhase = tradePhase;
+		this.tradePhase = true;
 	}
 
-	public boolean hasTurnStarted()
+	boolean hasTurnStarted()
 	{
 		return turnStarted;
 	}
 
-	public void setTurnStarted(boolean turnStarted)
+	void setTurnStarted()
 	{
-		this.turnStarted = turnStarted;
+		this.turnStarted = true;
 	}
 
-	public boolean isInitialPhase()
+	boolean isInitialPhase()
 	{
 		return initialPhase;
 	}
 
-	public void setInitialPhase(boolean initialPhase)
+	void setInitialPhase(boolean initialPhase)
 	{
 		this.initialPhase = initialPhase;
 	}
@@ -95,12 +94,12 @@ public class TurnState extends Turn
 		this.roll = roll;
 	}
 
-	public void setCurrentTrade(CurrentTrade currentTrade)
+	void setCurrentTrade(CurrentTrade currentTrade)
 	{
 		this.currentTrade = currentTrade;
 	}
 
-	public CurrentTrade getCurrentTrade()
+	CurrentTrade getCurrentTrade()
 	{
 		return currentTrade;
 	}

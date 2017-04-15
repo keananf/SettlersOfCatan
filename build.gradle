@@ -56,10 +56,6 @@ project(":core") {
     apply plugin: "com.diffplug.gradle.spotless"
     apply plugin: 'findbugs'
 
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:all"
-    }
-
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
@@ -116,8 +112,8 @@ project(":core") {
 
     tasks.withType(FindBugs) {
         reports {
-            xml.enabled false
-            html.enabled true
+            xml.enabled = false
+            html.enabled = true
         }
         effort = "max"
         reportLevel = "low"

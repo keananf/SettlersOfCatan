@@ -2,27 +2,34 @@ package catan.ui.hud;
 
 import catan.SettlersOfCatan;
 import catan.ui.AssMan;
+import client.Client;
 import client.ClientGame;
+import client.Turn;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
 import game.players.Player;
+import intergroup.Requests;
 
 public class HeadsUpDisplay extends Stage
 {
 	private static final float MESSAGE_DURATION = 5; // seconds
+	private final Client client;
 	private float messageTimeLeft = 0;
 	private final Label messageBox;
 
 	private final Image currentTurn;
 	private final ClientGame state;
 
-	public HeadsUpDisplay(final ClientGame state)
+	public HeadsUpDisplay(final Client client)
 	{
 		super(new ScreenViewport());
-		this.state = state;
+		this.state = client.getState();
+		this.client = client;
 		final Player me = state.getPlayer();
 
 		final Table root = new Table();
@@ -83,6 +90,15 @@ public class HeadsUpDisplay extends Stage
 
 		{
 			ImageButton buyDevCardBtn = new ImageButton(AssMan.getDrawable("BuyDevelopmentCard.png"));
+			buyDevCardBtn.addListener(new ClickListener()
+			{
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					super.clicked(event, x, y);
+					client.log("UI", "Buy Dev Card Button Clicked");
+					client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.BUYDEVCARD));
+				}
+			});
 			root.add(buyDevCardBtn).left();
 		}
 
@@ -105,6 +121,15 @@ public class HeadsUpDisplay extends Stage
 			
 			
 			ImageButton endTurnBtn = new ImageButton(AssMan.getDrawable("EndTurn.png"));
+			endTurnBtn.addListener(new ClickListener()
+			{
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					super.clicked(event, x, y);
+					client.log("UI", "End Turn Button Clicked");
+					client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.ENDTURN));
+				}
+			});
 			root.add(endTurnBtn).right();
 			ImageButton bankTradeBtn = new ImageButton(AssMan.getDrawable("TradeWithBank.png"));
 			root.add(bankTradeBtn).left();

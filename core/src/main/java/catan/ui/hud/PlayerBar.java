@@ -18,7 +18,7 @@ class PlayerBar extends Stack
 		final Label name = new Label(player.getUsername(), SettlersOfCatan.getSkin(), "username");
 		row.addActor(name);
 
-		final ImageButton trade = new ImageButton(AssMan.getDrawable("buttonTrade.png"));
+		final ImageButton trade = new ImageButton(AssMan.getDrawable("Trade2.png"));
 		row.addActor(trade);
 		/*trade.addListener(new changeListener(){
 			public void changed(changeEvent event, Actor actor){

@@ -420,6 +420,7 @@ public class MoveProcessor
 	public boolean checkInitiateTrade(Turn turn)
 	{
 		Map<ResourceType, Integer> cost = new HashMap<>(), wanting = new HashMap<>();
+		boolean val = true;
 
 		Trade.Kind.Builder builder = Trade.Kind.newBuilder();
 		Trade.Kind initiateTrade = turn.getPlayerTrade() != null ? builder.setPlayer(turn.getPlayerTrade()).build()
@@ -430,15 +431,15 @@ public class MoveProcessor
 		case BANK:
 			cost = getGame().processResources(initiateTrade.getBank().getOffering());
 			wanting = getGame().processResources(initiateTrade.getBank().getWanting());
+			val = getGame().getBank().canAfford(wanting);
 			break;
 		case PLAYER:
 			cost = getGame().processResources(initiateTrade.getPlayer().getOffering());
-			wanting = getGame().processResources(initiateTrade.getPlayer().getWanting());
 			break;
 		}
 
 		// If both the player and the bank can afford the given trade
-		return isExpected(turn) && getGame().getPlayer().canAfford(cost) && getGame().getBank().canAfford(wanting);
+		return isExpected(turn) && getGame().getPlayer().canAfford(cost) && val;
 	}
 
 	/**

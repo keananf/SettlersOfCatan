@@ -99,7 +99,7 @@ public class TurnState extends Turn
 		this.currentTrade = currentTrade;
 	}
 
-	CurrentTrade getCurrentTrade()
+	public CurrentTrade getCurrentTrade()
 	{
 		return currentTrade;
 	}

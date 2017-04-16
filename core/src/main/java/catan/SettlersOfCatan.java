@@ -3,6 +3,7 @@ package catan;
 import AI.RemoteAIClient;
 import catan.ui.AssMan;
 import catan.ui.SplashScreen;
+import catan.ui.hud.HeadsUpDisplay;
 import client.Client;
 import client.ClientGame;
 import client.LocalClient;
@@ -19,6 +20,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	public Client client;
 	private Thread t;
 	private boolean active;
+	private HeadsUpDisplay hud;
 
 	public static Skin getSkin() {
 		return skin;
@@ -126,4 +128,14 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	{
 		return active;
 	}
+
+	public void setHUD(HeadsUpDisplay hud)
+	{
+		this.hud = hud;
+	}
+
+    public void showResponse()
+	{
+		hud.showResponse();
+    }
 }

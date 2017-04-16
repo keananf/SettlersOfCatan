@@ -60,6 +60,7 @@ public class GameScreen implements Screen
 		final InputMultiplexer multiplexer = new InputMultiplexer();
 		camController = new CameraController(camera);
 		hud = new HeadsUpDisplay(game.client);
+		game.setHUD(hud);
 		multiplexer.addProcessor(camController);
 		multiplexer.addProcessor(hud);
 		multiplexer.addProcessor(new GameController(camera, game.client));

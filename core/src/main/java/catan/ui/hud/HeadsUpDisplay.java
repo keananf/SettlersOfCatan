@@ -98,7 +98,7 @@ public class HeadsUpDisplay extends Stage
 			});
 			developmentCards.addActor(i);
 		}
-		root.add(developmentCards).expandY().left();
+		root.add(developmentCards).top().expandY().left();
 
 		root.add(); // blank centre middle cell
 	}
@@ -246,4 +246,10 @@ public class HeadsUpDisplay extends Stage
 		messageTimeLeft = MESSAGE_DURATION;
 		messageBox.setVisible(true);
 	}
+
+    public void showResponse()
+	{
+		TradeResponseDialog dialog = new TradeResponseDialog("Trade", SettlersOfCatan.getSkin(), client);
+		dialog.show(this);
+    }
 }

@@ -352,4 +352,12 @@ public abstract class Client implements Runnable
 	{
 		if (Gdx.graphics != null) Gdx.graphics.requestRendering();
 	}
+
+	public void renderTradeResponsePopUp()
+	{
+		if(catan != null)
+		{
+			catan.showResponse();
+		}
+	}
 }

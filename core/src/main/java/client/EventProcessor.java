@@ -99,6 +99,7 @@ public class EventProcessor
 		case PLAYERTRADEINITIATED:
 			getTurn().setTradePhase();
 			getTurn().setCurrentTrade(new CurrentTrade(ev.getPlayerTradeInitiated(), ev.getInstigator()));
+			client.renderTradeResponsePopUp();
 			break;
 		case PLAYERTRADEACCEPTED:
 			if (getTurn().getCurrentTrade() != null)

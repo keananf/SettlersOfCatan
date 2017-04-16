@@ -1,7 +1,7 @@
 package catan.ui.hud;
 
 import catan.SettlersOfCatan;
-import catan.ui.AssMan;
+import catan.ui.AssetMan;
 import client.Client;
 import client.ClientGame;
 import client.Turn;
@@ -38,7 +38,7 @@ public class HeadsUpDisplay extends Stage
 		root.setFillParent(true);
 		addActor(root);
 
-		final Image bground = new Image(AssMan.getTexture("icons/player.png"));
+		final Image bground = new Image(AssetMan.getTexture("icons/player.png"));
 		bground.setColor(state.getPlayer().getColour().getDisplayColor());
 		final Counter vps = new Counter(bground, me::getVp);
 		root.add(vps).left();
@@ -49,7 +49,7 @@ public class HeadsUpDisplay extends Stage
 		messageBox.setVisible(false);
 		root.add(messageBox).center();
 
-		currentTurn = new Image(AssMan.getDrawable("icons/player.png"));
+		currentTurn = new Image(AssetMan.getDrawable("icons/player.png"));
 		root.add(currentTurn).right();
 		root.row();
 
@@ -77,7 +77,7 @@ public class HeadsUpDisplay extends Stage
 		developmentCards.space(5f);
 		for (DevelopmentCardType type : DevelopmentCardType.values())
 		{
-			ImageButton i = new ImageButton(AssMan.getDrawable(String.format("%sCardButton.png", type.name())));
+			ImageButton i = new ImageButton(AssetMan.getDrawable(String.format("%sCardButton.png", type.name())));
 			Actor a = new Counter(type.toString().toLowerCase(),
 					() -> me.getDevelopmentCards().getOrDefault(type, 0));
 			a.scaleBy(0.5f);
@@ -138,7 +138,7 @@ public class HeadsUpDisplay extends Stage
 
 	private ImageButton addBuyDevCardButton()
 	{
-		ImageButton buyDevCardBtn = new ImageButton(AssMan.getDrawable("BuyDevelopmentCard.png"));
+		ImageButton buyDevCardBtn = new ImageButton(AssetMan.getDrawable("BuyDevelopmentCard.png"));
 		buyDevCardBtn.addListener(new ClickListener()
 		{
 			@Override
@@ -154,7 +154,7 @@ public class HeadsUpDisplay extends Stage
 
 	private ImageButton addDiceRollButton()
 	{
-		ImageButton diceRoll = new ImageButton(AssMan.getDrawable("rollDice.png"));
+		ImageButton diceRoll = new ImageButton(AssetMan.getDrawable("rollDice.png"));
 		diceRoll.addListener(new ClickListener()
 		{
 			@Override
@@ -171,7 +171,7 @@ public class HeadsUpDisplay extends Stage
 
 	private ImageButton addEndTurnButton()
 	{
-		ImageButton endTurnBtn = new ImageButton(AssMan.getDrawable("EndTurn.png"));
+		ImageButton endTurnBtn = new ImageButton(AssetMan.getDrawable("EndTurn.png"));
 		endTurnBtn.addListener(new ClickListener()
 		{
 			@Override
@@ -188,7 +188,7 @@ public class HeadsUpDisplay extends Stage
 	public ImageButton addBankTradeButton()
 	{
 		HeadsUpDisplay hud = this;
-		ImageButton bankTradeBtn = new ImageButton(AssMan.getDrawable("TradeWithBank.png"));
+		ImageButton bankTradeBtn = new ImageButton(AssetMan.getDrawable("TradeWithBank.png"));
 		bankTradeBtn.addListener(new ClickListener()
 		{
 			@Override
@@ -238,4 +238,10 @@ public class HeadsUpDisplay extends Stage
 		TradeResponseDialog dialog = new TradeResponseDialog("Trade", SettlersOfCatan.getSkin(), client, this);
 		dialog.show(this);
     }
+
+	public void showChooseResource()
+	{
+		ChooseResourceDialog dialog = new ChooseResourceDialog("Choose Resource", SettlersOfCatan.getSkin(), client, this);
+		dialog.show(this);
+	}
 }

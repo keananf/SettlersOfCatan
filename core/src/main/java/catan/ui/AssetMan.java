@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.util.HashMap;
 
-public final class AssMan extends AssetManager
+public final class AssetMan extends AssetManager
 {
 	private static final String MODELS = "models/";
 	private static final String TEXTURES = "textures/";

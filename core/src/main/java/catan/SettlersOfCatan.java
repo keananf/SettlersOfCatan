@@ -1,6 +1,6 @@
 package catan;
 
-import catan.ui.AssMan;
+import catan.ui.AssetMan;
 import catan.ui.SplashScreen;
 import catan.ui.hud.HeadsUpDisplay;
 import client.Client;
@@ -10,13 +10,14 @@ import client.RemoteClient;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	private static Skin skin;
-	private static AssMan assets = new AssMan();
+	private static AssetMan assets = new AssetMan();
 	public Client client;
 	private Thread t;
 	private boolean active;
@@ -26,7 +27,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		return skin;
 	}
 
-	public static AssMan getAssets() {
+	public static AssetMan getAssets() {
 		return assets;
 	}
 
@@ -37,8 +38,13 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		Gdx.graphics.setContinuousRendering(false);
 
 		skin = new Skin(Gdx.files.internal("skin.json"));
-		Window.WindowStyle ws = new Window.WindowStyle(SettlersOfCatan.getSkin().getFont("body"), Color.WHITE, AssMan.getDrawable("resources.png"));
+		Window.WindowStyle ws = new Window.WindowStyle(SettlersOfCatan.getSkin().getFont("body"),
+				Color.WHITE, AssetMan.getDrawable("resources.png"));
+		CheckBox.CheckBoxStyle cs = new CheckBox.CheckBoxStyle(AssetMan.getDrawable("checkBoxOff.png"),
+				AssetMan.getDrawable("checkBoxOn.png"),SettlersOfCatan.getSkin().getFont("body"),
+				Color.WHITE);
 		SettlersOfCatan.getSkin().add("default", ws);
+		SettlersOfCatan.getSkin().add("default", cs);
 
 		// start off at the splash screen
 		setScreen(new SplashScreen(this));
@@ -143,4 +149,9 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	{
 		hud.showResponse();
     }
+
+	public void showChooseResource()
+	{
+		hud.showChooseResource();
+	}
 }

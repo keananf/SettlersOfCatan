@@ -156,6 +156,14 @@ public class EventProcessor
 		}
 
 		updateExpectedMoves(ev);
+		if(getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
+		{
+			client.renderDiscardPopUp();
+		}
+		if(getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE))
+		{
+			client.renderChooseResourcePopUp();
+		}
 	}
 
 	/**
@@ -312,7 +320,6 @@ public class EventProcessor
 				client.log("Client Play",
 						String.format("Adding DISCARDRESOURCES for %s", getGame().getPlayer().getId().name()));
 				getExpectedMoves().add(Requests.Request.BodyCase.DISCARDRESOURCES);
-				client.renderDiscardPopUp();
 			}
 			if (ev.getInstigator().getId().getNumber() == getGame().getPlayer().getId().getNumber())
 			{

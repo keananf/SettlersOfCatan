@@ -375,4 +375,12 @@ public abstract class Client implements Runnable
 			catan.showDiscard();
 		}
 	}
+
+	public void renderChooseResourcePopUp()
+	{
+		if(catan != null)
+		{
+			catan.showChooseResource();
+		}
+	}
 }

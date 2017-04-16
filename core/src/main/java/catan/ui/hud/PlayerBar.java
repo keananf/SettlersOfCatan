@@ -1,7 +1,7 @@
 package catan.ui.hud;
 
 import catan.SettlersOfCatan;
-import catan.ui.AssMan;
+import catan.ui.AssetMan;
 import client.Client;
 import client.Turn;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -20,7 +20,7 @@ class PlayerBar extends Stack
 	{
 		this.client = client;
 		this.hud = hud;
-		final Image bground = new Image(AssMan.getTexture("playerbar.png"));
+		final Image bground = new Image(AssetMan.getTexture("playerbar.png"));
 		addActor(bground);
 		final HorizontalGroup row = new HorizontalGroup();
 		addActor(row);
@@ -29,7 +29,7 @@ class PlayerBar extends Stack
 		row.addActor(name);
 
 		// Steal button
-		final ImageButton steal = new ImageButton(AssMan.getDrawable("Steal.png"));
+		final ImageButton steal = new ImageButton(AssetMan.getDrawable("Steal.png"));
 		row.addActor(steal);
 		steal.addListener(new ClickListener()
 		{
@@ -45,7 +45,7 @@ class PlayerBar extends Stack
 		});
 
 		// Trade button
-		final ImageButton trade = new ImageButton(AssMan.getDrawable("Trade2.png"));
+		final ImageButton trade = new ImageButton(AssetMan.getDrawable("Trade2.png"));
 		row.addActor(trade);
 		trade.addListener(new ClickListener()
 		{

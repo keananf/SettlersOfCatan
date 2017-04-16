@@ -286,7 +286,8 @@ public class MessageProcessor
 
 		// Add that a response is expected from this player
 		case INITIATETRADE:
-			if (!moves.contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
+			if (!moves.contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
+					&& req.getInitiateTrade().getTradeCase().equals(Trade.Kind.TradeCase.PLAYER))
 			{
 				server.log("Server Play",
 						String.format("Adding trade response to %s", game.getPlayer(colour).getId().name()));

@@ -97,7 +97,7 @@ public class TradeResponseDialog extends Dialog
             }
         });
         TextButton cancel = new TextButton("Reject", SettlersOfCatan.getSkin());
-        button.addListener(new ClickListener()
+        cancel.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)

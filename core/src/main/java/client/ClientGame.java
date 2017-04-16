@@ -505,6 +505,7 @@ public class ClientGame extends Game
 		// Handle resources
 		if (player.getColour().equals(getPlayer().getColour()))
 		{
+			client.log("BANK TRADE", "BANK TRADE");
 			// Update resources
 			player.spendResources(offering, bank);
 			player.grantResources(wanting, bank);

@@ -3,10 +3,12 @@ package catan.ui;
 import client.Client;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import grid.BoardElement;
 import grid.Edge;
@@ -28,8 +30,17 @@ class GameController implements InputProcessor
 	private List<Edge> edges;
 
 	/** A plane parallel to the game board used to detect clicks. */
-	private final static float DETECTION_Y = 0.1f;
-	private final static Plane DETECTION_PLANE = new Plane(new Vector3(0, 1, 0), new Vector3(0, DETECTION_Y, 0));
+	private final static float DETECTION_Y = 0.2f;
+	private final static Plane DETECTION_PLANE = new Plane(new Vector3(0, 2f, 0), new Vector3(0, DETECTION_Y, 0));
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	GameController(final Camera camera, Client client)
 	{
@@ -44,32 +55,70 @@ class GameController implements InputProcessor
 	public boolean touchUp(int screenX, int screenY, int pointer, int button)
 	{
 		Ray ray = camera.getPickRay(screenX, screenY);
-
 		Vector3 intersectionPoint = new Vector3();
 		if (!Intersector.intersectRayPlane(ray, DETECTION_PLANE, intersectionPoint)) return false;
 
 		BoardElement element = findElement(intersectionPoint.x, intersectionPoint.z);
+		
+		
+		
+		
 		if (element == null) return false;
 
 		moveBuilder.onSelect(element);
+		
 
 		return true;
 	}
 
 	/** Returns the clicked on element or null if none. */
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	private BoardElement findElement(float planeX, float planeY)
 	{
 		BoardElement found = null;
 
+		
 		found = findNode(planeX, planeY);
 		if (found != null) return found;
-
+		
 		found = findEdge(planeX, planeY);
 		if (found != null) return found;
+
+
+	
 
 		found = findHex(planeX, planeY);
 		if (found != null) return found;
 
+		return null;
+	}
+	
+	
+	
+	private Hex getHex(float planeX, float planeY)
+	{
+		final float HEX_WIDTH = 2f;
+
+		for (Hex hex : hexes)
+		{
+			final Vector2 pos = hex.get2DPos();
+			
+			if(pos.dst(planeX,planeY)<2){
+				System.out.println("HEX");
+				return hex;
+			}
+					
+					
+		}
 		return null;
 	}
 
@@ -80,11 +129,19 @@ class GameController implements InputProcessor
 	 */
 	private Node findNode(float planeX, float planeY)
 	{
-		for (Node node : nodes)
+		System.out.println(planeX + "" + planeY);
+		Hex h = getHex(planeX, planeY);
+		for (Node node : h.getNodes())
 		{
 			Vector2 coord = node.get2DPos();
-
-			if (coord.dst(planeX, planeY) <= 0.3) { return node; }
+			System.out.println("NODE " + coord.x + "Node " + " " + coord.y);
+			if (new Vector2(coord.x, 0).dst(planeX,0)<0.6 && new Vector2(coord.y,0).dst(planeY,0)<0.6) { 
+				
+				
+				return node; 
+				
+			
+			}
 		}
 
 		return null;
@@ -106,7 +163,7 @@ class GameController implements InputProcessor
 			float x = (nodeX.x + nodeY.x) / 2;
 			float y = (nodeX.y + nodeY.y) / 2;
 			Vector2 check = new Vector2(x, y);
-			if (check.dst(planeX, planeY) <= 0.2) { return edge; }
+			if (check.dst(planeX, planeY) <0.7 ) { return edge; }
 		}
 
 		return null;
@@ -133,7 +190,7 @@ class GameController implements InputProcessor
 
 			if (planeX <= furthestRight && planeX >= furthestLeft)
 			{
-				if (planeY <= highestHeight && planeY >= lowestHeight) { return hex; }
+				if (planeY <= highestHeight && planeY >= lowestHeight && pos.dst(planeX,planeY)>1) { return hex; }
 			}
 		}
 		return null;

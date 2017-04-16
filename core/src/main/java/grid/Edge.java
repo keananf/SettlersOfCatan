@@ -1,10 +1,11 @@
 package grid;
 
-import com.badlogic.gdx.math.Vector3;
-import game.build.Road;
 import intergroup.board.Board;
+import game.build.Road;
 
 import java.util.List;
+
+import com.badlogic.gdx.math.Vector3;
 
 /**
  * Class uniquely describing an edge (between two edges)
@@ -20,6 +21,110 @@ public class Edge implements BoardElement
 	{
 		this.setX(x);
 		this.setY(y);
+	}
+
+	/**
+	 * Returns the distance between the two edges
+	 * 
+	 * @param other the edge to check
+	 * @return the distance between thw two
+	 */
+	public int distance(Edge other)
+	{
+		Node goal = null, start = null;
+		Node otherX = other.getX();
+		Node otherY = other.getY();
+		int xyDistance = 0, yxDistance = 0, xxDistance = 0, yyDistance = 0;
+
+		// Find raw differences between both nodes of this edge and the nodes of
+		// the other edge.
+		// This will determine which is the goal node of the other edge, as well
+		// as which node of this edge
+		// to start with.
+		xyDistance = getX().getCoordDistance(otherY);
+		yxDistance = getY().getCoordDistance(otherX);
+		xxDistance = getX().getCoordDistance(otherX);
+		yyDistance = getY().getCoordDistance(otherY);
+
+		// Determine start and goal node
+		if (xyDistance <= yxDistance && xyDistance <= xxDistance && xyDistance <= yyDistance)
+		{
+			start = getX();
+			goal = otherY;
+		}
+		else if (yxDistance <= xyDistance && yxDistance <= xxDistance && yxDistance <= yyDistance)
+		{
+			start = getY();
+			goal = otherX;
+		}
+		else if (xxDistance <= xyDistance && xxDistance <= yxDistance && xxDistance <= yyDistance)
+		{
+			start = getX();
+			goal = otherX;
+		}
+		else if (yyDistance <= xyDistance && yyDistance <= xxDistance && yyDistance <= yxDistance)
+		{
+			start = getY();
+			goal = otherY;
+		}
+
+		return navigate(start, goal);
+	}
+
+	/**
+	 * Finds the shortest path to the other node by navigating along the edges
+	 * 
+	 * @param node the given node
+	 * @param goalNode the node to find
+	 * @return
+	 */
+	private int navigate(Node node, Node goalNode)
+	{
+		int xDistance = Math.abs(node.getX() - goalNode.getX());
+		int yDistance = Math.abs(node.getY() - goalNode.getY());
+
+		// If we've reached it
+		if (xDistance == 0 && yDistance == 0) { return 1; }
+
+		// Find the next closest node adjacent to this one
+		Edge next = findNextNode(node, goalNode);
+		Node nextNode = next.getX().equals(node) ? next.getY() : next.getX();
+		return 1 + next.navigate(nextNode, goalNode);
+	}
+
+	/**
+	 * Based on node's edges, this find the next node that brings us closer to
+	 * the goal
+	 * 
+	 * @param node the node whose edge's we're checking
+	 * @param goalNode the node we're trying to reach
+	 * @return
+	 */
+	private Edge findNextNode(Node node, Node goalNode)
+	{
+		int distance1 = 5000, distance2 = 5000;
+		Edge edge1 = null, edge2 = null;
+
+		// For each of node's edges except for 'this'
+		for (Edge e : node.getEdges())
+		{
+			Node other = e.getX().equals(node) ? e.getY() : e.getX();
+			if (e.equals(this)) continue;
+
+			if (distance1 == 5000)
+			{
+				edge1 = e;
+				distance1 = other.getCoordDistance(goalNode);
+			}
+			else if (distance2 == 5000)
+			{
+				edge2 = e;
+				distance2 = other.getCoordDistance(goalNode);
+			}
+		}
+
+		// Return the node with the smallest distance between the goal node.
+		return Math.min(distance1, distance2) == distance1 ? edge1 : edge2;
 	}
 
 	/**
@@ -57,6 +162,20 @@ public class Edge implements BoardElement
 			return e;
 		}
 		return null;
+	}
+
+	/**
+	 * Checks if there is a settlement on either of this edge's nodes
+	 * 
+	 * @return true / false indicating if it is a valid move
+	 */
+	public boolean hasSettlement()
+	{
+		Node n1 = getX(), n2 = getY();
+
+		// If there is a settlement on one of its nodes
+		return n1.getBuilding() != null || n2.getBuilding() != null;
+
 	}
 
 	@Override
@@ -159,7 +278,7 @@ public class Edge implements BoardElement
 
 	}
 
-	public Vector3 get3dVectorMidpoint()
+	  public Vector3 get3dVectorMidpoint()
 	{
 		Node a = getX();
 		Node b = getY();

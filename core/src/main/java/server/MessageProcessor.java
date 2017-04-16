@@ -203,7 +203,6 @@ public class MessageProcessor
 				else if (currentTrade != null && (request.getSubmitTradeResponse().equals(Trade.Response.REJECT)
 						|| !currentTrade.isExpired()))
 				{
-					server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
 					currentTrade = null;
 					ev.setPlayerTradeRejected(EmptyOuterClass.Empty.getDefaultInstance());
 				}

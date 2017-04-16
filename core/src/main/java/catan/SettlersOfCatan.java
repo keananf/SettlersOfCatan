@@ -134,6 +134,11 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		this.hud = hud;
 	}
 
+	public void showDiscard()
+	{
+		hud.showDiscardDialog();
+	}
+
     public void showResponse()
 	{
 		hud.showResponse();

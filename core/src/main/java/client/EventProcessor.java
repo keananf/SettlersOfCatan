@@ -97,9 +97,14 @@ public class EventProcessor
 			getGame().processBankTrade(ev.getBankTrade(), ev.getInstigator());
 			break;
 		case PLAYERTRADEINITIATED:
+			Player p = getGame().getPlayer(ev.getPlayerTradeInitiated().getOther().getId());
 			getTurn().setTradePhase();
 			getTurn().setCurrentTrade(new CurrentTrade(ev.getPlayerTradeInitiated(), ev.getInstigator()));
-			client.renderTradeResponsePopUp();
+
+			if(p.getColour().equals(getGame().getPlayer().getColour()))
+			{
+				client.renderTradeResponsePopUp();
+			}
 			break;
 		case PLAYERTRADEACCEPTED:
 			if (getTurn().getCurrentTrade() != null)
@@ -294,6 +299,7 @@ public class EventProcessor
 				client.log("Client Play",
 						String.format("Adding DISCARDRESOURCES for %s", getGame().getPlayer().getId().name()));
 				getExpectedMoves().add(Requests.Request.BodyCase.DISCARDRESOURCES);
+				client.renderDiscardPopUp();
 			}
 			if (ev.getInstigator().getId().getNumber() == getGame().getPlayer().getId().getNumber())
 			{

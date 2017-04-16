@@ -56,7 +56,7 @@ class PlayerBar extends Stack
 				client.log("UI", String.format("Trade Button with %s Clicked", player.getId().name()));
 
 				TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(),
-						Board.Player.newBuilder().setId(player.getId()).build(), client);
+						Board.Player.newBuilder().setId(player.getId()).build(), client, hud);
 				dialog.show(hud);
 			}
 		});

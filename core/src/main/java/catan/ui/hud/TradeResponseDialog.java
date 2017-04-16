@@ -21,7 +21,7 @@ public class TradeResponseDialog extends Dialog
     private final Trade.WithPlayer trade;
     Map<ResourceType, Integer> offerResources, requestResources;
 
-    public TradeResponseDialog(String title, Skin skin, Client client)
+    public TradeResponseDialog(String title, Skin skin, Client client, HeadsUpDisplay hud)
     {
         super(title, skin);
         this.sender = client.getTurn().getCurrentTrade().getInstigator();
@@ -32,13 +32,16 @@ public class TradeResponseDialog extends Dialog
 
         VerticalGroup vert  = new VerticalGroup();
         final Table root = new Table();
+        hud.addResources(root);
         root.setFillParent(true);
         addActor(root);
 
         // Add labels
         HorizontalGroup horiz = new HorizontalGroup();
         TextField offering = new TextField("Offer", SettlersOfCatan.getSkin());
+        offering.setTextFieldListener((textField, c) -> textField.setText("Offer"));
         TextField wanting = new TextField("Request", SettlersOfCatan.getSkin());
+        wanting.setTextFieldListener((textField, c) -> textField.setText("Request"));
         horiz.addActor(offering);
         horiz.addActor(wanting);
         vert.addActor(horiz);
@@ -64,7 +67,9 @@ public class TradeResponseDialog extends Dialog
 
         // List trade contents for this resource
         TextField text = new TextField(msg, SettlersOfCatan.getSkin());
+        text.setTextFieldListener((textField, c) -> textField.setText(msg));
         TextField text2 = new TextField(msg2, SettlersOfCatan.getSkin());
+        text.setTextFieldListener((textField, c) -> textField.setText(msg2));
         horiz.addActor(text);
         horiz.addActor(text2);
 

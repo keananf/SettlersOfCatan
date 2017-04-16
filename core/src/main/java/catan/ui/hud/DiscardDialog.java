@@ -17,7 +17,7 @@ public class DiscardDialog extends Dialog
     private final Client client;
     Map<ResourceType, Integer> resources;
 
-    public DiscardDialog(String title, Skin skin, Client client)
+    public DiscardDialog(String title, Skin skin, Client client, HeadsUpDisplay hud)
     {
         super(title, skin);
         this.client = client;
@@ -26,10 +26,12 @@ public class DiscardDialog extends Dialog
         VerticalGroup vert  = new VerticalGroup();
         final Table root = new Table();
         root.setFillParent(true);
+        hud.addResources(root);
         addActor(root);
 
         // Add label
         TextField offering = new TextField("Discard", SettlersOfCatan.getSkin());
+        offering.setTextFieldListener((textField, c) -> textField.setText("Discard"));
         vert.addActor(offering);
 
         for(ResourceType r : ResourceType.values())

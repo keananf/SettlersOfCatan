@@ -64,7 +64,6 @@ public class HeadsUpDisplay extends Stage
 		buttons.addActor(addBuyDevCardButton());
 		buttons.addActor(addDiceRollButton());
 		buttons.addActor(addBankTradeButton());
-		buttons.addActor(addDiscardButton());
 		buttons.addActor(addEndTurnButton());
 		root.add(buttons).right();
 	}
@@ -119,7 +118,7 @@ public class HeadsUpDisplay extends Stage
 		root.row();
 	}
 
-	private void addResources(Table root)
+	protected void addResources(Table root)
 	{
 		/*
 		 * RESOURCES
@@ -199,26 +198,7 @@ public class HeadsUpDisplay extends Stage
 				client.log("UI", String.format("Bank Trade Button Clicked"));
 
 				TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(),
-						null, client);
-				dialog.show(hud);
-			}
-		});
-		return bankTradeBtn;
-	}
-
-	public ImageButton addDiscardButton()
-	{
-		HeadsUpDisplay hud = this;
-		ImageButton bankTradeBtn = new ImageButton(AssMan.getDrawable("Discard.png"));
-		bankTradeBtn.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				super.clicked(event, x, y);
-				client.log("UI", String.format("Discard Button Clicked"));
-
-				DiscardDialog dialog = new DiscardDialog("Discard", SettlersOfCatan.getSkin(), client);
+						null, client, hud);
 				dialog.show(hud);
 			}
 		});
@@ -247,9 +227,15 @@ public class HeadsUpDisplay extends Stage
 		messageBox.setVisible(true);
 	}
 
+	public void showDiscardDialog()
+	{
+		DiscardDialog dialog = new DiscardDialog("Discard", SettlersOfCatan.getSkin(), client, this);
+		dialog.show(this);
+	}
+
     public void showResponse()
 	{
-		TradeResponseDialog dialog = new TradeResponseDialog("Trade", SettlersOfCatan.getSkin(), client);
+		TradeResponseDialog dialog = new TradeResponseDialog("Trade", SettlersOfCatan.getSkin(), client, this);
 		dialog.show(this);
     }
 }

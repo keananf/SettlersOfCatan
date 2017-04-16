@@ -360,4 +360,12 @@ public abstract class Client implements Runnable
 			catan.showResponse();
 		}
 	}
+
+	public void renderDiscardPopUp()
+	{
+		if(catan != null)
+		{
+			catan.showDiscard();
+		}
+	}
 }

@@ -21,7 +21,7 @@ public class TradeDialog extends Dialog
     private final Client client;
     Map<ResourceType, Integer> resources, otherResources;
 
-    public TradeDialog(String title, Skin skin, Board.Player player, Client client)
+    public TradeDialog(String title, Skin skin, Board.Player player, Client client, HeadsUpDisplay hud)
     {
         super(title, skin);
         this.player = player;
@@ -31,13 +31,16 @@ public class TradeDialog extends Dialog
 
         VerticalGroup vert  = new VerticalGroup();
         final Table root = new Table();
+        hud.addResources(root);
         root.setFillParent(true);
         addActor(root);
 
         // Add labels
         HorizontalGroup horiz = new HorizontalGroup();
         TextField offering = new TextField("Offering", SettlersOfCatan.getSkin());
+        offering.setTextFieldListener((textField, c) -> textField.setText("Offering"));
         TextField wanting = new TextField("Wanting", SettlersOfCatan.getSkin());
+        wanting.setTextFieldListener((textField, c) -> textField.setText("Wanting"));
         horiz.addActor(offering);
         horiz.addActor(wanting);
         vert.addActor(horiz);

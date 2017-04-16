@@ -227,22 +227,12 @@ public class MoveProcessor
 	 */
 	private boolean checkHex(Turn turn)
 	{
-		boolean val = false;
 		Hex hex = turn.getChosenHex();
-
-		// Check there is indeed a foreign settlement on one of the hexes nodes
-		for (Node n : hex.getNodes())
-		{
-			if (n.getBuilding() != null && !n.getBuilding().getPlayerColour().equals(getGame().getPlayer().getColour())
-					&& getGame().getPlayerResources(n.getBuilding().getPlayerColour()) > 0)
-			{
-				val = getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER);
-			}
-		}
 
 		// Ensure this hex doesn't already have the robber, and that the move is
 		// expected
-		return checkTurn() && !hex.equals(getGame().getGrid().getHexWithRobber()) && val && isExpected(turn);
+		return checkTurn() && !hex.equals(getGame().getGrid().getHexWithRobber())
+				&& getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER) && isExpected(turn);
 	}
 
 	/**

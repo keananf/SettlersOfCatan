@@ -3,7 +3,9 @@ package client;
 import connection.IServerConnection;
 import game.CurrentTrade;
 import game.Game;
+import game.build.Building;
 import game.players.Player;
+import grid.Node;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import intergroup.Requests;
@@ -263,8 +265,20 @@ public class EventProcessor
 
 	private void handleRobber(Event ev)
 	{
+		boolean hasSettlement = false;
+
+		// Only will add a submit target player if the given hex has a foreign settlement on it
+		for(Node n : getGame().getGrid().getHexWithRobber().getNodes())
+		{
+			Building b = n.getBuilding();
+			if(b != null && !b.getPlayerColour().equals(getGame().getPlayer().getColour()))
+			{
+				hasSettlement = true;
+			}
+		}
+
 		// Expect for the player to send a steal request next
-		if (getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
+		if (getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()) && hasSettlement)
 		{
 			getExpectedMoves().add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
 		}

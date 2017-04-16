@@ -3,7 +3,9 @@ package server;
 import enums.Colour;
 import exceptions.*;
 import game.CurrentTrade;
+import game.build.Building;
 import game.players.Player;
+import grid.Node;
 import intergroup.EmptyOuterClass;
 import intergroup.Events;
 import intergroup.Messages;
@@ -288,7 +290,21 @@ public class MessageProcessor
 		{
 		// Expect for the player to send a steal request next
 		case MOVEROBBER:
-			moves.add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+			boolean hasSettlement = false;
+
+			// Only will add a submit target player if the given hex has a foreign settlement on it
+			for(Node n : game.getGrid().getHexWithRobber().getNodes())
+			{
+				Building b = n.getBuilding();
+				if(b != null && !b.getPlayerColour().equals(game.getCurrentPlayer()))
+				{
+					hasSettlement = true;
+				}
+			}
+			if(hasSettlement)
+			{
+				moves.add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+			}
 			break;
 
 		// Add that a dice roll is expected as the first move for the new player

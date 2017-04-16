@@ -164,7 +164,7 @@ public class TradeTests extends TestHelper
 		assertTrue(0 == p2.getResources().get(ResourceType.Grain));
 	}
 
-	@Test(expected = CannotAffordException.class)
+	@Test(expected = IllegalBankTradeException.class)
 	public void cannotAffordBankTradeTest() throws IllegalTradeException, IllegalPortTradeException,
 			CannotAffordException, IllegalBankTradeException, BankLimitException
 	{

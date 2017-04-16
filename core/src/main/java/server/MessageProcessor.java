@@ -180,8 +180,20 @@ public class MessageProcessor
 				if (steal != null) ev.setResourceStolen(steal);
 				break;
 			case INITIATETRADE:
-				Trade.WithBank trade = processTradeType(request.getInitiateTrade(), ev.getInstigator());
-				if (trade != null) ev.setBankTrade(trade);
+				try
+				{
+					Trade.WithBank trade = processTradeType(request.getInitiateTrade(), ev.getInstigator());
+					if (trade != null) ev.setBankTrade(trade);
+					else if(trade == null && currentTrade == null)
+					{
+						ev.setError(Events.Event.Error.newBuilder().setDescription(
+								new IllegalBankTradeException(colour).getMessage()).build());
+					}
+				}
+				catch(IllegalBankTradeException e)
+				{
+					ev.setError(Events.Event.Error.newBuilder().setDescription(e.getMessage()).build());
+				}
 				break;
 			case SUBMITTRADERESPONSE:
 				if (currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT)
@@ -347,10 +359,10 @@ public class MessageProcessor
 
 		case BANK:
 			game.determineTradeType(request.getBank());
-			break;
+			return request.getBank();
 		}
 
-		return request.getBank();
+		return null;
 	}
 
 	/**

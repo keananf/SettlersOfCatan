@@ -164,7 +164,14 @@ public abstract class Client implements Runnable
 			getTurn().setChosenResources(selectedMove.getChosenResources());
 			break;
 		case INITIATETRADE:
-			getTurn().setPlayerTrade(selectedMove.getPlayerTrade());
+			if(selectedMove.getPlayerTrade() != null)
+			{
+				getTurn().setPlayerTrade(selectedMove.getPlayerTrade());
+			}
+			else if(selectedMove.getBankTrade() != null)
+			{
+				getTurn().setBankTrade(selectedMove.getBankTrade());
+			}
 			break;
 		case SUBMITTARGETPLAYER:
 			getTurn().setTarget(selectedMove.getTarget());

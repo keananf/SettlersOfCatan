@@ -111,12 +111,11 @@ public class ServerGame extends Game
 		Map<ResourceType, Integer> offer = processResources(trade.getOffering());
 
 		// Check that the player can afford the offer
-		if (!current.canAfford(offer)
-				|| offer.size() < 1) { throw new CannotAffordException(current.getResources(), offer); }
+		if (!current.canAfford(offer)) { throw new CannotAffordException(current.getResources(), offer); }
 
 		// Must only be requesting one type of resource and giving one type of
 		// resource
-		if (offer.size() > 1 || request.size() != 1) { throw new IllegalBankTradeException(current.getColour()); }
+		if (offer.size() != 1 || request.size() != 1) { throw new IllegalBankTradeException(current.getColour()); }
 
 		// Retrieve resources
 		for (ResourceType r : ResourceType.values())
@@ -128,12 +127,14 @@ public class ServerGame extends Game
 		// Check all roads this player owns
 		for (Road r : current.getRoads())
 		{
-			Port p = (Port) r.getEdge();
-			// If this road is on a port and the resource types match up
-			if (r.getEdge() instanceof Port
-					&& (p.getExchangeType().equals(offerType) || p.getExchangeType().equals(ResourceType.Generic))
-					&& offer.get(offerType) / request.get(requestType) == Port.EXCHANGE_AMOUNT)
-				return processPortTrade(trade, (Port) r.getEdge(), requestType, offerType);
+			if(r.getEdge() instanceof Port)
+			{
+				// If this road is on a port and the resource types match up
+				Port p = (Port) r.getEdge();
+				if ((p.getExchangeType().equals(offerType) || p.getExchangeType().equals(ResourceType.Generic))
+						&& offer.get(offerType) / request.get(requestType) == Port.EXCHANGE_AMOUNT)
+					return processPortTrade(trade, (Port) r.getEdge(), requestType, offerType);
+			}
 		}
 
 		// Otherwise assume it is with the bank
@@ -149,7 +150,7 @@ public class ServerGame extends Game
 	 * @return the response status
 	 */
 	private Trade.WithBank processBankTrade(Trade.WithBank trade, ResourceType requestType, ResourceType offerType)
-			throws IllegalBankTradeException, CannotAffordException
+			throws IllegalBankTradeException, CannotAffordException, BankLimitException
 	{
 		int exchangeAmount = 4;
 
@@ -164,15 +165,9 @@ public class ServerGame extends Game
 						current.getColour()); }
 
 		// Perform swap and return
-		try
-		{
-			current.spendResources(offer, bank);
-			current.grantResources(request, bank);
-		}
-		catch (BankLimitException e)
-		{
-			e.printStackTrace();
-		}
+		current.spendResources(offer, bank);
+		current.grantResources(request, bank);
+
 		return trade;
 	}
 

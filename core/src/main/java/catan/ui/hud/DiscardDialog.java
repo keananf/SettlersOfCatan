@@ -57,7 +57,7 @@ public class DiscardDialog extends Dialog
                 int num = 0;
                 try
                 {
-                    num = Integer.parseInt(text.getText());
+                    num = Integer.parseInt(textField.getText());
                 }
                 catch(NumberFormatException e)
                 {

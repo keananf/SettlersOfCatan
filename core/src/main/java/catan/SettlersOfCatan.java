@@ -1,12 +1,12 @@
 package catan;
 
-import AI.RemoteAIClient;
 import catan.ui.AssMan;
 import catan.ui.SplashScreen;
 import catan.ui.hud.HeadsUpDisplay;
 import client.Client;
 import client.ClientGame;
 import client.LocalClient;
+import client.RemoteClient;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -76,10 +76,10 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	 */
 	public boolean startNewRemoteClient(String host)
 	{
-		client = new RemoteAIClient(host);
+		client = new RemoteClient(host, this);
 		t = new Thread(client);
 		t.start();
-		return ((RemoteAIClient) client).isInitialised();
+		return ((RemoteClient) client).isInitialised();
 	}
 
 	/**

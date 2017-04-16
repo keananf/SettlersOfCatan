@@ -27,7 +27,7 @@ public class HeadsUpDisplay extends Stage
 	private final ClientGame state;
 	private final Player me;
 
-	public HeadsUpDisplay(final Client client)
+	public HeadsUpDisplay(final Client client, SettlersOfCatan catan)
 	{
 		super(new ScreenViewport());
 		this.state = client.getState();
@@ -54,21 +54,24 @@ public class HeadsUpDisplay extends Stage
 		root.row();
 
 		// Add player's HUD info
-		addDevelopmentCards(root);
+		addDevelopmentCards(root, catan);
 		addPlayerBars(root);
 		addResources(root);
 
 		// Buttons Stacked on top of one another
-		VerticalGroup buttons = new VerticalGroup();
-		buttons.space(1f);
-		buttons.addActor(addBuyDevCardButton());
-		buttons.addActor(addDiceRollButton());
-		buttons.addActor(addBankTradeButton());
-		buttons.addActor(addEndTurnButton());
-		root.add(buttons).right();
+		if(!catan.isAI)
+		{
+			VerticalGroup buttons = new VerticalGroup();
+			buttons.space(1f);
+			buttons.addActor(addBuyDevCardButton());
+			buttons.addActor(addDiceRollButton());
+			buttons.addActor(addBankTradeButton());
+			buttons.addActor(addEndTurnButton());
+			root.add(buttons).right();
+		}
 	}
 
-	private void addDevelopmentCards(Table root)
+	private void addDevelopmentCards(Table root, SettlersOfCatan catan)
 	{
 		/*
 		 * DEVELOPMENT CARDS
@@ -83,18 +86,21 @@ public class HeadsUpDisplay extends Stage
 			a.scaleBy(0.5f);
 			a.setPosition(i.getX() + i.getWidth(), i.getY());
 			i.addActor(a);
-			i.addListener(new ClickListener()
+
+			// Make buttons non-functional if an AI is playing
+			if(!catan.isAI)
 			{
-				@Override
-				public void clicked(InputEvent event, float x, float y)
-				{
-					super.clicked(event, x, y);
-					client.log("UI", String.format("%s Button Clicked", type.name()));
-					Turn turn = new Turn(Requests.Request.BodyCase.PLAYDEVCARD);
-					turn.setChosenCard(type);
-					client.acquireLocksAndSendTurn(turn);
-				}
-			});
+				i.addListener(new ClickListener() {
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						super.clicked(event, x, y);
+						client.log("UI", String.format("%s Button Clicked", type.name()));
+						Turn turn = new Turn(Requests.Request.BodyCase.PLAYDEVCARD);
+						turn.setChosenCard(type);
+						client.acquireLocksAndSendTurn(turn);
+					}
+				});
+			}
 			developmentCards.addActor(i);
 		}
 		root.add(developmentCards).top().expandY().left();

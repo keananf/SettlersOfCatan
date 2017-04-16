@@ -1,11 +1,11 @@
 package catan;
 
+import AI.LocalAIClient;
 import catan.ui.AssetMan;
 import catan.ui.SplashScreen;
 import catan.ui.hud.HeadsUpDisplay;
 import client.Client;
 import client.ClientGame;
-import client.LocalClient;
 import client.RemoteClient;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -22,6 +22,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	private Thread t;
 	private boolean active;
 	private HeadsUpDisplay hud;
+	public boolean isAI;
 
 	public static Skin getSkin() {
 		return skin;
@@ -82,7 +83,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	 */
 	public boolean startNewRemoteClient(String host)
 	{
-		client = new RemoteClient(host, this);
+		client = new RemoteClient(host, "Default", this);
 		t = new Thread(client);
 		t.start();
 		return ((RemoteClient) client).isInitialised();
@@ -91,9 +92,14 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	/**
 	 * Starts up a new server and local client
 	 */
-	public void startNewServer()
+	public void startNewServer(Client c)
 	{
-		client = new LocalClient(this);
+		if(c instanceof LocalAIClient)
+		{
+			isAI = true;
+		}
+		
+		client = c;
 		t = new Thread(client);
 		t.start();
 	}

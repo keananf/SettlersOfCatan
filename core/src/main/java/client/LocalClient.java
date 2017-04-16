@@ -13,12 +13,14 @@ import server.Server;
  */
 public class LocalClient extends Client
 {
+	private final int numAis;
 	private Server server;
 	private Thread serverThread;
 
-	public LocalClient(SettlersOfCatan game)
+	public LocalClient(SettlersOfCatan game, String userName, int numAIs)
 	{
-		super(game);
+		super(game, userName);
+		this.numAis = numAIs;
 		setUpConnection();
 	}
 
@@ -27,7 +29,7 @@ public class LocalClient extends Client
 		LocalServerConnection conn = new LocalServerConnection();
 		conn.setConn(new LocalClientConnection(conn));
 		setUp(conn);
-		server = new LocalServer(conn.getConn());
+		server = new LocalServer(conn.getConn(), numAis);
 		serverThread = new Thread(server);
 		serverThread.start();
 	}

@@ -41,29 +41,15 @@ public class MainMenuScreen implements Screen
 
 		// Buttons
 		{
-			TextButton button = new TextButton("New Single Player Game", SettlersOfCatan.getSkin());
+			TextButton button = new TextButton("New Game", SettlersOfCatan.getSkin());
 			button.addListener(new ChangeListener()
 			{
 				public void changed(ChangeEvent event, Actor actor)
 				{
 
-					game.startNewServer();
-					game.setScreen(new GameScreen(game));
-				}
-			});
-			body.addActor(button);
-		}
-
-		{
-			TextButton button = new TextButton("Host New Multiplayer Game", SettlersOfCatan.getSkin());
-			button.addListener(new ChangeListener()
-			{
-				public void changed(ChangeEvent event, Actor actor)
-				{
-					Gdx.app.debug("UI", "Button click: Host New Multiplayer Game");
-
-					game.startNewServer();
-					game.setScreen(new GameScreen(game));
+					GameSettingsDialog dialog = new GameSettingsDialog("Settings",
+							SettlersOfCatan.getSkin(), game);
+					dialog.show(ui);
 				}
 			});
 			body.addActor(button);

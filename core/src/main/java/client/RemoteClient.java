@@ -15,9 +15,9 @@ public class RemoteClient extends Client
 	private String host;
 	private RemoteServerConnection conn;
 
-	public RemoteClient(String host, SettlersOfCatan game)
+	public RemoteClient(String host, String userName, SettlersOfCatan game)
 	{
-		super(game);
+		super(game, userName);
 		this.host = host;
 		setUpConnection();
 	}

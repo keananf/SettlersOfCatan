@@ -9,28 +9,22 @@ public abstract class AIClient extends Client
 {
 	protected AICore ai;
 
-	public AIClient(Difficulty difficulty, SettlersOfCatan game)
+	public AIClient(Difficulty difficulty, String userName, SettlersOfCatan game)
 	{
-		super(game);
+		super(game, userName);
 		assignAI(difficulty);
 	}
 
 	public AIClient()
 	{
-		super();
+		super("Default");
 		assignAI(Difficulty.VERYEASY);
 	}
 
 	public AIClient(Difficulty difficulty)
 	{
-		super();
+		super("Default");
 		assignAI(difficulty);
-	}
-
-	public AIClient(SettlersOfCatan game)
-	{
-		super(game);
-		ai = new VeryEasyAI(this);
 	}
 
 	private void assignAI(Difficulty difficulty)

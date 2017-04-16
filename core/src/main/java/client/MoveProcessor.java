@@ -412,6 +412,8 @@ boolean printed = false;
 		Map<ResourceType, Integer> cost = new HashMap<>(), wanting = new HashMap<>();
 		boolean val = true;
 
+		if(turn.getBankTrade() == null && turn.getPlayerTrade() == null) return false;
+
 		Trade.Kind.Builder builder = Trade.Kind.newBuilder();
 		Trade.Kind initiateTrade = turn.getPlayerTrade() != null ? builder.setPlayer(turn.getPlayerTrade()).build()
 				: builder.setBank(turn.getBankTrade()).build();

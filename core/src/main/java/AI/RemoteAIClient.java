@@ -1,5 +1,6 @@
 package AI;
 
+import catan.SettlersOfCatan;
 import connection.RemoteServerConnection;
 import enums.Difficulty;
 
@@ -13,16 +14,9 @@ public class RemoteAIClient extends AIClient
 	private String host;
 	private RemoteServerConnection conn;
 
-	public RemoteAIClient(String host, Difficulty difficulty)
+	public RemoteAIClient(String host, Difficulty difficulty, String userName, SettlersOfCatan game)
 	{
-		super(difficulty);
-		this.host = host;
-		setUpConnection();
-	}
-
-	public RemoteAIClient(String host)
-	{
-		super();
+		super(difficulty, userName, game);
 		this.host = host;
 		setUpConnection();
 	}

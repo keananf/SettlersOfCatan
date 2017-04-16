@@ -126,7 +126,7 @@ public class ServerPlayer extends Player
 	{
 		// Try to buy a development card
 		spendResources(DevelopmentCardType.getCardCost(), bank);
-		DevelopmentCardType card = DevelopmentCardType.YearOfPlenty;//DevelopmentCardType.chooseRandom(bank);
+		DevelopmentCardType card = DevelopmentCardType.chooseRandom(bank);
 		addDevelopmentCard(DevelopmentCardType.toProto(card));
 		return card;
 	}

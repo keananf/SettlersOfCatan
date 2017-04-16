@@ -36,15 +36,15 @@ public abstract class Client implements Runnable
 	private List<String> usersInLobby;
 	protected boolean active;
 
-	public Client(SettlersOfCatan game)
+	public Client(SettlersOfCatan game, String userName)
 	{
-		this();
+		this(userName);
 		this.catan = game;
 	}
 
-	public Client()
+	public Client(String userName)
 	{
-		thisPlayer = new ClientPlayer(Colour.BLUE, "Default");
+		thisPlayer = new ClientPlayer(Colour.BLUE, userName);
 		usersInLobby = new ArrayList<>(Game.NUM_PLAYERS);
 	}
 
@@ -362,7 +362,7 @@ public abstract class Client implements Runnable
 
 	public void renderTradeResponsePopUp()
 	{
-		if(catan != null)
+		if(catan != null && (this instanceof LocalClient || this instanceof RemoteClient))
 		{
 			catan.showResponse();
 		}
@@ -370,7 +370,7 @@ public abstract class Client implements Runnable
 
 	public void renderDiscardPopUp()
 	{
-		if(catan != null)
+		if(catan != null && (this instanceof LocalClient || this instanceof RemoteClient))
 		{
 			catan.showDiscard();
 		}
@@ -378,7 +378,7 @@ public abstract class Client implements Runnable
 
 	public void renderChooseResourcePopUp()
 	{
-		if(catan != null)
+		if(catan != null && (this instanceof LocalClient || this instanceof RemoteClient))
 		{
 			catan.showChooseResource();
 		}

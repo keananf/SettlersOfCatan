@@ -50,7 +50,7 @@ public class DevelopmentCardTests extends TestHelper
 	public void cannotPlayDevCardTest() throws DoesNotOwnException, CannotPlayException
 	{
 		// This development card does not exist in the player's hand
-		p.playDevelopmentCard(c);
+		p.playDevelopmentCard(c, game.getBank());
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class DevelopmentCardTests extends TestHelper
 
 		// Play card and test it was removed
 		DevelopmentCardType key = (DevelopmentCardType) p.getDevelopmentCards().keySet().toArray()[0];
-		p.playDevelopmentCard(key);
+		p.playDevelopmentCard(key, game.getBank());
 
 		assertTrue(p.getDevelopmentCards().get(c) == 0);
 	}
@@ -428,13 +428,13 @@ public class DevelopmentCardTests extends TestHelper
 		server.processMessage();
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 
-		// Now set up move robber request, ensure robber was moved
+		// Now set up move robber request, ensure robber was moved, and no move expected
 		req.clearPlayDevCard();
 		req.setMoveRobber(hex.toHexProto().getLocation());
 		server.addMessageToProcess(
 				new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 		server.processMessage();
-		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
+		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
 		assertFalse(oldHex.hasRobber());
 		assertFalse(oldHex.equals(game.getGrid().getHexWithRobber()));
 

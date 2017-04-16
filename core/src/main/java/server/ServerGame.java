@@ -329,13 +329,19 @@ public class ServerGame extends Game
 		DevelopmentCardType type = DevelopmentCardType.fromProto(card);
 
 		// Not enough roads available to play a road building card
-		if(type.equals(DevelopmentCardType.RoadBuilding) && bank.getAvailableRoads(p.getColour()) < 2)
+		if(type.equals(DevelopmentCardType.RoadBuilding) && bank.getAvailableRoads(p.getColour()) < 1)
+		{
+			throw new CannotPlayException();
+		}
+
+		// Not enough resources available to play a YOP card
+		if(type.equals(DevelopmentCardType.YearOfPlenty) && bank.getNumAvailableResources() < 1)
 		{
 			throw new CannotPlayException();
 		}
 
 		// Try to play card
-		((ServerPlayer) p).playDevelopmentCard(type);
+		((ServerPlayer) p).playDevelopmentCard(type, bank);
 
 		// Perform any additional actions not accomplished through
 		// updating expected moves (i.e. road building, year of plenty)
@@ -363,7 +369,7 @@ public class ServerGame extends Game
 		Player p = players.get(currentPlayer);
 
 		// Cannot upgrade
-		if (bank.getNumAvailableDevCards() == 0) { throw new BankLimitException("No more settlements available"); }
+		if (bank.getNumAvailableDevCards() == 0) { throw new BankLimitException("No more dev cards available"); }
 
 		// Try to buy card
 		DevelopmentCardType card = ((ServerPlayer) p).buyDevelopmentCard(bank);
@@ -451,6 +457,12 @@ public class ServerGame extends Game
 		Map<ResourceType, Integer> grant = new HashMap<>();
 		grant.put(ResourceType.fromProto(r1), 1);
 		players.get(currentPlayer).grantResources(grant, bank);
+
+		// Subtract from expected resources
+		if(players.get(currentPlayer).getExpectedResources() > 0)
+		{
+			players.get(currentPlayer).subtractExpectedResources();
+		}
 	}
 
 	/**

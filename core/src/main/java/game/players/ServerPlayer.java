@@ -154,7 +154,7 @@ public class ServerPlayer extends Player
 	 * @param card the development card to play
 	 * @throws DoesNotOwnException if the user does not own the given card
 	 */
-	public void playDevelopmentCard(DevelopmentCardType card) throws DoesNotOwnException, CannotPlayException
+	public void playDevelopmentCard(DevelopmentCardType card, Bank bank) throws DoesNotOwnException, CannotPlayException
 	{
 		// Check if the player owns the given card
 		if (!cards.containsKey(card)) { throw new DoesNotOwnException(card, getColour()); }
@@ -164,7 +164,7 @@ public class ServerPlayer extends Player
 				&& cards.get(card).equals(recentBoughtCards.get(card))) { throw new CannotPlayException(); }
 
 		// Remove from inventory
-		super.playCard(card);
+		super.playCard(card, bank);
 	}
 
 	/**

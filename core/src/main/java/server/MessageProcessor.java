@@ -316,12 +316,12 @@ public class MessageProcessor
 				moves.add(Requests.Request.BodyCase.MOVEROBBER);
 				break;
 			case YEAR_OF_PLENTY:
-				moves.add(Requests.Request.BodyCase.CHOOSERESOURCE);
-				moves.add(Requests.Request.BodyCase.CHOOSERESOURCE);
+				for(int i = 0; i < game.getPlayer(colour).getExpectedResources(); i++)
+					moves.add(Requests.Request.BodyCase.CHOOSERESOURCE);
 				break;
 			case ROAD_BUILDING:
-				moves.add(Requests.Request.BodyCase.BUILDROAD);
-				moves.add(Requests.Request.BodyCase.BUILDROAD);
+				for(int i = 0; i < game.getPlayer(colour).getExpectedRoads(); i++)
+					moves.add(Requests.Request.BodyCase.BUILDROAD);
 				break;
 			case MONOPOLY:
 				monopoly = true;

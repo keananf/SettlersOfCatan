@@ -45,7 +45,7 @@ public abstract class Player
 
 	private static final int VP_THRESHOLD = 10;
 	private static final int MIN_SETTLEMENTS = 2;
-	protected int expectedRoads;
+	protected int expectedRoads, expectedResources;
 
 	public Player(Colour colour, String userName)
 	{
@@ -630,14 +630,18 @@ public abstract class Player
 	 * 
 	 * @param card the development card to add
 	 */
-	public void playCard(DevelopmentCardType card)
+	public void playCard(DevelopmentCardType card, Bank bank)
 	{
 		int existing = cards.getOrDefault(card, 0);
 		cards.put(card, existing - 1);
 
 		if(card.equals(DevelopmentCardType.RoadBuilding))
 		{
-			expectedRoads = 2;
+			expectedRoads = bank.getAvailableRoads(colour) > 1 ? 2 : 1;
+		}
+		if(card.equals(DevelopmentCardType.YearOfPlenty))
+		{
+			expectedResources = bank.getNumAvailableResources() > 1 ? 2 : 1;
 		}
 	}
 
@@ -695,5 +699,20 @@ public abstract class Player
 	public Map<DevelopmentCardType, Integer> getRecentBoughtDevCards()
 	{
 		return recentBoughtCards;
+	}
+
+	public int getExpectedRoads()
+	{
+		return expectedRoads;
+	}
+
+	public int getExpectedResources()
+	{
+		return expectedResources;
+	}
+
+	public void subtractExpectedResources()
+	{
+		expectedResources--;
 	}
 }

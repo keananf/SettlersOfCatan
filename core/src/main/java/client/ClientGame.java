@@ -444,7 +444,7 @@ public class ClientGame extends Game
 
 		if (player.getColour().equals(getPlayer().getColour()))
 		{
-			player.playCard(card);
+			player.playCard(card, bank);
 		}
 
 		// Update largest army
@@ -505,7 +505,6 @@ public class ClientGame extends Game
 		// Handle resources
 		if (player.getColour().equals(getPlayer().getColour()))
 		{
-			client.log("BANK TRADE", String.format("Offer: %d Request %d", offeringSize, wantingSize));
 			// Update resources
 			player.spendResources(offering, bank);
 			player.grantResources(wanting, bank);
@@ -661,6 +660,11 @@ public class ClientGame extends Game
 			Map<ResourceType, Integer> map = new HashMap<>();
 			map.put(ResourceType.fromProto(resource), 1);
 			p.grantResources(map, bank);
+
+			if(p.getExpectedResources() > 0)
+			{
+				p.subtractExpectedResources();
+			}
 		}
 		else
 		{

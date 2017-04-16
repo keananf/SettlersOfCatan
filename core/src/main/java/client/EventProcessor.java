@@ -214,8 +214,7 @@ public class EventProcessor
 			break;
 		case PLAYERTRADEREJECTED:
 		case PLAYERTRADEACCEPTED:
-			if (getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
-					&& ev.getPlayerTradeInitiated().getOther().getId() == getGame().getPlayer().getId())
+			if (getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
 			{
 				client.log("Client Play", String.format("Removing SUBMITTRADERESPONSE from %s",
 						ev.getPlayerTradeInitiated().getOther().getId().name()));
@@ -341,12 +340,12 @@ public class EventProcessor
 				getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
 				break;
 			case YEAR_OF_PLENTY:
-				getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
-				getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
+				for(int i = 0; i < getGame().getPlayer().getExpectedResources(); i++)
+					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
 				break;
 			case ROAD_BUILDING:
-				getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
-				getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
+				for(int i = 0; i < getGame().getPlayer().getExpectedRoads(); i++)
+					getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
 				break;
 			case MONOPOLY:
 				getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);

@@ -208,6 +208,8 @@ public abstract class Player
 			// For each skipped road
 			for(Road road : skipped)
 			{
+				if(newList1.contains(road) || newList2.contains(road)) continue;
+
 				// Check if connected to any road in first list
 				boolean added = false;
 				for(Road r1 : newList1)
@@ -219,11 +221,11 @@ public abstract class Player
 						break;
 					}
 				}
+				if(added) continue;
 
 				// Check if connected to any road in second list
 				for(Road r2 : newList2)
 				{
-					if(added) break;
 					if (road.isConnected(r2))
 					{
 						newList2.add(road);

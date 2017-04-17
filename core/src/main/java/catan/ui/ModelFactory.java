@@ -51,7 +51,7 @@ class ModelFactory
     private static final Model ISLAND = builder.createCylinder(11f, 1f, 11f, 6, DIRT, DEFAULT_ATTRS);
     private static final Model GRAIN = SettlersOfCatan.getAssets().getModel("grain.g3db");
     private static final Model ORE = SettlersOfCatan.getAssets().getModel("ore.g3db");
-    private static final Model WOOL = SettlersOfCatan.getAssets().getModel("woolScaled.g3db");
+    private static final Model WOOL = SettlersOfCatan.getAssets().getModel("wool.g3db");
     private static final Model LUMBER = SettlersOfCatan.getAssets().getModel("lumber.g3db");
     private static final Model GENERIC = SettlersOfCatan.getAssets().getModel("desert.g3db");
     private static final Model BRICK = SettlersOfCatan.getAssets().getModel("claymine.g3db");

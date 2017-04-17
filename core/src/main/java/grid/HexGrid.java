@@ -434,6 +434,19 @@ public class HexGrid
 		es.addAll(edges);
 		this.ports = ports;
 
+		// Set exchange resources
+		for(Port p : ports)
+		{
+			if(p.getExchangeType().equals(ResourceType.Generic))
+			{
+				p.setExchangeAmount(3);
+			}
+			else
+			{
+				p.setExchangeAmount(2);
+			}
+		}
+
 		// If edge is a port, overwrite
 		for (Edge e : es)
 		{

@@ -198,7 +198,7 @@ public class TradeTests extends TestHelper
 
 		// Give player resources in prep for trade
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
-		grant.put(exchangeType, Port.EXCHANGE_AMOUNT);
+		grant.put(exchangeType, port.getExchangeAmount());
 		p.grantResources(grant, game.getBank());
 		Trade.WithBank.Builder portTrade = setUpBankTrade(grant, req);
 
@@ -209,7 +209,7 @@ public class TradeTests extends TestHelper
 		portTrade.setWanting(request.build());
 
 		// assert resources are set up
-		assertEquals(new Integer(p.getResources().get(exchangeType)), new Integer(Port.EXCHANGE_AMOUNT));
+		assertEquals(new Integer(p.getResources().get(exchangeType)), new Integer(port.getExchangeAmount()));
 
 		game.determineTradeType(portTrade.build());
 	}
@@ -273,7 +273,7 @@ public class TradeTests extends TestHelper
 
 		// Give player resources in prep for trade
 		Map<ResourceType, Integer> grant = new HashMap<ResourceType, Integer>();
-		grant.put(exchangeType, Port.EXCHANGE_AMOUNT * 2);
+		grant.put(exchangeType, port.getExchangeAmount() * 2);
 		p.grantResources(grant, game.getBank());
 		Trade.WithBank.Builder portTrade = setUpBankTrade(grant, req);
 
@@ -284,7 +284,7 @@ public class TradeTests extends TestHelper
 		portTrade.setWanting(request.build());
 
 		// assert resources are set up
-		assertEquals(new Integer(p.getResources().get(exchangeType)), new Integer(Port.EXCHANGE_AMOUNT * 2));
+		assertEquals(new Integer(p.getResources().get(exchangeType)), new Integer(port.getExchangeAmount() * 2));
 
 		game.determineTradeType(portTrade.build());
 	}

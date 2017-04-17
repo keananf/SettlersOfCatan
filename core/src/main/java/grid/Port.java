@@ -17,7 +17,8 @@ import java.util.*;
 public class Port extends Edge
 {
 	private ResourceType exchangeType;
-	public static final int EXCHANGE_AMOUNT = 3, RETURN_AMOUNT = 1;
+	private int exchangeAmount;
+	public static final int RETURN_AMOUNT = 1;
 
 	public Port(Node x, Node y)
 	{
@@ -93,6 +94,7 @@ public class Port extends Edge
 		{
 			Port p = new Port(new Node(0, 0), new Node(-1, -1));
 			p.exchangeType = ResourceType.Generic; // signifies 'Any'
+			p.exchangeAmount = 3;
 
 			ports.add(p);
 		}
@@ -104,6 +106,7 @@ public class Port extends Edge
 
 			Port p = new Port(new Node(0, 0), new Node(-1, -1));
 			p.exchangeType = r;
+			p.exchangeAmount = 2;
 
 			ports.add(p);
 		}
@@ -163,7 +166,7 @@ public class Port extends Edge
 
 		Port port = (Port) o;
 
-		return exchangeType == port.exchangeType;
+		return exchangeType == port.exchangeType && exchangeAmount == port.exchangeAmount;
 	}
 
 	@Override
@@ -171,6 +174,17 @@ public class Port extends Edge
 	{
 		int result = super.hashCode();
 		result = 31 * result + (exchangeType != null ? exchangeType.hashCode() : 0);
+		result = 31 * result + exchangeAmount;
 		return result;
 	}
+
+	public int getExchangeAmount()
+	{
+		return exchangeAmount;
+	}
+
+    public void setExchangeAmount(int exchangeAmount)
+	{
+        this.exchangeAmount = exchangeAmount;
+    }
 }

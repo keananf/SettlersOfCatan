@@ -9,10 +9,7 @@ import game.build.City;
 import game.build.Settlement;
 import game.players.ClientPlayer;
 import game.players.Player;
-import grid.Edge;
-import grid.Hex;
-import grid.HexGrid;
-import grid.Node;
+import grid.*;
 import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.resource.Resource;
@@ -21,13 +18,11 @@ import org.junit.Test;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ClientProcessTests extends ClientTestHelper
 {
@@ -55,8 +50,14 @@ public class ClientProcessTests extends ClientTestHelper
 
 		for (Edge e : actualBoard.getEdgesAsList())
 		{
+			if(e instanceof Port) continue;
 			assertTrue(processedBoard.getEdgesAsList().contains(e));
 		}
+		for (Port p : actualBoard.getPortsAsList())
+		{
+			assertTrue(processedBoard.getPortsAsList().contains(p));
+		}
+
 		assertTrue(processedBoard.getEdgesAsList().size() == actualBoard.getEdgesAsList().size());
 	}
 
@@ -541,7 +542,7 @@ public class ClientProcessTests extends ClientTestHelper
 	{
 		Player p = clientPlayer;
 		Node n = clientGame.getGrid().getNode(-1, 0);
-		int dice = n.getHexes().get(0).getChit();
+		int dice = n.getHexes().get(0).getChit() == 0 ? n.getHexes().get(1).getChit() : n.getHexes().get(0).getChit();
 		ArrayList<Board.ResourceAllocation> list = new ArrayList<Board.ResourceAllocation>();
 
 		// Build Settlement so resources can be granted
@@ -552,14 +553,16 @@ public class ClientProcessTests extends ClientTestHelper
 				.setResources(processResources(clientGame.getNewResources(dice, p.getColour()))).build());
 
 		// Move and check the dice was updated
-		clientGame.getPlayer().getNumResources();
+		assertEquals(0, clientGame.getPlayer().getNumResources());
 		clientGame.processDice(dice, list);
 		assertEquals(clientGame.getDice(), dice);
 
 		// Check resources were indeed granted
 		int expected = 0;
+		//System.out.println("Dice: " + dice);
 		for(Hex hex : n.getHexes())
 		{
+			//System.out.println(hex.getChit());
 			if(hex.getChit() == dice) expected++;
 		}
 		assertEquals(expected, clientGame.getPlayer().getNumResources());

@@ -14,6 +14,9 @@ public enum DevelopmentCardType
 	Knight, // Steal 1 resource from
 	Library, // 1 VP
 	University, // 1 VP
+	Chapel, // 1 VP
+	Market, // 1 VP
+	Palace, // 1 VP
 	YearOfPlenty, // Gain any 2 resources from the bank
 	RoadBuilding, // Build two new roads
 	Monopoly; // Every player must give over all resources of a particular type
@@ -29,30 +32,34 @@ public enum DevelopmentCardType
 	{
 		Board.DevCard.Builder devCard = Board.DevCard.newBuilder();
 
-		switch (card) // TODO complete
+		switch (card)
 		{
 		case Knight:
 			devCard.setPlayableDevCard(PlayableDevCard.KNIGHT);
 			break;
-
 		case Monopoly:
 			devCard.setPlayableDevCard(PlayableDevCard.MONOPOLY);
 			break;
-
 		case RoadBuilding:
 			devCard.setPlayableDevCard(PlayableDevCard.ROAD_BUILDING);
 			break;
-
 		case YearOfPlenty:
 			devCard.setPlayableDevCard(PlayableDevCard.YEAR_OF_PLENTY);
 			break;
-
 		case Library:
 			devCard.setVictoryPoint(Board.VictoryPoint.LIBRARY);
 			break;
-
 		case University:
 			devCard.setVictoryPoint(Board.VictoryPoint.UNIVERSITY);
+			break;
+		case Chapel:
+			devCard.setVictoryPoint(Board.VictoryPoint.CHAPEL);
+			break;
+		case Palace:
+			devCard.setVictoryPoint(Board.VictoryPoint.PALACE);
+			break;
+		case Market:
+			devCard.setVictoryPoint(Board.VictoryPoint.MARKET);
 			break;
 		}
 
@@ -84,8 +91,14 @@ public enum DevelopmentCardType
 			case UNIVERSITY:
 				type = DevelopmentCardType.University;
 				break;
-
-			// TODO COMPLETE
+			case CHAPEL:
+				type = DevelopmentCardType.Chapel;
+				break;
+			case MARKET:
+				type = DevelopmentCardType.Market;
+				break;
+			case PALACE:
+				type = DevelopmentCardType.Palace;
 			}
 			break;
 		}

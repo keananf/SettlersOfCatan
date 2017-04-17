@@ -25,9 +25,11 @@ public class ChatDialog extends Dialog
         root.setFillParent(true);
         addActor(root);
 
-        // Add Chat messages
+        // Add last 15 Chat messages
+        int i = 0;
         for(ChatBoard.ChatMessage msg : chatBoard.getMessages())
         {
+            if(++i == 15) break;
             Label l = new Label(msg.getMessage(), SettlersOfCatan.getSkin());
             vert.addActor(l);
         }

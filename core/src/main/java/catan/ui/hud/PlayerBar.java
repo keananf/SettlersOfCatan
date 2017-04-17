@@ -36,6 +36,7 @@ class PlayerBar extends Stack
 		row.addActor(id);
 		row.addActor(name);
 
+		// Only display buttons if the player is NOT an AI
 		if(!catan.isAI)
 		{
 			// Steal button

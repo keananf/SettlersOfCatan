@@ -542,7 +542,7 @@ public class ClientProcessTests extends ClientTestHelper
 	{
 		Player p = clientPlayer;
 		Node n = clientGame.getGrid().getNode(-1, 0);
-		int dice = n.getHexes().get(0).getChit();
+		int dice = n.getHexes().get(0).getChit() == 0 ? n.getHexes().get(1).getChit() : n.getHexes().get(0).getChit();
 		ArrayList<Board.ResourceAllocation> list = new ArrayList<Board.ResourceAllocation>();
 
 		// Build Settlement so resources can be granted
@@ -559,9 +559,10 @@ public class ClientProcessTests extends ClientTestHelper
 
 		// Check resources were indeed granted
 		int expected = 0;
+		//System.out.println("Dice: " + dice);
 		for(Hex hex : n.getHexes())
 		{
-			System.out.println(hex.getChit());
+			//System.out.println(hex.getChit());
 			if(hex.getChit() == dice) expected++;
 		}
 		assertEquals(expected, clientGame.getPlayer().getNumResources());

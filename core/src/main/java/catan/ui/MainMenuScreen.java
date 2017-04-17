@@ -54,7 +54,17 @@ public class MainMenuScreen implements Screen
 			});
 			body.addActor(button);
 		}
-
+		{
+		TextButton button = new TextButton("Start Game", SettlersOfCatan.getSkin());
+		button.addListener(new ChangeListener()
+				{
+			public void changed(ChangeEvent event, Actor actor){
+				game.setScreen(new GameScreenSettings(game));
+			}
+				});
+		body.addActor(button);
+		}
+	
 		{
 			TextButton button = new TextButton("Join Remote Game", SettlersOfCatan.getSkin());
 			button.addListener(new ChangeListener()

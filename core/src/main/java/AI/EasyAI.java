@@ -174,7 +174,7 @@ public class EasyAI extends AICore
                     rank++;
 
                     Node nxtToAnalyse = (e.getX().getBuilding() == null && !e.getX().equals(toAnalyse) ) ? e.getX() : e.getY();
-                    if(nxtToAnalyse.getBuilding() != null){
+                    if(nxtToAnalyse.getBuilding() == null){
                          rank ++ ;
                     }
                     else if(nxtToAnalyse.getBuilding() != null)

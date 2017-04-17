@@ -157,7 +157,6 @@ public class EasyAI extends AICore
         // the less cards you have the higher the priority
     }
 
-//TODO:ASAP
     @Override
     public int rankNewRoad(Edge chosenEdge)
     {
@@ -198,7 +197,7 @@ public class EasyAI extends AICore
             Node toAnalyse = (!n1.isNearRoad(getPlayer().getColour())) ? n1 :n2 ;
             RankNode rn = new RankNode(toAnalyse, getPlayer());
             rn.rank(false);
-            rank += rn.getRanking();
+            rank += (rn.getRanking()/2);
         }
 
         return rank;
@@ -206,7 +205,6 @@ public class EasyAI extends AICore
 
 
 
-//LOWER PRIORITY, TRADE ETC
     @Override
     public int rankDiscard(Turn turn)
     {
@@ -287,7 +285,7 @@ public class EasyAI extends AICore
         return 0;
     }
 
-    @Override   //done by jack
+    @Override   
     public int rankTargetPlayer(Colour target)
     {
     	int rank = 5;

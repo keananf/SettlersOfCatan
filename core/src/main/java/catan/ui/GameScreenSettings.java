@@ -98,6 +98,8 @@ public class GameScreenSettings implements Screen
 				}
 			});
 			
+	
+			
 		
 			
 			HorizontalGroup AISelection = new HorizontalGroup();

@@ -114,6 +114,11 @@ public class Bank
 	{
 		this.availableSettlements.put(c, availableSettlements);
 	}
+	public void subtractAvailableDevCards(DevelopmentCardType type)
+	{
+		int existing = availableDevCards.getOrDefault(type, 0);
+		availableDevCards.put(type, existing - 1);
+	}
 
 	public void setAvailableRoads(Colour c, int availableRoads)
 	{

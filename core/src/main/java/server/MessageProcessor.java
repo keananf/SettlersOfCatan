@@ -3,7 +3,9 @@ package server;
 import enums.Colour;
 import exceptions.*;
 import game.CurrentTrade;
+import game.build.Building;
 import game.players.Player;
+import grid.Node;
 import intergroup.EmptyOuterClass;
 import intergroup.Events;
 import intergroup.Messages;
@@ -33,7 +35,6 @@ public class MessageProcessor
 	private HashMap<Colour, List<Requests.Request.BodyCase>> expectedMoves;
 	private BlockingQueue<ReceivedMessage> movesToProcess;
 	private CurrentTrade currentTrade;
-	private boolean tradePhase;
 	private ReceivedMessage lastMessage;
 	protected boolean initialPhase;
 
@@ -139,7 +140,6 @@ public class MessageProcessor
 				if (canEndTurn())
 				{
 					ev.setTurnEnded(game.changeTurn());
-					tradePhase = false;
 					currentTrade = null;
 					initialPhase = true;
 				}
@@ -180,8 +180,20 @@ public class MessageProcessor
 				if (steal != null) ev.setResourceStolen(steal);
 				break;
 			case INITIATETRADE:
-				Trade.WithBank trade = processTradeType(request.getInitiateTrade(), ev.getInstigator());
-				if (trade != null) ev.setBankTrade(trade);
+				try
+				{
+					Trade.WithBank trade = processTradeType(request.getInitiateTrade(), ev.getInstigator());
+					if (trade != null) ev.setBankTrade(trade);
+					else if(trade == null && currentTrade == null)
+					{
+						ev.setError(Events.Event.Error.newBuilder().setDescription(
+								new IllegalBankTradeException(colour).getMessage()).build());
+					}
+				}
+				catch(IllegalBankTradeException e)
+				{
+					ev.setError(Events.Event.Error.newBuilder().setDescription(e.getMessage()).build());
+				}
 				break;
 			case SUBMITTRADERESPONSE:
 				if (currentTrade != null && request.getSubmitTradeResponse().equals(Trade.Response.ACCEPT)
@@ -189,7 +201,7 @@ public class MessageProcessor
 				{
 					try
 					{
-						game.processPlayerTrade(currentTrade.getTrade());
+						game.processPlayerTrade(currentTrade.getTrade(), currentTrade.getInstigator());
 						ev.setPlayerTradeAccepted(currentTrade.getTrade());
 						ev.setInstigator(currentTrade.getInstigator());
 					}
@@ -203,7 +215,6 @@ public class MessageProcessor
 				else if (currentTrade != null && (request.getSubmitTradeResponse().equals(Trade.Response.REJECT)
 						|| !currentTrade.isExpired()))
 				{
-					server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
 					currentTrade = null;
 					ev.setPlayerTradeRejected(EmptyOuterClass.Empty.getDefaultInstance());
 				}
@@ -221,7 +232,14 @@ public class MessageProcessor
 		catch (Exception e)
 		{
 			String errMsg = e.getMessage();
-			ev.setError(Events.Event.Error.newBuilder().setDescription(errMsg != null ? errMsg : "Error").build());
+			if(request.getBodyCase().equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
+			{
+				server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
+			}
+			else
+			{
+				ev.setError(Events.Event.Error.newBuilder().setDescription(errMsg != null ? errMsg : "Error").build());
+			}
 		}
 
 		// Add expected trade response for other player
@@ -277,7 +295,21 @@ public class MessageProcessor
 		{
 		// Expect for the player to send a steal request next
 		case MOVEROBBER:
-			moves.add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+			boolean hasSettlement = false;
+
+			// Only will add a submit target player if the given hex has a foreign settlement on it
+			for(Node n : game.getGrid().getHexWithRobber().getNodes())
+			{
+				Building b = n.getBuilding();
+				if(b != null && !b.getPlayerColour().equals(game.getCurrentPlayer()))
+				{
+					hasSettlement = true;
+				}
+			}
+			if(hasSettlement)
+			{
+				moves.add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+			}
 			break;
 
 		// Add that a dice roll is expected as the first move for the new player
@@ -287,7 +319,8 @@ public class MessageProcessor
 
 		// Add that a response is expected from this player
 		case INITIATETRADE:
-			if (!moves.contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
+			if (!moves.contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
+					&& req.getInitiateTrade().getTradeCase().equals(Trade.Kind.TradeCase.PLAYER))
 			{
 				server.log("Server Play",
 						String.format("Adding trade response to %s", game.getPlayer(colour).getId().name()));
@@ -304,12 +337,12 @@ public class MessageProcessor
 				moves.add(Requests.Request.BodyCase.MOVEROBBER);
 				break;
 			case YEAR_OF_PLENTY:
-				moves.add(Requests.Request.BodyCase.CHOOSERESOURCE);
-				moves.add(Requests.Request.BodyCase.CHOOSERESOURCE);
+				for(int i = 0; i < game.getPlayer(colour).getExpectedResources(); i++)
+					moves.add(Requests.Request.BodyCase.CHOOSERESOURCE);
 				break;
 			case ROAD_BUILDING:
-				moves.add(Requests.Request.BodyCase.BUILDROAD);
-				moves.add(Requests.Request.BodyCase.BUILDROAD);
+				for(int i = 0; i < game.getPlayer(colour).getExpectedRoads(); i++)
+					moves.add(Requests.Request.BodyCase.BUILDROAD);
 				break;
 			case MONOPOLY:
 				monopoly = true;
@@ -334,8 +367,6 @@ public class MessageProcessor
 	private Trade.WithBank processTradeType(Trade.Kind request, Board.Player instigator)
 			throws IllegalPortTradeException, IllegalBankTradeException, CannotAffordException, BankLimitException
 	{
-		tradePhase = true;
-
 		// Switch on trade type
 		switch (request.getTradeCase())
 		{
@@ -347,10 +378,10 @@ public class MessageProcessor
 
 		case BANK:
 			game.determineTradeType(request.getBank());
-			break;
+			return request.getBank();
 		}
 
-		return request.getBank();
+		return null;
 	}
 
 	/**
@@ -388,13 +419,6 @@ public class MessageProcessor
 
 		// If the move is not expected
 		else if (!expected.isEmpty()) return false;
-
-		// If in trade phase and the given message isn't a trade
-		if (tradePhase && game.getCurrentPlayer().equals(col)
-				&& !(type.equals(Requests.Request.BodyCase.INITIATETRADE)
-						|| type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
-						|| type.equals(Requests.Request.BodyCase.ENDTURN)))
-			return false;
 
 		// If it's not your turn and there are no expected moves from you
 		return !(!game.getCurrentPlayer().equals(col) && expected.isEmpty());
@@ -438,11 +462,6 @@ public class MessageProcessor
 	public Lobby.GameWon getGameWon()
 	{
 		return game.getGameWon();
-	}
-
-	public boolean isTradePhase()
-	{
-		return tradePhase;
 	}
 
 	public void addExpectedMove(Colour c, Requests.Request.BodyCase type)

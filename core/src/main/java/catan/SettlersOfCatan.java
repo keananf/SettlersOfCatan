@@ -2,29 +2,34 @@ package catan;
 
 import AI.LocalAIClient;
 import AI.RemoteAIClient;
-import catan.ui.AssMan;
+import catan.ui.AssetMan;
 import catan.ui.SplashScreen;
+import catan.ui.hud.HeadsUpDisplay;
 import client.Client;
 import client.ClientGame;
-import client.LocalClient;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import enums.Difficulty;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+
 
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	private static Skin skin;
-	private static AssMan assets = new AssMan();
+	private static AssetMan assets = new AssetMan();
 	public Client client;
 	private Thread t;
 	private boolean active;
+	private HeadsUpDisplay hud;
+	public boolean isAI;
 
 	public static Skin getSkin() {
 		return skin;
 	}
 
-	public static AssMan getAssets() {
+	public static AssetMan getAssets() {
 		return assets;
 	}
 
@@ -35,6 +40,13 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		Gdx.graphics.setContinuousRendering(false);
 
 		skin = new Skin(Gdx.files.internal("skin.json"));
+		Window.WindowStyle ws = new Window.WindowStyle(SettlersOfCatan.getSkin().getFont("body"),
+				Color.WHITE, AssetMan.getDrawable("resources.png"));
+		CheckBox.CheckBoxStyle cs = new CheckBox.CheckBoxStyle(AssetMan.getDrawable("checkBoxOff.png"),
+				AssetMan.getDrawable("checkBoxOn.png"),SettlersOfCatan.getSkin().getFont("body"),
+				Color.WHITE);
+		SettlersOfCatan.getSkin().add("default", ws);
+		SettlersOfCatan.getSkin().add("default", cs);
 
 		// start off at the splash screen
 		setScreen(new SplashScreen(this));
@@ -67,23 +79,31 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	/**
 	 * Starts up a new remote client.
 	 *
-	 * @param host the host server to connect to
-	 * @return the status of the connection
+     * @return the status of the connection
 	 */
-	public boolean startNewRemoteClient(String host)
+	public void startNewRemoteClient(Client c)
 	{
-		client = new RemoteAIClient(host);
+		if(c instanceof RemoteAIClient)
+		{
+			isAI = true;
+		}
+
+		client = c;
 		t = new Thread(client);
 		t.start();
-		return ((RemoteAIClient) client).isInitialised();
 	}
 
 	/**
 	 * Starts up a new server and local client
 	 */
-	public void startNewServer()
+	public void startNewServer(Client c)
 	{
-		client = new LocalAIClient(Difficulty.EASY,this);
+		if(c instanceof LocalAIClient)
+		{
+			isAI = true;
+		}
+		
+		client = c;
 		t = new Thread(client);
 		t.start();
 	}
@@ -123,5 +143,25 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	public boolean isActive()
 	{
 		return active;
+	}
+
+	public void setHUD(HeadsUpDisplay hud)
+	{
+		this.hud = hud;
+	}
+
+	public void showDiscard()
+	{
+		hud.showDiscardDialog();
+	}
+
+    public void showResponse()
+	{
+		hud.showResponse();
+    }
+
+	public void showChooseResource()
+	{
+		hud.showChooseResource();
 	}
 }

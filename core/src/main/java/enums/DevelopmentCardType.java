@@ -1,8 +1,10 @@
 package enums;
 
+import exceptions.BankLimitException;
 import game.Bank;
 import intergroup.board.Board;
 import intergroup.board.Board.PlayableDevCard;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -126,9 +128,13 @@ public enum DevelopmentCardType
 		return resources;
 	}
 
-	public static DevelopmentCardType chooseRandom(Bank bank)
+	public static DevelopmentCardType chooseRandom(Bank bank) throws BankLimitException
 	{
 		DevelopmentCardType type = null;
+		if(bank.getNumAvailableDevCards() == 0)
+		{
+			throw new BankLimitException(String.format("Not enough dev cards left"));
+		}
 
 		// Randomly choose a development card to allocate
 		while (type == null || bank.getAvailableDevCards().get(type) == 0)
@@ -137,7 +143,7 @@ public enum DevelopmentCardType
 		}
 
 		// Eliminate from bank
-		bank.getAvailableDevCards().put(type, bank.getAvailableDevCards().get(type) - 1);
+		bank.subtractAvailableDevCards(type);
 		return type;
 	}
 

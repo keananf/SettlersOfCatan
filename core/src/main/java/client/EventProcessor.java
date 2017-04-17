@@ -3,7 +3,9 @@ package client;
 import connection.IServerConnection;
 import game.CurrentTrade;
 import game.Game;
+import game.build.Building;
 import game.players.Player;
+import grid.Node;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import intergroup.Requests;
@@ -93,12 +95,17 @@ public class EventProcessor
 			getGame().writeMessage(ev.getChatMessage(), ev.getInstigator());
 			break;
 		case BANKTRADE:
-			getTurn().setTradePhase();
+			getTurn().setHasTraded(true);
 			getGame().processBankTrade(ev.getBankTrade(), ev.getInstigator());
 			break;
 		case PLAYERTRADEINITIATED:
-			getTurn().setTradePhase();
+			Player p = getGame().getPlayer(ev.getPlayerTradeInitiated().getOther().getId());
 			getTurn().setCurrentTrade(new CurrentTrade(ev.getPlayerTradeInitiated(), ev.getInstigator()));
+
+			if(p.getColour().equals(getGame().getPlayer().getColour()))
+			{
+				client.renderTradeResponsePopUp();
+			}
 			break;
 		case PLAYERTRADEACCEPTED:
 			if (getTurn().getCurrentTrade() != null)
@@ -148,6 +155,14 @@ public class EventProcessor
 		}
 
 		updateExpectedMoves(ev);
+		if(getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
+		{
+			client.renderDiscardPopUp();
+		}
+		if(getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE))
+		{
+			client.renderChooseResourcePopUp();
+		}
 	}
 
 	/**
@@ -208,8 +223,7 @@ public class EventProcessor
 			break;
 		case PLAYERTRADEREJECTED:
 		case PLAYERTRADEACCEPTED:
-			if (getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
-					&& ev.getPlayerTradeInitiated().getOther().getId() == getGame().getPlayer().getId())
+			if (getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
 			{
 				client.log("Client Play", String.format("Removing SUBMITTRADERESPONSE from %s",
 						ev.getPlayerTradeInitiated().getOther().getId().name()));
@@ -258,8 +272,20 @@ public class EventProcessor
 
 	private void handleRobber(Event ev)
 	{
+		boolean hasSettlement = false;
+
+		// Only will add a submit target player if the given hex has a foreign settlement on it
+		for(Node n : getGame().getGrid().getHexWithRobber().getNodes())
+		{
+			Building b = n.getBuilding();
+			if(b != null && !b.getPlayerColour().equals(getGame().getPlayer().getColour()))
+			{
+				hasSettlement = true;
+			}
+		}
+
 		// Expect for the player to send a steal request next
-		if (getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()))
+		if (getGame().getPlayer().getColour().equals(getGame().getCurrentPlayer()) && hasSettlement)
 		{
 			getExpectedMoves().add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
 		}
@@ -299,8 +325,7 @@ public class EventProcessor
 				getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
 			}
 		}
-		if (ev.getInstigator().getId() == getGame().getPlayer().getId()
-				&& getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE))
+		if (getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE))
 		{
 			getExpectedMoves().remove(Requests.Request.BodyCase.ROLLDICE);
 		}
@@ -334,12 +359,12 @@ public class EventProcessor
 				getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
 				break;
 			case YEAR_OF_PLENTY:
-				getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
-				getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
+				for(int i = 0; i < getGame().getPlayer().getExpectedResources(); i++)
+					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
 				break;
 			case ROAD_BUILDING:
-				getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
-				getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
+				for(int i = 0; i < getGame().getPlayer().getExpectedRoads(); i++)
+					getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
 				break;
 			case MONOPOLY:
 				getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);

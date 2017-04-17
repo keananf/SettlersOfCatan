@@ -54,7 +54,7 @@ public class VeryEasyAI extends AICore
 	@Override
 	public int rankNewRobberLocation(Hex chosenHex)
 	{
-		return 0;
+		return 3;
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class VeryEasyAI extends AICore
 	{
 		// Ensures the AI only trades once per turn, so as not to spam
 		// the server
-		if (getTurn().isTradePhase()) return -1;
+		if (getTurn().hasTraded()) return -1;
 
 		Map<ResourceType, Integer> tradeReq = new HashMap<>();
 		Map<ResourceType, Integer> resources = new HashMap<>();

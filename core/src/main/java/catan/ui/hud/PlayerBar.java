@@ -1,7 +1,7 @@
 package catan.ui.hud;
 
 import catan.SettlersOfCatan;
-import catan.ui.AssMan;
+import catan.ui.AssetMan;
 import client.Client;
 import client.Turn;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -10,24 +10,35 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import game.players.Player;
 import intergroup.Requests;
 import intergroup.board.Board;
-import intergroup.trade.Trade;
 
 class PlayerBar extends Stack
 {
 	final Client client;
-	PlayerBar(final Player player, final Client client)
+	private final HeadsUpDisplay hud;
+
+	PlayerBar(final Player player, final Client client, HeadsUpDisplay hud)
 	{
 		this.client = client;
-		final Image bground = new Image(AssMan.getTexture("playerbar.png"));
+		this.hud = hud;
+		final Image bground = new Image(AssetMan.getTexture("playerbar.png"));
 		addActor(bground);
 		final HorizontalGroup row = new HorizontalGroup();
 		addActor(row);
 
-		final Label name = new Label(player.getUsername(), SettlersOfCatan.getSkin(), "username");
+		// Colour
+		final Image col = new Image(AssetMan.getTexture("icons/player.png"));
+		col.setColor(player.getColour().getDisplayColor());
+		row.addActor(col);
+
+		// Name and ID
+		final Label id = new Label("ID: " + player.getId().name(), SettlersOfCatan.getSkin(), "username");
+		final Label name = new Label("\tName:" +player.getUsername(), SettlersOfCatan.getSkin(), "username");
+		row.addActor(id);
 		row.addActor(name);
 
+
 		// Steal button
-		final ImageButton steal = new ImageButton(AssMan.getDrawable("Steal.png"));
+		final ImageButton steal = new ImageButton(AssetMan.getDrawable("StealButton.png"));
 		row.addActor(steal);
 		steal.addListener(new ClickListener()
 		{
@@ -43,7 +54,7 @@ class PlayerBar extends Stack
 		});
 
 		// Trade button
-		final ImageButton trade = new ImageButton(AssMan.getDrawable("Trade2.png"));
+		final ImageButton trade = new ImageButton(AssetMan.getDrawable("Trade2.png"));
 		row.addActor(trade);
 		trade.addListener(new ClickListener()
 		{
@@ -53,16 +64,9 @@ class PlayerBar extends Stack
 				super.clicked(event, x, y);
 				client.log("UI", String.format("Trade Button with %s Clicked", player.getId().name()));
 
-				// Set up trade
-				Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
-				Trade.WithPlayer.Builder builder = Trade.WithPlayer.newBuilder();
-				builder.setOther(Board.Player.newBuilder().setId(player.getId()).build());
-
-				//TODO SETUP RESOURCES
-
-				// Set Trade
-				turn.setPlayerTrade(builder.build());
-				//client.acquireLocksAndSendTurn(turn);
+				TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(),
+						Board.Player.newBuilder().setId(player.getId()).build(), client, hud);
+				dialog.show(hud);
 			}
 		});
 	}

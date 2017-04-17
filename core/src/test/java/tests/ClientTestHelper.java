@@ -53,10 +53,6 @@ public class ClientTestHelper extends TestHelper
 		try
 		{
 			grantResources(col, Road.getRoadCost());
-			if (clientGame.getPlayer(col).getRoads().size() < 2 && clientGame.getPlayer().getColour().equals(col))
-			{
-				clientGame.getPlayer(col).spendResources(Road.getRoadCost(), clientGame.getBank());
-			}
 			clientGame.setCurrentPlayer(col);
 			clientGame.processRoad(e, player);
 		}

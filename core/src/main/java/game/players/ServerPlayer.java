@@ -11,7 +11,6 @@ import game.build.Settlement;
 import grid.Edge;
 import grid.Node;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,30 +21,11 @@ import java.util.Map;
  */
 public class ServerPlayer extends Player
 {
-	private InetAddress inetAddress;
 	private Settlement settlementForInitialResources;
 
 	public ServerPlayer(Colour colour, String username)
 	{
 		super(colour, username);
-	}
-
-	/**
-	 * @return the inetAddress
-	 */
-	public InetAddress getInetAddress()
-	{
-		return inetAddress;
-	}
-
-	/**
-	 * sets the inetaddress of this network player
-	 * 
-	 * @param inetAddress
-	 */
-	public void setInetAddress(InetAddress inetAddress)
-	{
-		this.inetAddress = inetAddress;
 	}
 
 	/**
@@ -69,9 +49,10 @@ public class ServerPlayer extends Player
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		if (canBuildRoad(edge) && (getRoads().size() < 2 || canAfford(Road.getRoadCost())))
+		if (canBuildRoad(edge, bank))
 		{
-			if (getRoads().size() >= 2) spendResources(r.getCost(), bank);
+			if (getRoads().size() >= 2 && expectedRoads == 0) spendResources(r.getCost(), bank);
+			if(expectedRoads > 0) expectedRoads--;
 			edge.setRoad(r);
 
 			// Find out where this road is connected
@@ -112,7 +93,7 @@ public class ServerPlayer extends Player
 		Settlement s = new Settlement(node, colour);
 
 		// If valid placement, attempt to spend the required resources
-		if (canBuildSettlement(node))
+		if (canBuildSettlement(node, bank))
 		{
 			if (settlements.size() >= 2) spendResources(s.getCost(), bank);
 			if (settlements.size() == 1) settlementForInitialResources = s;
@@ -141,7 +122,7 @@ public class ServerPlayer extends Player
 	 * @return the bought development card
 	 * @throws CannotAffordException
 	 */
-	public DevelopmentCardType buyDevelopmentCard(Bank bank) throws CannotAffordException
+	public DevelopmentCardType buyDevelopmentCard(Bank bank) throws CannotAffordException, BankLimitException
 	{
 		// Try to buy a development card
 		spendResources(DevelopmentCardType.getCardCost(), bank);
@@ -173,7 +154,7 @@ public class ServerPlayer extends Player
 	 * @param card the development card to play
 	 * @throws DoesNotOwnException if the user does not own the given card
 	 */
-	public void playDevelopmentCard(DevelopmentCardType card) throws DoesNotOwnException, CannotPlayException
+	public void playDevelopmentCard(DevelopmentCardType card, Bank bank) throws DoesNotOwnException, CannotPlayException
 	{
 		// Check if the player owns the given card
 		if (!cards.containsKey(card)) { throw new DoesNotOwnException(card, getColour()); }
@@ -183,7 +164,7 @@ public class ServerPlayer extends Player
 				&& cards.get(card).equals(recentBoughtCards.get(card))) { throw new CannotPlayException(); }
 
 		// Remove from inventory
-		super.playCard(card);
+		super.playCard(card, bank);
 	}
 
 	/**
@@ -196,7 +177,7 @@ public class ServerPlayer extends Player
 	public void upgradeSettlement(Node node, Bank bank) throws CannotAffordException, CannotUpgradeException
 	{
 		// Check that the move is legal
-		if (canBuildCity(node))
+		if (canBuildCity(node, bank))
 		{
 			// Otherwise build city
 			City c = new City(node, colour);

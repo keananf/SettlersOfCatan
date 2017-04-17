@@ -125,7 +125,7 @@ public class ClientGame extends Game
 			Node n = getGrid().getNode(road.getEdge().getA().getX(), road.getEdge().getA().getY());
 			Node n2 = getGrid().getNode(road.getEdge().getB().getX(), road.getEdge().getB().getY());
 			Edge e = n.findEdge(n2);
-			((ClientPlayer) players.get(c)).addRoad(e);
+			((ClientPlayer) players.get(c)).addRoad(e, false, getBank());
 		}
 
 		return grid;
@@ -316,11 +316,7 @@ public class ClientGame extends Game
 		// Spend resources if it is not a preliminary move
 		if (player.getRoads().size() >= 2)
 		{
-			if (player.getColour().equals(getPlayer().getColour()))
-			{
-				player.spendResources(Road.getRoadCost(), bank);
-			}
-			else
+			if(!player.getColour().equals(getPlayer().getColour()))
 			{
 				int existing = resources.get(player.getColour());
 				resources.put(player.getColour(), existing - Road.getRoadCost().size());
@@ -328,7 +324,9 @@ public class ClientGame extends Game
 		}
 
 		// Make new road object
-		Road r = ((ClientPlayer) players.get(player.getColour())).addRoad(newEdge);
+		boolean me = player.getColour().equals(getPlayer().getColour());
+		Road r = ((ClientPlayer) players.get(player.getColour())).addRoad(newEdge, me, getBank());
+		getBank().setAvailableRoads(player.getColour(), getBank().getAvailableRoads(player.getColour()) - 1);
 		checkLongestRoad(false);
 
 		return r;
@@ -371,6 +369,8 @@ public class ClientGame extends Game
 
 		// Updates settlement and score
 		players.get(player.getColour()).addSettlement(c);
+		getBank().setAvailableCities(player.getColour(), getBank().getAvailableCities(player.getColour()) - 1);
+		getBank().setAvailableSettlements(player.getColour(), getBank().getAvailableSettlements(player.getColour()) + 1);
 		return c;
 	}
 
@@ -413,6 +413,7 @@ public class ClientGame extends Game
 
 		// Updates settlement and score
 		players.get(player.getColour()).addSettlement(s);
+		getBank().setAvailableSettlements(player.getColour(), getBank().getAvailableSettlements(player.getColour()) - 1);
 		return s;
 	}
 
@@ -443,8 +444,7 @@ public class ClientGame extends Game
 
 		if (player.getColour().equals(getPlayer().getColour()))
 		{
-			existing = player.getDevelopmentCards().get(card);
-			player.getDevelopmentCards().put(card, existing - 1);
+			player.playCard(card, bank);
 		}
 
 		// Update largest army
@@ -481,6 +481,7 @@ public class ClientGame extends Game
 		Colour c = player.getColour();
 		int existing = boughtDevCards.getOrDefault(c, 0);
 		boughtDevCards.put(c, existing + 1);
+		getBank().subtractAvailableDevCards(DevelopmentCardType.fromProto(boughtDevCard));
 	}
 
 	/**
@@ -654,11 +655,16 @@ public class ClientGame extends Game
 	{
 		Player p = getPlayer(instigator.getId());
 
-		if (p.equals(getPlayer()))
+		if (p.getColour().equals(getPlayer().getColour()))
 		{
 			Map<ResourceType, Integer> map = new HashMap<>();
 			map.put(ResourceType.fromProto(resource), 1);
 			p.grantResources(map, bank);
+
+			if(p.getExpectedResources() > 0)
+			{
+				p.subtractExpectedResources();
+			}
 		}
 		else
 		{

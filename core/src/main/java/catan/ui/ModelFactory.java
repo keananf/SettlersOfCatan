@@ -60,6 +60,13 @@ class ModelFactory
     private static final Model SETTLEMENT = SettlersOfCatan.getAssets().getModel("settlement.g3db");
     private static final Model CITY = SettlersOfCatan.getAssets().getModel("city.g3db");
     private static final Model ROBBER = SettlersOfCatan.getAssets().getModel("robber.g3db");
+    
+ 
+    
+    
+    
+    
+    
 
 	static ModelInstance getSeaInstance()
 	{

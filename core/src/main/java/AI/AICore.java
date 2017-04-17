@@ -117,7 +117,7 @@ public abstract class AICore implements IAI, Runnable
 	@Override
 	public int rankMove(Turn turn)
 	{
-		int rank = -999;
+		int rank = 0;
 		// Switch on turn type and rank move
 
 		switch (turn.getChosenMove())
@@ -160,14 +160,13 @@ public abstract class AICore implements IAI, Runnable
 		case CHOOSERESOURCE:
 			rank = rankChosenResource(turn.getChosenResource());
 			break;
-
 			// Should rank apply for ENDTURN / ROLLDICE? Maybe sometimes..
 		case ENDTURN:
 			rank = rankEndTurn();
 			break;
 		case ROLLDICE:
-			rank = 6;
-			break;
+			return -1;
+
 
 			// ai will never chat
 		case CHATMESSAGE:

@@ -10,7 +10,7 @@ import java.util.List;
 public class TurnState extends Turn
 {
 	private List<Requests.Request.BodyCase> expectedMoves;
-	private boolean tradePhase, turnStarted, initialPhase;
+	private boolean turnStarted, initialPhase, hasTraded;
 	private int roll;
 	private CurrentTrade currentTrade;
 
@@ -32,8 +32,8 @@ public class TurnState extends Turn
 	{
 		super.reset();
 		roll = 0;
-		tradePhase = false;
 		turnStarted = false;
+		hasTraded = false;
 		currentTrade = null;
 		expectedMoves.clear();
 	}
@@ -45,23 +45,13 @@ public class TurnState extends Turn
 	{
 		super.resetInfo();
 		roll = 0;
-		tradePhase = false;
+		hasTraded = false;
 		turnStarted = false;
 	}
 
 	public List<Requests.Request.BodyCase> getExpectedMoves()
 	{
 		return expectedMoves;
-	}
-
-	public boolean isTradePhase()
-	{
-		return tradePhase;
-	}
-
-	void setTradePhase()
-	{
-		this.tradePhase = true;
 	}
 
 	boolean hasTurnStarted()
@@ -97,10 +87,19 @@ public class TurnState extends Turn
 	void setCurrentTrade(CurrentTrade currentTrade)
 	{
 		this.currentTrade = currentTrade;
+		hasTraded = true;
 	}
 
-	CurrentTrade getCurrentTrade()
+	public CurrentTrade getCurrentTrade()
 	{
 		return currentTrade;
+	}
+
+	public boolean hasTraded() {
+		return hasTraded;
+	}
+
+	public void setHasTraded(boolean hasTraded) {
+		this.hasTraded = hasTraded;
 	}
 }

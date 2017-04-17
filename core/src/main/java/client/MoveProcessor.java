@@ -3,8 +3,8 @@ package client;
 import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
+import game.Bank;
 import game.CurrentTrade;
-import game.build.Road;
 import game.players.Player;
 import grid.Edge;
 import grid.Hex;
@@ -110,7 +110,7 @@ public class MoveProcessor
 		if (getTurn().isInitialPhase()) { return possibilities; }
 
 		// If the turn hasn't started, then the player can roll the dice
-		if (!getTurn().hasTurnStarted() && getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE))
+		if (getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE))
 		{
 			possibilities.add(new Turn(Requests.Request.BodyCase.ROLLDICE));
 		}
@@ -227,22 +227,12 @@ public class MoveProcessor
 	 */
 	private boolean checkHex(Turn turn)
 	{
-		boolean val = false;
 		Hex hex = turn.getChosenHex();
-
-		// Check there is indeed a foreign settlement on one of the hexes nodes
-		for (Node n : hex.getNodes())
-		{
-			if (n.getBuilding() != null && !n.getBuilding().getPlayerColour().equals(getGame().getPlayer().getColour())
-					&& getGame().getPlayerResources(n.getBuilding().getPlayerColour()) > 0)
-			{
-				val = getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER);
-			}
-		}
 
 		// Ensure this hex doesn't already have the robber, and that the move is
 		// expected
-		return checkTurn() && !hex.equals(getGame().getGrid().getHexWithRobber()) && val && isExpected(turn);
+		return checkTurn() && !hex.equals(getGame().getGrid().getHexWithRobber())
+				&& getExpectedMoves().contains(Requests.Request.BodyCase.MOVEROBBER) && isExpected(turn);
 	}
 
 	/**
@@ -285,7 +275,7 @@ public class MoveProcessor
 				&& getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
 				&& !target.equals(getGame().getPlayer().getColour()));
 	}
-
+boolean printed = false;
 	/**
 	 * Checks that a CHOOSERESOURCE move is valid
 	 *
@@ -321,6 +311,12 @@ public class MoveProcessor
 			// If the player owns the provided card
 			if (player.getDevelopmentCards().containsKey(type) && player.getDevelopmentCards().get(type) > 0)
 			{
+				Bank bank = getGame().getBank();
+				if(type.equals(DevelopmentCardType.RoadBuilding) && bank.getAvailableRoads(player.getColour()) < 2)
+				{
+					return false;
+				}
+
 				// If you didn't just buy this card / these cards
 				Map<DevelopmentCardType, Integer> recentCards = player.getRecentBoughtDevCards();
 				int num = recentCards.getOrDefault(type, 0);
@@ -339,7 +335,8 @@ public class MoveProcessor
 		Turn turn = new Turn(Requests.Request.BodyCase.BUYDEVCARD);
 
 		// If its the user's turn, they have no expected moves, and
-		return checkTurn() && isExpected(turn) && getGame().getPlayer().canAfford(DevelopmentCardType.getCardCost());
+		return checkTurn() && isExpected(turn) && getGame().getBank().getNumAvailableDevCards() > 0 &&
+				getGame().getPlayer().canAfford(DevelopmentCardType.getCardCost());
 	}
 
 	/**
@@ -351,7 +348,8 @@ public class MoveProcessor
 	{
 		Player p = getGame().getPlayer();
 		Node node = turn.getChosenNode();
-		return checkTurn() && (isExpected(turn) && (p.canBuildSettlement(node) || p.canBuildCity(node)));
+		Bank bank = getGame().getBank();
+		return checkTurn() && (isExpected(turn) && (p.canBuildSettlement(node, bank) || p.canBuildCity(node, bank)));
 	}
 
 	/**
@@ -370,8 +368,8 @@ public class MoveProcessor
 	private boolean checkBuildRoad(Turn turn)
 	{
 		Edge edge = turn.getChosenEdge();
-		return checkTurn() && getGame().getPlayer().canBuildRoad(edge) && isExpected(turn)
-				&& (getGame().getPlayer().getRoads().size() < 2 || getGame().getPlayer().canAfford(Road.getRoadCost()));
+		Bank bank = getGame().getBank();
+		return checkTurn() && getGame().getPlayer().canBuildRoad(edge, bank) && isExpected(turn);
 	}
 
 	/**
@@ -386,7 +384,7 @@ public class MoveProcessor
 		Trade.Response response = turn.getTradeResponse();
 
 		CurrentTrade t = getTurn().getCurrentTrade();
-		if (t != null && getTurn().isTradePhase() && t.getTrade().getOther().getId() == getGame().getPlayer().getId())
+		if (t != null && t.getTrade().getOther().getId() == getGame().getPlayer().getId())
 		{
 			Trade.WithPlayer trade = t.getTrade();
 			Resource.Counts cost = trade.getOther().getId() == (getGame().getPlayer().getId()) ? trade.getWanting()
@@ -413,6 +411,9 @@ public class MoveProcessor
 	public boolean checkInitiateTrade(Turn turn)
 	{
 		Map<ResourceType, Integer> cost = new HashMap<>(), wanting = new HashMap<>();
+		boolean val = true;
+
+		if(turn.getBankTrade() == null && turn.getPlayerTrade() == null) return false;
 
 		Trade.Kind.Builder builder = Trade.Kind.newBuilder();
 		Trade.Kind initiateTrade = turn.getPlayerTrade() != null ? builder.setPlayer(turn.getPlayerTrade()).build()
@@ -423,15 +424,25 @@ public class MoveProcessor
 		case BANK:
 			cost = getGame().processResources(initiateTrade.getBank().getOffering());
 			wanting = getGame().processResources(initiateTrade.getBank().getWanting());
+			val = getGame().getBank().canAfford(wanting);
 			break;
 		case PLAYER:
 			cost = getGame().processResources(initiateTrade.getPlayer().getOffering());
 			wanting = getGame().processResources(initiateTrade.getPlayer().getWanting());
+
+			// All trades must not be "giveaways"
+			boolean validOffer = false, validReq =  false;
+			for(ResourceType r : ResourceType.values())
+			{
+				if(cost.getOrDefault(r, 0) > 0) validOffer = false;
+				if(wanting.getOrDefault(r, 0) > 0) validReq = false;
+			}
+			val = validOffer && validReq;
 			break;
 		}
 
 		// If both the player and the bank can afford the given trade
-		return isExpected(turn) && getGame().getPlayer().canAfford(cost) && getGame().getBank().canAfford(wanting);
+		return isExpected(turn) && getGame().getPlayer().canAfford(cost) && val;
 	}
 
 	/**
@@ -458,11 +469,6 @@ public class MoveProcessor
 
 		// If the move is not expected
 		else if (!getExpectedMoves().isEmpty()) return false;
-
-		// If in trade phase and the given message isn't a trade
-		if (getTurn().isTradePhase() && ((checkTurn() && !(type.equals(Requests.Request.BodyCase.INITIATETRADE)
-				|| type.equals(Requests.Request.BodyCase.ENDTURN)))
-				|| (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !checkTurn()))) { return false; }
 
 		// If it's not your turn and there are no expected moves from you
 		return !(!checkTurn() && getExpectedMoves().isEmpty());

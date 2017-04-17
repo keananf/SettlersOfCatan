@@ -1,7 +1,7 @@
 package catan.ui.hud;
 
 import catan.SettlersOfCatan;
-import catan.ui.AssMan;
+import catan.ui.AssetMan;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -20,7 +20,7 @@ class Counter extends Stack
 
 	Counter(final String type, final Supplier<Integer> countSupplier)
 	{
-		this(new Image(AssMan.getTexture(format(ICON_FMT, type))), countSupplier);
+		this(new Image(AssetMan.getTexture(format(ICON_FMT, type))), countSupplier);
 	}
 
 	Counter(final Image bground, final Supplier<Integer> countSupplier)

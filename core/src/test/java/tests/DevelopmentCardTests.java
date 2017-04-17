@@ -41,7 +41,7 @@ public class DevelopmentCardTests extends TestHelper
 	}
 
 	@Test(expected = CannotAffordException.class)
-	public void cannotBuyDevCardTest() throws CannotAffordException
+	public void cannotBuyDevCardTest() throws CannotAffordException, BankLimitException
 	{
 		p.buyDevelopmentCard(game.getBank());
 	}
@@ -50,7 +50,7 @@ public class DevelopmentCardTests extends TestHelper
 	public void cannotPlayDevCardTest() throws DoesNotOwnException, CannotPlayException
 	{
 		// This development card does not exist in the player's hand
-		p.playDevelopmentCard(c);
+		p.playDevelopmentCard(c, game.getBank());
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class DevelopmentCardTests extends TestHelper
 
 		// Play card and test it was removed
 		DevelopmentCardType key = (DevelopmentCardType) p.getDevelopmentCards().keySet().toArray()[0];
-		p.playDevelopmentCard(key);
+		p.playDevelopmentCard(key, game.getBank());
 
 		assertTrue(p.getDevelopmentCards().get(c) == 0);
 	}
@@ -428,13 +428,13 @@ public class DevelopmentCardTests extends TestHelper
 		server.processMessage();
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 
-		// Now set up move robber request, ensure robber was moved
+		// Now set up move robber request, ensure robber was moved, and no move expected
 		req.clearPlayDevCard();
 		req.setMoveRobber(hex.toHexProto().getLocation());
 		server.addMessageToProcess(
 				new ReceivedMessage(p.getColour(), Messages.Message.newBuilder().setRequest(req).build()));
 		server.processMessage();
-		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
+		assertEquals(0, server.getExpectedMoves(p.getColour()).size());
 		assertFalse(oldHex.hasRobber());
 		assertFalse(oldHex.equals(game.getGrid().getHexWithRobber()));
 
@@ -547,18 +547,20 @@ public class DevelopmentCardTests extends TestHelper
 	public void playBuildRoadsCardTest() throws Exception
 	{
 		// Set up entities
-		Edge e1 = n.getEdges().get(0), e2 = n.getEdges().get(1);
+		Edge e1 = n.getEdges().get(0);
+		Node n2 = game.getGrid().getNode(-1, 0);
+		Edge e2 = n2.getEdges().get(0);
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
 
 		// Reset recent dev card for player, so they can play this turn
 		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
 
-		// Grant resources and make settlement
+		// Grant resources and make settlements
 		p.grantResources(Settlement.getSettlementCost(), game.getBank());
-		p.grantResources(Road.getRoadCost(), game.getBank());
-		p.grantResources(Road.getRoadCost(), game.getBank());
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n);
+		makeSettlement(p, n2);
 
 		// Set up Road building card request, play the card
 		Requests.Request.Builder req = Requests.Request.newBuilder();

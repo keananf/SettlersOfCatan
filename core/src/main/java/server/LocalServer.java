@@ -16,13 +16,13 @@ public class LocalServer extends Server
 {
 	private Player localPlayer;
 
-	public LocalServer(LocalClientConnection connection)
+	public LocalServer(LocalClientConnection connection, int numAis)
 	{
 		super();
 		ServerGame.NUM_PLAYERS = 4;
 		Colour c = joinGame(connection);
 		localPlayer = game.getPlayer(c);
-		addAIs(3);
+		addAIs(numAis);
 	}
 
 	public LocalServer()

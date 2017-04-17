@@ -45,7 +45,7 @@ public class ChatBoard
 	 *
 	 * @author 140001596
 	 */
-	private class ChatMessage
+	public class ChatMessage
 	{
 		private String contents;
 		private Date date;
@@ -58,6 +58,11 @@ public class ChatBoard
 			this.date = date;
 			this.senderName = senderName;
 			this.senderColour = senderColour;
+		}
+
+		public String getMessage()
+		{
+			return String.format("%s: %s", senderColour.name(), contents);
 		}
 	}
 }

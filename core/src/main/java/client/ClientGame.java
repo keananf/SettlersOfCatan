@@ -738,4 +738,9 @@ public class ClientGame extends Game
 	{
 		return client.getTurn().getRoll();
 	}
+
+    public ChatBoard getChatBoard()
+	{
+        return chatBoard;
+    }
 }

@@ -462,6 +462,8 @@ boolean printed = false;
 		Requests.Request.BodyCase type = turn.getChosenMove();
 		if (type == null) return false;
 
+		if(type.equals(Requests.Request.BodyCase.CHATMESSAGE)) return true;
+
 		if (getExpectedMoves().contains(type))
 		{
 			return true;

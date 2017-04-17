@@ -71,6 +71,7 @@ public class HeadsUpDisplay extends Stage
 			buttons.addActor(addDiceRollButton());
 			buttons.addActor(addBankTradeButton());
 			buttons.addActor(addEndTurnButton());
+			buttons.addActor(showChatButton());
 			root.add(buttons).right();
 		}
 	}
@@ -216,6 +217,24 @@ public class HeadsUpDisplay extends Stage
 				super.clicked(event, x, y);
 				client.log("UI", "End Turn Button Clicked");
 				client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.ENDTURN));
+			}
+		});
+		return endTurnBtn;
+	}
+
+	private Actor showChatButton()
+	{
+		HeadsUpDisplay hud = this;
+		ImageButton endTurnBtn = new ImageButton(AssetMan.getDrawable("Chat.png"));
+		endTurnBtn.addListener(new ClickListener()
+		{
+			@Override
+			public void clicked(InputEvent event, float x, float y)
+			{
+				super.clicked(event, x, y);
+				client.log("UI", "Chat Button Clicked");
+				ChatDialog dialog = new ChatDialog("Chat", SettlersOfCatan.getSkin(), client);
+				dialog.show(hud);
 			}
 		});
 		return endTurnBtn;

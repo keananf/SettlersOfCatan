@@ -24,7 +24,7 @@ public class GameScreenSettings implements Screen
 	final private SettlersOfCatan game;
 	private boolean isAi;
     private int numAIs;
-    private Difficulty difficulty = Difficulty.VERYEASY;
+    private Difficulty difficulty = Difficulty.VERYEASY, opponentDifficulty = Difficulty.VERYEASY;
     private String username = "Player";
 	final  Stage ui = new Stage(new ScreenViewport());
 
@@ -178,10 +178,11 @@ public class GameScreenSettings implements Screen
 			public void clicked(InputEvent event, float x, float y){
 				super.clicked(event,x,y);
 				Client c;
-				if(isAi){
-					c= new LocalAIClient(difficulty, game, username, numAIs);
+				if(isAi)
+				{
+					c= new LocalAIClient(difficulty, opponentDifficulty, game, username, numAIs);
 				} else{
-					c=new LocalClient(game,username,numAIs);
+					c=new LocalClient(game,opponentDifficulty, username,numAIs);
 				}
 				game.startNewServer(c);
 				game.setScreen(new GameScreen(game));

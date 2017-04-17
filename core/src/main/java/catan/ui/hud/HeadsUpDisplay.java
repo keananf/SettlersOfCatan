@@ -77,13 +77,17 @@ public class HeadsUpDisplay extends Stage
 
 	private void addDevelopmentCards(Table root, SettlersOfCatan catan)
 	{
-		/*
-		 * DEVELOPMENT CARDS
-		 */
+
 		final VerticalGroup developmentCards = new VerticalGroup();
 		developmentCards.space(5f);
 		for (DevelopmentCardType type : DevelopmentCardType.values())
 		{
+			// Skip victory point cards as they will be listed under one thing
+			if(type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University)
+					|| type.equals(DevelopmentCardType.Chapel) || type.equals(DevelopmentCardType.Palace)
+					|| type.equals(DevelopmentCardType.Market))
+				continue;
+
 			ImageButton i = new ImageButton(AssetMan.getDrawable(String.format("%sCardButton.png", type.name())));
 			Actor a = new Counter(type.toString().toLowerCase(),
 					() -> me.getDevelopmentCards().getOrDefault(type, 0));
@@ -107,6 +111,28 @@ public class HeadsUpDisplay extends Stage
 			}
 			developmentCards.addActor(i);
 		}
+
+		// Add VP
+		ImageButton i = new ImageButton(AssetMan.getDrawable("VictoryPointCardButton.png"));
+		Actor a = new Counter("victory-points", () ->
+		{
+			int sum = 0;
+			for(DevelopmentCardType type : DevelopmentCardType.values())
+			{
+				// Skip non VP cards
+				if(!(type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University)
+						|| type.equals(DevelopmentCardType.Chapel) || type.equals(DevelopmentCardType.Palace)
+						|| type.equals(DevelopmentCardType.Market)))
+					continue;
+				sum += me.getDevelopmentCards().getOrDefault(type, 0);
+			}
+			return sum;
+		});
+		a.scaleBy(0.5f);
+		a.setPosition(i.getX() + i.getWidth(), i.getY());
+		i.addActor(a);
+		developmentCards.addActor(i);
+
 		root.add(developmentCards).top().expandY().left();
 
 		root.add(); // blank centre middle cell

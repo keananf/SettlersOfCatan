@@ -53,8 +53,11 @@ public class Bank
 		}
 
 		availableDevCards.put(DevelopmentCardType.Knight, 14);
-		availableDevCards.put(DevelopmentCardType.University, 2);
-		availableDevCards.put(DevelopmentCardType.Library, 3);
+		availableDevCards.put(DevelopmentCardType.University, 1);
+		availableDevCards.put(DevelopmentCardType.Chapel, 1);
+		availableDevCards.put(DevelopmentCardType.Market, 1);
+		availableDevCards.put(DevelopmentCardType.Palace, 1);
+		availableDevCards.put(DevelopmentCardType.Library, 1);
 		availableDevCards.put(DevelopmentCardType.Monopoly, 2);
 		availableDevCards.put(DevelopmentCardType.YearOfPlenty, 2);
 		availableDevCards.put(DevelopmentCardType.RoadBuilding, 2);
@@ -178,11 +181,12 @@ public class Bank
 
 	public int getNumAvailableDevCards()
 	{
-		return availableDevCards.get(DevelopmentCardType.Knight) + availableDevCards.get(DevelopmentCardType.Monopoly)
-				+ availableDevCards.get(DevelopmentCardType.YearOfPlenty)
-				+ availableDevCards.get(DevelopmentCardType.University)
-				+ availableDevCards.get(DevelopmentCardType.Library)
-				+ availableDevCards.get(DevelopmentCardType.RoadBuilding);
+		int sum = 0;
+		for(DevelopmentCardType type : DevelopmentCardType.values())
+		{
+			sum += availableDevCards.getOrDefault(type, 0);
+		}
+		return sum;
 	}
 
 	/**

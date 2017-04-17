@@ -300,7 +300,12 @@ boolean printed = false;
 	private boolean checkPlayDevCard(Turn turn)
 	{
 		DevelopmentCardType type = turn.getChosenCard();
-		if (type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University)) return false;
+		if(type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University)
+				|| type.equals(DevelopmentCardType.Chapel) || type.equals(DevelopmentCardType.Palace)
+				|| type.equals(DevelopmentCardType.Market))
+		{
+			return false;
+		}
 
 		// If player's turn and no other moves are expected, or it is the start
 		// of their turn

@@ -20,7 +20,6 @@ public abstract class MenuScreen implements Screen
 	{
 		// delegate input processing to stage
 		Gdx.input.setInputProcessor(stage);
-		stage.setDebugAll(true);
 
 		// full-window background image
 		final Image background = AssetMan.getImage("splash.jpg");
@@ -40,7 +39,8 @@ public abstract class MenuScreen implements Screen
 
 		// secondary input group
 		rootTable.row();
-		secondaryGroup.space(20);
+		secondaryGroup.padTop(40);
+		secondaryGroup.space(60);
 		rootTable.add(secondaryGroup);
 	}
 

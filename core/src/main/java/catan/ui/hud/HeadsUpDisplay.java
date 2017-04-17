@@ -68,6 +68,10 @@ public class HeadsUpDisplay extends Stage
 			buttons.addActor(showChatButton());
 			root.add(buttons).left().bottom();
 		}
+		else
+		{
+			root.add();
+		}
 
 		root.add(getResources()).bottom();
 
@@ -80,6 +84,10 @@ public class HeadsUpDisplay extends Stage
 			buttons.addActor(getBankTradeButton());
 			buttons.addActor(getEndTurnButton());
 			root.add(buttons).right().bottom();
+		}
+		else
+		{
+			root.add();
 		}
 	}
 

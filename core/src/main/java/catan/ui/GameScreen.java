@@ -19,7 +19,6 @@ import game.build.Road;
 import grid.Edge;
 import grid.Hex;
 import grid.Node;
-import grid.Port;
 
 import java.util.List;
 
@@ -50,6 +49,7 @@ public class GameScreen implements Screen
 		nodes = game.getState().getGrid().getNodesAsList();
 		edges = game.getState().getGrid().getEdgesAsList();
 		hexes = game.getState().getGrid().getHexesAsList();
+
 		// camera
 		camera = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(0f, 8f, -10f); // look from down negative z-axis
@@ -77,14 +77,6 @@ public class GameScreen implements Screen
 			{
 				persistentInstances.add(ModelFactory.getChitInstance(hex));
 			}
-		}
-
-		for (final Port port : game.getState().getGrid().getPortsAsList())
-		{
-			
-			persistentInstances.add(ModelFactory.getPortInstance(port.getX()));
-			persistentInstances.add(ModelFactory.getPortInstance(port.getY()));
-
 		}
 
 		hud.sendMessage("Welcome!");

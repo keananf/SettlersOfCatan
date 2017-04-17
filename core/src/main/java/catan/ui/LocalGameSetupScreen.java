@@ -7,12 +7,7 @@ import client.LocalClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -24,7 +19,9 @@ class LocalGameSetupScreen extends GameSetupScreen
 	{
 		super("Start new game", game);
 
-		final NumberField numberOfAIs = new NumberField("Number of AI opponents");
+		final Label numberOfAIsLabel = new Label("Number of AI opponents", SettlersOfCatan.getSkin());
+		addPrimary(numberOfAIsLabel);
+		final NumberField numberOfAIs = new NumberField("3");
 		addPrimary(numberOfAIs);
 
 		setSubmitListener(new ChangeListener()

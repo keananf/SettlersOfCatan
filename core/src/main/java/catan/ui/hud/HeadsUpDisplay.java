@@ -59,7 +59,7 @@ public class HeadsUpDisplay extends Stage
 
 		// Add player's HUD info
 		addDevelopmentCards(root, catan);
-		addPlayerBars(root);
+		addPlayerBars(root, catan);
 		addResources(root);
 
 		// Buttons Stacked on top of one another
@@ -138,7 +138,7 @@ public class HeadsUpDisplay extends Stage
 		root.add(); // blank centre middle cell
 	}
 
-	private void addPlayerBars(Table root)
+	private void addPlayerBars(Table root, SettlersOfCatan catan)
 	{
 		/*
 		 * PLAYERS
@@ -147,7 +147,7 @@ public class HeadsUpDisplay extends Stage
 		players.space(5);
 		for (Player player : state.getPlayersAsList())
 		{
-			players.addActor(new PlayerBar(player, client, this));
+			players.addActor(new PlayerBar(player, client, this, catan));
 		}
 		root.add(players).right().pad(10);
 

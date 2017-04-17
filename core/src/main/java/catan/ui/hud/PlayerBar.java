@@ -16,7 +16,7 @@ class PlayerBar extends Stack
 	final Client client;
 	private final HeadsUpDisplay hud;
 
-	PlayerBar(final Player player, final Client client, HeadsUpDisplay hud)
+	PlayerBar(final Player player, final Client client, HeadsUpDisplay hud, SettlersOfCatan catan)
 	{
 		this.client = client;
 		this.hud = hud;
@@ -36,38 +36,41 @@ class PlayerBar extends Stack
 		row.addActor(id);
 		row.addActor(name);
 
-
-		// Steal button
-		final ImageButton steal = new ImageButton(AssetMan.getDrawable("StealButton.png"));
-		row.addActor(steal);
-		steal.addListener(new ClickListener()
+		if(!catan.isAI)
 		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
+			// Steal button
+			final ImageButton steal = new ImageButton(AssetMan.getDrawable("StealButton.png"));
+			row.addActor(steal);
+			steal.addListener(new ClickListener()
 			{
-				super.clicked(event, x, y);
-				client.log("UI", "Submit Target Player Button Clicked");
-				Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
-				turn.setTarget(player.getColour());
-				client.acquireLocksAndSendTurn(turn);
-			}
-		});
-
-		// Trade button
-		final ImageButton trade = new ImageButton(AssetMan.getDrawable("Trade2.png"));
-		row.addActor(trade);
-		trade.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
+				@Override
+				public void clicked(InputEvent event, float x, float y)
+				{
+					super.clicked(event, x, y);
+					client.log("UI", "Submit Target Player Button Clicked");
+					Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+					turn.setTarget(player.getColour());
+					client.acquireLocksAndSendTurn(turn);
+				}
+			});
+	
+			// Trade button
+			final ImageButton trade = new ImageButton(AssetMan.getDrawable("Trade2.png"));
+			row.addActor(trade);
+			trade.addListener(new ClickListener()
 			{
-				super.clicked(event, x, y);
-				client.log("UI", String.format("Trade Button with %s Clicked", player.getId().name()));
+				@Override
+				public void clicked(InputEvent event, float x, float y)
+				{
+					super.clicked(event, x, y);
+					client.log("UI", String.format("Trade Button with %s Clicked", player.getId().name()));
 
-				TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(),
-						Board.Player.newBuilder().setId(player.getId()).build(), client, hud);
-				dialog.show(hud);
-			}
-		});
+					TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(),
+							Board.Player.newBuilder().setId(player.getId()).build(), client, hud);
+					dialog.show(hud);
+				}
+			});
+		}
+
 	}
 }

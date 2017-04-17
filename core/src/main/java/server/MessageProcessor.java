@@ -398,6 +398,8 @@ public class MessageProcessor
 		List<Requests.Request.BodyCase> expected = expectedMoves.get(col);
 		if (type == null || game == null) return false;
 
+		if(type.equals(Requests.Request.BodyCase.CHATMESSAGE)) return true;
+
 		if (expected.contains(type))
 		{
 			return true;

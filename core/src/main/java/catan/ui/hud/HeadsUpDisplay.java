@@ -55,23 +55,31 @@ public class HeadsUpDisplay extends Stage
 
 		root.add(getDevCards(isAI)).left();
 		root.add(/* empty cell */);
-		root.add(getPlayerBars()).right();
+		root.add(getPlayerBars(isAI)).right();
 
 		/* ******* */ root.row().expand(); /* ************************************************************************ */
 
-		root.add(/* empty cell */);
+		if (!isAI)
+		{
+			VerticalGroup buttons = new VerticalGroup();
+			buttons.space(5);
+			buttons.pad(10);
+			buttons.addActor(getBuyDevCardButton());
+			buttons.addActor(showChatButton());
+			root.add(buttons).left().bottom();
+		}
+
 		root.add(getResources()).bottom();
 
 		// Buttons Stacked on top of one another
 		if(!isAI)
 		{
 			VerticalGroup buttons = new VerticalGroup();
-			buttons.space(1f);
-			buttons.addActor(getBuyDevCardButton());
+			buttons.space(5);
+			buttons.pad(10);
 			buttons.addActor(getBankTradeButton());
 			buttons.addActor(getEndTurnButton());
-			buttons.addActor(showChatButton());
-			root.add(buttons).right();
+			root.add(buttons).right().bottom();
 		}
 	}
 
@@ -84,9 +92,7 @@ public class HeadsUpDisplay extends Stage
 					|| type.equals(DevelopmentCardType.Market))
 				continue;
 
-			ImageButton i = new ImageButton(AssetMan.getDrawable(String.format("%sCardButton.png", type.name())));
-			Actor a = new Counter(type.toString().toLowerCase(),
-
+			Counter counter = new Counter(type.toString().toLowerCase(),
 					() -> me.getDevelopmentCards().getOrDefault(type, 0));
 			developmentCards.addActor(counter);
 
@@ -106,14 +112,14 @@ public class HeadsUpDisplay extends Stage
 		return developmentCards;
 	}
 
-	private VerticalGroup getPlayerBars()
+	private VerticalGroup getPlayerBars(final boolean isAI)
 	{
 		final VerticalGroup players = new VerticalGroup();
 		players.space(5);
 		for (Player player : state.getPlayersAsList())
 		{
 			if (player != state.getPlayer()) {
-				players.addActor(new PlayerBar(player, client, this));
+				players.addActor(new PlayerBar(player, client, this, isAI));
 			}
 		}
 		return players;

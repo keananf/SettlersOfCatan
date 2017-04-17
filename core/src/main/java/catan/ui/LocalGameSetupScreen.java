@@ -4,14 +4,9 @@ import AI.LocalAIClient;
 import catan.SettlersOfCatan;
 import client.Client;
 import client.LocalClient;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import enums.Difficulty;
 
 class LocalGameSetupScreen extends GameSetupScreen
 {
@@ -32,11 +27,11 @@ class LocalGameSetupScreen extends GameSetupScreen
 				final Client client;
 				if (playerIsAI())
 				{
-					client = new LocalAIClient(getChosenDifficulty(), game, getUsername(), numberOfAIs.getNumericValue());
+					client = new LocalAIClient(getChosenDifficulty(), getChosenDifficulty(), game, getUsername(), numberOfAIs.getNumericValue());
 				}
 				else
 				{
-					client = new LocalClient(game, getUsername(), numberOfAIs.getNumericValue());
+					client = new LocalClient(game, getChosenDifficulty(), getUsername(), numberOfAIs.getNumericValue());
 				}
 				game.startNewServer(client);
 				game.setScreen(new GameScreen(game));

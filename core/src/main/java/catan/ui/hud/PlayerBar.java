@@ -15,7 +15,7 @@ import intergroup.board.Board;
 
 class PlayerBar extends Stack
 {
-	PlayerBar(final Player player, final Client client, HeadsUpDisplay hud)
+	PlayerBar(final Player player, final Client client, HeadsUpDisplay hud, final boolean isAI)
 	{
 
 		final Pixmap backgroundColor = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -33,7 +33,7 @@ class PlayerBar extends Stack
 		row.addActor(name);
 
 		// Only display buttons if the player is NOT an AI
-		if(!catan.isAI) {
+		if(!isAI) {
 			final VerticalGroup btnCol = new VerticalGroup();
 			btnCol.space(5);
 			row.addActor(btnCol);
@@ -42,9 +42,12 @@ class PlayerBar extends Stack
 			final ImageButton steal = AssetMan.getImageButton("steal.png");
 			btnCol.addActor(steal);
 			steal.addListener(new ClickListener() {
-				Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
-				turn.setTarget(player.getColour());
-				client.acquireLocksAndSendTurn(turn);
+				@Override
+				public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+					Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+					turn.setTarget(player.getColour());
+					client.acquireLocksAndSendTurn(turn);
+				}
 			});
 
 			// Trade button

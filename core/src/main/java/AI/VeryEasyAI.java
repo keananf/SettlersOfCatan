@@ -30,7 +30,7 @@ public class VeryEasyAI extends AICore
 	@Override
 	public int rankBuyDevCard()
 	{
-		return 1;
+		return 0;
 	}
 
 	@Override

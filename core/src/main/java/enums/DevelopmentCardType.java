@@ -99,6 +99,7 @@ public enum DevelopmentCardType
 				break;
 			case PALACE:
 				type = DevelopmentCardType.Palace;
+				break;
 			}
 			break;
 		}

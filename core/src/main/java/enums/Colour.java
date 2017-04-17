@@ -5,8 +5,17 @@ import intergroup.lobby.Lobby;
 
 public enum Colour
 {
-	BLUE, RED, ORANGE, WHITE;
+	BLUE(Color.BLUE),
+	RED(Color.RED),
+	ORANGE(Color.ORANGE),
+	WHITE(Color.WHITE);
 
+	public final Color displayColor;
+
+	Colour(Color displayColor)
+	{
+		this.displayColor = displayColor;
+	}
 	/**
 	 * Translate from the protobuf enum to an internally used enum
 	 *
@@ -59,23 +68,5 @@ public enum Colour
 		}
 
 		return p;
-	}
-
-	public Color getDisplayColor()
-	{
-		switch (this)
-		{
-			case BLUE:
-				return Color.BLUE;
-			case RED:
-				return Color.RED;
-			case WHITE:
-				return Color.WHITE;
-			case ORANGE:
-				return Color.ORANGE;
-			default:
-				assert(false);
-				return null;
-		}
 	}
 }

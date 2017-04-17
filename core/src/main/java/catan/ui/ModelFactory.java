@@ -16,14 +16,12 @@ import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import enums.Colour;
 import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
 import grid.Hex;
 import grid.Node;
-import grid.Port;
 
 class ModelFactory
 {
@@ -37,9 +35,9 @@ class ModelFactory
 
 	// Materials
 	private static final Material WATER = new Material(
-			TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/water.jpg"))));
+			TextureAttribute.createDiffuse(AssetMan.getTexture("water.jpg")));
 	private static final Material DIRT = new Material(
-			TextureAttribute.createDiffuse(new Texture(Gdx.files.internal("textures/dirt.png"))));
+			TextureAttribute.createDiffuse(AssetMan.getTexture("dirt.png")));
 
 	// Fonts
 	private static final BitmapFont font = new BitmapFont();
@@ -60,13 +58,6 @@ class ModelFactory
     private static final Model SETTLEMENT = SettlersOfCatan.getAssets().getModel("settlement.g3db");
     private static final Model CITY = SettlersOfCatan.getAssets().getModel("city.g3db");
     private static final Model ROBBER = SettlersOfCatan.getAssets().getModel("robber.g3db");
-    
- 
-    
-    
-    
-    
-    
 
 	static ModelInstance getSeaInstance()
 	{
@@ -158,7 +149,7 @@ class ModelFactory
 			return null;
 
 		final ModelInstance instance = new ModelInstance(model, building.getNode().get3DPos());
-		paint(instance, building.getPlayerColour().getDisplayColor());
+		paint(instance, building.getPlayerColour().displayColor);
 		instance.transform.scale(0.3f, 0.25f, 0.25f);
 		instance.transform.translate(0.2f, 2f, 0.2f);
 		return instance;
@@ -168,7 +159,7 @@ class ModelFactory
 	{
 		final Vector3 pos = road.getEdge().get3dVectorMidpoint();
 		final ModelInstance instance = new ModelInstance(ROAD, pos);
-		paint(instance, road.getPlayerColour().getDisplayColor());
+		paint(instance, road.getPlayerColour().displayColor);
 		instance.transform.scale(0.1f, 0.1f, 0.1f);
 		instance.transform.translate(0, 1.5f, 0);
 

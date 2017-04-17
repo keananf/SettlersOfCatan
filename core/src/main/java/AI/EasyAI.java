@@ -183,8 +183,15 @@ public class EasyAI extends AICore
                     	{
                     		rank =- 2;
                     	}
+			else{
+				rank++;
+			}
+				
+				
+			
                     }
-                }
+		    
+                }	
             }
 
         }else{// if settlement can be build at the end of this road

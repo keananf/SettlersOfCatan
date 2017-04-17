@@ -15,13 +15,8 @@ import intergroup.board.Board;
 
 class PlayerBar extends Stack
 {
-	final Client client;
-	private final HeadsUpDisplay hud;
-
-	PlayerBar(final Player player, final Client client, HeadsUpDisplay hud, SettlersOfCatan catan)
+	PlayerBar(final Player player, final Client client, HeadsUpDisplay hud)
 	{
-		this.client = client;
-		this.hud = hud;
 
 		final Pixmap backgroundColor = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 		backgroundColor.setColor(player.getColour().displayColor);
@@ -29,8 +24,8 @@ class PlayerBar extends Stack
 		addActor(new Image(new Texture(backgroundColor)));
 
 		final HorizontalGroup row = new HorizontalGroup();
-		row.pad(10);
-		row.space(15);
+		row.pad(5);
+		row.space(10);
 		addActor(row);
 
 		// Name and ID
@@ -38,37 +33,32 @@ class PlayerBar extends Stack
 		row.addActor(name);
 
 		// Only display buttons if the player is NOT an AI
-		if(!catan.isAI)
-		{
+		if(!catan.isAI) {
 			final VerticalGroup btnCol = new VerticalGroup();
-			btnCol.space(15);
+			btnCol.space(5);
 			row.addActor(btnCol);
 
 			// Steal button
 			final ImageButton steal = AssetMan.getImageButton("steal.png");
 			btnCol.addActor(steal);
-			steal.addListener(new ClickListener()
-			{
-				super.clicked(event, x, y);
+			steal.addListener(new ClickListener() {
 				Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
 				turn.setTarget(player.getColour());
 				client.acquireLocksAndSendTurn(turn);
-			}
-		});
+			});
 
-		// Trade button
-		final ImageButton trade = AssetMan.getImageButton("trade.png");
-		btnCol.addActor(trade);
-		trade.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				super.clicked(event, x, y);
-				TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(),
-						Board.Player.newBuilder().setId(player.getId()).build(), client, hud);
-				dialog.show(hud);
-			}
-		});
+			// Trade button
+			final ImageButton trade = AssetMan.getImageButton("trade.png");
+			btnCol.addActor(trade);
+			trade.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					super.clicked(event, x, y);
+					TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(),
+							Board.Player.newBuilder().setId(player.getId()).build(), client, hud);
+					dialog.show(hud);
+				}
+			});
+		}
 	}
 }

@@ -3,12 +3,10 @@ package catan.ui;
 import client.Client;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import grid.BoardElement;
 import grid.Edge;
@@ -131,10 +129,13 @@ class GameController implements InputProcessor
 	{
 		System.out.println(planeX + "" + planeY);
 		Hex h = getHex(planeX, planeY);
+
+		if(h == null) return null;
+
 		for (Node node : h.getNodes())
 		{
 			Vector2 coord = node.get2DPos();
-			System.out.println("NODE " + coord.x + "Node " + " " + coord.y);
+			//System.out.println("NODE " + coord.x + "Node " + " " + coord.y);
 			if (new Vector2(coord.x, 0).dst(planeX,0)<0.6 && new Vector2(coord.y,0).dst(planeY,0)<0.6) { 
 				
 				

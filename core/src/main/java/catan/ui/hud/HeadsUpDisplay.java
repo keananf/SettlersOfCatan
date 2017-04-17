@@ -24,6 +24,7 @@ public class HeadsUpDisplay extends Stage
 	private final Label messageBox;
 
 	private final Image currentTurn;
+	private final Label diceRoll;
 	private final ClientGame state;
 	private final Player me;
 
@@ -49,7 +50,10 @@ public class HeadsUpDisplay extends Stage
 		messageBox.setVisible(false);
 		root.add(messageBox).center();
 
+		// Add current turn and dice roll
 		currentTurn = new Image(AssetMan.getDrawable("icons/player.png"));
+		diceRoll = new Label("Dice: 0", SettlersOfCatan.getSkin());
+		root.add(diceRoll).right();
 		root.add(currentTurn).right();
 		root.row();
 
@@ -160,7 +164,7 @@ public class HeadsUpDisplay extends Stage
 
 	private ImageButton addDiceRollButton()
 	{
-		ImageButton diceRoll = new ImageButton(AssetMan.getDrawable("dice.png"));
+		ImageButton diceRoll = new ImageButton(AssetMan.getDrawable("rollDice.png"));
 		diceRoll.addListener(new ClickListener()
 		{
 			@Override
@@ -224,6 +228,7 @@ public class HeadsUpDisplay extends Stage
 		}
 
 		currentTurn.setColor(state.getCurrentPlayer().getDisplayColor());
+		diceRoll.setText(String.format("Dice: %d", client.getState().getDice()));
 	}
 
 	public void sendMessage(final String message)

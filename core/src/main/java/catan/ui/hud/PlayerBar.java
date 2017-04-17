@@ -25,11 +25,20 @@ class PlayerBar extends Stack
 		final HorizontalGroup row = new HorizontalGroup();
 		addActor(row);
 
-		final Label name = new Label(player.getUsername(), SettlersOfCatan.getSkin(), "username");
+		// Colour
+		final Image col = new Image(AssetMan.getTexture("icons/player.png"));
+		col.setColor(player.getColour().getDisplayColor());
+		row.addActor(col);
+
+		// Name and ID
+		final Label id = new Label("ID: " + player.getId().name(), SettlersOfCatan.getSkin(), "username");
+		final Label name = new Label("\tName:" +player.getUsername(), SettlersOfCatan.getSkin(), "username");
+		row.addActor(id);
 		row.addActor(name);
 
+
 		// Steal button
-		final ImageButton steal = new ImageButton(AssetMan.getDrawable("StealButton.png"));
+		final ImageButton steal = new ImageButton(AssetMan.getDrawable("Steal.png"));
 		row.addActor(steal);
 		steal.addListener(new ClickListener()
 		{

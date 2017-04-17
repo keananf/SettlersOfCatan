@@ -41,28 +41,14 @@ public class MainMenuScreen implements Screen
 
 		// Buttons
 		{
-			TextButton button = new TextButton("New Game", SettlersOfCatan.getSkin());
+			TextButton button = new TextButton("Start Game", SettlersOfCatan.getSkin());
 			button.addListener(new ChangeListener()
-			{
-				public void changed(ChangeEvent event, Actor actor)
-				{
-
-					GameSettingsDialog dialog = new GameSettingsDialog("Settings",
-							SettlersOfCatan.getSkin(), game);
-					dialog.show(ui);
+					{
+				public void changed(ChangeEvent event, Actor actor){
+					game.setScreen(new GameScreenSettings(game));
 				}
-			});
+					});
 			body.addActor(button);
-		}
-		{
-		TextButton button = new TextButton("Start Game", SettlersOfCatan.getSkin());
-		button.addListener(new ChangeListener()
-				{
-			public void changed(ChangeEvent event, Actor actor){
-				game.setScreen(new GameScreenSettings(game));
-			}
-				});
-		body.addActor(button);
 		}
 	
 		{

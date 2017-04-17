@@ -132,7 +132,7 @@ public class ServerGame extends Game
 				// If this road is on a port and the resource types match up
 				Port port = (Port) r.getEdge();
 				if ((port.getExchangeType().equals(offerType) || port.getExchangeType().equals(ResourceType.Generic))
-						&& offer.get(offerType) / request.get(requestType) == Port.EXCHANGE_AMOUNT)
+						&& offer.get(offerType) / request.get(requestType) == port.getExchangeAmount())
 					return processPortTrade(trade, port, requestType, offerType);
 			}
 		}
@@ -189,9 +189,11 @@ public class ServerGame extends Game
 		Map<ResourceType, Integer> offer = processResources(trade.getOffering());
 
 		// If request doesn't match what the offer should give
-		if (offer.get(offerType) % Port.EXCHANGE_AMOUNT != 0 || offer.get(offerType)
-				/ request.get(requestType) != Port.EXCHANGE_AMOUNT) { throw new IllegalPortTradeException(current.getColour(),
-						port); }
+		if (offer.get(offerType) % port.getExchangeAmount() != 0 || offer.get(offerType)
+				/ request.get(requestType) != port.getExchangeAmount())
+		{
+			throw new IllegalPortTradeException(current.getColour(),port);
+		}
 
 		// Exchange resources
 		port.exchange(current, offer, request, bank);

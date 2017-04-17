@@ -655,7 +655,7 @@ public class ClientGame extends Game
 	{
 		Player p = getPlayer(instigator.getId());
 
-		if (p.equals(getPlayer()))
+		if (p.getColour().equals(getPlayer().getColour()))
 		{
 			Map<ResourceType, Integer> map = new HashMap<>();
 			map.put(ResourceType.fromProto(resource), 1);

@@ -203,7 +203,7 @@ public class MessageProcessor
 				{
 					try
 					{
-						game.processPlayerTrade(currentTrade.getTrade());
+						game.processPlayerTrade(currentTrade.getTrade(), currentTrade.getInstigator());
 						ev.setPlayerTradeAccepted(currentTrade.getTrade());
 						ev.setInstigator(currentTrade.getInstigator());
 					}
@@ -234,7 +234,14 @@ public class MessageProcessor
 		catch (Exception e)
 		{
 			String errMsg = e.getMessage();
-			ev.setError(Events.Event.Error.newBuilder().setDescription(errMsg != null ? errMsg : "Error").build());
+			if(request.getBodyCase().equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
+			{
+				server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
+			}
+			else
+			{
+				ev.setError(Events.Event.Error.newBuilder().setDescription(errMsg != null ? errMsg : "Error").build());
+			}
 		}
 
 		// Add expected trade response for other player

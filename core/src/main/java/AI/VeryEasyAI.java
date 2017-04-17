@@ -54,7 +54,7 @@ public class VeryEasyAI extends AICore
 	@Override
 	public int rankNewRobberLocation(Hex chosenHex)
 	{
-		return 0;
+		return 3;
 	}
 
 	@Override

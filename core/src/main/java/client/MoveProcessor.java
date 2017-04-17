@@ -335,7 +335,8 @@ boolean printed = false;
 		Turn turn = new Turn(Requests.Request.BodyCase.BUYDEVCARD);
 
 		// If its the user's turn, they have no expected moves, and
-		return checkTurn() && isExpected(turn) && getGame().getPlayer().canAfford(DevelopmentCardType.getCardCost());
+		return checkTurn() && isExpected(turn) && getGame().getBank().getNumAvailableDevCards() > 0 &&
+				getGame().getPlayer().canAfford(DevelopmentCardType.getCardCost());
 	}
 
 	/**

@@ -324,7 +324,7 @@ public class TradeTests extends TestHelper
 	 * Integer(Port.RETURN_AMOUNT * 2)); }
 	 */
 
-	@Test
+	@Test(expected = IllegalTradeException.class)
 	public void emptyTradeTest() throws IllegalTradeException, BankLimitException
 	{
 		// Set up player 2
@@ -350,9 +350,6 @@ public class TradeTests extends TestHelper
 		// Exception thrown and caught in processMove
 		assertTrue(p.getNumResources() == 0 && p2.getNumResources() == 1);
 		game.processPlayerTrade(playerTrade.build(), Board.Player.newBuilder().setId(p.getId()).build());
-
-		// assert success
-		assertTrue(p.getNumResources() == 1 && p2.getNumResources() == 0);
 	}
 
 	@Test(expected = IllegalBankTradeException.class)

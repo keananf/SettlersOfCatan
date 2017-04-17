@@ -398,13 +398,16 @@ public class ClientProcessTests extends ClientTestHelper
 		 Hex h = game.getGrid().getHexWithRobber();
 		 List<Hex> hexes = h.getNodes().get(0).getHexes();
 
-		 // Set up request
-		 h = hexes.get(0).equals(h) ? hexes.get(1) : hexes.get(0);
-		 Board.Point point = h.toHexProto().getLocation();
+		 if(hexes.size() > 1)
+		 {
+			 // Set up request
+			 h = hexes.get(0).equals(h) ? hexes.get(1) : hexes.get(0);
+			 Board.Point point = h.toHexProto().getLocation();
 
-		 // Move and check
-		 clientGame.moveRobber(point);
-		 assertNotEquals(h,clientGame.getGrid().getHexWithRobber());
+			 // Move and check
+			 clientGame.moveRobber(point);
+			 assertNotEquals(h, clientGame.getGrid().getHexWithRobber());
+		 }
 	 }
 
 	@Test

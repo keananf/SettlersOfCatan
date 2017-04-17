@@ -428,6 +428,16 @@ boolean printed = false;
 			break;
 		case PLAYER:
 			cost = getGame().processResources(initiateTrade.getPlayer().getOffering());
+			wanting = getGame().processResources(initiateTrade.getPlayer().getWanting());
+
+			// All trades must not be "giveaways"
+			boolean validOffer = false, validReq =  false;
+			for(ResourceType r : ResourceType.values())
+			{
+				if(cost.getOrDefault(r, 0) > 0) validOffer = false;
+				if(wanting.getOrDefault(r, 0) > 0) validReq = false;
+			}
+			val = validOffer && validReq;
 			break;
 		}
 

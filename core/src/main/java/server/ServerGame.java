@@ -213,9 +213,15 @@ public class ServerGame extends Game
 		Colour recipientColour = getPlayer(trade.getOther().getId()).getColour();
 		ServerPlayer recipient = (ServerPlayer) players.get(recipientColour);
 		Player offerer = getPlayer(instigator.getId());
+		int offerAmount = 0, wantAmount = 0;
+		for(ResourceType r : ResourceType.values())
+		{
+			offerAmount += processResources(offer).getOrDefault(r, 0);
+			wantAmount += processResources(request).getOrDefault(r, 0);
+		}
 
-		// Both players need to be able to afford the trade
-		if (!offerer.canAfford(processResources(offer)) || !recipient.canAfford(
+		// Both players need to be able to afford the trade, and both need to be non-zero
+		if (offerAmount == 0 || wantAmount == 0 || !offerer.canAfford(processResources(offer)) || !recipient.canAfford(
 				processResources(request))) { throw new IllegalTradeException(offerer.getColour(), recipientColour); }
 
 		try

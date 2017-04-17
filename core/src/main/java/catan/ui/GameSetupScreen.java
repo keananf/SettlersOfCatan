@@ -24,19 +24,21 @@ class GameSetupScreen extends MenuScreen
 		playAsAIInput.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if (!((CheckBox) actor).isChecked())
+				if (((CheckBox) actor).isChecked())
 				{
-					aiChooser.uncheckAll();
+					aiChooser.getGroup().setVisible(true);
+				}
+				else
+				{
+					aiChooser.getGroup().setVisible(false);
 				}
 			}
 		});
 
 		// choose AI difficulty
-		final HorizontalGroup aiOptions = new HorizontalGroup();
-		addPrimary(aiOptions);
-		aiOptions.addActor(playAsAIInput);
-		aiOptions.addActor(aiChooser.getGroup());
-
+		addPrimary(playAsAIInput);
+		aiChooser.getGroup().setVisible(false);
+		addPrimary(aiChooser.getGroup());
 
 		final TextButton backBtn = new TextButton("Main Menu", SettlersOfCatan.getSkin());
 		backBtn.addListener(new ChangeListener() {

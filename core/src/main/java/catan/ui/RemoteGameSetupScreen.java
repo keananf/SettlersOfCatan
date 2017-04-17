@@ -7,9 +7,9 @@ import client.RemoteClient;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-class RemoteGameScreen extends GameSetupScreen
+class RemoteGameSetupScreen extends GameSetupScreen
 {
-	RemoteGameScreen(final SettlersOfCatan game) {
+	RemoteGameSetupScreen(final SettlersOfCatan game) {
 		super("Join remote game", game);
 
 		SaneTextField host = new SaneTextField("Host");

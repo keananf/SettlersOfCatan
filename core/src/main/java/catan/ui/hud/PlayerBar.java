@@ -20,20 +20,19 @@ class PlayerBar extends Stack
 	{
 		this.client = client;
 		this.hud = hud;
-		final Image bground = new Image(AssetMan.getTexture("playerbar.png"));
-		addActor(bground);
+
+		final Image background = new Image(AssetMan.getTexture("playerbar.png"));
+		addActor(background);
 		final HorizontalGroup row = new HorizontalGroup();
 		addActor(row);
 
 		// Colour
-		final Image col = new Image(AssetMan.getTexture("icons/player.png"));
-		col.setColor(player.getColour().getDisplayColor());
-		row.addActor(col);
+		final Image colour = new Image(AssetMan.getTexture("icons/player.png"));
+		colour.setColor(player.getColour().getDisplayColor());
+		row.addActor(colour);
 
 		// Name and ID
-		final Label id = new Label("ID: " + player.getId().name(), SettlersOfCatan.getSkin(), "username");
-		final Label name = new Label("\tName:" +player.getUsername(), SettlersOfCatan.getSkin(), "username");
-		row.addActor(id);
+		final Label name = new Label(player.getUsername(), SettlersOfCatan.getSkin(), "username");
 		row.addActor(name);
 
 		// Only display buttons if the player is NOT an AI
@@ -54,7 +53,7 @@ class PlayerBar extends Stack
 					client.acquireLocksAndSendTurn(turn);
 				}
 			});
-	
+
 			// Trade button
 			final ImageButton trade = new ImageButton(AssetMan.getDrawable("Trade2.png"));
 			row.addActor(trade);

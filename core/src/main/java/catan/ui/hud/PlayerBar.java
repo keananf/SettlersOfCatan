@@ -4,6 +4,7 @@ import catan.SettlersOfCatan;
 import catan.ui.AssetMan;
 import client.Client;
 import client.Turn;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -18,10 +19,12 @@ class PlayerBar extends Stack
 	PlayerBar(final Player player, final Client client, HeadsUpDisplay hud, final boolean isAI)
 	{
 
-		final Pixmap backgroundColor = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-		backgroundColor.setColor(player.getColour().displayColor);
-		backgroundColor.fillRectangle(0, 0, 250, 50);
-		addActor(new Image(new Texture(backgroundColor)));
+		final Pixmap background = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+		final Color color = player.getColour().displayColor;
+		color.a = 0.8f;
+		background.setColor(color);
+		background.fillRectangle(0, 0, 250, 50);
+		addActor(new Image(new Texture(background)));
 
 		final HorizontalGroup row = new HorizontalGroup();
 		row.pad(5);

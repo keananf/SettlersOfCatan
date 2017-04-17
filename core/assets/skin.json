@@ -1,7 +1,7 @@
 {
 	"com.badlogic.gdx.graphics.Color": {
 		"white": { "r": 1, "g": 1, "b": 1, "a": 1 },
-		"orangey": { "r":1, "g":0.576, "b":0, "a": 1 },
+		"orange": { "r":1, "g":0.576, "b":0, "a": 1 },
 		"black": { "r":0, "g":0, "b":0, "a": 1 }
 	},
 	"com.badlogic.gdx.graphics.g2d.BitmapFont": {
@@ -15,7 +15,7 @@
 		},
 		"title": {
 			"font": "display",
-			"fontColor": "orangey"
+			"fontColor": "orange"
 		},
 		"username": {
 			"font": "body",
@@ -30,7 +30,7 @@
 	"com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
 		"default": {
 			"font": "body",
-			"fontColor": "white"
+			"fontColor": "black"
 		}
 	}
 }

@@ -24,7 +24,7 @@ public class GameScreenSettings implements Screen
 	final private SettlersOfCatan game;
 	private boolean isAi;
     private int numAIs;
-    private Difficulty difficulty;
+    private Difficulty difficulty = Difficulty.VERYEASY;
     private String username = "Player";
 	final  Stage ui = new Stage(new ScreenViewport());
 

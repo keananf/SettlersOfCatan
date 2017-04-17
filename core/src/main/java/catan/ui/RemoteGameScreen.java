@@ -24,7 +24,7 @@ public class RemoteGameScreen implements Screen
 	final private SettlersOfCatan game;
 	final private Stage ui = new Stage(new ScreenViewport());
 	private boolean isAi;
-	private Difficulty difficulty;
+	private Difficulty difficulty = Difficulty.VERYEASY;
 
 	RemoteGameScreen(final SettlersOfCatan game)
 	{

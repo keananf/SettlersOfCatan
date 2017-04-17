@@ -28,7 +28,7 @@ public class HeadsUpDisplay extends Stage
 	private final ClientGame state;
 	private final Player me;
 
-	public HeadsUpDisplay(final Client client, SettlersOfCatan catan)
+	public HeadsUpDisplay(final Client client, final boolean isAI)
 	{
 		super(new ScreenViewport());
 		this.state = client.getState();
@@ -76,7 +76,7 @@ public class HeadsUpDisplay extends Stage
 		}
 	}
 
-	private void addDevelopmentCards(Table root, SettlersOfCatan catan)
+	private VerticalGroup getDevCards(boolean isAi)
 	{
 
 		final VerticalGroup developmentCards = new VerticalGroup();
@@ -97,7 +97,7 @@ public class HeadsUpDisplay extends Stage
 			i.addActor(a);
 
 			// Make buttons non-functional if an AI is playing
-			if(!catan.isAI)
+			if(!isAi)
 			{
 				i.addListener(new ClickListener() {
 					@Override

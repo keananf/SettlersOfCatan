@@ -59,7 +59,7 @@ public class GameScreen implements Screen
 		// input processors
 		final InputMultiplexer multiplexer = new InputMultiplexer();
 		camController = new CameraController(camera);
-		hud = new HeadsUpDisplay(game.client, game);
+		hud = new HeadsUpDisplay(game.client, game.isAI());
 		game.setHUD(hud);
 		multiplexer.addProcessor(camController);
 		multiplexer.addProcessor(hud);

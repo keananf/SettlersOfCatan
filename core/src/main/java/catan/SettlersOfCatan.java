@@ -22,7 +22,7 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	private Thread t;
 	private boolean active;
 	private HeadsUpDisplay hud;
-	public boolean isAI;
+	private boolean isAI;
 
 	public static Skin getSkin() {
 		return skin;
@@ -162,5 +162,9 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	public void showChooseResource()
 	{
 		hud.showChooseResource();
+	}
+
+	public boolean isAI() {
+		return isAI;
 	}
 }

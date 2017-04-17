@@ -20,6 +20,7 @@ public class RankNode {
         int ranking = 0;
         ResourceType[] stdResourceList = new ResourceType[]{ResourceType.Brick, ResourceType.Lumber, ResourceType.Grain, ResourceType.Wool, ResourceType.Ore};
         ArrayList<ResourceType> resourceQueue = new ArrayList<>(Arrays.asList(stdResourceList));//change to queue if wanted
+
         LinkedList<Hex> surroundingHexes  = new LinkedList<Hex>();
 
         public RankNode(Node node, Player player){
@@ -59,7 +60,7 @@ public class RankNode {
             ranking += surroundingHexes.size();
         }
 
-        public void deprioritiseResource(ResourceType r){ //TODO: NEEDS TESTING
+        public void deprioritiseResource(ResourceType r){ 
             resourceQueue.remove(r);//remove it from the front
             resourceQueue.add(r); // add it to the back
         }
@@ -109,5 +110,5 @@ public class RankNode {
             return null;
         }
 
-        //TODO: work on heuristic ranking of moves and heuristic placement of robber
+        
     }

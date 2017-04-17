@@ -35,12 +35,12 @@ public class HeadsUpDisplay extends Stage
 
 		final Table root = new Table();
 		root.setFillParent(true);
-		root.debug();
+		root.pad(10);
 		addActor(root);
 
 		// Victory points counter (includes hidden VP cards)
 		final Counter vps = new Counter("victory-points", me::getVp);
-		root.add(vps).left().top().pad(10).uniform();
+		root.add(vps).left().top().uniform();
 
 		// Outlet for miscellaneous messages
 		messageBox = new Label("", SettlersOfCatan.getSkin());
@@ -48,8 +48,8 @@ public class HeadsUpDisplay extends Stage
 		root.add(messageBox).top();
 
 		// Last dice roll
-		final Counter diceRoll = new Counter("dice-roll", state::getDice);
-		root.add(diceRoll).right().top().pad(10).uniform();
+		final Counter diceRoll = new Counter("dice", state::getDice);
+		root.add(diceRoll).right().top().uniform();
 
 		/* ******* */ root.row().expand(); /* ************************************************************************ */
 
@@ -63,7 +63,6 @@ public class HeadsUpDisplay extends Stage
 		{
 			VerticalGroup buttons = new VerticalGroup();
 			buttons.space(5);
-			buttons.pad(10);
 			buttons.addActor(getBuyDevCardButton());
 			buttons.addActor(showChatButton());
 			root.add(buttons).left().bottom();
@@ -80,7 +79,6 @@ public class HeadsUpDisplay extends Stage
 		{
 			VerticalGroup buttons = new VerticalGroup();
 			buttons.space(5);
-			buttons.pad(10);
 			buttons.addActor(getBankTradeButton());
 			buttons.addActor(getEndTurnButton());
 			root.add(buttons).right().bottom();
@@ -93,6 +91,7 @@ public class HeadsUpDisplay extends Stage
 
 	private VerticalGroup getDevCards(boolean isAi) {
 		final VerticalGroup developmentCards = new VerticalGroup();
+		developmentCards.space(5);
 		for (DevelopmentCardType type : DevelopmentCardType.values()) {
 			// Skip victory point cards as they will be listed under one thing
 			if (type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University)

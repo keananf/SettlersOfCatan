@@ -384,7 +384,7 @@ boolean printed = false;
 		Trade.Response response = turn.getTradeResponse();
 
 		CurrentTrade t = getTurn().getCurrentTrade();
-		if (t != null && getTurn().isTradePhase() && t.getTrade().getOther().getId() == getGame().getPlayer().getId())
+		if (t != null && t.getTrade().getOther().getId() == getGame().getPlayer().getId())
 		{
 			Trade.WithPlayer trade = t.getTrade();
 			Resource.Counts cost = trade.getOther().getId() == (getGame().getPlayer().getId()) ? trade.getWanting()
@@ -459,11 +459,6 @@ boolean printed = false;
 
 		// If the move is not expected
 		else if (!getExpectedMoves().isEmpty()) return false;
-
-		// If in trade phase and the given message isn't a trade
-		if (getTurn().isTradePhase() && ((checkTurn() && !(type.equals(Requests.Request.BodyCase.INITIATETRADE)
-				|| type.equals(Requests.Request.BodyCase.ENDTURN)))
-				|| (!type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE) && !checkTurn()))) { return false; }
 
 		// If it's not your turn and there are no expected moves from you
 		return !(!checkTurn() && getExpectedMoves().isEmpty());

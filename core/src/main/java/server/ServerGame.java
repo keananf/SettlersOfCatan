@@ -212,7 +212,7 @@ public class ServerGame extends Game
 		Resource.Counts request = trade.getWanting();
 		Colour recipientColour = getPlayer(trade.getOther().getId()).getColour();
 		ServerPlayer recipient = (ServerPlayer) players.get(recipientColour);
-		Player offerer = players.get(instigator.getId());
+		Player offerer = getPlayer(instigator.getId());
 
 		// Both players need to be able to afford the trade
 		if (!offerer.canAfford(processResources(offer)) || !recipient.canAfford(

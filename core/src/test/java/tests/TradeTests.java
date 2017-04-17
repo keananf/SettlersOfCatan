@@ -61,7 +61,8 @@ public class TradeTests extends TestHelper
 		// Neither player has resources, so this will fail.
 		// Exception thrown and caught in processMove
 		assertTrue(p.getNumResources() == 0 && p2.getNumResources() == 0);
-		game.processPlayerTrade(playerTrade.build());
+		Board.Player player = Board.Player.newBuilder().setId(p.getId()).build();
+		game.processPlayerTrade(playerTrade.build(), player);
 	}
 
 	@Test
@@ -98,7 +99,7 @@ public class TradeTests extends TestHelper
 		assertTrue(1 == p2.getResources().get(ResourceType.Brick) && 1 == p2.getNumResources());
 		assertTrue(0 == p2.getResources().get(ResourceType.Grain));
 
-		game.processPlayerTrade(playerTrade.build());
+		game.processPlayerTrade(playerTrade.build(), Board.Player.newBuilder().setId(p.getId()).build());
 
 		// assert resources are swapped
 		assertTrue(1 == p.getResources().get(ResourceType.Brick) && 1 == p.getNumResources());
@@ -348,7 +349,7 @@ public class TradeTests extends TestHelper
 		// Neither player has resources, so this will fail.
 		// Exception thrown and caught in processMove
 		assertTrue(p.getNumResources() == 0 && p2.getNumResources() == 1);
-		game.processPlayerTrade(playerTrade.build());
+		game.processPlayerTrade(playerTrade.build(), Board.Player.newBuilder().setId(p.getId()).build());
 
 		// assert success
 		assertTrue(p.getNumResources() == 1 && p2.getNumResources() == 0);
@@ -517,21 +518,17 @@ public class TradeTests extends TestHelper
 		assertTrue(1 == p2.getResources().get(ResourceType.Brick) && 1 == p2.getNumResources());
 		assertTrue(0 == p2.getResources().get(ResourceType.Grain));
 
-		// INITIATE TRADE PHASE
-		assertFalse(server.isTradePhase());
+		// INITIATE TRADE
 		server.addMessageToProcess(new ReceivedMessage(p.getColour(),
 				Messages.Message.newBuilder().setRequest(Requests.Request.newBuilder()
 						.setInitiateTrade(Trade.Kind.newBuilder().setPlayer(playerTrade.build()).build()).build())
 						.build()));
 		server.processMessage();
 
-		// Assert it is the trade phase, and that player red has an expected
-		// move
-		assertTrue(server.isTradePhase());
+		// Assert that player red has an expectedmove
 		assertTrue(server.getExpectedMoves(Colour.RED).get(0).equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE));
 
-		// Player red accepts. Assert trade occurred and that it is still trade
-		// phase
+		// Player red accepts. Assert trade occurred
 		server.addMessageToProcess(
 				new ReceivedMessage(p2.getColour(),
 						Messages.Message.newBuilder()
@@ -543,10 +540,9 @@ public class TradeTests extends TestHelper
 		assertTrue(0 == p.getResources().get(ResourceType.Grain));
 		assertTrue(1 == p2.getResources().get(ResourceType.Grain) && 1 == p2.getNumResources());
 		assertTrue(0 == p2.getResources().get(ResourceType.Brick));
-		assertTrue(server.isTradePhase());
 		assertTrue(server.getExpectedMoves(Colour.RED).size() == 0);
 
-		// Try to upgrade settlement. WONT WORK BECAUSE NOW IN TRADE PHASE
+		// Try to upgrade settlement.
 		int old = p.getNumResources();
 		p.grantResources(City.getCityCost(), game.getBank());
 		assertTrue(p.getNumResources() > old);
@@ -554,7 +550,7 @@ public class TradeTests extends TestHelper
 				.setRequest(Requests.Request.newBuilder().setBuildCity(n.toProto()).build()).build()));
 		server.processMessage();
 
-		assertTrue(p.getNumResources() > old);
+		assertTrue(p.getNumResources() == old);
 		assertTrue(p.getSettlements().size() == 1);
 	}
 

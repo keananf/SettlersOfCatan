@@ -25,7 +25,6 @@ import intergroup.resource.Resource;
 import intergroup.trade.Trade;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public class Server implements Runnable
 		aiThreads = new HashMap<>();
 		threads = new HashMap<>();
 		game = new ServerGame();
-		Game.NUM_PLAYERS = 2;
+		Game.NUM_PLAYERS = 4;
 
 		// Set up
 		msgProc = new MessageProcessor(game, this);
@@ -345,8 +344,8 @@ public class Server implements Runnable
 			return;
 		}
 
-		serverSocket = new ServerSocket();
-		serverSocket.bind(new InetSocketAddress("localhost", PORT));
+		serverSocket = new ServerSocket(PORT);
+
 		log("Server Setup",
 				String.format("Server started. Waiting for client(s)...%s\n", serverSocket.getInetAddress()));
 
@@ -370,7 +369,6 @@ public class Server implements Runnable
 			log("Server Setup", String.format("Player %d connected", numConnections));
 			numConnections++;
 		}
-
 		if (active && numConnections == Game.NUM_PLAYERS)
 		{
 			log("Server Setup", "All Players connected. Starting game...\n");
@@ -744,11 +742,6 @@ public class Server implements Runnable
 	public List<Request.BodyCase> getExpectedMoves(Colour colour)
 	{
 		return msgProc.getExpectedMoves(colour);
-	}
-
-	public boolean isTradePhase()
-	{
-		return msgProc.isTradePhase();
 	}
 
 	public void sleep()

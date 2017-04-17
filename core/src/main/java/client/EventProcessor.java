@@ -95,12 +95,11 @@ public class EventProcessor
 			getGame().writeMessage(ev.getChatMessage(), ev.getInstigator());
 			break;
 		case BANKTRADE:
-			getTurn().setTradePhase();
+			getTurn().setHasTraded(true);
 			getGame().processBankTrade(ev.getBankTrade(), ev.getInstigator());
 			break;
 		case PLAYERTRADEINITIATED:
 			Player p = getGame().getPlayer(ev.getPlayerTradeInitiated().getOther().getId());
-			getTurn().setTradePhase();
 			getTurn().setCurrentTrade(new CurrentTrade(ev.getPlayerTradeInitiated(), ev.getInstigator()));
 
 			if(p.getColour().equals(getGame().getPlayer().getColour()))

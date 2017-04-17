@@ -35,7 +35,6 @@ public class MessageProcessor
 	private HashMap<Colour, List<Requests.Request.BodyCase>> expectedMoves;
 	private BlockingQueue<ReceivedMessage> movesToProcess;
 	private CurrentTrade currentTrade;
-	private boolean tradePhase;
 	private ReceivedMessage lastMessage;
 	protected boolean initialPhase;
 
@@ -141,7 +140,6 @@ public class MessageProcessor
 				if (canEndTurn())
 				{
 					ev.setTurnEnded(game.changeTurn());
-					tradePhase = false;
 					currentTrade = null;
 					initialPhase = true;
 				}
@@ -369,8 +367,6 @@ public class MessageProcessor
 	private Trade.WithBank processTradeType(Trade.Kind request, Board.Player instigator)
 			throws IllegalPortTradeException, IllegalBankTradeException, CannotAffordException, BankLimitException
 	{
-		tradePhase = true;
-
 		// Switch on trade type
 		switch (request.getTradeCase())
 		{
@@ -424,13 +420,6 @@ public class MessageProcessor
 		// If the move is not expected
 		else if (!expected.isEmpty()) return false;
 
-		// If in trade phase and the given message isn't a trade
-		if (tradePhase && game.getCurrentPlayer().equals(col)
-				&& !(type.equals(Requests.Request.BodyCase.INITIATETRADE)
-						|| type.equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE)
-						|| type.equals(Requests.Request.BodyCase.ENDTURN)))
-			return false;
-
 		// If it's not your turn and there are no expected moves from you
 		return !(!game.getCurrentPlayer().equals(col) && expected.isEmpty());
 	}
@@ -473,11 +462,6 @@ public class MessageProcessor
 	public Lobby.GameWon getGameWon()
 	{
 		return game.getGameWon();
-	}
-
-	public boolean isTradePhase()
-	{
-		return tradePhase;
 	}
 
 	public void addExpectedMove(Colour c, Requests.Request.BodyCase type)

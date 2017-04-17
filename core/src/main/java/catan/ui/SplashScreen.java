@@ -10,16 +10,11 @@ public class SplashScreen extends MenuScreen
 
 	public SplashScreen(final SettlersOfCatan game)
 	{
-		super();
+		super("Settlers of Catan");
 		this.game = game;
 
-		Label title = new Label("Settlers of Catan", SettlersOfCatan.getSkin(), "title");
-		body.addActor(title);
-
 		Label prompt = new Label("Click to start", SettlersOfCatan.getSkin());
-		body.addActor(prompt);
-
-		body.setSize(body.getPrefWidth(), body.getPrefHeight());
+		addPrimary(prompt);
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class DiscardDialog extends Dialog
         VerticalGroup vert  = new VerticalGroup();
         final Table root = new Table();
         root.setFillParent(true);
-        hud.addResources(root);
+        hud.getResources();
         addActor(root);
 
         // Add label

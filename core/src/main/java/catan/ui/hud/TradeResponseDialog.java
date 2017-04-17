@@ -32,7 +32,7 @@ public class TradeResponseDialog extends Dialog
 
         VerticalGroup vert  = new VerticalGroup();
         final Table root = new Table();
-        hud.addResources(root);
+        hud.getResources();
         root.setFillParent(true);
         addActor(root);
 

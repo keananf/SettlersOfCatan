@@ -4,6 +4,8 @@ import catan.SettlersOfCatan;
 import catan.ui.AssetMan;
 import client.Client;
 import client.Turn;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -21,15 +23,15 @@ class PlayerBar extends Stack
 		this.client = client;
 		this.hud = hud;
 
-		final Image background = new Image(AssetMan.getTexture("playerbar.png"));
-		addActor(background);
-		final HorizontalGroup row = new HorizontalGroup();
-		addActor(row);
+		final Pixmap backgroundColor = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+		backgroundColor.setColor(player.getColour().displayColor);
+		backgroundColor.fillRectangle(0, 0, 250, 50);
+		addActor(new Image(new Texture(backgroundColor)));
 
-		// Colour
-		final Image colour = new Image(AssetMan.getTexture("icons/player.png"));
-		colour.setColor(player.getColour().getDisplayColor());
-		row.addActor(colour);
+		final HorizontalGroup row = new HorizontalGroup();
+		row.pad(10);
+		row.space(15);
+		addActor(row);
 
 		// Name and ID
 		final Label name = new Label(player.getUsername(), SettlersOfCatan.getSkin(), "username");
@@ -38,39 +40,35 @@ class PlayerBar extends Stack
 		// Only display buttons if the player is NOT an AI
 		if(!catan.isAI)
 		{
+			final VerticalGroup btnCol = new VerticalGroup();
+			btnCol.space(15);
+			row.addActor(btnCol);
+
 			// Steal button
-			final ImageButton steal = new ImageButton(AssetMan.getDrawable("StealButton.png"));
-			row.addActor(steal);
+			final ImageButton steal = AssetMan.getImageButton("steal.png");
+			btnCol.addActor(steal);
 			steal.addListener(new ClickListener()
 			{
-				@Override
-				public void clicked(InputEvent event, float x, float y)
-				{
-					super.clicked(event, x, y);
-					client.log("UI", "Submit Target Player Button Clicked");
-					Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
-					turn.setTarget(player.getColour());
-					client.acquireLocksAndSendTurn(turn);
-				}
-			});
+				super.clicked(event, x, y);
+				Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
+				turn.setTarget(player.getColour());
+				client.acquireLocksAndSendTurn(turn);
+			}
+		});
 
-			// Trade button
-			final ImageButton trade = new ImageButton(AssetMan.getDrawable("Trade2.png"));
-			row.addActor(trade);
-			trade.addListener(new ClickListener()
+		// Trade button
+		final ImageButton trade = AssetMan.getImageButton("trade.png");
+		btnCol.addActor(trade);
+		trade.addListener(new ClickListener()
+		{
+			@Override
+			public void clicked(InputEvent event, float x, float y)
 			{
-				@Override
-				public void clicked(InputEvent event, float x, float y)
-				{
-					super.clicked(event, x, y);
-					client.log("UI", String.format("Trade Button with %s Clicked", player.getId().name()));
-
-					TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(),
-							Board.Player.newBuilder().setId(player.getId()).build(), client, hud);
-					dialog.show(hud);
-				}
-			});
-		}
-
+				super.clicked(event, x, y);
+				TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(),
+						Board.Player.newBuilder().setId(player.getId()).build(), client, hud);
+				dialog.show(hud);
+			}
+		});
 	}
 }

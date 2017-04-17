@@ -325,8 +325,7 @@ public class EventProcessor
 				getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
 			}
 		}
-		if (ev.getInstigator().getId() == getGame().getPlayer().getId()
-				&& getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE))
+		if (getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE))
 		{
 			getExpectedMoves().remove(Requests.Request.BodyCase.ROLLDICE);
 		}

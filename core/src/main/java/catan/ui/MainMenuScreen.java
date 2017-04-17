@@ -20,7 +20,7 @@ public class MainMenuScreen extends MenuScreen
 			{
 				public void changed(ChangeEvent event, Actor actor)
 				{
-					game.setScreen(new GameScreenSettings(game));
+					game.setScreen(new LocalGameSetupScreen(game));
 				}
 			});
 			addPrimary(button);

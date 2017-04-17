@@ -18,18 +18,17 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import enums.Difficulty;
 
-public class GameScreenSettings implements Screen 
+public class LocalGameSetupScreen implements Screen
 {
-
-	final private SettlersOfCatan game;
+	private final SettlersOfCatan game;
 	private boolean isAi;
     private int numAIs;
     private Difficulty difficulty = Difficulty.VERYEASY, opponentDifficulty = Difficulty.VERYEASY;
     private String username = "Player";
-	final  Stage ui = new Stage(new ScreenViewport());
+	private final Stage ui = new Stage(new ScreenViewport());
 
 	
-	GameScreenSettings(final SettlersOfCatan game){
+	LocalGameSetupScreen(final SettlersOfCatan game){
 		this.game = game;
 
 		Gdx.input.setInputProcessor(ui);

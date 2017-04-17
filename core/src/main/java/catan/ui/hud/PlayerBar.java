@@ -38,7 +38,7 @@ class PlayerBar extends Stack
 
 
 		// Steal button
-		final ImageButton steal = new ImageButton(AssetMan.getDrawable("Steal.png"));
+		final ImageButton steal = new ImageButton(AssetMan.getDrawable("StealButton.png"));
 		row.addActor(steal);
 		steal.addListener(new ClickListener()
 		{

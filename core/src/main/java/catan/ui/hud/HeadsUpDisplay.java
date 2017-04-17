@@ -164,7 +164,7 @@ public class HeadsUpDisplay extends Stage
 
 	private ImageButton addDiceRollButton()
 	{
-		ImageButton diceRoll = new ImageButton(AssetMan.getDrawable("rollDice.png"));
+		ImageButton diceRoll = new ImageButton(AssetMan.getDrawable("dice.png"));
 		diceRoll.addListener(new ClickListener()
 		{
 			@Override

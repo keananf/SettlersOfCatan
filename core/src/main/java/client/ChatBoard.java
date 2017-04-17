@@ -25,7 +25,12 @@ public class ChatBoard
 	 */
 	public List<ChatMessage> getMessages()
 	{
-		return chatMessages;
+		List<ChatMessage> reverse = new ArrayList<ChatMessage>();
+		for(int i = chatMessages.size() - 1; i >= 0; i--)
+		{
+			reverse.add(chatMessages.get(i));
+		}
+		return reverse;
 	}
 
 	/**

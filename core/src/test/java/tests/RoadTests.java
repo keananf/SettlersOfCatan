@@ -278,20 +278,18 @@ public class RoadTests extends TestHelper
 		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n2);
 
-		// Make three roads
-		for (int i = 0; i < n.getEdges().size(); i++)
-		{
-			Edge e = n.getEdges().get(i);
-			p.grantResources(Road.getRoadCost(), game.getBank());
-
-			// Build road
-			buildRoad(p, e);
-		}
-
-		// Make another road
+		// Make two roads
 		Edge e = n2.getEdges().get(0);
-		p.grantResources(Road.getRoadCost(), game.getBank());
 		buildRoad(p, e);
+		e = n.getEdges().get(0);
+		buildRoad(p, e);
+
+		// Make two more roads
+		for (int i = 1; i < n.getEdges().size(); i++)
+		{
+			Edge e2 = n.getEdges().get(i);
+			buildRoad(p, e2);
+		}
 
 		// Ensure four were built but that this player's longest road count
 		// is only 3

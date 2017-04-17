@@ -547,18 +547,20 @@ public class DevelopmentCardTests extends TestHelper
 	public void playBuildRoadsCardTest() throws Exception
 	{
 		// Set up entities
-		Edge e1 = n.getEdges().get(0), e2 = n.getEdges().get(1);
+		Edge e1 = n.getEdges().get(0);
+		Node n2 = game.getGrid().getNode(-1, 0);
+		Edge e2 = n2.getEdges().get(0);
 		p.grantResources(DevelopmentCardType.getCardCost(), game.getBank());
 		p.buyDevelopmentCard(DevelopmentCardType.RoadBuilding, game.getBank());
 
 		// Reset recent dev card for player, so they can play this turn
 		game.getPlayer(game.getCurrentPlayer()).clearRecentDevCards();
 
-		// Grant resources and make settlement
+		// Grant resources and make settlements
 		p.grantResources(Settlement.getSettlementCost(), game.getBank());
-		p.grantResources(Road.getRoadCost(), game.getBank());
-		p.grantResources(Road.getRoadCost(), game.getBank());
+		p.grantResources(Settlement.getSettlementCost(), game.getBank());
 		makeSettlement(p, n);
+		makeSettlement(p, n2);
 
 		// Set up Road building card request, play the card
 		Requests.Request.Builder req = Requests.Request.newBuilder();

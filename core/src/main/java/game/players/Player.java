@@ -348,9 +348,22 @@ public abstract class Player
 			b = r.getEdge().getY().getBuilding();
 		}
 
+		// Does b already have an edge and is it the initial phase?
+		boolean val = true;
+		if(b != null && getRoads().size() < 2)
+		{
+			for(Edge e : b.getNode().getEdges())
+			{
+				if(e.getRoad() != null)
+				{
+					val = false;
+				}
+			}
+		}
+
 		// Check the location is valid for building and that the player can
 		// afford it
-		return bank.getAvailableRoads(colour) > 0 && ((getRoads().size() < 2 || canAfford(Road.getRoadCost())
+		return val && bank.getAvailableRoads(colour) > 0 && ((getRoads().size() < 2 || canAfford(Road.getRoadCost())
 						|| expectedRoads > 0) && (b != null || valid));
 
 	}

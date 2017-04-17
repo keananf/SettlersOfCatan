@@ -239,21 +239,40 @@ public class ClientProcessTests extends ClientTestHelper
 		processSettlementEvent(n, p.getColour());
 		processSettlementEvent(n2, p.getColour());
 
-		// Make three roads
-		for (int i = 0; i < n.getEdges().size(); i++)
-		{
-			Edge e = n.getEdges().get(i);
-			processRoadEvent(e, p.getColour());
-		}
-
-		// Make another road not connected to the first three
+		// Make two roads
 		Edge e = n2.getEdges().get(0);
 		processRoadEvent(e, p.getColour());
+		e = n.getEdges().get(0);
+		processRoadEvent(e, p.getColour());
+
+		// Make two more roads
+		for (int i = 1; i < n.getEdges().size(); i++)
+		{
+			Edge e2 = n.getEdges().get(i);
+			processRoadEvent(e2, p.getColour());
+		}
 
 		// Ensure four were built but that this player's longest road count
 		// is only 3
 		assertEquals(4, p.getRoads().size());
 		assertEquals(3, p.calcRoadLength());
+	}
+
+	@Test
+	public void initialRoadTest() throws SettlementExistsException, CannotBuildRoadException, RoadExistsException
+	{
+		Player p = clientPlayer;
+		// Make two settlements
+		processSettlementEvent(n, p.getColour());
+
+		Edge e = n.getEdges().get(0);
+		Edge e2 = n.getEdges().get(1);
+		processRoadEvent(e, p.getColour());
+		assertEquals(1, p.getRoads().size());
+
+		processRoadEvent(e2, p.getColour());
+		assertEquals(1, p.getRoads().size());
+
 	}
 
 	@Test
@@ -532,11 +551,18 @@ public class ClientProcessTests extends ClientTestHelper
 		list.add(Board.ResourceAllocation.newBuilder().setPlayer(Board.Player.newBuilder().setId(p.getId()).build())
 				.setResources(processResources(clientGame.getNewResources(dice, p.getColour()))).build());
 
-		// Move and check assertEquals(0,
+		// Move and check the dice was updated
 		clientGame.getPlayer().getNumResources();
 		clientGame.processDice(dice, list);
 		assertEquals(clientGame.getDice(), dice);
-		assertEquals(1, clientGame.getPlayer().getNumResources());
+
+		// Check resources were indeed granted
+		int expected = 0;
+		for(Hex hex : n.getHexes())
+		{
+			if(hex.getChit() == dice) expected++;
+		}
+		assertEquals(expected, clientGame.getPlayer().getNumResources());
 	}
 
 	private Resource.Counts processResources(Map<ResourceType, Integer> newResources)

@@ -164,7 +164,8 @@ public abstract class AICore implements IAI, Runnable
 			break;
 		case ROLLDICE:
 			return -1;
-
+		case GETRESOURCES:
+			return 100;
 
 			// ai will never chat
 		case CHATMESSAGE:

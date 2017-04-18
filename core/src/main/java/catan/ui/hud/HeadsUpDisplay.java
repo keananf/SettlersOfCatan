@@ -258,7 +258,7 @@ public class HeadsUpDisplay extends Stage
 
 	public void showDiscardDialog()
 	{
-		DiscardDialog dialog = new DiscardDialog(SettlersOfCatan.getSkin(), client, this);
+		Dialog dialog = new DiscardDialog(SettlersOfCatan.getSkin(), client, this);
 		dialog.show(this);
 	}
 
@@ -272,6 +272,6 @@ public class HeadsUpDisplay extends Stage
 	{
 		ChooseResourceDialog dialog = new ChooseResourceDialog(SettlersOfCatan.getSkin(), client,
 				this);
-		dialog.show(this);
+			
 	}
 }

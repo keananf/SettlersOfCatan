@@ -22,6 +22,7 @@ import game.build.Road;
 import game.build.Settlement;
 import grid.Hex;
 import grid.Node;
+import grid.Port;
 
 class ModelFactory
 {
@@ -50,12 +51,24 @@ class ModelFactory
 	private static final Model LUMBER = SettlersOfCatan.getAssets().getModel("lumber.g3db");
 	private static final Model GENERIC = SettlersOfCatan.getAssets().getModel("desert.g3db");
 	private static final Model BRICK = SettlersOfCatan.getAssets().getModel("claymine.g3db");
-	private static final Model PORT = SettlersOfCatan.getAssets().getModel("port.g3db");
+	private static final Model PORT = SettlersOfCatan.getAssets().getModel("QuestionMark.g3db");
+	private static final Model GRAINPORT=SettlersOfCatan.getAssets().getModel("GrainPort.g3db");
+	private static final Model CLAYMINEPORT=SettlersOfCatan.getAssets().getModel("ClayminePort.g3db");
+	private static final Model OREPORT=SettlersOfCatan.getAssets().getModel("OrePort.g3db");
+	private static final Model WOOLPORT=SettlersOfCatan.getAssets().getModel("woolport.g3db");
+	private static final Model TREEPORT=SettlersOfCatan.getAssets().getModel("TreePort.g3db");
+
 	private static final Model ROAD = SettlersOfCatan.getAssets().getModel("road.g3db");
 	private static final Model SETTLEMENT = SettlersOfCatan.getAssets().getModel("settlement.g3db");
 	private static final Model CITY = SettlersOfCatan.getAssets().getModel("city.g3db");
 	private static final Model ROBBER = SettlersOfCatan.getAssets().getModel("robber.g3db");
-
+	private SettlersOfCatan catan;
+	
+	/*public ModelFactory(SettlersOfCatan catan)
+	{
+		this.catan = catan;
+	}
+	*/
 	static ModelInstance getSeaInstance()
 	{
 		return new ModelInstance(SEA, ORIGIN);
@@ -137,14 +150,45 @@ class ModelFactory
 		return material;
 	}
 
-	static ModelInstance getPortInstance(final Node node) // fix
+	static ModelInstance getPortInstance(final Port port) // fix
 	{
+		final Model model;
+			switch (port.getExchangeType()){
+				
+			case Brick:
+				model = CLAYMINEPORT;
+				break;
+			case Grain:
+				model = GRAINPORT;
+				break;
+			case Lumber:
+				model = TREEPORT;
+				break;
+			case Ore:
+				model = OREPORT;
+				break;
+			case Wool:
+				model = WOOLPORT;
+				break;
+			default:
+				model = PORT;
+			
 
-		final ModelInstance instance = new ModelInstance(PORT, node.get3DPos());
-		instance.transform.scale(0.5f, 0.5f, 0.4f);
-		instance.transform.translate(0, 1.5f, 0);
-		return instance;
+			
+		}
+		
+			
+		
+			final ModelInstance instance = new ModelInstance(model, port.getX().get3DPos());
+			instance.transform.translate(0, GROUND_LEVEL, 0);
+			return instance;
 
+		
+		
+		
+		
+		
+		
 	}
 
 	static ModelInstance getBuildingInstance(final Building building)

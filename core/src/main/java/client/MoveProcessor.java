@@ -282,8 +282,6 @@ public class MoveProcessor
 				&& !target.equals(getGame().getPlayer().getColour()));
 	}
 
-	boolean printed = false;
-
 	/**
 	 * Checks that a CHOOSERESOURCE move is valid
 	 *

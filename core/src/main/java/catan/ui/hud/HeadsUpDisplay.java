@@ -73,6 +73,7 @@ public class HeadsUpDisplay extends Stage
 			buttons.space(5);
 			buttons.addActor(getBuyDevCardButton());
 			buttons.addActor(showChatButton());
+			buttons.addActor(getRequestResourcesButton());
 			root.add(buttons).left().bottom();
 		}
 		else
@@ -225,6 +226,22 @@ public class HeadsUpDisplay extends Stage
 			}
 		});
 		return bankTradeBtn;
+	}
+
+	private ImageButton getRequestResourcesButton()
+	{
+		ImageButton resourcesBtn = AssetMan.getImageButton("RequestResources.png");
+		resourcesBtn.addListener(new ClickListener()
+		{
+			@Override
+			public void clicked(InputEvent event, float x, float y)
+			{
+				super.clicked(event, x, y);
+				client.log("UI", "Resources Button Clicked");
+				client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.GETRESOURCES));
+			}
+		});
+		return resourcesBtn;
 	}
 
 	public void render(final float delta)

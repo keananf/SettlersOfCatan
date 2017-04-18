@@ -59,21 +59,13 @@ public class HeadsUpDisplay extends Stage
 		});
 		root.add(diceRoll).right().top().uniform();
 
-		/* ******* */ root.row()
-				.expand(); /*
-							 * *************************************************
-							 * * **********************
-							 */
+		root.row().expand();
 
 		root.add(getDevCards(isAI)).left();
 		root.add(/* empty cell */);
 		root.add(getPlayerBars(isAI)).right();
 
-		/* ******* */ root.row()
-				.expand(); /*
-							 * *************************************************
-							 * * **********************
-							 */
+		root.row().expand();
 
 		if (!isAI)
 		{
@@ -270,8 +262,7 @@ public class HeadsUpDisplay extends Stage
 
 	public void showChooseResource()
 	{
-		ChooseResourceDialog dialog = new ChooseResourceDialog(SettlersOfCatan.getSkin(), client,
-				this);
+		ChooseResourceDialog dialog = new ChooseResourceDialog(SettlersOfCatan.getSkin(), client, this);
 		dialog.show(this);
 	}
 }

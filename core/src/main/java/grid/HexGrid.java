@@ -263,17 +263,16 @@ public class HexGrid
 
 	/**
 	 * Swaps robbers with the current hex and the one at x, y
-	 * 
+	 *
 	 * @param hex the hex that is getting the robber
 	 */
-	public Hex swapRobbers(Hex hex)
+	public void swapRobbers(Hex hex)
 	{
 		// Swap robbers
 		hexWithRobber.toggleRobber();
 		hexWithRobber = hex;
 		hexWithRobber.toggleRobber();
 
-		return hexWithRobber;
 	}
 
 	/**
@@ -470,14 +469,7 @@ public class HexGrid
 
 	private boolean inBoundries(int x, int y)
 	{
-		Boolean terms[] = {
-				y - 2 * x <= 8,
-				2 * y - x <= 8,
-				x + y <= 8,
-				y - 2 * x >= -8,
-				2 * y - x >= -8,
-				x + y >= -8
-		};
+		Boolean terms[] = { y - 2 * x <= 8, 2 * y - x <= 8, x + y <= 8, y - 2 * x >= -8, 2 * y - x >= -8, x + y >= -8 };
 		return Stream.of(terms).reduce(true, (a, b) -> a && b);
 	}
 }

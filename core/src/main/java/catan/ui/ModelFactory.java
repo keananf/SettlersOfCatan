@@ -21,7 +21,6 @@ import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
 import grid.Hex;
-import grid.Node;
 
 class ModelFactory
 {
@@ -50,7 +49,6 @@ class ModelFactory
 	private static final Model LUMBER = SettlersOfCatan.getAssets().getModel("lumber.g3db");
 	private static final Model GENERIC = SettlersOfCatan.getAssets().getModel("desert.g3db");
 	private static final Model BRICK = SettlersOfCatan.getAssets().getModel("claymine.g3db");
-	private static final Model PORT = SettlersOfCatan.getAssets().getModel("port.g3db");
 	private static final Model ROAD = SettlersOfCatan.getAssets().getModel("road.g3db");
 	private static final Model SETTLEMENT = SettlersOfCatan.getAssets().getModel("settlement.g3db");
 	private static final Model CITY = SettlersOfCatan.getAssets().getModel("city.g3db");
@@ -137,16 +135,6 @@ class ModelFactory
 		return material;
 	}
 
-	static ModelInstance getPortInstance(final Node node) // fix
-	{
-
-		final ModelInstance instance = new ModelInstance(PORT, node.get3DPos());
-		instance.transform.scale(0.5f, 0.5f, 0.4f);
-		instance.transform.translate(0, 1.5f, 0);
-		return instance;
-
-	}
-
 	static ModelInstance getBuildingInstance(final Building building)
 	{
 		final Model model;
@@ -159,8 +147,6 @@ class ModelFactory
 
 		final ModelInstance instance = new ModelInstance(model, building.getNode().get3DPos());
 		paint(instance, building.getPlayerColour().displayColor);
-		instance.transform.scale(0.3f, 0.25f, 0.25f);
-		instance.transform.translate(0.2f, 2f, 0.2f);
 		return instance;
 	}
 
@@ -169,8 +155,6 @@ class ModelFactory
 		final Vector3 pos = road.getEdge().get3dVectorMidpoint();
 		final ModelInstance instance = new ModelInstance(ROAD, pos);
 		paint(instance, road.getPlayerColour().displayColor);
-		instance.transform.scale(0.1f, 0.1f, 0.1f);
-		instance.transform.translate(0, 1.5f, 0);
 
 		Vector2 compare = road.getEdge().getX().get2DPos();
 		Vector2 compareTo = road.getEdge().getY().get2DPos();

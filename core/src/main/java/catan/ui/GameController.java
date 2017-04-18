@@ -101,12 +101,10 @@ class GameController implements InputProcessor
 
 		if (h == null) return null;
 
-		for (Node node : h.getNodes()) {
+		for (Node node : h.getNodes())
+		{
 			Vector2 coord = node.get2DPos();
-			if (coord.dst(planeX, planeY) < 0.3)
-			{
-				return node;
-			}
+			if (coord.dst(planeX, planeY) < 0.3) { return node; }
 		}
 
 		return null;

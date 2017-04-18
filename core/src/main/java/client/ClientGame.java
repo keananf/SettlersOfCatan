@@ -84,10 +84,9 @@ public class ClientGame extends Game
 	}
 
 	/**
-	 * @return a representation of the game that is compatible with protofbufs
 	 * @param gameInfo
 	 */
-	public HexGrid processGameInfo(Lobby.GameInfo gameInfo)
+	void processGameInfo(Lobby.GameInfo gameInfo)
 			throws CannotAffordException, RoadExistsException, CannotBuildRoadException
 	{
 		HexGrid grid = setBoard(gameInfo.getGameInfo());
@@ -129,7 +128,6 @@ public class ClientGame extends Game
 			((ClientPlayer) players.get(c)).addRoad(e, false, getBank());
 		}
 
-		return grid;
 	}
 
 	/**

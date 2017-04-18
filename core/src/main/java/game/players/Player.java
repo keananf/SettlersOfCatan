@@ -564,14 +564,6 @@ public abstract class Player
 	}
 
 	/**
-	 * @param hasLargestArmy the hasLargestArmy to set
-	 */
-	public void setHasLargestArmy(boolean hasLargestArmy)
-	{
-		boolean hasLargestArmy1 = hasLargestArmy;
-	}
-
-	/**
 	 * @param hasLongestRoad the hasLongestRoad to set
 	 */
 	public void setHasLongestRoad(boolean hasLongestRoad)

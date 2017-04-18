@@ -277,11 +277,9 @@ public abstract class Game
 					playerWithLargestArmy.addVp(-2);
 				}
 				if (armySize >= MIN_ARMY_SIZE) player.addVp(2);
-				if (playerWithLargestArmy != null) playerWithLargestArmy.setHasLargestArmy(false);
 
 				largestArmy = armySize;
 				this.playerWithLargestArmy = c;
-				player.setHasLargestArmy(true);
 			}
 		}
 	}

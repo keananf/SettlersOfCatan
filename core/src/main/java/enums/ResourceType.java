@@ -8,11 +8,7 @@ import java.util.Random;
 public enum ResourceType
 {
 	Generic, // Default
-	Wool,
-	Ore,
-	Grain,
-	Brick,
-	Lumber;
+	Wool, Ore, Grain, Brick, Lumber;
 
 	private static final Random rand;
 	static

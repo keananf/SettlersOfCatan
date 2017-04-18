@@ -178,7 +178,7 @@ public class Server implements Runnable
 	 * 
 	 * @throws IOException
 	 */
-	public void processMessage() throws IOException
+	public void processMessage()
 	{
 		Event ev = null;
 		try
@@ -206,7 +206,8 @@ public class Server implements Runnable
 	 * 
 	 * @param event the event from the last processed move
 	 */
-	private void sendEvents(Event event) {
+	private void sendEvents(Event event)
+	{
 		if (event == null) return;
 
 		// Switch on message type to interpret which event(s) need to be sent
@@ -477,7 +478,7 @@ public class Server implements Runnable
 	 * Give the player one of each resource which pertains to the second built
 	 * settlement
 	 */
-	private void allocateInitialResources() throws IOException
+	private void allocateInitialResources()
 	{
 		Board.InitialResourceAllocation.Builder allocs = Board.InitialResourceAllocation.newBuilder();
 		for (Player p : game.getPlayers().values())

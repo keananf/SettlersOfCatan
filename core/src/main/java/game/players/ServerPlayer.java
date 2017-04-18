@@ -198,14 +198,14 @@ public class ServerPlayer extends Player
 	 * @param other the other player
 	 * @param resource the resource to take
 	 */
-	public ResourceType takeResource(Player other, ResourceType resource, Bank bank)
+	public void takeResource(Player other, ResourceType resource, Bank bank)
 	{
 		Map<ResourceType, Integer> grant = new HashMap<>();
 
 		// Check the specified resource can be taken
 		if (resource.equals(ResourceType.Generic) || !other.getResources().containsKey(resource)
 				|| other.getResources().get(resource) == 0)
-			return null;
+			return;
 
 		try
 		{
@@ -218,7 +218,6 @@ public class ServerPlayer extends Player
 			/* Cannot happen */
 		}
 
-		return resource;
 	}
 
 	public Settlement getSettlementForInitialResources()

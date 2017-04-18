@@ -6,31 +6,34 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import enums.Difficulty;
 
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 class DifficultyChooser extends ButtonGroup<CheckBox>
 {
 	private final BooleanSupplier enabled;
 	private final HorizontalGroup group = new HorizontalGroup();
-
+	private final HashMap<CheckBox, Difficulty> checkboxes = new HashMap<>(2);
+	
 	DifficultyChooser(final BooleanSupplier enabled)
 	{
 		this.enabled = enabled;
 		group.space(20);
 
-		final CheckBox[] options = { new CheckBox("Easy", SettlersOfCatan.getSkin()),
-				new CheckBox("Hard", SettlersOfCatan.getSkin()) };
+		checkboxes.put(new CheckBox("Easy", SettlersOfCatan.getSkin()), Difficulty.VERYEASY);
+		checkboxes.put(new CheckBox("Hard", SettlersOfCatan.getSkin()), Difficulty.EASY);
 
-		for (CheckBox cb : options)
+		for (CheckBox cb : checkboxes.keySet())
 		{
 			group.addActor(cb);
 			add(cb);
 		}
-
 	}
 
 	@Override
-	protected boolean canCheck(CheckBox button, boolean newState)
+	protected boolean canCheck(final CheckBox button, final boolean newState)
 	{
 		final boolean superRes = super.canCheck(button, newState);
 		return superRes && enabled.getAsBoolean();
@@ -38,15 +41,7 @@ class DifficultyChooser extends ButtonGroup<CheckBox>
 
 	Difficulty getChosen()
 	{
-		switch (getChecked().getText().toString())
-		{
-		case "Easy":
-			return Difficulty.VERYEASY;
-		case "Hard":
-			return Difficulty.EASY;
-		default:
-			return null;
-		}
+		return checkboxes.get(getChecked());
 	}
 
 	HorizontalGroup getGroup()

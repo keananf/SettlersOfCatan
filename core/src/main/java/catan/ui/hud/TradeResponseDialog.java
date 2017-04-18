@@ -8,110 +8,58 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import enums.ResourceType;
 import intergroup.Requests;
-import intergroup.board.Board;
 import intergroup.trade.Trade;
 
 import java.util.Map;
 
-class TradeResponseDialog extends Dialog
+class TradeResponseDialog extends SaneDialog
 {
-	private final Client client;
-	private final Map<ResourceType, Integer> offerResources;
-	private final Map<ResourceType, Integer> requestResources;
 
-	public TradeResponseDialog(Skin skin, Client client, HeadsUpDisplay hud)
+	TradeResponseDialog(Client client)
 	{
-		super("Trade", skin);
-		Board.Player sender = client.getTurn().getCurrentTrade().getInstigator();
-		this.client = client;
-		Trade.WithPlayer trade = client.getTurn().getCurrentTrade().getTrade();
-		offerResources = client.getState().processResources(trade.getOffering());
-		requestResources = client.getState().processResources(trade.getWanting());
+		super("Trade response");
 
-		VerticalGroup vert = new VerticalGroup();
-		final Table root = new Table();
-		hud.getResources();
-		root.setFillParent(true);
-		addActor(root);
+		final Trade.WithPlayer trade = client.getTurn().getCurrentTrade().getTrade();
+		final Map<ResourceType, Integer> offerResources = client.getState().processResources(trade.getOffering());
+		final Map<ResourceType, Integer> requestResources = client.getState().processResources(trade.getWanting());
 
 		// Add labels
-		HorizontalGroup horiz = new HorizontalGroup();
-		TextField offering = new TextField("Offer", SettlersOfCatan.getSkin());
-		offering.setTextFieldListener((textField, c) -> textField.setText("Offer"));
-		TextField wanting = new TextField("Request", SettlersOfCatan.getSkin());
-		wanting.setTextFieldListener((textField, c) -> textField.setText("Request"));
-		horiz.addActor(offering);
-		horiz.addActor(wanting);
-		vert.addActor(horiz);
+
+		getContentTable().add(new Label("Resource", SettlersOfCatan.getSkin(), "dialog"));
+		getContentTable().add(new Label("Offering", SettlersOfCatan.getSkin(), "dialog"));
+		getContentTable().add(new Label("Wanting", SettlersOfCatan.getSkin(), "dialog"));
 
 		for (ResourceType r : ResourceType.values())
 		{
 			if (r.equals(ResourceType.Generic)) continue;
 
-			addTradeInfo(r, vert);
+			final String offer = offerResources.getOrDefault(r, 0).toString();
+			final String request = requestResources.getOrDefault(r, 0).toString();
+
+			getContentTable().add(new Label(r.name(), SettlersOfCatan.getSkin(), "dialog"));
+			getContentTable().add(new Label(offer, SettlersOfCatan.getSkin(), "dialog"));
+			getContentTable().add(new Label(request, SettlersOfCatan.getSkin(), "dialog"));
+			getContentTable().row();
 		}
 
-		root.add(vert);
-		addConfirmButtons();
-	}
+		addButton("Accept", () -> {
+			// Set up trade
+			Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
+			turn.setTradeResponse(Trade.Response.ACCEPT);
+			turn.setPlayerTrade(client.getTurn().getCurrentTrade().getTrade());
 
-	private void addTradeInfo(ResourceType r, VerticalGroup vert)
-	{
-		HorizontalGroup horiz = new HorizontalGroup();
-		int offer = offerResources.getOrDefault(r, 0);
-		int request = requestResources.getOrDefault(r, 0);
-		String msg = offer > 0 ? String.valueOf(offer) : r.name();
-		String msg2 = request > 0 ? String.valueOf(request) : r.name();
-
-		// List trade contents for this resource
-		TextField text = new TextField(msg, SettlersOfCatan.getSkin());
-		text.setTextFieldListener((textField, c) -> textField.setText(msg));
-		TextField text2 = new TextField(msg2, SettlersOfCatan.getSkin());
-		text.setTextFieldListener((textField, c) -> textField.setText(msg2));
-		horiz.addActor(text);
-		horiz.addActor(text2);
-
-		vert.addActor(horiz);
-	}
-
-	private void addConfirmButtons()
-	{
-		TextButton button = new TextButton("Accept", SettlersOfCatan.getSkin());
-		button.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				super.clicked(event, x, y);
-
-				// Set up trade
-				Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
-				turn.setTradeResponse(Trade.Response.ACCEPT);
-				turn.setPlayerTrade(client.getTurn().getCurrentTrade().getTrade());
-
-				// Set Trade
-				client.acquireLocksAndSendTurn(turn);
-
-			}
-		});
-		TextButton cancel = new TextButton("Reject", SettlersOfCatan.getSkin());
-		cancel.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				super.clicked(event, x, y);
-
-				// Set up trade
-				Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
-				turn.setTradeResponse(Trade.Response.REJECT);
-				turn.setPlayerTrade(client.getTurn().getCurrentTrade().getTrade());
-
-				// Set Trade
-				client.acquireLocksAndSendTurn(turn);
-			}
+			// Set Trade
+			client.acquireLocksAndSendTurn(turn);
 		});
 
-		button(button, true).button(cancel, false);
+		addButton("Reject", () -> {
+			// Set up trade
+			Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
+			turn.setTradeResponse(Trade.Response.REJECT);
+			turn.setPlayerTrade(client.getTurn().getCurrentTrade().getTrade());
+
+			// Set Trade
+			client.acquireLocksAndSendTurn(turn);
+		});
 	}
 }

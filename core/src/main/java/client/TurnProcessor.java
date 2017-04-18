@@ -78,7 +78,9 @@ class TurnProcessor
 		case BUYDEVCARD:
 			request.setBuyDevCard(EmptyOuterClass.Empty.getDefaultInstance());
 			break;
-
+		case GETRESOURCES:
+			request.setGetResources(EmptyOuterClass.Empty.getDefaultInstance());
+			break;
 		case BODY_NOT_SET:
 		default:
 			return;

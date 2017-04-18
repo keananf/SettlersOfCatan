@@ -282,8 +282,6 @@ public class MoveProcessor
 				&& !target.equals(getGame().getPlayer().getColour()));
 	}
 
-	boolean printed = false;
-
 	/**
 	 * Checks that a CHOOSERESOURCE move is valid
 	 *
@@ -442,8 +440,8 @@ public class MoveProcessor
 			boolean validOffer = false, validReq = false;
 			for (ResourceType r : ResourceType.values())
 			{
-				if (cost.getOrDefault(r, 0) > 0) validOffer = false;
-				if (wanting.getOrDefault(r, 0) > 0) validReq = false;
+				if (cost.getOrDefault(r, 0) > 0) validOffer = true;
+				if (wanting.getOrDefault(r, 0) > 0) validReq = true;
 			}
 			val = validOffer && validReq;
 			break;

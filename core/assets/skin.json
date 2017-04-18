@@ -20,15 +20,27 @@
 		"username": {
 			"font": "body",
 			"fontColor": "black"
+		},
+		"dialog": {
+			"font": "body",
+			"fontColor": "black"
 		}
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
 		"default": {
 			"font": "body"
+		},
+		"dialog": {
+			"font": "body",
+			"fontColor": "black"
 		}
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
 		"default": {
+			"font": "body",
+			"fontColor": "black"
+		},
+		"dialog": {
 			"font": "body",
 			"fontColor": "black"
 		}

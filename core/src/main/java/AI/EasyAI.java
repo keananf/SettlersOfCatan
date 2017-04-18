@@ -24,123 +24,87 @@ import java.util.*;
  */
 public class EasyAI extends AICore
 {
-	public EasyAI(AIClient client)
-	{
-		super(client);
-	}
+    public EasyAI(AIClient client)
+    {
+        super(client);
+    }
 
-	@Override
-	public int rankNewSettlement(Node chosenNode)
-	{
-		RankNode rankNode = new RankNode(chosenNode, super.getPlayer());
-		rankNode.rank(false);
-		return rankNode.getRanking();
 
-	}
+    @Override
+    public int rankNewSettlement(Node chosenNode) {
+        RankNode rankNode = new RankNode(chosenNode, super.getPlayer());
+        rankNode.rank(false);
+        return rankNode.getRanking();
 
-	public int rankInitialSettlement(Node chosenNode)
-	{
-		RankNode rankNode = new RankNode(chosenNode, super.getPlayer());
-		rankNode.rank(true);
-		return rankNode.getRanking();
-	}
+    }
 
-	@Override
-	public int rankNewCity(Node chosenNode)
-	{
-		RankNode rankNode = new RankNode(chosenNode, super.getPlayer());
-		rankNode.rank(false);
-		return rankNode.getRanking();
-	}
 
-	@Override
-	public int rankNewRobberLocation(Hex chosenHex)
-	{
-		RankHex rh = new RankHex(chosenHex, getState());
-		rh.rank();
-		return rh.getRanking();
-	}
+    public int rankInitialSettlement(Node chosenNode) {
+        RankNode rankNode = new RankNode(chosenNode, super.getPlayer());
+        rankNode.rank(true);
+        return rankNode.getRanking();
+    }
 
-	@Override
-	public int rankPlayDevCard(DevelopmentCardType chosenCard)
-	{
-		int ranking = 0;
-		switch (chosenCard)
-		{
-		case Knight:
-			ranking++; // point for the opportunities available when moving
-						// rubber
-			break;
+    @Override
+    public int rankNewCity(Node chosenNode) {
+        RankNode rankNode = new RankNode(chosenNode, super.getPlayer());
+        rankNode.rank(false);
+        return rankNode.getRanking();
+    }
 
-		case RoadBuilding:
+    @Override
+    public int rankNewRobberLocation(Hex chosenHex) {
+        RankHex rh = new RankHex(chosenHex, getState());
+        rh.rank();
+        return rh.getRanking();
+    }
 
-			Player p = null;
+    @Override
+    public int rankPlayDevCard(DevelopmentCardType chosenCard) {
+        int ranking = 0;
+        switch (chosenCard) {
+            case Knight:
+                ranking++; // point for the opportunities available when moving rubber
+                break;
 
-			playerLoop: for (Colour c : getState().getPlayers().keySet())
-			{
-				if ((p = getState().getPlayer(c)).getHasLongestRoad())
-				{
+            case RoadBuilding:
 
-					// if building 2 roads gains you the longest road
-					if (p.getNumOfRoadChains() - 1 == getPlayer().calcRoadLength())
-					{
-						ranking += 2;
-						// 1 for extending road and gaining longest road & 1 for
-						// the potential access to resources
-						break playerLoop;
-					}
+                Player p = null;
 
-				}
-			}
-			break;
+                playerLoop:
+                for (Colour c : getState().getPlayers().keySet()) {
+                    if ((p = getState().getPlayer(c)).getHasLongestRoad()) {
 
-		case YearOfPlenty:
-			int differentResources = 0;
-			int diffResForCities = 0;
-			Map<ResourceType, Integer> map = getPlayer().getResources();
+                        //if building 2 roads gains you the longest road
+                        if (p.getNumOfRoadChains() - 1 == getPlayer().calcRoadLength()) {
+                            ranking += 2;
+                            //1 for extending road and gaining longest road & 1 for the potential access to resources
+                            break playerLoop;
+                        }
 
-			for (ResourceType rt : map.keySet())
-			{
-				if (map.get(rt) != 0 && rt != ResourceType.Ore)
-				{ // checking to see if I am lacking 2 or less resources to
-					// build a road or a settlement
-					differentResources++;
-				}
-				else if (map.get(rt) != 0 && (rt == ResourceType.Ore || rt == ResourceType.Grain))
-				{
-					diffResForCities++;
-				}
-			}
+                    }
+                }
+                break;
 
-			if (differentResources >= 2 || diffResForCities >= 1)
-			{
-				ranking++;
-			}
-			break;
+            case YearOfPlenty:
+                int differentResources = 0;
+                int diffResForCities = 0;
+                Map<ResourceType, Integer> map = getPlayer().getResources();
 
-		case Monopoly:
+                for (ResourceType rt : map.keySet()) {
+                    if (map.get(rt) != 0 && rt != ResourceType.Ore) { // checking to see if I am lacking 2 or less resources to build a road or a settlement
+                        differentResources++;
+                    } else if (map.get(rt) != 0 && (rt == ResourceType.Ore || rt == ResourceType.Grain)) {
+                        diffResForCities++;
+                    }
+                }
 
-			for (Port port : getState().getGrid().getPortsAsList())
-			{
-				if (port.hasSettlement())
-				{
+                if (differentResources >= 2 || diffResForCities >= 1) {
+                    ranking++;
+                }
+                break;
 
-					Road road = port.getRoad();
-					if (road != null)
-					{
-						Colour col = road.getPlayerColour();
-						if (col == getPlayer().getColour())
-						{
-							ranking++;// more efficient trading available when
-										// taking block of resource cards
-							break;
-						}
-					}
-				}
-			}
-			ranking++; // for general trading ability with resource bank
-			break;
-		}
+            case Monopoly:
 
                 for (Port port : getState().getGrid().getPortsAsList())
                 {
@@ -163,31 +127,25 @@ public class EasyAI extends AICore
                 break;
         }
 
-	@Override
-	public int rankChosenResource(ResourceType chosenResource)
-	{
-		Map<ResourceType, Integer> map = getPlayer().getResources();
+        return ++ranking;
+    }
 
-		int rank = 5;
-		int least = map.get(chosenResource);
+    @Override
+    public int rankChosenResource(ResourceType chosenResource) {
+        Map<ResourceType,Integer> map = getPlayer().getResources();
 
-		for (ResourceType rt : map.keySet())
-		{
-			if (map.get(rt) < least)
-			{
-				least = map.get(rt);
-				rank--;
-			}
-		}
-		return rank; // if many resources are more scarce than chosenResource
-						// --> low rank
-		// else--> high rank
-	}
+        int rank = 5;
+        int least = map.get(chosenResource);
 
-	@Override
-	public int rankBuyDevCard()
-	{
-		int rank = 4;
+        for (ResourceType rt: map.keySet()){
+            if(map.get(rt) < least){
+                least = map.get(rt);
+                rank--;
+            }
+        }
+        return rank; // if many resources are more scarce than chosenResource --> low rank
+        // else--> high rank
+    }
 
     @Override
     public int rankBuyDevCard()
@@ -210,33 +168,14 @@ public class EasyAI extends AICore
         Node n1 = chosenEdge.getX();
         Node n2 = chosenEdge.getY();
 
-		if (chosenEdge.hasSettlement())
-		{// if next settlement has to be 2 roads away
-			Node toAnalyse = (n1.getBuilding() != null && n1.getBuilding().getPlayerColour() == getPlayer().getColour())
-					? n2 : n1;
+        int rank = 3 ;
 
-			for (Edge e : toAnalyse.getEdges())
-			{
-				if (!e.hasSettlement())
-				{
-					rank++;
+        if(chosenEdge.hasSettlement()) {// if next settlement has to be 2 roads away
+            Node toAnalyse = (n1.getBuilding()!=null && n1.getBuilding().getPlayerColour() == getPlayer().getColour()) ? n2 : n1;
 
-					Node nxtToAnalyse = (e.getX().getBuilding() == null && !e.getX().equals(toAnalyse)) ? e.getX()
-							: e.getY();
-					if (nxtToAnalyse.getBuilding() == null)
-					{
-						rank++;
-					}
-					else if (nxtToAnalyse.getBuilding() != null)
-					{
-						if (nxtToAnalyse.getBuilding().getPlayerColour() != getPlayer().getColour())
-						{
-							rank = -2;
-						}
-						else
-						{
-							rank++;
-						}
+            for (Edge e: toAnalyse.getEdges()) {
+                if(!e.hasSettlement()){
+                    rank++;
 
                     Node nxtToAnalyse = (e.getX().getBuilding() == null && !e.getX().equals(toAnalyse) ) ? e.getX() : e.getY();
                     if(nxtToAnalyse.getBuilding() == null){
@@ -259,17 +198,15 @@ public class EasyAI extends AICore
                 }
             }
 
-		}
-		else
-		{// if settlement can be build at the end of this road
-			Node toAnalyse = (!n1.isNearRoad(getPlayer().getColour())) ? n1 : n2;
-			RankNode rn = new RankNode(toAnalyse, getPlayer());
-			rn.rank(false);
-			rank += (rn.getRanking() / 2);
-		}
+        }else{// if settlement can be build at the end of this road
+            Node toAnalyse = (!n1.isNearRoad(getPlayer().getColour())) ? n1 :n2 ;
+            RankNode rn = new RankNode(toAnalyse, getPlayer());
+            rn.rank(false);
+            rank += (rn.getRanking()/2);
+        }
 
-		return rank;
-	}
+        return rank;
+    }
 
 
 
@@ -337,25 +274,9 @@ public class EasyAI extends AICore
         return 6;
     }
 
-		return 6;
-	}
 
-	@Override
-	public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)
-	{
-		return (tradeResponse == Trade.Response.REJECT) ? 0 : -1;
-	}
 
-	// remains 0 as this is the EasyAI
-	public int rankEndTurn()
-	{
-		return 0;
-	}
 
-	@Override
-	public int rankTargetPlayer(Colour target)
-	{
-		int rank = 5;
 
     @Override
     public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)
@@ -381,7 +302,11 @@ public class EasyAI extends AICore
 
     }
 
-		Game game = client.getState();
+    // remains 0 as this is the EasyAI
+    public int rankEndTurn()
+    {
+        return 0;
+    }
 
     @Override
     public int rankTargetPlayer(Colour target)

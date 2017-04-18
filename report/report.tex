@@ -260,7 +260,8 @@ Road Placements Implementation:
 
 Then it looks at all edges connected to that node that are not the edge on which the road is to be placed. The rank increases every time it discovers that the nodes that allow for future settlements are not occupied by opponents’ settlements.If one of these nodes is occupied by an opponent it decreases the rank of the road, if it is the player’s own settlement the ranking increases as it allows you to expand quicker.
 
-
+\paragraph{Trading}
+The trading has been implemented to accept requests that offer resources that the AI is lacking or in need of. If it does offer such resources, the ranking for the trade is increased. In turn, if the trade requests resources that the AI has plenty of, the ranking is increased as it would not hurt the AI to lose these resources.
 
 
 \paragraph{Discarding and Stealing Resources}

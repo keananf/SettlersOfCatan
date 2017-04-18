@@ -206,12 +206,12 @@ Development Cards are most useful at the end of the game when you are close to w
 
 Hence the main strategy of the AI is to prioritise aspects of the game in the following order:
 
-\begin{Priorities}
+\begin{description}
 \item[$\bullet$ Roads] - prioritised throughout the game while aiding building of settlements
 \item[$\bullet$ Settlements] - prioritised at the beginning of the game while advancing
 \item[$\bullet$ Cities] - considered once advanced to a stable game state 
 \item[$\bullet$ Development Cards] - considered and prioritised at the end of the game or when an opponent is close in terms of victory points.
-\end{Priorities}
+\end{description}
 
 The AI will expand quickly by building a lot of settlements and roads quickly. This will give our AI access to better settlement locations early on (stabilising resource flow )and will increase its chances of getting the longest road. 
 
@@ -221,13 +221,13 @@ The AI will expand quickly by building a lot of settlements and roads quickly. T
 The first thing we considered was which resources we wanted our AI player to prioritize. As our main strategy is to have the AI expand quickly and build as many settlements and roads as possible. To this end, we decided to make ore our lowest priority as it is the only resource that is not used in building settlements or roads.
 While deciding how to prioritize the remaining four resources we looked at how often our AI would require those resources. We observed that bricks and lumber are required for both settlements and roads it made a lot of sense to make those our top priorities as it would allow the AI to better achieve its goal of expanding quickly. Our third priority is grain as it is a necessary resource for more items than any of the others which provides a strong case for it being the most useful resource. However, two of the three items that can be bought for grain also require ore and as we had decided to make ore our lowest priority it would not have been sensible to prioritize grain any higher. After these discussions we agreed on the following resource priority order:
 
-\begin{Resource Types}
+\begin{description}
 \item[$\bullet$ Bricks]
 \item[$\bullet$ Lumber]
 \item[$\bullet$ Grain]
 \item[$\bullet$ Wool]
 \item[$\bullet$ Ore]
-\end{Resource Types}
+\end{description}
 
 Resources Implementation:
 The prioritization of these resources is implemented using an ArrayList containing each resource type that ensures that the AI attempts to acquire each resource and does not attempt to only acquire the most favourable one. The ArrayList in the Rank Node class is modified at each call of the rank method by ranking the resource in ascending order, making the most scarce resource always a priority. Hence, because we take care of prioritization in the initial road and settlement placements of the game, we can now focus on establishing a balance between getting the right amount of resources and getting the right resources.
@@ -243,6 +243,10 @@ During the game the AI decides to prioritise the settlements that are around the
 
 
 \paragraph{Road Placements}
+\begin{figure}[hbtp]
+\includegraphics[width=\textwidth]{AIRoadPlacement}
+\caption{How road placement is determined}
+\end{figure}
 For each potential new road location there are two different situations that can apply to the location. The particular situation must be identified before the edge can be ranked properly.    
  The first situation is that the road would be connected to a node that a settlement can be built on. In this situation we decided that the most important factor would be the feasibility of the connected node as a settlement location. As such, the road is ranked based on the rank that the node would receive if it were being considered as a settlement location.
 The second situation is that the road is not connected to a node on which a settlement can be built such as an edge connected to a settlement. When ranking an edge under these conditions we first take into account what the edge is connected to. If the edge is connected to an opposing settlement then the dge gets ranked down as this would stifle expansion. If the case is that the edge is connected to one of the AI player’s settlements then the edge gets ranked up slightly as a road built on that edge would contribute to the longest road goal without harming the AI’s ability to expand.  If the edge is connected to an empty node then we rank the edge based on the road building options that it would open up to the AI player. Edges in this situation are ranked based on the number of valid settlement building options they could potentially provide.
@@ -269,12 +273,12 @@ When choosing which player to target when given the opportunity via rolling a se
 \paragraph{Playing Development Cards}
 Development cards are ranked lower than roads and settlements due to our strategy
 
-\begin{Cards}
+\begin{description}
 \item[$\bullet$ Knight Card] As The Knight Card lets you move the robber, it gets a basic ranking as moving the rubber allows the AI to get resources that help it advance quicker. Apart from that there is no other benefit of playing this card (not considering the Victory points that are automatically assigned to a player).
 \item[$\bullet$ Road Building Card] When evaluating this card we find the player with the longest road to get the length of the longest road and then compare it to our own road to see if 2 additional roads will give us the longest road award. Additionally, this card still helps us to expand quickly, hence it is ranked higher than the rank card.
 \item[$\bullet$ Year of Plenty Card] As this card allows you to get 2 resource cards it checks if the AI is in need of 2 or less resources to build a road or a settlement. If the AI has enough resources for these 2 tasks, it evaluates if we are in need of one resource card to upgrade to a city. 1 has been chosen as we do not want to waste a development card on upgrading to a city and expansion is our strategy.
 \item[$\bullet$ Monopoly Card] When the AI is given the opportunity to play the monopoly card, it checks to see if it has a settlement or city by a port which would enable it to trade the cards that it would gain at a better rate than with the resource bank. If so it ranks higher, but if it has no access to a port it gains the standard ranking of 1.
-\end{Cards}
+\end{description}
 
 Due to the group protocol, it is no longer possible to keep the remaining development cards from the other players until you play them. The victory points earned from them and some of the development cards mentioned above are added immediately to the player’s total victory points.
 

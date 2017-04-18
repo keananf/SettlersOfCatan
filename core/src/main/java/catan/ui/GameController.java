@@ -140,8 +140,8 @@ class GameController implements InputProcessor
 	private Hex findHex(float planeX, float planeY)
 	{
 		final float HEX_WIDTH = 2f;
-
-		for (Hex hex : hexes)
+		return getHex(planeX, planeY);
+		/*for (Hex hex : hexes)
 		{
 			final Vector2 pos = hex.get2DPos();
 
@@ -155,7 +155,7 @@ class GameController implements InputProcessor
 				if (planeY <= highestHeight && planeY >= lowestHeight && pos.dst(planeX, planeY) > 1) { return hex; }
 			}
 		}
-		return null;
+		return null;*/
 	}
 
 	// The InputProcessor interface requires these methods be implemented.

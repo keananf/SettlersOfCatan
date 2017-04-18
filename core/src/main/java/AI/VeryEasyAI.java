@@ -264,4 +264,10 @@ public class VeryEasyAI extends AICore
 
 		return r;
 	}
+	
+	@Override
+	public int rankEndTurn()
+	{
+		return 0;
+	}
 }

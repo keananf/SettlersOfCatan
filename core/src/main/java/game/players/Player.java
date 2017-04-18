@@ -322,7 +322,7 @@ public abstract class Player
 
 	/**
 	 * Checks to see if building a road is valid at the given edge
-	 * 
+	 * getGame()
 	 * @param edge the desired road location
 	 * @return if the desired location is valid for a road
 	 */
@@ -398,6 +398,11 @@ public abstract class Player
 
 		return bank.getAvailableCities(colour) > 0 && canAfford(City.getCityCost()) && settlements.containsKey(p)
 				&& settlements.get(p) instanceof Settlement;
+	}
+
+//TODO: canAffordDevCard
+	public boolean canAffordDevCard (DevelopmentCardType developmentCardType){
+		return false;
 	}
 
 	/**
@@ -574,6 +579,9 @@ public abstract class Player
 		}
 		else if (!this.hasLongestRoad) addVp(2);
 		this.hasLongestRoad = hasLongestRoad;
+	}
+	public boolean getHasLongestRoad(){
+		return hasLongestRoad;
 	}
 
 	public int getNumOfRoadChains()

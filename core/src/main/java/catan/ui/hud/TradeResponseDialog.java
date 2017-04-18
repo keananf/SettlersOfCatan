@@ -3,9 +3,7 @@ package catan.ui.hud;
 import catan.SettlersOfCatan;
 import client.Client;
 import client.Turn;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import enums.ResourceType;
 import intergroup.Requests;
 import intergroup.trade.Trade;
@@ -28,6 +26,7 @@ class TradeResponseDialog extends SaneDialog
 		getContentTable().add(new Label("Resource", SettlersOfCatan.getSkin(), "dialog"));
 		getContentTable().add(new Label("Offering", SettlersOfCatan.getSkin(), "dialog"));
 		getContentTable().add(new Label("Wanting", SettlersOfCatan.getSkin(), "dialog"));
+		getContentTable().row();
 
 		for (ResourceType r : ResourceType.values())
 		{

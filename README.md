@@ -3,9 +3,17 @@ Settlers of Catan Implementation in Java using LibGDX
 
 ## Building
 ### Linux and macOS
-To build and start the game, navigate to the project directory and run the following command:
+To build the game, navigate to the project directory and run the following command:
 
 `./gradlew build`
+
+## Running
+### Linux and macOS
+To run the game, navigate to the project directory and run the command:
+
+`./gradlew run`
+
+If the game has not already been built, this command will also build the game.
 
 ## Hosting a Game
 Clicking "Start Game" will bring up the menu for hosting new games.

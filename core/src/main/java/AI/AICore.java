@@ -12,13 +12,11 @@ import java.util.*;
 
 public abstract class AICore implements IAI, Runnable
 {
-	protected AIClient client;
-	private Random rand;
-
+	protected final AIClient client;
+	private final Random rand;
 	private boolean waiting;
 	private ArrayList<Events.Event.TypeCase> expectedEventPossibilities;
-	private Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> expectedEvents;
-
+	private final Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> expectedEvents;
 
 	public AICore(AIClient client)
 	{
@@ -200,7 +198,7 @@ public abstract class AICore implements IAI, Runnable
 	/**
 	 * @return a list of Turn objects, entailing move type and additional info.
 	 */
-	protected List<Turn> getMoves()
+	private List<Turn> getMoves()
 	{
 		List<Turn> options = client.getMoveProcessor().getPossibleMoves();
 
@@ -248,17 +246,17 @@ public abstract class AICore implements IAI, Runnable
 		return evs;
 	}
 
-	protected Player getPlayer()
+	Player getPlayer()
 	{
 		return client.getPlayer();
 	}
 
-	protected ClientGame getState()
+	ClientGame getState()
 	{
 		return client.getState();
 	}
 
-	public TurnState getTurn()
+	TurnState getTurn()
 	{
 		return client.getTurn();
 	}

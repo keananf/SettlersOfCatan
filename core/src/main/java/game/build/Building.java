@@ -10,16 +10,16 @@ import grid.Node;
  */
 public abstract class Building
 {
-	protected Node node;
+	Node node;
 	private Colour playerColour;
 
-	public Building(Node node, Colour colour)
+	Building(Node node, Colour colour)
 	{
 		this.node = node;
 		this.playerColour = colour;
 	}
 
-	protected Building()
+	Building()
 	{}
 
 	/**

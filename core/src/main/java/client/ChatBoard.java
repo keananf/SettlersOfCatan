@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ChatBoard
 {
-	private List<ChatMessage> chatMessages;
+	private final List<ChatMessage> chatMessages;
 
 	public ChatBoard()
 	{
@@ -25,7 +25,12 @@ public class ChatBoard
 	 */
 	public List<ChatMessage> getMessages()
 	{
-		return chatMessages;
+		List<ChatMessage> reverse = new ArrayList<>();
+		for (int i = chatMessages.size() - 1; i >= 0; i--)
+		{
+			reverse.add(chatMessages.get(i));
+		}
+		return reverse;
 	}
 
 	/**
@@ -45,12 +50,12 @@ public class ChatBoard
 	 *
 	 * @author 140001596
 	 */
-	private class ChatMessage
+	public class ChatMessage
 	{
-		private String contents;
-		private Date date;
-		private String senderName;
-		private Colour senderColour;
+		private final String contents;
+		private final Date date;
+		private final String senderName;
+		private final Colour senderColour;
 
 		private ChatMessage(String contents, Date date, String senderName, Colour senderColour)
 		{
@@ -58,6 +63,11 @@ public class ChatBoard
 			this.date = date;
 			this.senderName = senderName;
 			this.senderColour = senderColour;
+		}
+
+		public String getMessage()
+		{
+			return String.format("%s: %s", senderColour.name(), contents);
 		}
 	}
 }

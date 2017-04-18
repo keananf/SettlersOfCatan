@@ -33,7 +33,7 @@ public class Port extends Edge
 	 * @param availablePorts a list of total available ports
 	 * @return
 	 */
-	public static Port makePort(Node node, Node neighbour, List<Port> availablePorts)
+	private static Port makePort(Node node, Node neighbour, List<Port> availablePorts)
 	{
 		// Allocate port
 		Random rand = new Random();
@@ -183,8 +183,8 @@ public class Port extends Edge
 		return exchangeAmount;
 	}
 
-    public void setExchangeAmount(int exchangeAmount)
+	public void setExchangeAmount(int exchangeAmount)
 	{
-        this.exchangeAmount = exchangeAmount;
-    }
+		this.exchangeAmount = exchangeAmount;
+	}
 }

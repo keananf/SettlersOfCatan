@@ -6,6 +6,7 @@ import "board/board.proto";
 import "resource/resource.proto";
 import "lobby/lobby.proto";
 import "trade/trade.proto";
+import "requests.proto";
 
 enum ErrorCause {
   UNKNOWN = 0;
@@ -37,6 +38,7 @@ message Event {
     lobby.GameInfo gameInfo = 24;
     board.MultiSteal monopolyResolution = 20;
     string chatMessage = 21;
+    Resources allResources = 25;
   }
 
   message Error {
@@ -45,4 +47,7 @@ message Event {
   }
 }
 
-
+message Resources {
+    board.ResourceAllocation alloc = 1;
+    bool discard = 2;
+}

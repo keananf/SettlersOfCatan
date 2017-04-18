@@ -50,7 +50,7 @@ public class ClientProcessTests extends ClientTestHelper
 
 		for (Edge e : actualBoard.getEdgesAsList())
 		{
-			if(e instanceof Port) continue;
+			if (e instanceof Port) continue;
 			assertTrue(processedBoard.getEdgesAsList().contains(e));
 		}
 		for (Port p : actualBoard.getPortsAsList())
@@ -412,23 +412,23 @@ public class ClientProcessTests extends ClientTestHelper
 		assertEquals(2, p.getVp());
 	}
 
-	 @Test
-	 public void moveRobberTest() throws InvalidCoordinatesException
-	 {
-		 Hex h = game.getGrid().getHexWithRobber();
-		 List<Hex> hexes = h.getNodes().get(0).getHexes();
+	@Test
+	public void moveRobberTest() throws InvalidCoordinatesException
+	{
+		Hex h = game.getGrid().getHexWithRobber();
+		List<Hex> hexes = h.getNodes().get(0).getHexes();
 
-		 if(hexes.size() > 1)
-		 {
-			 // Set up request
-			 h = hexes.get(0).equals(h) ? hexes.get(1) : hexes.get(0);
-			 Board.Point point = h.toHexProto().getLocation();
+		if (hexes.size() > 1)
+		{
+			// Set up request
+			h = hexes.get(0).equals(h) ? hexes.get(1) : hexes.get(0);
+			Board.Point point = h.toHexProto().getLocation();
 
-			 // Move and check
-			 clientGame.moveRobber(point);
-			 assertNotEquals(h, clientGame.getGrid().getHexWithRobber());
-		 }
-	 }
+			// Move and check
+			clientGame.moveRobber(point);
+			assertNotEquals(h, clientGame.getGrid().getHexWithRobber());
+		}
+	}
 
 	@Test
 	public void stealTest() throws CannotAffordException, BankLimitException
@@ -559,11 +559,11 @@ public class ClientProcessTests extends ClientTestHelper
 
 		// Check resources were indeed granted
 		int expected = 0;
-		//System.out.println("Dice: " + dice);
-		for(Hex hex : n.getHexes())
+		// System.out.println("Dice: " + dice);
+		for (Hex hex : n.getHexes())
 		{
-			//System.out.println(hex.getChit());
-			if(hex.getChit() == dice) expected++;
+			// System.out.println(hex.getChit());
+			if (hex.getChit() == dice) expected++;
 		}
 		assertEquals(expected, clientGame.getPlayer().getNumResources());
 	}

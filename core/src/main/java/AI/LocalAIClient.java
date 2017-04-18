@@ -13,12 +13,15 @@ import server.Server;
 public class LocalAIClient extends AIClient
 {
 	private final int numAis;
+	private final Difficulty opponentDifficulty;
 	private Server server;
 	private Thread serverThread;
 
-	public LocalAIClient(Difficulty difficulty, SettlersOfCatan game, String userName, int numAIs)
+	public LocalAIClient(Difficulty difficulty, Difficulty opponentDifficulty, SettlersOfCatan game, String userName,
+			int numAIs)
 	{
 		super(difficulty, userName, game);
+		this.opponentDifficulty = opponentDifficulty;
 		this.numAis = numAIs;
 		setUpConnection();
 	}
@@ -29,7 +32,7 @@ public class LocalAIClient extends AIClient
 		LocalServerConnection conn = new LocalServerConnection();
 		conn.setConn(new LocalClientConnection(conn));
 		setUp(conn);
-		server = new LocalServer(conn.getConn(), numAis);
+		server = new LocalServer(conn.getConn(), numAis, opponentDifficulty);
 		serverThread = new Thread(server);
 		serverThread.start();
 	}

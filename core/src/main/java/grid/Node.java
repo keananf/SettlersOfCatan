@@ -15,7 +15,7 @@ import java.util.List;
 public class Node extends GridElement
 {
 	private List<Hex> hexes;
-	private List<Edge> edges;
+	private final List<Edge> edges;
 	private Building building;
 
 	public Node(int x, int y)

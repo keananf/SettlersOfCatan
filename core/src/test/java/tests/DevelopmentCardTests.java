@@ -428,7 +428,8 @@ public class DevelopmentCardTests extends TestHelper
 		server.processMessage();
 		assertEquals(1, server.getExpectedMoves(p.getColour()).size());
 
-		// Now set up move robber request, ensure robber was moved, and no move expected
+		// Now set up move robber request, ensure robber was moved, and no move
+		// expected
 		req.clearPlayDevCard();
 		req.setMoveRobber(hex.toHexProto().getLocation());
 		server.addMessageToProcess(

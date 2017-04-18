@@ -6,7 +6,7 @@ import catan.SettlersOfCatan;
 
 public class DesktopLauncher {
 	private static final int INITIAL_WINDOW_WIDTH = 1024;
-	private static final int INITIAL_WINDOW_HEIGHT = 576;
+	private static final int INITIAL_WINDOW_HEIGHT = 620;
 
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();

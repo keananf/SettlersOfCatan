@@ -3,6 +3,7 @@ package client;
 import catan.SettlersOfCatan;
 import connection.LocalClientConnection;
 import connection.LocalServerConnection;
+import enums.Difficulty;
 import server.LocalServer;
 import server.Server;
 
@@ -15,12 +16,14 @@ public class LocalClient extends Client
 {
 	private final int numAis;
 	private Server server;
+	private final Difficulty opponentDifficulty;
 	private Thread serverThread;
 
-	public LocalClient(SettlersOfCatan game, String userName, int numAIs)
+	public LocalClient(SettlersOfCatan game, Difficulty opponentDifficulty, String userName, int numAIs)
 	{
 		super(game, userName);
 		this.numAis = numAIs;
+		this.opponentDifficulty = opponentDifficulty;
 		setUpConnection();
 	}
 
@@ -29,7 +32,7 @@ public class LocalClient extends Client
 		LocalServerConnection conn = new LocalServerConnection();
 		conn.setConn(new LocalClientConnection(conn));
 		setUp(conn);
-		server = new LocalServer(conn.getConn(), numAis);
+		server = new LocalServer(conn.getConn(), numAis, opponentDifficulty);
 		serverThread = new Thread(server);
 		serverThread.start();
 	}

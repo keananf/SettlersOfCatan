@@ -13,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class LocalClientConnection implements IClientConnection
 {
 	private LocalServerConnection conn;
-	protected BlockingQueue<Messages.Message> fromClient;
+	BlockingQueue<Messages.Message> fromClient;
 
 	public LocalClientConnection(LocalServerConnection conn)
 	{

@@ -11,7 +11,7 @@ import intergroup.trade.Trade;
 
 import java.util.List;
 
-public interface IAI
+interface IAI
 {
 	/**
 	 * Rank an individual turn based upon its assigned values

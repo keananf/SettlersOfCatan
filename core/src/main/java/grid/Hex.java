@@ -18,7 +18,7 @@ public class Hex extends GridElement
 	private ResourceType resource;
 	private int diceRoll;
 	private boolean hasRobber;
-	private List<Node> nodes;
+	private final List<Node> nodes;
 
 	public Hex(int x, int y)
 	{

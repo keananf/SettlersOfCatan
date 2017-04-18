@@ -9,7 +9,8 @@ import java.util.*;
 public class CannotAffordException extends Exception
 {
 	private String msg;
-	Map<ResourceType, Integer> resources, cost;
+	private Map<ResourceType, Integer> resources;
+	private Map<ResourceType, Integer> cost;
 
 	public CannotAffordException(Map<ResourceType, Integer> resources, Map<ResourceType, Integer> cost)
 	{

@@ -3,7 +3,8 @@ package exceptions;
 @SuppressWarnings("serial")
 public class InvalidDiscardRequest extends Exception
 {
-	int before, after;
+	private final int before;
+	private final int after;
 
 	public InvalidDiscardRequest(int oldAmount, int newAmount)
 	{

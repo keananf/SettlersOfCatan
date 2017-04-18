@@ -5,7 +5,8 @@ import enums.Colour;
 @SuppressWarnings("serial")
 public class IllegalTradeException extends Exception
 {
-	private Colour offerer, recipient;
+	private final Colour offerer;
+	private final Colour recipient;
 
 	public IllegalTradeException(Colour offerer, Colour recipient)
 	{

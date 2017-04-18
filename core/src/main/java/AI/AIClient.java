@@ -7,21 +7,21 @@ import intergroup.Events;
 
 public abstract class AIClient extends Client
 {
-	protected AICore ai;
+	private AICore ai;
 
-	public AIClient(Difficulty difficulty, String userName, SettlersOfCatan game)
+	AIClient(Difficulty difficulty, String userName, SettlersOfCatan game)
 	{
 		super(game, userName);
 		assignAI(difficulty);
 	}
 
-	public AIClient()
+	AIClient()
 	{
 		super("Default");
 		assignAI(Difficulty.VERYEASY);
 	}
 
-	public AIClient(Difficulty difficulty)
+	AIClient(Difficulty difficulty)
 	{
 		super("Default");
 		assignAI(difficulty);
@@ -55,9 +55,10 @@ public abstract class AIClient extends Client
 			try
 			{
 				Events.Event ev = acquireLocksAndGetEvents();
-				if ((ai.getExpectedEvents().contains(ev.getTypeCase())|| ev.getTypeCase().equals(Events.Event.TypeCase.ERROR)))
+				if ((ai.getExpectedEvents().contains(ev.getTypeCase())
+						|| ev.getTypeCase().equals(Events.Event.TypeCase.ERROR)))
 				{
-					if(!ev.getTypeCase().equals(Events.Event.TypeCase.CARDSDISCARDED)
+					if (!ev.getTypeCase().equals(Events.Event.TypeCase.CARDSDISCARDED)
 							|| ev.getInstigator().getId().getNumber() == getPlayer().getId().getNumber())
 					{
 						log("Client Proc", "Resuming");
@@ -79,7 +80,7 @@ public abstract class AIClient extends Client
 	/**
 	 * Acquires locks and attempts to move
 	 */
-	protected boolean acquireLocksAndPerformMove()
+	boolean acquireLocksAndPerformMove()
 	{
 		boolean val = false;
 		try

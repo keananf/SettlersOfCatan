@@ -11,6 +11,7 @@ import game.build.Settlement;
 import game.players.ClientPlayer;
 import game.players.Player;
 import grid.*;
+import intergroup.Events;
 import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.resource.Resource;
@@ -28,13 +29,14 @@ import java.util.Map;
 public class ClientGame extends Game
 {
 	private boolean gameOver;
-	private Map<Colour, Integer> boughtDevCards, resources;
-	private Map<Colour, Map<DevelopmentCardType, Integer>> playedDevCards;
-	private ChatBoard chatBoard;
+	private final Map<Colour, Integer> boughtDevCards;
+	private final Map<Colour, Integer> resources;
+	private final Map<Colour, Map<DevelopmentCardType, Integer>> playedDevCards;
+	private final ChatBoard chatBoard;
 	private int turns = 0;
 	private Client client;
 
-	public ClientGame()
+	private ClientGame()
 	{
 		super();
 		grid = null;
@@ -83,11 +85,10 @@ public class ClientGame extends Game
 	}
 
 	/**
-	 * @return a representation of the game that is compatible with protofbufs
 	 * @param gameInfo
 	 */
-	public HexGrid processGameInfo(Lobby.GameInfo gameInfo)
-			throws InvalidCoordinatesException, CannotAffordException, RoadExistsException, CannotBuildRoadException
+	void processGameInfo(Lobby.GameInfo gameInfo)
+			throws CannotAffordException, RoadExistsException, CannotBuildRoadException
 	{
 		HexGrid grid = setBoard(gameInfo.getGameInfo());
 		getPlayer().setResources(processResources(gameInfo.getResources()));
@@ -128,7 +129,6 @@ public class ClientGame extends Game
 			((ClientPlayer) players.get(c)).addRoad(e, false, getBank());
 		}
 
-		return grid;
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class ClientGame extends Game
 		}
 	}
 
-	protected void processAllocation(List<Board.ResourceAllocation> resourceAllocationList)
+	public void processAllocation(List<Board.ResourceAllocation> resourceAllocationList)
 	{
 		// For each player's new resources
 		for (Board.ResourceAllocation alloc : resourceAllocationList)
@@ -282,6 +282,30 @@ public class ClientGame extends Game
 			{
 				e.printStackTrace();
 			}
+		}
+	}
+
+
+	public void handleResources(Events.Resources allResources)
+	{
+		Board.ResourceAllocation alloc = allResources.getAlloc();
+		Player p = getPlayer(alloc.getPlayer().getId());
+
+		try
+		{
+			// Give all resources back to the bank
+			p.spendResources(p.getResources(), bank);
+			Map<ResourceType, Integer> grant = processResources(alloc.getResources());
+
+			// Grant resources that server says you have
+			if (p.getColour().equals(getPlayer().getColour()))
+			{
+				p.grantResources(grant, bank);
+			}
+		}
+		catch (BankLimitException | CannotAffordException e)
+		{
+			e.printStackTrace();
 		}
 	}
 
@@ -316,7 +340,7 @@ public class ClientGame extends Game
 		// Spend resources if it is not a preliminary move
 		if (player.getRoads().size() >= 2)
 		{
-			if(!player.getColour().equals(getPlayer().getColour()))
+			if (!player.getColour().equals(getPlayer().getColour()))
 			{
 				int existing = resources.get(player.getColour());
 				resources.put(player.getColour(), existing - Road.getRoadCost().size());
@@ -370,7 +394,8 @@ public class ClientGame extends Game
 		// Updates settlement and score
 		players.get(player.getColour()).addSettlement(c);
 		getBank().setAvailableCities(player.getColour(), getBank().getAvailableCities(player.getColour()) - 1);
-		getBank().setAvailableSettlements(player.getColour(), getBank().getAvailableSettlements(player.getColour()) + 1);
+		getBank().setAvailableSettlements(player.getColour(),
+				getBank().getAvailableSettlements(player.getColour()) + 1);
 		return c;
 	}
 
@@ -413,7 +438,8 @@ public class ClientGame extends Game
 
 		// Updates settlement and score
 		players.get(player.getColour()).addSettlement(s);
-		getBank().setAvailableSettlements(player.getColour(), getBank().getAvailableSettlements(player.getColour()) - 1);
+		getBank().setAvailableSettlements(player.getColour(),
+				getBank().getAvailableSettlements(player.getColour()) - 1);
 		return s;
 	}
 
@@ -661,7 +687,7 @@ public class ClientGame extends Game
 			map.put(ResourceType.fromProto(resource), 1);
 			p.grantResources(map, bank);
 
-			if(p.getExpectedResources() > 0)
+			if (p.getExpectedResources() > 0)
 			{
 				p.subtractExpectedResources();
 			}
@@ -699,7 +725,7 @@ public class ClientGame extends Game
 		return client.getPlayer();
 	}
 
-	public void setPlayer(ClientPlayer p)
+	private void setPlayer(ClientPlayer p)
 	{
 		client.setPlayer(p);
 	}
@@ -737,5 +763,10 @@ public class ClientGame extends Game
 	public int getDice()
 	{
 		return client.getTurn().getRoll();
+	}
+
+	public ChatBoard getChatBoard()
+	{
+		return chatBoard;
 	}
 }

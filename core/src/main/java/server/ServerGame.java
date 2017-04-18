@@ -17,6 +17,7 @@ import grid.Node;
 import grid.Port;
 import intergroup.EmptyOuterClass;
 import intergroup.Events;
+import intergroup.Requests;
 import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.resource.Resource;
@@ -26,7 +27,7 @@ import java.util.*;
 
 public class ServerGame extends Game
 {
-	private Random dice;
+	private final Random dice;
 
 	public ServerGame()
 	{
@@ -127,7 +128,7 @@ public class ServerGame extends Game
 		// Check all roads this player owns
 		for (Road r : current.getRoads())
 		{
-			if(r.getEdge() instanceof Port)
+			if (r.getEdge() instanceof Port)
 			{
 				// If this road is on a port and the resource types match up
 				Port port = (Port) r.getEdge();
@@ -189,11 +190,9 @@ public class ServerGame extends Game
 		Map<ResourceType, Integer> offer = processResources(trade.getOffering());
 
 		// If request doesn't match what the offer should give
-		if (offer.get(offerType) % port.getExchangeAmount() != 0 || offer.get(offerType)
-				/ request.get(requestType) != port.getExchangeAmount())
-		{
-			throw new IllegalPortTradeException(current.getColour(),port);
-		}
+		if (offer.get(offerType) % port.getExchangeAmount() != 0
+				|| offer.get(offerType) / request.get(requestType) != port
+						.getExchangeAmount()) { throw new IllegalPortTradeException(current.getColour(), port); }
 
 		// Exchange resources
 		port.exchange(current, offer, request, bank);
@@ -207,7 +206,8 @@ public class ServerGame extends Game
 	 * @param trade the trade object detailing the trade
 	 * @return the response status
 	 */
-	public Trade.WithPlayer processPlayerTrade(Trade.WithPlayer trade, Board.Player instigator) throws IllegalTradeException
+	public Trade.WithPlayer processPlayerTrade(Trade.WithPlayer trade, Board.Player instigator)
+			throws IllegalTradeException
 	{
 		// Find the recipient and extract the trade's contents
 		Resource.Counts offer = trade.getOffering();
@@ -216,13 +216,14 @@ public class ServerGame extends Game
 		ServerPlayer recipient = (ServerPlayer) players.get(recipientColour);
 		Player offerer = getPlayer(instigator.getId());
 		int offerAmount = 0, wantAmount = 0;
-		for(ResourceType r : ResourceType.values())
+		for (ResourceType r : ResourceType.values())
 		{
 			offerAmount += processResources(offer).getOrDefault(r, 0);
 			wantAmount += processResources(request).getOrDefault(r, 0);
 		}
 
-		// Both players need to be able to afford the trade, and both need to be non-zero
+		// Both players need to be able to afford the trade, and both need to be
+		// non-zero
 		if (offerAmount == 0 || wantAmount == 0 || !offerer.canAfford(processResources(offer)) || !recipient.canAfford(
 				processResources(request))) { throw new IllegalTradeException(offerer.getColour(), recipientColour); }
 
@@ -315,7 +316,8 @@ public class ServerGame extends Game
 		if (node == null) { throw new InvalidCoordinatesException(request.getX(), request.getY()); }
 
 		// Cannot upgrade
-		if (bank.getAvailableSettlements(p.getColour()) == 0) { throw new BankLimitException("No more settlements available"); }
+		if (bank.getAvailableSettlements(
+				p.getColour()) == 0) { throw new BankLimitException("No more settlements available"); }
 
 		// Try to build settlement
 		((ServerPlayer) p).buildSettlement(node, bank);
@@ -335,16 +337,12 @@ public class ServerGame extends Game
 		DevelopmentCardType type = DevelopmentCardType.fromProto(card);
 
 		// Not enough roads available to play a road building card
-		if(type.equals(DevelopmentCardType.RoadBuilding) && bank.getAvailableRoads(p.getColour()) < 1)
-		{
-			throw new CannotPlayException();
-		}
+		if (type.equals(DevelopmentCardType.RoadBuilding)
+				&& bank.getAvailableRoads(p.getColour()) < 1) { throw new CannotPlayException(); }
 
 		// Not enough resources available to play a YOP card
-		if(type.equals(DevelopmentCardType.YearOfPlenty) && bank.getNumAvailableResources() < 1)
-		{
-			throw new CannotPlayException();
-		}
+		if (type.equals(DevelopmentCardType.YearOfPlenty)
+				&& bank.getNumAvailableResources() < 1) { throw new CannotPlayException(); }
 
 		// Try to play card
 		((ServerPlayer) p).playDevelopmentCard(type, bank);
@@ -413,7 +411,8 @@ public class ServerGame extends Game
 		Player other = getPlayer(id);
 		ResourceType r = ResourceType.Generic;
 
-		// If there are no resources to take, send a generic steal event so the players can move on
+		// If there are no resources to take, send a generic steal event so the
+		// players can move on
 		if (other.getNumResources() == 0)
 			return Board.Steal.newBuilder().setVictim(Board.Player.newBuilder().setId(id).build())
 					.setResource(ResourceType.toProto(ResourceType.Generic)).setQuantity(0).build();
@@ -466,7 +465,7 @@ public class ServerGame extends Game
 		players.get(currentPlayer).grantResources(grant, bank);
 
 		// Subtract from expected resources
-		if(players.get(currentPlayer).getExpectedResources() > 0)
+		if (players.get(currentPlayer).getExpectedResources() > 0)
 		{
 			players.get(currentPlayer).subtractExpectedResources();
 		}
@@ -768,6 +767,28 @@ public class ServerGame extends Game
 		}
 
 		return gameWon.build();
+	}
+
+	public HashMap<Colour, Events.Resources> getResources(HashMap<Colour, List<Requests.Request.BodyCase>> expected)
+	{
+		HashMap<Colour, Events.Resources> all = new HashMap<Colour, Events.Resources>();
+		for(Colour c : expected.keySet())
+		{
+			Player p = getPlayer(c);
+			Events.Resources.Builder builder = Events.Resources.newBuilder();
+
+			// Get all resources
+			Board.ResourceAllocation.Builder alloc = Board.ResourceAllocation.newBuilder();
+			alloc.setPlayer(Board.Player.newBuilder().setId(p.getId()).build());
+			alloc.setResources(processResources(p.getResources()));
+
+			// Build
+			builder.setAlloc(alloc.build());
+			builder.setDiscard(expected.get(c).contains(Requests.Request.BodyCase.DISCARDRESOURCES));
+			all.put(c, builder.build());
+		}
+
+		return all;
 	}
 
 	public Map<Colour, Player> getPlayers()

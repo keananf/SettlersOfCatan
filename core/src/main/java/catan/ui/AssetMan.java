@@ -5,6 +5,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.util.HashMap;
@@ -13,6 +15,7 @@ public final class AssetMan extends AssetManager
 {
 	private static final String MODELS = "models/";
 	private static final String TEXTURES = "textures/";
+	private static final String BUTTONS = "buttons/";
 
 	private static final HashMap<String, Texture> textures = new HashMap<>();
 
@@ -43,6 +46,16 @@ public final class AssetMan extends AssetManager
 			textures.put(name, texture);
 			return texture;
 		}
+	}
+
+	static Image getImage(final String name)
+	{
+		return new Image(getTexture(name));
+	}
+
+	public static ImageButton getImageButton(final String name)
+	{
+		return new ImageButton(getDrawable(BUTTONS + name));
 	}
 
 	public static TextureRegionDrawable getDrawable(final String name)

@@ -3,7 +3,8 @@ package exceptions;
 @SuppressWarnings("serial")
 public class CannotUpgradeException extends Exception
 {
-	int x, y;
+	private final int x;
+	private final int y;
 
 	public CannotUpgradeException(int x, int y)
 	{

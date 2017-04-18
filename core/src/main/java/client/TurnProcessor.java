@@ -10,7 +10,7 @@ import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.trade.Trade;
 
-public class TurnProcessor
+class TurnProcessor
 {
 	private final Client client;
 	private IServerConnection conn;
@@ -24,7 +24,7 @@ public class TurnProcessor
 	/**
 	 * Switches on the move type to ascertain which proto message to form
 	 */
-	protected void setUpMove()
+	void setUpMove()
 	{
 		Requests.Request.Builder request = Requests.Request.newBuilder();
 

@@ -23,21 +23,21 @@ import java.util.Map;
 public abstract class Game
 {
 	protected HexGrid grid;
-	protected Map<Colour, Player> players;
-	protected Map<Board.Player.Id, Colour> idsToColours;
+	protected final Map<Colour, Player> players;
+	protected final Map<Board.Player.Id, Colour> idsToColours;
 	protected Colour currentPlayer;
-	protected Colour playerWithLongestRoad;
-	protected Colour playerWithLargestArmy;
-	protected int longestRoad;
-	protected int largestArmy;
-	protected Bank bank;
+	private Colour playerWithLongestRoad;
+	private Colour playerWithLargestArmy;
+	private int longestRoad;
+	private int largestArmy;
+	protected final Bank bank;
 	protected int numPlayers;
 	protected int current; // index of current player
 	public static int NUM_PLAYERS = 4;
-	public static final int MIN_ROAD_LENGTH = 5;
-	public static final int MIN_ARMY_SIZE = 3;
+	private static final int MIN_ROAD_LENGTH = 5;
+	private static final int MIN_ARMY_SIZE = 3;
 
-	public Game()
+	protected Game()
 	{
 		bank = new Bank();
 		grid = new HexGrid(true);
@@ -86,7 +86,7 @@ public abstract class Game
 	 * @param map the map to convert
 	 * @return the protobuf representation of the map
 	 */
-	public Lobby.GameInfo.PlayerDevCardInfo processCards(Map<DevelopmentCardType, Integer> map)
+	protected Lobby.GameInfo.PlayerDevCardInfo processCards(Map<DevelopmentCardType, Integer> map)
 	{
 		Lobby.GameInfo.PlayerDevCardInfo.Builder info = Lobby.GameInfo.PlayerDevCardInfo.newBuilder();
 		info.setUniversity(map.getOrDefault(DevelopmentCardType.University, 0));
@@ -105,7 +105,7 @@ public abstract class Game
 	 * @param info the dev cards received from the network
 	 * @return a map of dev cards to number
 	 */
-	public Map<DevelopmentCardType, Integer> processCards(Lobby.GameInfo.PlayerDevCardInfo info)
+	protected Map<DevelopmentCardType, Integer> processCards(Lobby.GameInfo.PlayerDevCardInfo info)
 	{
 		Map<DevelopmentCardType, Integer> ret = new HashMap<>();
 
@@ -167,7 +167,7 @@ public abstract class Game
 	protected void checkLongestRoad(boolean broken)
 	{
 		Player playerWithLongestRoad = players.get(this.playerWithLongestRoad);
-		List<Colour> cols = new ArrayList<Colour>();
+		List<Colour> cols = new ArrayList<>();
 		int max = 0;
 
 		// Calculate which player(s) has / have the longest road
@@ -176,27 +176,28 @@ public abstract class Game
 			Colour c = player.getColour();
 			int length = player.calcRoadLength();
 
-			if(length > max)
+			if (length > max)
 			{
 				cols.clear();
 				max = length;
 				cols.add(c);
 			}
-			else if(length == max) cols.add(c);
+			else if (length == max) cols.add(c);
 		}
 
 		// Remove longest road victory points if necessary
 		if (longestRoad >= MIN_ROAD_LENGTH)
 		{
 			// If the player no longer has longest road
-			if(max < MIN_ROAD_LENGTH || !cols.contains(playerWithLongestRoad.getColour()))
+			if (max < MIN_ROAD_LENGTH || !cols.contains(playerWithLongestRoad.getColour()))
 			{
 				this.playerWithLongestRoad = null;
 				playerWithLongestRoad.setHasLongestRoad(false);
 			}
 
-			// if the road was broken but the player with the longest road still has it
-			if(broken && cols.contains(playerWithLongestRoad.getColour()))
+			// if the road was broken but the player with the longest road still
+			// has it
+			if (broken && cols.contains(playerWithLongestRoad.getColour()))
 			{
 				longestRoad = max;
 				return;
@@ -208,8 +209,7 @@ public abstract class Game
 		if (max >= MIN_ROAD_LENGTH)
 		{
 			// If there is a tie, no one gets longest road
-			if(broken && cols.size() > 1) return;
-			else
+			if (!broken || cols.size() <= 1)
 			{
 				Colour c = cols.get(0);
 				Player player = players.get(c);
@@ -277,11 +277,9 @@ public abstract class Game
 					playerWithLargestArmy.addVp(-2);
 				}
 				if (armySize >= MIN_ARMY_SIZE) player.addVp(2);
-				if (playerWithLargestArmy != null) playerWithLargestArmy.setHasLargestArmy(false);
 
 				largestArmy = armySize;
 				this.playerWithLargestArmy = c;
-				player.setHasLargestArmy(true);
 			}
 		}
 	}
@@ -321,7 +319,7 @@ public abstract class Game
 	/**
 	 * @return the next player
 	 */
-	public Colour getNextPlayer()
+	protected Colour getNextPlayer()
 	{
 		return getPlayer(Board.Player.Id.forNumber((1 + current) % NUM_PLAYERS)).getColour();
 	}
@@ -329,7 +327,7 @@ public abstract class Game
 	/**
 	 * @return the next player
 	 */
-	public Colour getLastPlayer()
+	protected Colour getLastPlayer()
 	{
 		return getPlayer(Board.Player.Id.forNumber((current - 1) % NUM_PLAYERS)).getColour();
 	}

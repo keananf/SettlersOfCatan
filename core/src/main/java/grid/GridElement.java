@@ -7,7 +7,7 @@ public abstract class GridElement implements BoardElement
 {
 	private int x, y; // coordinates
 
-	protected GridElement(int x, int y)
+	GridElement(int x, int y)
 	{
 		setX(x);
 		setY(y);
@@ -24,7 +24,7 @@ public abstract class GridElement implements BoardElement
 	/**
 	 * @param x the x to set
 	 */
-	public void setX(int x)
+	private void setX(int x)
 	{
 		this.x = x;
 	}
@@ -40,7 +40,7 @@ public abstract class GridElement implements BoardElement
 	/**
 	 * @param y the y to set
 	 */
-	public void setY(int y)
+	private void setY(int y)
 	{
 		this.y = y;
 	}

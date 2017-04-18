@@ -21,7 +21,7 @@ public enum DevelopmentCardType
 	RoadBuilding, // Build two new roads
 	Monopoly; // Every player must give over all resources of a particular type
 
-	private static Random rand;
+	private static final Random rand;
 
 	static
 	{
@@ -99,6 +99,7 @@ public enum DevelopmentCardType
 				break;
 			case PALACE:
 				type = DevelopmentCardType.Palace;
+				break;
 			}
 			break;
 		}
@@ -144,10 +145,7 @@ public enum DevelopmentCardType
 	public static DevelopmentCardType chooseRandom(Bank bank) throws BankLimitException
 	{
 		DevelopmentCardType type = null;
-		if(bank.getNumAvailableDevCards() == 0)
-		{
-			throw new BankLimitException(String.format("Not enough dev cards left"));
-		}
+		if (bank.getNumAvailableDevCards() == 0) { throw new BankLimitException("Not enough dev cards left"); }
 
 		// Randomly choose a development card to allocate
 		while (type == null || bank.getAvailableDevCards().get(type) == 0)

@@ -15,10 +15,10 @@ import java.util.stream.Stream;
  */
 public class HexGrid
 {
-	public Hashtable<Point, Hex> grid; // Overall grid
-	public List<Edge> edges; // All edges
+	public final Hashtable<Point, Hex> grid; // Overall grid
+	public final List<Edge> edges; // All edges
 	public List<Port> ports; // All ports
-	public Hashtable<Point, Node> nodes; // All nodes
+	public final Hashtable<Point, Node> nodes; // All nodes
 	private Hex hexWithRobber;
 	private static final int SIZE_OF_GRID = 5;
 
@@ -111,7 +111,7 @@ public class HexGrid
 	 * Creates edges and relationships between the different board elements.
 	 * Nodes are given their adjacent hexes, and edges are made between nodes.
 	 */
-	public void setUpReferences()
+	private void setUpReferences()
 	{
 		// for each node
 		for (Node node : nodes.values())
@@ -263,17 +263,16 @@ public class HexGrid
 
 	/**
 	 * Swaps robbers with the current hex and the one at x, y
-	 * 
+	 *
 	 * @param hex the hex that is getting the robber
 	 */
-	public Hex swapRobbers(Hex hex)
+	public void swapRobbers(Hex hex)
 	{
 		// Swap robbers
 		hexWithRobber.toggleRobber();
 		hexWithRobber = hex;
 		hexWithRobber.toggleRobber();
 
-		return hexWithRobber;
 	}
 
 	/**
@@ -378,7 +377,7 @@ public class HexGrid
 	 * @param p2 the second point
 	 * @return the internal version of the road
 	 */
-	public Edge getEdge(Point p1, Point p2)
+	private Edge getEdge(Point p1, Point p2)
 	{
 		// Find nodes and edges
 		Node n1 = getNode((int) p1.getX(), (int) p1.getY());
@@ -435,9 +434,9 @@ public class HexGrid
 		this.ports = ports;
 
 		// Set exchange resources
-		for(Port p : ports)
+		for (Port p : ports)
 		{
-			if(p.getExchangeType().equals(ResourceType.Generic))
+			if (p.getExchangeType().equals(ResourceType.Generic))
 			{
 				p.setExchangeAmount(3);
 			}
@@ -470,14 +469,7 @@ public class HexGrid
 
 	private boolean inBoundries(int x, int y)
 	{
-		Boolean terms[] = {
-				y - 2 * x <= 8,
-				2 * y - x <= 8,
-				x + y <= 8,
-				y - 2 * x >= -8,
-				2 * y - x >= -8,
-				x + y >= -8
-		};
+		Boolean terms[] = { y - 2 * x <= 8, 2 * y - x <= 8, x + y <= 8, y - 2 * x >= -8, 2 * y - x >= -8, x + y >= -8 };
 		return Stream.of(terms).reduce(true, (a, b) -> a && b);
 	}
 }

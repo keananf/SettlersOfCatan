@@ -216,6 +216,12 @@ public class MoveProcessor
 				possibilities.add(turn);
 			}
 		}
+
+		// Request all resources again from server
+		if(possibilities.isEmpty() || getTurn().getErrors() >= 5)
+		{
+			possibilities.add(new Turn(Requests.Request.BodyCase.GETRESOURCES));
+		}
 		return possibilities;
 	}
 
@@ -275,7 +281,9 @@ public class MoveProcessor
 				&& getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
 				&& !target.equals(getGame().getPlayer().getColour()));
 	}
-boolean printed = false;
+
+	boolean printed = false;
+
 	/**
 	 * Checks that a CHOOSERESOURCE move is valid
 	 *
@@ -300,12 +308,9 @@ boolean printed = false;
 	private boolean checkPlayDevCard(Turn turn)
 	{
 		DevelopmentCardType type = turn.getChosenCard();
-		if(type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University)
+		if (type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University)
 				|| type.equals(DevelopmentCardType.Chapel) || type.equals(DevelopmentCardType.Palace)
-				|| type.equals(DevelopmentCardType.Market))
-		{
-			return false;
-		}
+				|| type.equals(DevelopmentCardType.Market)) { return false; }
 
 		// If player's turn and no other moves are expected, or it is the start
 		// of their turn
@@ -317,10 +322,8 @@ boolean printed = false;
 			if (player.getDevelopmentCards().containsKey(type) && player.getDevelopmentCards().get(type) > 0)
 			{
 				Bank bank = getGame().getBank();
-				if(type.equals(DevelopmentCardType.RoadBuilding) && bank.getAvailableRoads(player.getColour()) < 2)
-				{
-					return false;
-				}
+				if (type.equals(DevelopmentCardType.RoadBuilding)
+						&& bank.getAvailableRoads(player.getColour()) < 2) { return false; }
 
 				// If you didn't just buy this card / these cards
 				Map<DevelopmentCardType, Integer> recentCards = player.getRecentBoughtDevCards();
@@ -340,8 +343,8 @@ boolean printed = false;
 		Turn turn = new Turn(Requests.Request.BodyCase.BUYDEVCARD);
 
 		// If its the user's turn, they have no expected moves, and
-		return checkTurn() && isExpected(turn) && getGame().getBank().getNumAvailableDevCards() > 0 &&
-				getGame().getPlayer().canAfford(DevelopmentCardType.getCardCost());
+		return checkTurn() && isExpected(turn) && getGame().getBank().getNumAvailableDevCards() > 0
+				&& getGame().getPlayer().canAfford(DevelopmentCardType.getCardCost());
 	}
 
 	/**
@@ -413,12 +416,12 @@ boolean printed = false;
 	 * @param turn the initiate trade request
 	 * @return whether or not the trade is valid
 	 */
-	public boolean checkInitiateTrade(Turn turn)
+	private boolean checkInitiateTrade(Turn turn)
 	{
-		Map<ResourceType, Integer> cost = new HashMap<>(), wanting = new HashMap<>();
+		Map<ResourceType, Integer> cost = new HashMap<>(), wanting;
 		boolean val = true;
 
-		if(turn.getBankTrade() == null && turn.getPlayerTrade() == null) return false;
+		if (turn.getBankTrade() == null && turn.getPlayerTrade() == null) return false;
 
 		Trade.Kind.Builder builder = Trade.Kind.newBuilder();
 		Trade.Kind initiateTrade = turn.getPlayerTrade() != null ? builder.setPlayer(turn.getPlayerTrade()).build()
@@ -436,11 +439,11 @@ boolean printed = false;
 			wanting = getGame().processResources(initiateTrade.getPlayer().getWanting());
 
 			// All trades must not be "giveaways"
-			boolean validOffer = false, validReq =  false;
-			for(ResourceType r : ResourceType.values())
+			boolean validOffer = false, validReq = false;
+			for (ResourceType r : ResourceType.values())
 			{
-				if(cost.getOrDefault(r, 0) > 0) validOffer = false;
-				if(wanting.getOrDefault(r, 0) > 0) validReq = false;
+				if (cost.getOrDefault(r, 0) > 0) validOffer = false;
+				if (wanting.getOrDefault(r, 0) > 0) validReq = false;
 			}
 			val = validOffer && validReq;
 			break;
@@ -462,11 +465,14 @@ boolean printed = false;
 		Requests.Request.BodyCase type = turn.getChosenMove();
 		if (type == null) return false;
 
+		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE) ||
+				type.equals(Requests.Request.BodyCase.GETRESOURCES)) return true;
+
 		if (getExpectedMoves().contains(type))
 		{
 			return true;
 		}
-		else if(getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE)
+		else if (getExpectedMoves().contains(Requests.Request.BodyCase.ROLLDICE)
 				&& type.equals(Requests.Request.BodyCase.PLAYDEVCARD))
 		{
 			return true;
@@ -499,6 +505,9 @@ boolean printed = false;
 		case BUILDCITY:
 		case BUILDSETTLEMENT:
 			val = checkBuild(turn);
+			break;
+		case GETRESOURCES:
+			val= true;
 			break;
 		case BUILDROAD:
 			val = checkBuildRoad(turn);

@@ -24,5 +24,6 @@ message Request {
     Empty endTurn = 13;
     lobby.Join joinLobby = 14;
     string chatMessage = 15;
+    Empty getResources = 16;
   }
 }

@@ -148,8 +148,17 @@ class EventProcessor
 			getGame().processAllocation(ev.getInitialAllocation().getResourceAllocationList());
 			client.render();
 			break;
+		case ALLRESOURCES:
+			boolean discard = ev.getAllResources().getDiscard();
+			if(discard && !getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
+			{
+				getExpectedMoves().add(Requests.Request.BodyCase.DISCARDRESOURCES);
+			}
+			getGame().handleResources(ev.getAllResources());
+			break;
 		case ERROR:
 			client.log("Client Error", String.format("Error Message: %s", ev.getError().getDescription()));
+			getTurn().addError();
 			// TODO display error?
 			break;
 		}

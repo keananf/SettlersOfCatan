@@ -15,6 +15,7 @@ import game.players.Player;
 import game.players.ServerPlayer;
 import grid.Hex;
 import intergroup.EmptyOuterClass;
+import intergroup.Events;
 import intergroup.Events.Event;
 import intergroup.Messages.Message;
 import intergroup.Requests;
@@ -723,4 +724,14 @@ public class Server implements Runnable
 	{
 		return msgProc.getCurrentTrade();
 	}
+
+    public void sendResources(HashMap<Colour, Events.Resources> resources)
+	{
+		for(Colour c : resources.keySet())
+		{
+			Message.Builder msg = Message.newBuilder();
+			msg.setEvent(Event.newBuilder().setAllResources(resources.get(c)).build());
+			sendMessage(msg.build(),c);
+		}
+    }
 }

@@ -13,6 +13,7 @@ public class TurnState extends Turn
 	private boolean turnStarted, initialPhase, hasTraded;
 	private int roll;
 	private CurrentTrade currentTrade;
+	private int error;
 
 	TurnState()
 	{
@@ -32,6 +33,7 @@ public class TurnState extends Turn
 	{
 		super.reset();
 		roll = 0;
+		error = 0;
 		turnStarted = false;
 		hasTraded = false;
 		currentTrade = null;
@@ -45,6 +47,7 @@ public class TurnState extends Turn
 	{
 		super.resetInfo();
 		roll = 0;
+		error = 0;
 		hasTraded = false;
 		turnStarted = false;
 	}
@@ -98,5 +101,15 @@ public class TurnState extends Turn
 	void setHasTraded()
 	{
 		this.hasTraded = true;
+	}
+
+    public void addError()
+	{
+		error++;
+    }
+    
+    public int getErrors()
+	{
+		return error;
 	}
 }

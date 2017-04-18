@@ -216,6 +216,12 @@ public class MoveProcessor
 				possibilities.add(turn);
 			}
 		}
+
+		// Request all resources again from server
+		if(possibilities.isEmpty() || getTurn().getErrors() >= 5)
+		{
+			possibilities.add(new Turn(Requests.Request.BodyCase.GETRESOURCES));
+		}
 		return possibilities;
 	}
 
@@ -459,7 +465,8 @@ public class MoveProcessor
 		Requests.Request.BodyCase type = turn.getChosenMove();
 		if (type == null) return false;
 
-		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE)) return true;
+		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE) ||
+				type.equals(Requests.Request.BodyCase.GETRESOURCES)) return true;
 
 		if (getExpectedMoves().contains(type))
 		{
@@ -498,6 +505,9 @@ public class MoveProcessor
 		case BUILDCITY:
 		case BUILDSETTLEMENT:
 			val = checkBuild(turn);
+			break;
+		case GETRESOURCES:
+			val= true;
 			break;
 		case BUILDROAD:
 			val = checkBuildRoad(turn);

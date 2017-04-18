@@ -11,6 +11,7 @@ import game.build.Settlement;
 import game.players.ClientPlayer;
 import game.players.Player;
 import grid.*;
+import intergroup.Events;
 import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.resource.Resource;
@@ -252,7 +253,7 @@ public class ClientGame extends Game
 		}
 	}
 
-	void processAllocation(List<Board.ResourceAllocation> resourceAllocationList)
+	public void processAllocation(List<Board.ResourceAllocation> resourceAllocationList)
 	{
 		// For each player's new resources
 		for (Board.ResourceAllocation alloc : resourceAllocationList)
@@ -281,6 +282,30 @@ public class ClientGame extends Game
 			{
 				e.printStackTrace();
 			}
+		}
+	}
+
+
+	public void handleResources(Events.Resources allResources)
+	{
+		Board.ResourceAllocation alloc = allResources.getAlloc();
+		Player p = getPlayer(alloc.getPlayer().getId());
+
+		try
+		{
+			// Give all resources back to the bank
+			p.spendResources(p.getResources(), bank);
+			Map<ResourceType, Integer> grant = processResources(alloc.getResources());
+
+			// Grant resources that server says you have
+			if (p.getColour().equals(getPlayer().getColour()))
+			{
+				p.grantResources(grant, bank);
+			}
+		}
+		catch (BankLimitException | CannotAffordException e)
+		{
+			e.printStackTrace();
 		}
 	}
 

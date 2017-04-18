@@ -227,7 +227,10 @@ class MessageProcessor
 			case CHATMESSAGE:
 				ev.setChatMessage(request.getChatMessage());
 				break;
-
+			case GETRESOURCES:
+				HashMap<Colour, Events.Resources> resources = game.getResources(expectedMoves);
+				server.sendResources(resources);
+				break;
 			}
 		}
 		catch (Exception e)
@@ -400,7 +403,9 @@ class MessageProcessor
 		List<Requests.Request.BodyCase> expected = expectedMoves.get(col);
 		if (type == null || game == null) return false;
 
-		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE)) return true;
+		// Always allow
+		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE) ||
+				type.equals(Requests.Request.BodyCase.GETRESOURCES)) return true;
 
 		if (expected.contains(type))
 		{

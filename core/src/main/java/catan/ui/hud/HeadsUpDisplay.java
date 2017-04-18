@@ -203,7 +203,7 @@ public class HeadsUpDisplay extends Stage
 
 	public void showDiscardDialog()
 	{
-		new DiscardDialog(SettlersOfCatan.getSkin(), client, this).show(this);
+		new DiscardDialog(client).show(this);
 	}
 
 	public void showResponse()

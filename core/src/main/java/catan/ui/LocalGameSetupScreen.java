@@ -16,7 +16,7 @@ class LocalGameSetupScreen extends GameSetupScreen
 
 		final Label numberOfAIsLabel = new Label("Number of AI opponents", SettlersOfCatan.getSkin());
 		addPrimary(numberOfAIsLabel);
-		final NumberField numberOfAIs = new NumberField("3");
+		final IntegerField numberOfAIs = new IntegerField("3");
 		addPrimary(numberOfAIs);
 
 		final Label opponentsDifficulty = new Label("Difficulty of opponents", SettlersOfCatan.getSkin());

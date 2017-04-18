@@ -19,6 +19,11 @@ class LocalGameSetupScreen extends GameSetupScreen
 		final NumberField numberOfAIs = new NumberField("3");
 		addPrimary(numberOfAIs);
 
+		final Label opponentsDifficulty = new Label("Difficulty of opponents", SettlersOfCatan.getSkin());
+		addPrimary(opponentsDifficulty);
+		final DifficultyChooser aiChooser = new DifficultyChooser(()->true);
+		addPrimary(aiChooser.getGroup());
+
 		setSubmitListener(new ChangeListener()
 		{
 			@Override
@@ -27,12 +32,12 @@ class LocalGameSetupScreen extends GameSetupScreen
 				final Client client;
 				if (playerIsAI())
 				{
-					client = new LocalAIClient(getChosenDifficulty(), getChosenDifficulty(), game, getUsername(),
+					client = new LocalAIClient(getChosenDifficulty(), aiChooser.getChosen(), game, getUsername(),
 							numberOfAIs.getNumericValue());
 				}
 				else
 				{
-					client = new LocalClient(game, getChosenDifficulty(), getUsername(), numberOfAIs.getNumericValue());
+					client = new LocalClient(game, aiChooser.getChosen(), getUsername(), numberOfAIs.getNumericValue());
 				}
 				game.startNewServer(client);
 				game.setScreen(new GameScreen(game));

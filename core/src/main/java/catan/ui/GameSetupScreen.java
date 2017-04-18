@@ -17,6 +17,7 @@ class GameSetupScreen extends MenuScreen
 	GameSetupScreen(final String title, final SettlersOfCatan game)
 	{
 		super(title);
+
 		// username field
 		addPrimary(nameInput);
 

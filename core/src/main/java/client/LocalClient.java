@@ -16,7 +16,7 @@ public class LocalClient extends Client
 {
 	private final int numAis;
 	private Server server;
-	private Difficulty opponentDifficulty;
+	private final Difficulty opponentDifficulty;
 	private Thread serverThread;
 
 	public LocalClient(SettlersOfCatan game, Difficulty opponentDifficulty, String userName, int numAIs)

@@ -15,10 +15,10 @@ import java.util.stream.Stream;
  */
 public class HexGrid
 {
-	public Hashtable<Point, Hex> grid; // Overall grid
-	public List<Edge> edges; // All edges
+	public final Hashtable<Point, Hex> grid; // Overall grid
+	public final List<Edge> edges; // All edges
 	public List<Port> ports; // All ports
-	public Hashtable<Point, Node> nodes; // All nodes
+	public final Hashtable<Point, Node> nodes; // All nodes
 	private Hex hexWithRobber;
 	private static final int SIZE_OF_GRID = 5;
 

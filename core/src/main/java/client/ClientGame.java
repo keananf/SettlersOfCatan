@@ -28,9 +28,10 @@ import java.util.Map;
 public class ClientGame extends Game
 {
 	private boolean gameOver;
-	private Map<Colour, Integer> boughtDevCards, resources;
-	private Map<Colour, Map<DevelopmentCardType, Integer>> playedDevCards;
-	private ChatBoard chatBoard;
+	private final Map<Colour, Integer> boughtDevCards;
+	private final Map<Colour, Integer> resources;
+	private final Map<Colour, Map<DevelopmentCardType, Integer>> playedDevCards;
+	private final ChatBoard chatBoard;
 	private int turns = 0;
 	private Client client;
 
@@ -87,7 +88,7 @@ public class ClientGame extends Game
 	 * @param gameInfo
 	 */
 	public HexGrid processGameInfo(Lobby.GameInfo gameInfo)
-			throws InvalidCoordinatesException, CannotAffordException, RoadExistsException, CannotBuildRoadException
+			throws CannotAffordException, RoadExistsException, CannotBuildRoadException
 	{
 		HexGrid grid = setBoard(gameInfo.getGameInfo());
 		getPlayer().setResources(processResources(gameInfo.getResources()));

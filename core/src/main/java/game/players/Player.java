@@ -32,17 +32,15 @@ public abstract class Player
 	private int vp; // Victory points
 	Colour colour;
 	Map<ResourceType, Integer> resources;
-	List<List<Road>> roads;
-	HashMap<Point, Building> settlements;
+	final List<List<Road>> roads;
+	final HashMap<Point, Building> settlements;
 	private boolean hasLongestRoad;
-	private boolean hasLargestArmy;
 	Map<DevelopmentCardType, Integer> cards;
-	private Map<DevelopmentCardType, Integer> playedDevCards;
-	private boolean playedDevCard;
+	private final Map<DevelopmentCardType, Integer> playedDevCards;
 	private int armySize;
 	private Board.Player.Id id;
 	private String userName;
-	Map<DevelopmentCardType, Integer> recentBoughtCards;
+	final Map<DevelopmentCardType, Integer> recentBoughtCards;
 
 	private static final int VP_THRESHOLD = 10;
 	private static final int MIN_SETTLEMENTS = 2;
@@ -66,8 +64,6 @@ public abstract class Player
 			if (r == ResourceType.Generic) continue;
 			resources.put(r, 0);
 		}
-
-		playedDevCard = false;
 	}
 
 	/**
@@ -311,7 +307,6 @@ public abstract class Player
 	 * Checks to see if the user canAfford something
 	 * 
 	 * @param cost
-	 * @throws CannotAffordException
 	 */
 	public boolean canAfford(Map<ResourceType, Integer> cost)
 	{
@@ -573,7 +568,7 @@ public abstract class Player
 	 */
 	public void setHasLargestArmy(boolean hasLargestArmy)
 	{
-		this.hasLargestArmy = hasLargestArmy;
+		boolean hasLargestArmy1 = hasLargestArmy;
 	}
 
 	/**

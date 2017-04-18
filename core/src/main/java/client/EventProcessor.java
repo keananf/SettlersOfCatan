@@ -19,10 +19,10 @@ import java.util.List;
  * Class which continuously listens for updates from the server Created by
  * 140001596
  */
-public class EventProcessor
+class EventProcessor
 {
 	private final Client client;
-	private IServerConnection conn;
+	private final IServerConnection conn;
 
 	public EventProcessor(IServerConnection conn, Client client)
 	{

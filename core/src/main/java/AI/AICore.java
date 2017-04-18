@@ -11,11 +11,11 @@ import java.util.*;
 
 public abstract class AICore implements IAI, Runnable
 {
-	private AIClient client;
-	private Random rand;
+	private final AIClient client;
+	private final Random rand;
 	private boolean waiting;
 	private ArrayList<Events.Event.TypeCase> expectedEventPossibilities;
-	private Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> expectedEvents;
+	private final Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> expectedEvents;
 
 	AICore(AIClient client)
 	{

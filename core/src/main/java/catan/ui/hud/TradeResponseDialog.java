@@ -15,18 +15,16 @@ import java.util.Map;
 
 class TradeResponseDialog extends Dialog
 {
-	private final Board.Player sender;
 	private final Client client;
-	private final Trade.WithPlayer trade;
-	private Map<ResourceType, Integer> offerResources;
-	private Map<ResourceType, Integer> requestResources;
+	private final Map<ResourceType, Integer> offerResources;
+	private final Map<ResourceType, Integer> requestResources;
 
 	public TradeResponseDialog(Skin skin, Client client, HeadsUpDisplay hud)
 	{
 		super("Trade", skin);
-		this.sender = client.getTurn().getCurrentTrade().getInstigator();
+		Board.Player sender = client.getTurn().getCurrentTrade().getInstigator();
 		this.client = client;
-		this.trade = client.getTurn().getCurrentTrade().getTrade();
+		Trade.WithPlayer trade = client.getTurn().getCurrentTrade().getTrade();
 		offerResources = client.getState().processResources(trade.getOffering());
 		requestResources = client.getState().processResources(trade.getWanting());
 

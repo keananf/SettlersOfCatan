@@ -35,17 +35,16 @@ import java.util.concurrent.Semaphore;
 
 public class Server implements Runnable
 {
-	private MessageProcessor msgProc;
+	private final MessageProcessor msgProc;
 	ServerGame game;
 	int numConnections;
-	Map<Colour, ListenerThread> connections;
-	private ServerSocket serverSocket;
-	Map<Colour, Thread> aiThreads;
-	Map<Colour, Thread> threads;
-	Map<Colour, AIClient> ais;
+	final Map<Colour, ListenerThread> connections;
+	final Map<Colour, Thread> aiThreads;
+	final Map<Colour, Thread> threads;
+	final Map<Colour, AIClient> ais;
 	private static final int PORT = 7000;
 	private boolean active;
-	private Semaphore lock;
+	private final Semaphore lock;
 
 	public Server()
 	{
@@ -207,8 +206,7 @@ public class Server implements Runnable
 	 * 
 	 * @param event the event from the last processed move
 	 */
-	private void sendEvents(Event event) throws IOException
-	{
+	private void sendEvents(Event event) {
 		if (event == null) return;
 
 		// Switch on message type to interpret which event(s) need to be sent
@@ -345,7 +343,7 @@ public class Server implements Runnable
 			return;
 		}
 
-		serverSocket = new ServerSocket(PORT);
+		ServerSocket serverSocket = new ServerSocket(PORT);
 
 		log("Server Setup",
 				String.format("Server started. Waiting for client(s)...%s\n", serverSocket.getInetAddress()));
@@ -635,15 +633,7 @@ public class Server implements Runnable
 	void forwardTradeOffer(Trade.WithPlayer playerTrade, Board.Player instigator)
 	{
 		Event ev = Event.newBuilder().setPlayerTradeInitiated(playerTrade).setInstigator(instigator).build();
-
-		try
-		{
-			sendEvents(ev);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		sendEvents(ev);
 
 		/*
 		 * // Send messages if (connections.containsKey(recipient)) {
@@ -663,15 +653,7 @@ public class Server implements Runnable
 		// Extract player info, and set up the reject event
 		Event ev = Event.newBuilder().setInstigator(instigator)
 				.setPlayerTradeRejected(EmptyOuterClass.Empty.getDefaultInstance()).build();
-
-		try
-		{
-			sendEvents(ev);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		sendEvents(ev);
 	}
 
 	/**
@@ -679,7 +661,6 @@ public class Server implements Runnable
 	 * 
 	 * @param msg the message
 	 * @param col
-	 * @throws IOException
 	 */
 	private void sendMessage(Message msg, Colour col)
 	{

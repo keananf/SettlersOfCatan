@@ -10,7 +10,7 @@ import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.trade.Trade;
 
-public class TurnProcessor
+class TurnProcessor
 {
 	private final Client client;
 	private IServerConnection conn;

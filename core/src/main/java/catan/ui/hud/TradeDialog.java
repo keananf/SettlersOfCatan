@@ -18,8 +18,8 @@ class TradeDialog extends Dialog
 {
 	private final Board.Player player;
 	private final Client client;
-	private Map<ResourceType, Integer> resources;
-	private Map<ResourceType, Integer> otherResources;
+	private final Map<ResourceType, Integer> resources;
+	private final Map<ResourceType, Integer> otherResources;
 
 	public TradeDialog(Skin skin, Board.Player player, Client client, HeadsUpDisplay hud)
 	{

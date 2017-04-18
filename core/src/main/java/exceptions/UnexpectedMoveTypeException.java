@@ -5,7 +5,7 @@ import intergroup.Messages.*;
 @SuppressWarnings("serial")
 public class UnexpectedMoveTypeException extends Exception
 {
-	private Message msg;
+	private final Message msg;
 
 	public UnexpectedMoveTypeException(Message msg)
 	{

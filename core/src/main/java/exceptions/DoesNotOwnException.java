@@ -6,8 +6,8 @@ import enums.DevelopmentCardType;
 @SuppressWarnings("serial")
 public class DoesNotOwnException extends Exception
 {
-	private DevelopmentCardType card;
-	private Colour player;
+	private final DevelopmentCardType card;
+	private final Colour player;
 
 	public DoesNotOwnException(DevelopmentCardType d, Colour c)
 	{

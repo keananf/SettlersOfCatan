@@ -5,7 +5,8 @@ import enums.Colour;
 @SuppressWarnings("serial")
 public class CannotStealException extends Exception
 {
-	private Colour taker, other;
+	private final Colour taker;
+	private final Colour other;
 
 	public CannotStealException(Colour taker, Colour other)
 	{

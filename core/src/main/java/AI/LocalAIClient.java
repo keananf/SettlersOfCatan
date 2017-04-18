@@ -13,7 +13,7 @@ import server.Server;
 public class LocalAIClient extends AIClient
 {
 	private final int numAis;
-	private Difficulty opponentDifficulty;
+	private final Difficulty opponentDifficulty;
 	private Server server;
 	private Thread serverThread;
 

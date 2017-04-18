@@ -26,7 +26,7 @@ import java.util.*;
 
 public class ServerGame extends Game
 {
-	private Random dice;
+	private final Random dice;
 
 	public ServerGame()
 	{

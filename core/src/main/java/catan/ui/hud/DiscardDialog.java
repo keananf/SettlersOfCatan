@@ -15,7 +15,7 @@ import java.util.Map;
 class DiscardDialog extends Dialog
 {
 	private final Client client;
-	private Map<ResourceType, Integer> resources;
+	private final Map<ResourceType, Integer> resources;
 
 	public DiscardDialog(Skin skin, Client client, HeadsUpDisplay hud)
 	{

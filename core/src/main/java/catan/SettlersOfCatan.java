@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	private static Skin skin;
-	private static AssetMan assets = new AssetMan();
+	private static final AssetMan assets = new AssetMan();
 	public Client client;
 	private Thread t;
 	private boolean active;

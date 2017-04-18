@@ -12,13 +12,12 @@ import intergroup.Requests;
 class ChatDialog extends Dialog
 {
 	private final Client client;
-	private final ChatBoard chatBoard;
 
 	public ChatDialog(Skin skin, Client client)
 	{
 		super("Chat", skin);
 		this.client = client;
-		this.chatBoard = client.getState().getChatBoard();
+		ChatBoard chatBoard = client.getState().getChatBoard();
 
 		VerticalGroup vert = new VerticalGroup();
 		final Table root = new Table();

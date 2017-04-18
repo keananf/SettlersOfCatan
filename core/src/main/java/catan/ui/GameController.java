@@ -23,9 +23,8 @@ class GameController implements InputProcessor
 	private final Camera camera;
 	private final MoveBuilder moveBuilder;
 
-	private List<Hex> hexes;
-	private List<Node> nodes;
-	private List<Edge> edges;
+	private final List<Hex> hexes;
+	private final List<Edge> edges;
 
 	/** A plane parallel to the game board used to detect clicks. */
 	private final static float DETECTION_Y = 0.6f;
@@ -35,7 +34,7 @@ class GameController implements InputProcessor
 	{
 		this.camera = camera;
 		this.hexes = client.getState().getGrid().getHexesAsList();
-		this.nodes = client.getState().getGrid().getNodesAsList();
+		List<Node> nodes = client.getState().getGrid().getNodesAsList();
 		this.edges = client.getState().getGrid().getEdgesAsList();
 		this.moveBuilder = new MoveBuilder(client);
 	}

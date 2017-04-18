@@ -26,14 +26,14 @@ import java.util.concurrent.LinkedBlockingQueue;
  * 
  * @author 140001596
  */
-public class MessageProcessor
+class MessageProcessor
 {
 	private ServerGame game;
 	private final Server server;
 	private boolean monopoly;
-	private Logger logger;
-	private HashMap<Colour, List<Requests.Request.BodyCase>> expectedMoves;
-	private BlockingQueue<ReceivedMessage> movesToProcess;
+	private final Logger logger;
+	private final HashMap<Colour, List<Requests.Request.BodyCase>> expectedMoves;
+	private final BlockingQueue<ReceivedMessage> movesToProcess;
 	private CurrentTrade currentTrade;
 	private ReceivedMessage lastMessage;
 	boolean initialPhase;

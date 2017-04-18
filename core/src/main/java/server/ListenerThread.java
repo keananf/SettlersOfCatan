@@ -13,8 +13,8 @@ import java.io.IOException;
 class ListenerThread implements Runnable
 {
 	private IClientConnection conn;
-	private Colour colour;
-	private Server server;
+	private final Colour colour;
+	private final Server server;
 	private boolean active;
 
 	public ListenerThread(IClientConnection conn, Colour c, Server server)

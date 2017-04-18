@@ -52,7 +52,7 @@ public class ServerPlayer extends Player
 		if (canBuildRoad(edge, bank))
 		{
 			if (getRoads().size() >= 2 && expectedRoads == 0) spendResources(r.getCost(), bank);
-			if(expectedRoads > 0) expectedRoads--;
+			if (expectedRoads > 0) expectedRoads--;
 			edge.setRoad(r);
 
 			// Find out where this road is connected

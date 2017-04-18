@@ -183,14 +183,15 @@ public class MessageProcessor
 				try
 				{
 					Trade.WithBank trade = processTradeType(request.getInitiateTrade(), ev.getInstigator());
-					if (trade != null) ev.setBankTrade(trade);
-					else if(trade == null && currentTrade == null)
+					if (trade != null)
+						ev.setBankTrade(trade);
+					else if (trade == null && currentTrade == null)
 					{
-						ev.setError(Events.Event.Error.newBuilder().setDescription(
-								new IllegalBankTradeException(colour).getMessage()).build());
+						ev.setError(Events.Event.Error.newBuilder()
+								.setDescription(new IllegalBankTradeException(colour).getMessage()).build());
 					}
 				}
-				catch(IllegalBankTradeException e)
+				catch (IllegalBankTradeException e)
 				{
 					ev.setError(Events.Event.Error.newBuilder().setDescription(e.getMessage()).build());
 				}
@@ -232,7 +233,7 @@ public class MessageProcessor
 		catch (Exception e)
 		{
 			String errMsg = e.getMessage();
-			if(request.getBodyCase().equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
+			if (request.getBodyCase().equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
 			{
 				server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
 			}
@@ -297,16 +298,17 @@ public class MessageProcessor
 		case MOVEROBBER:
 			boolean hasSettlement = false;
 
-			// Only will add a submit target player if the given hex has a foreign settlement on it
-			for(Node n : game.getGrid().getHexWithRobber().getNodes())
+			// Only will add a submit target player if the given hex has a
+			// foreign settlement on it
+			for (Node n : game.getGrid().getHexWithRobber().getNodes())
 			{
 				Building b = n.getBuilding();
-				if(b != null && !b.getPlayerColour().equals(game.getCurrentPlayer()))
+				if (b != null && !b.getPlayerColour().equals(game.getCurrentPlayer()))
 				{
 					hasSettlement = true;
 				}
 			}
-			if(hasSettlement)
+			if (hasSettlement)
 			{
 				moves.add(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
 			}
@@ -337,11 +339,11 @@ public class MessageProcessor
 				moves.add(Requests.Request.BodyCase.MOVEROBBER);
 				break;
 			case YEAR_OF_PLENTY:
-				for(int i = 0; i < game.getPlayer(colour).getExpectedResources(); i++)
+				for (int i = 0; i < game.getPlayer(colour).getExpectedResources(); i++)
 					moves.add(Requests.Request.BodyCase.CHOOSERESOURCE);
 				break;
 			case ROAD_BUILDING:
-				for(int i = 0; i < game.getPlayer(colour).getExpectedRoads(); i++)
+				for (int i = 0; i < game.getPlayer(colour).getExpectedRoads(); i++)
 					moves.add(Requests.Request.BodyCase.BUILDROAD);
 				break;
 			case MONOPOLY:
@@ -398,7 +400,7 @@ public class MessageProcessor
 		List<Requests.Request.BodyCase> expected = expectedMoves.get(col);
 		if (type == null || game == null) return false;
 
-		if(type.equals(Requests.Request.BodyCase.CHATMESSAGE)) return true;
+		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE)) return true;
 
 		if (expected.contains(type))
 		{

@@ -28,17 +28,8 @@ class GameController implements InputProcessor
 	private List<Edge> edges;
 
 	/** A plane parallel to the game board used to detect clicks. */
-	private final static float DETECTION_Y = 0.2f;
+	private final static float DETECTION_Y = 0.6f;
 	private final static Plane DETECTION_PLANE = new Plane(new Vector3(0, 2f, 0), new Vector3(0, DETECTION_Y, 0));
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	GameController(final Camera camera, Client client)
 	{
@@ -57,51 +48,32 @@ class GameController implements InputProcessor
 		if (!Intersector.intersectRayPlane(ray, DETECTION_PLANE, intersectionPoint)) return false;
 
 		BoardElement element = findElement(intersectionPoint.x, intersectionPoint.z);
-		
-		
-		
-		
+
 		if (element == null) return false;
 
 		moveBuilder.onSelect(element);
-		
 
 		return true;
 	}
 
 	/** Returns the clicked on element or null if none. */
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	private BoardElement findElement(float planeX, float planeY)
 	{
 		BoardElement found = null;
 
-		
 		found = findNode(planeX, planeY);
 		if (found != null) return found;
-		
+
 		found = findEdge(planeX, planeY);
 		if (found != null) return found;
-
-
-	
 
 		found = findHex(planeX, planeY);
 		if (found != null) return found;
 
 		return null;
 	}
-	
-	
-	
+
 	private Hex getHex(float planeX, float planeY)
 	{
 		final float HEX_WIDTH = 2f;
@@ -109,13 +81,13 @@ class GameController implements InputProcessor
 		for (Hex hex : hexes)
 		{
 			final Vector2 pos = hex.get2DPos();
-			
-			if(pos.dst(planeX,planeY)<2){
+
+			if (pos.dst(planeX, planeY) < 2)
+			{
 				System.out.println("HEX");
 				return hex;
 			}
-					
-					
+
 		}
 		return null;
 	}
@@ -130,18 +102,16 @@ class GameController implements InputProcessor
 		System.out.println(planeX + "" + planeY);
 		Hex h = getHex(planeX, planeY);
 
-		if(h == null) return null;
+		if (h == null) return null;
 
 		for (Node node : h.getNodes())
 		{
 			Vector2 coord = node.get2DPos();
-			//System.out.println("NODE " + coord.x + "Node " + " " + coord.y);
-			if (new Vector2(coord.x, 0).dst(planeX,0)<0.6 && new Vector2(coord.y,0).dst(planeY,0)<0.6) { 
-				
-				
-				return node; 
-				
-			
+			// System.out.println("NODE " + coord.x + "Node " + " " + coord.y);
+			if (new Vector2(coord.x, 0).dst(planeX, 0) < 0.6 && new Vector2(coord.y, 0).dst(planeY, 0) < 0.6) {
+
+			return node;
+
 			}
 		}
 
@@ -164,7 +134,7 @@ class GameController implements InputProcessor
 			float x = (nodeX.x + nodeY.x) / 2;
 			float y = (nodeX.y + nodeY.y) / 2;
 			Vector2 check = new Vector2(x, y);
-			if (check.dst(planeX, planeY) <0.7 ) { return edge; }
+			if (check.dst(planeX, planeY) < 0.7) { return edge; }
 		}
 
 		return null;
@@ -191,7 +161,7 @@ class GameController implements InputProcessor
 
 			if (planeX <= furthestRight && planeX >= furthestLeft)
 			{
-				if (planeY <= highestHeight && planeY >= lowestHeight && pos.dst(planeX,planeY)>1) { return hex; }
+				if (planeY <= highestHeight && planeY >= lowestHeight && pos.dst(planeX, planeY) > 1) { return hex; }
 			}
 		}
 		return null;

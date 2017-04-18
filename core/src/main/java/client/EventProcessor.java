@@ -102,7 +102,7 @@ public class EventProcessor
 			Player p = getGame().getPlayer(ev.getPlayerTradeInitiated().getOther().getId());
 			getTurn().setCurrentTrade(new CurrentTrade(ev.getPlayerTradeInitiated(), ev.getInstigator()));
 
-			if(p.getColour().equals(getGame().getPlayer().getColour()))
+			if (p.getColour().equals(getGame().getPlayer().getColour()))
 			{
 				client.renderTradeResponsePopUp();
 			}
@@ -155,11 +155,11 @@ public class EventProcessor
 		}
 
 		updateExpectedMoves(ev);
-		if(getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
+		if (getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
 		{
 			client.renderDiscardPopUp();
 		}
-		if(getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE))
+		if (getExpectedMoves().contains(Requests.Request.BodyCase.CHOOSERESOURCE))
 		{
 			client.renderChooseResourcePopUp();
 		}
@@ -243,7 +243,8 @@ public class EventProcessor
 			if (ev.getInstigator().getId() == getGame().getPlayer().getId()
 					&& getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
 			{
-				client.log("Client Play", String.format("Removing DISCARDRESOURCES for %s", getGame().getPlayer().getId().name()));
+				client.log("Client Play",
+						String.format("Removing DISCARDRESOURCES for %s", getGame().getPlayer().getId().name()));
 				getExpectedMoves().remove(Requests.Request.BodyCase.DISCARDRESOURCES);
 			}
 			break;
@@ -274,11 +275,12 @@ public class EventProcessor
 	{
 		boolean hasSettlement = false;
 
-		// Only will add a submit target player if the given hex has a foreign settlement on it
-		for(Node n : getGame().getGrid().getHexWithRobber().getNodes())
+		// Only will add a submit target player if the given hex has a foreign
+		// settlement on it
+		for (Node n : getGame().getGrid().getHexWithRobber().getNodes())
 		{
 			Building b = n.getBuilding();
-			if(b != null && !b.getPlayerColour().equals(getGame().getPlayer().getColour()))
+			if (b != null && !b.getPlayerColour().equals(getGame().getPlayer().getColour()))
 			{
 				hasSettlement = true;
 			}
@@ -359,11 +361,11 @@ public class EventProcessor
 				getExpectedMoves().add(Requests.Request.BodyCase.MOVEROBBER);
 				break;
 			case YEAR_OF_PLENTY:
-				for(int i = 0; i < getGame().getPlayer().getExpectedResources(); i++)
+				for (int i = 0; i < getGame().getPlayer().getExpectedResources(); i++)
 					getExpectedMoves().add(Requests.Request.BodyCase.CHOOSERESOURCE);
 				break;
 			case ROAD_BUILDING:
-				for(int i = 0; i < getGame().getPlayer().getExpectedRoads(); i++)
+				for (int i = 0; i < getGame().getPlayer().getExpectedRoads(); i++)
 					getExpectedMoves().add(Requests.Request.BodyCase.BUILDROAD);
 				break;
 			case MONOPOLY:

@@ -278,7 +278,7 @@ public class Edge implements BoardElement
 
 	}
 
-	  public Vector3 get3dVectorMidpoint()
+	public Vector3 get3dVectorMidpoint()
 	{
 		Node a = getX();
 		Node b = getY();

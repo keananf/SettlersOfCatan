@@ -117,6 +117,7 @@ public class Bank
 	{
 		this.availableSettlements.put(c, availableSettlements);
 	}
+
 	public void subtractAvailableDevCards(DevelopmentCardType type)
 	{
 		int existing = availableDevCards.getOrDefault(type, 0);
@@ -182,7 +183,7 @@ public class Bank
 	public int getNumAvailableDevCards()
 	{
 		int sum = 0;
-		for(DevelopmentCardType type : DevelopmentCardType.values())
+		for (DevelopmentCardType type : DevelopmentCardType.values())
 		{
 			sum += availableDevCards.getOrDefault(type, 0);
 		}

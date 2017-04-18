@@ -316,7 +316,7 @@ public class ClientGame extends Game
 		// Spend resources if it is not a preliminary move
 		if (player.getRoads().size() >= 2)
 		{
-			if(!player.getColour().equals(getPlayer().getColour()))
+			if (!player.getColour().equals(getPlayer().getColour()))
 			{
 				int existing = resources.get(player.getColour());
 				resources.put(player.getColour(), existing - Road.getRoadCost().size());
@@ -370,7 +370,8 @@ public class ClientGame extends Game
 		// Updates settlement and score
 		players.get(player.getColour()).addSettlement(c);
 		getBank().setAvailableCities(player.getColour(), getBank().getAvailableCities(player.getColour()) - 1);
-		getBank().setAvailableSettlements(player.getColour(), getBank().getAvailableSettlements(player.getColour()) + 1);
+		getBank().setAvailableSettlements(player.getColour(),
+				getBank().getAvailableSettlements(player.getColour()) + 1);
 		return c;
 	}
 
@@ -413,7 +414,8 @@ public class ClientGame extends Game
 
 		// Updates settlement and score
 		players.get(player.getColour()).addSettlement(s);
-		getBank().setAvailableSettlements(player.getColour(), getBank().getAvailableSettlements(player.getColour()) - 1);
+		getBank().setAvailableSettlements(player.getColour(),
+				getBank().getAvailableSettlements(player.getColour()) - 1);
 		return s;
 	}
 
@@ -661,7 +663,7 @@ public class ClientGame extends Game
 			map.put(ResourceType.fromProto(resource), 1);
 			p.grantResources(map, bank);
 
-			if(p.getExpectedResources() > 0)
+			if (p.getExpectedResources() > 0)
 			{
 				p.subtractExpectedResources();
 			}
@@ -739,8 +741,8 @@ public class ClientGame extends Game
 		return client.getTurn().getRoll();
 	}
 
-    public ChatBoard getChatBoard()
+	public ChatBoard getChatBoard()
 	{
-        return chatBoard;
-    }
+		return chatBoard;
+	}
 }

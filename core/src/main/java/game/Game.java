@@ -176,27 +176,28 @@ public abstract class Game
 			Colour c = player.getColour();
 			int length = player.calcRoadLength();
 
-			if(length > max)
+			if (length > max)
 			{
 				cols.clear();
 				max = length;
 				cols.add(c);
 			}
-			else if(length == max) cols.add(c);
+			else if (length == max) cols.add(c);
 		}
 
 		// Remove longest road victory points if necessary
 		if (longestRoad >= MIN_ROAD_LENGTH)
 		{
 			// If the player no longer has longest road
-			if(max < MIN_ROAD_LENGTH || !cols.contains(playerWithLongestRoad.getColour()))
+			if (max < MIN_ROAD_LENGTH || !cols.contains(playerWithLongestRoad.getColour()))
 			{
 				this.playerWithLongestRoad = null;
 				playerWithLongestRoad.setHasLongestRoad(false);
 			}
 
-			// if the road was broken but the player with the longest road still has it
-			if(broken && cols.contains(playerWithLongestRoad.getColour()))
+			// if the road was broken but the player with the longest road still
+			// has it
+			if (broken && cols.contains(playerWithLongestRoad.getColour()))
 			{
 				longestRoad = max;
 				return;
@@ -208,7 +209,8 @@ public abstract class Game
 		if (max >= MIN_ROAD_LENGTH)
 		{
 			// If there is a tie, no one gets longest road
-			if(broken && cols.size() > 1) return;
+			if (broken && cols.size() > 1)
+				return;
 			else
 			{
 				Colour c = cols.get(0);

@@ -24,11 +24,13 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	private HeadsUpDisplay hud;
 	private boolean isAI;
 
-	public static Skin getSkin() {
+	public static Skin getSkin()
+	{
 		return skin;
 	}
 
-	public static AssetMan getAssets() {
+	public static AssetMan getAssets()
+	{
 		return assets;
 	}
 
@@ -39,11 +41,10 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		Gdx.graphics.setContinuousRendering(false);
 
 		skin = new Skin(Gdx.files.internal("skin.json"));
-		Window.WindowStyle ws = new Window.WindowStyle(SettlersOfCatan.getSkin().getFont("body"),
-				Color.WHITE, AssetMan.getDrawable("resources.png"));
+		Window.WindowStyle ws = new Window.WindowStyle(SettlersOfCatan.getSkin().getFont("body"), Color.WHITE,
+				AssetMan.getDrawable("resources.png"));
 		CheckBox.CheckBoxStyle cs = new CheckBox.CheckBoxStyle(AssetMan.getDrawable("checkBoxOff.png"),
-				AssetMan.getDrawable("checkBoxOn.png"),SettlersOfCatan.getSkin().getFont("body"),
-				Color.WHITE);
+				AssetMan.getDrawable("checkBoxOn.png"), SettlersOfCatan.getSkin().getFont("body"), Color.WHITE);
 		SettlersOfCatan.getSkin().add("default", ws);
 		SettlersOfCatan.getSkin().add("default", cs);
 
@@ -78,11 +79,11 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	/**
 	 * Starts up a new remote client.
 	 *
-     * @return the status of the connection
+	 * @return the status of the connection
 	 */
 	public void startNewRemoteClient(Client c)
 	{
-		if(c instanceof RemoteAIClient)
+		if (c instanceof RemoteAIClient)
 		{
 			isAI = true;
 		}
@@ -97,11 +98,11 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 	 */
 	public void startNewServer(Client c)
 	{
-		if(c instanceof LocalAIClient)
+		if (c instanceof LocalAIClient)
 		{
 			isAI = true;
 		}
-		
+
 		client = c;
 		t = new Thread(client);
 		t.start();
@@ -154,17 +155,18 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		hud.showDiscardDialog();
 	}
 
-    public void showResponse()
+	public void showResponse()
 	{
 		hud.showResponse();
-    }
+	}
 
 	public void showChooseResource()
 	{
 		hud.showChooseResource();
 	}
 
-	public boolean isAI() {
+	public boolean isAI()
+	{
 		return isAI;
 	}
 }

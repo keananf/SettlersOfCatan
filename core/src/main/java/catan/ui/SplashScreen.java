@@ -18,7 +18,8 @@ public class SplashScreen extends MenuScreen
 	}
 
 	@Override
-	public void render(float delta) {
+	public void render(float delta)
+	{
 		super.render(delta);
 
 		if (Gdx.input.justTouched())

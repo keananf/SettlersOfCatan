@@ -13,16 +13,13 @@ public class DifficultyChooser extends ButtonGroup<CheckBox>
 	private final BooleanSupplier enabled;
 	private final HorizontalGroup group = new HorizontalGroup();
 
-
 	DifficultyChooser(final BooleanSupplier enabled)
 	{
 		this.enabled = enabled;
 		group.space(20);
 
-		final CheckBox[] options = {
-				new CheckBox("Easy", SettlersOfCatan.getSkin()),
-				new CheckBox("Hard", SettlersOfCatan.getSkin())
-		};
+		final CheckBox[] options = { new CheckBox("Easy", SettlersOfCatan.getSkin()),
+				new CheckBox("Hard", SettlersOfCatan.getSkin()) };
 
 		for (CheckBox cb : options)
 		{
@@ -33,7 +30,8 @@ public class DifficultyChooser extends ButtonGroup<CheckBox>
 	}
 
 	@Override
-	protected boolean canCheck(CheckBox button, boolean newState) {
+	protected boolean canCheck(CheckBox button, boolean newState)
+	{
 		final boolean superRes = super.canCheck(button, newState);
 		return superRes && enabled.getAsBoolean();
 	}
@@ -42,9 +40,12 @@ public class DifficultyChooser extends ButtonGroup<CheckBox>
 	{
 		switch (getChecked().getText().toString())
 		{
-			case "Easy": return Difficulty.VERYEASY;
-			case "Hard": return Difficulty.EASY;
-			default:     return null;
+		case "Easy":
+			return Difficulty.VERYEASY;
+		case "Hard":
+			return Difficulty.EASY;
+		default:
+			return null;
 		}
 	}
 

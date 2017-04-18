@@ -42,6 +42,7 @@ public class GameScreen implements Screen
 	private final List<Node> nodes;
 	private final List<Edge> edges;
 	private final List<Hex> hexes;
+
 	/** Initial world setup */
 	GameScreen(final SettlersOfCatan game)
 	{
@@ -120,17 +121,16 @@ public class GameScreen implements Screen
 				volatileInstances.add(ModelFactory.getRoadInstance(road));
 			}
 		}
-	
-		for(final Hex hex : hexes) {
-			if(hex.hasRobber()){
+
+		for (final Hex hex : hexes)
+		{
+			if (hex.hasRobber())
+			{
 				volatileInstances.add(ModelFactory.placeRobber(hex));
 			}
 		}
-	
+
 	}
-	
-	
-	
 
 	@Override
 	public void dispose()

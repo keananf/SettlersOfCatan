@@ -49,15 +49,31 @@ public class HeadsUpDisplay extends Stage
 
 		// Last dice roll
 		final Counter diceRoll = new Counter("dice", state::getDice);
+		diceRoll.addListener(new ClickListener()
+		{
+			@Override
+			public void clicked(InputEvent event, float x, float y)
+			{
+				client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.ROLLDICE));
+			}
+		});
 		root.add(diceRoll).right().top().uniform();
 
-		/* ******* */ root.row().expand(); /* ************************************************************************ */
+		/* ******* */ root.row()
+				.expand(); /*
+							 * *************************************************
+							 * * **********************
+							 */
 
 		root.add(getDevCards(isAI)).left();
 		root.add(/* empty cell */);
 		root.add(getPlayerBars(isAI)).right();
 
-		/* ******* */ root.row().expand(); /* ************************************************************************ */
+		/* ******* */ root.row()
+				.expand(); /*
+							 * *************************************************
+							 * * **********************
+							 */
 
 		if (!isAI)
 		{
@@ -75,7 +91,7 @@ public class HeadsUpDisplay extends Stage
 		root.add(getResources()).bottom();
 
 		// Buttons Stacked on top of one another
-		if(!isAI)
+		if (!isAI)
 		{
 			VerticalGroup buttons = new VerticalGroup();
 			buttons.space(5);
@@ -89,10 +105,12 @@ public class HeadsUpDisplay extends Stage
 		}
 	}
 
-	private VerticalGroup getDevCards(boolean isAi) {
+	private VerticalGroup getDevCards(boolean isAi)
+	{
 		final VerticalGroup developmentCards = new VerticalGroup();
 		developmentCards.space(5);
-		for (DevelopmentCardType type : DevelopmentCardType.values()) {
+		for (DevelopmentCardType type : DevelopmentCardType.values())
+		{
 			// Skip victory point cards as they will be listed under one thing
 			if (type.equals(DevelopmentCardType.Library) || type.equals(DevelopmentCardType.University)
 					|| type.equals(DevelopmentCardType.Chapel) || type.equals(DevelopmentCardType.Palace)
@@ -104,10 +122,13 @@ public class HeadsUpDisplay extends Stage
 			developmentCards.addActor(counter);
 
 			// Make buttons non-functional if an AI is playing
-			if (!isAi) {
-				counter.addListener(new ClickListener() {
+			if (!isAi)
+			{
+				counter.addListener(new ClickListener()
+				{
 					@Override
-					public void clicked(InputEvent event, float x, float y) {
+					public void clicked(InputEvent event, float x, float y)
+					{
 						Turn turn = new Turn(Requests.Request.BodyCase.PLAYDEVCARD);
 						turn.setChosenCard(type);
 						client.acquireLocksAndSendTurn(turn);
@@ -125,7 +146,8 @@ public class HeadsUpDisplay extends Stage
 		players.space(5);
 		for (Player player : state.getPlayersAsList())
 		{
-			if (player != state.getPlayer()) {
+			if (player != state.getPlayer())
+			{
 				players.addActor(new PlayerBar(player, client, this, isAI));
 			}
 		}
@@ -140,8 +162,8 @@ public class HeadsUpDisplay extends Stage
 		{
 			if (type != ResourceType.Generic)
 			{
-				resources.addActor(new Counter(type.toString().toLowerCase(),
-						() -> me.getResources().getOrDefault(type, 0)));
+				resources.addActor(
+						new Counter(type.toString().toLowerCase(), () -> me.getResources().getOrDefault(type, 0)));
 			}
 		}
 		return resources;
@@ -205,8 +227,7 @@ public class HeadsUpDisplay extends Stage
 			public void clicked(InputEvent event, float x, float y)
 			{
 				super.clicked(event, x, y);
-				TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(),
-						null, client, hud);
+				TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(), null, client, hud);
 				dialog.show(hud);
 			}
 		});
@@ -221,7 +242,9 @@ public class HeadsUpDisplay extends Stage
 		if (messageTimeLeft > 0)
 		{
 			messageTimeLeft -= delta;
-		} else {
+		}
+		else
+		{
 			messageBox.setVisible(false);
 		}
 	}
@@ -239,15 +262,16 @@ public class HeadsUpDisplay extends Stage
 		dialog.show(this);
 	}
 
-    public void showResponse()
+	public void showResponse()
 	{
 		TradeResponseDialog dialog = new TradeResponseDialog("Trade", SettlersOfCatan.getSkin(), client, this);
 		dialog.show(this);
-    }
+	}
 
 	public void showChooseResource()
 	{
-		ChooseResourceDialog dialog = new ChooseResourceDialog("Choose Resource", SettlersOfCatan.getSkin(), client, this);
+		ChooseResourceDialog dialog = new ChooseResourceDialog("Choose Resource", SettlersOfCatan.getSkin(), client,
+				this);
 		dialog.show(this);
 	}
 }

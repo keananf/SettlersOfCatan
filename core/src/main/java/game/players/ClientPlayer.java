@@ -24,8 +24,8 @@ public class ClientPlayer extends Player
 	 * @param edge the edge to build the road on
 	 * @param me
 	 */
-	public Road addRoad(Edge edge, boolean me, Bank bank) throws RoadExistsException, CannotBuildRoadException,
-			CannotAffordException
+	public Road addRoad(Edge edge, boolean me, Bank bank)
+			throws RoadExistsException, CannotBuildRoadException, CannotAffordException
 	{
 		List<Integer> listsAddedTo = new ArrayList<>();
 		Road r = new Road(edge, colour);
@@ -37,8 +37,8 @@ public class ClientPlayer extends Player
 		// afford it
 		if (canBuildRoad(edge, bank) || !me)
 		{
-			if(me && expectedRoads == 0 && getRoads().size() >= 2) spendResources(Road.getRoadCost(), bank);
-			if(expectedRoads > 0) expectedRoads--;
+			if (me && expectedRoads == 0 && getRoads().size() >= 2) spendResources(Road.getRoadCost(), bank);
+			if (expectedRoads > 0) expectedRoads--;
 			edge.setRoad(r);
 
 			// Find out where this road is connected

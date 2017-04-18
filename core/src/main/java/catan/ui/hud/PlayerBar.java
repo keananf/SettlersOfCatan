@@ -36,7 +36,8 @@ class PlayerBar extends Stack
 		row.addActor(name);
 
 		// Only display buttons if the player is NOT an AI
-		if(!isAI) {
+		if (!isAI)
+		{
 			final VerticalGroup btnCol = new VerticalGroup();
 			btnCol.space(5);
 			row.addActor(btnCol);
@@ -44,9 +45,11 @@ class PlayerBar extends Stack
 			// Steal button
 			final ImageButton steal = AssetMan.getImageButton("steal.png");
 			btnCol.addActor(steal);
-			steal.addListener(new ClickListener() {
+			steal.addListener(new ClickListener()
+			{
 				@Override
-				public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				public void touchUp(InputEvent event, float x, float y, int pointer, int button)
+				{
 					Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTARGETPLAYER);
 					turn.setTarget(player.getColour());
 					client.acquireLocksAndSendTurn(turn);
@@ -56,9 +59,11 @@ class PlayerBar extends Stack
 			// Trade button
 			final ImageButton trade = AssetMan.getImageButton("trade.png");
 			btnCol.addActor(trade);
-			trade.addListener(new ClickListener() {
+			trade.addListener(new ClickListener()
+			{
 				@Override
-				public void clicked(InputEvent event, float x, float y) {
+				public void clicked(InputEvent event, float x, float y)
+				{
 					super.clicked(event, x, y);
 					TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(),
 							Board.Player.newBuilder().setId(player.getId()).build(), client, hud);

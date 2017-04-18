@@ -27,7 +27,8 @@ class LocalGameSetupScreen extends GameSetupScreen
 				final Client client;
 				if (playerIsAI())
 				{
-					client = new LocalAIClient(getChosenDifficulty(), getChosenDifficulty(), game, getUsername(), numberOfAIs.getNumericValue());
+					client = new LocalAIClient(getChosenDifficulty(), getChosenDifficulty(), game, getUsername(),
+							numberOfAIs.getNumericValue());
 				}
 				else
 				{

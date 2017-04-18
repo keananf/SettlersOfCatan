@@ -435,9 +435,9 @@ public class HexGrid
 		this.ports = ports;
 
 		// Set exchange resources
-		for(Port p : ports)
+		for (Port p : ports)
 		{
-			if(p.getExchangeType().equals(ResourceType.Generic))
+			if (p.getExchangeType().equals(ResourceType.Generic))
 			{
 				p.setExchangeAmount(3);
 			}

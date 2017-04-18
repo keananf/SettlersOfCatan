@@ -183,8 +183,8 @@ public class Port extends Edge
 		return exchangeAmount;
 	}
 
-    public void setExchangeAmount(int exchangeAmount)
+	public void setExchangeAmount(int exchangeAmount)
 	{
-        this.exchangeAmount = exchangeAmount;
-    }
+		this.exchangeAmount = exchangeAmount;
+	}
 }

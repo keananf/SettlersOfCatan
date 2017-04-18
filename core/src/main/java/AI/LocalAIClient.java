@@ -17,7 +17,8 @@ public class LocalAIClient extends AIClient
 	private Server server;
 	private Thread serverThread;
 
-	public LocalAIClient(Difficulty difficulty, Difficulty opponentDifficulty, SettlersOfCatan game, String userName, int numAIs)
+	public LocalAIClient(Difficulty difficulty, Difficulty opponentDifficulty, SettlersOfCatan game, String userName,
+			int numAIs)
 	{
 		super(difficulty, userName, game);
 		this.opponentDifficulty = opponentDifficulty;

@@ -164,11 +164,11 @@ public abstract class Client implements Runnable
 			getTurn().setChosenResources(selectedMove.getChosenResources());
 			break;
 		case INITIATETRADE:
-			if(selectedMove.getPlayerTrade() != null)
+			if (selectedMove.getPlayerTrade() != null)
 			{
 				getTurn().setPlayerTrade(selectedMove.getPlayerTrade());
 			}
-			else if(selectedMove.getBankTrade() != null)
+			else if (selectedMove.getBankTrade() != null)
 			{
 				getTurn().setBankTrade(selectedMove.getBankTrade());
 			}
@@ -362,7 +362,7 @@ public abstract class Client implements Runnable
 
 	public void renderTradeResponsePopUp()
 	{
-		if(catan != null && (this instanceof LocalClient || this instanceof RemoteClient))
+		if (catan != null && (this instanceof LocalClient || this instanceof RemoteClient))
 		{
 			catan.showResponse();
 		}
@@ -370,7 +370,7 @@ public abstract class Client implements Runnable
 
 	public void renderDiscardPopUp()
 	{
-		if(catan != null && (this instanceof LocalClient || this instanceof RemoteClient))
+		if (catan != null && (this instanceof LocalClient || this instanceof RemoteClient))
 		{
 			catan.showDiscard();
 		}
@@ -378,7 +378,7 @@ public abstract class Client implements Runnable
 
 	public void renderChooseResourcePopUp()
 	{
-		if(catan != null && (this instanceof LocalClient || this instanceof RemoteClient))
+		if (catan != null && (this instanceof LocalClient || this instanceof RemoteClient))
 		{
 			catan.showChooseResource();
 		}

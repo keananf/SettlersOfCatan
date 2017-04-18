@@ -55,26 +55,40 @@ public abstract class MenuScreen implements Screen
 	}
 
 	@Override
-	public void render(final float delta) {
+	public void render(final float delta)
+	{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act(delta);
 		stage.draw();
 	}
 
 	@Override
-	public void resize(final int width, final int height) {
+	public void resize(final int width, final int height)
+	{
 		stage.getViewport().update(width, height, true);
 		primaryGroup.setSize(primaryGroup.getPrefWidth(), primaryGroup.getPrefHeight());
 		secondaryGroup.setSize(secondaryGroup.getPrefWidth(), secondaryGroup.getPrefHeight());
 	}
 
 	@Override
-	public void dispose() {
+	public void dispose()
+	{
 		stage.dispose();
 	}
 
-	@Override public void show() {}
-	@Override public void pause() {}
-	@Override public void resume() {}
-	@Override public void hide() {}
+	@Override
+	public void show()
+	{}
+
+	@Override
+	public void pause()
+	{}
+
+	@Override
+	public void resume()
+	{}
+
+	@Override
+	public void hide()
+	{}
 }

@@ -11,7 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 
 class SaneTextField extends TextField
 {
-	SaneTextField(final String placeholder) {
+	SaneTextField(final String placeholder)
+	{
 		super(placeholder, SettlersOfCatan.getSkin());
 
 		// background
@@ -27,13 +28,18 @@ class SaneTextField extends TextField
 		getStyle().cursor = new Image(new Texture(cursorColor)).getDrawable();
 
 		// placeholder text
-		addListener(new FocusListener() {
+		addListener(new FocusListener()
+		{
 			@Override
-			public void keyboardFocusChanged(final FocusEvent event, final Actor actor, final boolean focused) {
+			public void keyboardFocusChanged(final FocusEvent event, final Actor actor, final boolean focused)
+			{
 				super.keyboardFocusChanged(event, actor, focused);
-				if (focused) {
+				if (focused)
+				{
 					setText("");
-				} else if (((TextField) actor).getText().isEmpty()) {
+				}
+				else if (((TextField) actor).getText().isEmpty())
+				{
 					((TextField) actor).setText(placeholder);
 				}
 			}

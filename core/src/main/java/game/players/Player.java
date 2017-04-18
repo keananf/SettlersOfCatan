@@ -188,7 +188,7 @@ public abstract class Player
 		// For each road in the chain
 		for (Road road : sublist)
 		{
-			if(newList1.contains(road) || newList2.contains(road)) continue;
+			if (newList1.contains(road) || newList2.contains(road)) continue;
 
 			// Divide up subList
 			if (e.getRoad().isConnected(road))
@@ -199,20 +199,21 @@ public abstract class Player
 			{
 				newList2.add(road);
 			}
-			else skipped.add(road);
+			else
+				skipped.add(road);
 		}
 
 		// Loop until all roads sorted
-		while(newList1.size() + newList2.size() != sublist.size())
+		while (newList1.size() + newList2.size() != sublist.size())
 		{
 			// For each skipped road
-			for(Road road : skipped)
+			for (Road road : skipped)
 			{
-				if(newList1.contains(road) || newList2.contains(road)) continue;
+				if (newList1.contains(road) || newList2.contains(road)) continue;
 
 				// Check if connected to any road in first list
 				boolean added = false;
-				for(Road r1 : newList1)
+				for (Road r1 : newList1)
 				{
 					if (road.isConnected(r1))
 					{
@@ -221,10 +222,10 @@ public abstract class Player
 						break;
 					}
 				}
-				if(added) continue;
+				if (added) continue;
 
 				// Check if connected to any road in second list
-				for(Road r2 : newList2)
+				for (Road r2 : newList2)
 				{
 					if (road.isConnected(r2))
 					{
@@ -352,11 +353,11 @@ public abstract class Player
 
 		// Does b already have an edge and is it the initial phase?
 		boolean val = true;
-		if(b != null && getRoads().size() < 2)
+		if (b != null && getRoads().size() < 2)
 		{
-			for(Edge e : b.getNode().getEdges())
+			for (Edge e : b.getNode().getEdges())
 			{
-				if(e.getRoad() != null)
+				if (e.getRoad() != null)
 				{
 					val = false;
 				}
@@ -365,8 +366,9 @@ public abstract class Player
 
 		// Check the location is valid for building and that the player can
 		// afford it
-		return val && bank.getAvailableRoads(colour) > 0 && ((getRoads().size() < 2 || canAfford(Road.getRoadCost())
-						|| expectedRoads > 0) && (b != null || valid));
+		return val && bank.getAvailableRoads(colour) > 0
+				&& ((getRoads().size() < 2 || canAfford(Road.getRoadCost()) || expectedRoads > 0)
+						&& (b != null || valid));
 
 	}
 
@@ -381,8 +383,8 @@ public abstract class Player
 		Point p = new Point(node.getX(), node.getY());
 		Settlement s = new Settlement(node, colour);
 
-		return bank.getAvailableSettlements(colour) > 0 &&(canAfford(Settlement.getSettlementCost())
-				|| getSettlements().size() < MIN_SETTLEMENTS)
+		return bank.getAvailableSettlements(colour) > 0
+				&& (canAfford(Settlement.getSettlementCost()) || getSettlements().size() < MIN_SETTLEMENTS)
 				&& !settlements.containsKey(p) && node.getBuilding() == null && !s.isNearSettlement()
 				&& (node.isNearRoad(colour) || getSettlements().size() < MIN_SETTLEMENTS);
 	}
@@ -577,11 +579,11 @@ public abstract class Player
 	 */
 	public void setHasLongestRoad(boolean hasLongestRoad)
 	{
-		if(!hasLongestRoad)
+		if (!hasLongestRoad)
 		{
 			addVp(-2);
 		}
-		else if(!this.hasLongestRoad) addVp(2);
+		else if (!this.hasLongestRoad) addVp(2);
 		this.hasLongestRoad = hasLongestRoad;
 	}
 
@@ -650,11 +652,11 @@ public abstract class Player
 		int existing = cards.getOrDefault(card, 0);
 		cards.put(card, existing - 1);
 
-		if(card.equals(DevelopmentCardType.RoadBuilding))
+		if (card.equals(DevelopmentCardType.RoadBuilding))
 		{
 			expectedRoads = bank.getAvailableRoads(colour) > 1 ? 2 : 1;
 		}
-		if(card.equals(DevelopmentCardType.YearOfPlenty))
+		if (card.equals(DevelopmentCardType.YearOfPlenty))
 		{
 			expectedResources = bank.getNumAvailableResources() > 1 ? 2 : 1;
 		}

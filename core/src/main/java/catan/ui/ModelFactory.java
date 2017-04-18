@@ -25,9 +25,7 @@ import grid.Node;
 
 class ModelFactory
 {
-	private static final long DEFAULT_ATTRS
-			= VertexAttributes.Usage.Position
-			| VertexAttributes.Usage.Normal
+	private static final long DEFAULT_ATTRS = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal
 			| VertexAttributes.Usage.TextureCoordinates;
 	private static final Vector3 ORIGIN = new Vector3(0, 0, 0);
 	private static final float GROUND_LEVEL = 0.6f;
@@ -36,8 +34,7 @@ class ModelFactory
 	// Materials
 	private static final Material WATER = new Material(
 			TextureAttribute.createDiffuse(AssetMan.getTexture("water.jpg")));
-	private static final Material DIRT = new Material(
-			TextureAttribute.createDiffuse(AssetMan.getTexture("dirt.png")));
+	private static final Material DIRT = new Material(TextureAttribute.createDiffuse(AssetMan.getTexture("dirt.png")));
 
 	// Fonts
 	private static final BitmapFont font = new BitmapFont();
@@ -45,19 +42,19 @@ class ModelFactory
 	private static final Pixmap fontPixmap = new Pixmap(Gdx.files.internal(data.imagePaths[0]));
 
 	// Models
-    private static final Model SEA = builder.createCylinder(150f, 0f, 150f, 6, WATER, DEFAULT_ATTRS);
-    private static final Model ISLAND = builder.createCylinder(11f, 1f, 11f, 6, DIRT, DEFAULT_ATTRS);
-    private static final Model GRAIN = SettlersOfCatan.getAssets().getModel("grain.g3db");
-    private static final Model ORE = SettlersOfCatan.getAssets().getModel("ore.g3db");
-    private static final Model WOOL = SettlersOfCatan.getAssets().getModel("wool.g3db");
-    private static final Model LUMBER = SettlersOfCatan.getAssets().getModel("lumber.g3db");
-    private static final Model GENERIC = SettlersOfCatan.getAssets().getModel("desert.g3db");
-    private static final Model BRICK = SettlersOfCatan.getAssets().getModel("claymine.g3db");
-    private static final Model PORT = SettlersOfCatan.getAssets().getModel("port.g3db");
-    private static final Model ROAD = SettlersOfCatan.getAssets().getModel("road.g3db");
-    private static final Model SETTLEMENT = SettlersOfCatan.getAssets().getModel("settlement.g3db");
-    private static final Model CITY = SettlersOfCatan.getAssets().getModel("city.g3db");
-    private static final Model ROBBER = SettlersOfCatan.getAssets().getModel("robber.g3db");
+	private static final Model SEA = builder.createCylinder(150f, 0f, 150f, 6, WATER, DEFAULT_ATTRS);
+	private static final Model ISLAND = builder.createCylinder(11f, 1f, 11f, 6, DIRT, DEFAULT_ATTRS);
+	private static final Model GRAIN = SettlersOfCatan.getAssets().getModel("grain.g3db");
+	private static final Model ORE = SettlersOfCatan.getAssets().getModel("ore.g3db");
+	private static final Model WOOL = SettlersOfCatan.getAssets().getModel("wool.g3db");
+	private static final Model LUMBER = SettlersOfCatan.getAssets().getModel("lumber.g3db");
+	private static final Model GENERIC = SettlersOfCatan.getAssets().getModel("desert.g3db");
+	private static final Model BRICK = SettlersOfCatan.getAssets().getModel("claymine.g3db");
+	private static final Model PORT = SettlersOfCatan.getAssets().getModel("port.g3db");
+	private static final Model ROAD = SettlersOfCatan.getAssets().getModel("road.g3db");
+	private static final Model SETTLEMENT = SettlersOfCatan.getAssets().getModel("settlement.g3db");
+	private static final Model CITY = SettlersOfCatan.getAssets().getModel("city.g3db");
+	private static final Model ROBBER = SettlersOfCatan.getAssets().getModel("robber.g3db");
 
 	static ModelInstance getSeaInstance()
 	{
@@ -74,13 +71,26 @@ class ModelFactory
 		final Model model;
 		switch (hex.getResource())
 		{
-		case Brick:   model = BRICK;   break;
-		case Generic: model = GENERIC; break;
-		case Grain:   model = GRAIN;   break;
-		case Lumber:  model = LUMBER;  break;
-		case Ore:     model = ORE;     break;
-		case Wool:    model = WOOL;    break;
-		default:      return null;
+		case Brick:
+			model = BRICK;
+			break;
+		case Generic:
+			model = GENERIC;
+			break;
+		case Grain:
+			model = GRAIN;
+			break;
+		case Lumber:
+			model = LUMBER;
+			break;
+		case Ore:
+			model = ORE;
+			break;
+		case Wool:
+			model = WOOL;
+			break;
+		default:
+			return null;
 		}
 
 		final ModelInstance mod = new ModelInstance(model, hex.get3DPos());
@@ -127,15 +137,14 @@ class ModelFactory
 		return material;
 	}
 
-	static ModelInstance getPortInstance(final Node node) //fix
+	static ModelInstance getPortInstance(final Node node) // fix
 	{
-		
-		
+
 		final ModelInstance instance = new ModelInstance(PORT, node.get3DPos());
 		instance.transform.scale(0.5f, 0.5f, 0.4f);
 		instance.transform.translate(0, 1.5f, 0);
 		return instance;
-		
+
 	}
 
 	static ModelInstance getBuildingInstance(final Building building)
@@ -180,13 +189,13 @@ class ModelFactory
 
 		return instance;
 	}
-	
-	static ModelInstance placeRobber(final Hex hex){
+
+	static ModelInstance placeRobber(final Hex hex)
+	{
 		ModelInstance model = new ModelInstance(ROBBER, hex.get3DPos());
-		model.transform.translate(0,0.9f,0);
+		model.transform.translate(0, 0.9f, 0);
 		return model;
 	}
-	
 
 	private static void paint(final ModelInstance instance, final Color color)
 	{

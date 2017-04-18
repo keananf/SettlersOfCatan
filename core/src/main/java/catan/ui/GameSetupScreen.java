@@ -21,9 +21,11 @@ class GameSetupScreen extends MenuScreen
 		addPrimary(nameInput);
 
 		// play as AI checkboxes
-		playAsAIInput.addListener(new ChangeListener() {
+		playAsAIInput.addListener(new ChangeListener()
+		{
 			@Override
-			public void changed(ChangeEvent event, Actor actor) {
+			public void changed(ChangeEvent event, Actor actor)
+			{
 				if (((CheckBox) actor).isChecked())
 				{
 					aiChooser.getGroup().setVisible(true);
@@ -41,11 +43,13 @@ class GameSetupScreen extends MenuScreen
 		addPrimary(aiChooser.getGroup());
 
 		final TextButton backBtn = new TextButton("Main Menu", SettlersOfCatan.getSkin());
-		backBtn.addListener(new ChangeListener() {
-            public void changed(final ChangeEvent event, final Actor actor) {
-                game.setScreen(new MainMenuScreen(game));
-            }
-        });
+		backBtn.addListener(new ChangeListener()
+		{
+			public void changed(final ChangeEvent event, final Actor actor)
+			{
+				game.setScreen(new MainMenuScreen(game));
+			}
+		});
 		addSecondary(backBtn);
 		addSecondary(startBtn);
 	}

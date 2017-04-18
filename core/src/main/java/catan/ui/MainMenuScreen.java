@@ -25,7 +25,7 @@ public class MainMenuScreen extends MenuScreen
 			});
 			addPrimary(button);
 		}
-	
+
 		{
 			final TextButton button = new TextButton("Join Remote Game", SettlersOfCatan.getSkin());
 			button.addListener(new ChangeListener()

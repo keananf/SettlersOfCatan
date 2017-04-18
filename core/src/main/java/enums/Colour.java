@@ -5,10 +5,7 @@ import intergroup.lobby.Lobby;
 
 public enum Colour
 {
-	BLUE(Color.BLUE),
-	RED(Color.RED),
-	ORANGE(Color.ORANGE),
-	WHITE(Color.WHITE);
+	BLUE(Color.BLUE), RED(Color.RED), ORANGE(Color.ORANGE), WHITE(Color.WHITE);
 
 	public final Color displayColor;
 
@@ -16,6 +13,7 @@ public enum Colour
 	{
 		this.displayColor = displayColor;
 	}
+
 	/**
 	 * Translate from the protobuf enum to an internally used enum
 	 *

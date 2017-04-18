@@ -145,10 +145,8 @@ public enum DevelopmentCardType
 	public static DevelopmentCardType chooseRandom(Bank bank) throws BankLimitException
 	{
 		DevelopmentCardType type = null;
-		if(bank.getNumAvailableDevCards() == 0)
-		{
-			throw new BankLimitException(String.format("Not enough dev cards left"));
-		}
+		if (bank.getNumAvailableDevCards() == 0) { throw new BankLimitException(
+				String.format("Not enough dev cards left")); }
 
 		// Randomly choose a development card to allocate
 		while (type == null || bank.getAvailableDevCards().get(type) == 0)

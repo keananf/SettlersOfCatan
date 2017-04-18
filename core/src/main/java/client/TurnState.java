@@ -95,11 +95,13 @@ public class TurnState extends Turn
 		return currentTrade;
 	}
 
-	public boolean hasTraded() {
+	public boolean hasTraded()
+	{
 		return hasTraded;
 	}
 
-	public void setHasTraded(boolean hasTraded) {
+	public void setHasTraded(boolean hasTraded)
+	{
 		this.hasTraded = hasTraded;
 	}
 }

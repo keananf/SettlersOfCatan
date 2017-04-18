@@ -633,10 +633,7 @@ public class Server implements Runnable
 	 */
 	protected void forwardTradeOffer(Trade.WithPlayer playerTrade, Board.Player instigator)
 	{
-		//Colour player = game.getPlayer(instigator.getId()).getColour();
-		//Colour recipient = game.getPlayer(playerTrade.getOther().getId()).getColour();
 		Event ev = Event.newBuilder().setPlayerTradeInitiated(playerTrade).setInstigator(instigator).build();
-		//Message msg = Message.newBuilder().setEvent(ev).build();
 
 		try
 		{
@@ -647,15 +644,11 @@ public class Server implements Runnable
 			e.printStackTrace();
 		}
 
-		/*// Send messages
-		if (connections.containsKey(recipient))
-		{
-			sendMessage(msg, recipient);
-		}
-		if (connections.containsKey(player))
-		{
-			sendMessage(msg, player);
-		}*/
+		/*
+		 * // Send messages if (connections.containsKey(recipient)) {
+		 * sendMessage(msg, recipient); } if (connections.containsKey(player)) {
+		 * sendMessage(msg, player); }
+		 */
 	}
 
 	/**
@@ -667,11 +660,8 @@ public class Server implements Runnable
 	protected void forwardTradeReject(Trade.WithPlayer playerTrade, Board.Player instigator)
 	{
 		// Extract player info, and set up the reject event
-		//Colour recipient = game.getPlayer(playerTrade.getOther().getId()).getColour();
-		//Colour player = game.getPlayer(instigator.getId()).getColour();
 		Event ev = Event.newBuilder().setInstigator(instigator)
 				.setPlayerTradeRejected(EmptyOuterClass.Empty.getDefaultInstance()).build();
-		//Message msg = Message.newBuilder().setEvent(ev).build();
 
 		try
 		{
@@ -681,16 +671,6 @@ public class Server implements Runnable
 		{
 			e.printStackTrace();
 		}
-
-		/*// Send messages
-		if (connections.containsKey(recipient))
-		{
-			sendMessage(msg, recipient);
-		}
-		if (connections.containsKey(player))
-		{
-			sendMessage(msg, player);
-		}*/
 	}
 
 	/**

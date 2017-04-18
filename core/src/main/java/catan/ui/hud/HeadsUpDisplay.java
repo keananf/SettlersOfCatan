@@ -154,8 +154,9 @@ public class HeadsUpDisplay extends Stage
 		{
 			if (type != ResourceType.Generic)
 			{
+				final String typeName = type.toString().toLowerCase();
 				resources.addActor(
-						new Counter(type.toString().toLowerCase(), () -> me.getResources().getOrDefault(type, 0)));
+						new Counter(typeName, () -> me.getResources().getOrDefault(type, 0)));
 			}
 		}
 		return resources;

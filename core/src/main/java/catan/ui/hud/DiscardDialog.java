@@ -49,23 +49,18 @@ public class DiscardDialog extends Dialog
 	private void addOptions(ResourceType r, VerticalGroup vert)
 	{
 		TextField text = new TextField(r.name(), SettlersOfCatan.getSkin());
-		text.setTextFieldListener(new TextField.TextFieldListener()
-		{
-			@Override
-			public void keyTyped(TextField textField, char c)
+		text.setTextFieldListener((textField, c) -> {
+			textField.setText(String.valueOf(c));
+			int num = 0;
+			try
 			{
-				textField.setText(String.valueOf(c));
-				int num = 0;
-				try
-				{
-					num = Integer.parseInt(textField.getText());
-				}
-				catch (NumberFormatException e)
-				{
-					textField.setText(r.name());
-				}
-				resources.put(r, num);
+				num = Integer.parseInt(textField.getText());
 			}
+			catch (NumberFormatException e)
+			{
+				textField.setText(r.name());
+			}
+			resources.put(r, num);
 		});
 
 		vert.addActor(text);

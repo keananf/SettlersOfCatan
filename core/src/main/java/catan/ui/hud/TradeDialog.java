@@ -61,42 +61,32 @@ public class TradeDialog extends Dialog
 	{
 		HorizontalGroup horiz = new HorizontalGroup();
 		TextField text = new TextField(r.name(), SettlersOfCatan.getSkin());
-		text.setTextFieldListener(new TextField.TextFieldListener()
-		{
-			@Override
-			public void keyTyped(TextField textField, char c)
+		text.setTextFieldListener((textField, c) -> {
+			textField.setText(String.valueOf(c));
+			int num = 0;
+			try
 			{
-				textField.setText(String.valueOf(c));
-				int num = 0;
-				try
-				{
-					num = Integer.parseInt(textField.getText());
-				}
-				catch (NumberFormatException e)
-				{
-					textField.setText(r.name());
-				}
-				resources.put(r, num);
+				num = Integer.parseInt(textField.getText());
 			}
+			catch (NumberFormatException e)
+			{
+				textField.setText(r.name());
+			}
+			resources.put(r, num);
 		});
 		TextField text2 = new TextField(r.name(), SettlersOfCatan.getSkin());
-		text2.setTextFieldListener(new TextField.TextFieldListener()
-		{
-			@Override
-			public void keyTyped(TextField textField, char c)
+		text2.setTextFieldListener((textField, c) -> {
+			textField.setText(String.valueOf(c));
+			int num = 0;
+			try
 			{
-				textField.setText(String.valueOf(c));
-				int num = 0;
-				try
-				{
-					num = Integer.parseInt(textField.getText());
-				}
-				catch (NumberFormatException e)
-				{
-					textField.setText(r.name());
-				}
-				otherResources.put(r, num);
+				num = Integer.parseInt(textField.getText());
 			}
+			catch (NumberFormatException e)
+			{
+				textField.setText(r.name());
+			}
+			otherResources.put(r, num);
 		});
 		horiz.addActor(text);
 		horiz.addActor(text2);

@@ -23,7 +23,7 @@ class Counter extends Stack
 		this(new Image(AssetMan.getTexture(format(ICON_FMT, type))), countSupplier);
 	}
 
-	Counter(final Image bground, final Supplier<Integer> countSupplier)
+	private Counter(final Image bground, final Supplier<Integer> countSupplier)
 	{
 		this.countSupplier = countSupplier;
 		add(bground);

@@ -10,20 +10,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import enums.ResourceType;
 import intergroup.Requests;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ChooseResourceDialog extends Dialog
+class ChooseResourceDialog extends Dialog
 {
 	private final Client client;
 	private ResourceType chosenResource;
-	private List<CheckBox> checkBoxes;
 
-	public ChooseResourceDialog(Skin skin, Client client, HeadsUpDisplay hud)
+	ChooseResourceDialog(Skin skin, Client client, HeadsUpDisplay hud)
 	{
 		super("Choose Resource", skin);
 		this.client = client;
-		checkBoxes = new ArrayList<>();
 
 		VerticalGroup vert = new VerticalGroup();
 		final Table root = new Table();
@@ -74,7 +69,6 @@ public class ChooseResourceDialog extends Dialog
 			}
 		});
 
-		checkBoxes.add(checkBox);
 		vert.addActor(checkBox);
 	}
 

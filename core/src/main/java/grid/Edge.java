@@ -1,11 +1,10 @@
 package grid;
 
-import intergroup.board.Board;
+import com.badlogic.gdx.math.Vector3;
 import game.build.Road;
+import intergroup.board.Board;
 
 import java.util.List;
-
-import com.badlogic.gdx.math.Vector3;
 
 /**
  * Class uniquely describing an edge (between two edges)
@@ -17,7 +16,7 @@ public class Edge implements BoardElement
 	private Node x, y; // way of uniquely describing an edge
 	private Road road;
 
-	public Edge(Node x, Node y)
+	Edge(Node x, Node y)
 	{
 		this.setX(x);
 		this.setY(y);
@@ -34,7 +33,7 @@ public class Edge implements BoardElement
 		Node goal = null, start = null;
 		Node otherX = other.getX();
 		Node otherY = other.getY();
-		int xyDistance = 0, yxDistance = 0, xxDistance = 0, yyDistance = 0;
+		int xyDistance, yxDistance, xxDistance, yyDistance;
 
 		// Find raw differences between both nodes of this edge and the nodes of
 		// the other edge.
@@ -206,7 +205,7 @@ public class Edge implements BoardElement
 	/**
 	 * @param x the x to set
 	 */
-	public void setX(Node x)
+	void setX(Node x)
 	{
 		this.x = x;
 	}
@@ -222,7 +221,7 @@ public class Edge implements BoardElement
 	/**
 	 * @param y the y to set
 	 */
-	public void setY(Node y)
+	void setY(Node y)
 	{
 		this.y = y;
 	}

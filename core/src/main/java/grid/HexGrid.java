@@ -111,7 +111,7 @@ public class HexGrid
 	 * Creates edges and relationships between the different board elements.
 	 * Nodes are given their adjacent hexes, and edges are made between nodes.
 	 */
-	public void setUpReferences()
+	private void setUpReferences()
 	{
 		// for each node
 		for (Node node : nodes.values())
@@ -378,7 +378,7 @@ public class HexGrid
 	 * @param p2 the second point
 	 * @return the internal version of the road
 	 */
-	public Edge getEdge(Point p1, Point p2)
+	private Edge getEdge(Point p1, Point p2)
 	{
 		// Find nodes and edges
 		Node n1 = getNode((int) p1.getX(), (int) p1.getY());

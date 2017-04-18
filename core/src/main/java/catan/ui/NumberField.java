@@ -1,6 +1,6 @@
 package catan.ui;
 
-public class NumberField extends SaneTextField
+class NumberField extends SaneTextField
 {
 	NumberField(final String placeholder)
 	{

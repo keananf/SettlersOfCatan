@@ -410,9 +410,9 @@ public class MoveProcessor
 	 * @param turn the initiate trade request
 	 * @return whether or not the trade is valid
 	 */
-	public boolean checkInitiateTrade(Turn turn)
+	private boolean checkInitiateTrade(Turn turn)
 	{
-		Map<ResourceType, Integer> cost = new HashMap<>(), wanting = new HashMap<>();
+		Map<ResourceType, Integer> cost = new HashMap<>(), wanting;
 		boolean val = true;
 
 		if (turn.getBankTrade() == null && turn.getPlayerTrade() == null) return false;

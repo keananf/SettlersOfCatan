@@ -35,14 +35,15 @@ import java.util.concurrent.Semaphore;
 
 public class Server implements Runnable
 {
-	protected MessageProcessor msgProc;
-	protected ServerGame game;
-	protected int numConnections;
-	protected Map<Colour, ListenerThread> connections;
-	protected ServerSocket serverSocket;
-	protected Map<Colour, Thread> aiThreads, threads;
-	protected Map<Colour, AIClient> ais;
-	protected static final int PORT = 7000;
+	private MessageProcessor msgProc;
+	ServerGame game;
+	int numConnections;
+	Map<Colour, ListenerThread> connections;
+	private ServerSocket serverSocket;
+	Map<Colour, Thread> aiThreads;
+	Map<Colour, Thread> threads;
+	Map<Colour, AIClient> ais;
+	private static final int PORT = 7000;
 	private boolean active;
 	private Semaphore lock;
 
@@ -206,7 +207,7 @@ public class Server implements Runnable
 	 * 
 	 * @param event the event from the last processed move
 	 */
-	protected void sendEvents(Event event) throws IOException
+	private void sendEvents(Event event) throws IOException
 	{
 		if (event == null) return;
 
@@ -543,7 +544,7 @@ public class Server implements Runnable
 	 * 
 	 * @param c the colour of the player
 	 */
-	protected void replacePlayer(Colour c)
+	private void replacePlayer(Colour c)
 	{
 		// Replace connection with a new ai
 		LocalAIClientOnServer ai = new LocalAIClientOnServer();
@@ -589,7 +590,7 @@ public class Server implements Runnable
 	 * 
 	 * @param col the colour of the connection to overwrite
 	 */
-	protected void replacePlayerWithAI(Colour col)
+	private void replacePlayerWithAI(Colour col)
 	{
 		if (connections.containsKey(col) && connections.get(col).getConnection() instanceof RemoteClientConnection)
 		{
@@ -631,7 +632,7 @@ public class Server implements Runnable
 	 * @param playerTrade the internal trade request inside the message
 	 * @param instigator the player who requested the trade that was rejected
 	 */
-	protected void forwardTradeOffer(Trade.WithPlayer playerTrade, Board.Player instigator)
+	void forwardTradeOffer(Trade.WithPlayer playerTrade, Board.Player instigator)
 	{
 		Event ev = Event.newBuilder().setPlayerTradeInitiated(playerTrade).setInstigator(instigator).build();
 
@@ -657,7 +658,7 @@ public class Server implements Runnable
 	 * @param playerTrade the internal trade request inside the message
 	 * @param instigator the player who requested the trade that was rejected
 	 */
-	protected void forwardTradeReject(Trade.WithPlayer playerTrade, Board.Player instigator)
+	void forwardTradeReject(Trade.WithPlayer playerTrade, Board.Player instigator)
 	{
 		// Extract player info, and set up the reject event
 		Event ev = Event.newBuilder().setInstigator(instigator)
@@ -680,7 +681,7 @@ public class Server implements Runnable
 	 * @param col
 	 * @throws IOException
 	 */
-	public void sendMessage(Message msg, Colour col)
+	private void sendMessage(Message msg, Colour col)
 	{
 		if (col != null)
 		{
@@ -702,7 +703,7 @@ public class Server implements Runnable
 	 * @param event
 	 * @param c the colour of the player to send the error to
 	 */
-	public void sendError(Event event, Colour c)
+	private void sendError(Event event, Colour c)
 	{
 		Message msg = Message.newBuilder().setEvent(event).build();
 		sendMessage(msg, c);
@@ -724,7 +725,7 @@ public class Server implements Runnable
 		return msgProc.getExpectedMoves(colour);
 	}
 
-	public void sleep()
+	private void sleep()
 	{
 		try
 		{

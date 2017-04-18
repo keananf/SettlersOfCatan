@@ -8,7 +8,7 @@ import enums.Difficulty;
 
 import java.util.function.BooleanSupplier;
 
-public class DifficultyChooser extends ButtonGroup<CheckBox>
+class DifficultyChooser extends ButtonGroup<CheckBox>
 {
 	private final BooleanSupplier enabled;
 	private final HorizontalGroup group = new HorizontalGroup();

@@ -10,9 +10,9 @@ import java.io.IOException;
  * Class which simply listens to a socket. The successfully received message is
  * added to a ConcurrentLinkedQueue. Created by 140001596.
  */
-public class ListenerThread implements Runnable
+class ListenerThread implements Runnable
 {
-	protected IClientConnection conn;
+	private IClientConnection conn;
 	private Colour colour;
 	private Server server;
 	private boolean active;

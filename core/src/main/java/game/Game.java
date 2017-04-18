@@ -26,18 +26,18 @@ public abstract class Game
 	protected Map<Colour, Player> players;
 	protected Map<Board.Player.Id, Colour> idsToColours;
 	protected Colour currentPlayer;
-	protected Colour playerWithLongestRoad;
-	protected Colour playerWithLargestArmy;
-	protected int longestRoad;
-	protected int largestArmy;
+	private Colour playerWithLongestRoad;
+	private Colour playerWithLargestArmy;
+	private int longestRoad;
+	private int largestArmy;
 	protected Bank bank;
 	protected int numPlayers;
 	protected int current; // index of current player
 	public static int NUM_PLAYERS = 4;
-	public static final int MIN_ROAD_LENGTH = 5;
-	public static final int MIN_ARMY_SIZE = 3;
+	private static final int MIN_ROAD_LENGTH = 5;
+	private static final int MIN_ARMY_SIZE = 3;
 
-	public Game()
+	protected Game()
 	{
 		bank = new Bank();
 		grid = new HexGrid(true);
@@ -86,7 +86,7 @@ public abstract class Game
 	 * @param map the map to convert
 	 * @return the protobuf representation of the map
 	 */
-	public Lobby.GameInfo.PlayerDevCardInfo processCards(Map<DevelopmentCardType, Integer> map)
+	protected Lobby.GameInfo.PlayerDevCardInfo processCards(Map<DevelopmentCardType, Integer> map)
 	{
 		Lobby.GameInfo.PlayerDevCardInfo.Builder info = Lobby.GameInfo.PlayerDevCardInfo.newBuilder();
 		info.setUniversity(map.getOrDefault(DevelopmentCardType.University, 0));
@@ -105,7 +105,7 @@ public abstract class Game
 	 * @param info the dev cards received from the network
 	 * @return a map of dev cards to number
 	 */
-	public Map<DevelopmentCardType, Integer> processCards(Lobby.GameInfo.PlayerDevCardInfo info)
+	protected Map<DevelopmentCardType, Integer> processCards(Lobby.GameInfo.PlayerDevCardInfo info)
 	{
 		Map<DevelopmentCardType, Integer> ret = new HashMap<>();
 
@@ -321,7 +321,7 @@ public abstract class Game
 	/**
 	 * @return the next player
 	 */
-	public Colour getNextPlayer()
+	protected Colour getNextPlayer()
 	{
 		return getPlayer(Board.Player.Id.forNumber((1 + current) % NUM_PLAYERS)).getColour();
 	}
@@ -329,7 +329,7 @@ public abstract class Game
 	/**
 	 * @return the next player
 	 */
-	public Colour getLastPlayer()
+	protected Colour getLastPlayer()
 	{
 		return getPlayer(Board.Player.Id.forNumber((current - 1) % NUM_PLAYERS)).getColour();
 	}

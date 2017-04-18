@@ -12,10 +12,10 @@ import intergroup.Requests;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DiscardDialog extends Dialog
+class DiscardDialog extends Dialog
 {
 	private final Client client;
-	Map<ResourceType, Integer> resources;
+	private Map<ResourceType, Integer> resources;
 
 	public DiscardDialog(Skin skin, Client client, HeadsUpDisplay hud)
 	{

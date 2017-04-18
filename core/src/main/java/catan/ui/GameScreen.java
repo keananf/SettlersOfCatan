@@ -22,7 +22,7 @@ import grid.Node;
 
 import java.util.List;
 
-public class GameScreen implements Screen
+class GameScreen implements Screen
 {
 	private static final Environment ENVIRONMENT = new Environment();
 	static

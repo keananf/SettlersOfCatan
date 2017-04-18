@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import java.util.HashSet;
 
-public final class CameraController implements InputProcessor
+final class CameraController implements InputProcessor
 {
 	private static final Vector3 ORIGIN = new Vector3(0f, 0f, 0f);
 	private static final Vector3 Y_AXIS = new Vector3(0f, 1f, 0f);

@@ -25,7 +25,7 @@ public class LocalServer extends Server
 		addAIs(numAis, diff);
 	}
 
-	public LocalServer()
+	private LocalServer()
 	{
 		super();
 		ServerGame.NUM_PLAYERS = 4;

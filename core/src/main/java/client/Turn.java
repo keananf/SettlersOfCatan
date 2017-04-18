@@ -14,19 +14,19 @@ import java.util.Map;
 
 public class Turn
 {
-	protected Requests.Request.BodyCase chosenMove;
+	private Requests.Request.BodyCase chosenMove;
 
-	protected Node chosenNode;
-	protected Edge chosenEdge;
-	protected ResourceType chosenResource;
-	protected Map<ResourceType, Integer> chosenResources;
-	protected Hex chosenHex;
-	protected DevelopmentCardType chosenCard;
-	protected String chatMessage;
-	protected Trade.WithBank bankTrade;
-	protected Trade.WithPlayer playerTrade;
-	protected Trade.Response tradeResponse;
-	protected Colour target;
+	private Node chosenNode;
+	private Edge chosenEdge;
+	private ResourceType chosenResource;
+	Map<ResourceType, Integer> chosenResources;
+	private Hex chosenHex;
+	private DevelopmentCardType chosenCard;
+	private String chatMessage;
+	private Trade.WithBank bankTrade;
+	private Trade.WithPlayer playerTrade;
+	private Trade.Response tradeResponse;
+	private Colour target;
 
 	public Turn()
 	{
@@ -39,13 +39,13 @@ public class Turn
 		setUp();
 	}
 
-	protected void setUp()
+	void setUp()
 	{
 		chosenResources = new HashMap<>();
 		reset();
 	}
 
-	public void reset()
+	void reset()
 	{
 		chosenCard = null;
 		chosenEdge = null;
@@ -63,7 +63,7 @@ public class Turn
 	/**
 	 * Same as above but leaves expected moves in tact
 	 */
-	public void resetInfo()
+	void resetInfo()
 	{
 		chosenCard = null;
 		chosenEdge = null;

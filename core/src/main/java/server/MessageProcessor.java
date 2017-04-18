@@ -36,7 +36,7 @@ public class MessageProcessor
 	private BlockingQueue<ReceivedMessage> movesToProcess;
 	private CurrentTrade currentTrade;
 	private ReceivedMessage lastMessage;
-	protected boolean initialPhase;
+	boolean initialPhase;
 
 	public MessageProcessor(ServerGame game, Server server)
 	{

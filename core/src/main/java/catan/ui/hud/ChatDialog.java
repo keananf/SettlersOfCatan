@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import intergroup.Requests;
 
-public class ChatDialog extends Dialog
+class ChatDialog extends Dialog
 {
 	private final Client client;
 	private final ChatBoard chatBoard;

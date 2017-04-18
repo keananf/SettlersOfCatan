@@ -14,11 +14,12 @@ import intergroup.trade.Trade;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TradeDialog extends Dialog
+class TradeDialog extends Dialog
 {
 	private final Board.Player player;
 	private final Client client;
-	Map<ResourceType, Integer> resources, otherResources;
+	private Map<ResourceType, Integer> resources;
+	private Map<ResourceType, Integer> otherResources;
 
 	public TradeDialog(Skin skin, Board.Player player, Client client, HeadsUpDisplay hud)
 	{

@@ -10,7 +10,7 @@ public enum ResourceType
 	Generic("desert.g3db"), // Default
 	Wool("grass.g3db"), Ore("mountain.g3db"), Grain("grain.g3db"), Brick("mine.g3db"), Lumber("forest.g3db");
 
-	public final String modelPath;
+	private final String modelPath;
 
 	ResourceType(final String modelPath)
 	{

@@ -75,7 +75,7 @@ public class VeryEasyAI extends AICore
 		resources.putAll(getPlayer().getResources());
 		List<ResourceType> want = getDesiredResources(resources);
 		ResourceType maxResource = findMax(resources);
-		ResourceType leastResource = null;
+		ResourceType leastResource;
 		Trade.WithPlayer.Builder trade = Trade.WithPlayer.newBuilder();
 
 		// Set up the resources the player is wanting

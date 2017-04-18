@@ -29,25 +29,27 @@ import java.util.Map;
  */
 public abstract class Player
 {
-	protected int vp; // Victory points
-	protected Colour colour;
-	protected Map<ResourceType, Integer> resources;
-	protected List<List<Road>> roads;
-	protected HashMap<Point, Building> settlements;
-	protected boolean hasLongestRoad;
-	protected boolean hasLargestArmy;
-	protected Map<DevelopmentCardType, Integer> cards, playedDevCards;
-	protected boolean playedDevCard;
-	protected int armySize;
-	protected Board.Player.Id id;
-	protected String userName;
-	protected Map<DevelopmentCardType, Integer> recentBoughtCards;
+	private int vp; // Victory points
+	Colour colour;
+	Map<ResourceType, Integer> resources;
+	List<List<Road>> roads;
+	HashMap<Point, Building> settlements;
+	private boolean hasLongestRoad;
+	private boolean hasLargestArmy;
+	Map<DevelopmentCardType, Integer> cards;
+	private Map<DevelopmentCardType, Integer> playedDevCards;
+	private boolean playedDevCard;
+	private int armySize;
+	private Board.Player.Id id;
+	private String userName;
+	Map<DevelopmentCardType, Integer> recentBoughtCards;
 
 	private static final int VP_THRESHOLD = 10;
 	private static final int MIN_SETTLEMENTS = 2;
-	protected int expectedRoads, expectedResources;
+	int expectedRoads;
+	private int expectedResources;
 
-	public Player(Colour colour, String userName)
+	Player(Colour colour, String userName)
 	{
 		this.colour = colour;
 		roads = new ArrayList<>();
@@ -94,9 +96,9 @@ public abstract class Player
 	 *            ones)
 	 * @return boolean dictating whether or not this method was successful
 	 */
-	protected boolean checkRoadsAndAdd(Road r, List<Integer> listsAddedTo)
+	boolean checkRoadsAndAdd(Road r, List<Integer> listsAddedTo)
 	{
-		boolean isConnected = false, valid = false;
+		boolean isConnected, valid = false;
 		int index = 0;
 
 		// Check if this road is adjacent to any others
@@ -176,7 +178,7 @@ public abstract class Player
 		roads.add(newList2);
 	}
 
-	public List<List<Road>> segmentRoads(List<Road> sublist, Edge e, Edge other)
+	private List<List<Road>> segmentRoads(List<Road> sublist, Edge e, Edge other)
 	{
 		List<Road> newList1 = new ArrayList<>();
 		List<Road> newList2 = new ArrayList<>();
@@ -250,7 +252,7 @@ public abstract class Player
 	 * @param listsAddedTo the number of lists (of adjacent roads) it was added
 	 *            to
 	 */
-	protected void mergeRoads(Road r, List<Integer> listsAddedTo)
+	void mergeRoads(Road r, List<Integer> listsAddedTo)
 	{
 		if (listsAddedTo.size() > 0)
 		{

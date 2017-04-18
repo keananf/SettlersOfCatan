@@ -13,12 +13,13 @@ import intergroup.trade.Trade;
 
 import java.util.Map;
 
-public class TradeResponseDialog extends Dialog
+class TradeResponseDialog extends Dialog
 {
 	private final Board.Player sender;
 	private final Client client;
 	private final Trade.WithPlayer trade;
-	Map<ResourceType, Integer> offerResources, requestResources;
+	private Map<ResourceType, Integer> offerResources;
+	private Map<ResourceType, Integer> requestResources;
 
 	public TradeResponseDialog(Skin skin, Client client, HeadsUpDisplay hud)
 	{

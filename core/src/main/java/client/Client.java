@@ -23,12 +23,12 @@ import java.util.concurrent.Semaphore;
  */
 public abstract class Client implements Runnable
 {
-	protected SettlersOfCatan catan;
-	protected ClientGame state;
-	protected EventProcessor eventProcessor;
-	protected TurnProcessor turnProcessor;
-	protected MoveProcessor moveProcessor;
-	protected ClientPlayer thisPlayer;
+	private SettlersOfCatan catan;
+	private ClientGame state;
+	private EventProcessor eventProcessor;
+	private TurnProcessor turnProcessor;
+	private MoveProcessor moveProcessor;
+	private ClientPlayer thisPlayer;
 	protected static final int PORT = 7000;
 	private TurnState turn;
 	private IServerConnection conn;
@@ -36,13 +36,13 @@ public abstract class Client implements Runnable
 	private List<String> usersInLobby;
 	protected boolean active;
 
-	public Client(SettlersOfCatan game, String userName)
+	protected Client(SettlersOfCatan game, String userName)
 	{
 		this(userName);
 		this.catan = game;
 	}
 
-	public Client(String userName)
+	protected Client(String userName)
 	{
 		thisPlayer = new ClientPlayer(Colour.BLUE, userName);
 		usersInLobby = new ArrayList<>(Game.NUM_PLAYERS);
@@ -133,7 +133,7 @@ public abstract class Client implements Runnable
 	 * 
 	 * @param selectedMove this move and corresponding information
 	 */
-	public void updateTurn(Turn selectedMove)
+	private void updateTurn(Turn selectedMove)
 	{
 		// Reset and set chosen field
 		getTurn().resetInfo();
@@ -325,7 +325,7 @@ public abstract class Client implements Runnable
 		return stateLock;
 	}
 
-	public Semaphore getTurnLock()
+	protected Semaphore getTurnLock()
 	{
 		return turnLock;
 	}

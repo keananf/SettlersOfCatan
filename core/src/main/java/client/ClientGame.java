@@ -34,7 +34,7 @@ public class ClientGame extends Game
 	private int turns = 0;
 	private Client client;
 
-	public ClientGame()
+	private ClientGame()
 	{
 		super();
 		grid = null;
@@ -253,7 +253,7 @@ public class ClientGame extends Game
 		}
 	}
 
-	protected void processAllocation(List<Board.ResourceAllocation> resourceAllocationList)
+	void processAllocation(List<Board.ResourceAllocation> resourceAllocationList)
 	{
 		// For each player's new resources
 		for (Board.ResourceAllocation alloc : resourceAllocationList)
@@ -701,7 +701,7 @@ public class ClientGame extends Game
 		return client.getPlayer();
 	}
 
-	public void setPlayer(ClientPlayer p)
+	private void setPlayer(ClientPlayer p)
 	{
 		client.setPlayer(p);
 	}

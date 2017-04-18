@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public abstract class MenuScreen implements Screen
+abstract class MenuScreen implements Screen
 {
 	private final Stage stage = new Stage(new ScreenViewport());
 	private final VerticalGroup primaryGroup = new VerticalGroup();

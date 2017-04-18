@@ -1,6 +1,7 @@
 \documentclass[a4paper,doc,draftfirst]{apa6}
 \usepackage[utf8]{inputenc}
 \usepackage[UKenglish]{babel}
+\usepackage{pdfpages}
 \usepackage[style=apa,sortcites,sorting=nyt]{biblatex}
 \DeclareLanguageMapping{UKenglish}{ukenglish-apa}
 \graphicspath{{./}}
@@ -46,7 +47,7 @@ We retain the copyright in this work, and ownership of any resulting intellectua
 This practical was meant to challenge one’s ability to effectively work in a group, and to structure a large scale software project to meet a series of vaguely-defined end goals. To accomplish this, the groups needed to effectively organise tasks amongst themselves, interface with other teams to develop a standard protocol compatible with all implementations, set and adhere to self-imposed deadlines, and finally to deliver a product by the final date. The task was to build Settlers of Catan, a strategy board game, and have it equipped with AIs, the ability to play games over the network, the ability to network with other teams and to of course have a working implementation of Catan’s basic rules and game logic. All of this was to be accomplished at the discretion of the group, through experimentation and refinement where necessary, as well as through the successful delineation of tasks amongst the group’s constituents.
 
 \paragraph{Beginning the project}
-To begin the project, the vague requirements were broken down and elaborated on, so that we could have a more complete idea of our team's goals and how we intended to achieve them. This involved specifying the ways in which we wanted our program to operate, so that architecting the actual implementation involved less subjectivity. We began by setting out to structure the project in as modular of a manner as possible, so as to be able to re-use as much code as we possibly could. This involved more planning in the beginning, but made our lives much easier when figuring out how the different components were to interact (AIs, networking, etc.). We initially knew the best way of going about structuring the project was if the Server didn't discriminate between the nature of its connections; that is, the server shouldn't care -- or even know -- whether its sending or receiving a message from an AI, a player, or the network. We also knew we wanted to write the project with a language or framework specifically tailored for gaming, and that is was not to be a web-app. The latter decision followed from wanting our game to be as accessible as possible, in that it could be played without any internet connection whatsoever, while still retaining the platform independence and flexibility that a web-application offers. The decision rested between C\# and Unity, Lua and the Love2D engine, or Java and libGDX, which is what was used for 'Minecraft.' The latter ended up being chosen due to everyone's familiarity and comfortability with Java development.
+To begin the project, the vague requirements were broken down and elaborated on, so that we could have a more complete idea of our team's goals and how we intended to achieve them. This involved specifying the ways in which we wanted our program to operate, so that architecting the actual implementation involved less subjectivity. We began by setting out to structure the project in as modular of a manner as possible, so as to be able to re-use as much code as we possibly could. This involved more planning in the beginning, but made our lives much easier when figuring out how the different components were to interact (AIs, networking, etc.). We initially knew the best way of going about structuring the project was if the Server didn't discriminate between the nature of its connections; that is, the server shouldn't care -- or even know -- whether its sending or receiving a message from an AI, a player, or the network. We also knew we wanted to write the project with a language or framework specifically tailored for gaming, and that is was not to be a web-app. The latter decision followed from wanting our game to be as accessible as possible, in that it could be played without any internet connection whatsoever, while still retaining the platform independence and flexibility that a web-application offers. The decision rested between C\# and Unity, Lua and the Love2D engine, or Java and libGDX, which is what was used for 'Minecraft.' Originally, we had chosen to use Lua, however it did not have a good library for handling protocol buffers. Given that we ended up basing the entirety of the client / server interaction around protocol bufffers, we opted to switch to Java. This was chosen due to everyone's familiarity and comfortability with Java development, and libGDX's and Java's ability to be run regardless of platform. C\# was decided against as there was no easy way of getting Unity to run on the lab machines, and not everyone in the group was comfortable with switching to working with windows and .NET. 
 
 \paragraph{What this implementation achieves}
 This implementation achieves all of the basic requirements, including the ability to play with AIs (either locally or remotely), the ability to play as an AI or a player, the ability to play an off-line game (local server achieved via threading, and AIs run directly from it), the ability to play as a player networked into a remote server, and the ability to network with other groups’ implementations. The UI and front-end utilise libGDX for rendering of art and graphics, and the server is exposed through the abstraction of the actual implementation of a Client’s connection. For example, the server is able to be run with remote players through Java’s standard TCP sockets, or alternatively through a local connection all via the same code and turn flow; in the case of it being locally run from a client, the server is capable of being run on a different thread (spun off of a ‘LocalClient’ or ‘LocalAIClient’) complete with complex, concurrent data structures and semaphores to ensure the correct behaviour. Conversely, the server is capable of being run as a stand-alone program, where clients can simply connect via TCP sockets. Given that connections are abstracted over, these features can all be mixed and matched, depending which components are plugged in with the Server (e.g. a completely offline game with four AIs, an offline game with one human player and three AIs, or an online game with a human player, and any combination of remote clients and local AIs to fill in the blanks. Java is used throughout the entire project, for the coding of the game logic, the server, and the client.
@@ -206,12 +207,12 @@ Development Cards are most useful at the end of the game when you are close to w
 
 Hence the main strategy of the AI is to prioritise aspects of the game in the following order:
 
-\begin{Priorities}
+\begin{description}
 \item[$\bullet$ Roads] - prioritised throughout the game while aiding building of settlements
 \item[$\bullet$ Settlements] - prioritised at the beginning of the game while advancing
 \item[$\bullet$ Cities] - considered once advanced to a stable game state 
 \item[$\bullet$ Development Cards] - considered and prioritised at the end of the game or when an opponent is close in terms of victory points.
-\end{Priorities}
+\end{description}
 
 The AI will expand quickly by building a lot of settlements and roads quickly. This will give our AI access to better settlement locations early on (stabilising resource flow )and will increase its chances of getting the longest road. 
 
@@ -221,13 +222,13 @@ The AI will expand quickly by building a lot of settlements and roads quickly. T
 The first thing we considered was which resources we wanted our AI player to prioritize. As our main strategy is to have the AI expand quickly and build as many settlements and roads as possible. To this end, we decided to make ore our lowest priority as it is the only resource that is not used in building settlements or roads.
 While deciding how to prioritize the remaining four resources we looked at how often our AI would require those resources. We observed that bricks and lumber are required for both settlements and roads it made a lot of sense to make those our top priorities as it would allow the AI to better achieve its goal of expanding quickly. Our third priority is grain as it is a necessary resource for more items than any of the others which provides a strong case for it being the most useful resource. However, two of the three items that can be bought for grain also require ore and as we had decided to make ore our lowest priority it would not have been sensible to prioritize grain any higher. After these discussions we agreed on the following resource priority order:
 
-\begin{Resource Types}
+\begin{description}
 \item[$\bullet$ Bricks]
 \item[$\bullet$ Lumber]
 \item[$\bullet$ Grain]
 \item[$\bullet$ Wool]
 \item[$\bullet$ Ore]
-\end{Resource Types}
+\end{description}
 
 Resources Implementation:
 The prioritization of these resources is implemented using an ArrayList containing each resource type that ensures that the AI attempts to acquire each resource and does not attempt to only acquire the most favourable one. The ArrayList in the Rank Node class is modified at each call of the rank method by ranking the resource in ascending order, making the most scarce resource always a priority. Hence, because we take care of prioritization in the initial road and settlement placements of the game, we can now focus on establishing a balance between getting the right amount of resources and getting the right resources.
@@ -243,6 +244,10 @@ During the game the AI decides to prioritise the settlements that are around the
 
 
 \paragraph{Road Placements}
+\begin{figure}[hbtp]
+\includegraphics[width=\textwidth]{AIRoadPlacement}
+\caption{How road placement is determined}
+\end{figure}
 For each potential new road location there are two different situations that can apply to the location. The particular situation must be identified before the edge can be ranked properly.    
  The first situation is that the road would be connected to a node that a settlement can be built on. In this situation we decided that the most important factor would be the feasibility of the connected node as a settlement location. As such, the road is ranked based on the rank that the node would receive if it were being considered as a settlement location.
 The second situation is that the road is not connected to a node on which a settlement can be built such as an edge connected to a settlement. When ranking an edge under these conditions we first take into account what the edge is connected to. If the edge is connected to an opposing settlement then the dge gets ranked down as this would stifle expansion. If the case is that the edge is connected to one of the AI player’s settlements then the edge gets ranked up slightly as a road built on that edge would contribute to the longest road goal without harming the AI’s ability to expand.  If the edge is connected to an empty node then we rank the edge based on the road building options that it would open up to the AI player. Edges in this situation are ranked based on the number of valid settlement building options they could potentially provide.
@@ -269,12 +274,12 @@ When choosing which player to target when given the opportunity via rolling a se
 \paragraph{Playing Development Cards}
 Development cards are ranked lower than roads and settlements due to our strategy
 
-\begin{Cards}
+\begin{description}
 \item[$\bullet$ Knight Card] As The Knight Card lets you move the robber, it gets a basic ranking as moving the rubber allows the AI to get resources that help it advance quicker. Apart from that there is no other benefit of playing this card (not considering the Victory points that are automatically assigned to a player).
 \item[$\bullet$ Road Building Card] When evaluating this card we find the player with the longest road to get the length of the longest road and then compare it to our own road to see if 2 additional roads will give us the longest road award. Additionally, this card still helps us to expand quickly, hence it is ranked higher than the rank card.
 \item[$\bullet$ Year of Plenty Card] As this card allows you to get 2 resource cards it checks if the AI is in need of 2 or less resources to build a road or a settlement. If the AI has enough resources for these 2 tasks, it evaluates if we are in need of one resource card to upgrade to a city. 1 has been chosen as we do not want to waste a development card on upgrading to a city and expansion is our strategy.
 \item[$\bullet$ Monopoly Card] When the AI is given the opportunity to play the monopoly card, it checks to see if it has a settlement or city by a port which would enable it to trade the cards that it would gain at a better rate than with the resource bank. If so it ranks higher, but if it has no access to a port it gains the standard ranking of 1.
-\end{Cards}
+\end{description}
 
 Due to the group protocol, it is no longer possible to keep the remaining development cards from the other players until you play them. The victory points earned from them and some of the development cards mentioned above are added immediately to the player’s total victory points.
 
@@ -317,12 +322,15 @@ The team functioned by essentially splitting into a front-end, ai, and back-end 
 
 \subsection{Project objectives, specification and initial plan}
 As submitted during the year.
+\includepdf[page=-]{InitialPlan.pdf}
+\includepdf[page=-]{RequirementsSpecification.pdf}
 
 
 
 
-\subsection{Interim report}
+\subsection{S2 Interim report}
 As submitted during the year.
+\includepdf[page=-]{ProgressReport.pdf}
 
 
 

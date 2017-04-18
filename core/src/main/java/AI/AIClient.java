@@ -57,12 +57,10 @@ public abstract class AIClient extends Client
 				Events.Event ev = acquireLocksAndGetEvents();
 				if (ai.getExpectedEvents().contains(ev.getTypeCase())
 						|| ev.getTypeCase().equals(Events.Event.TypeCase.ERROR)
-						|| ev.getTypeCase().equals(Events.Event.TypeCase.ALLRESOURCES)
-						|| ev.getTypeCase().equals(Events.Event.TypeCase.TURNENDED))
+						|| ev.getTypeCase().equals(Events.Event.TypeCase.ALLRESOURCES))
 				{
 					if (!ev.getTypeCase().equals(Events.Event.TypeCase.CARDSDISCARDED)
-							|| ev.getInstigator().getId().getNumber() == getPlayer().getId().getNumber()
-							|| ev.getTypeCase().equals(Events.Event.TypeCase.ALLRESOURCES))
+							|| ev.getInstigator().getId().getNumber() == getPlayer().getId().getNumber())
 					{
 						log("Client Proc", "Resuming");
 						ai.resume();

@@ -281,7 +281,25 @@ public class EasyAI extends AICore
     @Override
     public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)
     {
-        return (tradeResponse == Trade.Response.REJECT) ? 0 : -1;
+        int ranking = -1;
+        Map<ResourceType,Integer> given = getState().processResources(trade.getOffering());
+        Map<ResourceType,Integer>  taking = getState().processResources(trade.getWanting());
+
+        for(ResourceType rt : getPlayer().getResources().keySet()){
+            if(getPlayer().getResources().get(rt) <=1 ){
+                if(given.containsKey(rt)){
+                    ranking ++;
+                }
+            }
+            else if(getPlayer().getResources().get(rt)>=4){
+                if(taking.containsKey(rt)){
+                    ranking ++;
+                }
+            }
+        }
+
+        return (tradeResponse == Trade.Response.REJECT) ? 0 : ranking;
+
     }
 
     // remains 0 as this is the EasyAI

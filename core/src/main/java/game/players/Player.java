@@ -32,17 +32,15 @@ public abstract class Player
 	private int vp; // Victory points
 	Colour colour;
 	Map<ResourceType, Integer> resources;
-	List<List<Road>> roads;
-	HashMap<Point, Building> settlements;
+	final List<List<Road>> roads;
+	final HashMap<Point, Building> settlements;
 	private boolean hasLongestRoad;
-	private boolean hasLargestArmy;
 	Map<DevelopmentCardType, Integer> cards;
-	private Map<DevelopmentCardType, Integer> playedDevCards;
-	private boolean playedDevCard;
+	private final Map<DevelopmentCardType, Integer> playedDevCards;
 	private int armySize;
 	private Board.Player.Id id;
 	private String userName;
-	Map<DevelopmentCardType, Integer> recentBoughtCards;
+	final Map<DevelopmentCardType, Integer> recentBoughtCards;
 
 	private static final int VP_THRESHOLD = 10;
 	private static final int MIN_SETTLEMENTS = 2;
@@ -66,8 +64,6 @@ public abstract class Player
 			if (r == ResourceType.Generic) continue;
 			resources.put(r, 0);
 		}
-
-		playedDevCard = false;
 	}
 
 	/**
@@ -311,7 +307,6 @@ public abstract class Player
 	 * Checks to see if the user canAfford something
 	 * 
 	 * @param cost
-	 * @throws CannotAffordException
 	 */
 	public boolean canAfford(Map<ResourceType, Integer> cost)
 	{
@@ -327,7 +322,7 @@ public abstract class Player
 
 	/**
 	 * Checks to see if building a road is valid at the given edge
-	 * 
+	 * getGame()
 	 * @param edge the desired road location
 	 * @return if the desired location is valid for a road
 	 */
@@ -353,7 +348,7 @@ public abstract class Player
 			b = r.getEdge().getY().getBuilding();
 		}
 
-		// Does b already have an edge and is it the initial phase?
+		// Does b already have a road and is it the initial phase?
 		boolean val = true;
 		if (b != null && getRoads().size() < 2)
 		{
@@ -569,14 +564,6 @@ public abstract class Player
 	}
 
 	/**
-	 * @param hasLargestArmy the hasLargestArmy to set
-	 */
-	public void setHasLargestArmy(boolean hasLargestArmy)
-	{
-		this.hasLargestArmy = hasLargestArmy;
-	}
-
-	/**
 	 * @param hasLongestRoad the hasLongestRoad to set
 	 */
 	public void setHasLongestRoad(boolean hasLongestRoad)
@@ -587,6 +574,9 @@ public abstract class Player
 		}
 		else if (!this.hasLongestRoad) addVp(2);
 		this.hasLongestRoad = hasLongestRoad;
+	}
+	public boolean getHasLongestRoad(){
+		return hasLongestRoad;
 	}
 
 	public int getNumOfRoadChains()

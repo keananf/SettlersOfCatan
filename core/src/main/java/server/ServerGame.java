@@ -17,6 +17,7 @@ import grid.Node;
 import grid.Port;
 import intergroup.EmptyOuterClass;
 import intergroup.Events;
+import intergroup.Requests;
 import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.resource.Resource;
@@ -26,7 +27,7 @@ import java.util.*;
 
 public class ServerGame extends Game
 {
-	private Random dice;
+	private final Random dice;
 
 	public ServerGame()
 	{
@@ -263,8 +264,11 @@ public class ServerGame extends Game
 		}
 
 		// Invalid request
-		if (oldAmount - discardAmount > ((oldAmount / 2) + 1)) { throw new InvalidDiscardRequest(oldAmount,
-				current.getNumResources()); }
+		if(!current.canAfford(resources)) throw new CannotAffordException(current.getResources(), resources);
+		if (oldAmount - discardAmount != ((oldAmount / 2)) && oldAmount - discardAmount - 1 != ((oldAmount / 2)))
+		{
+			throw new InvalidDiscardRequest(oldAmount,discardAmount);
+		}
 
 		// If the player can afford the request, then spend the resources
 		current.spendResources(resources, bank);
@@ -766,6 +770,28 @@ public class ServerGame extends Game
 		}
 
 		return gameWon.build();
+	}
+
+	public HashMap<Colour, Events.Resources> getResources(HashMap<Colour, List<Requests.Request.BodyCase>> expected)
+	{
+		HashMap<Colour, Events.Resources> all = new HashMap<Colour, Events.Resources>();
+		for(Colour c : expected.keySet())
+		{
+			Player p = getPlayer(c);
+			Events.Resources.Builder builder = Events.Resources.newBuilder();
+
+			// Get all resources
+			Board.ResourceAllocation.Builder alloc = Board.ResourceAllocation.newBuilder();
+			alloc.setPlayer(Board.Player.newBuilder().setId(p.getId()).build());
+			alloc.setResources(processResources(p.getResources()));
+
+			// Build
+			builder.setAlloc(alloc.build());
+			builder.setDiscard(expected.get(c).contains(Requests.Request.BodyCase.DISCARDRESOURCES));
+			all.put(c, builder.build());
+		}
+
+		return all;
 	}
 
 	public Map<Colour, Player> getPlayers()

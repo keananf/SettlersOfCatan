@@ -14,10 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
+
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	private static Skin skin;
-	private static AssetMan assets = new AssetMan();
+	private static final AssetMan assets = new AssetMan();
 	public Client client;
 	private Thread t;
 	private boolean active;
@@ -40,13 +41,16 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		Gdx.graphics.setContinuousRendering(false);
 
-		skin = new Skin(Gdx.files.internal("skin.json"));
-		Window.WindowStyle ws = new Window.WindowStyle(SettlersOfCatan.getSkin().getFont("body"), Color.WHITE,
-				AssetMan.getDrawable("resources.png"));
-		CheckBox.CheckBoxStyle cs = new CheckBox.CheckBoxStyle(AssetMan.getDrawable("checkBoxOff.png"),
-				AssetMan.getDrawable("checkBoxOn.png"), SettlersOfCatan.getSkin().getFont("body"), Color.WHITE);
-		SettlersOfCatan.getSkin().add("default", ws);
-		SettlersOfCatan.getSkin().add("default", cs);
+		skin = new Skin((Gdx.files.internal("skin.json")));
+		skin.add("default", new Window.WindowStyle(
+				skin.getFont("display"),
+				Color.BLACK,
+				AssetMan.getDrawable("dialog.png")));
+		skin.add("default", new CheckBox.CheckBoxStyle(
+				AssetMan.getDrawable("checkBoxOff.png"),
+				AssetMan.getDrawable("checkBoxOn.png"),
+				skin.getFont("body"),
+				Color.WHITE));
 
 		// start off at the splash screen
 		setScreen(new SplashScreen(this));
@@ -145,9 +149,13 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		return active;
 	}
 
-	public void setHUD(HeadsUpDisplay hud)
+	public void setHUD(final HeadsUpDisplay hud)
 	{
 		this.hud = hud;
+	}
+
+	public void sendMessage(final String message) {
+		hud.sendMessage(message);
 	}
 
 	public void showDiscard()

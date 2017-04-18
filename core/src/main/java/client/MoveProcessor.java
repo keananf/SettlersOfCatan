@@ -216,6 +216,12 @@ public class MoveProcessor
 				possibilities.add(turn);
 			}
 		}
+
+		// Request all resources again from server
+		if(possibilities.isEmpty() || getTurn().getErrors() >= 2)
+		{
+			possibilities.add(new Turn(Requests.Request.BodyCase.GETRESOURCES));
+		}
 		return possibilities;
 	}
 
@@ -275,8 +281,6 @@ public class MoveProcessor
 				&& getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
 				&& !target.equals(getGame().getPlayer().getColour()));
 	}
-
-	boolean printed = false;
 
 	/**
 	 * Checks that a CHOOSERESOURCE move is valid
@@ -436,8 +440,8 @@ public class MoveProcessor
 			boolean validOffer = false, validReq = false;
 			for (ResourceType r : ResourceType.values())
 			{
-				if (cost.getOrDefault(r, 0) > 0) validOffer = false;
-				if (wanting.getOrDefault(r, 0) > 0) validReq = false;
+				if (cost.getOrDefault(r, 0) > 0) validOffer = true;
+				if (wanting.getOrDefault(r, 0) > 0) validReq = true;
 			}
 			val = validOffer && validReq;
 			break;
@@ -459,7 +463,8 @@ public class MoveProcessor
 		Requests.Request.BodyCase type = turn.getChosenMove();
 		if (type == null) return false;
 
-		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE)) return true;
+		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE) ||
+				type.equals(Requests.Request.BodyCase.GETRESOURCES)) return true;
 
 		if (getExpectedMoves().contains(type))
 		{
@@ -498,6 +503,9 @@ public class MoveProcessor
 		case BUILDCITY:
 		case BUILDSETTLEMENT:
 			val = checkBuild(turn);
+			break;
+		case GETRESOURCES:
+			val= true;
 			break;
 		case BUILDROAD:
 			val = checkBuildRoad(turn);

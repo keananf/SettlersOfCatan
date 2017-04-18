@@ -6,7 +6,7 @@ import game.build.Settlement;
 @SuppressWarnings("serial")
 public class IllegalPlacementException extends Exception
 {
-	private Settlement settlement;
+	private final Settlement settlement;
 
 	public IllegalPlacementException(Settlement s)
 	{

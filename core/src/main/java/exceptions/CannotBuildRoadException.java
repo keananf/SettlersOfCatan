@@ -6,7 +6,7 @@ import game.build.Road;
 @SuppressWarnings("serial")
 public class CannotBuildRoadException extends Exception
 {
-	private Road road;
+	private final Road road;
 
 	public CannotBuildRoadException(Road r)
 	{

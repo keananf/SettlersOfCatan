@@ -3,8 +3,8 @@ package exceptions;
 @SuppressWarnings("serial")
 public class InvalidDiscardRequest extends Exception
 {
-	private int before;
-	private int after;
+	private final int before;
+	private final int after;
 
 	public InvalidDiscardRequest(int oldAmount, int newAmount)
 	{
@@ -15,7 +15,7 @@ public class InvalidDiscardRequest extends Exception
 	@Override
 	public String getMessage()
 	{
-		return String.format("Invalid discard request. Player needs 7 or less resources.%n" + "Before: %d. After: %d",
+		return String.format("Invalid discard request. Player needs to eliminate half of their resources.%n" + "Before: %d. After: %d",
 				before, after);
 	}
 }

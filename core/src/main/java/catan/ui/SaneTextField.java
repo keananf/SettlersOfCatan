@@ -9,11 +9,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 
-class SaneTextField extends TextField
+public class SaneTextField extends TextField
 {
-	SaneTextField(final String placeholder)
+	public SaneTextField(final String placeholder)
 	{
-		super(placeholder, SettlersOfCatan.getSkin());
+		this(placeholder, "default");
+	}
+
+	public SaneTextField(final String placeholder, final String styleName)
+	{
+		super(placeholder, SettlersOfCatan.getSkin(), styleName);
 
 		// background
 		final Pixmap backgroundColor = new Pixmap(1, 1, Pixmap.Format.RGBA8888);

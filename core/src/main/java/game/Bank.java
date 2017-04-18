@@ -15,11 +15,11 @@ import java.util.Map;
  */
 public class Bank
 {
-	private Map<ResourceType, Integer> availableResources;
-	private Map<DevelopmentCardType, Integer> availableDevCards;
-	private Map<Colour, Integer> availableCities;
-	private Map<Colour, Integer> availableSettlements;
-	private Map<Colour, Integer> availableRoads;
+	private final Map<ResourceType, Integer> availableResources;
+	private final Map<DevelopmentCardType, Integer> availableDevCards;
+	private final Map<Colour, Integer> availableCities;
+	private final Map<Colour, Integer> availableSettlements;
+	private final Map<Colour, Integer> availableRoads;
 
 	public Bank()
 	{

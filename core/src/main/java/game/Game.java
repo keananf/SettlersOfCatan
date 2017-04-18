@@ -23,14 +23,14 @@ import java.util.Map;
 public abstract class Game
 {
 	protected HexGrid grid;
-	protected Map<Colour, Player> players;
-	protected Map<Board.Player.Id, Colour> idsToColours;
+	protected final Map<Colour, Player> players;
+	protected final Map<Board.Player.Id, Colour> idsToColours;
 	protected Colour currentPlayer;
 	private Colour playerWithLongestRoad;
 	private Colour playerWithLargestArmy;
 	private int longestRoad;
 	private int largestArmy;
-	protected Bank bank;
+	protected final Bank bank;
 	protected int numPlayers;
 	protected int current; // index of current player
 	public static int NUM_PLAYERS = 4;
@@ -277,11 +277,9 @@ public abstract class Game
 					playerWithLargestArmy.addVp(-2);
 				}
 				if (armySize >= MIN_ARMY_SIZE) player.addVp(2);
-				if (playerWithLargestArmy != null) playerWithLargestArmy.setHasLargestArmy(false);
 
 				largestArmy = armySize;
 				this.playerWithLargestArmy = c;
-				player.setHasLargestArmy(true);
 			}
 		}
 	}

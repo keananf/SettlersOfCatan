@@ -6,8 +6,8 @@ import enums.Colour;
 @SuppressWarnings("serial")
 public class IllegalPortTradeException extends Exception
 {
-	private Colour offerer;
-	private Port port;
+	private final Colour offerer;
+	private final Port port;
 
 	public IllegalPortTradeException(Colour offerer, Port port)
 	{

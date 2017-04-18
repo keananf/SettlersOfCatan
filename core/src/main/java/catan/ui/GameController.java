@@ -23,9 +23,8 @@ class GameController implements InputProcessor
 	private final Camera camera;
 	private final MoveBuilder moveBuilder;
 
-	private List<Hex> hexes;
-	private List<Node> nodes;
-	private List<Edge> edges;
+	private final List<Hex> hexes;
+	private final List<Edge> edges;
 
 	/** A plane parallel to the game board used to detect clicks. */
 	private final static float DETECTION_Y = 0.6f;
@@ -35,7 +34,7 @@ class GameController implements InputProcessor
 	{
 		this.camera = camera;
 		this.hexes = client.getState().getGrid().getHexesAsList();
-		this.nodes = client.getState().getGrid().getNodesAsList();
+		List<Node> nodes = client.getState().getGrid().getNodesAsList();
 		this.edges = client.getState().getGrid().getEdgesAsList();
 		this.moveBuilder = new MoveBuilder(client);
 	}
@@ -102,12 +101,10 @@ class GameController implements InputProcessor
 
 		if (h == null) return null;
 
-		for (Node node : h.getNodes()) {
+		for (Node node : h.getNodes())
+		{
 			Vector2 coord = node.get2DPos();
-			if (coord.dst(planeX, planeY) < 0.3)
-			{
-				return node;
-			}
+			if (coord.dst(planeX, planeY) < 0.3) { return node; }
 		}
 
 		return null;
@@ -143,8 +140,8 @@ class GameController implements InputProcessor
 	private Hex findHex(float planeX, float planeY)
 	{
 		final float HEX_WIDTH = 2f;
-
-		for (Hex hex : hexes)
+		return getHex(planeX, planeY);
+		/*for (Hex hex : hexes)
 		{
 			final Vector2 pos = hex.get2DPos();
 
@@ -158,7 +155,7 @@ class GameController implements InputProcessor
 				if (planeY <= highestHeight && planeY >= lowestHeight && pos.dst(planeX, planeY) > 1) { return hex; }
 			}
 		}
-		return null;
+		return null;*/
 	}
 
 	// The InputProcessor interface requires these methods be implemented.

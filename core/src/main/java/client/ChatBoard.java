@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ChatBoard
 {
-	private List<ChatMessage> chatMessages;
+	private final List<ChatMessage> chatMessages;
 
 	public ChatBoard()
 	{
@@ -52,10 +52,10 @@ public class ChatBoard
 	 */
 	public class ChatMessage
 	{
-		private String contents;
-		private Date date;
-		private String senderName;
-		private Colour senderColour;
+		private final String contents;
+		private final Date date;
+		private final String senderName;
+		private final Colour senderColour;
 
 		private ChatMessage(String contents, Date date, String senderName, Colour senderColour)
 		{
@@ -63,6 +63,11 @@ public class ChatBoard
 			this.date = date;
 			this.senderName = senderName;
 			this.senderColour = senderColour;
+		}
+
+		public Colour getSenderColour()
+		{
+			return senderColour;
 		}
 
 		public String getMessage()

@@ -21,8 +21,8 @@ class RemoteGameSetupScreen extends GameSetupScreen
 		{
 			public void changed(ChangeEvent event, Actor actor)
 			{
-				boolean valid;
-				Client client;
+				final boolean valid;
+				final Client client;
 
 				// Create proper type of remote client
 				if (playerIsAI())

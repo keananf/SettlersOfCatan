@@ -3,7 +3,8 @@ package exceptions;
 @SuppressWarnings("serial")
 public class InvalidCoordinatesException extends Exception
 {
-	private int x, y;
+	private final int x;
+	private final int y;
 
 	public InvalidCoordinatesException(int x, int y)
 	{

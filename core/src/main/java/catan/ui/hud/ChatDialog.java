@@ -1,64 +1,53 @@
 package catan.ui.hud;
 
 import catan.SettlersOfCatan;
+import catan.ui.SaneTextField;
 import client.ChatBoard;
 import client.Client;
 import client.Turn;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.utils.Align;
 import intergroup.Requests;
 
-class ChatDialog extends Dialog
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+class ChatDialog extends SaneDialog
 {
-	private final Client client;
-	private final ChatBoard chatBoard;
-
-	public ChatDialog(Skin skin, Client client)
+	ChatDialog(final Client client)
 	{
-		super("Chat", skin);
-		this.client = client;
-		this.chatBoard = client.getState().getChatBoard();
+		super("Chat");
 
-		VerticalGroup vert = new VerticalGroup();
-		final Table root = new Table();
-		root.setFillParent(true);
-		addActor(root);
+		final ChatBoard chatBoard = client.getState().getChatBoard();
+		final VerticalGroup verticalGroup = new VerticalGroup();
+		verticalGroup.columnAlign(Align.bottomLeft);
+		final ScrollPane scrollPane = new ScrollPane(verticalGroup);
+		getContentTable().bottom().left();
+		getContentTable().add(scrollPane);
 
-		// Add last 15 Chat messages
-		int i = 0;
-		for (ChatBoard.ChatMessage msg : chatBoard.getMessages())
+		List<ChatBoard.ChatMessage> messages = chatBoard.getMessages().subList(0, chatBoard.getMessages().size());
+		Collections.reverse(messages);
+		for (ChatBoard.ChatMessage msg : messages)
 		{
-			if (++i == 15) break;
-			Label l = new Label(msg.getMessage(), SettlersOfCatan.getSkin());
-			vert.addActor(l);
+			final Label label = new Label(msg.getMessage(), SettlersOfCatan.getSkin());
+			label.setColor(msg.getSenderColour().displayColor);
+			verticalGroup.addActor(label);
 		}
 
 		// Add label
-		TextField chat = new TextField("New", SettlersOfCatan.getSkin());
-		vert.addActor(chat);
+		SaneTextField chat = new SaneTextField("Message", "dialog");
+		getContentTable().row();
+		getContentTable().add(chat).left().bottom();
 
-		root.add(vert).bottom();
-		addConfirmButtons(chat);
-	}
-
-	private void addConfirmButtons(TextField chat)
-	{
-		TextButton button = new TextButton("Submit", SettlersOfCatan.getSkin());
-		button.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				super.clicked(event, x, y);
-
-				// Set up choose
-				Turn turn = new Turn(Requests.Request.BodyCase.CHATMESSAGE);
-				turn.setChatMessage(chat.getText());
-				client.acquireLocksAndSendTurn(turn);
-			}
+		addButton("Submit", () -> {
+			Turn turn = new Turn(Requests.Request.BodyCase.CHATMESSAGE);
+			turn.setChatMessage(chat.getText());
+			client.acquireLocksAndSendTurn(turn);
 		});
-		button(button).button("Cancel", false);
-	}
 
+		addButton("Cancel");
+	}
 }

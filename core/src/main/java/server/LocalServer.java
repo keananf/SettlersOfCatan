@@ -14,7 +14,7 @@ import game.players.Player;
  */
 public class LocalServer extends Server
 {
-	private Player localPlayer;
+	private final Player localPlayer;
 
 	public LocalServer(LocalClientConnection connection, int numAis, Difficulty diff)
 	{

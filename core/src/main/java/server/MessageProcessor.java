@@ -26,14 +26,14 @@ import java.util.concurrent.LinkedBlockingQueue;
  * 
  * @author 140001596
  */
-public class MessageProcessor
+class MessageProcessor
 {
 	private ServerGame game;
 	private final Server server;
 	private boolean monopoly;
-	private Logger logger;
-	private HashMap<Colour, List<Requests.Request.BodyCase>> expectedMoves;
-	private BlockingQueue<ReceivedMessage> movesToProcess;
+	private final Logger logger;
+	private final HashMap<Colour, List<Requests.Request.BodyCase>> expectedMoves;
+	private final BlockingQueue<ReceivedMessage> movesToProcess;
 	private CurrentTrade currentTrade;
 	private ReceivedMessage lastMessage;
 	boolean initialPhase;
@@ -227,7 +227,10 @@ public class MessageProcessor
 			case CHATMESSAGE:
 				ev.setChatMessage(request.getChatMessage());
 				break;
-
+			case GETRESOURCES:
+				HashMap<Colour, Events.Resources> resources = game.getResources(expectedMoves);
+				server.sendResources(resources);
+				break;
 			}
 		}
 		catch (Exception e)
@@ -400,7 +403,9 @@ public class MessageProcessor
 		List<Requests.Request.BodyCase> expected = expectedMoves.get(col);
 		if (type == null || game == null) return false;
 
-		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE)) return true;
+		// Always allow
+		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE) ||
+				type.equals(Requests.Request.BodyCase.GETRESOURCES)) return true;
 
 		if (expected.contains(type))
 		{

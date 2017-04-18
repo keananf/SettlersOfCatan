@@ -10,7 +10,7 @@ import intergroup.board.Board;
 import intergroup.lobby.Lobby;
 import intergroup.trade.Trade;
 
-public class TurnProcessor
+class TurnProcessor
 {
 	private final Client client;
 	private IServerConnection conn;
@@ -78,7 +78,9 @@ public class TurnProcessor
 		case BUYDEVCARD:
 			request.setBuyDevCard(EmptyOuterClass.Empty.getDefaultInstance());
 			break;
-
+		case GETRESOURCES:
+			request.setGetResources(EmptyOuterClass.Empty.getDefaultInstance());
+			break;
 		case BODY_NOT_SET:
 		default:
 			return;

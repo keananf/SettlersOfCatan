@@ -65,8 +65,8 @@ class PlayerBar extends Stack
 				public void clicked(InputEvent event, float x, float y)
 				{
 					super.clicked(event, x, y);
-					TradeDialog dialog = new TradeDialog(SettlersOfCatan.getSkin(),
-							Board.Player.newBuilder().setId(player.getId()).build(), client, hud);
+					TradeDialog dialog = new TradeDialog(Board.Player.newBuilder().setId(player.getId()).build(),
+							client);
 					dialog.show(hud);
 				}
 			});

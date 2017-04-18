@@ -19,10 +19,10 @@ import java.util.List;
  * Class which continuously listens for updates from the server Created by
  * 140001596
  */
-public class EventProcessor
+class EventProcessor
 {
 	private final Client client;
-	private IServerConnection conn;
+	private final IServerConnection conn;
 
 	public EventProcessor(IServerConnection conn, Client client)
 	{
@@ -148,8 +148,17 @@ public class EventProcessor
 			getGame().processAllocation(ev.getInitialAllocation().getResourceAllocationList());
 			client.render();
 			break;
+		case ALLRESOURCES:
+			boolean discard = ev.getAllResources().getDiscard();
+			if(discard && !getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
+			{
+				getExpectedMoves().add(Requests.Request.BodyCase.DISCARDRESOURCES);
+			}
+			getGame().handleResources(ev.getAllResources());
+			break;
 		case ERROR:
 			client.log("Client Error", String.format("Error Message: %s", ev.getError().getDescription()));
+			getTurn().addError();
 			// TODO display error?
 			break;
 		}

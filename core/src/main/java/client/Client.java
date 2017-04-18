@@ -33,7 +33,7 @@ public abstract class Client implements Runnable
 	private TurnState turn;
 	private IServerConnection conn;
 	private Semaphore stateLock, turnLock;
-	private List<String> usersInLobby;
+	private final List<String> usersInLobby;
 	protected boolean active;
 
 	protected Client(SettlersOfCatan game, String userName)

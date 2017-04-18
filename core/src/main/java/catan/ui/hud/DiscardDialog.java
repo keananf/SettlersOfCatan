@@ -1,87 +1,42 @@
 package catan.ui.hud;
 
 import catan.SettlersOfCatan;
+import catan.ui.IntegerField;
 import client.Client;
 import client.Turn;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import enums.ResourceType;
 import intergroup.Requests;
 
 import java.util.HashMap;
 import java.util.Map;
 
-class DiscardDialog extends Dialog
+class DiscardDialog extends SaneDialog
 {
-	private final Client client;
-	private Map<ResourceType, Integer> resources;
+	private final Map<ResourceType, Integer> resources = new HashMap<>();
 
-	public DiscardDialog(Skin skin, Client client, HeadsUpDisplay hud)
+	DiscardDialog(final Client client)
 	{
-		super("Discard", skin);
-		this.client = client;
-		resources = new HashMap<>();
+		super("Discard cards");
 
-		VerticalGroup vert = new VerticalGroup();
-		final Table root = new Table();
-		root.setFillParent(true);
-		hud.getResources();
-		addActor(root);
-
-		// Add label
-		TextField offering = new TextField("Discard", SettlersOfCatan.getSkin());
-		offering.setTextFieldListener((textField, c) -> textField.setText("Discard"));
-		vert.addActor(offering);
+		getContentTable().add(new Label("Resource", SettlersOfCatan.getSkin(), "dialog"));
+		getContentTable().add(new Label("Quantity", SettlersOfCatan.getSkin(), "dialog"));
+		getContentTable().row();
 
 		for (ResourceType r : ResourceType.values())
 		{
 			if (r.equals(ResourceType.Generic)) continue;
-
 			resources.put(r, 0);
-			addOptions(r, vert);
+			getContentTable().add(new Label(r.name(), SettlersOfCatan.getSkin(), "dialog"));
+			getContentTable().add(new IntegerField("0", (n) -> resources.put(r, n)));
+			getContentTable().row();
 		}
 
-		root.add(vert);
-		addConfirmButtons();
-	}
-
-	private void addOptions(ResourceType r, VerticalGroup vert)
-	{
-		TextField text = new TextField(r.name(), SettlersOfCatan.getSkin());
-		text.setTextFieldListener((textField, c) -> {
-			textField.setText(String.valueOf(c));
-			int num = 0;
-			try
-			{
-				num = Integer.parseInt(textField.getText());
-			}
-			catch (NumberFormatException e)
-			{
-				textField.setText(r.name());
-			}
-			resources.put(r, num);
+		addButton("Submit", () -> {
+			Turn turn = new Turn(Requests.Request.BodyCase.DISCARDRESOURCES);
+			turn.setChosenResources(resources);
+			client.acquireLocksAndSendTurn(turn);
 		});
-
-		vert.addActor(text);
-	}
-
-	private void addConfirmButtons()
-	{
-		TextButton button = new TextButton("Submit", SettlersOfCatan.getSkin());
-		button.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				super.clicked(event, x, y);
-
-				// Set up Discard
-				Turn turn = new Turn(Requests.Request.BodyCase.DISCARDRESOURCES);
-				turn.setChosenResources(resources);
-				client.acquireLocksAndSendTurn(turn);
-			}
-		});
-		button(button, true).button("Cancel", false);
+		addButton("Cancel");
 	}
 }

@@ -293,17 +293,18 @@ public class ClientGame extends Game
 
 		try
 		{
-			// Give all resources back to the bank
-			p.spendResources(p.getResources(), bank);
+			// Zero out resources
+			p.setResources(new HashMap<ResourceType, Integer>());
 			Map<ResourceType, Integer> grant = processResources(alloc.getResources());
 
-			// Grant resources that server says you have
+			// Grant resources that server says you have, and reset the bank
 			if (p.getColour().equals(getPlayer().getColour()))
 			{
+				bank.grantResources(grant);
 				p.grantResources(grant, bank);
 			}
 		}
-		catch (BankLimitException | CannotAffordException e)
+		catch (BankLimitException e)
 		{
 			e.printStackTrace();
 		}

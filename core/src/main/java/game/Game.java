@@ -30,7 +30,7 @@ public abstract class Game
 	private Colour playerWithLargestArmy;
 	private int longestRoad;
 	private int largestArmy;
-	protected final Bank bank;
+	protected Bank bank;
 	protected int numPlayers;
 	protected int current; // index of current player
 	public static int NUM_PLAYERS = 4;

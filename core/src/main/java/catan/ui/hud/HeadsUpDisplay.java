@@ -213,6 +213,6 @@ public class HeadsUpDisplay extends Stage
 
 	public void showChooseResource()
 	{
-		new ChooseResourceDialog(SettlersOfCatan.getSkin(), client, this).show(this);
+		new ChooseResourceDialog(client).show(this);
 	}
 }

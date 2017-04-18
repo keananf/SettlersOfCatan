@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
+
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	private static Skin skin;

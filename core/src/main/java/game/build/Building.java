@@ -45,4 +45,5 @@ public abstract class Building
 	{
 		return playerColour;
 	}
+
 }

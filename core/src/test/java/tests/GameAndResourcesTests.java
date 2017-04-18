@@ -7,8 +7,8 @@ import exceptions.*;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
-import game.players.ServerPlayer;
 import game.players.Player;
+import game.players.ServerPlayer;
 import grid.Hex;
 import intergroup.board.Board;
 import intergroup.resource.Resource;
@@ -143,6 +143,26 @@ public class GameAndResourcesTests extends TestHelper
 		game.processDiscard(discard.build(), p.getColour());
 	}
 
+	@Test
+	public void discardTest2() throws InvalidDiscardRequest, CannotAffordException, BankLimitException
+	{
+
+		// Grant player more than 7 resources
+		Map<ResourceType, Integer> grant = Settlement.getSettlementCost();
+		p.grantResources(grant, game.getBank());
+		p.grantResources(grant, game.getBank());
+		grant.clear();
+		grant.put(ResourceType.Lumber, 1);
+		p.grantResources(grant, game.getBank());
+		assertEquals(9, p.getNumResources());
+
+		// Construct discard request
+		Resource.Counts.Builder discard = Resource.Counts.newBuilder();
+		discard.setLumber(2);
+		discard.setBrick(2);
+
+		game.processDiscard(discard.build(), p.getColour());
+	}
 	@Test
 	public void discardTest() throws InvalidDiscardRequest, CannotAffordException, BankLimitException
 	{

@@ -9,15 +9,16 @@ import intergroup.Requests;
 
 import java.util.*;
 
+
 public abstract class AICore implements IAI, Runnable
 {
-	private final AIClient client;
+	protected final AIClient client;
 	private final Random rand;
 	private boolean waiting;
 	private ArrayList<Events.Event.TypeCase> expectedEventPossibilities;
 	private final Map<Requests.Request.BodyCase, ArrayList<Events.Event.TypeCase>> expectedEvents;
 
-	AICore(AIClient client)
+	public AICore(AIClient client)
 	{
 		this.client = client;
 		this.rand = new Random();
@@ -67,6 +68,7 @@ public abstract class AICore implements IAI, Runnable
 
 			expectedEventPossibilities = expectedEvents.get(turn.getChosenMove());
 			return client.sendTurn(turn);
+
 		}
 		return false;
 	}
@@ -95,7 +97,6 @@ public abstract class AICore implements IAI, Runnable
 		{
 			// Implementation-defined
 			int rank = rankMove(entry);
-
 			if (rank > maxRank)
 			{
 				maxRank = rank;
@@ -114,65 +115,85 @@ public abstract class AICore implements IAI, Runnable
 	@Override
 	public int rankMove(Turn turn)
 	{
+		int rank = 0;
 		// Switch on turn type and rank move
+
 		switch (turn.getChosenMove())
 		{
 		case BUYDEVCARD:
-			return rankBuyDevCard();
+			rank = rankBuyDevCard();
+			break;
 		case BUILDROAD:
-			return rankNewRoad(turn.getChosenEdge());
+			rank = rankNewRoad(turn.getChosenEdge());
+			break;
 		case BUILDSETTLEMENT:
-			return rankNewSettlement(turn.getChosenNode());
+			rank = rankNewSettlement(turn.getChosenNode());
+			break;
 		case BUILDCITY:
-			return rankNewCity(turn.getChosenNode());
+			rank = rankNewCity(turn.getChosenNode());
+			break;
 		case MOVEROBBER:
-			return rankNewRobberLocation(turn.getChosenHex());
+			rank = rankNewRobberLocation(turn.getChosenHex());
+			break;
 		case PLAYDEVCARD:
-			return rankPlayDevCard(turn.getChosenCard());
+			rank = rankPlayDevCard(turn.getChosenCard());
+			break;
 		case INITIATETRADE:
 			// Set the player or bank trade in 'turn' as well
-			return rankInitiateTrade(turn);
+			rank = rankInitiateTrade(turn);
+			break;
 		case SUBMITTRADERESPONSE:
-			return rankTradeResponse(turn.getTradeResponse(), turn.getPlayerTrade());
+			rank = rankTradeResponse(turn.getTradeResponse(), turn.getPlayerTrade());
+			break;
 		case DISCARDRESOURCES:
 			// If a discard move has gotten this for, then we know it is
 			// an expected move.
 			// Set the chosenResources in 'turn' to be a valid discard as well
 			// as rank.
-			return rankDiscard(turn);
+			rank = rankDiscard(turn);
+			break;
 		case SUBMITTARGETPLAYER:
-			return rankTargetPlayer(turn.getTarget());
+			rank = rankTargetPlayer(turn.getTarget());
+			break;
 		case CHOOSERESOURCE:
-			return rankChosenResource(turn.getChosenResource());
-
+			rank = rankChosenResource(turn.getChosenResource());
+			break;
+			// Should rank apply for ENDTURN / ROLLDICE? Maybe sometimes..
+		case ENDTURN:
+			rank = rankEndTurn();
+			break;
 		case ROLLDICE:
 			return -1;
-		case ENDTURN:
-			break;
+		case GETRESOURCES:
+			return 100;
 
-		// ai will never chat
+			// ai will never chat
 		case CHATMESSAGE:
+			rank = -1;
 			break;
 
-		// If Join Lobby, then the ai has to join a lobby and the rest of the
-		// list will be empty
-		// So, it's rank doesn't matter
+			// If Join Lobby, then the ai has to join a lobby and the rest of the
+			// list will be empty
+			// So, it's rank doesn't matter
 		case JOINLOBBY:
+			rank = 6;
 			break;
 		case BODY_NOT_SET:
 		default:
 			break;
 		}
-
-		return 0;
+		
+		
+		return rank;
 	}
 
 	@Override
 	public Turn selectMove(List<Turn> optimalMoves)
 	{
 		// Randomly choose one of the highest rank
-		return optimalMoves != null && optimalMoves.size() > 0 ? optimalMoves.get(rand.nextInt(optimalMoves.size()))
-				: null;
+		if (optimalMoves == null) return null;
+		if (optimalMoves.size() < 1) return null;
+		return optimalMoves.get(rand.nextInt(optimalMoves.size()));
 	}
 
 	/**

@@ -218,7 +218,7 @@ public class MoveProcessor
 		}
 
 		// Request all resources again from server
-		if(possibilities.isEmpty() || getTurn().getErrors() >= 5)
+		if(possibilities.isEmpty() || getTurn().getErrors() >= 2)
 		{
 			possibilities.add(new Turn(Requests.Request.BodyCase.GETRESOURCES));
 		}
@@ -281,8 +281,6 @@ public class MoveProcessor
 				&& getExpectedMoves().contains(Requests.Request.BodyCase.SUBMITTARGETPLAYER)
 				&& !target.equals(getGame().getPlayer().getColour()));
 	}
-
-	boolean printed = false;
 
 	/**
 	 * Checks that a CHOOSERESOURCE move is valid

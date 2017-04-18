@@ -208,7 +208,7 @@ public class HeadsUpDisplay extends Stage
 
 	public void showResponse()
 	{
-		new TradeResponseDialog(SettlersOfCatan.getSkin(), client, this).show(this);
+		new TradeResponseDialog(client).show(this);
 	}
 
 	public void showChooseResource()

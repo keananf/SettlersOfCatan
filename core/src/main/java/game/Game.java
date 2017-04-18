@@ -167,7 +167,7 @@ public abstract class Game
 	protected void checkLongestRoad(boolean broken)
 	{
 		Player playerWithLongestRoad = players.get(this.playerWithLongestRoad);
-		List<Colour> cols = new ArrayList<Colour>();
+		List<Colour> cols = new ArrayList<>();
 		int max = 0;
 
 		// Calculate which player(s) has / have the longest road

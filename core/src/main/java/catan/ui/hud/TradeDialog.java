@@ -25,8 +25,8 @@ public class TradeDialog extends Dialog
 		super(title, skin);
 		this.player = player;
 		this.client = client;
-		resources = new HashMap<ResourceType, Integer>();
-		otherResources = new HashMap<ResourceType, Integer>();
+		resources = new HashMap<>();
+		otherResources = new HashMap<>();
 
 		VerticalGroup vert = new VerticalGroup();
 		final Table root = new Table();

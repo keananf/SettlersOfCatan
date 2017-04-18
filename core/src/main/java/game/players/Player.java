@@ -178,9 +178,9 @@ public abstract class Player
 
 	public List<List<Road>> segmentRoads(List<Road> sublist, Edge e, Edge other)
 	{
-		List<Road> newList1 = new ArrayList<Road>();
-		List<Road> newList2 = new ArrayList<Road>();
-		List<Road> skipped = new ArrayList<Road>();
+		List<Road> newList1 = new ArrayList<>();
+		List<Road> newList2 = new ArrayList<>();
+		List<Road> skipped = new ArrayList<>();
 		Road eRoad = e.getRoad(), otherRoad = other.getRoad();
 		newList1.add(eRoad);
 		newList2.add(otherRoad);
@@ -236,7 +236,7 @@ public abstract class Player
 			}
 		}
 
-		List<List<Road>> newList = new ArrayList<List<Road>>();
+		List<List<Road>> newList = new ArrayList<>();
 		newList.add(newList1);
 		newList.add(newList2);
 		return newList;

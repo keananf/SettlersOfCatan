@@ -21,7 +21,7 @@ public class DiscardDialog extends Dialog
 	{
 		super(title, skin);
 		this.client = client;
-		resources = new HashMap<ResourceType, Integer>();
+		resources = new HashMap<>();
 
 		VerticalGroup vert = new VerticalGroup();
 		final Table root = new Table();

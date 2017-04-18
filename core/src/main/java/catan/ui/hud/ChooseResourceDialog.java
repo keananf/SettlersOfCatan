@@ -23,7 +23,7 @@ public class ChooseResourceDialog extends Dialog
 	{
 		super(title, skin);
 		this.client = client;
-		checkBoxes = new ArrayList<CheckBox>();
+		checkBoxes = new ArrayList<>();
 
 		VerticalGroup vert = new VerticalGroup();
 		final Table root = new Table();

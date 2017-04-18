@@ -60,7 +60,7 @@ class GameController implements InputProcessor
 
 	private BoardElement findElement(float planeX, float planeY)
 	{
-		BoardElement found = null;
+		BoardElement found;
 
 		found = findNode(planeX, planeY);
 		if (found != null) return found;
@@ -76,8 +76,6 @@ class GameController implements InputProcessor
 
 	private Hex getHex(float planeX, float planeY)
 	{
-		final float HEX_WIDTH = 2f;
-
 		for (Hex hex : hexes)
 		{
 			final Vector2 pos = hex.get2DPos();
@@ -104,19 +102,15 @@ class GameController implements InputProcessor
 
 		if (h == null) return null;
 
-		for (Node node : h.getNodes())
-		{
+		for (Node node : h.getNodes()) {
 			Vector2 coord = node.get2DPos();
-			// System.out.println("NODE " + coord.x + "Node " + " " + coord.y);
-			if (new Vector2(coord.x, 0).dst(planeX, 0) < 0.6 && new Vector2(coord.y, 0).dst(planeY, 0) < 0.6) {
-
-			return node;
-
+			if (coord.dst(planeX, planeY) < 0.3)
+			{
+				return node;
 			}
 		}
 
 		return null;
-
 	}
 
 	/**
@@ -134,7 +128,7 @@ class GameController implements InputProcessor
 			float x = (nodeX.x + nodeY.x) / 2;
 			float y = (nodeX.y + nodeY.y) / 2;
 			Vector2 check = new Vector2(x, y);
-			if (check.dst(planeX, planeY) < 0.7) { return edge; }
+			if (check.dst(planeX, planeY) < 0.3) { return edge; }
 		}
 
 		return null;

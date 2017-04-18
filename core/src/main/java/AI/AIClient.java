@@ -8,6 +8,7 @@ import intergroup.Events;
 public abstract class AIClient extends Client
 {
 	private AICore ai;
+	private static final String[] names = {"Cheswick", "Alice", "Bob", "Evelyn", "James", "Gary", "Frank", "Helen", "Iris", "Kevin"};
 
 	AIClient(Difficulty difficulty, String userName, SettlersOfCatan game)
 	{
@@ -17,13 +18,13 @@ public abstract class AIClient extends Client
 
 	AIClient()
 	{
-		super("Default");
+		super(names[(int)Math.floor(Math.random() * 10)]);
 		assignAI(Difficulty.VERYEASY);
 	}
 
 	AIClient(Difficulty difficulty)
 	{
-		super("Default");
+		super(names[(int)Math.floor(Math.random() * 10)]);
 		assignAI(difficulty);
 	}
 

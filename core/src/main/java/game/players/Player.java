@@ -695,6 +695,10 @@ public abstract class Player
 	public void setResources(Map<ResourceType, Integer> resources)
 	{
 		this.resources = resources;
+		for(ResourceType r : this.resources.keySet())
+		{
+			this.resources.put(r, 0);
+		}
 	}
 
 	public void setDevelopmentCards(Map<DevelopmentCardType, Integer> developmentCards)

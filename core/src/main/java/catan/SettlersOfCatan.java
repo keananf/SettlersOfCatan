@@ -155,17 +155,17 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 
 	public void showDiscard()
 	{
-		hud.showDiscardDialog();
+		Gdx.app.postRunnable(() -> hud.showDiscardDialog());
 	}
 
 	public void showResponse()
 	{
-		hud.showResponse();
+		Gdx.app.postRunnable(() -> hud.showResponse());
 	}
 
 	public void showChooseResource()
 	{
-		hud.showChooseResource();
+		Gdx.app.postRunnable(() -> hud.showChooseResource());
 	}
 
 	public boolean isAI()

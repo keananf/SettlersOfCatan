@@ -221,6 +221,7 @@ class MessageProcessor
 				}
 				else
 				{
+					server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
 					ev.setError(Events.Event.Error.newBuilder().setDescription("No active trade to respond to."));
 				}
 				break;

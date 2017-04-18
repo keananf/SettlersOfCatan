@@ -5,6 +5,7 @@ import enums.Colour;
 import enums.DevelopmentCardType;
 import enums.ResourceType;
 import game.Game;
+import game.build.Building;
 import game.build.City;
 import game.build.Road;
 import game.build.Settlement;
@@ -13,12 +14,10 @@ import grid.Edge;
 import grid.Hex;
 import grid.Node;
 import grid.Port;
+import intergroup.board.Board;
 import intergroup.trade.Trade;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by 140002949 on 19/03/17.
@@ -143,8 +142,26 @@ public class EasyAI extends AICore
 			break;
 		}
 
-		return ++ranking;
-	}
+                for (Port port : getState().getGrid().getPortsAsList())
+                {
+                    if (port.hasSettlement())
+                    {
+
+                        Road road = port.getRoad();
+                        if(road != null)
+                        {
+                            Colour col = road.getPlayerColour();
+                            if (col == getPlayer().getColour())
+                            {
+                                ranking++;//more efficient trading available when taking block of resource cards
+                                break;
+                            }
+                        }
+                    }
+                }
+                ranking++; // for general trading ability with resource bank
+                break;
+        }
 
 	@Override
 	public int rankChosenResource(ResourceType chosenResource)
@@ -172,23 +189,26 @@ public class EasyAI extends AICore
 	{
 		int rank = 4;
 
-		// check if player can build or set a road if so-> decrease rank by 2
-		if (getPlayer().canAfford(Settlement.getSettlementCost()) || getPlayer().canAfford(Road.getRoadCost())
-				|| getPlayer().canAfford(City.getCityCost()))
-		{
-			rank = -2;
-		}
-		return rank - getPlayer().getNumDevCards();
-		// the less cards you have the higher the priority
-	}
+    @Override
+    public int rankBuyDevCard()
+    {
+        int rank = 4;
 
-	@Override
-	public int rankNewRoad(Edge chosenEdge)
-	{
-		Node n1 = chosenEdge.getX();
-		Node n2 = chosenEdge.getY();
+        //check if player can build or set a road if so-> decrease rank by 2
+        if(getPlayer().canAfford(Settlement.getSettlementCost())
+                || getPlayer().canAfford(Road.getRoadCost())
+                || getPlayer().canAfford(City.getCityCost())){
+            rank =-2;
+        }
+        return rank - getPlayer().getNumDevCards();
+        // the less cards you have the higher the priority
+    }
 
-		int rank = 3;
+    @Override
+    public int rankNewRoad(Edge chosenEdge)
+    {
+        Node n1 = chosenEdge.getX();
+        Node n2 = chosenEdge.getY();
 
 		if (chosenEdge.hasSettlement())
 		{// if next settlement has to be 2 roads away
@@ -218,10 +238,26 @@ public class EasyAI extends AICore
 							rank++;
 						}
 
-					}
+                    Node nxtToAnalyse = (e.getX().getBuilding() == null && !e.getX().equals(toAnalyse) ) ? e.getX() : e.getY();
+                    if(nxtToAnalyse.getBuilding() == null){
+                        rank ++ ;
+                    }
+                    else if(nxtToAnalyse.getBuilding() != null)
+                    {
+                        if(nxtToAnalyse.getBuilding().getPlayerColour() != getPlayer().getColour())
+                        {
+                            rank =- 2;
+                        }
+                        else{
+                            rank++;
+                        }
 
-				}
-			}
+
+
+                    }
+
+                }
+            }
 
 		}
 		else
@@ -235,64 +271,71 @@ public class EasyAI extends AICore
 		return rank;
 	}
 
-	@Override
-	public int rankDiscard(Turn turn)
-	{
-		int amount = getPlayer().getNumResources();
-		int diff = amount / 2;
-		Map<ResourceType, Integer> discard = new HashMap<ResourceType, Integer>();
-		Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
-		resources.putAll(getPlayer().getResources());
 
-		while (diff > 0)
-		{
-			ResourceType r = ResourceType.Ore;
 
-			if (resources.containsKey(r) && resources.get(r) > 0)
-			{
-				resources.put(r, resources.get(r) - 1);
-				discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
-			}
-			else
-			{
-				if (resources.get(ResourceType.Grain) > resources.get(ResourceType.Wool))
-				{
-					r = ResourceType.Grain;
-					if (resources.containsKey(r) && resources.get(r) > 0)
-					{
-						resources.put(r, resources.get(r) - 1);
-						discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
-					}
-				}
-				else if (resources.containsKey(ResourceType.Wool) && resources.get(ResourceType.Wool) > 0)
-				{
-					r = ResourceType.Wool;
-					resources.put(r, resources.get(r) - 1);
-					discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
-				}
-				else if (resources.get(ResourceType.Lumber) > resources.get(ResourceType.Brick))
-				{
-					r = ResourceType.Lumber;
-					if (resources.containsKey(r) && resources.get(r) > 0)
-					{
-						resources.put(r, resources.get(r) - 1);
-						discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
-					}
-				}
-				else
-				{
-					r = ResourceType.Brick;
-					if (resources.containsKey(r) && resources.get(r) > 0)
-					{
-						resources.put(r, resources.get(r) - 1);
-						discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
-					}
-				}
+    @Override
+    public int rankDiscard(Turn turn)
+    {
+        int amount = getPlayer().getNumResources();
+        int diff = amount / 2;
+        Map<ResourceType, Integer> discard = new HashMap<ResourceType, Integer>();
+        Map<ResourceType, Integer> resources = new HashMap<ResourceType, Integer>();
+        resources.putAll(getPlayer().getResources());
 
-			}
-			turn.setChosenResources(discard);
-			diff--;
-		}
+
+        while(diff > 0)
+        {
+            ResourceType r = ResourceType.Ore;
+
+            if(resources.containsKey(r) && resources.get(r) > 0)
+            {
+                resources.put(r, resources.get(r) - 1);
+                discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
+            }
+            else
+            {
+                if(resources.get(ResourceType.Grain) > resources.get(ResourceType.Wool))
+                {
+                    r = ResourceType.Grain;
+                    if(resources.containsKey(r) && resources.get(r) > 0)
+                    {
+                        resources.put(r, resources.get(r) - 1);
+                        discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
+                    }
+                }
+                else if(resources.containsKey(ResourceType.Wool) && resources.get(ResourceType.Wool) > 0)
+                {
+                    r = ResourceType.Wool;
+                    resources.put(r, resources.get(r) - 1);
+                    discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
+                }
+                else if(resources.get(ResourceType.Lumber) > resources.get(ResourceType.Brick))
+                {
+                    r = ResourceType.Lumber;
+                    if(resources.containsKey(r) && resources.get(r) > 0)
+                    {
+                        resources.put(r, resources.get(r) - 1);
+                        discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
+                    }
+                }
+                else
+                {
+                    r = ResourceType.Brick;
+                    if(resources.containsKey(r) && resources.get(r) > 0)
+                    {
+                        resources.put(r, resources.get(r) - 1);
+                        discard.put(r, 1 + (discard.containsKey(r) ? discard.get(r) : 0));
+                    }
+                }
+
+
+            }
+            turn.setChosenResources(discard);
+            diff--;
+        }
+
+        return 6;
+    }
 
 		return 6;
 	}
@@ -314,58 +357,239 @@ public class EasyAI extends AICore
 	{
 		int rank = 5;
 
-		HashMap<Colour, Integer> totalRank = new HashMap<Colour, Integer>();
+    @Override
+    public int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade)
+    {
+        int ranking = -1;
+        Map<ResourceType,Integer> given = getState().processResources(trade.getOffering());
+        Map<ResourceType,Integer>  taking = getState().processResources(trade.getWanting());
+
+        for(ResourceType rt : getPlayer().getResources().keySet()){
+            if(getPlayer().getResources().get(rt) <=1 ){
+                if(given.containsKey(rt)){
+                    ranking ++;
+                }
+            }
+            else if(getPlayer().getResources().get(rt)>=4){
+                if(taking.containsKey(rt)){
+                    ranking ++;
+                }
+            }
+        }
+
+        return (tradeResponse == Trade.Response.REJECT) ? 0 : ranking;
+
+    }
 
 		Game game = client.getState();
 
-		HashMap<Colour, Player> players = (HashMap<Colour, Player>) game.getPlayers();
+    @Override
+    public int rankTargetPlayer(Colour target)
+    {
+        int rank = 5;
 
-		Set<Colour> colours = players.keySet();
+        HashMap<Colour, Integer> totalRank = new HashMap<Colour, Integer>();
 
-		for (Colour c : colours)
-		{
-			Player p = players.get(c);
+        Game game = client.getState();
 
-			HashMap<ResourceType, Integer> resources = (HashMap<ResourceType, Integer>) p.getResources();
+        HashMap<Colour, Player> players = (HashMap<Colour, Player>) game.getPlayers();
 
-			Set<ResourceType> types = resources.keySet();
+        Set<Colour> colours = players.keySet();
 
-			for (ResourceType t : types)
-			{
-				if (!totalRank.keySet().contains(c))
-				{
-					totalRank.put(c, 0);
-				}
-				totalRank.put(c, totalRank.get(c) + resources.get(t));
-			}
+        for(Colour c : colours)
+        {
+            Player p = players.get(c);
 
-			totalRank.put(c, totalRank.get(c) + p.getVp());
-		}
+            HashMap<ResourceType, Integer> resources = (HashMap<ResourceType, Integer>) p.getResources();
 
-		ArrayList<Integer> ranks = new ArrayList<Integer>();
+            Set<ResourceType> types = resources.keySet();
 
-		for (Colour c : colours)
-		{
-			ranks.add(totalRank.get(c));
-		}
+            for(ResourceType t: types)
+            {
+                if(!totalRank.keySet().contains(c))
+                {
+                    totalRank.put(c, 0);
+                }
+                totalRank.put(c, totalRank.get(c) + resources.get(t));
+            }
 
-		int targetRank = totalRank.get(target);
+            totalRank.put(c, totalRank.get(c) + p.getVp());
+        }
 
-		for (int i : ranks)
-		{
-			if (i > targetRank)
-			{
-				rank--;
-			}
-		}
+        ArrayList<Integer> ranks = new ArrayList<Integer>();
 
-		return rank;
-	}
+        for(Colour c: colours)
+        {
+            ranks.add(totalRank.get(c));
+        }
 
-	@Override
-	public int rankInitiateTrade(Turn turn)
-	{
-		return -1;
-	}
+        int targetRank = totalRank.get(target);
+
+        for(int i: ranks)
+        {
+            if(i > targetRank)
+            {
+                rank--;
+            }
+        }
+
+        return rank;
+    }
+
+    @Override
+    public int rankInitiateTrade(Turn turn)
+    {
+        // Ensures the AI only trades once per turn, so as not to spam
+        // the server
+        if (getTurn().hasTraded()) return -1;
+
+        Map<ResourceType, Integer> tradeReq = new HashMap<>();
+        Map<ResourceType, Integer> resources = new HashMap<>();
+        resources.putAll(getPlayer().getResources());
+        List<ResourceType> want = getDesiredResources(resources);
+        ResourceType maxResource = findMax(resources);
+        ResourceType leastResource;
+        Trade.WithPlayer.Builder trade = Trade.WithPlayer.newBuilder();
+
+        // Set up the resources the player is wanting
+        if (want.size() == 0)
+        {
+            // Request one of the resource that the player has the least of
+            leastResource = findLeast(resources);
+            tradeReq.put(leastResource, 1);
+            trade.setWanting(getState().processResources(tradeReq));
+        }
+        else
+        {
+            // Simply choose a resource at random and add 1.
+            leastResource = want.get(new Random().nextInt(want.size()));
+            tradeReq.put(leastResource, 1);
+            trade.setWanting(getState().processResources(tradeReq));
+        }
+
+        // Set up the resources that the player is offering
+        tradeReq.clear();
+        tradeReq.put(maxResource, 1);
+        trade.setOffering(getState().processResources(tradeReq));
+
+        // Find a player to trade with
+        Board.Player other = findOther(leastResource);
+        trade.setOther(other);
+
+        // Update Turn:
+        turn.setPlayerTrade(trade.build());
+        return 0;
+    }
+    /**
+     * Finds a player to trade with based on what the user wants
+     *
+     * @param wanting the resources the user wants
+     * @return the player who should have some of this resource
+     */
+    private Board.Player findOther(ResourceType wanting)
+    {
+        // Arbitrary starting colour
+        Colour c = Colour.BLUE.equals(getPlayer().getColour()) ? Colour.RED : Colour.BLUE;
+
+        // Loop through players
+        for (Player p : getState().getPlayers().values())
+        {
+            boolean val = false;
+
+            // Skip this player
+            if (p.equals(getPlayer())) continue;
+
+            // Loop through players settlements
+            for (Building b : p.getSettlements().values())
+            {
+                // Check each hex this building is adjacent to
+                for (Hex h : b.getNode().getHexes())
+                {
+                    if (h.getResource().equals(wanting))
+                    {
+                        c = p.getColour();
+                        val = true;
+                        break;
+                    }
+                }
+
+                if (val) break;
+            }
+
+            if (val) break;
+        }
+
+        return Board.Player.newBuilder().setId(getState().getPlayer(c).getId()).build();
+    }
+
+    /**
+     * Ascertains which resource types the player does NOT have
+     *
+     * @param resources the player's resources
+     * @return a list of resource types that the player does NOT have
+     */
+    private List<ResourceType> getDesiredResources(Map<ResourceType, Integer> resources)
+    {
+        List<ResourceType> want = new ArrayList<>();
+
+        // Ask for resources this player does NOT have
+        for (ResourceType type : ResourceType.values())
+        {
+            // If the player has none of this resource
+            if (!resources.containsKey(type) || resources.get(type) == 0)
+            {
+                want.add(type);
+            }
+        }
+        return want;
+    }
+
+    /**
+     * Finds the resource that the player owns the most of
+     *
+     * @param resources the player's resources
+     * @return the max resource
+     */
+    private ResourceType findMax(Map<ResourceType, Integer> resources)
+    {
+        int max = 0;
+        ResourceType r = null;
+
+        // Loop through player resources to find most common
+        for (ResourceType type : resources.keySet())
+        {
+            if (resources.get(type) > max)
+            {
+                max = resources.get(type);
+                r = type;
+            }
+        }
+
+        return r;
+    }
+
+    /**
+     * Finds the resource that the player owns the least of
+     *
+     * @param resources the player's resources
+     * @return the least resource
+     */
+    private ResourceType findLeast(Map<ResourceType, Integer> resources)
+    {
+        int min = 100;
+        ResourceType r = null;
+
+        // Loop through player resources to find least common
+        for (ResourceType type : resources.keySet())
+        {
+            if (resources.get(type) < min)
+            {
+                min = resources.get(type);
+                r = type;
+            }
+        }
+
+        return r;
+    }
 
 }

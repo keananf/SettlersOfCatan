@@ -108,14 +108,21 @@ public class EasyAI extends AICore
 
             case Monopoly:
 
-                for (Port port : getState().getGrid().getPortsAsList()) {
-                    if (port.hasSettlement()) {
-
-                        Colour col = port.getRoad().getPlayerColour();
-                        if (col == getPlayer().getColour()) {
-                            ranking++;//more efficient trading available when taking block of resource cards
-                            break;
-                        }
+            	for (Port port : getState().getGrid().getPortsAsList()) 
+                {
+                    if (port.hasSettlement()) 
+                    {
+                    	
+                    	Road road = port.getRoad();
+                    	if(road != null)
+                    	{
+	                        Colour col = road.getPlayerColour();
+	                        if (col == getPlayer().getColour()) 
+	                        {
+	                            ranking++;//more efficient trading available when taking block of resource cards
+	                            break;
+	                        }
+                    	}
                     }
                 }
                 ranking++; // for general trading ability with resource bank

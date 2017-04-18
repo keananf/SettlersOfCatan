@@ -14,9 +14,9 @@ public class ChatDialog extends Dialog
 	private final Client client;
 	private final ChatBoard chatBoard;
 
-	public ChatDialog(String title, Skin skin, Client client)
+	public ChatDialog(Skin skin, Client client)
 	{
-		super(title, skin);
+		super("Chat", skin);
 		this.client = client;
 		this.chatBoard = client.getState().getChatBoard();
 

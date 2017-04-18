@@ -95,7 +95,7 @@ public class EventProcessor
 			getGame().writeMessage(ev.getChatMessage(), ev.getInstigator());
 			break;
 		case BANKTRADE:
-			getTurn().setHasTraded(true);
+			getTurn().setHasTraded();
 			getGame().processBankTrade(ev.getBankTrade(), ev.getInstigator());
 			break;
 		case PLAYERTRADEINITIATED:

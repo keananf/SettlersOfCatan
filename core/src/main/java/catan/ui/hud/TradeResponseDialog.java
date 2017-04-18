@@ -20,9 +20,9 @@ public class TradeResponseDialog extends Dialog
 	private final Trade.WithPlayer trade;
 	Map<ResourceType, Integer> offerResources, requestResources;
 
-	public TradeResponseDialog(String title, Skin skin, Client client, HeadsUpDisplay hud)
+	public TradeResponseDialog(Skin skin, Client client, HeadsUpDisplay hud)
 	{
-		super(title, skin);
+		super("Trade", skin);
 		this.sender = client.getTurn().getCurrentTrade().getInstigator();
 		this.client = client;
 		this.trade = client.getTurn().getCurrentTrade().getTrade();

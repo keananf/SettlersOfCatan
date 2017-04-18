@@ -54,11 +54,6 @@ public class TurnState extends Turn
 		return expectedMoves;
 	}
 
-	boolean hasTurnStarted()
-	{
-		return turnStarted;
-	}
-
 	void setTurnStarted()
 	{
 		this.turnStarted = true;
@@ -100,8 +95,8 @@ public class TurnState extends Turn
 		return hasTraded;
 	}
 
-	public void setHasTraded(boolean hasTraded)
+	void setHasTraded()
 	{
-		this.hasTraded = hasTraded;
+		this.hasTraded = true;
 	}
 }

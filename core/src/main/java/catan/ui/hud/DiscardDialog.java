@@ -17,9 +17,9 @@ public class DiscardDialog extends Dialog
 	private final Client client;
 	Map<ResourceType, Integer> resources;
 
-	public DiscardDialog(String title, Skin skin, Client client, HeadsUpDisplay hud)
+	public DiscardDialog(Skin skin, Client client, HeadsUpDisplay hud)
 	{
-		super(title, skin);
+		super("Discard", skin);
 		this.client = client;
 		resources = new HashMap<>();
 

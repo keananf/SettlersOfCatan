@@ -20,9 +20,9 @@ public class TradeDialog extends Dialog
 	private final Client client;
 	Map<ResourceType, Integer> resources, otherResources;
 
-	public TradeDialog(String title, Skin skin, Board.Player player, Client client, HeadsUpDisplay hud)
+	public TradeDialog(Skin skin, Board.Player player, Client client, HeadsUpDisplay hud)
 	{
-		super(title, skin);
+		super("Resources", skin);
 		this.player = player;
 		this.client = client;
 		resources = new HashMap<>();

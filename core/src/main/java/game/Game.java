@@ -209,9 +209,7 @@ public abstract class Game
 		if (max >= MIN_ROAD_LENGTH)
 		{
 			// If there is a tie, no one gets longest road
-			if (broken && cols.size() > 1)
-				return;
-			else
+			if (!broken || cols.size() <= 1)
 			{
 				Colour c = cols.get(0);
 				Player player = players.get(c);

@@ -210,7 +210,7 @@ public class HeadsUpDisplay extends Stage
 			{
 				super.clicked(event, x, y);
 				client.log("UI", "Chat Button Clicked");
-				ChatDialog dialog = new ChatDialog("Chat", SettlersOfCatan.getSkin(), client);
+				ChatDialog dialog = new ChatDialog(SettlersOfCatan.getSkin(), client);
 				dialog.show(hud);
 			}
 		});
@@ -227,7 +227,7 @@ public class HeadsUpDisplay extends Stage
 			public void clicked(InputEvent event, float x, float y)
 			{
 				super.clicked(event, x, y);
-				TradeDialog dialog = new TradeDialog("Resources", SettlersOfCatan.getSkin(), null, client, hud);
+				TradeDialog dialog = new TradeDialog(SettlersOfCatan.getSkin(), null, client, hud);
 				dialog.show(hud);
 			}
 		});
@@ -258,19 +258,19 @@ public class HeadsUpDisplay extends Stage
 
 	public void showDiscardDialog()
 	{
-		DiscardDialog dialog = new DiscardDialog("Discard", SettlersOfCatan.getSkin(), client, this);
+		DiscardDialog dialog = new DiscardDialog(SettlersOfCatan.getSkin(), client, this);
 		dialog.show(this);
 	}
 
 	public void showResponse()
 	{
-		TradeResponseDialog dialog = new TradeResponseDialog("Trade", SettlersOfCatan.getSkin(), client, this);
+		TradeResponseDialog dialog = new TradeResponseDialog(SettlersOfCatan.getSkin(), client, this);
 		dialog.show(this);
 	}
 
 	public void showChooseResource()
 	{
-		ChooseResourceDialog dialog = new ChooseResourceDialog("Choose Resource", SettlersOfCatan.getSkin(), client,
+		ChooseResourceDialog dialog = new ChooseResourceDialog(SettlersOfCatan.getSkin(), client,
 				this);
 		dialog.show(this);
 	}

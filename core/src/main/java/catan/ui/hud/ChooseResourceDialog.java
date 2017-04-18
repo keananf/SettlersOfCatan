@@ -19,9 +19,9 @@ public class ChooseResourceDialog extends Dialog
 	private ResourceType chosenResource;
 	private List<CheckBox> checkBoxes;
 
-	public ChooseResourceDialog(String title, Skin skin, Client client, HeadsUpDisplay hud)
+	public ChooseResourceDialog(Skin skin, Client client, HeadsUpDisplay hud)
 	{
-		super(title, skin);
+		super("Choose Resource", skin);
 		this.client = client;
 		checkBoxes = new ArrayList<>();
 

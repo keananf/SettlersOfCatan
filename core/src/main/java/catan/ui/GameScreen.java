@@ -31,7 +31,6 @@ public class GameScreen implements Screen
 		ENVIRONMENT.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 	}
 
-	private final SettlersOfCatan game;
 	private final Array<ModelInstance> persistentInstances = new Array<>();
 	private final Array<ModelInstance> volatileInstances = new Array<>();
 	private final ModelBatch worldBatch = new ModelBatch();
@@ -46,7 +45,6 @@ public class GameScreen implements Screen
 	/** Initial world setup */
 	GameScreen(final SettlersOfCatan game)
 	{
-		this.game = game;
 		nodes = game.getState().getGrid().getNodesAsList();
 		edges = game.getState().getGrid().getEdgesAsList();
 		hexes = game.getState().getGrid().getHexesAsList();

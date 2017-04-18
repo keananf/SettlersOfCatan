@@ -101,7 +101,7 @@ class ModelFactory
 		final Model chit = builder.createCylinder(2f, 0f, 2f, 16, getChitMaterial(hex.getChit()), DEFAULT_ATTRS);
 
 		final Vector3 pos = hex.get3DPos();
-		pos.y = GROUND_LEVEL + 0.8f;
+		pos.y = GROUND_LEVEL + 0.7f;
 		final ModelInstance instance = new ModelInstance(chit, pos);
 		instance.transform.rotate(0, 1, 0, 180);
 		return instance;
@@ -130,7 +130,7 @@ class ModelFactory
 		final Texture texture = new Texture(tile);
 		final Material material = new Material(TextureAttribute.createDiffuse(texture));
 		final BlendingAttribute blending = new BlendingAttribute();
-		blending.opacity = 0.3f;
+		blending.opacity = 0.5f;
 		material.set(blending);
 		return material;
 	}
@@ -146,6 +146,7 @@ class ModelFactory
 			return null;
 
 		final ModelInstance instance = new ModelInstance(model, building.getNode().get3DPos());
+		instance.transform.translate(0, GROUND_LEVEL, 0);
 		paint(instance, building.getPlayerColour().displayColor);
 		return instance;
 	}
@@ -171,6 +172,7 @@ class ModelFactory
 			}
 		}
 
+		instance.transform.translate(0, GROUND_LEVEL, 0);
 		return instance;
 	}
 

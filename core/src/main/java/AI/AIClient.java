@@ -59,7 +59,8 @@ public abstract class AIClient extends Client
 						|| ev.getTypeCase().equals(Events.Event.TypeCase.ERROR)))
 				{
 					if (!ev.getTypeCase().equals(Events.Event.TypeCase.CARDSDISCARDED)
-							|| ev.getInstigator().getId().getNumber() == getPlayer().getId().getNumber())
+							|| ev.getInstigator().getId().getNumber() == getPlayer().getId().getNumber()
+							|| ev.getTypeCase().equals(Events.Event.TypeCase.ALLRESOURCES))
 					{
 						log("Client Proc", "Resuming");
 						ai.resume();

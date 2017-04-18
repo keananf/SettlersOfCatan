@@ -19,6 +19,7 @@ import game.build.Road;
 import grid.Edge;
 import grid.Hex;
 import grid.Node;
+import grid.Port;
 
 import java.util.List;
 
@@ -41,6 +42,7 @@ class GameScreen implements Screen
 	private final List<Node> nodes;
 	private final List<Edge> edges;
 	private final List<Hex> hexes;
+	private final List<Port> ports;
 
 	/** Initial world setup */
 	GameScreen(final SettlersOfCatan game)
@@ -48,6 +50,7 @@ class GameScreen implements Screen
 		nodes = game.getState().getGrid().getNodesAsList();
 		edges = game.getState().getGrid().getEdgesAsList();
 		hexes = game.getState().getGrid().getHexesAsList();
+		ports = game.getState().getGrid().getPortsAsList();
 
 		// camera
 		camera = new PerspectiveCamera(50f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -128,6 +131,12 @@ class GameScreen implements Screen
 			}
 		}
 
+		for(final Port port: ports ){
+			volatileInstances.add(ModelFactory.getPortInstance(port));
+		}
+		
+		
+		
 	}
 
 	@Override

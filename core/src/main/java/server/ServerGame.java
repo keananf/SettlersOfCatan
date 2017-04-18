@@ -264,7 +264,7 @@ public class ServerGame extends Game
 		}
 
 		// Invalid request
-		if (oldAmount - discardAmount >= ((oldAmount / 2) + 1)) { throw new InvalidDiscardRequest(oldAmount,
+		if (oldAmount - discardAmount > ((oldAmount / 2))) { throw new InvalidDiscardRequest(oldAmount,
 				current.getNumResources()); }
 
 		// If the player can afford the request, then spend the resources

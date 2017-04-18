@@ -76,7 +76,7 @@ The protocol structure is as follows: the overarching message type is a ‘Messa
 A ‘Request’ has a one-of field for each defined request type (including building a settlement, road, or city, playing a development card, buying a development card, starting a trade, choosing a player to steal from, choosing a resource, etc). An ‘Event’ is similar in that it has a ‘one-of’ field, meaning it can take the form of any number of ‘Event’ types which roughly correspond to the ‘Request’ types (including settlement built, city built, road built, resource stolen, development card bought, development card played, trade occurred, etc.). An ‘Event’ also has an ‘instigator’ field which simply entails the ‘ID’ of the player who sent it. While this is almost always the current player, including this information was important for debugging purposes and move validation.
 
 \begin{figure}[hbtp]
-      \includegraphics[width=\textwidth]{gav2}
+      \includegraphics[width=\textwidth]{GroupI}
       \caption{Same view of the above game from Group I's perspective}
 \end{figure}
 
@@ -182,6 +182,104 @@ Given that ‘AIClient’ can have any implementation of ‘AICore’ as its und
 
 
 \subsubsection{AI logic}
+\paragraph{Design}
+Ideally we would have wanted to have at least three levels of AI player:
+Easy: An AI that would play random moves
+Medium: An AI that chooses its moved based purely on heuristics
+Hard: And AI that uses A* or Monte Carlo search algorithms to choose moves
+Due to time constraints however we only managed to implement the first two difficulty levels. As the Easy difficulty makes moves randomly, all further discussion about the AI will be in relation to the Medium difficulty level AI.
+
+\paragraph{Strategy}
+After a carefully observed game of Settlers of Catan with the team, we realised what strategies exist and what strategies are superior to others. For example one person’s aim was to win the game by upgrading to cities quickly. One error in this strategy is that the person did not think to expand through roads and settlement and hence were left with options of buying development cards and trading resources. Their buildings( settlements/cities) were located around hexes that had essential resources, but most of the hexes were very unlikely to return anything as the dice rolls on these were unlikely to occur( i.e 10-12). They therefore chose to trade before making any moves in order to maximise the likelihood of being able to build any item in a certain round, making them a very impulsive and impatient player. As assumed, this person had the least victory points at the end of the game. 
+
+On the other hand, another person placed their initial settlements wisely and chose to go with the “largest road” strategy (this was made easy due to a stable resource flow), which granted them two additional victory points while being ahead of the other players for the majority of the game.
+
+The third person and winner of the game used a mix of strategies, but the main aspect that helped him win was that he bought development cards throughout the game and only played them as the end of the game when it would put him above the winning threshold of victory points and ahead of the second strategic player.
+
+What we deduced from this:
+It is important that you build roads so you can build more settlements 
+This will stabilise your resource flow 
+More likely if settlements are placed around hexes with likely dice rolls
+You could gain 2 additional victory points
+Cities are only worth considering if you have a solid foundation of settlements
+Development Cards are most useful at the end of the game when you are close to winning
+
+Hence the main strategy of the AI is to prioritise aspects of the game in the following order:
+
+\begin{Priorities}
+\item[$\bullet$ Roads] - prioritised throughout the game while aiding building of settlements
+\item[$\bullet$ Settlements] - prioritised at the beginning of the game while advancing
+\item[$\bullet$ Cities] - considered once advanced to a stable game state 
+\item[$\bullet$ Development Cards] - considered and prioritised at the end of the game or when an opponent is close in terms of victory points.
+\end{Priorities}
+
+The AI will expand quickly by building a lot of settlements and roads quickly. This will give our AI access to better settlement locations early on (stabilising resource flow )and will increase its chances of getting the longest road. 
+
+
+
+\paragraph{Resources}
+The first thing we considered was which resources we wanted our AI player to prioritize. As our main strategy is to have the AI expand quickly and build as many settlements and roads as possible. To this end, we decided to make ore our lowest priority as it is the only resource that is not used in building settlements or roads.
+While deciding how to prioritize the remaining four resources we looked at how often our AI would require those resources. We observed that bricks and lumber are required for both settlements and roads it made a lot of sense to make those our top priorities as it would allow the AI to better achieve its goal of expanding quickly. Our third priority is grain as it is a necessary resource for more items than any of the others which provides a strong case for it being the most useful resource. However, two of the three items that can be bought for grain also require ore and as we had decided to make ore our lowest priority it would not have been sensible to prioritize grain any higher. After these discussions we agreed on the following resource priority order:
+
+\begin{Resource Types}
+\item[$\bullet$ Bricks]
+\item[$\bullet$ Lumber]
+\item[$\bullet$ Grain]
+\item[$\bullet$ Wool]
+\item[$\bullet$ Ore]
+\end{Resource Types}
+
+Resources Implementation:
+The prioritization of these resources is implemented using an ArrayList containing each resource type that ensures that the AI attempts to acquire each resource and does not attempt to only acquire the most favourable one. The ArrayList in the Rank Node class is modified at each call of the rank method by ranking the resource in ascending order, making the most scarce resource always a priority. Hence, because we take care of prioritization in the initial road and settlement placements of the game, we can now focus on establishing a balance between getting the right amount of resources and getting the right resources.
+
+\paragraph{Settlements}
+Settlement Placements and City Upgrades:
+	At the beginning of the game, potential settlement placements are ranked on two criteria. The first of which is how many of the four prioritized resources they give the AI access to. The second criterion is the probability of receiving any of the resources as indicated by the dice roll required to gain those resources so locations adjacent to resources that require dice rolls of  between five and nine (excluding seven) gain priority. The first part of the ranking is mainly dependant on the number of unique resources a potential settlement would provide to the AI such that the AI does not prioritize a location that meets the second. criterion well but only provides a single resource type over a location that does not provide the best probabilities of receiving resources but provides a greater variety of resources.
+
+Settlement Placement and City upgrades Implementation:
+
+During the game the AI decides to prioritise the settlements that are around the nodes that have resources that are scarce rather than the initial prioritization of resources.This is realised through the resource queue that is updated each time a road or settlement placement is evaluated. Nevertheless, the AI prioritises settlements near hexes with a more likely dice roll. This is necessary to ensure that a continuous stream of resources is at the hand of the AI so that the main aim of expansion can be realised. 
+
+
+
+\paragraph{Road Placements}
+For each potential new road location there are two different situations that can apply to the location. The particular situation must be identified before the edge can be ranked properly.    
+ The first situation is that the road would be connected to a node that a settlement can be built on. In this situation we decided that the most important factor would be the feasibility of the connected node as a settlement location. As such, the road is ranked based on the rank that the node would receive if it were being considered as a settlement location.
+The second situation is that the road is not connected to a node on which a settlement can be built such as an edge connected to a settlement. When ranking an edge under these conditions we first take into account what the edge is connected to. If the edge is connected to an opposing settlement then the dge gets ranked down as this would stifle expansion. If the case is that the edge is connected to one of the AI player’s settlements then the edge gets ranked up slightly as a road built on that edge would contribute to the longest road goal without harming the AI’s ability to expand.  If the edge is connected to an empty node then we rank the edge based on the road building options that it would open up to the AI player. Edges in this situation are ranked based on the number of valid settlement building options they could potentially provide.
+
+Road Placements Implementation:
+	This mechanism is implemented in rank New Road in the easy AI class. The road in the first situation is ranked higher than the second situation as it helps our aim of expanding as quickly as possible. If the road to be placed is connected to a settlement, making it impossible to place a settlement at the other end of the road, we first evaluate the edges going away from the node of the road to be placed that is not connected to the settlement
+
+Then it looks at all edges connected to that node that are not the edge on which the road is to be placed. The rank increases every time it discovers that the nodes that allow for future settlements are not occupied by opponents’ settlements.If one of these nodes is occupied by an opponent it decreases the rank of the road, if it is the player’s own settlement the ranking increases as it allows you to expand quicker.
+
+
+
+
+\paragraph{Discarding and Stealing Resources}
+Discarding Resources:
+
+For situations in which it is necessary to discard resources we attempt to work our way up our resource priority list. For this we consider bricks and lumber as having the same priority and the same consideration is given to grain and wool. As we are discarding resources based on priority, the AI will first discard any ore it has before looking at grain and wool and finally, if no other options are available, the AI will discard bricks and lumber. For the resources that are grouped, the AI will discard whichever resource it has the most of before discarding the second.
+
+\paragraph{Moving the robber}
+When choosing which player to target when given the opportunity via rolling a seven or playing a knight card the AI will attempt to target the player with the largest number of resources and the most victory points. While there were a few ways we could do this such as trying to calculate which players have which resources we felt like it would make sense for our medium AI to make a simpler choice and target the most valuable player. The most valuable player in this case is defined as the player with the greatest number of victory points and resources.
+
+
+\subsubsection{Development Cards}
+
+\paragraph{Playing Development Cards}
+Development cards are ranked lower than roads and settlements due to our strategy
+
+\begin{Cards}
+\item[$\bullet$ Knight Card] As The Knight Card lets you move the robber, it gets a basic ranking as moving the rubber allows the AI to get resources that help it advance quicker. Apart from that there is no other benefit of playing this card (not considering the Victory points that are automatically assigned to a player).
+\item[$\bullet$ Road Building Card] When evaluating this card we find the player with the longest road to get the length of the longest road and then compare it to our own road to see if 2 additional roads will give us the longest road award. Additionally, this card still helps us to expand quickly, hence it is ranked higher than the rank card.
+\item[$\bullet$ Year of Plenty Card] As this card allows you to get 2 resource cards it checks if the AI is in need of 2 or less resources to build a road or a settlement. If the AI has enough resources for these 2 tasks, it evaluates if we are in need of one resource card to upgrade to a city. 1 has been chosen as we do not want to waste a development card on upgrading to a city and expansion is our strategy.
+\item[$\bullet$ Monopoly Card] When the AI is given the opportunity to play the monopoly card, it checks to see if it has a settlement or city by a port which would enable it to trade the cards that it would gain at a better rate than with the resource bank. If so it ranks higher, but if it has no access to a port it gains the standard ranking of 1.
+\end{Cards}
+
+Due to the group protocol, it is no longer possible to keep the remaining development cards from the other players until you play them. The victory points earned from them and some of the development cards mentioned above are added immediately to the player’s total victory points.
+
+\paragraph{Buying Development Cards}
+	This has been given low priority due to the points we derived from our game which are explained above. The AI therefore tries to keep the number of development cards throughout the game at a minimum. The default ranking is decreased if the AI can afford to build or upgrade to cities. At the end it is also decreased by the number of development cards the AI already has, making it very unlikely to buy development cards when other moves are available.
 
 
 \subsection{Intergroup protocol and the process of integration}

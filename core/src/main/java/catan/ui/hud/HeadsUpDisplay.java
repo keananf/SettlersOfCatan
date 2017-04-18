@@ -5,7 +5,6 @@ import catan.ui.AssetMan;
 import client.Client;
 import client.ClientGame;
 import client.Turn;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -15,6 +14,9 @@ import enums.DevelopmentCardType;
 import enums.ResourceType;
 import game.players.Player;
 import intergroup.Requests;
+
+import static intergroup.Requests.Request.BodyCase.BUYDEVCARD;
+import static intergroup.Requests.Request.BodyCase.ENDTURN;
 
 public class HeadsUpDisplay extends Stage
 {
@@ -38,6 +40,8 @@ public class HeadsUpDisplay extends Stage
 		root.pad(10);
 		addActor(root);
 
+		/* ******** Start of table ********************************************************************************** */
+
 		// Victory points counter (includes hidden VP cards)
 		final Counter vps = new Counter("victory-points", me::getVp);
 		root.add(vps).left().top().uniform();
@@ -59,21 +63,26 @@ public class HeadsUpDisplay extends Stage
 		});
 		root.add(diceRoll).right().top().uniform();
 
+		/* ********************************************************************************************************** */
 		root.row().expand();
 
 		root.add(getDevCards(isAI)).left();
 		root.add(/* empty cell */);
 		root.add(getPlayerBars(isAI)).right();
 
+		/* ********************************************************************************************************** */
 		root.row().expand();
 
 		if (!isAI)
 		{
 			VerticalGroup buttons = new VerticalGroup();
 			buttons.space(5);
-			buttons.addActor(getBuyDevCardButton());
-			buttons.addActor(showChatButton());
-			buttons.addActor(getRequestResourcesButton());
+			buttons.addActor(AssetMan.getButton(
+					"BuyDevelopmentCard.png",
+					() -> client.acquireLocksAndSendTurn(new Turn(BUYDEVCARD))));
+			buttons.addActor(AssetMan.getButton(
+					"Chat.png",
+					() -> new ChatDialog(client).show(this)));
 			root.add(buttons).left().bottom();
 		}
 		else
@@ -88,14 +97,21 @@ public class HeadsUpDisplay extends Stage
 		{
 			VerticalGroup buttons = new VerticalGroup();
 			buttons.space(5);
-			buttons.addActor(getBankTradeButton());
-			buttons.addActor(getEndTurnButton());
+
+			buttons.addActor(AssetMan.getButton(
+					"TradeWithBank.png",
+					() -> new TradeDialog(null, client).show(this)));
+			buttons.addActor(AssetMan.getButton(
+					"EndTurn.png",
+					() -> this.client.acquireLocksAndSendTurn(new Turn(ENDTURN))));
 			root.add(buttons).right().bottom();
 		}
 		else
 		{
 			root.add();
 		}
+
+		/* ******** End of table ************************************************************************************ */
 	}
 
 	private VerticalGroup getDevCards(boolean isAi)
@@ -163,87 +179,6 @@ public class HeadsUpDisplay extends Stage
 		return resources;
 	}
 
-	private ImageButton getBuyDevCardButton()
-	{
-		ImageButton buyDevCardBtn = AssetMan.getImageButton("BuyDevelopmentCard.png");
-		buyDevCardBtn.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				super.clicked(event, x, y);
-				client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.BUYDEVCARD));
-			}
-		});
-		return buyDevCardBtn;
-	}
-
-	private ImageButton getEndTurnButton()
-	{
-		ImageButton endTurnBtn = AssetMan.getImageButton("EndTurn.png");
-		endTurnBtn.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				super.clicked(event, x, y);
-				client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.ENDTURN));
-			}
-		});
-		return endTurnBtn;
-	}
-
-	private Actor showChatButton()
-	{
-		HeadsUpDisplay hud = this;
-		ImageButton endTurnBtn = new ImageButton(AssetMan.getDrawable("Chat.png"));
-		endTurnBtn.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				super.clicked(event, x, y);
-				client.log("UI", "Chat Button Clicked");
-				ChatDialog dialog = new ChatDialog(SettlersOfCatan.getSkin(), client);
-				dialog.show(hud);
-			}
-		});
-		return endTurnBtn;
-	}
-
-	private ImageButton getBankTradeButton()
-	{
-		HeadsUpDisplay hud = this;
-		ImageButton bankTradeBtn = AssetMan.getImageButton("TradeWithBank.png");
-		bankTradeBtn.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				super.clicked(event, x, y);
-				TradeDialog dialog = new TradeDialog(SettlersOfCatan.getSkin(), null, client, hud);
-				dialog.show(hud);
-			}
-		});
-		return bankTradeBtn;
-	}
-
-	private ImageButton getRequestResourcesButton()
-	{
-		ImageButton resourcesBtn = AssetMan.getImageButton("RequestResources.png");
-		resourcesBtn.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				super.clicked(event, x, y);
-				client.log("UI", "Resources Button Clicked");
-				client.acquireLocksAndSendTurn(new Turn(Requests.Request.BodyCase.GETRESOURCES));
-			}
-		});
-		return resourcesBtn;
-	}
-
 	public void render(final float delta)
 	{
 		act();
@@ -268,19 +203,16 @@ public class HeadsUpDisplay extends Stage
 
 	public void showDiscardDialog()
 	{
-		DiscardDialog dialog = new DiscardDialog(SettlersOfCatan.getSkin(), client, this);
-		dialog.show(this);
+		new DiscardDialog(SettlersOfCatan.getSkin(), client, this).show(this);
 	}
 
 	public void showResponse()
 	{
-		TradeResponseDialog dialog = new TradeResponseDialog(SettlersOfCatan.getSkin(), client, this);
-		dialog.show(this);
+		new TradeResponseDialog(SettlersOfCatan.getSkin(), client, this).show(this);
 	}
 
 	public void showChooseResource()
 	{
-		ChooseResourceDialog dialog = new ChooseResourceDialog(SettlersOfCatan.getSkin(), client, this);
-		dialog.show(this);
+		new ChooseResourceDialog(SettlersOfCatan.getSkin(), client, this).show(this);
 	}
 }

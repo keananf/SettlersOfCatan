@@ -1,11 +1,14 @@
 package catan.ui.hud;
 
 import catan.SettlersOfCatan;
+import catan.ui.NumberField;
+import catan.ui.SaneTextField;
 import client.Client;
 import client.Turn;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import enums.ResourceType;
 import intergroup.Requests;
 import intergroup.board.Board;
@@ -14,125 +17,58 @@ import intergroup.trade.Trade;
 import java.util.HashMap;
 import java.util.Map;
 
-class TradeDialog extends Dialog
+class TradeDialog extends SaneDialog
 {
-	private final Board.Player player;
-	private final Client client;
-	private final Map<ResourceType, Integer> resources;
-	private final Map<ResourceType, Integer> otherResources;
+	private final Map<ResourceType, Integer> wanting = new HashMap<>();
+	private final Map<ResourceType, Integer> offering = new HashMap<>();
 
-	public TradeDialog(Skin skin, Board.Player player, Client client, HeadsUpDisplay hud)
-	{
-		super("Resources", skin);
-		this.player = player;
-		this.client = client;
-		resources = new HashMap<>();
-		otherResources = new HashMap<>();
+	TradeDialog(Board.Player player, Client client) {
+		super("Resources");
 
-		VerticalGroup vert = new VerticalGroup();
-		final Table root = new Table();
-		hud.getResources();
-		root.setFillParent(true);
-		addActor(root);
+		// Add headers
+		getContentTable().add(new Label("Resource", SettlersOfCatan.getSkin(), "dialog"));
+		getContentTable().add(new Label("Offering", SettlersOfCatan.getSkin(), "dialog"));
+		getContentTable().add(new Label("Wanting", SettlersOfCatan.getSkin(), "dialog"));
+		getContentTable().row();
 
-		// Add labels
-		HorizontalGroup horiz = new HorizontalGroup();
-		TextField offering = new TextField("Offering", SettlersOfCatan.getSkin());
-		offering.setTextFieldListener((textField, c) -> textField.setText("Offering"));
-		TextField wanting = new TextField("Wanting", SettlersOfCatan.getSkin());
-		wanting.setTextFieldListener((textField, c) -> textField.setText("Wanting"));
-		horiz.addActor(offering);
-		horiz.addActor(wanting);
-		vert.addActor(horiz);
-
-		for (ResourceType r : ResourceType.values())
-		{
+		for (ResourceType r : ResourceType.values()) {
 			if (r.equals(ResourceType.Generic)) continue;
 
-			otherResources.put(r, 0);
-			resources.put(r, 0);
-			addOptions(r, vert);
+			getContentTable().add(new Label(r.name(), SettlersOfCatan.getSkin(), "dialog"));
+			getContentTable().add(new NumberField("0"));
+			getContentTable().add(new NumberField("0"));
+			getContentTable().row();
+			wanting.put(r, 0);
+			offering.put(r, 0);
 		}
 
-		root.add(vert);
-		addConfirmButtons();
-	}
+		addButton("Submit", () -> {
+					// If a player trade
+					if (player != null) {
+						// Set up trade
+						Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
+						Trade.WithPlayer.Builder builder = Trade.WithPlayer.newBuilder();
+						builder.setOther(player).build();
+						builder.setOffering(client.getState().processResources(offering));
+						builder.setWanting(client.getState().processResources(wanting));
 
-	private void addOptions(ResourceType r, VerticalGroup vert)
-	{
-		HorizontalGroup horiz = new HorizontalGroup();
-		TextField text = new TextField(r.name(), SettlersOfCatan.getSkin());
-		text.setTextFieldListener((textField, c) -> {
-			textField.setText(String.valueOf(c));
-			int num = 0;
-			try
-			{
-				num = Integer.parseInt(textField.getText());
-			}
-			catch (NumberFormatException e)
-			{
-				textField.setText(r.name());
-			}
-			resources.put(r, num);
-		});
-		TextField text2 = new TextField(r.name(), SettlersOfCatan.getSkin());
-		text2.setTextFieldListener((textField, c) -> {
-			textField.setText(String.valueOf(c));
-			int num = 0;
-			try
-			{
-				num = Integer.parseInt(textField.getText());
-			}
-			catch (NumberFormatException e)
-			{
-				textField.setText(r.name());
-			}
-			otherResources.put(r, num);
-		});
-		horiz.addActor(text);
-		horiz.addActor(text2);
+						// Set Trade
+						turn.setPlayerTrade(builder.build());
+						client.acquireLocksAndSendTurn(turn);
+					} else {
+						// Set up trade
+						Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
+						Trade.WithBank.Builder builder = Trade.WithBank.newBuilder();
+						builder.setOffering(client.getState().processResources(offering));
+						builder.setWanting(client.getState().processResources(wanting));
 
-		vert.addActor(horiz);
-	}
-
-	private void addConfirmButtons()
-	{
-		TextButton button = new TextButton("Submit", SettlersOfCatan.getSkin());
-		button.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				super.clicked(event, x, y);
-
-				// If a player trade
-				if (player != null)
-				{
-					// Set up trade
-					Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
-					Trade.WithPlayer.Builder builder = Trade.WithPlayer.newBuilder();
-					builder.setOther(player).build();
-					builder.setOffering(client.getState().processResources(resources));
-					builder.setWanting(client.getState().processResources(otherResources));
-
-					// Set Trade
-					turn.setPlayerTrade(builder.build());
-					client.acquireLocksAndSendTurn(turn);
+						// Set Trade
+						turn.setBankTrade(builder.build());
+						client.acquireLocksAndSendTurn(turn);
+					}
 				}
-				else
-				{
-					// Set up trade
-					Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
-					Trade.WithBank.Builder builder = Trade.WithBank.newBuilder();
-					builder.setOffering(client.getState().processResources(resources));
-					builder.setWanting(client.getState().processResources(otherResources));
+		);
 
-					// Set Trade
-					turn.setBankTrade(builder.build());
-					client.acquireLocksAndSendTurn(turn);
-				}
-			}
-		});
-		button(button, true).button("Cancel", false);
+		addButton("Cancel");
 	}
 }

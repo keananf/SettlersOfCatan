@@ -321,8 +321,8 @@ public abstract class Player
 	}
 
 	/**
-	 * Checks to see if building a road is valid at the given edge
-	 * getGame()
+	 * Checks to see if building a road is valid at the given edge getGame()
+	 * 
 	 * @param edge the desired road location
 	 * @return if the desired location is valid for a road
 	 */
@@ -575,7 +575,9 @@ public abstract class Player
 		else if (!this.hasLongestRoad) addVp(2);
 		this.hasLongestRoad = hasLongestRoad;
 	}
-	public boolean getHasLongestRoad(){
+
+	public boolean getHasLongestRoad()
+	{
 		return hasLongestRoad;
 	}
 

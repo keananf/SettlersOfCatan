@@ -21,7 +21,7 @@ class LocalGameSetupScreen extends GameSetupScreen
 
 		final Label opponentsDifficulty = new Label("Difficulty of opponents", SettlersOfCatan.getSkin());
 		addPrimary(opponentsDifficulty);
-		final DifficultyChooser aiChooser = new DifficultyChooser(()->true);
+		final DifficultyChooser aiChooser = new DifficultyChooser(() -> true);
 		addPrimary(aiChooser.getGroup());
 
 		setSubmitListener(new ChangeListener()

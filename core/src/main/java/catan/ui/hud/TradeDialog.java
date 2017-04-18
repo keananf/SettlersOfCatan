@@ -18,7 +18,8 @@ class TradeDialog extends SaneDialog
 	private final Map<ResourceType, Integer> wanting = new HashMap<>();
 	private final Map<ResourceType, Integer> offering = new HashMap<>();
 
-	TradeDialog(Board.Player player, Client client) {
+	TradeDialog(Board.Player player, Client client)
+	{
 		super("Resources");
 
 		// Add headers
@@ -27,7 +28,8 @@ class TradeDialog extends SaneDialog
 		getContentTable().add(new Label("Wanting", SettlersOfCatan.getSkin(), "dialog"));
 		getContentTable().row();
 
-		for (ResourceType r : ResourceType.values()) {
+		for (ResourceType r : ResourceType.values())
+		{
 			if (r.equals(ResourceType.Generic)) continue;
 
 			getContentTable().add(new Label(r.name(), SettlersOfCatan.getSkin(), "dialog"));
@@ -39,31 +41,33 @@ class TradeDialog extends SaneDialog
 		}
 
 		addButton("Submit", () -> {
-				// If a player trade
-				if (player != null) {
-					// Set up trade
-					Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
-					Trade.WithPlayer.Builder builder = Trade.WithPlayer.newBuilder();
-					builder.setOther(player).build();
-					builder.setOffering(client.getState().processResources(offering));
-					builder.setWanting(client.getState().processResources(wanting));
+			// If a player trade
+			if (player != null)
+			{
+				// Set up trade
+				Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
+				Trade.WithPlayer.Builder builder = Trade.WithPlayer.newBuilder();
+				builder.setOther(player).build();
+				builder.setOffering(client.getState().processResources(offering));
+				builder.setWanting(client.getState().processResources(wanting));
 
-					// Set Trade
-					turn.setPlayerTrade(builder.build());
-					client.acquireLocksAndSendTurn(turn);
-				} else {
-					// Set up trade
-					Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
-					Trade.WithBank.Builder builder = Trade.WithBank.newBuilder();
-					builder.setOffering(client.getState().processResources(offering));
-					builder.setWanting(client.getState().processResources(wanting));
-
-					// Set Trade
-					turn.setBankTrade(builder.build());
-					client.acquireLocksAndSendTurn(turn);
-				}
+				// Set Trade
+				turn.setPlayerTrade(builder.build());
+				client.acquireLocksAndSendTurn(turn);
 			}
-		);
+			else
+			{
+				// Set up trade
+				Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
+				Trade.WithBank.Builder builder = Trade.WithBank.newBuilder();
+				builder.setOffering(client.getState().processResources(offering));
+				builder.setWanting(client.getState().processResources(wanting));
+
+				// Set Trade
+				turn.setBankTrade(builder.build());
+				client.acquireLocksAndSendTurn(turn);
+			}
+		});
 
 		addButton("Cancel");
 	}

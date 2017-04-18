@@ -150,7 +150,7 @@ class EventProcessor
 			break;
 		case ALLRESOURCES:
 			boolean discard = ev.getAllResources().getDiscard();
-			if(discard && !getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
+			if (discard && !getExpectedMoves().contains(Requests.Request.BodyCase.DISCARDRESOURCES))
 			{
 				getExpectedMoves().add(Requests.Request.BodyCase.DISCARDRESOURCES);
 			}

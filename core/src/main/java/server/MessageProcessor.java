@@ -404,8 +404,8 @@ class MessageProcessor
 		if (type == null || game == null) return false;
 
 		// Always allow
-		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE) ||
-				type.equals(Requests.Request.BodyCase.GETRESOURCES)) return true;
+		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE) || type.equals(Requests.Request.BodyCase.GETRESOURCES))
+			return true;
 
 		if (expected.contains(type))
 		{

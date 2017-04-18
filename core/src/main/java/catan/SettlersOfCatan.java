@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
-
 public class SettlersOfCatan extends com.badlogic.gdx.Game
 {
 	private static Skin skin;
@@ -42,15 +41,10 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		Gdx.graphics.setContinuousRendering(false);
 
 		skin = new Skin((Gdx.files.internal("skin.json")));
-		skin.add("default", new Window.WindowStyle(
-				skin.getFont("display"),
-				Color.BLACK,
-				AssetMan.getDrawable("dialog.png")));
-		skin.add("default", new CheckBox.CheckBoxStyle(
-				AssetMan.getDrawable("checkBoxOff.png"),
-				AssetMan.getDrawable("checkBoxOn.png"),
-				skin.getFont("body"),
-				Color.WHITE));
+		skin.add("default",
+				new Window.WindowStyle(skin.getFont("display"), Color.BLACK, AssetMan.getDrawable("dialog.png")));
+		skin.add("default", new CheckBox.CheckBoxStyle(AssetMan.getDrawable("checkBoxOff.png"),
+				AssetMan.getDrawable("checkBoxOn.png"), skin.getFont("body"), Color.WHITE));
 
 		// start off at the splash screen
 		setScreen(new SplashScreen(this));
@@ -154,7 +148,8 @@ public class SettlersOfCatan extends com.badlogic.gdx.Game
 		this.hud = hud;
 	}
 
-	public void sendMessage(final String message) {
+	public void sendMessage(final String message)
+	{
 		hud.sendMessage(message);
 	}
 

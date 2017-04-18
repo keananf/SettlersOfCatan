@@ -264,11 +264,9 @@ public class ServerGame extends Game
 		}
 
 		// Invalid request
-		if(!current.canAfford(resources)) throw new CannotAffordException(current.getResources(), resources);
-		if (oldAmount - discardAmount != ((oldAmount / 2)) && oldAmount - discardAmount - 1 != ((oldAmount / 2)))
-		{
-			throw new InvalidDiscardRequest(oldAmount,discardAmount);
-		}
+		if (!current.canAfford(resources)) throw new CannotAffordException(current.getResources(), resources);
+		if (oldAmount - discardAmount != ((oldAmount / 2)) && oldAmount - discardAmount
+				- 1 != ((oldAmount / 2))) { throw new InvalidDiscardRequest(oldAmount, discardAmount); }
 
 		// If the player can afford the request, then spend the resources
 		current.spendResources(resources, bank);
@@ -775,7 +773,7 @@ public class ServerGame extends Game
 	public HashMap<Colour, Events.Resources> getResources(HashMap<Colour, List<Requests.Request.BodyCase>> expected)
 	{
 		HashMap<Colour, Events.Resources> all = new HashMap<Colour, Events.Resources>();
-		for(Colour c : expected.keySet())
+		for (Colour c : expected.keySet())
 		{
 			Player p = getPlayer(c);
 			Events.Resources.Builder builder = Events.Resources.newBuilder();

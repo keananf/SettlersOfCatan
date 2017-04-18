@@ -163,6 +163,7 @@ public class GameAndResourcesTests extends TestHelper
 
 		game.processDiscard(discard.build(), p.getColour());
 	}
+
 	@Test
 	public void discardTest() throws InvalidDiscardRequest, CannotAffordException, BankLimitException
 	{

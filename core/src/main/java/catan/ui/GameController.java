@@ -141,21 +141,18 @@ class GameController implements InputProcessor
 	{
 		final float HEX_WIDTH = 2f;
 		return getHex(planeX, planeY);
-		/*for (Hex hex : hexes)
-		{
-			final Vector2 pos = hex.get2DPos();
-
-			final double furthestLeft = pos.x - HEX_WIDTH / 2;
-			final double furthestRight = pos.x + HEX_WIDTH / 2;
-			final double highestHeight = pos.y + ((Math.sqrt(3) * HEX_WIDTH) / 4);
-			final double lowestHeight = pos.y - ((Math.sqrt(3) * HEX_WIDTH) / 4);
-
-			if (planeX <= furthestRight && planeX >= furthestLeft)
-			{
-				if (planeY <= highestHeight && planeY >= lowestHeight && pos.dst(planeX, planeY) > 1) { return hex; }
-			}
-		}
-		return null;*/
+		/*
+		 * for (Hex hex : hexes) { final Vector2 pos = hex.get2DPos();
+		 * 
+		 * final double furthestLeft = pos.x - HEX_WIDTH / 2; final double
+		 * furthestRight = pos.x + HEX_WIDTH / 2; final double highestHeight =
+		 * pos.y + ((Math.sqrt(3) * HEX_WIDTH) / 4); final double lowestHeight =
+		 * pos.y - ((Math.sqrt(3) * HEX_WIDTH) / 4);
+		 * 
+		 * if (planeX <= furthestRight && planeX >= furthestLeft) { if (planeY
+		 * <= highestHeight && planeY >= lowestHeight && pos.dst(planeX, planeY)
+		 * > 1) { return hex; } } } return null;
+		 */
 	}
 
 	// The InputProcessor interface requires these methods be implemented.

@@ -7,7 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-abstract class SaneDialog extends Dialog {
+abstract class SaneDialog extends Dialog
+{
 	SaneDialog(final String title)
 	{
 		super(title, SettlersOfCatan.getSkin());
@@ -31,7 +32,8 @@ abstract class SaneDialog extends Dialog {
 		button.addListener(new ClickListener()
 		{
 			@Override
-			public void clicked(InputEvent event, float x, float y) {
+			public void clicked(InputEvent event, float x, float y)
+			{
 				clickListener.run();
 			}
 		});

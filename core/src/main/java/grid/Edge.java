@@ -276,7 +276,6 @@ public class Edge implements BoardElement
 				|| getY().equals(otherEdge.getY());
 
 	}
-	
 
 	public Vector3 get3dVectorMidpoint()
 	{

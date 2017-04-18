@@ -103,12 +103,12 @@ public class TurnState extends Turn
 		this.hasTraded = true;
 	}
 
-    public void addError()
+	public void addError()
 	{
 		error++;
-    }
-    
-    public int getErrors()
+	}
+
+	public int getErrors()
 	{
 		return error;
 	}

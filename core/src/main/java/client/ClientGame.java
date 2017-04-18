@@ -285,7 +285,6 @@ public class ClientGame extends Game
 		}
 	}
 
-
 	public void handleResources(Events.Resources allResources)
 	{
 		Board.ResourceAllocation alloc = allResources.getAlloc();

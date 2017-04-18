@@ -218,7 +218,7 @@ public class MoveProcessor
 		}
 
 		// Request all resources again from server
-		if(possibilities.isEmpty() || getTurn().getErrors() >= 2)
+		if (possibilities.isEmpty() || getTurn().getErrors() >= 2)
 		{
 			possibilities.add(new Turn(Requests.Request.BodyCase.GETRESOURCES));
 		}
@@ -463,8 +463,8 @@ public class MoveProcessor
 		Requests.Request.BodyCase type = turn.getChosenMove();
 		if (type == null) return false;
 
-		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE) ||
-				type.equals(Requests.Request.BodyCase.GETRESOURCES)) return true;
+		if (type.equals(Requests.Request.BodyCase.CHATMESSAGE) || type.equals(Requests.Request.BodyCase.GETRESOURCES))
+			return true;
 
 		if (getExpectedMoves().contains(type))
 		{
@@ -505,7 +505,7 @@ public class MoveProcessor
 			val = checkBuild(turn);
 			break;
 		case GETRESOURCES:
-			val= true;
+			val = true;
 			break;
 		case BUILDROAD:
 			val = checkBuildRoad(turn);

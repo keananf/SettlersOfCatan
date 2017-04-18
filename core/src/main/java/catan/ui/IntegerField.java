@@ -10,9 +10,11 @@ public class IntegerField extends SaneTextField
 	public IntegerField(final String placeholder, final Consumer<Integer> listener)
 	{
 		this(placeholder);
-		addListener(new ChangeListener() {
+		addListener(new ChangeListener()
+		{
 			@Override
-			public void changed(ChangeEvent event, Actor actor) {
+			public void changed(ChangeEvent event, Actor actor)
+			{
 				listener.accept(getNumericValue());
 			}
 		});

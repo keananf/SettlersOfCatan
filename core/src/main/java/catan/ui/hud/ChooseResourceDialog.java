@@ -3,15 +3,9 @@ package catan.ui.hud;
 import catan.SettlersOfCatan;
 import client.Client;
 import client.Turn;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import enums.ResourceType;
 import intergroup.Requests;
-import intergroup.resource.Resource;
 
 class ChooseResourceDialog extends SaneDialog
 {
@@ -43,13 +37,15 @@ class ChooseResourceDialog extends SaneDialog
 	{
 		private final ResourceType resource;
 
-		ResourceCheckBox(final ResourceType resource) {
+		ResourceCheckBox(final ResourceType resource)
+		{
 			super(resource.name(), SettlersOfCatan.getSkin());
 
 			this.resource = resource;
 		}
 
-		public ResourceType getResource() {
+		public ResourceType getResource()
+		{
 			return resource;
 		}
 	}

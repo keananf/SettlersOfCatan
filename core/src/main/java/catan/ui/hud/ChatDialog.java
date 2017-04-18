@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Align;
 import intergroup.Requests;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

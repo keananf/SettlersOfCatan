@@ -725,13 +725,13 @@ public class Server implements Runnable
 		return msgProc.getCurrentTrade();
 	}
 
-    public void sendResources(HashMap<Colour, Events.Resources> resources)
+	public void sendResources(HashMap<Colour, Events.Resources> resources)
 	{
-		for(Colour c : resources.keySet())
+		for (Colour c : resources.keySet())
 		{
 			Message.Builder msg = Message.newBuilder();
 			msg.setEvent(Event.newBuilder().setAllResources(resources.get(c)).build());
-			sendMessage(msg.build(),c);
+			sendMessage(msg.build(), c);
 		}
-    }
+	}
 }

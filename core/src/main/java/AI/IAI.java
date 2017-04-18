@@ -158,10 +158,11 @@ interface IAI
 	 * @return a rank ranking this trade response
 	 */
 	int rankTradeResponse(Trade.Response tradeResponse, Trade.WithPlayer trade);
-	
+
 	/**
-	 * This method will set a baseline rank that other move ranks must
-	 * surpass in order to be performed.
+	 * This method will set a baseline rank that other move ranks must surpass
+	 * in order to be performed.
+	 * 
 	 * @return a rank ranking ending the turn
 	 */
 	int rankEndTurn();

@@ -40,7 +40,11 @@ public class HeadsUpDisplay extends Stage
 		root.pad(10);
 		addActor(root);
 
-		/* ******** Start of table ********************************************************************************** */
+		/*
+		 * ******** Start of table
+		 * *********************************************************************
+		 * *************
+		 */
 
 		// Victory points counter (includes hidden VP cards)
 		final Counter vps = new Counter("victory-points", me::getVp);
@@ -63,26 +67,29 @@ public class HeadsUpDisplay extends Stage
 		});
 		root.add(diceRoll).right().top().uniform();
 
-		/* ********************************************************************************************************** */
+		/*
+		 * *********************************************************************
+		 * *************************************
+		 */
 		root.row().expand();
 
 		root.add(getDevCards(isAI)).left();
 		root.add(/* empty cell */);
 		root.add(getPlayerBars(isAI)).right();
 
-		/* ********************************************************************************************************** */
+		/*
+		 * *********************************************************************
+		 * *************************************
+		 */
 		root.row().expand();
 
 		if (!isAI)
 		{
 			VerticalGroup buttons = new VerticalGroup();
 			buttons.space(5);
-			buttons.addActor(AssetMan.getButton(
-					"BuyDevelopmentCard.png",
+			buttons.addActor(AssetMan.getButton("BuyDevelopmentCard.png",
 					() -> client.acquireLocksAndSendTurn(new Turn(BUYDEVCARD))));
-			buttons.addActor(AssetMan.getButton(
-					"Chat.png",
-					() -> new ChatDialog(client).show(this)));
+			buttons.addActor(AssetMan.getButton("Chat.png", () -> new ChatDialog(client).show(this)));
 			root.add(buttons).left().bottom();
 		}
 		else
@@ -98,12 +105,9 @@ public class HeadsUpDisplay extends Stage
 			VerticalGroup buttons = new VerticalGroup();
 			buttons.space(5);
 
-			buttons.addActor(AssetMan.getButton(
-					"TradeWithBank.png",
-					() -> new TradeDialog(null, client).show(this)));
-			buttons.addActor(AssetMan.getButton(
-					"EndTurn.png",
-					() -> this.client.acquireLocksAndSendTurn(new Turn(ENDTURN))));
+			buttons.addActor(AssetMan.getButton("TradeWithBank.png", () -> new TradeDialog(null, client).show(this)));
+			buttons.addActor(
+					AssetMan.getButton("EndTurn.png", () -> this.client.acquireLocksAndSendTurn(new Turn(ENDTURN))));
 			root.add(buttons).right().bottom();
 		}
 		else
@@ -111,7 +115,11 @@ public class HeadsUpDisplay extends Stage
 			root.add();
 		}
 
-		/* ******** End of table ************************************************************************************ */
+		/*
+		 * ******** End of table
+		 * *********************************************************************
+		 * ***************
+		 */
 	}
 
 	private VerticalGroup getDevCards(boolean isAi)
@@ -172,8 +180,7 @@ public class HeadsUpDisplay extends Stage
 			if (type != ResourceType.Generic)
 			{
 				final String typeName = type.toString().toLowerCase();
-				resources.addActor(
-						new Counter(typeName, () -> me.getResources().getOrDefault(type, 0)));
+				resources.addActor(new Counter(typeName, () -> me.getResources().getOrDefault(type, 0)));
 			}
 		}
 		return resources;

@@ -9,7 +9,6 @@ import intergroup.Requests;
 
 import java.util.*;
 
-
 public abstract class AICore implements IAI, Runnable
 {
 	protected final AIClient client;
@@ -158,7 +157,7 @@ public abstract class AICore implements IAI, Runnable
 		case CHOOSERESOURCE:
 			rank = rankChosenResource(turn.getChosenResource());
 			break;
-			// Should rank apply for ENDTURN / ROLLDICE? Maybe sometimes..
+		// Should rank apply for ENDTURN / ROLLDICE? Maybe sometimes..
 		case ENDTURN:
 			rank = rankEndTurn();
 			break;
@@ -167,14 +166,14 @@ public abstract class AICore implements IAI, Runnable
 		case GETRESOURCES:
 			return 100;
 
-			// ai will never chat
+		// ai will never chat
 		case CHATMESSAGE:
 			rank = -1;
 			break;
 
-			// If Join Lobby, then the ai has to join a lobby and the rest of the
-			// list will be empty
-			// So, it's rank doesn't matter
+		// If Join Lobby, then the ai has to join a lobby and the rest of the
+		// list will be empty
+		// So, it's rank doesn't matter
 		case JOINLOBBY:
 			rank = 6;
 			break;
@@ -182,8 +181,7 @@ public abstract class AICore implements IAI, Runnable
 		default:
 			break;
 		}
-		
-		
+
 		return rank;
 	}
 

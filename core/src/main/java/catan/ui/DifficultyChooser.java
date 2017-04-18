@@ -8,7 +8,6 @@ import enums.Difficulty;
 
 import java.awt.*;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 class DifficultyChooser extends ButtonGroup<CheckBox>
@@ -16,7 +15,7 @@ class DifficultyChooser extends ButtonGroup<CheckBox>
 	private final BooleanSupplier enabled;
 	private final HorizontalGroup group = new HorizontalGroup();
 	private final HashMap<CheckBox, Difficulty> checkboxes = new HashMap<>(2);
-	
+
 	DifficultyChooser(final BooleanSupplier enabled)
 	{
 		this.enabled = enabled;

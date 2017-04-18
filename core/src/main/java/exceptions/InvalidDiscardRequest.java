@@ -15,7 +15,7 @@ public class InvalidDiscardRequest extends Exception
 	@Override
 	public String getMessage()
 	{
-		return String.format("Invalid discard request. Player needs to eliminate half of their resources.%n" + "Before: %d. After: %d",
-				before, after);
+		return String.format("Invalid discard request. Player needs to eliminate half of their resources.%n"
+				+ "Before: %d. After: %d", before, after);
 	}
 }

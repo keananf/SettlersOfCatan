@@ -19,7 +19,7 @@ class TradeResponseDialog extends Dialog
 	private final Map<ResourceType, Integer> offerResources;
 	private final Map<ResourceType, Integer> requestResources;
 
-	public TradeResponseDialog(Skin skin, Client client, HeadsUpDisplay hud)
+	TradeResponseDialog(Skin skin, Client client, HeadsUpDisplay hud)
 	{
 		super("Trade", skin);
 		Board.Player sender = client.getTurn().getCurrentTrade().getInstigator();

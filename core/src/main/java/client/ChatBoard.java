@@ -65,6 +65,11 @@ public class ChatBoard
 			this.senderColour = senderColour;
 		}
 
+		public Colour getSenderColour()
+		{
+			return senderColour;
+		}
+
 		public String getMessage()
 		{
 			return String.format("%s: %s", senderColour.name(), contents);

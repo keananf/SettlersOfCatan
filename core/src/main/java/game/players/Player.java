@@ -348,7 +348,7 @@ public abstract class Player
 			b = r.getEdge().getY().getBuilding();
 		}
 
-		// Does b already have an edge and is it the initial phase?
+		// Does b already have a road and is it the initial phase?
 		boolean val = true;
 		if (b != null && getRoads().size() < 2)
 		{
@@ -398,11 +398,6 @@ public abstract class Player
 
 		return bank.getAvailableCities(colour) > 0 && canAfford(City.getCityCost()) && settlements.containsKey(p)
 				&& settlements.get(p) instanceof Settlement;
-	}
-
-//TODO: canAffordDevCard
-	public boolean canAffordDevCard (DevelopmentCardType developmentCardType){
-		return false;
 	}
 
 	/**

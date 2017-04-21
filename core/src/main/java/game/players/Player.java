@@ -350,9 +350,16 @@ public abstract class Player
 
 		// Does b already have a road and is it the initial phase?
 		boolean val = true;
-		if (b != null && getRoads().size() < 2)
+		if (getRoads().size() < 2)
 		{
-			for (Edge e : b.getNode().getEdges())
+			for (Edge e : edge.getX().getEdges())
+			{
+				if (e.getRoad() != null)
+				{
+					val = false;
+				}
+			}
+			for (Edge e : edge.getY().getEdges())
 			{
 				if (e.getRoad() != null)
 				{
@@ -695,7 +702,7 @@ public abstract class Player
 	public void setResources(Map<ResourceType, Integer> resources)
 	{
 		this.resources = resources;
-		for(ResourceType r : this.resources.keySet())
+		for(ResourceType r : ResourceType.values())
 		{
 			this.resources.put(r, 0);
 		}

@@ -3,7 +3,9 @@ package catan.ui.hud;
 import catan.SettlersOfCatan;
 import client.Client;
 import client.Turn;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import enums.ResourceType;
 import intergroup.Requests;
 import intergroup.trade.Trade;
@@ -41,24 +43,33 @@ class TradeResponseDialog extends SaneDialog
 			getContentTable().row();
 		}
 
-		addButton("Accept", () -> {
-			// Set up trade
-			Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
-			turn.setTradeResponse(Trade.Response.ACCEPT);
-			turn.setPlayerTrade(client.getTurn().getCurrentTrade().getTrade());
+		addButton("Accept", new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				// Set up trade
+				Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
+				turn.setTradeResponse(Trade.Response.ACCEPT);
+				//turn.setPlayerTrade(client.getTurn().getCurrentTrade().getTrade());
 
-			// Set Trade
-			client.acquireLocksAndSendTurn(turn);
+				// Set Trade
+				client.acquireLocksAndSendTurn(turn);
+			}
 		});
 
-		addButton("Reject", () -> {
-			// Set up trade
-			Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
-			turn.setTradeResponse(Trade.Response.REJECT);
-			turn.setPlayerTrade(client.getTurn().getCurrentTrade().getTrade());
+		addButton("Reject", new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				// Set up trade
+				Turn turn = new Turn(Requests.Request.BodyCase.SUBMITTRADERESPONSE);
+				turn.setTradeResponse(Trade.Response.REJECT);
+				//turn.setPlayerTrade(client.getTurn().getCurrentTrade().getTrade());
 
-			// Set Trade
-			client.acquireLocksAndSendTurn(turn);
+				// Set Trade
+				client.acquireLocksAndSendTurn(turn);
+			}
+
 		});
 	}
 }

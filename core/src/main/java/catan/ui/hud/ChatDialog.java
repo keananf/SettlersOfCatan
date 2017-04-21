@@ -5,9 +5,11 @@ import catan.ui.SaneTextField;
 import client.ChatBoard;
 import client.Client;
 import client.Turn;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import intergroup.Requests;
 
@@ -41,10 +43,15 @@ class ChatDialog extends SaneDialog
 		getContentTable().row();
 		getContentTable().add(chat).left().bottom();
 
-		addButton("Submit", () -> {
-			Turn turn = new Turn(Requests.Request.BodyCase.CHATMESSAGE);
-			turn.setChatMessage(chat.getText());
-			client.acquireLocksAndSendTurn(turn);
+		addButton("Submit", new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+
+				Turn turn = new Turn(Requests.Request.BodyCase.CHATMESSAGE);
+				turn.setChatMessage(chat.getText());
+				client.acquireLocksAndSendTurn(turn);
+			}
 		});
 
 		addButton("Cancel");

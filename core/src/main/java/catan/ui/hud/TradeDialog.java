@@ -4,7 +4,9 @@ import catan.SettlersOfCatan;
 import catan.ui.IntegerField;
 import client.Client;
 import client.Turn;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import enums.ResourceType;
 import intergroup.Requests;
 import intergroup.board.Board;
@@ -40,32 +42,36 @@ class TradeDialog extends SaneDialog
 			offering.put(r, 0);
 		}
 
-		addButton("Submit", () -> {
-			// If a player trade
-			if (player != null)
-			{
-				// Set up trade
-				Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
-				Trade.WithPlayer.Builder builder = Trade.WithPlayer.newBuilder();
-				builder.setOther(player).build();
-				builder.setOffering(client.getState().processResources(offering));
-				builder.setWanting(client.getState().processResources(wanting));
+		addButton("Submit", new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				// If a player trade
+				if (player != null)
+				{
+					// Set up trade
+					Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
+					Trade.WithPlayer.Builder builder = Trade.WithPlayer.newBuilder();
+					builder.setOther(player).build();
+					builder.setOffering(client.getState().processResources(offering));
+					builder.setWanting(client.getState().processResources(wanting));
 
-				// Set Trade
-				turn.setPlayerTrade(builder.build());
-				client.acquireLocksAndSendTurn(turn);
-			}
-			else
-			{
-				// Set up trade
-				Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
-				Trade.WithBank.Builder builder = Trade.WithBank.newBuilder();
-				builder.setOffering(client.getState().processResources(offering));
-				builder.setWanting(client.getState().processResources(wanting));
+					// Set Trade
+					turn.setPlayerTrade(builder.build());
+					client.acquireLocksAndSendTurn(turn);
+				}
+				else
+				{
+					// Set up trade
+					Turn turn = new Turn(Requests.Request.BodyCase.INITIATETRADE);
+					Trade.WithBank.Builder builder = Trade.WithBank.newBuilder();
+					builder.setOffering(client.getState().processResources(offering));
+					builder.setWanting(client.getState().processResources(wanting));
 
-				// Set Trade
-				turn.setBankTrade(builder.build());
-				client.acquireLocksAndSendTurn(turn);
+					// Set Trade
+					turn.setBankTrade(builder.build());
+					client.acquireLocksAndSendTurn(turn);
+				}
 			}
 		});
 

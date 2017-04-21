@@ -92,19 +92,19 @@ public class RankNode
 			{
 				ranking--;
 			}
-			else if (rt == resourceQueue.get(0))
+			else if (resourceQueue.size() >= 1 && rt == resourceQueue.get(0))
 			{
 				ranking += 4;
 			}
-			else if (rt == resourceQueue.get(1))
+			else if (resourceQueue.size() >= 2 && rt == resourceQueue.get(1))
 			{
 				ranking += 3;
 			}
-			else if (rt == resourceQueue.get(2))
+			else if (resourceQueue.size() >= 3 && rt == resourceQueue.get(2))
 			{
 				ranking += 2;
 			}
-			else if (rt == resourceQueue.get(3))
+			else if (resourceQueue.size() >= 4 && rt == resourceQueue.get(3))
 			{
 				ranking += 1;
 			}

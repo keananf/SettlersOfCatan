@@ -3,7 +3,9 @@ package catan.ui.hud;
 import catan.SettlersOfCatan;
 import client.Client;
 import client.Turn;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import enums.ResourceType;
 import intergroup.Requests;
 
@@ -25,10 +27,15 @@ class ChooseResourceDialog extends SaneDialog
 			getContentTable().row();
 		}
 
-		addButton("Submit", () -> {
-			Turn turn = new Turn(Requests.Request.BodyCase.CHOOSERESOURCE);
-			turn.setChosenResource(buttons.getChecked().getResource());
-			client.acquireLocksAndSendTurn(turn);
+		addButton("Submit", new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				Turn turn = new Turn(Requests.Request.BodyCase.CHOOSERESOURCE);
+				turn.setChosenResource(buttons.getChecked().getResource());
+				client.acquireLocksAndSendTurn(turn);
+			}
+
 		});
 		addButton("Cancel");
 	}

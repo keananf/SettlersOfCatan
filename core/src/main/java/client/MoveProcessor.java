@@ -217,11 +217,6 @@ public class MoveProcessor
 			}
 		}
 
-		// Request all resources again from server
-		if (possibilities.isEmpty() || getTurn().getErrors() >= 2)
-		{
-			possibilities.add(new Turn(Requests.Request.BodyCase.GETRESOURCES));
-		}
 		return possibilities;
 	}
 
@@ -448,7 +443,13 @@ public class MoveProcessor
 		}
 
 		// If both the player and the bank can afford the given trade
-		return isExpected(turn) && getGame().getPlayer().canAfford(cost) && val;
+		val = isExpected(turn) && getGame().getPlayer().canAfford(cost) && val;
+		if(!val)
+		{
+			turn.setTradeResponse(Trade.Response.REJECT);
+			val = true;
+		}
+		return val;
 	}
 
 	/**

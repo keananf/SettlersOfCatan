@@ -205,6 +205,12 @@ public abstract class Client implements Runnable
 		{
 			updateTurn(turn);
 			turnProcessor.setUpMove();
+			if(turn.getChosenMove().equals(Requests.Request.BodyCase.ROLLDICE))
+			{
+				updateTurn(new Turn(Requests.Request.BodyCase.GETRESOURCES));
+				turnProcessor.setUpMove();
+			}
+
 			return true;
 		}
 

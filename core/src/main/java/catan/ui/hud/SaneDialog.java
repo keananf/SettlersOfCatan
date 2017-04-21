@@ -1,7 +1,6 @@
 package catan.ui.hud;
 
 import catan.SettlersOfCatan;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -26,17 +25,10 @@ abstract class SaneDialog extends Dialog
 		button(new TextButton(label, SettlersOfCatan.getSkin(), "dialog"));
 	}
 
-	void addButton(final String label, final Runnable clickListener)
+	void addButton(final String label, final ClickListener clickListener)
 	{
 		final TextButton button = new TextButton(label, SettlersOfCatan.getSkin(), "dialog");
-		button.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				clickListener.run();
-			}
-		});
-		button(button);
+		button.addListener(clickListener);
+		button(button, true);
 	}
 }

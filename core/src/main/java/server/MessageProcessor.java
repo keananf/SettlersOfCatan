@@ -208,7 +208,7 @@ class MessageProcessor
 					}
 					catch (IllegalTradeException e)
 					{
-						server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
+						server.forwardTradeReject(currentTrade.getInstigator());
 					}
 
 					currentTrade = null;
@@ -221,7 +221,8 @@ class MessageProcessor
 				}
 				else
 				{
-					server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
+					if(currentTrade.getInstigator() != null)
+						server.forwardTradeReject(currentTrade.getInstigator());
 					ev.setError(Events.Event.Error.newBuilder().setDescription("No active trade to respond to."));
 				}
 				break;
@@ -239,7 +240,8 @@ class MessageProcessor
 			String errMsg = e.getMessage();
 			if (request.getBodyCase().equals(Requests.Request.BodyCase.SUBMITTRADERESPONSE))
 			{
-				server.forwardTradeReject(currentTrade.getTrade(), currentTrade.getInstigator());
+				if(currentTrade.getInstigator() != null)
+					server.forwardTradeReject(currentTrade.getInstigator());
 			}
 			else
 			{

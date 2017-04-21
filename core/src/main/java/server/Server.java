@@ -647,10 +647,9 @@ public class Server implements Runnable
 	/**
 	 * Simply forwards the reject to the participants
 	 *
-	 * @param playerTrade the internal trade request inside the message
 	 * @param instigator the player who requested the trade that was rejected
 	 */
-	void forwardTradeReject(Trade.WithPlayer playerTrade, Board.Player instigator)
+	void forwardTradeReject(Board.Player instigator)
 	{
 		// Extract player info, and set up the reject event
 		Event ev = Event.newBuilder().setInstigator(instigator)
